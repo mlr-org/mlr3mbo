@@ -1,0 +1,43 @@
+eval mit callr in extra prozess?
+
+tuning instance code kopieren?
+kann man da irgendwie die code doppelung vermeiden?
+
+die mbo targetfunctuon kann man auch für mlr3tuning nutzen? generell wäre ein opttools paket vielleicht sinnvoll?
+
+arcgive und targetfun trennen?
+
+mehrere masse erlauben
+
+und was machen wir mit den terminatoren? kommen die auch in das optools?
+
+und wenn wir R6 klassen wie terminator usw kopieren und das unter gleichem namen exportieren gibt das
+einen clash mit mlr3tuning
+
+es funktioiert auch nicht, wenn der Terminator eine instance bekommt.........
+vermutlich muss terminated auf der "Objective" basieren statt auf der instance?
+
+bei eval(dt) wäre eigentlich ein listcol für x besser? oder direkt eine liste? wegen deps?
+
+etwas niceres interface für non-list-x objectives?
+
+id von AcqF nach Obj bewegen?
+
+braaucht AcqF sowas wie requirements oder properties?
+
+learner bei AcqF im constructor geben? oder lieber setzteb lassen? so kann mans auch ohne konstriuueren
+
+soll acqf ein param_set haben?
+
+focussearch als optimizuer einabuen
+
+mlr3: es ist ziemlich doof dass man den task in predict_newdata braucht
+
+im punkte-design immer y drin haben. das NA setzten wenn noch nicht evaluier?
+
+wir benutzen oft Design$new um zu asserten das punkte feasible sind, das scheint quatschig zu sein,
+auch in anderen paketen. hilfsfunktion in paradox tun?
+
+viele asserts in viele funktionen schreiben
+
+formats und printer definieren

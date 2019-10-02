@@ -1,0 +1,63 @@
+Package: mlr3mbo
+Type: Package
+Title: Flexible Bayesian Optimization in R
+Version: 0.1.0
+Authors@R:
+    c(person(given = "Michel",
+             family = "Lang",
+             role = c("aut"),
+             email = "michellang@gmail.com",
+             comment = c(ORCID = "0000-0001-9754-0393")),
+      person(given = "Bernd",
+             family = "Bischl",
+             role = "aut",
+             email = "bernd_bischl@gmx.net",
+             comment = c(ORCID = "0000-0001-6002-6980")),
+      person(given = "Jakob",
+             family = "Richter",
+             role = "aut",
+             email = "jakob1richter@gmail.com",
+             comment = c(ORCID = "0000-0003-4481-5554")),
+      person(given = "Martin",
+             family = "Binder",
+             role = c("cre", "aut"),
+             email = "mlr.developer@mb706.com"),
+      person(given = "Julia",
+             family = "Moosbauer",
+             role = "aut",
+             email = "ju.moosbauer@gmail.com"))
+Description: A modern and flexible approach to Bayesian Optimization in R.
+License: LGPL-3
+URL: https://mlr3.mlr-org.com, https://github.com/mlr-org/mlr3mbo
+BugReports: https://github.com/mlr-org/mlr3mbo/issues
+Depends:
+    R (>= 3.1.0)
+Imports:
+    backports,
+    checkmate (>= 1.9.3),
+    data.table,
+    lgr (>= 0.3.0),
+    mlr3misc (>= 0.1.4),
+    paradox,
+    R6
+Suggests:
+    mlr3learners,
+    testthat
+Encoding: UTF-8
+LazyData: true
+NeedsCompilation: no
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+Collate: 
+    'AcqFunction.R'
+    'AcqFunctionCB.R'
+    'AcqFunctionMean.R'
+    'AcqOptimizer.R'
+    'Archive.R'
+    'Objective.R'
+    'ObjectiveSO.R'
+    'Terminator.R'
+    'TerminatorEvals.R'
+    'bayesopt_soo.R'
+    'parego.R'
+    'zzz.R'
