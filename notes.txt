@@ -1,18 +1,22 @@
-eval mit callr in extra prozess?
+eval mit callr in extra prozess? (https://github.com/mlr-org/mlr3mbo/issues/1)
 
 tuning instance code kopieren?
 kann man da irgendwie die code doppelung vermeiden?
+(https://github.com/mlr-org/mlr3mbo/issues/2)
 
 die mbo targetfunctuon kann man auch für mlr3tuning nutzen? generell wäre ein opttools paket vielleicht sinnvoll?
+(https://github.com/mlr-org/mlr3mbo/issues/2)
 
 arcgive und targetfun trennen?
 
 mehrere masse erlauben
 
 und was machen wir mit den terminatoren? kommen die auch in das optools?
+(https://github.com/mlr-org/mlr3mbo/issues/2)
 
 und wenn wir R6 klassen wie terminator usw kopieren und das unter gleichem namen exportieren gibt das
 einen clash mit mlr3tuning
+(https://github.com/mlr-org/mlr3mbo/issues/2)
 
 es funktioiert auch nicht, wenn der Terminator eine instance bekommt.........
 vermutlich muss terminated auf der "Objective" basieren statt auf der instance?
@@ -24,12 +28,14 @@ etwas niceres interface für non-list-x objectives?
 id von AcqF nach Obj bewegen?
 
 braaucht AcqF sowas wie requirements oder properties?
+(https://github.com/mlr-org/mlr3mbo/issues/5)
 
 learner bei AcqF im constructor geben? oder lieber setzteb lassen? so kann mans auch ohne konstriuueren
+(https://github.com/mlr-org/mlr3mbo/issues/6)
 
-soll acqf ein param_set haben?
+soll acqf ein param_set haben? (https://github.com/mlr-org/mlr3mbo/issues/3)
 
-focussearch als optimizuer einabuen
+focussearch als optimizuer einabuen (https://github.com/mlr-org/mlr3mbo/issues/4)
 
 mlr3: es ist ziemlich doof dass man den task in predict_newdata braucht
 
