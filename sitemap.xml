@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/index.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunction.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionCB.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionMean.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/Objective.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/Terminator.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/TerminatorEvals.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr3mbo-package.html</loc>
+  </url>
+</urlset>
