@@ -9,16 +9,16 @@
 #'
 #' @section Construction:
 #' ```
-#' acqf = AcquisitionFunction(id, opt_dir, settings, requirements) 
+#' acqf = AcquisitionFunction(id, opt_dir, settings, requirements)
 #' ```
 #'
 #' * `id` :: `character(1)`\cr
 #'    Short name of the criterion.
 #' * `opt_dir` :: `character(1)`\cr
 #'    Should the criterion be minimized of maximized?
-#'    Can be "min", "max" or "obj", where the latter means that the same direction 
+#'    Can be "min", "max" or "obj", where the latter means that the same direction
 #' * `settings` :: named `list`\cr
-#'    Control settings and constants. 
+#'    Control settings and constants.
 #'    as specified in the objective function is taken.
 #' * requirements :: named `list`\cr
 #'
@@ -27,11 +27,11 @@
 #' * `param_set` :: [paradox::ParamSet]`\cr
 #'    Feasible space to optimize over.
 #' * `task` :: [mlr3::Task]`\cr
-#'    
+#'
 #'
 #' @section Methods:
 #' * set_up(param_set, task, surrogate)\cr
-#'   (list of [Measure], `logical(1)`, `logical(1)`, `logical(1)`, `logical(1)`) -> [data.table::data.table()]\cr
+#'   (list of [mlr3::Measure], `logical(1)`, `logical(1)`, `logical(1)`, `logical(1)`) -> [data.table::data.table()]\cr
 #' * `eval_batch(dt)`\cr
 #'   [data.table::data.table()] -> `numeric(1)`\cr
 #'   Evaluates all design points in `dt` with the acquisition function where each points is a row, and columns are scalar parameters.
@@ -58,7 +58,7 @@ AcqFunction = R6Class("AcqFunction",
       self$task = task
       self$surrogate = surrogate
     },
-   
+
     eval_batch = function(dt) stop("abstract"),
 
     format = function() {

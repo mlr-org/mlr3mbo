@@ -21,8 +21,11 @@
 #' @family Terminator
 #' @export
 #' @examples
+#' \dontrun{
+#' library(mlr3tuning)
 #' TerminatorEvals$new()
 #' term("evals", n_evals = 5)
+#' }
 TerminatorEvals = R6Class("TerminatorEvals",
   inherit = Terminator,
   public = list(

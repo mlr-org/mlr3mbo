@@ -5,16 +5,16 @@
 #'
 #' @description
 #' Specifies a black-box function and archive for optimizers to
-#' act upon. 
+#' act upon.
 #' It allows the basic operations of querying the objective
 #' at design points (`$eval_batch()`), storing the evaluations in an internal archive
 #' and querying the archive (`$archive()`).
 #'
-#' Evaluations of points are performed in batches. 
+#' Evaluations of points are performed in batches.
 #' Before and after a batch is evaluated, the [Terminator] is queried for the remaining budget.
 #' If the available budget is exhausted, an exception is raised, and no further evaluations can be performed from this point on.
 #'
-#' The optimizer is also supposed to store its final result, consisting of a list of optimal values 
+#' The optimizer is also supposed to store its final result, consisting of a list of optimal values
 #' and stimated performance values, by calling the method `instance$assign_result`.
 #'
 #' @section Construction:
@@ -34,7 +34,7 @@
 #'   Number of configuration evaluations stored in the container.
 #' * `start_time` :: `POSIXct(1)`\cr
 #'   Time the tuning was started.
-#'   This is set in the beginning of `$tune()` of [Tuner].
+#'   This is set in the beginning of `$tune()` of [mlr3tuning::Tuner].
 #' * `result` :: named `list()`\cr
 #'   Result of the tuning, i.e., the optimal configuration and its estimated performance:
 #'   * `"perf"`: Named vector of estimated performance values of the best configuration found.
@@ -46,9 +46,9 @@
 #' * `eval_batch(dt)`\cr
 #'   [data.table::data.table()] -> named `list()`\cr
 #'   Evaluates all hyperparameter configurations in `dt` through resampling, where each configuration is a row, and columns are scalar parameters.
-#'   Updates the internal [BenchmarkResult] `$bmr` by reference, and returns a named list with the following elements:
+#'   Updates the internal [mlr3::BenchmarkResult] `$bmr` by reference, and returns a named list with the following elements:
 #'   * `"batch_nr"`: Number of the new batch.
-#'     This number is calculated in an auto-increment fashion and also stored inside the [BenchmarkResult] as column `batch_nr`
+#'     This number is calculated in an auto-increment fashion and also stored inside the [mlr3::BenchmarkResult] as column `batch_nr`
 #'   * `"perf"`: A [data.table::data.table()] of evaluated performances for each row of the `dt`.
 #'     Has the same number of rows as `dt`, and the same number of columns as length of `measures`.
 #'     Columns are named with measure-IDs. A cell entry is the (aggregated) performance of that configuration for that measure.
@@ -94,7 +94,7 @@ Objective = R6Class("Objective",
       self$param_set = assert_param_set(param_set)
       self$terminator = assert_r6(terminator, "Terminator")
       self$minimize = assert_flag(minimize)
-      self$archive = Archive$new(ps) 
+      self$archive = Archive$new(ps)
     },
 
     format = function() {
@@ -124,7 +124,7 @@ Objective = R6Class("Objective",
       parlist_trafoed = design$transpose(trafo = TRUE, filter_na = TRUE)
       parlist_untrafoed = design$transpose(trafo = FALSE, filter_na = TRUE)
 
-      # eval 
+      # eval
       # FIXME: allow this in parallel and encapsulated
       # FIXME: allow multiple values here? or subclass with MOO objective?
       y = vnapply(parlist_trafoed, self$fun)
@@ -145,7 +145,7 @@ Objective = R6Class("Objective",
       private$.result = list(tune_x = tune_x, perf = perf)
     }
   ),
-  
+
   active = list(
     n_evals = function() nrow(self$archive),
 
@@ -159,7 +159,7 @@ Objective = R6Class("Objective",
       list(tune_x = tune_x, params = params, perf = perf)
     }
   ),
-  
+
   private = list(
     .result = NULL
   )

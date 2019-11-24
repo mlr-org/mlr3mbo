@@ -6,12 +6,13 @@
 \alias{mlr3mbo-package}
 \title{mlr3mbo: Flexible Bayesian Optimization in R}
 \description{
-A modern and flexible approach to Bayesian Optimization in R.
+A modern and flexible approach to Bayesian
+    Optimization in R.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://mlr3.mlr-org.com}
+  \item \url{https://mlr3mbo.mlr-org.com}
   \item \url{https://github.com/mlr-org/mlr3mbo}
   \item Report bugs at \url{https://github.com/mlr-org/mlr3mbo/issues}
 }
@@ -22,9 +23,9 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Michel Lang \email{michellang@gmail.com} (0000-0001-9754-0393)
-  \item Bernd Bischl \email{bernd_bischl@gmx.net} (0000-0001-6002-6980)
-  \item Jakob Richter \email{jakob1richter@gmail.com} (0000-0003-4481-5554)
+  \item Michel Lang \email{michellang@gmail.com} (\href{https://orcid.org/0000-0001-9754-0393}{ORCID})
+  \item Bernd Bischl \email{bernd_bischl@gmx.net} (\href{https://orcid.org/0000-0001-6002-6980}{ORCID})
+  \item Jakob Richter \email{jakob1richter@gmail.com} (\href{https://orcid.org/0000-0003-4481-5554}{ORCID})
   \item Julia Moosbauer \email{ju.moosbauer@gmail.com}
 }
 

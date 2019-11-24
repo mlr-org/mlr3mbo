@@ -5,8 +5,8 @@
 #'
 #' @section Construction:
 #'
-#' @section Fields: See [AcquisitionFunction]
-#' @section Methods: See [AcquisitionFunction]
+#' @section Fields: See [AcqFunction]
+#' @section Methods: See [AcqFunction]
 #' @export
 AcqFunctionCB = R6Class( "AcqFunctionCB", inherit = AcqFunction,
   public = list(

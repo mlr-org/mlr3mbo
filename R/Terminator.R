@@ -30,7 +30,7 @@
 #'
 #' @section Methods:
 #' * `is_terminated(inst)`\cr
-#'   [TuningInstance] -> `logical(1)`\cr
+#'   [mlr3tuning::TuningInstance] -> `logical(1)`\cr
 #'   Is `TRUE` iff the termination criterion is positive.
 #'   Must be implemented in a subclass.
 #'
