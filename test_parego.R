@@ -1,6 +1,6 @@
 library(mlr3)
 library(paradox)
-load_all()
+devtools::load_all()
 
 
 f1 = function(x) sum(unlist(x)^2)

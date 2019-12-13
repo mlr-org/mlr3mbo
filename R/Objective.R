@@ -127,7 +127,7 @@ Objective = R6Class("Objective",
       # eval
       # FIXME: allow this in parallel and encapsulated
       # FIXME: allow multiple values here? or subclass with MOO objective?
-      y = vnapply(parlist_trafoed, self$fun)
+      y = map_dbl(parlist_trafoed, self$fun)
       assert_numeric(y, len = nrow(dt))
 
       # store evaluated results
