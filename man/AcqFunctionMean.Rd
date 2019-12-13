@@ -6,8 +6,6 @@
 \format{\link[R6:R6Class]{R6::R6Class} object.}
 \description{
 Acquisition function: Posterior Mean
-
-Acquisition function: Posterior Mean
 }
 \section{Construction}{
 
@@ -21,56 +19,3 @@ Acquisition function: Posterior Mean
  See \link{AcqFunction}
 }
 
-\section{Super class}{
-\code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionMean}
-}
-\section{Methods}{
-\subsection{Public methods}{
-\itemize{
-\item \href{#method-new}{\code{AcqFunctionMean$new()}}
-\item \href{#method-eval_batch}{\code{AcqFunctionMean$eval_batch()}}
-\item \href{#method-clone}{\code{AcqFunctionMean$clone()}}
-}
-}
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="format">}\href{../../mlr3mbo/html/AcqFunction.html#method-format}{\code{mlr3mbo::AcqFunction$format()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="print">}\href{../../mlr3mbo/html/AcqFunction.html#method-print}{\code{mlr3mbo::AcqFunction$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="set_up">}\href{../../mlr3mbo/html/AcqFunction.html#method-set_up}{\code{mlr3mbo::AcqFunction$set_up()}}\out{</span>}
-}
-\out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionMean$new()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-eval_batch"></a>}}
-\subsection{Method \code{eval_batch()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionMean$eval_batch(dt)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionMean$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
-}

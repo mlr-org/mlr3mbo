@@ -6,8 +6,6 @@
 \format{\link[R6:R6Class]{R6::R6Class} object.}
 \description{
 Acquisition function: Confidence Bound
-
-Acquisition function: Confidence Bound
 }
 \section{Construction}{
 
@@ -21,56 +19,3 @@ Acquisition function: Confidence Bound
  See \link{AcqFunction}
 }
 
-\section{Super class}{
-\code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionCB}
-}
-\section{Methods}{
-\subsection{Public methods}{
-\itemize{
-\item \href{#method-new}{\code{AcqFunctionCB$new()}}
-\item \href{#method-eval_batch}{\code{AcqFunctionCB$eval_batch()}}
-\item \href{#method-clone}{\code{AcqFunctionCB$clone()}}
-}
-}
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="format">}\href{../../mlr3mbo/html/AcqFunction.html#method-format}{\code{mlr3mbo::AcqFunction$format()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="print">}\href{../../mlr3mbo/html/AcqFunction.html#method-print}{\code{mlr3mbo::AcqFunction$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="set_up">}\href{../../mlr3mbo/html/AcqFunction.html#method-set_up}{\code{mlr3mbo::AcqFunction$set_up()}}\out{</span>}
-}
-\out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionCB$new(learner, lambda = 2)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-eval_batch"></a>}}
-\subsection{Method \code{eval_batch()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionCB$eval_batch(dt)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionCB$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
-}
