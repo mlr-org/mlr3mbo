@@ -20,7 +20,7 @@ AcqFunctionMean = R6Class( "AcqFunctionMean", inherit = AcqFunction,
     },
 
     eval_batch = function(dt) {
-      p = self$surrogate$predict_newdata(task = self$task, newdata = dt)
+      p = self$surrogate$predict_newdata(dt)
       p$response
     }
   )

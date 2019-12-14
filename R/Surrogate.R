@@ -11,6 +11,10 @@ Surrogate = R6Class("Surrogate",
     train = function(archive) {
       task = TaskRegr$new(backend = archive$data, target = "y", id = "surrogate_task")
       self$learner$train(task)
+    },
+    
+    predict_newdata = function(newdata) {
+      self$learner$predict_newdata(newdata) 
     }
   )
 )

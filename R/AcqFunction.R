@@ -44,7 +44,8 @@ AcqFunction = R6Class("AcqFunction",
     settings = NULL,
     surrogate = NULL,
     opt_dir = NULL,
-    param_set = NULL,
+    domain = NULL,
+    # FIXME: do we really need this?
     archive = NULL,
 
     initialize = function(id, opt_dir, settings, requirements) {
@@ -53,10 +54,10 @@ AcqFunction = R6Class("AcqFunction",
       self$settings = settings
     },
 
-    set_up = function(param_set, archive, surrogate) {
-      self$param_set = param_set
-      self$archive = archive
-      self$surrogate = surrogate
+    set_up = function(domain, archive, surrogate) {
+      self$domain = assert_param_set(domain)
+      self$archive = assert_r6(archive, "Archive")
+      self$surrogate = assert_r6(surrogate, "Surrogate")
     },
 
     eval_batch = function(dt) stop("abstract"),
@@ -68,9 +69,7 @@ AcqFunction = R6Class("AcqFunction",
     print = function() {
       catf(self$format())
       catf("opt_dir: %s", self$opt_dir)
-      print(self$param_set)
-      print(self$terminator)
-      print(self$archive)
+      print(self$domain)
     }
   )
 )
