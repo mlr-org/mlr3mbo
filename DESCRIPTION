@@ -40,6 +40,7 @@ Imports:
     data.table,
     lgr (>= 0.3.0),
     mlr3misc (>= 0.1.4),
+    bbotk,
     paradox,
     R6
 Suggests:
@@ -55,11 +56,6 @@ Collate:
     'AcqFunctionCB.R'
     'AcqFunctionMean.R'
     'AcqOptimizer.R'
-    'Archive.R'
-    'Objective.R'
-    'ObjectiveSO.R'
-    'Terminator.R'
-    'TerminatorEvals.R'
     'bayesopt_soo.R'
     'parego.R'
     'zzz.R'
