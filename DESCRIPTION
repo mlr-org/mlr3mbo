@@ -36,16 +36,18 @@ Depends:
     R (>= 3.1.0)
 Imports:
     backports,
+    bbotk,
     checkmate (>= 1.9.3),
     data.table,
     lgr (>= 0.3.0),
     mlr3misc (>= 0.1.4),
-    bbotk,
     paradox,
     R6
 Suggests:
     mlr3learners,
     testthat
+Remotes:
+    mlr-org/bbotk
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: no
