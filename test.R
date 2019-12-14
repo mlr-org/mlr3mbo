@@ -1,16 +1,29 @@
 library(mlr3)
 library(paradox)
-devtools::load_all()
+# library(bbotk)
+# roxygenize()
+# load_all("~/cos/bbotk")
+load_all()
 
+ps1 = ParamDbl$new("x", lower = -1, upper = 1)$rep(2)
 
-f = function(x) sum(unlist(x)^2)
-ps = ParamDbl$new("x", lower = -1, upper = 1)$rep(2)
-te = TerminatorEvals$new()
-te$param_set$values$n_evals = 12
-obj = ObjectiveSO$new(fun = f, param_set = ps, te)
+fn = function(dt) {
+  y = map_dbl(seq_row(dt), function(i) {
+    x = dt[i,]
+    sum(x^2)
+  })
+  data.table(y = y)
+}
+
+obj = ObjectiveSO$new(fun = fn, domain = ps1)
+term = TerminatorEvals$new()
+term$param_set$values$n_evals = 9
+
 
 ll = lrn("regr.rpart")
 acqf = AcqFunctionMean$new()
 acqf_optim = AcqOptimizer$new()
 
-bayesop_soo(obj, ll, acqf, acqf_optim)
+a = bayesop_soo(obj, ll, acqf, term)
+print(a)
+

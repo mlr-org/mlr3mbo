@@ -8,31 +8,35 @@
 
 # and why do we pass some tings in "control" and some separately?
 
-bayesop_soo = function(obj, learner, acqf, acqf_optim, init_random = NULL) {
+bayesop_soo = function(objective, learner, acqf, terminator, init_random = NULL) {
   assert_r6(obj, "Objective")
   assert_r6(acqf, "AcqFunction")
   assert_r6(acqf_optim, "AcqOptimizer")
+  archive = Archive$new(objective$domain, objective$codomain)
+  sm = Surrogate$new(learner)
+
   # FIXME: where do we have the init design set?
-  ps = obj$param_set
+  ps = obj$domain
   if (is.null(init_random)) {
+    # FIXME: magic constant
     init_random = 4 * ps$length
   }
+  ev = Evaluator$new(obj, archive, term)
   if (init_random > 0L) {
     d = generate_design_random(ps, init_random)
-    dd = d$data
-    obj$eval_batch(dd)
+    ev$eval_points(d$data)
   }
   acqf_optim = AcqOptimizer$new()
-  while(!obj$terminator$is_terminated(obj)) {
+  while(!terminator$is_terminated(archive)) {
     # FIXME: maybe have a function to eval all unevalued poitbs in the archive?
-    # FIXME: put this in objective? not good if in opttools. or in helper? surroaget?
-    task = TaskRegr$new(backend = obj$archive$data, target = "y", id = "surrogate_task")
-    ll$train(task)
-    acqf$set_up(ps, task, ll)
+    sm$train(archive)
+    acqf$set_up(ps, archive, ll)
+    # FIXME: magic constant
     x = acqf_optim$optimize(acqf, n_evals = 3) 
-    obj$eval_batch(dd)
-    dd = rbind(dd, x)
+    # FIXME: use proposer
+    ev$eval_points(x)
   }
+  return(archive)
 }
 
 

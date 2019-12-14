@@ -45,7 +45,7 @@ AcqFunction = R6Class("AcqFunction",
     surrogate = NULL,
     opt_dir = NULL,
     param_set = NULL,
-    task = NULL,
+    archive = NULL,
 
     initialize = function(id, opt_dir, settings, requirements) {
       self$id = assert_string(id)
@@ -53,9 +53,9 @@ AcqFunction = R6Class("AcqFunction",
       self$settings = settings
     },
 
-    set_up = function(param_set, task, surrogate) {
+    set_up = function(param_set, archive, surrogate) {
       self$param_set = param_set
-      self$task = task
+      self$archive = archive
       self$surrogate = surrogate
     },
 
