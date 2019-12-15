@@ -12,14 +12,19 @@ AcqFunctionCB = R6Class( "AcqFunctionCB", inherit = AcqFunction,
   public = list(
     initialize = function(learner, lambda = 2) {
       settings = list(lambda = assert_number(lambda, lower = 0))
-      super$initialize(id = "acqf_cb", settings = settings,
-        opt_dir = "obj", requirements = c("response", "se"))
-    },
-
-    eval_batch = function(dt) {
-      p = self$surrogate$predict_newdata(task = NULL, newdata = dt)
-      res = p$mean + self$mult_max_to_min * self$settings$lambda * p$se
-      data.table(acq = res, se = p$se, mean = p$mean, lambda = self$settings$lambda)
+      fun = function(dt) {
+        p = self$surrogate$predict_newdata(task = NULL, newdata = dt)
+        res = p$mean + self$mult_max_to_min * self$settings$lambda * p$se
+        # FIXME: what do we return here? do we want to see se, mean, too?
+        data.table(y = res)
+      }
+      super$initialize(
+        id = "acqf_cb", 
+        fun = fun, 
+        settings = settings,
+        objective = objective,
+        minimize = objective$minimize
+      )
     }
   )
 )

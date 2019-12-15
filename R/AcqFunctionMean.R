@@ -10,18 +10,19 @@
 #' @export
 AcqFunctionMean = R6Class( "AcqFunctionMean", inherit = AcqFunction,
   public = list(
-    initialize = function() {
+    # FIXME: should we add some metainfo fequiremements what the acqf needs? eg se?
+
+    initialize = function(objective) {
+      fun = function(dt) {
+        p = self$surrogate$predict_newdata(dt)
+        data.table(y = p$response)
+      }
       super$initialize(
         id = "acqf_mean",
-        settings = list(),
-        opt_dir = "obj",
-        requirements = "response"
+        fun = fun, 
+        objective = objective,
+        minimize = objective$minimize
       )
-    },
-
-    eval_batch = function(dt) {
-      p = self$surrogate$predict_newdata(dt)
-      p$response
     }
   )
 )

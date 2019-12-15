@@ -24,17 +24,17 @@ bayesop_soo = function(objective, learner, acqf, terminator, init_random = NULL)
   ev = Evaluator$new(obj, archive, term)
   if (init_random > 0L) {
     d = generate_design_random(ps, init_random)
-    ev$eval_points(d$data)
+    ev$eval(d$data)
   }
   acqf_optim = AcqOptimizer$new()
   while(!terminator$is_terminated(archive)) {
     # FIXME: maybe have a function to eval all unevalued poitbs in the archive?
     sm$train(archive)
-    acqf$set_up(ps, archive, sm)
+    acqf$set_up(ps, sm)
     # FIXME: magic constant
     x = acqf_optim$optimize(acqf, n_evals = 3) 
     # FIXME: use proposer
-    ev$eval_points(x)
+    ev$eval(x)
   }
   return(archive)
 }
