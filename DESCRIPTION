@@ -60,4 +60,5 @@ Collate:
     'AcqOptimizer.R'
     'bayesopt_soo.R'
     'parego.R'
+    'surrogate.R'
     'zzz.R'
