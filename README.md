@@ -4,7 +4,7 @@ A new R6 and much more modular implementation for single- and multicrit Bayesian
 We are really not done here! Very prelim code, so beware!
 
 <!-- badges: start -->
-[![R CMD Check via {tic}](https://github.com/mlr-org/mlr3mbo/workflows/R%20CMD%20Check%20via%20{tic}/badge.svg?branch=master)](https://github.com/mlr-org/mlr3mbo/actions)
+[![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=master)](https://github.com/mlr-org/mlr3mbo/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
 <!-- badges: end -->
 
