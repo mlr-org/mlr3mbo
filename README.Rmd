@@ -1,0 +1,40 @@
+# mlr3mbo
+
+A new R6 and much more modular implementation for single- and multicrit Bayesian optimization.
+We are really not done here! Very prelim code, so beware!
+
+<!-- badges: start -->
+[![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=master)](https://github.com/mlr-org/mlr3mbo/actions)
+[![CRAN status](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
+<!-- badges: end -->
+
+[List of some Ideas](https://github.com/mb706/okmbo/tree/master/todo-files)
+
+```{r example}
+library(bbotk)
+library(mlr3mbo)
+
+ObjectiveRFun$new(
+  fun = function(xs) sum(umlist(xs)^2),
+  domain = ParamSet$new(ParamDbl$new("x", -5, 5)),
+  id = "test"
+)
+
+terminator = trm("evals", n_evals = 20)
+
+instance = OptimInstanceSingleCrit$new(
+  objective = obfun, 
+  terminator = terminator
+)
+
+optimizer = OptimizerMbo$new()
+surrogate = SurrogateLearner$new()
+surrogate$param_set$param_vals$learner= lrn("regr.km")
+proposal_generator = ProposalGeneratorSingle$new()
+
+optimizer$param_set$param_vals$proposal_generator = ProposalGeneratorSingle$new(
+  acqfun = AcqFunctionCB$new(surrogate = ),
+  )
+
+
+```
