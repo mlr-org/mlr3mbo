@@ -8,20 +8,21 @@
 #' @section Fields: See [AcqFunction]
 #' @section Methods: See [AcqFunction]
 #' @export
-AcqFunctionMean = R6Class( "AcqFunctionMean", inherit = AcqFunction,
+AcqFunctionMean = R6Class("AcqFunctionMean", inherit = AcqFunction,
   public = list(
     # FIXME: should we add some metainfo fequiremements what the acqf needs? eg se?
 
-    initialize = function() {
+    initialize = function(surrogate) {
       super$initialize(
-        id = "acqf_mean",
-        param_set = ParamSet$new()
+        id = "acq_mean",
+        param_set = ParamSet$new(),
+        surrogate = surrogate
       )
     },
 
     eval_dt = function(xdt) {
       p = self$surrogate$predict_newdata(dt)
-      data.table(y = p$response)
+      data.table(acq_mean = p$response)
     }
   )
 )

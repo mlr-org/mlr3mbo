@@ -30,7 +30,7 @@
 #'
 #'
 #' @section Methods:
-#' * set_up(param_set, task, surrogate)\cr
+#' * setup(param_set, task, surrogate)\cr
 #'   (list of [mlr3::Measure], `logical(1)`, `logical(1)`, `logical(1)`, `logical(1)`) -> [data.table::data.table()]\cr
 #' * `eval_batch(dt)`\cr
 #'   [data.table::data.table()] -> `numeric(1)`\cr
@@ -38,36 +38,50 @@
 #'
 #' @export
 AcqFunction = R6Class("AcqFunction",
-  
   public = list(
-
     id = NULL,
     surrogate = NULL,
     param_set = NULL,
-    domain = NULL,
+    search_space = NULL,
     codomain = NULL,
 
-    initialize = function(id, param_set) {
+    initialize = function(id, param_set, surrogate) {
       self$id = assert_string(id)
       self$param_set = assert_param_set(param_set)
-      super$initialize(id, properties = properties, domain = domain, codomain = codomain, check_values = FALSE)
-      self$param_set = assert_param_set(param_set)
+      self$surrogate = assert_r6(surrogate, "Surrogate")
     },
 
+    #' @value `data.table` \cr
+    #'   The column has to have the same name as the id of the acq_fun, because we renamed the id of the codomain
     eval_dt = function(xdt) {
       stop("abstract")
     },
 
-    set_up = function(surrogate, domain, codomain) {
-      self$surrogate = assert_r6(surrogate, "Surrogate")
-      self$domain = assert_param_set(domain)
-      self$codomain = assert_param_set(codomain)
+    
+    # FIXME: Should we allow alternative search_space as additional argument?
+    setup = function(archive) {
+
+      # here we can change the optim direction of the codomain for the acq function
+      codomain = archive$codomain$clone(deep = TRUE)
+      codomain$params[[1]]$id = self$id
+      names(codomain$params)[[1]] = self$id
+      self$codomain = codomain
+
+      self$search_space = archive$search_space
+      
+      xydt = archive$data()
+      surrogate$setup(xdt = xydt[, archive$cols_x], ydt = xydt[, archive$cols_y])
+    },
+
+    update = function(archive) {
+      xydt = archive$data()
+      surrogate$update(xdt = xydt[, archive$cols_x], ydt = xydt[, archive$cols_y])
     },
 
     generate_objective = function() {
       bbotk::ObjectiveRFunDt$new(
         fun = self$eval_dt,
-        domain = self$domain,
+        domain = self$search_space,
         codomain = self$codomain,
         id = self$id
       )

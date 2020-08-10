@@ -13,10 +13,11 @@ We are really not done here! Very prelim code, so beware!
 ```{r example}
 library(bbotk)
 library(mlr3mbo)
+library(paradox)
 
 ObjectiveRFun$new(
   fun = function(xs) sum(umlist(xs)^2),
-  domain = ParamSet$new(ParamDbl$new("x", -5, 5)),
+  domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
   id = "test"
 )
 
@@ -27,14 +28,12 @@ instance = OptimInstanceSingleCrit$new(
   terminator = terminator
 )
 
-optimizer = OptimizerMbo$new()
-surrogate = SurrogateLearner$new()
-surrogate$param_set$param_vals$learner= lrn("regr.km")
-proposal_generator = ProposalGeneratorSingle$new()
-
-optimizer$param_set$param_vals$proposal_generator = ProposalGeneratorSingle$new(
-  acqfun = AcqFunctionCB$new(surrogate = ),
-  )
+surrogate = SurrogateLearner$new(learner = lrn("regr.km"))
+acqfun = AcqFunctionCB$new(surrogate = surrogate)
+proposal_generator = ProposalGeneratorSingle$new(
+  acq_function = acqfun, 
+  acq_optimizer = AcqOptimizer$new())
+optimizer = OptimizerMbo$new(proposal_generator = proposal_generator)
 
 
 ```

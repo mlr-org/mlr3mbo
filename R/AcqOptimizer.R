@@ -1,4 +1,5 @@
-AcqOptimizer = R6Class("AcqOptimizer", 
+#FIXME: Not the final API!
+AcqOptimizer = R6Class("AcqOptimizer",
   public = list(
     initialize = function() {
     },
@@ -11,8 +12,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
       # FIXME:
       which_best = which_min
       j = which_best(ydt$y)
-      d$data[j,]
+      d$data[j, ]
     }
   )
 )
-
