@@ -3,7 +3,9 @@
 \name{AcqFunctionCB}
 \alias{AcqFunctionCB}
 \title{Acquisition function: Confidence Bound}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 Acquisition function: Confidence Bound
 }

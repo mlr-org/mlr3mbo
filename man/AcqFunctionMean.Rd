@@ -3,7 +3,9 @@
 \name{AcqFunctionMean}
 \alias{AcqFunctionMean}
 \title{Acquisition function: Posterior Mean}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 Acquisition function: Posterior Mean
 }

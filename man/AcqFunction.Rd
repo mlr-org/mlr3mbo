@@ -3,7 +3,9 @@
 \name{AcqFunction}
 \alias{AcqFunction}
 \title{Acquisition function}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 Based on a surrogate model, the acquisition function encodes the preference to evaluate
 a new point for evaluation.
@@ -37,7 +39,7 @@ Feasible space to optimize over.
 \section{Methods}{
 
 \itemize{
-\item set_up(param_set, task, surrogate)\cr
+\item setup(param_set, task, surrogate)\cr
 (list of \link[mlr3:Measure]{mlr3::Measure}, \code{logical(1)}, \code{logical(1)}, \code{logical(1)}, \code{logical(1)}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 \item \code{eval_batch(dt)}\cr
 \code{\link[data.table:data.table]{data.table::data.table()}} -> \code{numeric(1)}\cr
