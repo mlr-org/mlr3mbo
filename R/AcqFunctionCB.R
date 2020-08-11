@@ -21,7 +21,6 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
     },
 
     eval_dt = function(xdt) {
-      browser()
       p = self$surrogate$predict_newdata(xdt)
       res = p$mean + self$param_set$values$lambda * p$se
       # FIXME: what do we return here? do we want to see se, mean, too?
