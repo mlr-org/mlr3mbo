@@ -6,6 +6,10 @@
 \format{
 \link[R6:R6Class]{R6::R6Class} object.
 }
+\value{
+\code{data.table} \cr
+The column has to have the same name as the id of the acq_fun, because we renamed the id of the codomain
+}
 \description{
 Based on a surrogate model, the acquisition function encodes the preference to evaluate
 a new point for evaluation.

@@ -2,10 +2,11 @@
 
 export(AcqFunction)
 export(AcqFunctionCB)
-export(AcqFunctionMean)
+export(AcqFunctionEI)
+export(ProposalGenerator)
+export(ProposalGeneratorSingle)
 export(Surrogate)
 export(SurrogateLearner)
-import(R6)
 import(bbotk)
 import(checkmate)
 import(data.table)

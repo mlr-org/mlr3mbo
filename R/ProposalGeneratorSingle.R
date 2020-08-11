@@ -1,3 +1,6 @@
+#' @title Single Point Proposal Generator
+#' @export
+#' 
 ProposalGeneratorSingle = R6Class("ProposalGeneratorSingle",
   inherit = ProposalGenerator,
 
@@ -8,10 +11,10 @@ ProposalGeneratorSingle = R6Class("ProposalGeneratorSingle",
 
     initialize = function(acq_function, acq_optimizer) {
       self$acq_function = assert_r6(acq_function, "AcqFunction")
-      self$acq_optimizer = assert_r6(acq_function, "AcqOptimizer")
+      self$acq_optimizer = assert_r6(acq_optimizer, "AcqOptimizer")
     },
     
-    #' @value data.table \cr
+    #' @return data.table \cr
     #'   data.table with columns of domain$ids() and possible extras
     propose = function() {
       #FIXME Implement Optimization

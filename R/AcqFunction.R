@@ -54,7 +54,7 @@ AcqFunction = R6Class("AcqFunction",
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
     },
 
-    #' @value `data.table` \cr
+    #' @return `data.table` \cr
     #'   The column has to have the same name as the id of the acq_fun, because we renamed the id of the codomain
     eval_dt = function(xdt) {
       stop("abstract")
@@ -65,19 +65,19 @@ AcqFunction = R6Class("AcqFunction",
     setup = function(archive, direction = "same") {
 
       # here we can change the optim direction of the codomain for the acq function
-      self$codomain = generate_acq_codomain(archive, direction = direction)
+      self$codomain = generate_acq_codomain(archive, direction = direction, id = self$id)
 
       self$mult_max_to_min = ifelse(archive$codomain$tags == "minimize", 1, -1)
 
       self$search_space = archive$search_space
       
       xydt = archive$data()
-      surrogate$setup(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_ids = archive$cols_y)
+      surrogate$setup(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
     },
 
     update = function(archive) {
       xydt = archive$data()
-      surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_ids = archive$cols_y)
+      surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
     },
 
     generate_objective = function() {

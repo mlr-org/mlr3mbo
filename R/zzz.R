@@ -1,5 +1,4 @@
 #' @importFrom R6 R6Class is.R6
-#' @import R6
 #' @import checkmate
 #' @import data.table
 #' @import paradox

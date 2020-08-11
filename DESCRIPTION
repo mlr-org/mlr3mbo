@@ -57,12 +57,3 @@ LazyData: true
 NeedsCompilation: no
 Roxygen: list(markdown = TRUE, r6 = FALSE)
 RoxygenNote: 7.1.1
-Collate: 
-    'AcqFunction.R'
-    'AcqFunctionCB.R'
-    'AcqFunctionMean.R'
-    'AcqOptimizer.R'
-    'bayesopt_soo.R'
-    'parego.R'
-    'Surrogate.R'
-    'zzz.R'

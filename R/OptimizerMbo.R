@@ -9,7 +9,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
       param_classes = c("ParamDbl") # FIXME: Should depend on the surrogate?
       properties = c("single-crit") # FIXME: Should depend on the settings?
       packages = character() # Maybe not so important? Surrogate package etc?
-      super$initalize(param_set, param_classes, properties, packages)
+      super$initialize(param_set, param_classes, properties, packages)
       self$proposal_generator = assert_r6(proposal_generator, "ProposalGenerator")
     }
   ),

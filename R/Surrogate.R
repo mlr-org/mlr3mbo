@@ -21,8 +21,16 @@ Surrogate = R6Class("Surrogate",
     #' Train model with new points.
     #'
     #' @return `NULL`
-    update = function(xydt) {
+    update = function(xydt, y_cols) {
       stop("Abstract")
+    },
+
+    #' @description
+    #' Possible setup routine of the surrogate
+    #'
+    #' @return `NULL`
+    setup = function(xydt, y_cols) {
+      self$update(xydt, y_cols)
     },
 
 
