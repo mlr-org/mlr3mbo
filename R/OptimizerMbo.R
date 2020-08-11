@@ -1,7 +1,9 @@
 OptimizerMbo = R6Class("OptimizerMbo",
   inherit = bbotk::Optimizer,
-  proposal_generator = NULL,
+
   public = list(
+    proposal_generator = NULL,
+
     initialize = function(proposal_generator) {
       param_set = ParamSet$new()
       param_classes = c("ParamDbl") # FIXME: Should depend on the surrogate?
@@ -19,7 +21,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
       repeat { # iterate until we have an exception from eval_batch
         xdt = pg$propose()
         inst$eval_batch(xdt)
-        pg$update()   
+        pg$update()
       }
     },
 
