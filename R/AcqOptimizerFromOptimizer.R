@@ -3,7 +3,7 @@ AcqOptimizerFromOptimizer = R6Class("AcqOptimizerFromOptimizer",
 
   public = list(
 
-    term = NULL
+    term = NULL,
 
     initialize = function(optimizer, term) {
       private$.optimizer = assert_optimizer(optimizer)
@@ -12,12 +12,12 @@ AcqOptimizerFromOptimizer = R6Class("AcqOptimizerFromOptimizer",
 
     optimize = function(acqf) {
       assert_r6(acqf, "AcqFunction")
-      
+
       inst = OptimInstanceSingleCrit$new(objective = acqf$generate_objective,
         search_space = acqf$search_space, terminator = self$term)
 
       res = private$.optimizer$optimize(inst)
-      res$result_y
+      res$result_x
     }),
 
     private = list(
