@@ -34,9 +34,10 @@ instance$eval_batch(design)
 
 surrogate = SurrogateLearner$new(learner = lrn("regr.km"))
 acqfun = AcqFunctionCB$new(surrogate = surrogate)
+acqopt = AcqOptimizerFromOptimizer$new(OptimizerRandomSearch$new(), trm("evals", 1000))
 proposal_generator = ProposalGeneratorSingle$new(
   acq_function = acqfun, 
-  acq_optimizer = AcqOptimizer$new())
+  acq_optimizer = acqopt)
 optimizer = OptimizerMbo$new(proposal_generator = proposal_generator)
 optimizer$optimize(instance)
 
