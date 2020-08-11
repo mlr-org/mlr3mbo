@@ -10,7 +10,10 @@ We are really not done here! Very prelim code, so beware!
 
 [List of some Ideas](https://github.com/mb706/okmbo/tree/master/todo-files)
 
+## Simple Example
+
 ```{r example}
+set.seed(1)
 library(bbotk)
 library(mlr3mbo)
 library(paradox)
@@ -29,16 +32,45 @@ instance = OptimInstanceSingleCrit$new(
   terminator = terminator
 )
 
-design = generate_design_lhs(obfun$domain, 10)$data
+design = generate_design_lhs(obfun$domain, 4)$data
 instance$eval_batch(design)
 
 surrogate = SurrogateLearner$new(learner = lrn("regr.km"))
 acqfun = AcqFunctionCB$new(surrogate = surrogate)
-acqopt = AcqOptimizerFromOptimizer$new(OptimizerRandomSearch$new(), trm("evals", n_evals = 1000))
+acqopt = AcqOptimizerFromOptimizer$new(
+  opt("random_search", batch_size = 100), 
+  trm("evals", n_evals = 100)
+)
 proposal_generator = ProposalGeneratorSingle$new(
   acq_function = acqfun, 
   acq_optimizer = acqopt)
 optimizer = OptimizerMbo$new(proposal_generator = proposal_generator)
 optimizer$optimize(instance)
+plot(y~batch_nr, instance$archive$data()[batch_nr>1,], type = "b")
+```
 
+## Multipoint through constant liar
+
+```{r cl_example}
+instance = OptimInstanceSingleCrit$new(
+  objective = obfun, 
+  terminator = terminator
+)
+design = generate_design_lhs(obfun$domain, 4)$data
+instance$eval_batch(design)
+
+surrogate = SurrogateLearner$new(learner = lrn("regr.km"))
+acqfun = AcqFunctionCB$new(surrogate = surrogate)
+acqopt = AcqOptimizerFromOptimizer$new(
+  opt("random_search", batch_size = 100), 
+  trm("evals", n_evals = 100)
+)
+proposal_generator = ProposalGeneratorMpCL$new(
+  acq_function = acqfun, 
+  acq_optimizer = acqopt,
+  q = 3,
+  liar = mean)
+optimizer = OptimizerMbo$new(proposal_generator = proposal_generator)
+optimizer$optimize(instance)
+plot(y~batch_nr, instance$archive$data()[batch_nr>1,], type = "b")
 ```
