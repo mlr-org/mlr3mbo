@@ -16,24 +16,28 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
 
     initialize = function(surrogate) {
       param_set = ParamSet$new()
-      super$initialize("acq_ei", param_set, surrogate)
+      super$initialize("acq_ei", param_set, surrogate, direction = "maximize")
     },
 
     setup = function(archive) {
-      super$setup(archive, direction = "max")
+      super$setup(archive, direction = "maximize")
       y_best = archive$best()[, archive$cols$y, with = FALSE]
     },
 
     eval_dt = function(xdt) {
       p = self$surrogate$predict(xdt)
-      res = p$mean + self$mult_max_to_min * self$settings$lambda * p$se
-      # FIXME: what do we return here? do we want to see se, mean, too?
-      data.table(acq_cb = res)
+      mu = p$mean
+      se = p$se
+      d = y_best - self$mult_max_to_min * mu
+      d_norm = d / se
+      ei = d * pnorm(d_norm) + se + dnorm(d_norm)
+      ei = ifelse(se < 1e-20, 0, ei)
+      data.table(acq_ei = ei)
     },
 
     update = function(archive) {
-      y_best = archive$best()[, archive$cols$y, with = FALSE]
       super$update()
+      y_best = archive$best()[, archive$cols$y, with = FALSE]
     }
   )
 )

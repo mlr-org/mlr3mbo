@@ -1,4 +1,4 @@
-generate_acq_codomain = function(archive, direction = "same") {
+generate_acq_codomain = function(archive) {
   if (codomain$length > 1) {
     stop("not supportet yet") #FIXME: But should be
   }

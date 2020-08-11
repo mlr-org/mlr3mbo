@@ -44,11 +44,14 @@ AcqFunction = R6Class("AcqFunction",
     param_set = NULL,
     search_space = NULL,
     codomain = NULL,
+    direction = NULL, # optim direction of the acq function
+    mult_max_to_min = NULL, # optim direction of the obj function 1 for min, -1 for max
 
-    initialize = function(id, param_set, surrogate) {
+    initialize = function(id, param_set, surrogate, direction) {
       self$id = assert_string(id)
       self$param_set = assert_param_set(param_set)
       self$surrogate = assert_r6(surrogate, "Surrogate")
+      self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
     },
 
     #' @value `data.table` \cr
@@ -63,6 +66,8 @@ AcqFunction = R6Class("AcqFunction",
 
       # here we can change the optim direction of the codomain for the acq function
       self$codomain = generate_acq_codomain(archive, direction = direction)
+
+      self$mult_max_to_min = ifelse(archive$codomain$tags == "minimize", 1, -1)
 
       self$search_space = archive$search_space
       
