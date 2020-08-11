@@ -59,13 +59,10 @@ AcqFunction = R6Class("AcqFunction",
 
     
     # FIXME: Should we allow alternative search_space as additional argument?
-    setup = function(archive) {
+    setup = function(archive, direction = "same") {
 
       # here we can change the optim direction of the codomain for the acq function
-      codomain = archive$codomain$clone(deep = TRUE)
-      codomain$params[[1]]$id = self$id
-      names(codomain$params)[[1]] = self$id
-      self$codomain = codomain
+      self$codomain = generate_acq_codomain(archive, direction = direction)
 
       self$search_space = archive$search_space
       
