@@ -21,9 +21,8 @@ SurrogateLearner = R6Class("Surrogate",
     #' @description
     #' Train model with new points.
     #'
-    update = function(xdt, ydt) {
-      data = cbind(xdt, ydt)
-      task = TaskRegr$new("task", data, colnames(ydt))
+    update = function(xydt, y_cols) {
+      task = TaskRegr$new("task", xydt, y_cols)
       self$model$train(task)
     },
 
@@ -31,12 +30,12 @@ SurrogateLearner = R6Class("Surrogate",
     #' Returns mean response and standard error
     #'
     #' @return [data.table::data.table]
-    predict = function(xdt) {
+    predict_newdata = function(xdt) {
       pred = self$model$predict_newdata(newdata = xdt)
       if(self$model$predict_type == "se") {
-        data.table(y = pred$response, se = pred$se)
+        data.table(mean = pred$response, se = pred$se)
       } else {
-        data.table(y = pred$response)
+        data.table(mean = pred$response)
       }
     }
   )

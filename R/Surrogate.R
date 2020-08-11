@@ -21,7 +21,7 @@ Surrogate = R6Class("Surrogate",
     #' Train model with new points.
     #'
     #' @return `NULL`
-    update = function(xdt) {
+    update = function(xydt) {
       stop("Abstract")
     },
 
@@ -30,7 +30,7 @@ Surrogate = R6Class("Surrogate",
     #' Returns mean response and standard error
     #'
     #' @return [data.table::data.table]
-    predict = function(xdt) {
+    predict_newdata = function(xydt) {
       stop("Abstract")
     }
   )
