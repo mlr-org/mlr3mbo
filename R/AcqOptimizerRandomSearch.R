@@ -3,8 +3,11 @@ AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
   inherit = AcqOptimizer,
 
   public = list(
-    initialize = function() {
 
+    param_set = NULL
+
+    initialize = function() {
+      self$param_set = ParamSet()
     },
 
     optimize = function(acqf) {
