@@ -15,7 +15,7 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
       param_set = ParamSet$new(list(
         ParamDbl$new("lambda", lower = 0, default = 2)
       ))
-      param_set$param_vals$cb = 2
+      param_set$param_vals$lambda = 2
 
       super$initialize("acq_cb", param_set, surrogate)
     },

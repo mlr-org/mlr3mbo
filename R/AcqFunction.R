@@ -70,12 +70,12 @@ AcqFunction = R6Class("AcqFunction",
       self$search_space = archive$search_space
       
       xydt = archive$data()
-      surrogate$setup(xdt = xydt[, archive$cols_x], ydt = xydt[, archive$cols_y])
+      surrogate$setup(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_ids = archive$cols_y)
     },
 
     update = function(archive) {
       xydt = archive$data()
-      surrogate$update(xdt = xydt[, archive$cols_x], ydt = xydt[, archive$cols_y])
+      surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_ids = archive$cols_y)
     },
 
     generate_objective = function() {

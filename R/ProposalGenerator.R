@@ -1,4 +1,4 @@
-PointProposal = R6Class("PointProposal",
+ProposalGenerator = R6Class("ProposalGenerator",
   public = list(
 
     archive = NULL,

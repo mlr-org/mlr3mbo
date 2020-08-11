@@ -1,5 +1,5 @@
-PointProposalSingle = R6Class("PointProposalSingle",
-  inherit = PointProposal,
+ProposalGeneratorSingle = R6Class("ProposalGeneratorSingle",
+  inherit = ProposalGenerator,
 
   public = list(
 

@@ -21,9 +21,10 @@ AcqFunctionMean = R6Class("AcqFunctionMean", inherit = AcqFunction,
     },
 
     eval_dt = function(xdt) {
-      p = self$surrogate$predict_newdata(dt)
+      p = self$surrogate$predict_newdata(xdt)
       data.table(acq_mean = p$response)
     }
   )
 )
 
+#FIXME: Delete this AcqFun because it is CB with lambda = 0
