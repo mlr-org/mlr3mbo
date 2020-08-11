@@ -3,6 +3,7 @@
 export(AcqFunction)
 export(AcqFunctionCB)
 export(AcqFunctionEI)
+export(AcqOptimizerRandomSearch)
 export(ProposalGenerator)
 export(ProposalGeneratorSingle)
 export(Surrogate)

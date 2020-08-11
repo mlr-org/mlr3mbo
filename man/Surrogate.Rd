@@ -9,6 +9,8 @@
 \value{
 \code{NULL}
 
+\code{NULL}
+
 \link[data.table:data.table]{data.table::data.table}
 }
 \description{
@@ -17,6 +19,8 @@
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 Train model with new points.
+
+Possible setup routine of the surrogate
 
 Returns mean response and standard error
 }
