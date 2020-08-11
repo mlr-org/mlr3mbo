@@ -30,8 +30,8 @@ SurrogateLearner = R6Class("Surrogate",
     #' Returns mean response and standard error
     #'
     #' @return [data.table::data.table]
-    predict_newdata = function(xdt) {
-      pred = self$model$predict_newdata(newdata = xdt)
+    predict = function(xdt) {
+      pred = self$model$predict(newdata = xdt)
       if(self$model$predict_type == "se") {
         data.table(mean = pred$response, se = pred$se)
       } else {

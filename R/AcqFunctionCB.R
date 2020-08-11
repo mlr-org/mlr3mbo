@@ -21,7 +21,7 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
     },
 
     eval_dt = function(xdt) {
-      p = self$surrogate$predict_newdata(xdt)
+      p = self$surrogate$predict(xdt)
       res = p$mean + self$param_set$values$lambda * p$se
       # FIXME: what do we return here? do we want to see se, mean, too?
       data.table(acq_cb = res)

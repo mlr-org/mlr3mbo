@@ -14,7 +14,7 @@ ProposalGeneratorSingle = R6Class("ProposalGeneratorSingle",
     #' @value data.table \cr
     #'   data.table with columns of domain$ids() and possible extras
     propose = function() {
-      stop("abstract")
+      #FIXME Implement Optimization
     },
 
     setup = function(archive) {
