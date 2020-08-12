@@ -20,7 +20,7 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     },
 
     setup = function(archive) {
-      super$setup(archive, direction = "maximize")
+      super$setup(archive)
       y_best = archive$best()[, archive$cols$y, with = FALSE]
     },
 

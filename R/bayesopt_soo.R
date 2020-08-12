@@ -8,35 +8,35 @@
 
 # and why do we pass some tings in "control" and some separately?
 
-bayesop_soo = function(objective, learner, acqf, terminator, init_random = NULL) {
-  assert_r6(obj, "Objective")
-  assert_r6(acqf, "AcqFunction")
-  assert_r6(acqf_optim, "AcqOptimizer")
-  archive = Archive$new(objective$domain, objective$codomain)
-  sm = Surrogate$new(learner)
+bayesop_soo = function(instance, surrogate, acq_function, acq_optimizer) {
+  #FIXME maybe do not have this here, but have a general assert helper
+  assert_r6(instance, "Objective")
+  assert_r6(surrogate, "AcqFunction")
+  assert_r6(acq_function, "AcqFunction")
+  assert_r6(acq_optimizer, "AcqOptimizer")
+  assert_data_table(design, null.ok = TRUE)
 
-  # FIXME: where do we have the init design set?
-  ps = obj$domain
-  if (is.null(init_random)) {
-    # FIXME: magic constant
-    init_random = 4 * ps$length
+  #FIXME maybe do not have this here, but have a general init helper
+  if (instance$archive$n_evals == 0) {
+    design = generate_design_lhs(instance$search_space, 4 * instance$search_space$length)$data
+    instance$eval_batch(design)
   }
-  ev = Evaluator$new(obj, archive, term)
-  if (init_random > 0L) {
-    d = generate_design_random(ps, init_random)
-    ev$eval(d$data)
+
+  acq_function$setup(archive) #setup necessary to determine the domain, codomain (for opt direction) of acq function
+
+  repeat {
+    xydt = archive$data()
+    surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y) #update surrogate model with new data
+    
+    acq_function$update(archive) # NOTE: necessary becaue we have to dertermine e.g. y_best for ei, there are possible other costy calculations that we just want to do once for each state. We might not want to do these calculation in acq_function$eval_dt() because this can get called several times during the optimization.
+    # one more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design
+    # alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFun), 
+    xdt = acq_optimizer$optim$(acq_function)
+    inst$eval_batch(xdt)
+    if (inst$is_terminated || inst$terminator$is_terminated(inst$archive)) break
   }
-  acqf_optim = AcqOptimizer$new()
-  while(!terminator$is_terminated(archive)) {
-    # FIXME: maybe have a function to eval all unevalued poitbs in the archive?
-    sm$train(archive)
-    acqf$setup(ps, sm)
-    # FIXME: magic constant
-    x = acqf_optim$optimize(acqf, n_evals = 3) 
-    # FIXME: use proposer
-    ev$eval(x)
-  }
-  return(archive)
+
+  return(inst$archive)
 }
 
 

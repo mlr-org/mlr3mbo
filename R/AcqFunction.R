@@ -62,10 +62,10 @@ AcqFunction = R6Class("AcqFunction",
 
     
     # FIXME: Should we allow alternative search_space as additional argument?
-    setup = function(archive, direction = "same") {
+    setup = function(archive) {
 
       # here we can change the optim direction of the codomain for the acq function
-      self$codomain = generate_acq_codomain(archive, direction = direction, id = self$id)
+      self$codomain = generate_acq_codomain(archive, direction = self$direction, id = self$id)
 
       self$mult_max_to_min = ifelse(archive$codomain$tags == "minimize", 1, -1)
 
