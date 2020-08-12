@@ -21,14 +21,14 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
 
     setup = function(archive) {
       super$setup(archive)
-      y_best = archive$best()[, archive$cols$y, with = FALSE]
+      self$y_best = archive$best()[[archive$cols_y]]
     },
 
     eval_dt = function(xdt) {
       p = self$surrogate$predict(xdt)
       mu = p$mean
       se = p$se
-      d = y_best - self$mult_max_to_min * mu
+      d = self$y_best - self$mult_max_to_min * mu
       d_norm = d / se
       ei = d * pnorm(d_norm) + se + dnorm(d_norm)
       ei = ifelse(se < 1e-20, 0, ei)
@@ -36,8 +36,8 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     },
 
     update = function(archive) {
-      super$update()
-      y_best = archive$best()[, archive$cols$y, with = FALSE]
+      super$update(archive)
+      self$y_best = archive$best()[[archive$cols_y]]
     }
   )
 )
