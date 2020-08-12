@@ -12,9 +12,14 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
   inherit = AcqFunction, #FIXME: AcqFunctionMultiCrit?
   public = list(
 
+    ys_front = NULL,
+    ref_point = NULL,
+    eps = NULL,
+    progress = NULL,
+
     initialize = function(surrogate) { # FIXME: If we have a multi-output learner we might only want to use this learner as a single surrogate, alternatively we might want to have a SurrogateMulti class that abstracts this idea and allows both (a MultiOutput learner or multiple single learners)
       param_set = ParamSet$new(list(
-        ParamDbl$new("lambda", lower = 0, default = 1)
+        ParamDbl$new("lambda", lower = 0, default = 1),
         ParamDbl$new("eps", lower = 0, default = NULL) # for NULL, it will be calculated dynamically
       ))
       param_set$values$lambda = 1
@@ -28,9 +33,8 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
       n_obj = archive$codomain$length
       ys = archive$data()[, archive$y_cols, with = FALSE]
       ys = as.matrix(ys) %*% diag(self$mult_max_to_min)
-      minimize = rep(TRUE, n_obj)
-      self$ys_front = getNonDominatedPoints(ys, minimize = minimize)
-      self$ref_point = getMultiObjRefPoint(ys, minimize = minimize) #FIXME: We should allow a fixed value, other options are worst seen + offset = 1
+      self$ys_front = as.matrix(archive$best()) %*% diag(self$mult_max_to_min)
+      self$ref_point = apply(ys, 2L, max) + 1 #offset = 1 like in mlrMBO
 
       if (is.null(self$param_set$values$eps)) {
         c_val = 1 - 1 / 2^n_obj
@@ -38,7 +42,7 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
           seq_col(ys_front),
           function(i) {
             (max(ys_front[, i]) - min(ys_front[, i])) /
-            (ncol(ys_front) + c_val * (self$instance$terminator$param_set$values$n_evals - archive$n_evals)) #FIXME: Need progress here!
+            (ncol(ys_front) + c_val * self$progress) #FIXME: Need progress here! originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
           }
         )
         self$eps = eps

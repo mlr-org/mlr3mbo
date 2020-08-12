@@ -4,7 +4,7 @@
 #'
 #' @export
 SurrogateMultiCrit = R6Class("SurrogateMultiCrit",
-  inherit = Surrogate
+  inherit = Surrogate,
 
   public = list(
     #' @description

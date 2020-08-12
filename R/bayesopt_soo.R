@@ -31,7 +31,7 @@ bayesop_soo = function(instance, surrogate, acq_function, acq_optimizer) {
     acq_function$update(archive) # NOTE: necessary becaue we have to dertermine e.g. y_best for ei, there are possible other costy calculations that we just want to do once for each state. We might not want to do these calculation in acq_function$eval_dt() because this can get called several times during the optimization.
     # one more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design
     # alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFun), 
-    xdt = acq_optimizer$optim$(acq_function)
+    xdt = acq_optimizer$optim(acq_function)
     inst$eval_batch(xdt)
     if (inst$is_terminated || inst$terminator$is_terminated(inst$archive)) break
   }

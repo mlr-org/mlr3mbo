@@ -4,7 +4,7 @@ AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
 
   public = list(
 
-    param_set = NULL
+    param_set = NULL,
 
     initialize = function() {
       self$param_set = ParamSet()
