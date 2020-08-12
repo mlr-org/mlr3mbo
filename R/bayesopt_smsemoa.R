@@ -2,7 +2,7 @@
 
 bayesop_smsemoa = function(instance, surrogate, acq_function, acq_optimizer) {
   #FIXME maybe do not have this here, but have a general assert helper
-  assert_r6(instance, "OptimInstance")
+  assert_r6(instance, "OptimInstanceMultiCrit")
   assert_r6(surrogate, "SurrogateMultiCrit")
   assert_r6(acq_function, "AcqFunctionSmsEmoa")
   assert_r6(acq_optimizer, "AcqOptimizer")
