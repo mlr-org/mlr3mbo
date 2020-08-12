@@ -20,10 +20,10 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
     initialize = function(surrogate) { # FIXME: If we have a multi-output learner we might only want to use this learner as a single surrogate, alternatively we might want to have a SurrogateMulti class that abstracts this idea and allows both (a MultiOutput learner or multiple single learners)
       param_set = ParamSet$new(list(
         ParamDbl$new("lambda", lower = 0, default = 1),
-        ParamDbl$new("eps", lower = 0, default = NULL) # for NULL, it will be calculated dynamically
+        ParamDbl$new("eps", lower = 0, default = NULL, special_vals = list(NULL)) # for NULL, it will be calculated dynamically
       ))
       param_set$values$lambda = 1
-      assert_list(surrogate, types = "SurrogateMultiCrit")
+      assert_r6(surrogate, "SurrogateMultiCrit")
       super$initialize("acq_sms", param_set, surrogate = surrogate, direction = "maximize")
     },
 

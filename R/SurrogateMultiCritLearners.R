@@ -20,7 +20,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
 
     update = function(xydt, y_cols) {
       tasks = lapply(y_cols, function(y_col) TaskRegr$new(id = "surrogate_task", backend = xydt, target = y_col))
-      mapply(function(model, task) model$train(task), self$model)
+      mapply(function(model, task) model$train(task), self$model, tasks)
       names(self$model) = y_cols
       invisible(NULL)
     },

@@ -2,11 +2,10 @@
 
 bayesop_smsemoa = function(instance, surrogate, acq_function, acq_optimizer) {
   #FIXME maybe do not have this here, but have a general assert helper
-  assert_r6(instance, "Instance")
+  assert_r6(instance, "OptimInstance")
   assert_r6(surrogate, "SurrogateMultiCrit")
   assert_r6(acq_function, "AcqFunctionSmsEmoa")
   assert_r6(acq_optimizer, "AcqOptimizer")
-  assert_data_table(design, null.ok = TRUE)
 
   archive = instance$archive
   #FIXME maybe do not have this here, but have a general init helper
@@ -15,7 +14,7 @@ bayesop_smsemoa = function(instance, surrogate, acq_function, acq_optimizer) {
     instance$eval_batch(design)
   }
 
-  acq_function$setup() #setup necessary to determine the domain, codomain (for opt direction) of acq function
+  acq_function$setup(archive) #setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
     xydt = archive$data()
@@ -48,17 +47,17 @@ if (FALSE) {
     ParamDbl$new("y1", tags = "minimize"),
     ParamDbl$new("y2", tags = "maximize")
   ))
-  OBJ_2D_2D = ObjectiveRFun$new(fun = FUN_2D_2D, domain = PS_2D,
+  obfun = ObjectiveRFun$new(fun = FUN_2D_2D, domain = PS_2D,
     codomain = FUN_2D_2D_CODOMAIN, properties = "multi-crit")
 
   terminator = trm("evals", n_evals = 20)
 
-  instance = OptimInstanceSingleCrit$new(
+  instance = OptimInstanceMultiCrit$new(
     objective = obfun, 
     terminator = terminator
   )
 
-  surrogate = SurrogateLearnerMultiCritLearners$new(learners = replicate(2, lrn("regr.km")))
+  surrogate = SurrogateMultiCritLearners$new(learners = replicate(2, lrn("regr.km")))
   acqfun = AcqFunctionSmsEmoa$new(surrogate = surrogate)
   acqopt = AcqOptimizerRandomSearch$new()
 
