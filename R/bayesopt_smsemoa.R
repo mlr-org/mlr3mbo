@@ -14,19 +14,20 @@ bayesop_smsemoa = function(instance, surrogate, acq_function, acq_optimizer) {
     instance$eval_batch(design)
   }
 
+  acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
   acq_function$setup(archive) #setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
     xydt = archive$data()
     surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y) #update surrogate model with new data
-    acq_function$update(archive)
     acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
-    xdt = acq_optimizer$optim(acq_function)
-    inst$eval_batch(xdt)
-    if (inst$is_terminated || inst$terminator$is_terminated(inst$archive)) break
+    acq_function$update(archive)
+    xdt = acq_optimizer$optimize(acq_function)
+    instance$eval_batch(xdt)
+    if (instance$is_terminated || instance$terminator$is_terminated(archive)) break
   }
 
-  return(inst$archive)
+  return(instance$archive)
 }
 
 if (FALSE) {
@@ -62,6 +63,11 @@ if (FALSE) {
   acqopt = AcqOptimizerRandomSearch$new()
 
   bayesop_smsemoa(instance, surrogate, acqfun, acqopt)
+
+  archdata = instance$archive$data()
+  library(ggplot2)
+  g = ggplot(archdata, aes_string(x = "y1", y = "y2", color = "batch_nr"))
+  g + geom_point()
 }
 
 

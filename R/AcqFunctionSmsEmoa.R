@@ -29,26 +29,7 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
 
     setup = function(archive) {
       super$setup(archive)
-
-      n_obj = archive$codomain$length
-      ys = archive$data()[, archive$y_cols, with = FALSE]
-      ys = as.matrix(ys) %*% diag(self$mult_max_to_min)
-      self$ys_front = as.matrix(archive$best()) %*% diag(self$mult_max_to_min)
-      self$ref_point = apply(ys, 2L, max) + 1 #offset = 1 like in mlrMBO
-
-      if (is.null(self$param_set$values$eps)) {
-        c_val = 1 - 1 / 2^n_obj
-        eps = map_dbl(
-          seq_col(ys_front),
-          function(i) {
-            (max(ys_front[, i]) - min(ys_front[, i])) /
-            (ncol(ys_front) + c_val * self$progress) #FIXME: Need progress here! originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
-          }
-        )
-        self$eps = eps
-      } else {
-        self$eps = self$param_set$values$eps
-      }
+      private$.prepare(archive)
     },
 
     eval_dt = function(xdt) {
@@ -64,6 +45,31 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
 
     update = function(archive) {
       super$update(archive)
+      private$.prepare(archive)
+    }
+  ),
+
+  private = list(
+    .prepare = function(archive) {
+      n_obj = archive$codomain$length
+      ys = archive$data()[, archive$cols_y, with = FALSE]
+      ys = as.matrix(ys) %*% diag(self$mult_max_to_min)
+      self$ys_front = as.matrix(archive$best()[, archive$cols_y, with = FALSE]) %*% diag(self$mult_max_to_min)
+      self$ref_point = apply(ys, 2L, max) + 1 #offset = 1 like in mlrMBO
+
+      if (is.null(self$param_set$values$eps)) {
+        c_val = 1 - 1 / 2^n_obj
+        eps = map_dbl(
+          seq_col(self$ys_front),
+          function(i) {
+            (max(self$ys_front[, i]) - min(self$ys_front[, i])) /
+            (ncol(self$ys_front) + c_val * self$progress) #FIXME: Need progress here! originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
+          }
+        )
+        self$eps = eps
+      } else {
+        self$eps = self$param_set$values$eps
+      }
     }
   )
 )
