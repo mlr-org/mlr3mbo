@@ -35,17 +35,13 @@ instance = OptimInstanceSingleCrit$new(
 design = generate_design_lhs(obfun$domain, 4)$data
 instance$eval_batch(design)
 
-surrogate = SurrogateLearner$new(learner = lrn("regr.km"))
+surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
 acqfun = AcqFunctionCB$new(surrogate = surrogate)
 acqopt = AcqOptimizerFromOptimizer$new(
   opt("random_search", batch_size = 100), 
   trm("evals", n_evals = 100)
 )
-proposal_generator = ProposalGeneratorSingle$new(
-  acq_function = acqfun, 
-  acq_optimizer = acqopt)
-optimizer = OptimizerMbo$new(proposal_generator = proposal_generator)
-optimizer$optimize(instance)
+bayesopt_soo(instance, acq_function, acq_optimizer)
 plot(y~batch_nr, instance$archive$data()[batch_nr>1,], type = "b")
 ```
 
@@ -59,18 +55,12 @@ instance = OptimInstanceSingleCrit$new(
 design = generate_design_lhs(obfun$domain, 4)$data
 instance$eval_batch(design)
 
-surrogate = SurrogateLearner$new(learner = lrn("regr.km"))
+surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
 acqfun = AcqFunctionCB$new(surrogate = surrogate)
 acqopt = AcqOptimizerFromOptimizer$new(
   opt("random_search", batch_size = 100), 
   trm("evals", n_evals = 100)
 )
-proposal_generator = ProposalGeneratorMpCL$new(
-  acq_function = acqfun, 
-  acq_optimizer = acqopt,
-  q = 3,
-  liar = mean)
-optimizer = OptimizerMbo$new(proposal_generator = proposal_generator)
-optimizer$optimize(instance)
+bayesopt_mpcl(instance, acq_function, acq_optimizer)
 plot(y~batch_nr, instance$archive$data()[batch_nr>1,], type = "b")
 ```
