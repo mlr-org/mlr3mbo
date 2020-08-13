@@ -1,25 +1,32 @@
-#' @title Acquisition function: Expected Improvement
+#' @title Acquisition Function Expected Improvement
 #'
-#' @usage NULL
-#' @format [R6::R6Class] object.
+#' @description
+#' Expected Improvement.
 #'
-#' @section Construction:
-#'
-#' @section Fields: See [AcqFunction]
-#' @section Methods: See [AcqFunction]
 #' @export
 AcqFunctionEI = R6Class("AcqFunctionEI",
   inherit = AcqFunction,
   public = list(
 
-    y_best = NULL, 
+    #' @field y_best (`numeric()`).
+    y_best = NULL,
 
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param surrogate [SurrogateSingleCrit].
     initialize = function(surrogate) {
       param_set = ParamSet$new()
       assert_r6(surrogate, "SurrogateSingleCrit")
       super$initialize("acq_ei", param_set, surrogate, direction = "maximize")
     },
 
+    #' @description
+    #' Evaluates all input values in `xdt`.
+    #'
+    #' @param xdt [data.table::data.table]
+    #'
+    #' @return `data.table`
     eval_dt = function(xdt) {
       p = self$surrogate$predict(xdt)
       mu = p$mean
@@ -31,6 +38,10 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
       data.table(acq_ei = ei)
     },
 
+    #' @description
+    #' Updates acquisition function and sets `y_best`.
+    #'
+    #' @param archive [bbotk::Archive]
     update = function(archive) {
       super$update(archive)
       self$y_best = archive$best()[[archive$cols_y]]

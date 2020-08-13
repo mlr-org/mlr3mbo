@@ -1,4 +1,4 @@
-#' @title Acquisition function
+#' @title Acquisition Function
 #'
 #' @description
 #' Based on a surrogate model, the acquisition function encodes the preference to evaluate

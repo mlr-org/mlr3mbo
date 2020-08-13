@@ -1,22 +1,30 @@
-#' @title Acquisition function: SMS EMOA
+#' @title Acquisition Function SMS EMOA
 #'
-#' @usage NULL
-#' @format [R6::R6Class] object.
+#' @description
+#' S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
 #'
-#' @section Construction:
-#'
-#' @section Fields: See [AcqFunction]
-#' @section Methods: See [AcqFunction]
 #' @export
 AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
   inherit = AcqFunction, #FIXME: AcqFunctionMultiCrit?
+
   public = list(
 
+    #' @field ys_front
     ys_front = NULL,
+
+    #' @field ref_point
     ref_point = NULL,
+
+    #' @field eps
     eps = NULL,
+
+    #' @field progress
     progress = NULL,
 
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param surrogate [SurrogateMultiCrit].
     initialize = function(surrogate) { # FIXME: If we have a multi-output learner we might only want to use this learner as a single surrogate, alternatively we might want to have a SurrogateMulti class that abstracts this idea and allows both (a MultiOutput learner or multiple single learners)
       param_set = ParamSet$new(list(
         ParamDbl$new("lambda", lower = 0, default = 1),
@@ -27,6 +35,12 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
       super$initialize("acq_sms", param_set, surrogate = surrogate, direction = "maximize")
     },
 
+    #' @description
+    #' Evaluates all input values in `xdt`.
+    #'
+    #' @param xdt [data.table::data.table].
+    #'
+    #' @return [data.table::data.table]
     eval_dt = function(xdt) {
       ps = self$surrogate$predict(xdt)
       means = map_dtc(ps, "mean")
@@ -38,6 +52,10 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
       data.table(acq_sms = sms)
     },
 
+    #' @description
+    #' Updates acquisition function and sets `$y_best`.
+    #'
+    #' @param archive [bbotk::Archive].
     update = function(archive) {
       super$update(archive)
 
