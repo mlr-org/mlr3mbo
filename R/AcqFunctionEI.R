@@ -19,11 +19,6 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
       super$initialize("acq_ei", param_set, surrogate, direction = "maximize")
     },
 
-    setup = function(archive) {
-      super$setup(archive)
-      self$y_best = archive$best()[[archive$cols_y]]
-    },
-
     eval_dt = function(xdt) {
       p = self$surrogate$predict(xdt)
       mu = p$mean

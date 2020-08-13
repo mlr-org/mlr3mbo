@@ -27,11 +27,6 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
       super$initialize("acq_sms", param_set, surrogate = surrogate, direction = "maximize")
     },
 
-    setup = function(archive) {
-      super$setup(archive)
-      private$.prepare(archive)
-    },
-
     eval_dt = function(xdt) {
       ps = self$surrogate$predict(xdt)
       means = map_dtc(ps, "mean")
@@ -45,12 +40,7 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
 
     update = function(archive) {
       super$update(archive)
-      private$.prepare(archive)
-    }
-  ),
 
-  private = list(
-    .prepare = function(archive) {
       n_obj = archive$codomain$length
       ys = archive$data()[, archive$cols_y, with = FALSE]
       ys = as.matrix(ys) %*% diag(self$mult_max_to_min)
