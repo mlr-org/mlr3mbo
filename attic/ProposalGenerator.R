@@ -1,17 +1,26 @@
-ProposalGenerator = R6Class(
-  "ProposalGenerator",
-  
+#' @title Proposal Generator Base Class
+#' @export
+ProposalGenerator = R6Class("ProposalGenerator",
   public = list(
-    # public member
+
+    # acq_function, acq_optimizer are no member because we can have proposal generators with multiple acq_functions or none at all
+
+    archive = NULL,
     
-    # constructor
-    initialize = function() {
-      stop("Not implemented.")
+    #' @return data.table \cr
+    #'   data.table with columns of domain$ids() and possible extras
+    propose = function() {
+      stop("abstract")
     },
-    
-    # value: data.table with column x (plus additional stuff in additional columns?)
-    generate = function(opt_state) {
-      stop("Not implemented.")
+
+    setup = function(archive) {
+      self$archive = assert_r6(archive, "Archive")
+    },
+
+    update = function() {
+      stop("abstract")
     }
+
+
   )
 )
