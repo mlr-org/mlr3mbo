@@ -18,7 +18,7 @@ AcqOptimizerFromOptimizer = R6Class("AcqOptimizerFromOptimizer",
     #'
     #' @param optimizer [bbotk::Optimizer].
     #' @param terminator [bbotk::Terminator].
-    initialize = function(optimizer, term) {
+    initialize = function(optimizer, terminator) {
       private$.optimizer = assert_optimizer(optimizer)
       self$terminator = assert_r6(terminator, "Terminator")
     },

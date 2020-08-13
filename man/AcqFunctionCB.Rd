@@ -2,22 +2,89 @@
 % Please edit documentation in R/AcqFunctionCB.R
 \name{AcqFunctionCB}
 \alias{AcqFunctionCB}
-\title{Acquisition function: Confidence Bound}
-\format{
-\link[R6:R6Class]{R6::R6Class} object.
-}
+\title{Acquisition Function Confidence Bound}
 \description{
-Acquisition function: Confidence Bound
+Confidence Bound.
 }
-\section{Construction}{
+\section{Parameters}{
 
+\describe{
+\item{\code{lambda}}{\code{numeric(1)}}.
+}
 }
 
-\section{Fields}{
- See \link{AcqFunction}
+\section{Super class}{
+\code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionCB}
 }
-
 \section{Methods}{
- See \link{AcqFunction}
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{AcqFunctionCB$new()}}
+\item \href{#method-eval_dt}{\code{AcqFunctionCB$eval_dt()}}
+\item \href{#method-clone}{\code{AcqFunctionCB$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="generate_objective">}\href{../../mlr3mbo/html/AcqFunction.html#method-generate_objective}{\code{mlr3mbo::AcqFunction$generate_objective()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup">}\href{../../mlr3mbo/html/AcqFunction.html#method-setup}{\code{mlr3mbo::AcqFunction$setup()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="update">}\href{../../mlr3mbo/html/AcqFunction.html#method-update}{\code{mlr3mbo::AcqFunction$update()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+Creates a new instance of this \link[R6:R6Class]{R6} class.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionCB$new(surrogate)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{surrogate}}{\link{SurrogateSingleCrit}.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-eval_dt"></a>}}
+\if{latex}{\out{\hypertarget{method-eval_dt}{}}}
+\subsection{Method \code{eval_dt()}}{
+Evaluates all input values in \code{xdt}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionCB$eval_dt(xdt)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionCB$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

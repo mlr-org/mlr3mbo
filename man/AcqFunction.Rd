@@ -2,52 +2,148 @@
 % Please edit documentation in R/AcqFunction.R
 \name{AcqFunction}
 \alias{AcqFunction}
-\title{Acquisition function}
-\format{
-\link[R6:R6Class]{R6::R6Class} object.
-}
-\value{
-\code{data.table} \cr
-The column has to have the same name as the id of the acq_fun, because we renamed the id of the codomain
-}
+\title{Acquisition Function}
 \description{
 Based on a surrogate model, the acquisition function encodes the preference to evaluate
 a new point for evaluation.
 }
-\section{Construction}{
-\preformatted{acqf = AcquisitionFunction(id, opt_dir, settings, requirements)
-}
-\itemize{
-\item \code{id} :: \code{character(1)}\cr
-Short name of the criterion.
-\item \code{opt_dir} :: \code{character(1)}\cr
-Should the criterion be minimized of maximized?
-Can be "min", "max" or "obj", where the latter means that the same direction
-\item \code{settings} :: named \code{list}\cr
-Control settings and constants.
-as specified in the objective function is taken.
-\item requirements :: named \code{list}\cr
-}
-}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{id}}{(\code{character(1)}).}
 
-\section{Fields}{
+\item{\code{surrogate}}{\link{Surrogate}.}
 
-\itemize{
-\item \code{surrogate} :: \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}`\cr
-\item \code{param_set} :: \link[paradox:ParamSet]{paradox::ParamSet}`\cr
-Feasible space to optimize over.
-\item \code{task} :: \link[mlr3:Task]{mlr3::Task}`\cr
-}
-}
+\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
 
+\item{\code{search_space}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
+
+\item{\code{codomain}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
+
+\item{\code{direction}}{(\code{character(1)}).}
+
+\item{\code{mult_max_to_min}}{(\code{numeric(1)}).}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
-
+\subsection{Public methods}{
 \itemize{
-\item setup(param_set, task, surrogate)\cr
-(list of \link[mlr3:Measure]{mlr3::Measure}, \code{logical(1)}, \code{logical(1)}, \code{logical(1)}, \code{logical(1)}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
-\item \code{eval_batch(dt)}\cr
-\code{\link[data.table:data.table]{data.table::data.table()}} -> \code{numeric(1)}\cr
-Evaluates all design points in \code{dt} with the acquisition function where each points is a row, and columns are scalar parameters.
+\item \href{#method-new}{\code{AcqFunction$new()}}
+\item \href{#method-eval_dt}{\code{AcqFunction$eval_dt()}}
+\item \href{#method-setup}{\code{AcqFunction$setup()}}
+\item \href{#method-update}{\code{AcqFunction$update()}}
+\item \href{#method-generate_objective}{\code{AcqFunction$generate_objective()}}
+\item \href{#method-clone}{\code{AcqFunction$clone()}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+Creates a new instance of this \link[R6:R6Class]{R6} class.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(id, param_set, surrogate, direction)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)}).}
+
+\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
+
+\item{\code{surrogate}}{\link{Surrogate}.}
+
+\item{\code{direction}}{(\code{character(1)}).}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-eval_dt"></a>}}
+\if{latex}{\out{\hypertarget{method-eval_dt}{}}}
+\subsection{Method \code{eval_dt()}}{
+Evaluates all input values in \code{xdt}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$eval_dt(xdt)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} \cr
+The column has to have the same name as the id of the acq_fun, because we
+renamed the id of the codomain
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setup"></a>}}
+\if{latex}{\out{\hypertarget{method-setup}{}}}
+\subsection{Method \code{setup()}}{
+Sets up the acquisition function
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$setup(archive)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{archive}}{\link[bbotk:Archive]{bbotk::Archive}.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-update"></a>}}
+\if{latex}{\out{\hypertarget{method-update}{}}}
+\subsection{Method \code{update()}}{
+Update the acquisition function
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$update(archive)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{archive}}{\link[bbotk:Archive]{bbotk::Archive}.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-generate_objective"></a>}}
+\if{latex}{\out{\hypertarget{method-generate_objective}{}}}
+\subsection{Method \code{generate_objective()}}{
+Generates an objective function for \link[bbotk:Optimizer]{bbotk::Optimizer}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$generate_objective()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\link[bbotk:ObjectiveRFunDt]{bbotk::ObjectiveRFunDt}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

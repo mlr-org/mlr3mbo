@@ -20,7 +20,7 @@ AcqFunction = R6Class("AcqFunction",
     #' @field search_space ([paradox::ParamSet]).
     search_space = NULL,
 
-    #' @field search_space ([paradox::ParamSet]).
+    #' @field codomain ([paradox::ParamSet]).
     codomain = NULL,
 
     #' @field direction (`character(1)`).
@@ -73,6 +73,10 @@ AcqFunction = R6Class("AcqFunction",
       surrogate$setup(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
     },
 
+    #' @description
+    #' Update the acquisition function
+    #'
+    #' @param archive [bbotk::Archive].
     update = function(archive) {
       # it's okay to do nothing here
     },

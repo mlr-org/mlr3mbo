@@ -9,16 +9,16 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
 
   public = list(
 
-    #' @field ys_front
+    #' @field ys_front (`matrix()`).
     ys_front = NULL,
 
-    #' @field ref_point
+    #' @field ref_point (`numeric()`).
     ref_point = NULL,
 
-    #' @field eps
+    #' @field eps (`numeric()`).
     eps = NULL,
 
-    #' @field progress
+    #' @field progress (`numeric()`).
     progress = NULL,
 
     #' @description
