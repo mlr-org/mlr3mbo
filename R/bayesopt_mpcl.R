@@ -5,7 +5,7 @@ bayesop_mpcl = function(instance, surrogate, acq_function, acq_optimizer, liar, 
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")
   assert_function(liar)
-  assert_int(q)
+  assert_int(q, lower = 2L)
 
   archive = instance$archive
 
@@ -20,15 +20,17 @@ bayesop_mpcl = function(instance, surrogate, acq_function, acq_optimizer, liar, 
   repeat {
     proposals = data.table()
     temp_archive = archive$clone(deep = TRUE)
-    temp_acq_function = acq_function$clone(deep = TRUE)
+    temp_acq_function = acq_function$clone(deep = TRUE) # also generates clone of the surrogate, should be the only reason why we clone the acqfun
     lie = data.table(liar(archive$data()[[archive$cols_y]]))
     colnames(lie) = archive$cols_y
 
-    for(i in seq_len(q)) {
-      xdt = acq_optimizer$optimize(temp_acq_function) # temp_acq_fuunction?
+    for (i in seq_len(q)) {
+      xdt = acq_optimizer$optimize(temp_acq_function) 
       proposals = rbind(proposals, xdt)
       temp_archive$add_evals(xdt, transform_xdt_to_xss(xdt, temp_archive$search_space), lie)
       temp_acq_function$update(temp_archive)
+      xydt = archive$data()
+      temp_acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
     }
 
     instance$eval_batch(proposals)
@@ -68,6 +70,16 @@ if (FALSE) {
     acq_optimizer = acqopt)
 
   bayesop_mpcl(instance, surrogate, acqfun, acqopt, mean, 2)
+  data = instance$archive$data()
+  plot(y~batch_nr, data[batch_nr>1,], type = "b")
+
+  xgrid = generate_design_grid(instance$search_space, 100)$data
+  preds = cbind(xgrid, surrogate$predict(xgrid))
+  library(ggplot2)
+  g = ggplot(data, aes(x = x, y = y, col = batch_nr))
+  g = g + geom_line() + geom_point()
+  g = g + geom_line(data = preds, aes(x = x, y = mean), col = "blue")
+  g
 }
 
 
