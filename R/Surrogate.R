@@ -38,7 +38,7 @@ Surrogate = R6Class("Surrogate",
     #' Returns mean response and standard error
     #'
     #' @return [data.table::data.table]
-    predict = function(xydt) {
+    predict = function(xdt) {
       stop("Abstract")
     }
   )
