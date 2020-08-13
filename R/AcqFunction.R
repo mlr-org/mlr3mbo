@@ -74,8 +74,7 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     update = function(archive) {
-      xydt = archive$data()
-      surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
+      # it's okay to do nothing here
     },
 
     #' @description

@@ -3,8 +3,8 @@
 #' @description
 #'
 #' @export
-SurrogateLearner = R6Class("Surrogate",
-  inherit = Surrogate,
+SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
+  inherit = SurrogateSingleCrit,
   public = list(
 
     #' @description

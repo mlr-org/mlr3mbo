@@ -9,7 +9,7 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
         ParamDbl$new("lambda", lower = 0, default = 2)
       ))
       param_set$values$lambda = 2
-
+      assert_r6(surrogate, "SurrogateSingleCrit")
       super$initialize("acq_cb", param_set, surrogate, direction = "same")
     },
 

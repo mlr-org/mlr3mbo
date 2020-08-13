@@ -1,7 +1,6 @@
-bayesop_parego = function(instance, surrogate, acq_function, acq_optimizer, q = 1, s = 100, rho = 0.05) {
+bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100, rho = 0.05) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
-  assert_r6(surrogate, "Surrogate") #FIXME: Assert SurrogateSingleCrit?
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")
   assert_int(q, lower = 1)
@@ -18,7 +17,7 @@ bayesop_parego = function(instance, surrogate, acq_function, acq_optimizer, q = 
   # - only setup with domain, codomain, ycolumns (not cool because often we will pass things we do not need and blow up signature)
   # - Implement ArchiveScalarized: cool?
   # - ?
-  #manual fix:
+  #manual fix: #FIXMEL Write ParEGO Infill Crit?
   acq_function$search_space = instance$search_space
   acq_function$mult_max_to_min = ifelse(archive$codomain$tags == "minimize", 1, -1) 
   acq_function$codomain = generate_acq_codomain(archive, direction = "minimize", id = acq_function$id)
@@ -38,7 +37,7 @@ bayesop_parego = function(instance, surrogate, acq_function, acq_optimizer, q = 
       
       mult = Map('*', ydt, lambda)
 
-      surrogate$update(xydt = cbind(xdt, y_scal = do.call('+', mult)), y_cols = "y_scal") #update surrogate model with new data
+      acq_function$surrogate$update(xydt = cbind(xdt, y_scal = do.call('+', mult)), y_cols = "y_scal") #update surrogate model with new data
       #acq_function$update(archive) #FIXME e.g. EI will fail w/o update
       acq_optimizer$optimize(acq_function)  
     })
@@ -78,11 +77,11 @@ if (FALSE) {
     terminator = terminator
   )
 
-  surrogate = SurrogateLearner$new(learner =lrn("regr.km"))
+  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
   acqfun = AcqFunctionCB$new(surrogate = surrogate)
   acqopt = AcqOptimizerRandomSearch$new()
 
-  bayesop_parego(instance, surrogate, acqfun, acqopt, q = 2)
+  bayesop_parego(instance, acqfun, acqopt, q = 2)
 
   archdata = instance$archive$data()
   library(ggplot2)

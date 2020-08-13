@@ -8,10 +8,9 @@
 
 # and why do we pass some tings in "control" and some separately?
 
-bayesop_soo = function(instance, surrogate, acq_function, acq_optimizer) {
+bayesop_soo = function(instance, acq_function, acq_optimizer) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceSingleCrit")
-  assert_r6(surrogate, "Surrogate")
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")
   archive = instance$archive
@@ -26,7 +25,7 @@ bayesop_soo = function(instance, surrogate, acq_function, acq_optimizer) {
 
   repeat {
     xydt = archive$data()
-    surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y) #update surrogate model with new data
+    acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y) #update surrogate model with new data
     
     acq_function$update(archive) # NOTE: necessary becaue we have to dertermine e.g. y_best for ei, there are possible other costy calculations that we just want to do once for each state. We might not want to do these calculation in acq_function$eval_dt() because this can get called several times during the optimization.
     # one more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design
@@ -59,14 +58,11 @@ if (FALSE) {
     terminator = terminator
   )
 
-  surrogate = SurrogateLearner$new(learner = lrn("regr.km"))
+  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
   acqfun = AcqFunctionEI$new(surrogate = surrogate)
   acqopt = AcqOptimizerRandomSearch$new()
-  proposal_generator = ProposalGeneratorSingle$new(
-    acq_function = acqfun, 
-    acq_optimizer = acqopt)
 
-  bayesop_soo(instance, surrogate, acqfun, acqopt)
+  bayesop_soo(instance, acqfun, acqopt)
 }
 
 

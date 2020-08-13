@@ -16,12 +16,8 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
 
     initialize = function(surrogate) {
       param_set = ParamSet$new()
+      assert_r6(surrogate, "SurrogateSingleCrit")
       super$initialize("acq_ei", param_set, surrogate, direction = "maximize")
-    },
-
-    setup = function(archive) {
-      super$setup(archive)
-      self$y_best = archive$best()[[archive$cols_y]]
     },
 
     eval_dt = function(xdt) {

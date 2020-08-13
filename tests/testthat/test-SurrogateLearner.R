@@ -7,7 +7,7 @@ test_that("SurrogateLearner works", {
   xdt = data.table(x1 = seq(from = 1, to = 10, by = 0.5))
   ydt = data.table(y = fun(xdt$x1))
 
-  sl = SurrogateLearner$new(lrn("regr.ranger"))
+  sl = SurrogateSingleCritLearner$new(lrn("regr.ranger"))
   expect_silent(sl$update(xdt, ydt))
 
   new_xdt = data.table(x1 = 0.7)

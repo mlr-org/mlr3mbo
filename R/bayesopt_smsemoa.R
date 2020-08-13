@@ -1,9 +1,8 @@
 
 
-bayesop_smsemoa = function(instance, surrogate, acq_function, acq_optimizer) {
+bayesop_smsemoa = function(instance, acq_function, acq_optimizer) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
-  assert_r6(surrogate, "SurrogateMultiCrit")
   assert_r6(acq_function, "AcqFunctionSmsEmoa")
   assert_r6(acq_optimizer, "AcqOptimizer")
 
@@ -19,7 +18,7 @@ bayesop_smsemoa = function(instance, surrogate, acq_function, acq_optimizer) {
 
   repeat {
     xydt = archive$data()
-    surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y) #update surrogate model with new data
+    acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y) #update surrogate model with new data
     acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
     acq_function$update(archive)
     xdt = acq_optimizer$optimize(acq_function)
@@ -62,7 +61,7 @@ if (FALSE) {
   acqfun = AcqFunctionSmsEmoa$new(surrogate = surrogate)
   acqopt = AcqOptimizerRandomSearch$new()
 
-  bayesop_smsemoa(instance, surrogate, acqfun, acqopt)
+  bayesop_smsemoa(instance, acqfun, acqopt)
 
   archdata = instance$archive$data()
   library(ggplot2)
