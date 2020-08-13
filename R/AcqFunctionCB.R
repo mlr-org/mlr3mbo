@@ -1,12 +1,5 @@
 #' @title Acquisition function: Confidence Bound
 #'
-#' @usage NULL
-#' @format [R6::R6Class] object.
-#'
-#' @section Construction:
-#'
-#' @section Fields: See [AcqFunction]
-#' @section Methods: See [AcqFunction]
 #' @export
 AcqFunctionCB = R6Class("AcqFunctionCB",
   inherit = AcqFunction,
