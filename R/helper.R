@@ -1,10 +1,10 @@
-generate_acq_codomain = function(archive, id, direction = "same") {
+generate_acq_codomain = function(codomain, id, direction = "same") {
   assert_choice(direction, c("same", "minimize", "maximize"))
   if (direction == "same") {
-    if (archive$codomain$length > 1) {
+    if (codomain$length > 1) {
       stop("not supportet yet") #FIXME: But should be
     }
-    tags = archive$codomain$params[[1]]$tags
+    tags = codomain$params[[1]]$tags
   } else {
     tags = direction
   }
@@ -12,4 +12,8 @@ generate_acq_codomain = function(archive, id, direction = "same") {
     ParamDbl$new(id, tags = direction)
   ))
   return(codomain)
+}
+
+mult_max_to_min = function(codomain) {
+  ifelse(codomain$tags == "minimize", 1, -1)
 }

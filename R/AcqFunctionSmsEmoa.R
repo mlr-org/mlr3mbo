@@ -45,7 +45,7 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
       ps = self$surrogate$predict(xdt)
       means = map_dtc(ps, "mean")
       ses = map_dtc(ps, "se")
-      cbs = as.matrix(means) %*% diag(self$mult_max_to_min) - self$param_set$values$lambda * as.matrix(ses)
+      cbs = as.matrix(means) %*% diag(self$surrogate_max_to_min) - self$param_set$values$lambda * as.matrix(ses)
       # allocate mem for adding points to front for HV calculation in C
       front2 = t(rbind(self$ys_front, 0))
       sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$eps, self$ref_point) #FIXME: Copy from mlrMBO
@@ -61,8 +61,8 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
 
       n_obj = archive$codomain$length
       ys = archive$data()[, archive$cols_y, with = FALSE]
-      ys = as.matrix(ys) %*% diag(self$mult_max_to_min)
-      self$ys_front = as.matrix(archive$best()[, archive$cols_y, with = FALSE]) %*% diag(self$mult_max_to_min)
+      ys = as.matrix(ys) %*% diag(self$surrogate_max_to_min)
+      self$ys_front = as.matrix(archive$best()[, archive$cols_y, with = FALSE]) %*% diag(self$surrogate_max_to_min)
       self$ref_point = apply(ys, 2L, max) + 1 #offset = 1 like in mlrMBO
 
       if (is.null(self$param_set$values$eps)) {

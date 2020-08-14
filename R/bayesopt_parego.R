@@ -12,23 +12,19 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
     instance$eval_batch(design)
   }
 
-  #acq_function$setup(archive) #FIXME: Will fail internal update call for surrogate, or y_min if acq_fun is EI because archive as multiple y columns
-  # Alternatives
-  # - only setup with domain, codomain, ycolumns (not cool because often we will pass things we do not need and blow up signature)
-  # - Implement ArchiveScalarized: cool?
-  # - ?
-  #manual fix: #FIXMEL Write ParEGO Infill Crit?
-  acq_function$search_space = instance$search_space
-  acq_function$mult_max_to_min = ifelse(archive$codomain$tags == "minimize", 1, -1) 
-  acq_function$codomain = generate_acq_codomain(archive, direction = "minimize", id = acq_function$id)
-
+  # ParEGO Archive
+  dummy_codomain = ParamSet$new(list(ParamDbl$new("y_scal", tags = "minimize")))
+  dummy_archive = MboDummyArchive$new(archive, codomain = dummy_codomain)
+  #manual fix: #FIXME Write ParEGO Infill Crit? 
+  acq_function$setup(dummy_archive)
+  
   repeat {
     xydt = archive$data()
     xdt = xydt[, archive$cols_x, with = FALSE]
     ydt = xydt[, archive$cols_y, with = FALSE]
     d = archive$codomain$length
 
-    ydt = Map("*", ydt, acq_function$mult_max_to_min)
+    ydt = Map("*", ydt, mult_max_to_min(archive$codomain))
 
     xdt = map_dtr(seq_len(q), function(i) {
       # FIXME: Wrong way to calculate lambda
@@ -36,9 +32,13 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
       lambda = lambda / sum(lambda)
       
       mult = Map('*', ydt, lambda)
+      y_scal = do.call('+', mult)
+      dummy_archive$clear()
+      dummy_archive$add_cols(data.table(y_scal = y_scal))
 
-      acq_function$surrogate$update(xydt = cbind(xdt, y_scal = do.call('+', mult)), y_cols = "y_scal") #update surrogate model with new data
-      #acq_function$update(archive) #FIXME e.g. EI will fail w/o update
+      xydt = dummy_archive$data()
+      acq_function$surrogate$setup(xydt = xydt[, c(dummy_archive$cols_x, dummy_archive$cols_y), with = FALSE], y_cols = dummy_archive$cols_y) #update surrogate model with new data
+      acq_function$update(dummy_archive)
       acq_optimizer$optimize(acq_function)  
     })
 
@@ -78,10 +78,10 @@ if (FALSE) {
   )
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-  acqfun = AcqFunctionCB$new(surrogate = surrogate)
-  acqopt = AcqOptimizerRandomSearch$new()
+  acq_function = AcqFunctionEI$new(surrogate = surrogate)
+  acq_optimizer = AcqOptimizerRandomSearch$new()
 
-  bayesop_parego(instance, acqfun, acqopt, q = 2)
+  bayesop_parego(instance, acq_function, acq_optimizer, q = 2)
 
   archdata = instance$archive$data()
   library(ggplot2)

@@ -3,12 +3,57 @@
 \name{SurrogateSingleCrit}
 \alias{SurrogateSingleCrit}
 \title{Surrogate Model for Single criteria response surfaces}
-\value{
-\link[data.table:data.table]{data.table::data.table} with the columns \code{mean} and \code{se}.
-}
 \description{
 
-
+}
+\section{Super class}{
+\code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateSingleCrit}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-predict}{\code{SurrogateSingleCrit$predict()}}
+\item \href{#method-clone}{\code{SurrogateSingleCrit$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="initialize">}\href{../../mlr3mbo/html/Surrogate.html#method-initialize}{\code{mlr3mbo::Surrogate$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup">}\href{../../mlr3mbo/html/Surrogate.html#method-setup}{\code{mlr3mbo::Surrogate$setup()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update">}\href{../../mlr3mbo/html/Surrogate.html#method-update}{\code{mlr3mbo::Surrogate$update()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-predict"></a>}}
+\if{latex}{\out{\hypertarget{method-predict}{}}}
+\subsection{Method \code{predict()}}{
 Returns a named list of data.tables.
 Each contains the mean response and standard error for one dimension.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SurrogateSingleCrit$predict(xdt)}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\link[data.table:data.table]{data.table::data.table} with the columns \code{mean} and \code{se}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SurrogateSingleCrit$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }

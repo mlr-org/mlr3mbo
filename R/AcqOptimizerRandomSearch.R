@@ -28,9 +28,11 @@ AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
     #' @param acq_function [AcqFunction].
     optimize = function(acq_function) {
       xdt = generate_design_random(acq_function$search_space, self$param_set$values$iters)$data
-      ydt = acq_function$eval_dt(xdt)
-      xydt = cbind(xdt, ydt)
-      setorderv(xydt, acq_function$codomain$ids(), order = 1, na.last = TRUE)
-      xydt[1, acq_function$search_space$ids(), with = FALSE]
+      ydt = acq_function$eval_dt(xdt) * mult_max_to_min(acq_function$codomain)
+      best = which(ydt[[1]] == min(ydt[[1]]))
+      if (length(best) > 1) {
+        best = sample(best, 1)
+      }
+      xdt[best,]
     }
 ))

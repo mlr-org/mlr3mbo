@@ -26,8 +26,8 @@ AcqFunction = R6Class("AcqFunction",
     #' @field direction (`character(1)`).
     direction = NULL, # optim direction of the acq function
 
-    #' @field mult_max_to_min (`numeric(1)`).
-    mult_max_to_min = NULL, # optim direction of the obj function 1 for min, -1 for max
+    #' @field surrogate_max_to_min (`numeric(1)`).
+    surrogate_max_to_min = NULL, # optim direction of the obj function 1 for min, -1 for max, maybe it makes sense to make this private so it is clear that this is not meant to turn the acq into a minimization problem
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -63,14 +63,11 @@ AcqFunction = R6Class("AcqFunction",
       # FIXME: Should we allow alternative search_space as additional argument?
 
       # here we can change the optim direction of the codomain for the acq function
-      self$codomain = generate_acq_codomain(archive, direction = self$direction, id = self$id)
+      self$codomain = generate_acq_codomain(archive$codomain, id = self$id, direction = self$direction)
 
-      self$mult_max_to_min = ifelse(archive$codomain$tags == "minimize", 1, -1)
+      self$surrogate_max_to_min = mult_max_to_min(archive$codomain)
 
       self$search_space = archive$search_space
-
-      xydt = archive$data()
-      self$surrogate$setup(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
     },
 
     #' @description
