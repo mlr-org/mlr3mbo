@@ -1,6 +1,7 @@
-#' @title Surrogate Model from mlr3 Learner
+#' @title Surrogate Model
 #'
 #' @description
+#' Surrogate model based on regression [mlr3::Learner] objects.
 #'
 #' @export
 SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
@@ -22,6 +23,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' Train model with new points.
     #'
     update = function(xydt, y_cols) {
+      assert_string(y_cols)
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = y_cols)
       self$model$train(task)
     },
