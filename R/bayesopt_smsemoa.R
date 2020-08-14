@@ -13,7 +13,6 @@ bayesop_smsemoa = function(instance, acq_function, acq_optimizer) {
     instance$eval_batch(design)
   }
 
-  acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
   acq_function$setup(archive) #setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {

@@ -22,10 +22,11 @@ bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
     acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
     acq_function$update(archive) 
 
+    acq_function$update(instance$archive)
     xdt = acq_optimizer$optimize(acq_function)
 
     # prepare lie objects
-    temp_archive = archive$clone(deep = TRUE)
+    temp_archive = MboDummyArchive$new(archive)
     temp_acq_function = acq_function$clone(deep = TRUE) # also generates clone of the surrogate, should be the only reason why we clone the acqfun
     lie = data.table(liar(archive$data()[[archive$cols_y]]))
     colnames(lie) = archive$cols_y
@@ -34,20 +35,19 @@ bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
     # obtain proposals, fill with fake archive lie
     for (i in seq(2, q)) {
       # add lie instead of true eval
-      temp_archive$add_evals(xdt_new, transform_xdt_to_xss(xdt_new, temp_archive$search_space), lie)
+      temp_archive$add_evals(xdt = xdt_new, ydt = lie)
 
       # update all objects with lie
       xydt = temp_archive$data()
-      temp_acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
-      temp_acq_function$update(temp_archive)
+      temp_acq_function$surrogate$update(xydt = xydt[, c(temp_archive$cols_x, temp_archive$cols_y), with = FALSE], y_cols = temp_archive$cols_y)
 
       # obtain new proposal based on lie
+      temp_acq_function$update(temp_archive)
       xdt_new = acq_optimizer$optimize(temp_acq_function) 
       xdt = rbind(xdt, xdt_new)
     }
 
     instance$eval_batch(xdt)
-    acq_function$update(instance$archive)
 
     if (instance$is_terminated || instance$terminator$is_terminated(archive)) break
   }

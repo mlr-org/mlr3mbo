@@ -25,8 +25,10 @@ MboDummyArchive = R6Class("MboArchive",
       assert_data_table(ydt)
       
       xydt = cbind(xdt, ydt)
-      xydt[, "x_domain" := list(xss_trafoed)]
-      xydt[, "batch_nr" := self$batch_nr + 1]
+      if (!is.null(xss_trafoed)) {
+        xydt[, "x_domain" := list(xss_trafoed)]  
+      }
+      xydt[, "batch_nr" := self$n_batch + 1]
       
       self$added_rows = rbindlist(list(
         self$added_rows, 
@@ -91,7 +93,7 @@ MboDummyArchive = R6Class("MboArchive",
     #' @return [data.table::data.table()].
     data = function(unnest = NULL) {
       data = self$archive$data(unnest)
-      data = rbindlist(list(data, self$added_rows))
+      data = rbindlist(list(data, self$added_rows), fill = TRUE, use.names = TRUE)
       cbind(data, self$added_cols)
     },
 
