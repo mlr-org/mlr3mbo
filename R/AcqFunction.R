@@ -70,7 +70,7 @@ AcqFunction = R6Class("AcqFunction",
       self$search_space = archive$search_space
 
       xydt = archive$data()
-      surrogate$setup(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
+      self$surrogate$setup(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
     },
 
     #' @description
