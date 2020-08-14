@@ -2,6 +2,10 @@ lapply(list.files(system.file("testthat", package = "mlr3"),
   pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
 # Simple 1D Function
+PS_1D = ParamSet$new(list(
+  ParamDbl$new("x", lower = -5, upper = 5)
+))
+
 PS_1D_domain = ParamSet$new(list(
   ParamDbl$new("x", lower = -5, upper = 5)
 ))
