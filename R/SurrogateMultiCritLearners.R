@@ -21,7 +21,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     update = function(xydt, y_cols) {
       tasks = lapply(y_cols, function(y_col) {
         TaskRegr$new(
-          id = "surrogate_task", 
+          id = paste0("surrogate_task_",y_col), 
           backend = xydt[, c(setdiff(colnames(xydt), y_cols), y_col), with = FALSE], 
           target = y_col)
       })
@@ -42,6 +42,10 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       names(preds) = names(self$model)
       return(preds)
     }
+  ),
+
+  active = list(
+    k = function() length(self$model)
   )
 
 )

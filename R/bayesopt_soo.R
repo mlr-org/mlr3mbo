@@ -10,7 +10,7 @@
 
 bayesop_soo = function(instance, acq_function, acq_optimizer) {
   #FIXME maybe do not have this here, but have a general assert helper
-  assert_r6(instance, "OptimInstanceSingleCrit")
+  assert_r6(instance, "OptimInstance")
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")
   archive = instance$archive

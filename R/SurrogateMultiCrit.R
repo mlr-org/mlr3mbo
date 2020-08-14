@@ -16,6 +16,10 @@ SurrogateMultiCrit = R6Class("SurrogateMultiCrit",
     predict = function(xdt) {
       stop("abstract")
     }
+  ),
+
+  active = list(
+    k = function() stop("abstract") #FIXME: Should we allow SurrogateMultiCrit for arbitrary d?
   )
     
 )
