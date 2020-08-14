@@ -10,6 +10,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
 
     #' @field y_effective_best (`numeric()`).
     y_effective_best = NULL,
+    noise_var = NULL, # noise of the function
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -34,11 +35,11 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       p = self$surrogate$predict(xdt)
       mu = p$mean
       se = p$se
-      d = self$y_effective_best - self$surrogate_max_to_min * mu #FIXME: Not the right formula!!
+      d = self$y_effective_best - self$surrogate_max_to_min * mu
       d_norm = d / se
-      ei = d * pnorm(d_norm) + se + dnorm(d_norm)
-      ei = ifelse(se < 1e-20, 0, ei)
-      data.table(acq_ei = ei)
+      aei = d * pnorm(d_norm) + se * dnorm(d_norm) * (1 - sqrt(self$noise_var) / sqrt(self$noise_var + se^2))
+      aei = ifelse(se < 1e-20, 0, aei)
+      data.table(acq_aei = aei)
     },
 
     #' @description
@@ -56,6 +57,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
         y_effective = p$mean - self$param_set$values$c * p$se # pessimistic prediction
         self$y_effective_best = max(y_effective) 
       }
+      self$noise_var = self$surrogate$model$model@covariance@nugget #FIXME: Check that this value really exists (otherwise calculate residual variance?)
     }
   )
 )

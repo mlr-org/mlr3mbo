@@ -33,7 +33,7 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
       se = p$se
       d = self$y_best - self$surrogate_max_to_min * mu
       d_norm = d / se
-      ei = d * pnorm(d_norm) + se + dnorm(d_norm)
+      ei = d * pnorm(d_norm) + se * dnorm(d_norm)
       ei = ifelse(se < 1e-20, 0, ei)
       data.table(acq_ei = ei)
     },
