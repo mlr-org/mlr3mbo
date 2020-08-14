@@ -32,7 +32,7 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
       ))
       param_set$values$lambda = 1
       assert_r6(surrogate, "SurrogateMultiCrit")
-      super$initialize("acq_sms", param_set, surrogate = surrogate, direction = "maximize")
+      super$initialize("acq_sms", param_set, surrogate = surrogate, direction = "minimize")
     },
 
     #' @description
@@ -48,7 +48,7 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
       cbs = as.matrix(means) %*% diag(self$surrogate_max_to_min) - self$param_set$values$lambda * as.matrix(ses)
       # allocate mem for adding points to front for HV calculation in C
       front2 = t(rbind(self$ys_front, 0))
-      sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$eps, self$ref_point) #FIXME: Copy from mlrMBO
+      sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$eps, self$ref_point)
       data.table(acq_sms = sms)
     },
 

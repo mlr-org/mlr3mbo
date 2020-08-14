@@ -57,10 +57,10 @@ if (FALSE) {
   )
 
   surrogate = SurrogateMultiCritLearners$new(learners = replicate(2, lrn("regr.km")))
-  acqfun = AcqFunctionSmsEmoa$new(surrogate = surrogate)
-  acqopt = AcqOptimizerRandomSearch$new()
+  acq_function = AcqFunctionSmsEmoa$new(surrogate = surrogate)
+  acq_optimizer = AcqOptimizerRandomSearch$new()
 
-  bayesop_smsemoa(instance, acqfun, acqopt)
+  bayesop_smsemoa(instance, acq_function, acq_optimizer)
 
   archdata = instance$archive$data()
   library(ggplot2)
