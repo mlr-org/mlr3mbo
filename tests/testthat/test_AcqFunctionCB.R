@@ -12,10 +12,13 @@ test_that("AcqFunctionCB API works", {
   acqf$setup(inst$archive)
 
   expect_r6(acqf$codomain, "ParamSet")
-  expect_equal(acqf$mult_max_to_min, c(y = 1))
+  expect_equal(acqf$surrogate_max_to_min, c(y = 1))
   expect_equal(acqf$direction, "same")
   expect_equal(acqf$search_space, inst$search_space)
   expect_learner(acqf$surrogate$model)
+
+  xydt = inst$archive$data()
+  acqf$surrogate$update(xydt = xydt[, c(inst$archive$cols_x, inst$archive$cols_y), with = FALSE], y_cols = inst$archive$cols_y) #update surrogate model with new data
 
   xdt = data.table(x = seq(5))
   res = acqf$eval_dt(xdt)

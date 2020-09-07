@@ -13,7 +13,3 @@ generate_acq_codomain = function(codomain, id, direction = "same") {
   ))
   return(codomain)
 }
-
-mult_max_to_min = function(codomain) {
-  ifelse(codomain$tags == "minimize", 1, -1)
-}

@@ -22,7 +22,7 @@ a new point for evaluation.
 
 \item{\code{direction}}{(\code{character(1)}).}
 
-\item{\code{mult_max_to_min}}{(\code{numeric(1)}).}
+\item{\code{surrogate_max_to_min}}{(\code{numeric(1)}).}
 }
 \if{html}{\out{</div>}}
 }
