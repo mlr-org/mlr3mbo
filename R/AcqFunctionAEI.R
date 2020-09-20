@@ -17,9 +17,9 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     #'
     #' @param surrogate [SurrogateSingleCrit].
     initialize = function(surrogate) {
-      param_set = ParamSet$new(
+      param_set = ParamSet$new(list(
         ParamDbl$new("c", lower = 0, default = 1)
-      )
+      ))
       param_set$values$c = 1
       assert_r6(surrogate, "SurrogateSingleCrit")
       super$initialize("acq_aei", param_set, surrogate, direction = "maximize")
