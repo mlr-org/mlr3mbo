@@ -8,7 +8,6 @@ test_that("OptimizerMbo works", {
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
   design = generate_design_lhs(PS_1D, 4)$data
-  design = cbind(design, obfun$eval_dt(design))
 
   optim = OptimizerMbo$new(
     loop_function = bayesop_soo,
@@ -21,6 +20,8 @@ test_that("OptimizerMbo works", {
     terminator = trm("evals", n_evals = 10),
     search_space = PS_1D
   )
+
+  instance$eval_batch(design)
   
   optim$optimize(instance)
 
@@ -36,7 +37,6 @@ test_that("OptimizerMbo works with different settings", {
   obfun = OBJ_2D
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
   design = generate_design_lhs(PS_2D, 6)$data
-  design = cbind(design, obfun$eval_dt(design))
   term = trm("evals", n_evals = 12)
 
   # define combinations
@@ -45,7 +45,7 @@ test_that("OptimizerMbo works with different settings", {
     mpcl = list(fun = bayesop_mpcl, args = list(liar = mean, q = 2))
   )
   acq_functions = list(
-    #aei = AcqFunctionAEI$new(surrogate), #FIXME
+    aei = AcqFunctionAEI$new(surrogate), #FIXME
     cb = AcqFunctionCB$new(surrogate), 
     ei = AcqFunctionEI$new(surrogate)
   )
@@ -67,6 +67,11 @@ test_that("OptimizerMbo works with different settings", {
     mbo_fun = combinations[i,"loop_function"][[1]][[1]]$fun
     args = combinations[i,"loop_function"][[1]][[1]]$args
     acq_fun = combinations[i,"acq_function"][[1]][[1]]
+    if (acq_fun$id == "acq_aei") {
+      acq_fun$surrogate$model$param_set$values$nugget.estim = TRUE
+    } else {
+      acq_fun$surrogate$model$param_set$values$nugget.estim = FALSE
+    }
     acq_opt = combinations[i,"acq_optimizer"][[1]][[1]]
     optim = OptimizerMbo$new(
       loop_function = mbo_fun,
@@ -80,6 +85,8 @@ test_that("OptimizerMbo works with different settings", {
       terminator = term,
       search_space = PS_2D
     )
+
+    instance$eval_batch(design)
     
     optim$optimize(instance)
 

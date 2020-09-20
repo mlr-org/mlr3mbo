@@ -5,7 +5,7 @@ library(mlr3learners)
 test_that("SurrogateSingleCritLearner API works", {
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-  design = generate_design_lhs(OBJ_1D$domain, 4)$data
+  design = generate_design_lhs(PS_1D, 4)$data
   xydt = cbind(design, OBJ_1D$eval_dt(design))
 
   surrogate$update(xydt = xydt, y_cols = "y")
@@ -24,7 +24,7 @@ test_that("SurrogateSingleCritLearner API works", {
 
 test_that("predict_types are recognized", {
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-  design = generate_design_lhs(OBJ_1D$domain, 4)$data
+  design = generate_design_lhs(PS_1D, 4)$data
   xydt = cbind(design, OBJ_1D$eval_dt(design))
 
   surrogate$update(xydt = xydt, y_cols = "y")

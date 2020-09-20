@@ -48,7 +48,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     #' @param archive [bbotk::Archive]
     update = function(archive) {
       super$update(archive)
-      xdt = archive$data()[, archive$cols_x]
+      xdt = archive$data()[, archive$cols_x, with = FALSE]
       p = self$surrogate$predict(xdt)
       if (self$surrogate_max_to_min == 1) { # minimization
         y_effective = p$mean + self$param_set$values$c * p$se # pessimistic prediction
@@ -57,7 +57,15 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
         y_effective = p$mean - self$param_set$values$c * p$se # pessimistic prediction
         self$y_effective_best = max(y_effective) 
       }
-      self$noise_var = self$surrogate$model$model@covariance@nugget #FIXME: Check that this value really exists (otherwise calculate residual variance?)
+
+      if (!is.null(self$surrogate$model$model) && length(self$surrogate$model$model@covariance@nugget) == 1) {
+        self$noise_var = self$surrogate$model$model@covariance@nugget #FIXME: Check that this value really exists (otherwise calculate residual variance?)
+      } else {
+        lgr$warn("AEI currently only works correctly with regr.km and nugget estim = TRUE or given!")
+        self$noise_var = 0
+      }
+
+      
     }
   )
 )
