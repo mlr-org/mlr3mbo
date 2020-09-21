@@ -33,3 +33,6 @@ docs/
 # C compiled
 src/*.o
 src/*.so
+inst/doc
+doc
+Meta

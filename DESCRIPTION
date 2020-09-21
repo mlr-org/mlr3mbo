@@ -54,7 +54,9 @@ Suggests:
     mlr3learners,
     ranger,
     rpart,
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
 Remotes:
     mlr-org/bbotk
 ByteCompile: no
@@ -88,3 +90,4 @@ Collate:
     'bayesopt_soo_eips.R'
     'helper.R'
     'zzz.R'
+VignetteBuilder: knitr
