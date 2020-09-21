@@ -8,6 +8,7 @@
 
 # and why do we pass some tings in "control" and some separately?
 
+#' @export
 bayesop_soo = function(instance, acq_function, acq_optimizer) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstance")
@@ -26,10 +27,10 @@ bayesop_soo = function(instance, acq_function, acq_optimizer) {
   repeat {
     xydt = archive$data()
     acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y) #update surrogate model with new data
-    
+
     acq_function$update(archive) # NOTE: necessary becaue we have to dertermine e.g. y_best for ei, there are possible other costy calculations that we just want to do once for each state. We might not want to do these calculation in acq_function$eval_dt() because this can get called several times during the optimization.
     # one more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design
-    # alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFun), 
+    # alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFun),
     xdt = acq_optimizer$optimize(acq_function)
     instance$eval_batch(xdt)
     if (instance$is_terminated || instance$terminator$is_terminated(archive)) break
@@ -54,7 +55,7 @@ if (FALSE) {
   terminator = trm("evals", n_evals = 20)
 
   instance = OptimInstanceSingleCrit$new(
-    objective = obfun, 
+    objective = obfun,
     terminator = terminator
   )
 
