@@ -37,7 +37,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{learner}}{\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}}
+\item{\code{learner}}{\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -51,18 +51,36 @@ Train model with new points.
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateSingleCritLearner$update(xydt, y_cols)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xydt}}{\link[data.table:data.table]{data.table::data.table}.}
+
+\item{\code{y_cols}}{(\code{character(1)})\cr
+Name of response column.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-predict"></a>}}
 \if{latex}{\out{\hypertarget{method-predict}{}}}
 \subsection{Method \code{predict()}}{
-Returns mean response and standard error
+Returns mean response and standard error.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateSingleCritLearner$predict(xdt)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}\cr
+New data.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
-\link[data.table:data.table]{data.table::data.table}
+\link[data.table:data.table]{data.table::data.table} with the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}

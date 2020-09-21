@@ -1,46 +1,93 @@
+#' @title Logging object for objective function evaluations
+#'
+#' @description
+#' Container around a [data.table::data.table] which stores all performed
+#' function calls of the Objective.
+#'
+#' @section Technical details:
+#'
+#' The data is stored in a private `.data` field that contains a
+#' [data.table::data.table] which logs all performed function calls of the [Objective].
+#' This [data.table::data.table] is accessed with the public `$data()` method. New
+#' values can be added with the `$add_evals()` method. This however is usually
+#' done through the evaluation of the [OptimInstance] by the [Optimizer].
+#'
+#' @template param_codomain
+#' @template param_search_space
+#' @export
+
 MboDummyArchive = R6Class("MboArchive",
   inherit = bbotk::Archive,
 
   public = list(
-    
+
+    #' @field archive ([bbotk::Archive])
     archive = NULL, # unfortunately we can not inherit from an Object :(
+
+
+    #' @field codomain ([paradox::ParamSet])\cr
+    #' Codomain of objective function.
     codomain = NULL,
+
+    #' @field search_space ([paradox::ParamSet])\cr
+    #' Search space of objective.
     search_space = NULL,
+
+    #' @field added_rows ([data.table::data.table]).
     added_rows = data.table(),
+
+    #' @field added_cols ([data.table::data.table]).
     added_cols = NULL, # cbind does not work with empty data.table()
 
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param archive ([bbotk::Archive]).
     initialize = function(archive, codomain = archive$codomain, search_space = archive$search_space) {
       self$archive = archive
       self$codomain = codomain
       self$search_space = search_space
     },
 
+    #' @description
+    #' Clear archive.
     clear = function() {
       self$added_rows = data.table()
       self$added_cols = NULL
     },
 
+    #' @description
+    #' Adds function evaluations to the archive table.
+    #'
+    #' @param xdt ([data.table::data.table].
+    #' @param ydt ([data.table::data.table].
+    #' @param xss_trafoed (`list()`)\cr
+    #' Transformed point(s) in the *domain space*
     add_evals = function(xdt, xss_trafoed = NULL, ydt) {
       assert_data_table(xdt)
       assert_data_table(ydt)
-      
+
       xydt = cbind(xdt, ydt)
       if (!is.null(xss_trafoed)) {
-        xydt[, "x_domain" := list(xss_trafoed)]  
+        xydt[, "x_domain" := list(xss_trafoed)]
       }
       xydt[, "batch_nr" := self$n_batch + 1]
-      
+
       self$added_rows = rbindlist(list(
-        self$added_rows, 
+        self$added_rows,
         xydt),
         fill = TRUE, use.names = TRUE
       )
     },
 
+    #' @description
+    #' Add columns.
+    #'
+    #' @param dt ([data.table::data.table])
     add_cols = function(dt) {
       assert_data_table(dt, nrows = self$n_evals)
       if (is.null(self$added_cols)) {
-        self$added_cols = dt 
+        self$added_cols = dt
       } else (
         self$added_cols = cbind(self$added_cols, dt)
       )

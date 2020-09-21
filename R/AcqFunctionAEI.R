@@ -10,6 +10,8 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
 
     #' @field y_effective_best (`numeric()`).
     y_effective_best = NULL,
+
+    #' @field noise_var (`numeric()`).
     noise_var = NULL, # noise of the function
 
     #' @description
@@ -52,10 +54,10 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       p = self$surrogate$predict(xdt)
       if (self$surrogate_max_to_min == 1) { # minimization
         y_effective = p$mean + self$param_set$values$c * p$se # pessimistic prediction
-        self$y_effective_best = min(y_effective) 
+        self$y_effective_best = min(y_effective)
       } else { # maximization
         y_effective = p$mean - self$param_set$values$c * p$se # pessimistic prediction
-        self$y_effective_best = max(y_effective) 
+        self$y_effective_best = max(y_effective)
       }
 
       if (!is.null(self$surrogate$model$model) && length(self$surrogate$model$model@covariance@nugget) == 1) {
@@ -65,7 +67,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
         self$noise_var = 0
       }
 
-      
+
     }
   )
 )

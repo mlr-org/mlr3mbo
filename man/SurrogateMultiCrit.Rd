@@ -9,6 +9,13 @@
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateMultiCrit}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{k}}{Returns number of models.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -35,6 +42,14 @@ Each contains the mean response and standard error for one dimension.
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateMultiCrit$predict(xdt)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}\cr
+New data.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 \link{list} of \link[data.table:data.table]{data.table::data.table} objects.
 Each contains the columns \code{mean} and \code{se}.

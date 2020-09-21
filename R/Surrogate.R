@@ -6,7 +6,8 @@
 Surrogate = R6Class("Surrogate",
   public = list(
 
-    #' @field Stores surrogate model
+    #' @field model \cr
+    #' Stores surrogate model
     model = NULL,
 
     #' @description
@@ -20,6 +21,10 @@ Surrogate = R6Class("Surrogate",
     #' @description
     #' Train model with new points.
     #'
+    #' @param xydt [data.table::data.table].
+    #'
+    #' @param y_cols (`character()`)\cr
+    #' Names of response columns.
     #' @return `NULL`
     update = function(xydt, y_cols) {
       stop("Abstract")
@@ -27,6 +32,12 @@ Surrogate = R6Class("Surrogate",
 
     #' @description
     #' Possible setup routine of the surrogate
+    #'
+    #' @param xydt [data.table::data.table]\cr
+    #' New data.
+    #'
+    #' @param y_cols (`character()`)\cr
+    #' Names of response columns.
     #'
     #' @return `NULL`
     setup = function(xydt, y_cols) {
@@ -37,7 +48,10 @@ Surrogate = R6Class("Surrogate",
     #' @description
     #' Returns mean response and standard error
     #'
-    #' @return [data.table::data.table]
+    #' @param xdt [data.table::data.table]\cr
+    #' New data.
+    #'
+    #' @return [data.table::data.table] with the columns `mean` and `se`.
     predict = function(xdt) {
       stop("Abstract")
     }

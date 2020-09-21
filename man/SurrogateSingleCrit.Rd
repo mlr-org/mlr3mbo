@@ -35,6 +35,14 @@ Each contains the mean response and standard error for one dimension.
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateSingleCrit$predict(xdt)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}\cr
+New data.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 \link[data.table:data.table]{data.table::data.table} with the columns \code{mean} and \code{se}.
 }

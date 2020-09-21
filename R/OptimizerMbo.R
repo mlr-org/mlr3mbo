@@ -1,13 +1,35 @@
+#' @title OptimizerMbo
+#'
+#' @name mlr_optimizers_mbo
+#'
+#' @description
+#' MBO loop as Optimizer.
+#'
+#' @export
 OptimizerMbo = R6Class("OptimizerMbo",
   inherit = bbotk::Optimizer,
 
   public = list(
 
+    #' @field loop_function (`function`).
     loop_function = NULL, #FIXME: At this point it DOES look ok to have the different mbo algos as objects, right?
+
+    #' @field acq_function ([AcqFunction]).
     acq_function = NULL,
-    acq_optimizer = NULL, 
+
+    #' @field acq_optimizer ([AcqOptimizer]).
+    acq_optimizer = NULL,
+
+    #' @field args (`list()`).
     args = NULL,
 
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param loop_function (`function`).
+    #' @param acq_function ([AcqFunction]).
+    #' @param acq_optimizer ([AcqOptimizer]).
+    #' @param args (`list()`).
     initialize = function(loop_function, acq_function, acq_optimizer, args = NULL) {
       param_set = ParamSet$new()
       param_classes = c("ParamDbl") # FIXME: Should depend on the surrogate?

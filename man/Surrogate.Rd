@@ -9,14 +9,8 @@
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{Stores}}{surrogate model}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{Stores}}{surrogate model}
+\item{\code{model}}{\cr
+Stores surrogate model}
 }
 \if{html}{\out{</div>}}
 }
@@ -56,6 +50,16 @@ Train model with new points.
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$update(xydt, y_cols)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xydt}}{\link[data.table:data.table]{data.table::data.table}.}
+
+\item{\code{y_cols}}{(\code{character()})\cr
+Names of response columns.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 \code{NULL}
 }
@@ -69,6 +73,17 @@ Possible setup routine of the surrogate
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$setup(xydt, y_cols)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xydt}}{\link[data.table:data.table]{data.table::data.table}\cr
+New data.}
+
+\item{\code{y_cols}}{(\code{character()})\cr
+Names of response columns.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 \code{NULL}
 }
@@ -82,8 +97,16 @@ Returns mean response and standard error
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$predict(xdt)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}\cr
+New data.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
-\link[data.table:data.table]{data.table::data.table}
+\link[data.table:data.table]{data.table::data.table} with the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}

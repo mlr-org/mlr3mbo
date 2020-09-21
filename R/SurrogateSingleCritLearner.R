@@ -11,7 +11,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param learner [mlr3::LearnerRegr]
+    #' @param learner [mlr3::LearnerRegr].
     initialize = function(learner) {
       self$model = assert_learner(learner)
       if("se" %in% self$model$predict_types) {
@@ -22,6 +22,10 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' @description
     #' Train model with new points.
     #'
+    #' @param xydt [data.table::data.table].
+    #'
+    #' @param y_cols (`character(1)`)\cr
+    #' Name of response column.
     update = function(xydt, y_cols) {
       assert_string(y_cols)
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = y_cols)
@@ -29,9 +33,12 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     },
 
     #' @description
-    #' Returns mean response and standard error
+    #' Returns mean response and standard error.
     #'
-    #' @return [data.table::data.table]
+    #' @param xdt [data.table::data.table]\cr
+    #' New data.
+    #'
+    #' @return [data.table::data.table] with the columns `mean` and `se`.
     predict = function(xdt) {
       pred = self$model$predict_newdata(newdata = xdt)
       if(self$model$predict_type == "se") {

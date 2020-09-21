@@ -13,6 +13,8 @@ Expected Improvement.
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{y_effective_best}}{(\code{numeric()}).}
+
+\item{\code{noise_var}}{(\code{numeric()}).}
 }
 \if{html}{\out{</div>}}
 }
