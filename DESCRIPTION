@@ -44,6 +44,7 @@ Imports:
     checkmate (>= 2.0.0),
     data.table,
     mlr3misc (>= 0.3.0),
+    mlr3tuning,
     paradox (>= 0.3),
     lgr (>= 0.3.0),
     mlr3,
