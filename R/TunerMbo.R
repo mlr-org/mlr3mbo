@@ -22,5 +22,3 @@ TunerMbo = R6Class("TunerMbo",
     }
   )
 )
-
-mlr_tuners$add("mbo", TunerMbo)
