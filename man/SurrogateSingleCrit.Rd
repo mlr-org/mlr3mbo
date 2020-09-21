@@ -4,7 +4,7 @@
 \alias{SurrogateSingleCrit}
 \title{Surrogate Model for Single criteria response surfaces}
 \description{
-
+Surrogate Model for Single criteria response surfaces
 }
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateSingleCrit}

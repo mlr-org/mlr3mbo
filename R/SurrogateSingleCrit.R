@@ -1,6 +1,7 @@
 #' @title Surrogate Model for Single criteria response surfaces
 #'
 #' @description
+#' Surrogate Model for Single criteria response surfaces
 #'
 #' @export
 SurrogateSingleCrit = R6Class("SurrogateSingleCrit",

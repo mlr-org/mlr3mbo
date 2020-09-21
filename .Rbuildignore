@@ -7,3 +7,9 @@
 ^clang-.*
 ^\.lintr$
 ^\.vscode$
+^man-roxygen$
+^attic$
+^notes\.txt$
+^README\.Rmd$
+^README_files$
+^pkgdown$

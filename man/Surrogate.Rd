@@ -2,9 +2,9 @@
 % Please edit documentation in R/Surrogate.R
 \name{Surrogate}
 \alias{Surrogate}
-\title{Surrogate Model from mlr3 Learner}
+\title{Surrogate Model}
 \description{
-
+Surrogate Model
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

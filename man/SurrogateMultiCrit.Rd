@@ -4,7 +4,7 @@
 \alias{SurrogateMultiCrit}
 \title{Surrogate Model for MultiCriteria response surfaces}
 \description{
-
+Surrogate Model for MultiCriteria response surfaces
 }
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateMultiCrit}

@@ -1,6 +1,7 @@
 #' @title Surrogate Model for MultiCriteria response surfaces
 #'
 #' @description
+#' Surrogate Model for MultiCriteria response surfaces
 #'
 #' @export
 SurrogateMultiCrit = R6Class("SurrogateMultiCrit",

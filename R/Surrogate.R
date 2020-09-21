@@ -1,6 +1,7 @@
-#' @title Surrogate Model from mlr3 Learner
+#' @title Surrogate Model
 #'
 #' @description
+#' Surrogate Model
 #'
 #' @export
 Surrogate = R6Class("Surrogate",

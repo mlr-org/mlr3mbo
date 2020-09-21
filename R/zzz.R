@@ -7,7 +7,9 @@
 #' @import lgr
 #' @import mlr3
 #' @importFrom utils data head tail
-##' @useDynLib mlr3mbo c_sms_indicator c_eps_indicator
+#' @importFrom backports import
+#' @importFrom stats runif
+#' @useDynLib mlr3mbo c_sms_indicator c_eps_indicator
 "_PACKAGE"
 
 .onLoad = function(libname, pkgname) {

@@ -40,24 +40,26 @@ BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
     R (>= 3.1.0)
 Imports:
+    backports,
     bbotk (>= 0.2.1),
     checkmate (>= 2.0.0),
     data.table,
+    lgr (>= 0.3.0),
+    mlr3,
     mlr3misc (>= 0.3.0),
     mlr3tuning,
     paradox (>= 0.3),
-    lgr (>= 0.3.0),
-    mlr3,
     R6
 Suggests:
     mlr3learners,
     ranger,
+    rpart,
     testthat
 Remotes:
     mlr-org/bbotk
+ByteCompile: no
 Encoding: UTF-8
 LazyData: true
-ByteCompile: no
 NeedsCompilation: no
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
