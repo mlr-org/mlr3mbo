@@ -54,6 +54,7 @@ Suggests:
     mlr3learners,
     ranger,
     rpart,
+    DiceKriging,
     lhs,
     testthat,
     knitr,
