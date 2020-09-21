@@ -1,0 +1,66 @@
+# mlr3mbo
+
+A new R6 and much more modular implementation for single- and multicrit Bayesian optimization.
+We are really not done here! Very prelim code, so beware!
+
+<!-- badges: start -->
+[![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=master)](https://github.com/mlr-org/mlr3mbo/actions)
+[![CRAN status](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
+<!-- badges: end -->
+
+[List of some Ideas](https://github.com/mb706/okmbo/tree/master/todo-files)
+
+## Simple Example
+
+```{r example}
+set.seed(1)
+library(bbotk)
+library(mlr3mbo)
+library(paradox)
+library(mlr3learners)
+
+obfun = ObjectiveRFun$new(
+  fun = function(xs) sum(unlist(xs)^2),
+  domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
+  id = "test"
+)
+
+terminator = trm("evals", n_evals = 20)
+
+instance = OptimInstanceSingleCrit$new(
+  objective = obfun, 
+  terminator = terminator
+)
+
+design = generate_design_lhs(obfun$domain, 4)$data
+instance$eval_batch(design)
+
+surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
+acqfun = AcqFunctionCB$new(surrogate = surrogate)
+acqopt = AcqOptimizerFromOptimizer$new(
+  opt("random_search", batch_size = 100), 
+  trm("evals", n_evals = 100)
+)
+bayesopt_soo(instance, acq_function, acq_optimizer)
+plot(y~batch_nr, instance$archive$data()[batch_nr>1,], type = "b")
+```
+
+## Multipoint through constant liar
+
+```{r cl_example}
+instance = OptimInstanceSingleCrit$new(
+  objective = obfun, 
+  terminator = terminator
+)
+design = generate_design_lhs(obfun$domain, 4)$data
+instance$eval_batch(design)
+
+surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
+acqfun = AcqFunctionCB$new(surrogate = surrogate)
+acqopt = AcqOptimizerFromOptimizer$new(
+  opt("random_search", batch_size = 100), 
+  trm("evals", n_evals = 100)
+)
+bayesopt_mpcl(instance, acq_function, acq_optimizer)
+plot(y~batch_nr, instance$archive$data()[batch_nr>1,], type = "b")
+```

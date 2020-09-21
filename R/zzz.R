@@ -1,12 +1,13 @@
 #' @importFrom R6 R6Class is.R6
-#' @import R6 
 #' @import checkmate
 #' @import data.table
 #' @import paradox
 #' @import mlr3misc
 #' @import bbotk
 #' @import lgr
+#' @import mlr3
 #' @importFrom utils data head tail
+##' @useDynLib mlr3mbo c_sms_indicator c_eps_indicator
 "_PACKAGE"
 
 .onLoad = function(libname, pkgname) {
@@ -14,7 +15,7 @@
   backports::import(pkgname)
 
   # setup logger
-  assign("lg", lgr::get_logger("mlr3/mlr3mbo"), envir = parent.env(environment()))
+  assign("lg", lgr::get_logger("bbotk"), envir = parent.env(environment()))
   if (Sys.getenv("IN_PKGDOWN") == "true") {
     lg$set_threshold("warn")
   }

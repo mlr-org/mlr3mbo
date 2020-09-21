@@ -1,20 +1,45 @@
+#' @title Surrogate Model from mlr3 Learner
+#'
+#' @description
+#'
+#' @export
 Surrogate = R6Class("Surrogate",
-
   public = list(
-    learner = NULL,
 
-    initialize = function(learner) {
-      # FIXME: assert for regr
-      self$learner = assert_learner(learner)
+    #' @field Stores surrogate model
+    model = NULL,
+
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param model Model
+    initialize = function(model) {
+      stop("Abstract")
     },
 
-    train = function(archive) {
-      task = TaskRegr$new(backend = archive$data, target = "y", id = "surrogate_task")
-      self$learner$train(task)
+    #' @description
+    #' Train model with new points.
+    #'
+    #' @return `NULL`
+    update = function(xydt, y_cols) {
+      stop("Abstract")
     },
-    
-    predict_newdata = function(newdata) {
-      self$learner$predict_newdata(newdata) 
+
+    #' @description
+    #' Possible setup routine of the surrogate
+    #'
+    #' @return `NULL`
+    setup = function(xydt, y_cols) {
+      self$update(xydt, y_cols)
+    },
+
+
+    #' @description
+    #' Returns mean response and standard error
+    #'
+    #' @return [data.table::data.table]
+    predict = function(xdt) {
+      stop("Abstract")
     }
   )
 )

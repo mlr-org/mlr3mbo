@@ -30,3 +30,6 @@ cran-comments.md
 .vscode/
 docs/
 .vscode
+# C compiled
+src/*.o
+src/*.so

@@ -1,59 +1,94 @@
-#' @title Acquisition function
-#'
-#' @usage NULL
-#' @format [R6::R6Class] object.
+#' @title Acquisition Function
 #'
 #' @description
 #' Based on a surrogate model, the acquisition function encodes the preference to evaluate
 #' a new point for evaluation.
 #'
-#' @section Construction:
-#' ```
-#' acqf = AcquisitionFunction(id, opt_dir, settings, requirements)
-#' ```
-#'
-#' * `id` :: `character(1)`\cr
-#'    Short name of the criterion.
-#' * `opt_dir` :: `character(1)`\cr
-#'    Should the criterion be minimized of maximized?
-#'    Can be "min", "max" or "obj", where the latter means that the same direction
-#' * `settings` :: named `list`\cr
-#'    Control settings and constants.
-#'    as specified in the objective function is taken.
-#' * requirements :: named `list`\cr
-#'
-#' @section Fields:
-#' * `surrogate` :: [mlr3::LearnerRegr]`\cr
-#' * `param_set` :: [paradox::ParamSet]`\cr
-#'    Feasible space to optimize over.
-#' * `task` :: [mlr3::Task]`\cr
-#'
-#'
-#' @section Methods:
-#' * set_up(param_set, task, surrogate)\cr
-#'   (list of [mlr3::Measure], `logical(1)`, `logical(1)`, `logical(1)`, `logical(1)`) -> [data.table::data.table()]\cr
-#' * `eval_batch(dt)`\cr
-#'   [data.table::data.table()] -> `numeric(1)`\cr
-#'   Evaluates all design points in `dt` with the acquisition function where each points is a row, and columns are scalar parameters.
-#'
 #' @export
-AcqFunction = R6Class("AcqFunction", inherit = ObjectiveSO,
-
+AcqFunction = R6Class("AcqFunction",
   public = list(
+
+    #' @field id (`character(1)`).
+    id = NULL,
+
+    #' @field surrogate [Surrogate].
     surrogate = NULL,
 
-    # FIXME: we somehow have to figure out the optdir adaptively?
-    # FIXME: figure out way to set constants 
-    # FIXME: it is weird to specify fun like this, should we not implement it as a method?
-    initialize = function(objective, fun, settings, minimize, id) {
-      # FIXME: do we always require a singleobj objective here? better check?
-      assert_r6(objective, "ObjectiveSO")
-      super$initialize(fun, objective$domain, minimize, id) # asserts minimize and id
+    #' @field param_set ([paradox::ParamSet]).
+    param_set = NULL,
+
+    #' @field search_space ([paradox::ParamSet]).
+    search_space = NULL,
+
+    #' @field codomain ([paradox::ParamSet]).
+    codomain = NULL,
+
+    #' @field direction (`character(1)`).
+    direction = NULL, # optim direction of the acq function
+
+    #' @field surrogate_max_to_min (`numeric(1)`).
+    surrogate_max_to_min = NULL, # optim direction of the obj function 1 for min, -1 for max, maybe it makes sense to make this private so it is clear that this is not meant to turn the acq into a minimization problem
+
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param id (`character(1)`).
+    #' @param param_set ([paradox::ParamSet]).
+    #' @param surrogate [Surrogate].
+    #' @param direction (`character(1)`).
+    initialize = function(id, param_set, surrogate, direction) {
+      self$id = assert_string(id)
+      self$param_set = assert_param_set(param_set)
+      self$surrogate = assert_r6(surrogate, "Surrogate")
+      self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
     },
 
-    set_up = function(domain, surrogate) {
-      self$domain = assert_param_set(domain)
-      self$surrogate = assert_r6(surrogate, "Surrogate")
+    #' @description
+    #' Evaluates all input values in `xdt`.
+    #'
+    #' @param xdt [data.table::data.table]
+    #'
+    #' @return `data.table` \cr
+    #' The column has to have the same name as the id of the acq_fun, because we
+    #' renamed the id of the codomain
+    eval_dt = function(xdt) {
+      stop("abstract")
+    },
+
+    #' @description
+    #' Sets up the acquisition function
+    #'
+    #' @param archive [bbotk::Archive].
+    setup = function(archive) {
+      # FIXME: Should we allow alternative search_space as additional argument?
+
+      # here we can change the optim direction of the codomain for the acq function
+      self$codomain = generate_acq_codomain(archive$codomain, id = self$id, direction = self$direction)
+
+      self$surrogate_max_to_min = mult_max_to_min(archive$codomain)
+
+      self$search_space = archive$search_space
+    },
+
+    #' @description
+    #' Update the acquisition function
+    #'
+    #' @param archive [bbotk::Archive].
+    update = function(archive) {
+      # it's okay to do nothing here
+    },
+
+    #' @description
+    #' Generates an objective function for [bbotk::Optimizer].
+    #'
+    #' @return [bbotk::ObjectiveRFunDt]
+    generate_objective = function() {
+      bbotk::ObjectiveRFunDt$new(
+        fun = self$eval_dt,
+        domain = self$search_space,
+        codomain = self$codomain,
+        id = self$id
+      )
     }
   )
 )

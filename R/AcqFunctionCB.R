@@ -1,30 +1,43 @@
-#' @title Acquisition function: Confidence Bound
+#' @title Acquisition Function Confidence Bound
 #'
-#' @usage NULL
-#' @format [R6::R6Class] object.
+#' @description
+#'  Confidence Bound.
 #'
-#' @section Construction:
+#' @section Parameters:
+#' \describe{
+#' \item{`lambda`}{`numeric(1)`}.
+#' }
 #'
-#' @section Fields: See [AcqFunction]
-#' @section Methods: See [AcqFunction]
 #' @export
-AcqFunctionCB = R6Class( "AcqFunctionCB", inherit = AcqFunction,
+AcqFunctionCB = R6Class("AcqFunctionCB",
+  inherit = AcqFunction,
+
   public = list(
-    initialize = function(learner, lambda = 2) {
-      settings = list(lambda = assert_number(lambda, lower = 0))
-      fun = function(dt) {
-        p = self$surrogate$predict_newdata(task = NULL, newdata = dt)
-        res = p$mean + self$mult_max_to_min * self$settings$lambda * p$se
-        # FIXME: what do we return here? do we want to see se, mean, too?
-        data.table(y = res)
-      }
-      super$initialize(
-        id = "acqf_cb", 
-        fun = fun, 
-        settings = settings,
-        objective = objective,
-        minimize = objective$minimize
-      )
+
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param surrogate [SurrogateSingleCrit].
+    initialize = function(surrogate) {
+      param_set = ParamSet$new(list(
+        ParamDbl$new("lambda", lower = 0, default = 2)
+      ))
+      param_set$values$lambda = 2
+      assert_r6(surrogate, "SurrogateSingleCrit")
+      super$initialize("acq_cb", param_set, surrogate, direction = "same")
+    },
+
+    #' @description
+    #' Evaluates all input values in `xdt`.
+    #'
+    #' @param xdt [data.table::data.table]
+    #'
+    #' @return `data.table`
+    eval_dt = function(xdt) {
+      p = self$surrogate$predict(xdt)
+      res = p$mean - self$surrogate_max_to_min * self$param_set$values$lambda * p$se
+      # FIXME: what do we return here? do we want to see se, mean, too?
+      data.table(acq_cb = res)
     }
   )
 )
