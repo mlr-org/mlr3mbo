@@ -1,5 +1,7 @@
 context("AcqFunction")
 
+library(mlr3learners)
+
 test_that("AcqFunction API works", {
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
   design = generate_design_lhs(OBJ_1D$domain, 4)$data
@@ -10,5 +12,5 @@ test_that("AcqFunction API works", {
     surrogate = surrogate, direction = "same")
   acqf$setup(inst$archive)
 
-  acqf$generate_objective()
+  expect_r6(acqf$generate_objective(), "ObjectiveRFunDt")
 })
