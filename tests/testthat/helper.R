@@ -28,6 +28,13 @@ FUN_2D = function(xs) {
 FUN_2D_CODOMAIN = ParamSet$new(list(ParamDbl$new("y", tags = c("minimize", "random_tag"))))
 OBJ_2D = ObjectiveRFun$new(fun = FUN_2D, domain = PS_2D_domain, properties = "single-crit")
 
+# Simple 2D Function with noise
+FUN_2D_NOISY = function(xs) {
+  y = sum(as.numeric(xs)^2) + rnorm(1, sd = 0.1)
+  list(y = y)
+}
+OBJ_2D_NOISY = ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D_domain, properties = c("single-crit", "noisy"))
+
 # Instance helper
 MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D,
                      terminator = 5L) {
