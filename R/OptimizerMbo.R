@@ -33,6 +33,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @param acq_function ([AcqFunction]).
     #' @param acq_optimizer ([AcqOptimizer]).
     #' @param args (`list()`).
+    #' @param result_function (`function`).
     initialize = function(loop_function, acq_function, acq_optimizer, args = NULL, result_function = NULL) {
       param_set = ParamSet$new()
       param_classes = c("ParamDbl") # FIXME: Should depend on the surrogate?

@@ -9,7 +9,7 @@
 # and why do we pass some tings in "control" and some separately?
 
 #' @export
-bayesop_soo = function(instance, acq_function, acq_optimizer) {
+bayesop_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * instance$search_space$length) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstance")
   assert_r6(acq_function, "AcqFunction")
@@ -18,7 +18,7 @@ bayesop_soo = function(instance, acq_function, acq_optimizer) {
 
   #FIXME maybe do not have this here, but have a general init helper
   if (archive$n_evals == 0) {
-    design = generate_design_lhs(instance$search_space, 4 * instance$search_space$length)$data
+    design = generate_design_lhs(instance$search_space, n_design)$data
     instance$eval_batch(design)
   }
 

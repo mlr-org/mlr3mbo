@@ -15,6 +15,8 @@ MBO loop as Optimizer.
 \describe{
 \item{\code{loop_function}}{(\code{function}).}
 
+\item{\code{result_function}}{(\code{function}).}
+
 \item{\code{acq_function}}{(\link{AcqFunction}).}
 
 \item{\code{acq_optimizer}}{(\link{AcqOptimizer}).}
@@ -45,7 +47,13 @@ MBO loop as Optimizer.
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(loop_function, acq_function, acq_optimizer, args = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
+  loop_function,
+  acq_function,
+  acq_optimizer,
+  args = NULL,
+  result_function = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -58,6 +66,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{acq_optimizer}}{(\link{AcqOptimizer}).}
 
 \item{\code{args}}{(\code{list()}).}
+
+\item{\code{result_function}}{(\code{function}).}
 }
 \if{html}{\out{</div>}}
 }

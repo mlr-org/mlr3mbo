@@ -90,6 +90,7 @@ Collate:
     'bayesopt_smsemoa.R'
     'bayesopt_soo.R'
     'bayesopt_soo_eips.R'
+    'result_by_surrogate_design.R'
     'helper.R'
     'zzz.R'
 VignetteBuilder: knitr
