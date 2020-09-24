@@ -18,7 +18,11 @@ bayesop_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * ins
 
   #FIXME maybe do not have this here, but have a general init helper
   if (archive$n_evals == 0) {
-    design = generate_design_lhs(instance$search_space, n_design)$data
+    design = if(instance$search_space$has_deps) {
+      generate_design_random(instance$search_space, n_design)$data
+    } else {
+      generate_design_lhs(instance$search_space, n_design)$data
+    }
     instance$eval_batch(design)
   }
 
