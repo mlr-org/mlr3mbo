@@ -58,7 +58,8 @@ Suggests:
     lhs,
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    ggplot2
 Remotes:
     mlr-org/bbotk
 ByteCompile: no
