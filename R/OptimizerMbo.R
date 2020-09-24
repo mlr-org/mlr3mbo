@@ -14,6 +14,9 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @field loop_function (`function`).
     loop_function = NULL, #FIXME: At this point it DOES look ok to have the different mbo algos as objects, right?
 
+    #' @field result_function (`function`).
+    result_function = NULL,
+
     #' @field acq_function ([AcqFunction]).
     acq_function = NULL,
 
@@ -30,7 +33,8 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @param acq_function ([AcqFunction]).
     #' @param acq_optimizer ([AcqOptimizer]).
     #' @param args (`list()`).
-    initialize = function(loop_function, acq_function, acq_optimizer, args = NULL) {
+    #' @param result_function (`function`).
+    initialize = function(loop_function, acq_function, acq_optimizer, args = NULL, result_function = NULL) {
       param_set = ParamSet$new()
       param_classes = c("ParamDbl") # FIXME: Should depend on the surrogate?
       properties = c("single-crit") # FIXME: Should depend on the settings?
@@ -40,6 +44,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
       self$acq_function = assert_r6(acq_function, "AcqFunction")
       self$acq_optimizer = assert_r6(acq_optimizer, "AcqOptimizer")
       self$args = assert_list(args, names = "named", null.ok = TRUE)
+      self$result_function = assert_function(result_function, null.ok = TRUE)
     }
   ),
 
@@ -49,8 +54,12 @@ OptimizerMbo = R6Class("OptimizerMbo",
     },
 
     .assign_result = function(inst) {
-      #FIXME: Where do we define how to assign the result? i.e. if the problem is stochastic we dont want to chose the best point but the point with the best mean prediction
-      super$.assign_result(inst)
+      if (is.null(self$result_function)) {
+        super$.assign_result(inst)
+      } else {
+        #FIXME: Where do we define how to assign the result? i.e. if the problem is stochastic we dont want to chose the best point but the point with the best mean prediction
+        self$result_function(inst, self) #FIXME: Maybe not final API
+      }
     }
   )
 )

@@ -96,3 +96,33 @@ test_that("OptimizerMbo works with different settings", {
   }
 })
 
+test_that("OptimizerMbo works for noisy problems", {
+
+  obfun = OBJ_2D_NOISY
+
+  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km", nugget.estim = TRUE, jitter = 0.001))
+  design = generate_design_lhs(PS_2D, 12L)$data
+
+  optim = OptimizerMbo$new(
+    loop_function = bayesop_soo,
+    acq_function = AcqFunctionAEI$new(surrogate = surrogate),
+    acq_optimizer = AcqOptimizerRandomSearch$new(),
+    result_function = result_by_surrogate_design,
+  )
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = obfun, 
+    terminator = trm("evals", n_evals = 20),
+    search_space = PS_2D
+  )
+
+  instance$eval_batch(design)
+  
+  optim$optimize(instance)
+
+  opdf = instance$archive$data()
+  expect_data_table(opdf, any.missing = FALSE, nrows = 20)
+  expect_true(instance$result$y > min(opdf$y)) # we have not chosen the overoptimistic noisy y
+  expect_equal(instance$result$y, 0, tolerance = 0.1)
+})
+
