@@ -1,10 +1,8 @@
 context("SurrogateSingleCritLearner")
 
-library(mlr3learners)
-
 test_that("SurrogateSingleCritLearner API works", {
 
-  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
+  surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
   design = generate_design_lhs(PS_1D, 4)$data
   xydt = cbind(design, OBJ_1D$eval_dt(design))
 
@@ -23,7 +21,7 @@ test_that("SurrogateSingleCritLearner API works", {
 
 
 test_that("predict_types are recognized", {
-  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
+  surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
   design = generate_design_lhs(PS_1D, 4)$data
   xydt = cbind(design, OBJ_1D$eval_dt(design))
 

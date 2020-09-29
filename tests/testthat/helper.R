@@ -30,7 +30,7 @@ OBJ_2D = ObjectiveRFun$new(fun = FUN_2D, domain = PS_2D_domain, properties = "si
 
 # Simple 2D Function with noise
 FUN_2D_NOISY = function(xs) {
-  y = sum(as.numeric(xs)^2) + rnorm(1, sd = 0.1)
+  y = sum(as.numeric(xs)^2) + rnorm(1, sd = 0.5)
   list(y = y)
 }
 OBJ_2D_NOISY = ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D_domain, properties = c("single-crit", "noisy"))
@@ -54,3 +54,10 @@ MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D,
 MAKE_INST_1D = function(terminator) {
   MAKE_INST(objective = OBJ_1D, search_space = PS_1D, terminator = terminator)
 }
+
+library(mlr3learners)
+
+REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", nugget.stability = 10^-8)
+REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
+REGR_KM_DETERM = lrn("regr.km", nugget.estim = TRUE, covtype = "matern3_2", jitter = 0.001)
+REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
