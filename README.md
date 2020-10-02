@@ -6,6 +6,8 @@ We are really not done here! Very prelim code, so beware!
 <!-- badges: start -->
 [![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=master)](https://github.com/mlr-org/mlr3mbo/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
+[![StackOverflow](https://img.shields.io/badge/stackoverflow-mlr3-orange.svg)](https://stackoverflow.com/questions/tagged/mlr3)
+[![Mattermost](https://img.shields.io/badge/chat-mattermost-orange.svg)](https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/)
 <!-- badges: end -->
 
 [List of some Ideas](https://github.com/mb706/okmbo/tree/master/todo-files)
