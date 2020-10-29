@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Acquisition Function Confidence Bound — AcqFunctionCB • mlr3mbo</title>
+<title>Acquisition Function SMS EMOA — AcqFunctionSmsEmoa • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,8 +47,8 @@
 
 
 
-<meta property="og:title" content="Acquisition Function Confidence Bound — AcqFunctionCB" />
-<meta property="og:description" content="Confidence Bound." />
+<meta property="og:title" content="Acquisition Function SMS EMOA — AcqFunctionSmsEmoa" />
+<meta property="og:description" content="S-Metric Selection Evolutionary Multiobjective Optimization Algorithm." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -141,73 +141,86 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Acquisition Function Confidence Bound</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/AcqFunctionCB.R'><code>R/AcqFunctionCB.R</code></a></small>
-    <div class="hidden name"><code>AcqFunctionCB.Rd</code></div>
+    <h1>Acquisition Function SMS EMOA</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/AcqFunctionSmsEmoa.R'><code>R/AcqFunctionSmsEmoa.R</code></a></small>
+    <div class="hidden name"><code>AcqFunctionSmsEmoa.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Confidence Bound.</p>
+    <p>S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.</p>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="parameters"><a class="anchor" href="#parameters"></a>Parameters</h2>
-
-    
-
-<dl>
-<dt><code>lambda</code></dt><dd><p><code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code></p></dd>.
-
-</dl>
-
     <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
 
-    <p><code><a href='AcqFunction.html'>mlr3mbo::AcqFunction</a></code> -&gt; <code>AcqFunctionCB</code></p>
+    <p><code><a href='AcqFunction.html'>mlr3mbo::AcqFunction</a></code> -&gt; <code>AcqFunctionSmsEmoa</code></p>
+    <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
+
+    <p><div class="r6-fields"></p><dl>
+<dt><code>ys_front</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/matrix.html'>matrix()</a></code>).</p></dd>
+
+<dt><code>ref_point</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
+
+<dt><code>eps</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
+
+<dt><code>progress</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
+
+</dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
     
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
-<li><p><a href='#method-new'><code>AcqFunctionCB$new()</code></a></p></li>
-<li><p><a href='#method-eval_dt'><code>AcqFunctionCB$eval_dt()</code></a></p></li>
-<li><p><a href='#method-clone'><code>AcqFunctionCB$clone()</code></a></p></li>
+<li><p><a href='#method-new'><code>AcqFunctionSmsEmoa$new()</code></a></p></li>
+<li><p><a href='#method-eval_dt'><code>AcqFunctionSmsEmoa$eval_dt()</code></a></p></li>
+<li><p><a href='#method-update'><code>AcqFunctionSmsEmoa$update()</code></a></p></li>
+<li><p><a href='#method-clone'><code>AcqFunctionSmsEmoa$clone()</code></a></p></li>
 </ul>
 <p><details open ><summary>Inherited methods</summary>
 <ul>
 <li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="generate_objective"><a href='../../mlr3mbo/html/AcqFunction.html#method-generate_objective'><code>mlr3mbo::AcqFunction$generate_objective()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup"><a href='../../mlr3mbo/html/AcqFunction.html#method-setup'><code>mlr3mbo::AcqFunction$setup()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="update"><a href='../../mlr3mbo/html/AcqFunction.html#method-update'><code>mlr3mbo::AcqFunction$update()</code></a></span></p></li>
 </ul>
 </details>
 
 <hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
 <p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqFunctionCB</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>surrogate</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>AcqFunctionSmsEmoa</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>surrogate</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>surrogate</code></dt><dd><p><a href='SurrogateSingleCrit.html'>SurrogateSingleCrit</a>.</p></dd>
+<dt><code>surrogate</code></dt><dd><p><a href='SurrogateMultiCrit.html'>SurrogateMultiCrit</a>.</p></dd>
 
 </dl><p></div></p>
 <p><hr>
 <a id="method-eval_dt"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>eval_dt()</code></h3>
 <p>Evaluates all input values in <code>xdt</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqFunctionCB</span><span class='op'>$</span><span class='fu'>eval_dt</span><span class='op'>(</span><span class='va'>xdt</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>AcqFunctionSmsEmoa</span><span class='op'>$</span><span class='fu'>eval_dt</span><span class='op'>(</span><span class='va'>xdt</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>xdt</code></dt><dd><p><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a></p></dd>
+<dt><code>xdt</code></dt><dd><p><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a>.</p></dd>
 
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p><code>data.table</code></p>
+<p><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a></p>
+<p><hr>
+<a id="method-update"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/update.html'>update()</a></code></h3>
+<p>Updates acquisition function and sets <code>$y_best</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqFunctionSmsEmoa</span><span class='op'>$</span><span class='fu'>update</span><span class='op'>(</span><span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>archive</code></dt><dd><p><a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>.</p></dd>
+
+</dl><p></div></p>
 <p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqFunctionCB</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>AcqFunctionSmsEmoa</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>

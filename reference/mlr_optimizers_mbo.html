@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Acquisition function: Posterior Mean — AcqFunctionMean • mlr3mbo</title>
+<title>OptimizerMbo — mlr_optimizers_mbo • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,8 +47,8 @@
 
 
 
-<meta property="og:title" content="Acquisition function: Posterior Mean — AcqFunctionMean" />
-<meta property="og:description" content="Acquisition function: Posterior Mean" />
+<meta property="og:title" content="OptimizerMbo — mlr_optimizers_mbo" />
+<meta property="og:description" content="MBO loop as Optimizer." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -101,6 +101,9 @@
     mlr3book
   </a>
 </li>
+<li>
+  <a href="../articles/mlr3mbo.html">Get started</a>
+</li>
         <li>
   <a href="https://github.com/mlr-org/mlr3mbo/">
     <span class="fab fa fab fa-github fa-lg"></span>
@@ -138,31 +141,87 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Acquisition function: Posterior Mean</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/AcqFunctionMean.R'><code>R/AcqFunctionMean.R</code></a></small>
-    <div class="hidden name"><code>AcqFunctionMean.Rd</code></div>
+    <h1>OptimizerMbo</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/OptimizerMbo.R'><code>R/OptimizerMbo.R</code></a></small>
+    <div class="hidden name"><code>mlr_optimizers_mbo.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Acquisition function: Posterior Mean</p>
+    <p>MBO loop as Optimizer.</p>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
 
-    <p><a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a> object.</p>
-    <h2 class="hasAnchor" id="construction"><a class="anchor" href="#construction"></a>Construction</h2>
+    <p><code><a href='https://bbotk.mlr-org.com/reference/Optimizer.html'>bbotk::Optimizer</a></code> -&gt; <code>OptimizerMbo</code></p>
+    <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
 
-    
+    <p><div class="r6-fields"></p><dl>
+<dt><code>loop_function</code></dt><dd><p>(<code>function</code>).</p></dd>
 
+<dt><code>result_function</code></dt><dd><p>(<code>function</code>).</p></dd>
 
-    <h2 class="hasAnchor" id="fields"><a class="anchor" href="#fields"></a>Fields</h2>
+<dt><code>acq_function</code></dt><dd><p>(<a href='AcqFunction.html'>AcqFunction</a>).</p></dd>
 
-    <p>See <a href='AcqFunction.html'>AcqFunction</a></p>
+<dt><code>acq_optimizer</code></dt><dd><p>(<a href='AcqOptimizer.html'>AcqOptimizer</a>).</p></dd>
+
+<dt><code>args</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>).</p></dd>
+
+</dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
-    <p>See <a href='AcqFunction.html'>AcqFunction</a></p>
+    
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
+
+<ul>
+<li><p><a href='#method-new'><code>OptimizerMbo$new()</code></a></p></li>
+<li><p><a href='#method-clone'><code>OptimizerMbo$clone()</code></a></p></li>
+</ul>
+<p><details open ><summary>Inherited methods</summary>
+<ul>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-format'><code>bbotk::Optimizer$format()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="optimize"><a href='../../bbotk/html/Optimizer.html#method-optimize'><code>bbotk::Optimizer$optimize()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="print"><a href='../../bbotk/html/Optimizer.html#method-print'><code>bbotk::Optimizer$print()</code></a></span></p></li>
+</ul>
+</details>
+
+<hr>
+<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
+<p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>OptimizerMbo</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
+  <span class='va'>loop_function</span>,
+  <span class='va'>acq_function</span>,
+  <span class='va'>acq_optimizer</span>,
+  args <span class='op'>=</span> <span class='cn'>NULL</span>,
+  result_function <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>loop_function</code></dt><dd><p>(<code>function</code>).</p></dd>
+
+<dt><code>acq_function</code></dt><dd><p>(<a href='AcqFunction.html'>AcqFunction</a>).</p></dd>
+
+<dt><code>acq_optimizer</code></dt><dd><p>(<a href='AcqOptimizer.html'>AcqOptimizer</a>).</p></dd>
+
+<dt><code>args</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>).</p></dd>
+
+<dt><code>result_function</code></dt><dd><p>(<code>function</code>).</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
+<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>OptimizerMbo</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p></dd>
+
+</dl><p></div></p>
+
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -175,7 +234,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michel Lang, Bernd Bischl, Jakob Richter, Martin Binder, Julia Moosbauer.</p>
+  <p>Developed by Jakob Richter, Marc Becker, Michel Lang, Bernd Bischl, Martin Binder, Julia Moosbauer.</p>
 </div>
 
 <div class="pkgdown">

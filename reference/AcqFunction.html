@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Acquisition function — AcqFunction • mlr3mbo</title>
+<title>Acquisition Function — AcqFunction • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,7 +47,7 @@
 
 
 
-<meta property="og:title" content="Acquisition function — AcqFunction" />
+<meta property="og:title" content="Acquisition Function — AcqFunction" />
 <meta property="og:description" content="Based on a surrogate model, the acquisition function encodes the preference to evaluate
 a new point for evaluation." />
 <meta name="twitter:card" content="summary" />
@@ -102,6 +102,9 @@ a new point for evaluation." />
     mlr3book
   </a>
 </li>
+<li>
+  <a href="../articles/mlr3mbo.html">Get started</a>
+</li>
         <li>
   <a href="https://github.com/mlr-org/mlr3mbo/">
     <span class="fab fa fab fa-github fa-lg"></span>
@@ -139,7 +142,7 @@ a new point for evaluation." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Acquisition function</h1>
+    <h1>Acquisition Function</h1>
     <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/AcqFunction.R'><code>R/AcqFunction.R</code></a></small>
     <div class="hidden name"><code>AcqFunction.Rd</code></div>
     </div>
@@ -151,48 +154,105 @@ a new point for evaluation.</p>
 
 
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
 
-    <p><a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a> object.</p>
-    <h2 class="hasAnchor" id="construction"><a class="anchor" href="#construction"></a>Construction</h2>
+    <p><div class="r6-fields"></p><dl>
+<dt><code>id</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>).</p></dd>
 
-    
-<pre><span class='kw'>acqf</span> <span class='op'>=</span> <span class='fu'>AcquisitionFunction</span>(<span class='kw'>id</span>, <span class='kw'>opt_dir</span>, <span class='kw'>settings</span>, <span class='kw'>requirements</span>)
-</pre>
-<ul>
-<li><p><code>id</code> :: <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code><br />
-Short name of the criterion.</p></li>
-<li><p><code>opt_dir</code> :: <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code><br />
-Should the criterion be minimized of maximized?
-Can be "min", "max" or "obj", where the latter means that the same direction</p></li>
-<li><p><code>settings</code> :: named <code>list</code><br />
-Control settings and constants.
-as specified in the objective function is taken.</p></li>
-<li><p>requirements :: named <code>list</code><br /></p></li>
-</ul>
+<dt><code>surrogate</code></dt><dd><p><a href='Surrogate.html'>Surrogate</a>.</p></dd>
 
-    <h2 class="hasAnchor" id="fields"><a class="anchor" href="#fields"></a>Fields</h2>
+<dt><code>param_set</code></dt><dd><p>(<a href='https://paradox.mlr-org.com/reference/ParamSet.html'>paradox::ParamSet</a>).</p></dd>
 
-    
+<dt><code>search_space</code></dt><dd><p>(<a href='https://paradox.mlr-org.com/reference/ParamSet.html'>paradox::ParamSet</a>).</p></dd>
 
-<ul>
-<li><p><code>surrogate</code> :: <a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3::LearnerRegr</a>`<br /></p></li>
-<li><p><code>param_set</code> :: <a href='https://paradox.mlr-org.com/reference/ParamSet.html'>paradox::ParamSet</a>`<br />
-Feasible space to optimize over.</p></li>
-<li><p><code>task</code> :: <a href='https://mlr3.mlr-org.com/reference/Task.html'>mlr3::Task</a>`<br /></p></li>
-</ul>
+<dt><code>codomain</code></dt><dd><p>(<a href='https://paradox.mlr-org.com/reference/ParamSet.html'>paradox::ParamSet</a>).</p></dd>
 
+<dt><code>direction</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>).</p></dd>
+
+<dt><code>surrogate_max_to_min</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).</p></dd>
+
+</dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
     
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
-<li><p>set_up(param_set, task, surrogate)<br />
-(list of <a href='https://mlr3.mlr-org.com/reference/Measure.html'>mlr3::Measure</a>, <code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code>, <code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code>, <code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code>, <code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code>) -&gt; <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code><br /></p></li>
-<li><p><code>eval_batch(dt)</code><br />
-<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code> -&gt; <code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code><br />
-Evaluates all design points in <code>dt</code> with the acquisition function where each points is a row, and columns are scalar parameters.</p></li>
+<li><p><a href='#method-new'><code>AcqFunction$new()</code></a></p></li>
+<li><p><a href='#method-eval_dt'><code>AcqFunction$eval_dt()</code></a></p></li>
+<li><p><a href='#method-setup'><code>AcqFunction$setup()</code></a></p></li>
+<li><p><a href='#method-update'><code>AcqFunction$update()</code></a></p></li>
+<li><p><a href='#method-generate_objective'><code>AcqFunction$generate_objective()</code></a></p></li>
+<li><p><a href='#method-clone'><code>AcqFunction$clone()</code></a></p></li>
 </ul>
+<p><hr>
+<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
+<p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>param_set</span>, <span class='va'>surrogate</span>, <span class='va'>direction</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>id</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>).</p></dd>
+
+<dt><code>param_set</code></dt><dd><p>(<a href='https://paradox.mlr-org.com/reference/ParamSet.html'>paradox::ParamSet</a>).</p></dd>
+
+<dt><code>surrogate</code></dt><dd><p><a href='Surrogate.html'>Surrogate</a>.</p></dd>
+
+<dt><code>direction</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>).</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-eval_dt"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>eval_dt()</code></h3>
+<p>Evaluates all input values in <code>xdt</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>eval_dt</span><span class='op'>(</span><span class='va'>xdt</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>xdt</code></dt><dd><p><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a></p></dd>
+
+</dl><p></div></p>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p><code>data.table</code> <br />
+The column has to have the same name as the id of the acq_fun, because we
+renamed the id of the codomain</p>
+<p><hr>
+<a id="method-setup"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>setup()</code></h3>
+<p>Sets up the acquisition function</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>setup</span><span class='op'>(</span><span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>archive</code></dt><dd><p><a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-update"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/update.html'>update()</a></code></h3>
+<p>Update the acquisition function</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>update</span><span class='op'>(</span><span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>archive</code></dt><dd><p><a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-generate_objective"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>generate_objective()</code></h3>
+<p>Generates an objective function for <a href='https://bbotk.mlr-org.com/reference/Optimizer.html'>bbotk::Optimizer</a>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>generate_objective</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p><a href='https://bbotk.mlr-org.com/reference/ObjectiveRFunDt.html'>bbotk::ObjectiveRFunDt</a></p>
+<p><hr>
+<a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
+<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p></dd>
+
+</dl><p></div></p>
+
 
 
   </div>
@@ -206,7 +266,7 @@ Evaluates all design points in <code>dt</code> with the acquisition function whe
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michel Lang, Bernd Bischl, Jakob Richter, Martin Binder, Julia Moosbauer.</p>
+  <p>Developed by Jakob Richter, Marc Becker, Michel Lang, Bernd Bischl, Martin Binder, Julia Moosbauer.</p>
 </div>
 
 <div class="pkgdown">

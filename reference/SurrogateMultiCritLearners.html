@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Acquisition Function Confidence Bound — AcqFunctionCB • mlr3mbo</title>
+<title>Surrogate Model for MultiCriteria response surfaces — SurrogateMultiCritLearners • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,8 +47,8 @@
 
 
 
-<meta property="og:title" content="Acquisition Function Confidence Bound — AcqFunctionCB" />
-<meta property="og:description" content="Confidence Bound." />
+<meta property="og:title" content="Surrogate Model for MultiCriteria response surfaces — SurrogateMultiCritLearners" />
+<meta property="og:description" content="Multi Criteria response surfaces modeled by multiple mlr3 regression learners" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -141,73 +141,83 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Acquisition Function Confidence Bound</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/AcqFunctionCB.R'><code>R/AcqFunctionCB.R</code></a></small>
-    <div class="hidden name"><code>AcqFunctionCB.Rd</code></div>
+    <h1>Surrogate Model for MultiCriteria response surfaces</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/SurrogateMultiCritLearners.R'><code>R/SurrogateMultiCritLearners.R</code></a></small>
+    <div class="hidden name"><code>SurrogateMultiCritLearners.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Confidence Bound.</p>
+    <p>Multi Criteria response surfaces modeled by multiple mlr3 regression learners</p>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="parameters"><a class="anchor" href="#parameters"></a>Parameters</h2>
+    <h2 class="hasAnchor" id="super-classes"><a class="anchor" href="#super-classes"></a>Super classes</h2>
 
-    
+    <p><code><a href='Surrogate.html'>mlr3mbo::Surrogate</a></code> -&gt; <code><a href='SurrogateMultiCrit.html'>mlr3mbo::SurrogateMultiCrit</a></code> -&gt; <code>SurrogateMultiCritLearners</code></p>
+    <h2 class="hasAnchor" id="active-bindings"><a class="anchor" href="#active-bindings"></a>Active bindings</h2>
 
-<dl>
-<dt><code>lambda</code></dt><dd><p><code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code></p></dd>.
+    <p><div class="r6-active-bindings"></p><dl>
+<dt><code>k</code></dt><dd><p>Returns number of models.</p></dd>
 
-</dl>
-
-    <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
-
-    <p><code><a href='AcqFunction.html'>mlr3mbo::AcqFunction</a></code> -&gt; <code>AcqFunctionCB</code></p>
+</dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
     
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
-<li><p><a href='#method-new'><code>AcqFunctionCB$new()</code></a></p></li>
-<li><p><a href='#method-eval_dt'><code>AcqFunctionCB$eval_dt()</code></a></p></li>
-<li><p><a href='#method-clone'><code>AcqFunctionCB$clone()</code></a></p></li>
+<li><p><a href='#method-new'><code>SurrogateMultiCritLearners$new()</code></a></p></li>
+<li><p><a href='#method-update'><code>SurrogateMultiCritLearners$update()</code></a></p></li>
+<li><p><a href='#method-predict'><code>SurrogateMultiCritLearners$predict()</code></a></p></li>
+<li><p><a href='#method-clone'><code>SurrogateMultiCritLearners$clone()</code></a></p></li>
 </ul>
 <p><details open ><summary>Inherited methods</summary>
 <ul>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="generate_objective"><a href='../../mlr3mbo/html/AcqFunction.html#method-generate_objective'><code>mlr3mbo::AcqFunction$generate_objective()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup"><a href='../../mlr3mbo/html/AcqFunction.html#method-setup'><code>mlr3mbo::AcqFunction$setup()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="update"><a href='../../mlr3mbo/html/AcqFunction.html#method-update'><code>mlr3mbo::AcqFunction$update()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup"><a href='../../mlr3mbo/html/Surrogate.html#method-setup'><code>mlr3mbo::Surrogate$setup()</code></a></span></p></li>
 </ul>
 </details>
 
 <hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
 <p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqFunctionCB</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>surrogate</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>SurrogateMultiCritLearners</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>learners</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>surrogate</code></dt><dd><p><a href='SurrogateSingleCrit.html'>SurrogateSingleCrit</a>.</p></dd>
+<dt><code>learners</code></dt><dd><p>(list of <a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3::LearnerRegr</a>).</p></dd>
 
 </dl><p></div></p>
 <p><hr>
-<a id="method-eval_dt"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>eval_dt()</code></h3>
-<p>Evaluates all input values in <code>xdt</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqFunctionCB</span><span class='op'>$</span><span class='fu'>eval_dt</span><span class='op'>(</span><span class='va'>xdt</span><span class='op'>)</span></pre><p></div></p>
+<a id="method-update"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/update.html'>update()</a></code></h3>
+<p>Train model with new points.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>SurrogateMultiCritLearners</span><span class='op'>$</span><span class='fu'>update</span><span class='op'>(</span><span class='va'>xydt</span>, <span class='va'>y_cols</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>xdt</code></dt><dd><p><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a></p></dd>
+<dt><code>xydt</code></dt><dd><p>(<a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a>).</p></dd>
+
+<dt><code>y_cols</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character()</a></code>)<br />
+Names of response columns.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-predict"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/predict.html'>predict()</a></code></h3>
+<p>Returns mean response and standard error</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>SurrogateMultiCritLearners</span><span class='op'>$</span><span class='fu'>predict</span><span class='op'>(</span><span class='va'>xdt</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>xdt</code></dt><dd><p><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a><br />
+New data.</p></dd>
 
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p><code>data.table</code></p>
+<p><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a> with the columns <code>mean</code> and <code>se</code>.</p>
 <p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqFunctionCB</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>SurrogateMultiCritLearners</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>mlr3mbo: Flexible Bayesian Optimization in R — mlr3mbo-package • mlr3mbo</title>
+<title>Acquisition Optimizer from bbotk Optimizer — AcqOptimizerFromOptimizer • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,9 +47,8 @@
 
 
 
-<meta property="og:title" content="mlr3mbo: Flexible Bayesian Optimization in R — mlr3mbo-package" />
-<meta property="og:description" content="A modern and flexible approach to Bayesian
-    Optimization in R." />
+<meta property="og:title" content="Acquisition Optimizer from bbotk Optimizer — AcqOptimizerFromOptimizer" />
+<meta property="og:description" content="Internally used to transform bbotk::Optimizer to AcqOptimizer." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -142,37 +141,73 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>mlr3mbo: Flexible Bayesian Optimization in R</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/zzz.R'><code>R/zzz.R</code></a></small>
-    <div class="hidden name"><code>mlr3mbo-package.Rd</code></div>
+    <h1>Acquisition Optimizer from bbotk Optimizer</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/AcqOptimizerFromOptimizer.R'><code>R/AcqOptimizerFromOptimizer.R</code></a></small>
+    <div class="hidden name"><code>AcqOptimizerFromOptimizer.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A modern and flexible approach to Bayesian
-    Optimization in R.</p>
+    <p>Internally used to transform <a href='https://bbotk.mlr-org.com/reference/Optimizer.html'>bbotk::Optimizer</a> to <a href='AcqOptimizer.html'>AcqOptimizer</a>.</p>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
 
-    <div class='dont-index'><p>Useful links:</p><ul>
-<li><p><a href='https://mlr3mbo.mlr-org.com'>https://mlr3mbo.mlr-org.com</a></p></li>
-<li><p><a href='https://github.com/mlr-org/mlr3mbo'>https://github.com/mlr-org/mlr3mbo</a></p></li>
-<li><p>Report bugs at <a href='https://github.com/mlr-org/mlr3mbo/issues'>https://github.com/mlr-org/mlr3mbo/issues</a></p></li>
+    <p><code><a href='AcqOptimizer.html'>mlr3mbo::AcqOptimizer</a></code> -&gt; <code>AcqOptimizerFromOptimizer</code></p>
+    <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
+
+    <p><div class="r6-fields"></p><dl>
+<dt><code>terminator</code></dt><dd><p><a href='https://bbotk.mlr-org.com/reference/Terminator.html'>bbotk::Terminator</a>.</p></dd>
+
+</dl><p></div></p>
+    <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
+
+    
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
+
+<ul>
+<li><p><a href='#method-new'><code>AcqOptimizerFromOptimizer$new()</code></a></p></li>
+<li><p><a href='#method-optimize'><code>AcqOptimizerFromOptimizer$optimize()</code></a></p></li>
+<li><p><a href='#method-clone'><code>AcqOptimizerFromOptimizer$clone()</code></a></p></li>
 </ul>
-
-</div>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p><strong>Maintainer</strong>: Jakob Richter <a href='mailto:jakob1richter@gmail.com'>jakob1richter@gmail.com</a> (<a href='https://orcid.org/0000-0003-4481-5554'>ORCID</a>)</p>
-<p>Authors:</p><ul>
-<li><p>Marc Becker <a href='mailto:marcbecker@posteo.de'>marcbecker@posteo.de</a> (<a href='https://orcid.org/0000-0002-8115-0400'>ORCID</a>)</p></li>
-<li><p>Michel Lang <a href='mailto:michellang@gmail.com'>michellang@gmail.com</a> (<a href='https://orcid.org/0000-0001-9754-0393'>ORCID</a>)</p></li>
-<li><p>Bernd Bischl <a href='mailto:bernd_bischl@gmx.net'>bernd_bischl@gmx.net</a> (<a href='https://orcid.org/0000-0001-6002-6980'>ORCID</a>)</p></li>
-<li><p>Martin Binder <a href='mailto:mlr.developer@mb706.com'>mlr.developer@mb706.com</a></p></li>
-<li><p>Julia Moosbauer <a href='mailto:ju.moosbauer@gmail.com'>ju.moosbauer@gmail.com</a></p></li>
+<p><details open ><summary>Inherited methods</summary>
+<ul>
 </ul>
+</details>
+
+<hr>
+<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
+<p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqOptimizerFromOptimizer</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>optimizer</span>, <span class='va'>terminator</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>optimizer</code></dt><dd><p><a href='https://bbotk.mlr-org.com/reference/Optimizer.html'>bbotk::Optimizer</a>.</p></dd>
+
+<dt><code>terminator</code></dt><dd><p><a href='https://bbotk.mlr-org.com/reference/Terminator.html'>bbotk::Terminator</a>.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-optimize"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/optimize.html'>optimize()</a></code></h3>
+<p>Optimize the acquisition function.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqOptimizerFromOptimizer</span><span class='op'>$</span><span class='fu'>optimize</span><span class='op'>(</span><span class='va'>acq_function</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>acq_function</code></dt><dd><p><a href='AcqFunction.html'>AcqFunction</a>.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
+<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqOptimizerFromOptimizer</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p></dd>
+
+</dl><p></div></p>
 
 
 

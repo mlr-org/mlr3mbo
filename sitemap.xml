@@ -7,12 +7,66 @@
     <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunction.html</loc>
   </url>
   <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionAEI.html</loc>
+  </url>
+  <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionCB.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionMean.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionEI.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionEIPS.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionSmsEmoa.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerFromOptimizer.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerRandomSearch.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/MboDummyArchive.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/Surrogate.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateMultiCrit.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateMultiCritLearners.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateSingleCrit.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateSingleCritLearner.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/bayesop_smsemoa.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/bayesop_soo.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/mlr3mbo-package.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_mbo.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_tuners_mbo.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/result_by_surrogate_design.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/articles/mlr3mbo.html</loc>
   </url>
 </urlset>
