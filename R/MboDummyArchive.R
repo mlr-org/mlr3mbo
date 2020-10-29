@@ -17,7 +17,7 @@
 #' @export
 
 MboDummyArchive = R6Class("MboArchive",
-  inherit = bbotk::Archive,
+  inherit = Archive,
 
   public = list(
 
@@ -43,6 +43,8 @@ MboDummyArchive = R6Class("MboArchive",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param archive ([bbotk::Archive]).
+    #' @param codomain ([paradox::ParamSet])
+    #' @param search_space ([paradox::ParamSet])
     initialize = function(archive, codomain = archive$codomain, search_space = archive$search_space) {
       self$archive = archive
       self$codomain = codomain

@@ -7,8 +7,7 @@
 Surrogate = R6Class("Surrogate",
   public = list(
 
-    #' @field model \cr
-    #' Stores surrogate model
+    #' @field model Surrogate Model
     model = NULL,
 
     #' @description
@@ -22,10 +21,12 @@ Surrogate = R6Class("Surrogate",
     #' @description
     #' Train model with new points.
     #'
-    #' @param xydt [data.table::data.table].
+    #' @param xydt [data.table::data.table]\cr
+    #' Desing of new points.
     #'
     #' @param y_cols (`character()`)\cr
     #' Names of response columns.
+    #' 
     #' @return `NULL`
     update = function(xydt, y_cols) {
       stop("Abstract")
@@ -35,7 +36,7 @@ Surrogate = R6Class("Surrogate",
     #' Possible setup routine of the surrogate
     #'
     #' @param xydt [data.table::data.table]\cr
-    #' New data.
+    #' Initial design.
     #'
     #' @param y_cols (`character()`)\cr
     #' Names of response columns.

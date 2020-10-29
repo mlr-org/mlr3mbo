@@ -10,7 +10,7 @@ result_by_surrogate_design(instance, optimizer_mbo)
 \item{instance}{(\link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit}|\link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit})\cr
 The OptimInstance object the result should be assigned to}
 
-\item{optimer_mbo}{\link{OptimizerMbo}\cr
+\item{optimizer_mbo}{\link{OptimizerMbo}\cr
 The OptimizerMbo object that generates the final result.}
 }
 \description{

@@ -9,8 +9,7 @@ Surrogate Model
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{model}}{\cr
-Stores surrogate model}
+\item{\code{model}}{Surrogate Model}
 }
 \if{html}{\out{</div>}}
 }
@@ -53,7 +52,8 @@ Train model with new points.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xydt}}{\link[data.table:data.table]{data.table::data.table}.}
+\item{\code{xydt}}{\link[data.table:data.table]{data.table::data.table}\cr
+Desing of new points.}
 
 \item{\code{y_cols}}{(\code{character()})\cr
 Names of response columns.}
@@ -77,7 +77,7 @@ Possible setup routine of the surrogate
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{xydt}}{\link[data.table:data.table]{data.table::data.table}\cr
-New data.}
+Initial design.}
 
 \item{\code{y_cols}}{(\code{character()})\cr
 Names of response columns.}

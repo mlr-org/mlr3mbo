@@ -83,7 +83,7 @@ AcqFunction = R6Class("AcqFunction",
     #'
     #' @return [bbotk::ObjectiveRFunDt]
     generate_objective = function() {
-      bbotk::ObjectiveRFunDt$new(
+      ObjectiveRFunDt$new(
         fun = self$eval_dt,
         domain = self$search_space,
         codomain = self$codomain,

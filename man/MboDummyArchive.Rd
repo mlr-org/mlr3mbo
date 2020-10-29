@@ -86,12 +86,9 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \describe{
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
 
-\item{\code{codomain}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
-Specifies codomain of function.
-Most importantly the tags of each output "Parameter" define whether it should
-be minimized or maximized.  The default is to minimize each component.}
+\item{\code{codomain}}{(\link[paradox:ParamSet]{paradox::ParamSet})}
 
-\item{\code{search_space}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
+\item{\code{search_space}}{(\link[paradox:ParamSet]{paradox::ParamSet})}
 }
 \if{html}{\out{</div>}}
 }

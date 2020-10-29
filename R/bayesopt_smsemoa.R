@@ -1,5 +1,12 @@
-
-
+#' @title Multi-Objective SMS-MBO
+#'
+#' @description
+#' Function that executes a SMS multi-objective Bayesian optimization.
+#' @template param_instance
+#' @template param_acq_function
+#' @template param_acq_optimizer
+#' @return [bbotk::Archive]
+#' @export
 bayesop_smsemoa = function(instance, acq_function, acq_optimizer) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")

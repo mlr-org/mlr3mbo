@@ -1,3 +1,18 @@
+# #' @title Multi-Objective ParEGO
+# #'
+# #' @description
+# #' Function that executes a ParEGO multi-objective Bayesian optimization.
+# #' @template param_instance
+# #' @template param_acq_function
+# #' @template param_acq_optimizer
+# #' @param q (`int(1)`)\cr
+# #'   Batch size of proposal
+# #' @param s (`int(1)`)\cr
+# #'   ?
+# #' @param rho (`numeric(1)`)\cr
+# #'   ?
+# #' @return [bbotk::Archive]
+# #' @export
 bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100, rho = 0.05) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")

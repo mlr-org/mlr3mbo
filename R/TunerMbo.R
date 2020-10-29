@@ -13,8 +13,7 @@ TunerMbo = R6Class("TunerMbo",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param ... \cr
-    #' Parameter passed to [OptimizerMbo].
+    #' @param ... Parameter passed to [OptimizerMbo].
     initialize = function(...) {
       super$initialize(
         optimizer = OptimizerMbo$new(...)

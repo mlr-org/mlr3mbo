@@ -6,6 +6,7 @@
 #' @import bbotk
 #' @import lgr
 #' @import mlr3
+#' @import mlr3tuning
 #' @importFrom utils data head tail
 #' @importFrom backports import
 #' @importFrom stats runif

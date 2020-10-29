@@ -1,4 +1,6 @@
-#' @param codomain ([paradox::ParamSet])\cr
-#'   Specifies codomain of function.
-#'   Most importantly the tags of each output "Parameter" define whether it should
-#'   be minimized or maximized.  The default is to minimize each component.
+#' @param instance [bbotk::OptimInstance]\cr
+#'   The optimization instance object.
+#' @param acq_function [AcqFunction]\cr
+#'   The acquistion function object.
+#' @param acq_optimizer [AcqOptimizer]\cr
+#'   The optimizer that optimizes the acquistion function.
