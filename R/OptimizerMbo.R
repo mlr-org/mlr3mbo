@@ -36,7 +36,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @param result_function (`function`).
     initialize = function(loop_function, acq_function, acq_optimizer, args = NULL, result_function = NULL) {
       param_set = ParamSet$new()
-      param_classes = feauture_types_to_param_classes(acq_function$surrogate$model$feature_types)
+      param_classes = feature_types_to_param_classes(acq_function$surrogate$model$feature_types)
       properties = c("single-crit", "dependencies") # FIXME: Should depend on the settings?
       packages = character() # Maybe not so important? Surrogate package etc?
       super$initialize(param_set, param_classes, properties, packages)

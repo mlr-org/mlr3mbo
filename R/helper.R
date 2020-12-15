@@ -15,7 +15,7 @@ generate_acq_codomain = function(codomain, id, direction = "same") {
   return(codomain)
 }
 
-feauture_types_to_param_classes = function(feature_types) {
+feature_types_to_param_classes = function(feature_types) {
   param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct")
   param_classes[c("logical", "integer", "numeric", "factor") %in% feature_types]
 }
