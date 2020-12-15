@@ -4,15 +4,15 @@
 \alias{MboDummyArchive}
 \title{Logging object for objective function evaluations}
 \description{
-Container around a \link[data.table:data.table]{data.table::data.table} which stores all performed
+Container around a \code{\link[data.table:data.table]{data.table::data.table()}} which stores all performed
 function calls of the Objective.
 }
 \section{Technical details}{
 
 
 The data is stored in a private \code{.data} field that contains a
-\link[data.table:data.table]{data.table::data.table} which logs all performed function calls of the \link{Objective}.
-This \link[data.table:data.table]{data.table::data.table} is accessed with the public \verb{$data()} method. New
+\code{\link[data.table:data.table]{data.table::data.table()}} which logs all performed function calls of the \link{Objective}.
+This \code{\link[data.table:data.table]{data.table::data.table()}} is accessed with the public \verb{$data()} method. New
 values can be added with the \verb{$add_evals()} method. This however is usually
 done through the evaluation of the \link{OptimInstance} by the \link{Optimizer}.
 }
@@ -31,9 +31,9 @@ Codomain of objective function.}
 \item{\code{search_space}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Search space of objective.}
 
-\item{\code{added_rows}}{(\link[data.table:data.table]{data.table::data.table}).}
+\item{\code{added_rows}}{(\code{\link[data.table:data.table]{data.table::data.table()}}).}
 
-\item{\code{added_cols}}{(\link[data.table:data.table]{data.table::data.table}).}
+\item{\code{added_cols}}{(\code{\link[data.table:data.table]{data.table::data.table()}}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -115,12 +115,12 @@ Adds function evaluations to the archive table.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xdt}}{(\link[data.table:data.table]{data.table::data.table}.}
+\item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}}.}
 
 \item{\code{xss_trafoed}}{(\code{list()})\cr
 Transformed point(s) in the \emph{domain space}}
 
-\item{\code{ydt}}{(\link[data.table:data.table]{data.table::data.table}.}
+\item{\code{ydt}}{(\code{\link[data.table:data.table]{data.table::data.table()}}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -137,7 +137,7 @@ Add columns.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dt}}{(\link[data.table:data.table]{data.table::data.table})}
+\item{\code{dt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})}
 }
 \if{html}{\out{</div>}}
 }
@@ -169,7 +169,7 @@ Take only batches \code{m} into account. Default is all batches.}
 \if{html}{\out{<a id="method-data"></a>}}
 \if{latex}{\out{\hypertarget{method-data}{}}}
 \subsection{Method \code{data()}}{
-Returns a \link[data.table:data.table]{data.table::data.table} which contains all performed
+Returns a \code{\link[data.table:data.table]{data.table::data.table()}} which contains all performed
 \link{Objective} function calls.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MboDummyArchive$data(unnest = NULL)}\if{html}{\out{</div>}}

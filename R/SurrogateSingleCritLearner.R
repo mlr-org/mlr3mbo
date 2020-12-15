@@ -22,7 +22,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' @description
     #' Train model with new points.
     #'
-    #' @param xydt [data.table::data.table].
+    #' @param xydt [data.table::data.table()].
     #'
     #' @param y_cols (`character(1)`)\cr
     #' Name of response column.
@@ -35,10 +35,10 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' @description
     #' Returns mean response and standard error.
     #'
-    #' @param xdt [data.table::data.table]\cr
+    #' @param xdt [data.table::data.table()]\cr
     #' New data.
     #'
-    #' @return [data.table::data.table] with the columns `mean` and `se`.
+    #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
       pred = self$model$predict_newdata(newdata = xdt)
       if(self$model$predict_type == "se") {

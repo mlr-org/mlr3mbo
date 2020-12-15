@@ -25,7 +25,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #' @description
     #' Train model with new points.
     #'
-    #' @param xydt ([data.table::data.table]).
+    #' @param xydt ([data.table::data.table()]).
     #'
     #' @param y_cols (`character()`)\cr
     #' Names of response columns.
@@ -44,10 +44,10 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #' @description
     #' Returns mean response and standard error
     #'
-    #' @param xdt [data.table::data.table]\cr
+    #' @param xdt [data.table::data.table()]\cr
     #' New data.
     #'
-    #' @return [data.table::data.table] with the columns `mean` and `se`.
+    #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
       preds = lapply(self$model, function(model) {
         pred = model$predict_newdata(newdata = xdt)
@@ -70,4 +70,3 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
   )
 
 )
-

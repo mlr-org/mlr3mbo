@@ -31,9 +31,9 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #' @description
     #' Evaluates all input values in `xdt`.
     #'
-    #' @param xdt [data.table::data.table]
+    #' @param xdt [data.table::data.table()]
     #'
-    #' @return `data.table`
+    #' @return [data.table::data.table()].
     eval_dt = function(xdt) {
       p = self$surrogate$predict(xdt)
       mu = p[[1]]$mean

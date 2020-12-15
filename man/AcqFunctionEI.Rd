@@ -73,12 +73,12 @@ Evaluates all input values in \code{xdt}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}}
+\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table}
+\code{\link[data.table:data.table]{data.table::data.table()}}.
 }
 }
 \if{html}{\out{<hr>}}

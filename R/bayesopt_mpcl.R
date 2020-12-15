@@ -20,7 +20,7 @@ bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
     # normal soo updates
     xydt = archive$data()
     acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
-    acq_function$update(archive) 
+    acq_function$update(archive)
 
     acq_function$update(instance$archive)
     xdt = acq_optimizer$optimize(acq_function)
@@ -43,7 +43,7 @@ bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
 
       # obtain new proposal based on lie
       temp_acq_function$update(temp_archive)
-      xdt_new = acq_optimizer$optimize(temp_acq_function) 
+      xdt_new = acq_optimizer$optimize(temp_acq_function)
       xdt = rbind(xdt, xdt_new)
     }
 
@@ -91,6 +91,3 @@ if (FALSE) {
   g = g + geom_line(data = preds, aes(x = x, y = mean), col = "blue")
   g
 }
-
-
-
