@@ -1,5 +1,3 @@
-context("SurrogateSingleCritLearner")
-
 test_that("SurrogateSingleCritLearner API works", {
 
   surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)

@@ -18,8 +18,7 @@ bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
 
   repeat {
     # normal soo updates
-    xydt = archive$data()
-    acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)
+    acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y)
     acq_function$update(archive)
 
     acq_function$update(instance$archive)
@@ -38,8 +37,7 @@ bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
       temp_archive$add_evals(xdt = xdt_new, ydt = lie)
 
       # update all objects with lie
-      xydt = temp_archive$data()
-      temp_acq_function$surrogate$update(xydt = xydt[, c(temp_archive$cols_x, temp_archive$cols_y), with = FALSE], y_cols = temp_archive$cols_y)
+      temp_acq_function$surrogate$update(xydt = archive_xy(temp_archive),, y_cols = temp_archive$cols_y)
 
       # obtain new proposal based on lie
       temp_acq_function$update(temp_archive)

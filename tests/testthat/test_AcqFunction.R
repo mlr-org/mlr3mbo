@@ -1,5 +1,3 @@
-context("AcqFunction")
-
 test_that("AcqFunction API works", {
   surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
   design = generate_design_lhs(OBJ_1D$domain, 4)$data

@@ -1,5 +1,3 @@
-context("OptimizerMbo")
-
 test_that("OptimizerMbo works", {
 
   obfun = OBJ_1D
@@ -14,13 +12,13 @@ test_that("OptimizerMbo works", {
   )
 
   instance = OptimInstanceSingleCrit$new(
-    objective = obfun, 
+    objective = obfun,
     terminator = trm("evals", n_evals = 10),
     search_space = PS_1D
   )
 
   instance$eval_batch(design)
-  
+
   optim$optimize(instance)
 
   opdf = instance$archive$data()
@@ -30,7 +28,7 @@ test_that("OptimizerMbo works", {
 
 
 test_that("OptimizerMbo works with different settings", {
-  
+
   # defince common settings
   obfun = OBJ_2D
   surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
@@ -39,25 +37,25 @@ test_that("OptimizerMbo works with different settings", {
 
   # define combinations
   loop_functions = list(
-    soo = list(fun = bayesop_soo), 
+    soo = list(fun = bayesop_soo),
     mpcl = list(fun = bayesop_mpcl, args = list(liar = mean, q = 2))
   )
   acq_functions = list(
     aei = AcqFunctionAEI$new(surrogate), #FIXME
-    cb = AcqFunctionCB$new(surrogate), 
+    cb = AcqFunctionCB$new(surrogate),
     ei = AcqFunctionEI$new(surrogate)
   )
   acq_optimizers = list(
     rs = AcqOptimizerRandomSearch$new(),
     from_optim = AcqOptimizerFromOptimizer$new(
-      opt("random_search", batch_size = 1000), 
+      opt("random_search", batch_size = 1000),
       trm("evals", n_evals = 1000)
     )
   )
 
   combinations = cross_join(list(
-    loop_function = loop_functions, 
-    acq_function = acq_functions, 
+    loop_function = loop_functions,
+    acq_function = acq_functions,
     acq_optimizer = acq_optimizers
   ), sorted = FALSE)
 
@@ -79,13 +77,13 @@ test_that("OptimizerMbo works with different settings", {
     )
 
     instance = OptimInstanceSingleCrit$new(
-      objective = obfun, 
+      objective = obfun,
       terminator = term,
       search_space = PS_2D
     )
 
     instance$eval_batch(design)
-    
+
     optim$optimize(instance)
 
     opdf = instance$archive$data()
@@ -109,13 +107,13 @@ test_that("OptimizerMbo works for noisy problems", {
   )
 
   instance = OptimInstanceSingleCrit$new(
-    objective = obfun, 
+    objective = obfun,
     terminator = trm("evals", n_evals = 20),
     search_space = PS_2D
   )
 
   instance$eval_batch(design)
-  
+
   optim$optimize(instance)
 
   opdf = instance$archive$data()

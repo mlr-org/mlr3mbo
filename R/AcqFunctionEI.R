@@ -32,6 +32,9 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     #'
     #' @return [data.table::data.table()].
     eval_dt = function(xdt) {
+      if (is.null(self$y_best)) {
+        stop("y_best is not set. Missed to call $update(archive)?")
+      }
       p = self$surrogate$predict(xdt)
       mu = p$mean
       se = p$se

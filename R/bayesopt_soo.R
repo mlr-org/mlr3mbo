@@ -43,8 +43,7 @@ bayesop_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * ins
   acq_function$setup(archive) #setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
-    xydt = archive$data()
-    acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y) #update surrogate model with new data
+    acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y) #update surrogate model with new data
 
     acq_function$update(archive) # NOTE: necessary becaue we have to dertermine e.g. y_best for ei, there are possible other costy calculations that we just want to do once for each state. We might not want to do these calculation in acq_function$eval_dt() because this can get called several times during the optimization.
     # one more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design

@@ -35,6 +35,9 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #'
     #' @return [data.table::data.table()].
     eval_dt = function(xdt) {
+      if (is.null(self$y_best)) {
+        stop("y_best is not set. Missed to call $update(archive)?")
+      }
       p = self$surrogate$predict(xdt)
       mu = p[[1]]$mean
       se = p[[1]]$se
