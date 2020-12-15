@@ -1,4 +1,4 @@
-#' @importFrom R6 R6Class is.R6
+#' @importFrom R6 R6Class
 #' @import checkmate
 #' @import data.table
 #' @import paradox
@@ -7,13 +7,11 @@
 #' @import lgr
 #' @import mlr3
 #' @import mlr3tuning
-#' @importFrom utils data head tail
-#' @importFrom backports import
 #' @importFrom stats runif
 #' @useDynLib mlr3mbo c_sms_indicator c_eps_indicator
 "_PACKAGE"
 
-.onLoad = function(libname, pkgname) {
+.onLoad = function(libname, pkgname) { # nolint
   # nocov start
   backports::import(pkgname)
 
@@ -27,4 +25,3 @@
   x = utils::getFromNamespace("mlr_tuners", ns = "mlr3tuning")
   x$add("mbo", TunerMbo)
 } # nocov end
-
