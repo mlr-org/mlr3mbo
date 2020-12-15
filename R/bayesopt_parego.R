@@ -20,6 +20,23 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
   assert_r6(acq_optimizer, "AcqOptimizer")
   assert_int(q, lower = 1)
 
+  # functions needed for parego
+
+  # calculate all integer vectors of length k with sum n
+  #' @param n
+  #' @param k
+  #' @return integer matrix with ? x k entries
+  comb_with_sum = function(n, k) {
+    fun = function(n, k) {
+      if (k == 1L)
+        list(n)
+      else
+        unlist(lapply(0:n, function(i) Map(c, i, fun(n - i, k - 1L))),
+          recursive = FALSE)
+    }
+    matrix(unlist(fun(n, k)), ncol = k, byrow = TRUE)
+  }
+
   archive = instance$archive
   #FIXME maybe do not have this here, but have a general init helper
   if (archive$n_evals == 0) {
@@ -32,6 +49,9 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
   dummy_archive = MboDummyArchive$new(archive, codomain = dummy_codomain)
   #manual fix: #FIXME Write ParEGO Infill Crit?
   acq_function$setup(dummy_archive)
+
+  # calculate all possible weight vectors and save them
+  all_possible_weights = comb_with_sum(s, d) / s
 
   repeat {
     xydt = archive$data()
