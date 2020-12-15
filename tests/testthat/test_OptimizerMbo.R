@@ -77,12 +77,9 @@ test_that("OptimizerMbo works for noisy problems", {
 
   obfun = OBJ_2D_NOISY
 
-  surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_NOISY)
-  design = generate_design_lhs(PS_2D, 12L)$data
-
   optim = OptimizerMbo$new(
     loop_function = bayesop_soo,
-    acq_function = AcqFunctionAEI$new(surrogate = surrogate),
+    acq_function = AcqFunctionAEI$new(surrogate = SURR_KM_NOISY),
     acq_optimizer = AcqOptimizerRandomSearch$new(),
     result_function = result_by_surrogate_design,
   )
@@ -93,6 +90,7 @@ test_that("OptimizerMbo works for noisy problems", {
     search_space = PS_2D
   )
 
+  design = MAKE_DESIGN(instane, 12L)
   instance$eval_batch(design)
 
   optim$optimize(instance)
