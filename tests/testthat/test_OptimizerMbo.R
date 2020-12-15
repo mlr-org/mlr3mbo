@@ -1,39 +1,28 @@
 test_that("OptimizerMbo works", {
 
-  obfun = OBJ_1D
-
-  surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
-  design = generate_design_lhs(PS_1D, 4)$data
-
   optim = OptimizerMbo$new(
     loop_function = bayesop_soo,
-    acq_function = AcqFunctionEI$new(surrogate = surrogate),
+    acq_function = AcqFunctionEI$new(surrogate = SURR_KM_DETERM),
     acq_optimizer = AcqOptimizerRandomSearch$new()
   )
+  expect_class(optim, "OptimizerMbo")
 
-  instance = OptimInstanceSingleCrit$new(
-    objective = obfun,
-    terminator = trm("evals", n_evals = 10),
-    search_space = PS_1D
-  )
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10))
 
-  instance$eval_batch(design)
+  instance$eval_batch(MAKE_DESIGN(instance))
 
-  optim$optimize(instance)
+  res = optim$optimize(instance)
+  expect_equal(res, instance$result)
 
   opdf = instance$archive$data()
   expect_data_table(opdf, any.missing = FALSE, nrows = 10)
   expect_equal(instance$result$y, 0, tolerance = 0.1)
+
+  optim$optimize(instance)
 })
 
 
 test_that("OptimizerMbo works with different settings", {
-
-  # defince common settings
-  obfun = OBJ_2D
-  surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
-  design = generate_design_lhs(PS_2D, 6)$data
-  term = trm("evals", n_evals = 12)
 
   # define combinations
   loop_functions = list(
@@ -41,9 +30,9 @@ test_that("OptimizerMbo works with different settings", {
     mpcl = list(fun = bayesop_mpcl, args = list(liar = mean, q = 2))
   )
   acq_functions = list(
-    aei = AcqFunctionAEI$new(surrogate), #FIXME
-    cb = AcqFunctionCB$new(surrogate),
-    ei = AcqFunctionEI$new(surrogate)
+    aei = AcqFunctionAEI$new(SURR_KM_NOISY),
+    cb = AcqFunctionCB$new(SURR_KM_DETERM),
+    ei = AcqFunctionEI$new(SURR_KM_DETERM)
   )
   acq_optimizers = list(
     rs = AcqOptimizerRandomSearch$new(),
@@ -63,11 +52,6 @@ test_that("OptimizerMbo works with different settings", {
     mbo_fun = combinations[i,"loop_function"][[1]][[1]]$fun
     args = combinations[i,"loop_function"][[1]][[1]]$args
     acq_fun = combinations[i,"acq_function"][[1]][[1]]
-    if (acq_fun$id == "acq_aei") {
-      acq_fun$surrogate$model$param_set$values$nugget.estim = TRUE
-    } else {
-      acq_fun$surrogate$model$param_set$values$nugget.estim = FALSE
-    }
     acq_opt = combinations[i,"acq_optimizer"][[1]][[1]]
     optim = OptimizerMbo$new(
       loop_function = mbo_fun,
@@ -76,12 +60,9 @@ test_that("OptimizerMbo works with different settings", {
       args = args
     )
 
-    instance = OptimInstanceSingleCrit$new(
-      objective = obfun,
-      terminator = term,
-      search_space = PS_2D
-    )
+    instance = MAKE_INST(terminator = trm("evals", n_evals = 12))
 
+    design = MAKE_DESIGN(instance, 6)
     instance$eval_batch(design)
 
     optim$optimize(instance)
