@@ -48,7 +48,7 @@
 
 
 <meta property="og:title" content="Logging object for objective function evaluations — MboDummyArchive" />
-<meta property="og:description" content="Container around a data.table::data.table which stores all performed
+<meta property="og:description" content="Container around a data.table::data.table() which stores all performed
 function calls of the Objective." />
 <meta name="twitter:card" content="summary" />
 
@@ -107,25 +107,25 @@ function calls of the Objective." />
 </li>
         <li>
   <a href="https://github.com/mlr-org/mlr3mbo/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://mlr-org.slack.com">
-    <span class="fab fa fab fa-slack"></span>
+    <span class="fab fa-slack"></span>
      
   </a>
 </li>
 <li>
   <a href="https://stackoverflow.com/questions/tagged/mlr3">
-    <span class="fab fa fab fa-stack-overflow"></span>
+    <span class="fab fa-stack-overflow"></span>
      
   </a>
 </li>
 <li>
   <a href="https://mlr-org.com/">
-    <span class="fa fa-rss"></span>
+    <span class="fas fa-rss"></span>
      
   </a>
 </li>
@@ -148,7 +148,7 @@ function calls of the Objective." />
     </div>
 
     <div class="ref-description">
-    <p>Container around a <a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a> which stores all performed
+    <p>Container around a <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code> which stores all performed
 function calls of the Objective.</p>
     </div>
 
@@ -160,8 +160,8 @@ function calls of the Objective.</p>
 
 
 <p>The data is stored in a private <code>.data</code> field that contains a
-<a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a> which logs all performed function calls of the Objective.
-This <a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a> is accessed with the public <code>$data()</code> method. New
+<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code> which logs all performed function calls of the Objective.
+This <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code> is accessed with the public <code>$data()</code> method. New
 values can be added with the <code>$add_evals()</code> method. This however is usually
 done through the evaluation of the OptimInstance by the Optimizer.</p>
     <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
@@ -178,9 +178,9 @@ Codomain of objective function.</p></dd>
 <dt><code>search_space</code></dt><dd><p>(<a href='https://paradox.mlr-org.com/reference/ParamSet.html'>paradox::ParamSet</a>)<br />
 Search space of objective.</p></dd>
 
-<dt><code>added_rows</code></dt><dd><p>(<a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a>).</p></dd>
+<dt><code>added_rows</code></dt><dd><p>(<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>).</p></dd>
 
-<dt><code>added_cols</code></dt><dd><p>(<a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a>).</p></dd>
+<dt><code>added_cols</code></dt><dd><p>(<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>).</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="active-bindings"><a class="anchor" href="#active-bindings"></a>Active bindings</h2>
@@ -244,12 +244,12 @@ Number of batches stored in the archive.</p></dd>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>xdt</code></dt><dd><p>(<a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a>.</p></dd>
+<dt><code>xdt</code></dt><dd><p>(<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>.</p></dd>
 
 <dt><code>xss_trafoed</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>)<br />
 Transformed point(s) in the <em>domain space</em></p></dd>
 
-<dt><code>ydt</code></dt><dd><p>(<a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a>.</p></dd>
+<dt><code>ydt</code></dt><dd><p>(<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>.</p></dd>
 
 </dl><p></div></p>
 <p><hr>
@@ -259,7 +259,7 @@ Transformed point(s) in the <em>domain space</em></p></dd>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>dt</code></dt><dd><p>(<a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a>)</p></dd>
+<dt><code>dt</code></dt><dd><p>(<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>)</p></dd>
 
 </dl><p></div></p>
 <p><hr>
@@ -279,7 +279,7 @@ Take only batches <code>m</code> into account. Default is all batches.</p></dd>
 <p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>.</p>
 <p><hr>
 <a id="method-data"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/utils/data.html'>data()</a></code></h3>
-<p>Returns a <a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a> which contains all performed
+<p>Returns a <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code> which contains all performed
 Objective function calls.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>MboDummyArchive</span><span class='op'>$</span><span class='fu'>data</span><span class='op'>(</span>unnest <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre><p></div></p>
 

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Acquisition Function — AcqFunction • mlr3mbo</title>
+<title>Acquisition Function Base Class — AcqFunction • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,7 +47,7 @@
 
 
 
-<meta property="og:title" content="Acquisition Function — AcqFunction" />
+<meta property="og:title" content="Acquisition Function Base Class — AcqFunction" />
 <meta property="og:description" content="Based on a surrogate model, the acquisition function encodes the preference to evaluate
 a new point for evaluation." />
 <meta name="twitter:card" content="summary" />
@@ -107,25 +107,25 @@ a new point for evaluation." />
 </li>
         <li>
   <a href="https://github.com/mlr-org/mlr3mbo/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://mlr-org.slack.com">
-    <span class="fab fa fab fa-slack"></span>
+    <span class="fab fa-slack"></span>
      
   </a>
 </li>
 <li>
   <a href="https://stackoverflow.com/questions/tagged/mlr3">
-    <span class="fab fa fab fa-stack-overflow"></span>
+    <span class="fab fa-stack-overflow"></span>
      
   </a>
 </li>
 <li>
   <a href="https://mlr-org.com/">
-    <span class="fa fa-rss"></span>
+    <span class="fas fa-rss"></span>
      
   </a>
 </li>
@@ -142,7 +142,7 @@ a new point for evaluation." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Acquisition Function</h1>
+    <h1>Acquisition Function Base Class</h1>
     <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/AcqFunction.R'><code>R/AcqFunction.R</code></a></small>
     <div class="hidden name"><code>AcqFunction.Rd</code></div>
     </div>
@@ -154,6 +154,14 @@ a new point for evaluation.</p>
 
 
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Acquisition Function: 
+<code><a href='AcqFunctionAEI.html'>AcqFunctionAEI</a></code>,
+<code><a href='AcqFunctionCB.html'>AcqFunctionCB</a></code>,
+<code><a href='AcqFunctionEIPS.html'>AcqFunctionEIPS</a></code>,
+<code><a href='AcqFunctionEI.html'>AcqFunctionEI</a></code>,
+<code><a href='AcqFunctionSmsEmoa.html'>AcqFunctionSmsEmoa</a></code></p></div>
     <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
 
     <p><div class="r6-fields"></p><dl>
@@ -167,9 +175,11 @@ a new point for evaluation.</p>
 
 <dt><code>codomain</code></dt><dd><p>(<a href='https://paradox.mlr-org.com/reference/ParamSet.html'>paradox::ParamSet</a>).</p></dd>
 
-<dt><code>direction</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>).</p></dd>
+<dt><code>direction</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>)<br />
+Must be <code>"same"</code>, <code>"minimize"</code>, or <code>"maximize"</code>.</p></dd>
 
-<dt><code>surrogate_max_to_min</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).</p></dd>
+<dt><code>surrogate_max_to_min</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).
+Optimization direction of the objective function: 1 for minimization, -1 for maximization.</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
@@ -198,7 +208,8 @@ a new point for evaluation.</p>
 
 <dt><code>surrogate</code></dt><dd><p><a href='Surrogate.html'>Surrogate</a>.</p></dd>
 
-<dt><code>direction</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>).</p></dd>
+<dt><code>direction</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>).
+Must be <code>"same"</code>, <code>"minimize"</code>, or <code>"maximize"</code>.</p></dd>
 
 </dl><p></div></p>
 <p><hr>
@@ -208,16 +219,16 @@ a new point for evaluation.</p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>xdt</code></dt><dd><p><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table</a></p></dd>
+<dt><code>xdt</code></dt><dd><p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>.</p></dd>
 
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p><code>data.table</code> <br />
-The column has to have the same name as the id of the acq_fun, because we
-renamed the id of the codomain</p>
+<p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>.<br />
+The column has to have the same name as the id of the acquisition function,
+because we renamed the id of the codomain.</p>
 <p><hr>
 <a id="method-setup"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>setup()</code></h3>
-<p>Sets up the acquisition function</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p>Sets up the acquisition function.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>setup</span><span class='op'>(</span><span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
@@ -227,7 +238,7 @@ renamed the id of the codomain</p>
 </dl><p></div></p>
 <p><hr>
 <a id="method-update"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/update.html'>update()</a></code></h3>
-<p>Update the acquisition function</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p>Update the acquisition function given an <a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>update</span><span class='op'>(</span><span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
