@@ -68,30 +68,3 @@ LazyData: true
 NeedsCompilation: no
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Collate: 
-    'AcqFunction.R'
-    'AcqFunctionAEI.R'
-    'AcqFunctionCB.R'
-    'AcqFunctionEI.R'
-    'AcqFunctionEIPS.R'
-    'AcqFunctionSmsEmoa.R'
-    'AcqOptimizer.R'
-    'AcqOptimizerFromOptimizer.R'
-    'AcqOptimizerRandomSearch.R'
-    'MboDummyArchive.R'
-    'OptimizerMbo.R'
-    'Surrogate.R'
-    'SurrogateMultiCrit.R'
-    'SurrogateMultiCritLearners.R'
-    'SurrogateSingleCrit.R'
-    'SurrogateSingleCritLearner.R'
-    'TunerMbo.R'
-    'bayesopt_mpcl.R'
-    'bayesopt_parego.R'
-    'bayesopt_smsemoa.R'
-    'bayesopt_soo.R'
-    'bayesopt_soo_eips.R'
-    'result_by_surrogate_design.R'
-    'helper.R'
-    'zzz.R'
-VignetteBuilder: knitr
