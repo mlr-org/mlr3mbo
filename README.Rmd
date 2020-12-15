@@ -1,29 +1,37 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
 # mlr3mbo
 
-A new R6 and much more modular implementation for single- and multicrit
-Bayesian optimization. We are really not done here! Very prelim code, so
-beware!
+A new R6 and much more modular implementation for single- and multicrit Bayesian optimization.
+We are really not done here! Very prelim code, so beware!
 
 <!-- badges: start -->
-
 [![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=master)](https://github.com/mlr-org/mlr3mbo/actions)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
+[![CRAN status](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
 [![StackOverflow](https://img.shields.io/badge/stackoverflow-mlr3-orange.svg)](https://stackoverflow.com/questions/tagged/mlr3)
 [![Mattermost](https://img.shields.io/badge/chat-mattermost-orange.svg)](https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/)
 <!-- badges: end -->
 
-[List of some
-Ideas](https://github.com/mb706/okmbo/tree/master/todo-files)
+[List of some Ideas](https://github.com/mb706/okmbo/tree/master/todo-files)
 
 ## Simple Example
 
 Currently broken
 
-``` r
+```{r example, eval = FALSE}
 set.seed(1)
 library(bbotk)
 library(mlr3)
@@ -60,8 +68,7 @@ plot(y~batch_nr, instance$archive$data()[batch_nr>1,], type = "b")
 ## Multipoint through constant liar
 
 Currently broken example:
-
-``` r
+```{r cl_example, eval = FALSE}
 instance = OptimInstanceSingleCrit$new(
   objective = obfun,
   terminator = terminator
