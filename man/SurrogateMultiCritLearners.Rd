@@ -12,7 +12,7 @@ Multi Criteria response surfaces modeled by multiple mlr3 regression learners
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{k}}{Returns number of models.}
+\item{\code{k}}{Returns the number of models.}
 }
 \if{html}{\out{</div>}}
 }

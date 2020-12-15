@@ -32,12 +32,18 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     update = function(xydt, y_cols) {
       assert_xydt(xydt, y_cols)
 
-      # FIXME: inefficient
+      backend = as_data_backend(xydt)
+      features = setdiff(names(xydt), y_cols)
+
       tasks = lapply(y_cols, function(y_col) {
-        TaskRegr$new(
+        # If this turns out to be a bottleneck, we can also operate on a
+        # single task here
+        task = TaskRegr$new(
           id = paste0("surrogate_task_", y_col),
-          backend = xydt[, c(setdiff(colnames(xydt), y_cols), y_col), with = FALSE],
+          backend = backend,
           target = y_col)
+        task$col_roles$feature = features
+        task
       })
       mapply(function(model, task) model$train(task), self$model, tasks)
       names(self$model) = y_cols
