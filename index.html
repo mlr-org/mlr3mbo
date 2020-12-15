@@ -109,31 +109,60 @@
 <div id="simple-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#simple-example" class="anchor"></a>Simple Example</h2>
-<p>```{r example} set.seed(1) library(bbotk) library(mlr3mbo) library(paradox) library(mlr3learners)</p>
-<p>obfun = ObjectiveRFun<span class="math inline"><em>n</em><em>e</em><em>w</em>(<em>f</em><em>u</em><em>n</em> = <em>f</em><em>u</em><em>n</em><em>c</em><em>t</em><em>i</em><em>o</em><em>n</em>(<em>x</em><em>s</em>)<em>s</em><em>u</em><em>m</em>(<em>u</em><em>n</em><em>l</em><em>i</em><em>s</em><em>t</em>(<em>x</em><em>s</em>)<sup>2</sup>), <em>d</em><em>o</em><em>m</em><em>a</em><em>i</em><em>n</em> = <em>P</em><em>a</em><em>r</em><em>a</em><em>m</em><em>S</em><em>e</em><em>t</em></span>new(list(ParamDbl$new(“x”, -5, 5))), id = “test” )</p>
-<p>terminator = trm(“evals”, n_evals = 20)</p>
-<p>instance = OptimInstanceSingleCrit$new( objective = obfun, terminator = terminator )</p>
-<p>design = generate_design_lhs(obfun<span class="math inline"><em>d</em><em>o</em><em>m</em><em>a</em><em>i</em><em>n</em>, 4)</span>data instance$eval_batch(design)</p>
-<p>surrogate = SurrogateSingleCritLearner<span class="math inline">$new(learner = lrn("regr.km")) acqfun = AcqFunctionCB$</span>new(surrogate = surrogate) acqopt = AcqOptimizerFromOptimizer<span class="math inline">$new(  opt("random_search", batch_size = 100),  trm("evals", n_evals = 100) ) bayesopt_soo(instance, acq_function, acq_optimizer) plot(y~batch_nr, instance$</span>archive$data()[batch_nr&gt;1,], type = “b”)</p>
-<pre><code>
-## Multipoint through constant liar
+<p>Currently broken</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bbotk.mlr-org.com">bbotk</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3.mlr-org.com">mlr3</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3mbo.mlr-org.com">mlr3mbo</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://paradox.mlr-org.com">paradox</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3learners.mlr-org.com">mlr3learners</a></span><span class="op">)</span>
 
-```{r cl_example}
-instance = OptimInstanceSingleCrit$new(
-  objective = obfun, 
-  terminator = terminator
-)
-design = generate_design_lhs(obfun$domain, 4)$data
-instance$eval_batch(design)
+<span class="va">obfun</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/ObjectiveRFun.html">ObjectiveRFun</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+  fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">xs</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,
+  domain <span class="op">=</span> <span class="va"><a href="https://paradox.mlr-org.com/reference/ParamSet.html">ParamSet</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va"><a href="https://paradox.mlr-org.com/reference/ParamDbl.html">ParamDbl</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"x"</span>, <span class="op">-</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  id <span class="op">=</span> <span class="st">"test"</span>
+<span class="op">)</span>
 
-surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-acqfun = AcqFunctionCB$new(surrogate = surrogate)
-acqopt = AcqOptimizerFromOptimizer$new(
-  opt("random_search", batch_size = 100), 
-  trm("evals", n_evals = 100)
-)
-bayesopt_mpcl(instance, acq_function, acq_optimizer)
-plot(y~batch_nr, instance$archive$data()[batch_nr&gt;1,], type = "b")</code></pre>
+<span class="va">terminator</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
+
+<span class="va">instance</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html">OptimInstanceSingleCrit</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+  objective <span class="op">=</span> <span class="va">obfun</span>,
+  terminator <span class="op">=</span> <span class="va">terminator</span>
+<span class="op">)</span>
+
+<span class="va">design</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/generate_design_lhs.html">generate_design_lhs</a></span><span class="op">(</span><span class="va">obfun</span><span class="op">$</span><span class="va">domain</span>, <span class="fl">4</span><span class="op">)</span><span class="op">$</span><span class="va">data</span>
+<span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="va">design</span><span class="op">)</span>
+
+<span class="va">surrogate</span> <span class="op">=</span> <span class="va"><a href="reference/SurrogateSingleCritLearner.html">SurrogateSingleCritLearner</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>learner <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">acqfun</span> <span class="op">=</span> <span class="va"><a href="reference/AcqFunctionCB.html">AcqFunctionCB</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>surrogate <span class="op">=</span> <span class="va">surrogate</span><span class="op">)</span>
+<span class="va">acqopt</span> <span class="op">=</span> <span class="va"><a href="reference/AcqOptimizerFromOptimizer.html">AcqOptimizerFromOptimizer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+  <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html">opt</a></span><span class="op">(</span><span class="st">"random_search"</span>, batch_size <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,
+  <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu"><a href="reference/bayesop_soo.html">bayesop_soo</a></span><span class="op">(</span><span class="va">instance</span>, <span class="va">acqfun</span>, <span class="va">acqopt</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">batch_nr</span>, <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">data</span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="va">batch_nr</span><span class="op">&gt;</span><span class="fl">1</span>,<span class="op">]</span>, type <span class="op">=</span> <span class="st">"b"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="multipoint-through-constant-liar" class="section level2">
+<h2 class="hasAnchor">
+<a href="#multipoint-through-constant-liar" class="anchor"></a>Multipoint through constant liar</h2>
+<p>Currently broken example:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">instance</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html">OptimInstanceSingleCrit</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+  objective <span class="op">=</span> <span class="va">obfun</span>,
+  terminator <span class="op">=</span> <span class="va">terminator</span>
+<span class="op">)</span>
+<span class="va">design</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/generate_design_lhs.html">generate_design_lhs</a></span><span class="op">(</span><span class="va">obfun</span><span class="op">$</span><span class="va">domain</span>, <span class="fl">4</span><span class="op">)</span><span class="op">$</span><span class="va">data</span>
+<span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="va">design</span><span class="op">)</span>
+
+<span class="va">surrogate</span> <span class="op">=</span> <span class="va"><a href="reference/SurrogateSingleCritLearner.html">SurrogateSingleCritLearner</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>learner <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">acqfun</span> <span class="op">=</span> <span class="va"><a href="reference/AcqFunctionCB.html">AcqFunctionCB</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>surrogate <span class="op">=</span> <span class="va">surrogate</span><span class="op">)</span>
+<span class="va">acqopt</span> <span class="op">=</span> <span class="va"><a href="reference/AcqOptimizerFromOptimizer.html">AcqOptimizerFromOptimizer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+  <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html">opt</a></span><span class="op">(</span><span class="st">"random_search"</span>, batch_size <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,
+  <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">bayesop_mpcl</span><span class="op">(</span><span class="va">instance</span>, <span class="va">acqfun</span>, <span class="va">acqopt</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">batch_nr</span>, <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">data</span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="va">batch_nr</span><span class="op">&gt;</span><span class="fl">1</span>,<span class="op">]</span>, type <span class="op">=</span> <span class="st">"b"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
   </div>
