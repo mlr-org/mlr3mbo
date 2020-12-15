@@ -18,8 +18,10 @@
 #' @param n_design (`int(1)`)\cr
 #'   In case the `archive` inside the `instance` is empty, we generate a random initial design of `n_design` points.
 #' @return [bbotk::Archive]
-#' @export
-
+#'
+#' @references
+#' `r format_bib("jones_1998")`
+#'
 #' @export
 bayesop_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * instance$search_space$length) {
   #FIXME maybe do not have this here, but have a general assert helper
@@ -81,6 +83,3 @@ if (FALSE) {
 
   bayesop_soo(instance, acqfun, acqopt)
 }
-
-
-
