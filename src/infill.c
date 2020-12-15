@@ -4,10 +4,21 @@
 #include <R_ext/Utils.h>
 #include <Rinternals.h>
 
-#include "macros.h"
 #include "hv.h"
 
 #define INF 1.0e14
+
+#define MAX(a,b) (((a)>(b))?(a):(b))
+
+#define UNPACK_REAL_MATRIX(S, D, N, K) \
+    double *D = REAL(S); \
+    const R_len_t N = nrows(S); \
+    const R_len_t K = ncols(S);
+
+#define UNPACK_REAL_MATRIX_2(S, D, N) \
+    double *D = REAL(S); \
+    const R_len_t N = nrows(S);
+
 
 SEXP c_sms_indicator(SEXP s_cbs, SEXP s_front, SEXP s_front2, SEXP s_eps, SEXP s_ref) {
   UNPACK_REAL_MATRIX_2(s_cbs, cbs, nrow_cbs);
@@ -100,4 +111,5 @@ SEXP c_eps_indicator(SEXP s_cbs, SEXP s_front) {
   return(s_ret);
 }
 
-
+#undef UNPACK_REAL_MATRIX
+#undef UNPACK_REAL_MATRIX_2
