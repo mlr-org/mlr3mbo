@@ -1,8 +1,10 @@
-#' @title Acquisition Function
+#' @title Acquisition Function Base Class
 #'
 #' @description
 #' Based on a surrogate model, the acquisition function encodes the preference to evaluate
 #' a new point for evaluation.
+#'
+#' @family Acquisition Function
 #'
 #' @export
 AcqFunction = R6Class("AcqFunction",
@@ -23,11 +25,13 @@ AcqFunction = R6Class("AcqFunction",
     #' @field codomain ([paradox::ParamSet]).
     codomain = NULL,
 
-    #' @field direction (`character(1)`).
+    #' @field direction (`character(1)`)\cr
+    #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
     direction = NULL, # optim direction of the acq function
 
     #' @field surrogate_max_to_min (`numeric(1)`).
-    surrogate_max_to_min = NULL, # optim direction of the obj function 1 for min, -1 for max, maybe it makes sense to make this private so it is clear that this is not meant to turn the acq into a minimization problem
+    #'   Optimization direction of the objective function: 1 for minimization, -1 for maximization.
+    surrogate_max_to_min = NULL, # FIXME: make this private
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -36,6 +40,7 @@ AcqFunction = R6Class("AcqFunction",
     #' @param param_set ([paradox::ParamSet]).
     #' @param surrogate [Surrogate].
     #' @param direction (`character(1)`).
+    #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
     initialize = function(id, param_set, surrogate, direction) {
       self$id = assert_string(id)
       self$param_set = assert_param_set(param_set)
@@ -46,17 +51,17 @@ AcqFunction = R6Class("AcqFunction",
     #' @description
     #' Evaluates all input values in `xdt`.
     #'
-    #' @param xdt [data.table::data.table]
+    #' @param xdt [data.table::data.table()].
     #'
-    #' @return `data.table` \cr
-    #' The column has to have the same name as the id of the acq_fun, because we
-    #' renamed the id of the codomain
+    #' @return [data.table::data.table()].\cr
+    #' The column has to have the same name as the id of the acquisition function,
+    #' because we renamed the id of the codomain.
     eval_dt = function(xdt) {
       stop("abstract")
     },
 
     #' @description
-    #' Sets up the acquisition function
+    #' Sets up the acquisition function.
     #'
     #' @param archive [bbotk::Archive].
     setup = function(archive) {
@@ -71,7 +76,7 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @description
-    #' Update the acquisition function
+    #' Update the acquisition function given an [bbotk::Archive].
     #'
     #' @param archive [bbotk::Archive].
     update = function(archive) {

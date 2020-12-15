@@ -5,7 +5,18 @@
 \title{Acquisition Function Expected Improvement}
 \description{
 Expected Improvement.
+
+TODO DESCRIPTION and Reference
 }
+\seealso{
+Other Acquisition Function: 
+\code{\link{AcqFunctionAEI}},
+\code{\link{AcqFunctionCB}},
+\code{\link{AcqFunctionEIPS}},
+\code{\link{AcqFunctionSmsEmoa}},
+\code{\link{AcqFunction}}
+}
+\concept{Acquisition Function}
 \section{Super class}{
 \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionEI}
 }

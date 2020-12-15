@@ -3,6 +3,10 @@
 #' @description
 #' Expected Improvement.
 #'
+#' TODO DESCRIPTION and Reference
+#'
+#' @family Acquisition Function
+#'
 #' @export
 AcqFunctionEI = R6Class("AcqFunctionEI",
   inherit = AcqFunction,

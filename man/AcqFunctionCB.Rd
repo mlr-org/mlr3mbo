@@ -8,11 +8,21 @@ Confidence Bound.
 }
 \section{Parameters}{
 
-\describe{
-\item{\code{lambda}}{\code{numeric(1)}}.
+\itemize{
+\item \code{lambda} (\code{numeric(1)})\cr
+TODO DESCRIPTION and Reference
 }
 }
 
+\seealso{
+Other Acquisition Function: 
+\code{\link{AcqFunctionAEI}},
+\code{\link{AcqFunctionEIPS}},
+\code{\link{AcqFunctionEI}},
+\code{\link{AcqFunctionSmsEmoa}},
+\code{\link{AcqFunction}}
+}
+\concept{Acquisition Function}
 \section{Super class}{
 \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionCB}
 }
@@ -62,12 +72,12 @@ Evaluates all input values in \code{xdt}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}}
+\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table}
+\code{\link[data.table:data.table]{data.table::data.table()}}.
 }
 }
 \if{html}{\out{<hr>}}

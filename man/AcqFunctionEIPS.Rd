@@ -2,10 +2,21 @@
 % Please edit documentation in R/AcqFunctionEIPS.R
 \name{AcqFunctionEIPS}
 \alias{AcqFunctionEIPS}
-\title{Acquisition Function Expected Improvement}
+\title{Acquisition Function Expected Improvement Per Second}
 \description{
-Expected Improvement.
+Expected Improvement per second.
+
+TODO DESCRIPTION and Reference
 }
+\seealso{
+Other Acquisition Function: 
+\code{\link{AcqFunctionAEI}},
+\code{\link{AcqFunctionCB}},
+\code{\link{AcqFunctionEI}},
+\code{\link{AcqFunctionSmsEmoa}},
+\code{\link{AcqFunction}}
+}
+\concept{Acquisition Function}
 \section{Super class}{
 \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionEIPS}
 }

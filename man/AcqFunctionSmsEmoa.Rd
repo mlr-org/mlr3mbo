@@ -6,6 +6,28 @@
 \description{
 S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
 }
+\section{Parameters}{
+
+\itemize{
+\item \code{"lambda"} (\code{numeric(1)})\cr
+TODO ...
+Defaults to 1.
+\item \code{"eps"} (\code{numeric(1)})\cr
+TODO
+}
+
+TODO Reference
+}
+
+\seealso{
+Other Acquisition Function: 
+\code{\link{AcqFunctionAEI}},
+\code{\link{AcqFunctionCB}},
+\code{\link{AcqFunctionEIPS}},
+\code{\link{AcqFunctionEI}},
+\code{\link{AcqFunction}}
+}
+\concept{Acquisition Function}
 \section{Super class}{
 \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionSmsEmoa}
 }

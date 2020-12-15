@@ -1,7 +1,17 @@
 #' @title Acquisition Function Augmented Expected Improvement
 #'
 #' @description
-#' Expected Improvement.
+#' Augmented Expected Improvement.
+#'
+#' @references
+#' `r format_bib("huang_2012")`
+#'
+#' @section Parameters:
+#' * `c` (`numeric(1)`)\cr
+#'   Constant \eqn{c} as used in formula (14) of Huang 2012 to reflect the
+#'   degree of risk aversion. Defaults to `1`.
+#'
+#' @family Acquisition Function
 #'
 #' @export
 AcqFunctionAEI = R6Class("AcqFunctionAEI",

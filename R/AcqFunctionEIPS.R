@@ -1,7 +1,11 @@
-#' @title Acquisition Function Expected Improvement
+#' @title Acquisition Function Expected Improvement Per Second
 #'
 #' @description
-#' Expected Improvement.
+#' Expected Improvement per second.
+#'
+#' TODO DESCRIPTION and Reference
+#'
+#' @family Acquisition Function
 #'
 #' @export
 AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
