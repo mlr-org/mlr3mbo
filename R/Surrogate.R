@@ -43,6 +43,7 @@ Surrogate = R6Class("Surrogate",
     #'
     #' @return `NULL`
     setup = function(xydt, y_cols) {
+      assert_xydt(xydt, y_cols)
       self$update(xydt, y_cols)
     },
 

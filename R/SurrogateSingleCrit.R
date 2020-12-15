@@ -20,5 +20,4 @@ SurrogateSingleCrit = R6Class("SurrogateSingleCrit",
       stop("abstract")
     }
   )
-
 )

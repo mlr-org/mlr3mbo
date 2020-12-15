@@ -23,10 +23,11 @@ SurrogateMultiCrit = R6Class("SurrogateMultiCrit",
   ),
 
   active = list(
-
     #' @field k
     #' Returns number of models.
-    k = function() stop("abstract") #FIXME: Should we allow SurrogateMultiCrit for arbitrary d?
+    k = function() {
+      stop("abstract")
+      #FIXME: Should we allow SurrogateMultiCrit for arbitrary d?
+    }
   )
-
 )

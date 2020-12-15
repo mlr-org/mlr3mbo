@@ -16,7 +16,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     initialize = function(learners) {
       self$model = assert_learners(learners)
       for (model in self$model) {
-        if("se" %in% model$predict_types) {
+        if (model$predict_type != "se" && "se" %in% model$predict_types) {
           model$predict_type = "se"
         }
       }
@@ -30,9 +30,12 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #' @param y_cols (`character()`)\cr
     #' Names of response columns.
     update = function(xydt, y_cols) {
+      assert_xydt(xydt, y_cols)
+
+      # FIXME: inefficient
       tasks = lapply(y_cols, function(y_col) {
         TaskRegr$new(
-          id = paste0("surrogate_task_",y_col),
+          id = paste0("surrogate_task_", y_col),
           backend = xydt[, c(setdiff(colnames(xydt), y_cols), y_col), with = FALSE],
           target = y_col)
       })
@@ -49,9 +52,11 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #'
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
+      assert_xdt(xdt)
+
       preds = lapply(self$model, function(model) {
         pred = model$predict_newdata(newdata = xdt)
-        if(model$predict_type == "se") {
+        if (model$predict_type == "se") {
           data.table(mean = pred$response, se = pred$se)
         } else {
           data.table(mean = pred$response)
@@ -63,10 +68,10 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
   ),
 
   active = list(
-
     #' @field k
-    #' Returns number of models.
-    k = function() length(self$model)
+    #' Returns the number of models.
+    k = function() {
+      length(self$model)
+    }
   )
-
 )
