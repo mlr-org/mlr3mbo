@@ -20,34 +20,29 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #'
     #' @param surrogate [SurrogateSingleCrit].
     initialize = function(surrogate) {
-      param_set = ParamSet$new()
       assert_r6(surrogate, "SurrogateMultiCrit")
+
       if (surrogate$k != 2) {
         stop("SurrogateMultiCrit for k=2 needed")
       }
-      super$initialize("acq_eips", param_set, surrogate, direction = "maximize")
-    },
 
-    #' @description
-    #' Evaluates all input values in `xdt`.
-    #'
-    #' @param xdt [data.table::data.table()]
-    #'
-    #' @return [data.table::data.table()].
-    eval_dt = function(xdt) {
-      if (is.null(self$y_best)) {
-        stop("y_best is not set. Missed to call $update(archive)?")
+      fun = function(xdt) {
+        if (is.null(self$y_best)) {
+          stop("y_best is not set. Missed to call $update(archive)?")
+        }
+        p = self$surrogate$predict(xdt)
+        mu = p[[1]]$mean
+        se = p[[1]]$se
+        mu_t = p[[2]]$mean
+        d = self$y_best - self$surrogate_max_to_min * mu
+        d_norm = d / se
+        ei = d * pnorm(d_norm) + se + dnorm(d_norm)
+        eips = ei / mu_t
+        eips = ifelse(se < 1e-20 | mu_t < 1e-20, 0, ei)
+        data.table(acq_eips = eips)
       }
-      p = self$surrogate$predict(xdt)
-      mu = p[[1]]$mean
-      se = p[[1]]$se
-      mu_t = p[[2]]$mean
-      d = self$y_best - self$surrogate_max_to_min * mu
-      d_norm = d / se
-      ei = d * pnorm(d_norm) + se + dnorm(d_norm)
-      eips = ei / mu_t
-      eips = ifelse(se < 1e-20 | mu_t < 1e-20, 0, ei)
-      data.table(acq_eips = eips)
+
+      super$initialize("acq_eips", surrogate = surrogate, direction = "maximize", fun = fun)
     },
 
     #' @description

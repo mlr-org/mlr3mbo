@@ -28,8 +28,8 @@ Other Acquisition Function:
 \code{\link{AcqFunction}}
 }
 \concept{Acquisition Function}
-\section{Super class}{
-\code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionSmsEmoa}
+\section{Super classes}{
+\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[bbotk:ObjectiveRFunDt]{bbotk::ObjectiveRFunDt}} -> \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionSmsEmoa}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -56,7 +56,10 @@ Other Acquisition Function:
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="generate_objective">}\href{../../mlr3mbo/html/AcqFunction.html#method-generate_objective}{\code{mlr3mbo::AcqFunction$generate_objective()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval">}\href{../../bbotk/html/Objective.html#method-eval}{\code{bbotk::Objective$eval()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format">}\href{../../bbotk/html/Objective.html#method-format}{\code{bbotk::Objective$format()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print">}\href{../../bbotk/html/Objective.html#method-print}{\code{bbotk::Objective$print()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_many">}\href{../../bbotk/html/ObjectiveRFunDt.html#method-eval_many}{\code{bbotk::ObjectiveRFunDt$eval_many()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup">}\href{../../mlr3mbo/html/AcqFunction.html#method-setup}{\code{mlr3mbo::AcqFunction$setup()}}\out{</span>}
 }
 \out{</details>}

@@ -90,7 +90,7 @@ test_that("OptimizerMbo works for noisy problems", {
     search_space = PS_2D
   )
 
-  design = MAKE_DESIGN(instane, 12L)
+  design = MAKE_DESIGN(instance, 12L)
   instance$eval_batch(design)
 
   optim$optimize(instance)

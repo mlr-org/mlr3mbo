@@ -29,35 +29,31 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     #'
     #' @param surrogate [SurrogateSingleCrit].
     initialize = function(surrogate) {
-      param_set = ParamSet$new(list(
+      assert_r6(surrogate, "SurrogateSingleCrit")
+
+      constants = ParamSet$new(list(
         ParamDbl$new("c", lower = 0, default = 1)
       ))
-      param_set$values$c = 1
-      assert_r6(surrogate, "SurrogateSingleCrit")
-      super$initialize("acq_aei", param_set, surrogate, direction = "maximize")
-    },
+      constants$values$c = 1
 
-    #' @description
-    #' Evaluates all input values in `xdt`.
-    #'
-    #' @param xdt [data.table::data.table()]
-    #'
-    #' @return [data.table::data.table()].
-    eval_dt = function(xdt) {
-      if (is.null(self$y_effective_best)) {
-        stop("y_effective_best is not set. Missed to call $update(archive)?")
+      fun = function(xdt) {
+        if (is.null(self$y_effective_best)) {
+          stop("y_effective_best is not set. Missed to call $update(archive)?")
+        }
+        if (is.null(self$noise_var)) {
+          stop("noise_var is not set. Missed to call $update(archive)?")
+        }
+        p = self$surrogate$predict(xdt)
+        mu = p$mean
+        se = p$se
+        d = self$y_effective_best - self$surrogate_max_to_min * mu
+        d_norm = d / se
+        aei = d * pnorm(d_norm) + se * dnorm(d_norm) * (1 - sqrt(self$noise_var) / sqrt(self$noise_var + se^2))
+        aei = ifelse(se < 1e-20, 0, aei)
+        data.table(acq_aei = aei)
       }
-      if (is.null(self$y_effective_best)) {
-        stop("noise_var is not set. Missed to call $update(archive)?")
-      }
-      p = self$surrogate$predict(xdt)
-      mu = p$mean
-      se = p$se
-      d = self$y_effective_best - self$surrogate_max_to_min * mu
-      d_norm = d / se
-      aei = d * pnorm(d_norm) + se * dnorm(d_norm) * (1 - sqrt(self$noise_var) / sqrt(self$noise_var + se^2))
-      aei = ifelse(se < 1e-20, 0, aei)
-      data.table(acq_aei = aei)
+
+      super$initialize("acq_aei", constants, surrogate, direction = "maximize", fun = fun)
     },
 
     #' @description
@@ -69,10 +65,10 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       xdt = archive$data()[, archive$cols_x, with = FALSE]
       p = self$surrogate$predict(xdt)
       if (self$surrogate_max_to_min == 1) { # minimization
-        y_effective = p$mean + self$param_set$values$c * p$se # pessimistic prediction
+        y_effective = p$mean + self$constants$values$c * p$se # pessimistic prediction
         self$y_effective_best = min(y_effective)
       } else { # maximization
-        y_effective = p$mean - self$param_set$values$c * p$se # pessimistic prediction
+        y_effective = p$mean - self$constants$values$c * p$se # pessimistic prediction
         self$y_effective_best = max(y_effective)
       }
 

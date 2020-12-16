@@ -31,8 +31,8 @@ AcqOptimizerFromOptimizer = R6Class("AcqOptimizerFromOptimizer",
       assert_r6(acq_function, "AcqFunction")
 
       inst = OptimInstanceSingleCrit$new(
-        objective = acq_function$generate_objective(),
-        search_space = acq_function$search_space, terminator = self$terminator)
+        objective = acq_function,
+        search_space = acq_function$domain, terminator = self$terminator)
 
       private$.optimizer$optimize(inst)
       inst$result_x_search_space
