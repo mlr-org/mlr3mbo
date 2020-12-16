@@ -28,6 +28,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
+    #' For more information on default values, see `mbo_defaults`.
     #'
     #' @param loop_function (`function`).
     #' @param acq_function ([AcqFunction]).
@@ -40,9 +41,9 @@ OptimizerMbo = R6Class("OptimizerMbo",
       properties = c("single-crit", "dependencies") # FIXME: Should depend on the settings?
       packages = character() # Maybe not so important? Surrogate package etc?
       super$initialize(param_set, param_classes, properties, packages)
-      self$loop_function = assert_function(loop_function)
-      self$acq_function = assert_r6(acq_function, "AcqFunction")
-      self$acq_optimizer = assert_r6(acq_optimizer, "AcqOptimizer")
+      self$loop_function = assert_function(loop_function, null.ok = TRUE)
+      self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
+      self$acq_optimizer = assert_r6(acq_optimizer, "AcqOptimizer", null.ok = TRUE)
       self$args = assert_list(args, names = "named", null.ok = TRUE)
       self$result_function = assert_function(result_function, null.ok = TRUE)
     }
@@ -50,6 +51,15 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
   private = list(
     .optimize = function(inst) {
+      if (is.null(self$loop_function)) {
+        self$loop_function = default_loopfun(inst)
+      }
+      if (is.null(self$acq_function)) {
+        self$acq_function = default_acqfun(inst)
+      }
+      if (is.null(self$acq_optimizer)) {
+        self$acq_optimizer = default_acq_optimizer(inst)
+      }
       do.call(self$loop_function, c(list(instance = inst, acq_function = self$acq_function, acq_optimizer = self$acq_optimizer), self$args))
     },
 
