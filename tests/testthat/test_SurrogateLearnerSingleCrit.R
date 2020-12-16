@@ -53,6 +53,7 @@ test_that("insample_performance", {
   surrogate_constant = SurrogateSingleCritLearner$new(learner = lrn("regr.featureless"))
   surrogate_constant$update(xydt = xydt, y_cols = "y")
   expect_double(surrogate_constant$insample_performance, lower =  -Inf, upper = 1, any.missing = FALSE, len = 1L)
+  expect_equal(names(surrogate$insample_performance), surrogate$param_set$values$performance_measure$id)
   expect_true(surrogate_constant$insample_performance == 0)
   expect_false(surrogate_constant$test_insample_performance)
   expect_equal(names(surrogate$test_insample_performance), surrogate$param_set$values$performance_measure$id)
