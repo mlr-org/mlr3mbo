@@ -41,7 +41,7 @@ test_that("xdt_fix_distance", {
   expect_true(identical(xdt_fixed[1:2, ], xdt_redundant[1:2, ]))
   expect_true(all(map_lgl(seq_len(nrow(xdt_fixed)), function(i) all(gower::gower_dist(xdt_fixed[i, ], previous_xdt) > acqo$param_set$values$distance_epsilon))))
 
-  #multiple point proposal to single previous point
+  # multiple point proposal to single previous point
   expect_equal(address(acqo$xdt_fix_distance(xdt_ok, previous_xdt = previous_xdt[4L, ], search_space = obfun$domain)), address(xdt_ok))  # no change at all, not even copy
   xdt_fixed = acqo$xdt_fix_distance(xdt_redundant, previous_xdt = previous_xdt[4L, ], search_space = obfun$domain)  # FIXME: test logging
   expect_data_table(xdt_fixed, any.missing = FALSE, nrows = 4L)
