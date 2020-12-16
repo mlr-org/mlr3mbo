@@ -50,9 +50,9 @@ For more information on default values for \code{loop_function}, \code{acq_funct
 and \code{acq_optimizer}, see \code{mbo_defaults}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
-  loop_function,
-  acq_function,
-  acq_optimizer,
+  loop_function = NULL,
+  acq_function = NULL,
+  acq_optimizer = NULL,
   args = NULL,
   result_function = NULL
 )}\if{html}{\out{</div>}}
@@ -65,10 +65,10 @@ and \code{acq_optimizer}, see \code{mbo_defaults}.
 Loop function to run. See \code{mbo_defaults} for defaults.}
 
 \item{\code{acq_function}}{\link{AcqFunction}\cr
-The acquistion function object.}
+The acquistion function object. For defaults see \code{\link{mbo_defaults}}.}
 
 \item{\code{acq_optimizer}}{\link{AcqOptimizer}\cr
-The optimizer that optimizes the acquistion function.}
+The optimizer that optimizes the acquistion function.  For defaults see \code{\link{mbo_defaults}}.}
 
 \item{\code{args}}{(\code{list()}) \cr
 Further arguments for the 'loop_function'.}

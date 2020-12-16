@@ -1,6 +1,12 @@
-bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
+bayesop_mpcl = function(instance, acq_function = NULL, acq_optimizer = NULL, liar, q) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceSingleCrit")
+  if (is.null(acq_function)) {
+    acq_function = default_acqfun(instance)
+  }
+  if (is.null(acq_optimizer)) {
+    acq_optimizer = default_acq_optimizer(instance)
+  }
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")
   assert_function(liar)
@@ -78,6 +84,10 @@ if (FALSE) {
   acq_optimizer = AcqOptimizerRandomSearch$new()
 
   bayesop_mpcl(instance, acq_function, acq_optimizer, mean, 2)
+
+  # Defaults work
+  bayesop_mpcl(instance, liar = mean, q = 2L)
+
   data = instance$archive$data()
   plot(y~batch_nr, data[batch_nr>1,], type = "b")
 

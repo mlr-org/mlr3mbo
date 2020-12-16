@@ -65,6 +65,9 @@ default_loopfun = function(inst) {
 #'   This is the \code{se.method = "jackknife"} option of the \dQuote{regr.randomForest} Learner.
 #'   }
 #' }
+#' In any case, learners are encapsulated using "evaluate", and a fallback learner is set, in cases
+#' where the surrogate learner errors. Currently, the following learner is used as a fallback:
+#' ` GraphLearner$new(po("imputeoor") %>>% lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE))`.
 #'
 #' If additionally dependencies are present in the parameter space, inactive conditional parameters
 #' are represented by missing \code{NA} values in the training design data.frame.
@@ -81,30 +84,54 @@ default_loopfun = function(inst) {
 #'
 #' @param inst [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
+#' @param learner [mlr3::LearnerRegr] \cr
+#'   The surrogate learner used in the acquisition function. Defaults to [`default_surrogate`].
 #' @return [\code{Learner}]
 #' @family mbo_defaults
 #' @export
-default_surrogate = function(inst) {
+default_surrogate = function(inst, learner = NULL, n_objectives = NULL) {
+  assert_r6(instance, "OptimInstance")
+  assert_integer(n_objectives, null.ok=TRUE)
 
-  is_mixed_space = !all(inst$search_space$class %in% c("ParamDbl", "ParamInt"))
-  has_deps = nrow(inst$search_space$deps) > 0L
-
-  if (is_mixed_space) {
-    l = lrn("regr.km", covtype = "matern3_2", optim.method = "gen")
-    if ("deterministic" %in% inst$objective$properties) {
-      l = insert_named(l$param_set$values, list(nugget.stability = 10^-8))
+  if (is.null(learner)) {
+    is_mixed_space = !all(inst$search_space$class %in% c("ParamDbl", "ParamInt"))
+    has_deps = nrow(inst$search_space$deps) > 0L
+    if (!is_mixed_space) {
+      learner = lrn("regr.km", covtype = "matern3_2", optim.method = "gen")
+      if ("deterministic" %in% inst$objective$properties) {
+        insert_named(learner$param_set$values, list(nugget.stability = 10^-8))
+      } else {
+        insert_named(learner$param_set$values, list(nugget.estim = TRUE, jitter = TRUE))
+      }
     } else {
-      l = insert_named(l$param_set$values, list(nugget.estim = TRUE, jitter = TRUE))
+      learner = lrn("regr.ranger", num.trees = 50L, keep.inbag = TRUE)
+      # mrMBO: lrn("regr.randomForest", se.method = "jackknife", keep.inbag = TRUE)
+      # This currently does not work because mlr3's random forest does not have
+      # se estimation.
     }
+    # Stability: evaluate and add a fallback
+    learner$encapsulate[c("train", "predict")] = "evaluate"
+    learner$fallback = lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)
+
+    if (has_deps) {
+      learner = GraphLearner$new(po("imputeoor") %>>% learner)
+      learner$fallback = lrn("regr.featureless")
+    }
+  }
+
+  if (is.null(n_objectives)) {
+    n_objectives = inst$objective$ydim
+  }
+  if (n_objectives == 1L) {
+    surrogate = SurrogateSingleCritLearner$new(learner = learner)
   } else {
-    l = lrn("regr.randomForest", se.method = "jackknife", keep.inbag = TRUE)
+    if (!is.list(learner)) {
+      learner = replicate(n_objectives, learner$clone())
+    }
+    assert_list(learner, len = n_objectives, types = "Learner")
+    surrogate = SurrogateMultiCritLearners$new(learners = learner)
   }
-
-  if (has_deps) {
-    l = GraphLearner$new(po("imputeoor") %>>% l)
-  }
-
-  return(l)
+  return(surrogate)
 }
 
 #' @title Default Acquisition Function
@@ -115,27 +142,16 @@ default_surrogate = function(inst) {
 #' appropriate surrogate learner.
 #' @param inst [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
-#' @param learner [mlr3::LearnerRegr] \cr
-#'   The surrogate learner used in the acquisition function. Defaults to [`default_surrogate`].
+#' @param surrogate [[mlr3mbo::SurrogateSingleCritLearner]|[mlr3mbo::SurrogateMultiCritLearners]] \cr
+#'   The surrogate used in the acquisition function. Defaults to [`default_surrogate`].
 #' @family mbo_defaults
 #' @export
-default_acqfun = function(inst, learner = NULL) {
-  if (is.null(learner)) {
-    learner = default_surrogate(inst)
+default_acqfun = function(inst, surrogate = NULL) {
+  assert_r6(instance, "OptimInstance")
+  if (is.null(surrogate)) {
+    surrogate = default_surrogate(inst)
   }
-
-  # FIXME Depending on ydim will not work for parEGO
-  if (inst$objective$ydim == 1L) {
-    surrogate = SurrogateSingleCritLearner$new(learner = learner)
-    AcqFunctionEI$new(surrogate = surrogate)
-  } else {
-    if (!is.list(learner)) {
-      learner = map(seq_len(inst$objective$ydim), learner$clone())
-    }
-    surrogate = SurrogateMultiCritLearner$new(learners = learner)
-    # FIXME: This is a little odd, since loopfun is only a function.
-    AcqFunctionSmsEmoa$new(surrogate = surrogate)
-  }
+  AcqFunctionEI$new(surrogate = surrogate)
 }
 
 #' @title Default Acquisition Function Optimizer
@@ -149,5 +165,6 @@ default_acqfun = function(inst, learner = NULL) {
 #' @family mbo_defaults
 #' @export
 default_acq_optimizer = function(inst) {
+  assert_r6(instance, "OptimInstance")
   AcqOptimizerRandomSearch$new()
 }

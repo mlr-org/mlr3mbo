@@ -40,7 +40,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @param result_function (`function`)\cr
     #'   Function called after the optimization terminates.
     #'   Requires arguments 'inst' (the OptimInstance) and 'self' (the Optimizer).
-    initialize = function(loop_function, acq_function, acq_optimizer, args = NULL, result_function = NULL) {
+    initialize = function(loop_function = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
       param_set = ParamSet$new()
       param_classes = feature_types_to_param_classes(acq_function$surrogate$model$feature_types)
       properties = c("single-crit", "dependencies") # FIXME: Should depend on the settings?
@@ -58,12 +58,6 @@ OptimizerMbo = R6Class("OptimizerMbo",
     .optimize = function(inst) {
       if (is.null(self$loop_function)) {
         self$loop_function = default_loopfun(inst)
-      }
-      if (is.null(self$acq_function)) {
-        self$acq_function = default_acqfun(inst)
-      }
-      if (is.null(self$acq_optimizer)) {
-        self$acq_optimizer = default_acq_optimizer(inst)
       }
       do.call(self$loop_function, c(list(instance = inst, acq_function = self$acq_function, acq_optimizer = self$acq_optimizer), self$args))
     },

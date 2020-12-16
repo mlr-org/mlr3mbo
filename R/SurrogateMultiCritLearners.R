@@ -32,7 +32,8 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     update = function(xydt, y_cols) {
       assert_xydt(xydt, y_cols)
 
-      backend = as_data_backend(xydt)
+
+      backend = as_data_backend(char_to_fct(xydt))
       features = setdiff(names(xydt), y_cols)
 
       tasks = lapply(y_cols, function(y_col) {

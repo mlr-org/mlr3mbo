@@ -19,7 +19,7 @@ if (FALSE) {
   terminator = trm("evals", n_evals = 20)
 
   instance = OptimInstanceMultiCrit$new(
-    objective = obfun, 
+    objective = obfun,
     terminator = terminator
   )
 
@@ -28,6 +28,10 @@ if (FALSE) {
   acq_optimizer = AcqOptimizerRandomSearch$new()
 
   bayesop_soo(instance, acq_function, acq_optimizer)
+
+  # Defaults work
+  bayesop_soo(instance, AcqFunctionEIPS$new(surrogate = default_surrogate(instance)))
+
 
   data = instance$archive$data()
 

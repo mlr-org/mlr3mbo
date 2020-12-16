@@ -6,8 +6,8 @@
 \usage{
 bayesop_soo(
   instance,
-  acq_function,
-  acq_optimizer,
+  acq_function = NULL,
+  acq_optimizer = NULL,
   n_design = 4 * instance$search_space$length
 )
 }
@@ -16,10 +16,10 @@ bayesop_soo(
 The optimization instance object.}
 
 \item{acq_function}{\link{AcqFunction}\cr
-The acquistion function object.}
+The acquistion function object. For defaults see \code{\link{mbo_defaults}}.}
 
 \item{acq_optimizer}{\link{AcqOptimizer}\cr
-The optimizer that optimizes the acquistion function.}
+The optimizer that optimizes the acquistion function.  For defaults see \code{\link{mbo_defaults}}.}
 
 \item{n_design}{(\code{int(1)})\cr
 In case the \code{archive} inside the \code{instance} is empty, we generate a random initial design of \code{n_design} points.}

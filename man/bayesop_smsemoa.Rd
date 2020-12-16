@@ -4,17 +4,17 @@
 \alias{bayesop_smsemoa}
 \title{Multi-Objective SMS-MBO}
 \usage{
-bayesop_smsemoa(instance, acq_function, acq_optimizer)
+bayesop_smsemoa(instance, acq_function = NULL, acq_optimizer = NULL)
 }
 \arguments{
 \item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance}\cr
 The optimization instance object.}
 
 \item{acq_function}{\link{AcqFunction}\cr
-The acquistion function object.}
+The acquistion function object. For defaults see \code{\link{mbo_defaults}}.}
 
 \item{acq_optimizer}{\link{AcqOptimizer}\cr
-The optimizer that optimizes the acquistion function.}
+The optimizer that optimizes the acquistion function.  For defaults see \code{\link{mbo_defaults}}.}
 }
 \value{
 \link[bbotk:Archive]{bbotk::Archive}
