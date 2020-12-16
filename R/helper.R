@@ -21,5 +21,5 @@ feature_types_to_param_classes = function(feature_types) {
 }
 
 archive_xy = function(archive) {
-  archive$data()[, c(archive$cols_x, archive$cols_y), with = FALSE]
+  archive$data[, c(archive$cols_x, archive$cols_y), with = FALSE]
 }

@@ -63,3 +63,5 @@ REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
 SURR_KM_DETERM = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
 SURR_KM_NOISY = SurrogateSingleCritLearner$new(learner = REGR_KM_NOISY)
 SURR2D_KM_DETERM = SurrogateMultiCritLearners$new(learners = replicate(2, REGR_KM_DETERM))
+
+ACQ_OPT_DEF = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))

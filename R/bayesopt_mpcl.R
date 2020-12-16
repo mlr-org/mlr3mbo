@@ -27,7 +27,7 @@ bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
     # prepare lie objects
     temp_archive = MboDummyArchive$new(archive)
     temp_acq_function = acq_function$clone(deep = TRUE) # also generates clone of the surrogate, should be the only reason why we clone the acqfun
-    lie = data.table(liar(archive$data()[[archive$cols_y]]))
+    lie = data.table(liar(archive$data[[archive$cols_y]]))
     colnames(lie) = archive$cols_y
     xdt_new = xdt
 
@@ -75,10 +75,10 @@ if (FALSE) {
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.ranger"))
   acq_function = AcqFunctionEI$new(surrogate = surrogate)
-  acq_optimizer = AcqOptimizerRandomSearch$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
   bayesop_mpcl(instance, acq_function, acq_optimizer, mean, 2)
-  data = instance$archive$data()
+  data = instance$archive$data
   plot(y~batch_nr, data[batch_nr>1,], type = "b")
 
   xgrid = generate_design_grid(instance$search_space, 100)$data

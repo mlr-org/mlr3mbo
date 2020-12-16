@@ -34,7 +34,7 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
   acq_function$setup(dummy_archive)
 
   repeat {
-    xydt = archive$data()
+    xydt = archive$data
     xdt = xydt[, archive$cols_x, with = FALSE]
     ydt = xydt[, archive$cols_y, with = FALSE]
     d = archive$codomain$length
@@ -93,11 +93,11 @@ if (FALSE) {
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
   acq_function = AcqFunctionEI$new(surrogate = surrogate)
-  acq_optimizer = AcqOptimizerRandomSearch$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
   bayesop_parego(instance, acq_function, acq_optimizer, q = 2)
 
-  archdata = instance$archive$data()
+  archdata = instance$archive$data
   library(ggplot2)
   g = ggplot(archdata, aes_string(x = "y1", y = "y2", color = "batch_nr"))
   g + geom_point()

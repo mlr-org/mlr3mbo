@@ -51,8 +51,9 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #' @param archive [bbotk::Archive]
     update = function(archive) {
       super$update(archive)
-      dummy_archive = MboDummyArchive$new(archive, codomain = archive$codomain$clone(deep = TRUE)$subset(archive$cols_y[[1]]))
-      self$y_best = dummy_archive$best()[[dummy_archive$cols_y]]
+      y = archive$data[,archive$cols_y, with = FALSE][[1]]
+      y = y * mult_max_to_min(archive$codomain)
+      self$y_best = min(y)
     }
   )
 )

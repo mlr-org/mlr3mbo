@@ -3,7 +3,7 @@ test_that("OptimizerMbo works", {
   optim = OptimizerMbo$new(
     loop_function = bayesop_soo,
     acq_function = AcqFunctionEI$new(surrogate = SURR_KM_DETERM),
-    acq_optimizer = AcqOptimizerRandomSearch$new()
+    acq_optimizer = ACQ_OPT_DEF
   )
   expect_class(optim, "OptimizerMbo")
 
@@ -14,7 +14,7 @@ test_that("OptimizerMbo works", {
   res = optim$optimize(instance)
   expect_equal(res, instance$result)
 
-  opdf = instance$archive$data()
+  opdf = instance$archive$data
   expect_data_table(opdf, any.missing = FALSE, nrows = 10)
   expect_equal(instance$result$y, 0, tolerance = 0.1)
 
@@ -35,7 +35,7 @@ test_that("OptimizerMbo works with different settings", {
     ei = AcqFunctionEI$new(SURR_KM_DETERM)
   )
   acq_optimizers = list(
-    rs = AcqOptimizerRandomSearch$new(),
+    rs = ACQ_OPT_DEF,
     from_optim = AcqOptimizerFromOptimizer$new(
       opt("random_search", batch_size = 1000),
       trm("evals", n_evals = 1000)
@@ -67,7 +67,7 @@ test_that("OptimizerMbo works with different settings", {
 
     optim$optimize(instance)
 
-    opdf = instance$archive$data()
+    opdf = instance$archive$data
     expect_data_table(opdf, any.missing = FALSE, nrows = 12)
     expect_equal(instance$result$y, 0, tolerance = 0.2)
   }
@@ -80,7 +80,7 @@ test_that("OptimizerMbo works for noisy problems", {
   optim = OptimizerMbo$new(
     loop_function = bayesop_soo,
     acq_function = AcqFunctionAEI$new(surrogate = SURR_KM_NOISY),
-    acq_optimizer = AcqOptimizerRandomSearch$new(),
+    acq_optimizer = ACQ_OPT_DEF,
     result_function = result_by_surrogate_design,
   )
 
@@ -95,7 +95,7 @@ test_that("OptimizerMbo works for noisy problems", {
 
   optim$optimize(instance)
 
-  opdf = instance$archive$data()
+  opdf = instance$archive$data
   expect_data_table(opdf, any.missing = FALSE, nrows = 20)
   #FIXME: Can we test that the surrogate actually influneces the choice?
   #expect_true(instance$result$y > min(opdf$y)) # we have not chosen the overoptimistic noisy y

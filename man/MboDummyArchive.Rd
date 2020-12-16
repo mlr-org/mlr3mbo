@@ -172,18 +172,9 @@ Take only batches \code{m} into account. Default is all batches.}
 Returns a \code{\link[data.table:data.table]{data.table::data.table()}} which contains all performed
 \link{Objective} function calls.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MboDummyArchive$data(unnest = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MboDummyArchive$data()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{unnest}}{(\code{character()})\cr
-Set of column names for columns to unnest via \code{\link[mlr3misc:unnest]{mlr3misc::unnest()}}.
-Unnested columns are stored in separate columns instead of list-columns.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 \code{\link[data.table:data.table]{data.table::data.table()}}.
 }

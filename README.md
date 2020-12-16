@@ -54,7 +54,7 @@ acqopt = AcqOptimizerFromOptimizer$new(
   trm("evals", n_evals = 100)
 )
 bayesop_soo(instance, acqfun, acqopt)
-plot(y~batch_nr, instance$archive$data()[batch_nr>1,], type = "b")
+plot(y~batch_nr, instance$archive$data[batch_nr>1,], type = "b")
 ```
 
 ## Multipoint through constant liar

@@ -1,6 +1,6 @@
 #' @title Multipoint Constant Liar Proposals
 #' @export
-#' 
+#'
 ProposalGeneratorMpCL = R6Class("ProposalGeneratorMpCL",
   inherit = ProposalGenerator,
 
@@ -17,14 +17,14 @@ ProposalGeneratorMpCL = R6Class("ProposalGeneratorMpCL",
       self$liar = assert_function(liar)
       self$q = assert_int(q, lower = 1)
     },
-    
+
     #' @return data.table \cr
     #'   data.table with columns of domain$ids() and possible extras
     propose = function() {
       proposals = data.table()
       temp_archive = self$archive$clone(deep = TRUE)
       temp_acq_function = self$acq_function$clone(deep = TRUE)
-      lie = data.table(self$liar(self$archive$data()[[self$archive$cols_y]]))
+      lie = data.table(self$liar(self$archive$data[[self$archive$cols_y]]))
       colnames(lie) = self$archive$cols_y
       for (i in seq_len(self$q)) {
         xdt = self$acq_optimizer$optimize(self$acq_function)

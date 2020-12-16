@@ -13,7 +13,7 @@ Other Acquisition Function:
 \code{\link{AcqFunctionAEI}},
 \code{\link{AcqFunctionCB}},
 \code{\link{AcqFunctionEI}},
-\code{\link{AcqFunctionSmsEmoa}},
+\code{\link{AcqFunctionSmsEgo}},
 \code{\link{AcqFunction}}
 }
 \concept{Acquisition Function}

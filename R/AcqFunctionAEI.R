@@ -62,7 +62,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     #' @param archive [bbotk::Archive]
     update = function(archive) {
       super$update(archive)
-      xdt = archive$data()[, archive$cols_x, with = FALSE]
+      xdt = archive$data[, archive$cols_x, with = FALSE]
       p = self$surrogate$predict(xdt)
       if (self$surrogate_max_to_min == 1) { # minimization
         y_effective = p$mean + self$constants$values$c * p$se # pessimistic prediction
