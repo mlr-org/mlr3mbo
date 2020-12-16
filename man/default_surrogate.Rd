@@ -4,10 +4,10 @@
 \alias{default_surrogate}
 \title{Generate default surrogate}
 \usage{
-default_surrogate(inst, learner = NULL, n_objectives = NULL)
+default_surrogate(instance, learner = NULL, n_objectives = NULL)
 }
 \arguments{
-\item{inst}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
+\item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
 \item{learner}{\link[mlr3:LearnerRegr]{mlr3::LearnerRegr} \cr

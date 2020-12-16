@@ -4,10 +4,10 @@
 \alias{default_acqfun}
 \title{Default Acquisition Function}
 \usage{
-default_acqfun(inst, surrogate = NULL)
+default_acqfun(instance, surrogate = NULL)
 }
 \arguments{
-\item{inst}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
+\item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
 \item{surrogate}{[\link{SurrogateSingleCritLearner}|\link{SurrogateMultiCritLearners}] \cr

@@ -4,10 +4,10 @@
 \alias{default_acq_optimizer}
 \title{Default Acquisition Function Optimizer}
 \usage{
-default_acq_optimizer(inst)
+default_acq_optimizer(instance)
 }
 \arguments{
-\item{inst}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
+\item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 }
 \description{

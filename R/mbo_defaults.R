@@ -21,12 +21,12 @@ NULL
 #' For single-criteria optimization, defaults to [`bayesop_soo`].
 #' For multi-criteria optimization, defaults to [`bayesopt_smsemoa`].
 #'
-#' @param inst [bbotk::OptimInstance] \cr
+#' @param instance [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
 #' @family mbo_defaults
 #' @export
-default_loopfun = function(inst) {
-  if (inherits(inst, "OptimInstanceSingleCrit")) {
+default_loopfun = function(instance) {
+  if (inherits(instance, "OptimInstanceSingleCrit")) {
     bayesop_soo
   } else {
     bayesopt_smsemoa
@@ -82,23 +82,23 @@ default_loopfun = function(inst) {
 #' Journal of Machine Learning Research 11.Jan (2010): 131-170.
 #'
 #'
-#' @param inst [bbotk::OptimInstance] \cr
+#' @param instance [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
 #' @param learner [mlr3::LearnerRegr] \cr
 #'   The surrogate learner used in the acquisition function. Defaults to [`default_surrogate`].
 #' @return [\code{Learner}]
 #' @family mbo_defaults
 #' @export
-default_surrogate = function(inst, learner = NULL, n_objectives = NULL) {
+default_surrogate = function(instance, learner = NULL, n_objectives = NULL) {
   assert_r6(instance, "OptimInstance")
   assert_integer(n_objectives, null.ok=TRUE)
 
   if (is.null(learner)) {
-    is_mixed_space = !all(inst$search_space$class %in% c("ParamDbl", "ParamInt"))
-    has_deps = nrow(inst$search_space$deps) > 0L
+    is_mixed_space = !all(instance$search_space$class %in% c("ParamDbl", "ParamInt"))
+    has_deps = nrow(instance$search_space$deps) > 0L
     if (!is_mixed_space) {
       learner = lrn("regr.km", covtype = "matern3_2", optim.method = "gen")
-      if ("deterministic" %in% inst$objective$properties) {
+      if ("deterministic" %in% instance$objective$properties) {
         insert_named(learner$param_set$values, list(nugget.stability = 10^-8))
       } else {
         insert_named(learner$param_set$values, list(nugget.estim = TRUE, jitter = TRUE))
@@ -141,16 +141,16 @@ default_surrogate = function(inst, learner = NULL, n_objectives = NULL) {
 #' Chooses a  default 'acqfun', i.e. the criterion used to select future points.
 #' If no learner is provided, internally calls [`default_surrogate`] to select an
 #' appropriate surrogate learner.
-#' @param inst [bbotk::OptimInstance] \cr
+#' @param instance [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
 #' @param surrogate [[mlr3mbo::SurrogateSingleCritLearner]|[mlr3mbo::SurrogateMultiCritLearners]] \cr
 #'   The surrogate used in the acquisition function. Defaults to [`default_surrogate`].
 #' @family mbo_defaults
 #' @export
-default_acqfun = function(inst, surrogate = NULL) {
+default_acqfun = function(instance, surrogate = NULL) {
   assert_r6(instance, "OptimInstance")
   if (is.null(surrogate)) {
-    surrogate = default_surrogate(inst)
+    surrogate = default_surrogate(instance)
   }
   AcqFunctionEI$new(surrogate = surrogate)
 }
@@ -161,11 +161,11 @@ default_acqfun = function(inst, surrogate = NULL) {
 #' Chooses a  default 'acq_optimizer'
 #' Defaults to [`AcqOptimizerRandomSearch`].
 #'
-#' @param inst [bbotk::OptimInstance] \cr
+#' @param instance [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
 #' @family mbo_defaults
 #' @export
-default_acq_optimizer = function(inst) {
+default_acq_optimizer = function(instance) {
   assert_r6(instance, "OptimInstance")
   AcqOptimizerRandomSearch$new()
 }

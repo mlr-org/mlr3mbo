@@ -123,6 +123,6 @@ We
 ```{r}
 library(ggplot2)
 
-ggplot(instance$archive$data(), aes(batch_nr, classif.ce)) +
+ggplot(instance$archive$data, aes(batch_nr, classif.ce)) +
   geom_line()
 ```

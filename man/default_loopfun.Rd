@@ -4,10 +4,10 @@
 \alias{default_loopfun}
 \title{Default loopfun}
 \usage{
-default_loopfun(inst)
+default_loopfun(instance)
 }
 \arguments{
-\item{inst}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
+\item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 }
 \description{
