@@ -48,6 +48,3 @@ if (FALSE) {
   g = g + geom_line(data = preds, aes(x = x, y = time.mean), col = "blue")
   g
 }
-
-
-

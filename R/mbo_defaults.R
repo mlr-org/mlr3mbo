@@ -105,7 +105,7 @@ default_surrogate = function(inst, learner = NULL, n_objectives = NULL) {
       }
     } else {
       learner = lrn("regr.ranger", num.trees = 50L, keep.inbag = TRUE)
-      # mrMBO: lrn("regr.randomForest", se.method = "jackknife", keep.inbag = TRUE)
+      # FIXME mrMBO: lrn("regr.randomForest", se.method = "jackknife", keep.inbag = TRUE)
       # This currently does not work because mlr3's random forest does not have
       # se estimation.
     }
@@ -114,6 +114,7 @@ default_surrogate = function(inst, learner = NULL, n_objectives = NULL) {
     learner$fallback = lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)
 
     if (has_deps) {
+      require_namespaces("mlr3pipelines")
       learner = GraphLearner$new(po("imputeoor") %>>% learner)
       learner$fallback = lrn("regr.featureless")
     }
