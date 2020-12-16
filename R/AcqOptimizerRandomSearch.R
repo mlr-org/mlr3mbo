@@ -15,7 +15,7 @@ AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
     initialize = function() {
       private$.param_set = ParamSet$new(list(
         ParamInt$new("iters", lower = 1L, default = 1000L),
-        ParamDbl$new("distance_epsilon", lower = 0, upper = Inf))  # FIXME: handle this in the superclass
+        ParamDbl$new("distance_epsilon", lower = 0, upper = 1))  # FIXME: handle this in the superclass
       )
       # FIXME: adaptive default based on optimizer?
       private$.param_set$values$distance_epsilon = 0
