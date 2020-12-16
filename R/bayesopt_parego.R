@@ -29,7 +29,9 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
 
   # ParEGO Archive
   dummy_codomain = ParamSet$new(list(ParamDbl$new("y_scal", tags = "minimize")))
-  dummy_archive = MboDummyArchive$new(archive, codomain = dummy_codomain)
+  dummy_archive = archive$clone(deep = TRUE)
+  dummy_archive$codomain = dummy_codomain
+
   #manual fix: #FIXME Write ParEGO Infill Crit?
   acq_function$setup(dummy_archive)
 
@@ -48,8 +50,7 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
 
       mult = Map('*', ydt, lambda)
       y_scal = do.call('+', mult)
-      dummy_archive$clear()
-      dummy_archive$add_cols(data.table(y_scal = y_scal))
+      set(dummy_archive$data, j = "y_scal", value = y_scal)
 
       acq_function$surrogate$setup(xydt = archive_xy(dummy_archive), y_cols = dummy_archive$cols_y) #update surrogate model with new data
       acq_function$update(dummy_archive)
