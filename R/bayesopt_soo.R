@@ -44,12 +44,29 @@ bayesop_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * ins
 
   repeat {
     xydt = archive$data()
-    acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y) #update surrogate model with new data
+    # FIXME: maybe a tryCatch construction may be better here?
+    # FIXME: catching errors during training the surrogate depends on whether we encapsulate
+    acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)  # update surrogate model with new data
+    sufficient_insample_performance = isTRUE(acq_function$surrogate$test_insample_performance)  # FIXME: do we also want to log if the performance is insufficient?
+    # isTRUE currently due to NaN being possible as an insample performance if the update failed (we reset then)
 
-    acq_function$update(archive) # NOTE: necessary becaue we have to dertermine e.g. y_best for ei, there are possible other costy calculations that we just want to do once for each state. We might not want to do these calculation in acq_function$eval_dt() because this can get called several times during the optimization.
+    acq_function$update(archive)  # NOTE: necessary becaue we have to dertermine e.g. y_best for ei, there are possible other costy calculations that we just want to do once for each state. We might not want to do these calculation in acq_function$eval_dt() because this can get called several times during the optimization.
     # one more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design
     # alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFun),
-    xdt = acq_optimizer$optimize(acq_function)
+
+    xdt = if (sufficient_insample_performance) {
+      xdt = acq_optimizer$optimize(acq_function)
+
+      # FIXME: checking the (Gower) distance of the proposed point(s) to the previous point(s) is slightly more complicated; think about:
+      # - how many points are proposed
+      # - how many points were proposed previously
+      # - what if we propose async
+      acq_optimizer$xdt_fix_distance(xdt, previous_xdt = xydt[which(batch_nr == max(xydt$batch_nr)), archive$cols_x, with = FALSE], search_space = instance$search_space)
+    } else {
+      # lg$info("Proposing a randomly sampled point")  # FIXME: what about logging in general?
+      SamplerUnif$new(instance$search_space)$sample(1L)$data  # NOTE: we always only propose a single random point in this case?
+    }
+
     instance$eval_batch(xdt)
     if (instance$is_terminated || instance$terminator$is_terminated(archive)) break
   }
@@ -78,8 +95,44 @@ if (FALSE) {
   )
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-  acqfun = AcqFunctionEI$new(surrogate = surrogate)
-  acqopt = AcqOptimizerRandomSearch$new()
+  surrogate$model$encapsulate = c(train = "evaluate", predict = "evaluate")
+  acqfun = acq_function = AcqFunctionEI$new(surrogate = surrogate)
+  acqopt = acq_optimizer = AcqOptimizerRandomSearch$new()
+
+  bayesop_soo(instance, acqfun, acqopt)
+}
+
+if (FALSE) {
+  set.seed(1)
+  library(bbotk)
+  devtools::load_all()
+  library(paradox)
+  library(mlr3learners)
+
+  obfun = ObjectiveRFun$new(
+    fun = function(xs) {
+      (xs$x1 - switch(xs$x2, "a" = 0, "b" = 1, "c" = 2)) %% xs$x3 + (if (xs$x4) xs$x1 else pi)
+    },
+    domain = ParamSet$new(list(
+      ParamDbl$new("x1", -5, 5),
+      ParamFct$new("x2", levels = c("a", "b", "c")),
+      ParamInt$new("x3", 1, 2),
+      ParamLgl$new("x4"))),
+    id = "test"
+  )
+
+  terminator = trm("evals", n_evals = 100)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = obfun,
+    terminator = terminator
+  )
+
+  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.ranger"))
+  surrogate$model$param_set$values = list(se.method = "jack", keep.inbag = TRUE)
+  surrogate$model$encapsulate = c(train = "evaluate", predict = "evaluate")
+  acqfun = acq_function = AcqFunctionEI$new(surrogate = surrogate)
+  acqopt = acq_optimizer = AcqOptimizerRandomSearch$new()
 
   bayesop_soo(instance, acqfun, acqopt)
 }

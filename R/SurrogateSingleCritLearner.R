@@ -17,19 +17,43 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
       if("se" %in% self$model$predict_types) {
         self$model$predict_type = "se"
       }
+
+      private$.param_set = ParamSet$new(list(
+        #ParamLgl$new("calculate_insample_performance", default = TRUE),  # FIXME: do we actually want this to be turned off?
+        ParamUty$new("performance_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure,
+        ParamDbl$new("performance_epsilon", lower = -Inf, upper = Inf))
+      )
+      # FIXME: adaptive defaults based on learner and measure?
+      #private$.param_set$values$calculate_insample_performance = TRUE
+      private$.param_set$values$performance_measure = msr("regr.mse")
+      private$.param_set$values$performance_epsilon = Inf
     },
 
     #' @description
     #' Train model with new points.
     #'
-    #' @param xydt [data.table::data.table].
+    #' @param xydt [data.table::data.table]\cr
+    #' Desing of new points.
     #'
-    #' @param y_cols (`character(1)`)\cr
-    #' Name of response column.
+    #' @param y_cols (`character()`)\cr
+    #' Names of response columns.
+    #'
+    #' @return `NULL`
     update = function(xydt, y_cols) {
       assert_string(y_cols)
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = y_cols)
       self$model$train(task)
+      #if (self$param_set$values$calculate_insample_performance) {
+      # only update the insample performance if training was successful and we can actually predict from the Learner
+      # otherwise return NULL, this will result in insufficient insample performance later and trigger a fix
+      private$.insample_performance = if (!is.null(self$model$model)) {
+        assert_measure(self$param_set$values$performance_measure, task = task, learner = self$model)
+        # FIXME: this may need additional safety because the prediction may still fail for some weird reason
+        self$model$predict(task)$score(self$param_set$values$performance_measure, task = task, learner = self$model)
+      }  else {
+        NULL
+      }
+      #}
     },
 
     #' @description
@@ -46,6 +70,29 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
       } else {
         data.table(mean = pred$response)
       }
+    }
+  ),
+
+  active = list(
+    #' @description
+    #' #FIXME:
+    test_insample_performance = function(rhs) {  # FIXME: better name
+      if (!missing(rhs)) {
+        stopf("Field/Binding is read-only")
+      }
+
+      if (self$param_set$values$performance_measure$minimize) {
+        # FIXME: this is not numerically stable
+        self$insample_performance < self$param_set$values$performance_epsilon
+      } else {
+        self$insample_performance > self$param_set$values$performance_epsilon
+      }
+
+      #if (check_passed) {
+      #  invisible(TRUE)
+      #} else {
+      #  stopf("Insample performance of the Surrogate Model does not meet the defined criterion.")
+      #}
     }
   )
 )

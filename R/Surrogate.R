@@ -26,7 +26,7 @@ Surrogate = R6Class("Surrogate",
     #'
     #' @param y_cols (`character()`)\cr
     #' Names of response columns.
-    #' 
+    #'
     #' @return `NULL`
     update = function(xydt, y_cols) {
       stop("Abstract")
@@ -56,6 +56,46 @@ Surrogate = R6Class("Surrogate",
     #' @return [data.table::data.table] with the columns `mean` and `se`.
     predict = function(xdt) {
       stop("Abstract")
+    }
+  ),
+
+  active = list(
+
+    #' @field insample_performance (`numeric()`)\cr
+    #' Surrogate Model's current insample performance.
+    insample_performance = function(rhs) {
+      if (!missing(rhs)) {
+        stopf("Field/Binding is read-only")
+      }
+      private$.insample_performance %??% NaN
+    },
+
+    #' @field param_set ([paradox::ParamSet])\cr
+    #' Set of hyperparameters.
+    param_set = function(rhs) {
+      if (!missing(rhs) && !identical(rhs, private$.param_set)) {
+        stop("param_set is read-only.")
+      }
+      private$.param_set
+    },
+
+    #' @description
+    #' #FIXME:
+    test_insample_performance = function(rhs) {
+      stop("Abstract")
+    }
+  ),
+
+  private = list(
+
+    .insample_performance = NULL,
+    .param_set = NULL,
+
+    deep_clone = function(name, value) {
+      switch(name,
+        .param_set = value$clone(deep = TRUE),
+        value
+      )
     }
   )
 )

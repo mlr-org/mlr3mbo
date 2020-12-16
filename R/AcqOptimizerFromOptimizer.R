@@ -21,6 +21,13 @@ AcqOptimizerFromOptimizer = R6Class("AcqOptimizerFromOptimizer",
     initialize = function(optimizer, terminator) {
       private$.optimizer = assert_optimizer(optimizer)
       self$terminator = assert_r6(terminator, "Terminator")
+
+      # FIXME: handle this in the superclass
+      private$.param_set = ParamSet$new(list(
+        ParamDbl$new("distance_epsilon", lower = 0, upper = Inf))
+      )
+      # FIXME: adaptive default based on optimizer?
+      private$.param_set$values$distance_epsilon = 0
     },
 
     #' @description

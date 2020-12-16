@@ -10,16 +10,16 @@ AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
 
   public = list(
 
-    #' @field param_set ([paradox::ParamSet]).
-    param_set = NULL,
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function() {
-      self$param_set = ParamSet$new(list(
-        ParamInt$new("iters", lower = 1L, default = 1000L)
-      ))
-      self$param_set$values$iters = 1000L
+      private$.param_set = ParamSet$new(list(
+        ParamInt$new("iters", lower = 1L, default = 1000L),
+        ParamDbl$new("distance_epsilon", lower = 0, upper = Inf))  # FIXME: handle this in the superclass
+      )
+      # FIXME: adaptive default based on optimizer?
+      private$.param_set$values$distance_epsilon = 0
+      private$.param_set$values$iters = 1000L
     },
 
     #' @description
