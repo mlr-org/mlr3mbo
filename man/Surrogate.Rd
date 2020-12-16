@@ -52,7 +52,7 @@ Train model with new points.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xydt}}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{\code{xydt}}{\code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Desing of new points.}
 
 \item{\code{y_cols}}{(\code{character()})\cr
@@ -76,7 +76,7 @@ Possible setup routine of the surrogate
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xydt}}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{\code{xydt}}{\code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Initial design.}
 
 \item{\code{y_cols}}{(\code{character()})\cr
@@ -100,13 +100,13 @@ Returns mean response and standard error
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}\cr
 New data.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\link[data.table:data.table]{data.table::data.table} with the columns \code{mean} and \code{se}.
+\code{\link[data.table:data.table]{data.table::data.table()}} with the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}

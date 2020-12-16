@@ -1,14 +1,14 @@
 #' @title Logging object for objective function evaluations
 #'
 #' @description
-#' Container around a [data.table::data.table] which stores all performed
+#' Container around a [data.table::data.table()] which stores all performed
 #' function calls of the Objective.
 #'
 #' @section Technical details:
 #'
 #' The data is stored in a private `.data` field that contains a
-#' [data.table::data.table] which logs all performed function calls of the [Objective].
-#' This [data.table::data.table] is accessed with the public `$data()` method. New
+#' [data.table::data.table()] which logs all performed function calls of the [Objective].
+#' This [data.table::data.table()] is accessed with the public `$data()` method. New
 #' values can be added with the `$add_evals()` method. This however is usually
 #' done through the evaluation of the [OptimInstance] by the [Optimizer].
 #'
@@ -33,10 +33,10 @@ MboDummyArchive = R6Class("MboArchive",
     #' Search space of objective.
     search_space = NULL,
 
-    #' @field added_rows ([data.table::data.table]).
+    #' @field added_rows ([data.table::data.table()]).
     added_rows = data.table(),
 
-    #' @field added_cols ([data.table::data.table]).
+    #' @field added_cols ([data.table::data.table()]).
     added_cols = NULL, # cbind does not work with empty data.table()
 
     #' @description
@@ -61,8 +61,8 @@ MboDummyArchive = R6Class("MboArchive",
     #' @description
     #' Adds function evaluations to the archive table.
     #'
-    #' @param xdt ([data.table::data.table].
-    #' @param ydt ([data.table::data.table].
+    #' @param xdt ([data.table::data.table()].
+    #' @param ydt ([data.table::data.table()].
     #' @param xss_trafoed (`list()`)\cr
     #' Transformed point(s) in the *domain space*
     add_evals = function(xdt, xss_trafoed = NULL, ydt) {
@@ -85,7 +85,7 @@ MboDummyArchive = R6Class("MboArchive",
     #' @description
     #' Add columns.
     #'
-    #' @param dt ([data.table::data.table])
+    #' @param dt ([data.table::data.table()])
     add_cols = function(dt) {
       assert_data_table(dt, nrows = self$n_evals)
       if (is.null(self$added_cols)) {
@@ -132,7 +132,7 @@ MboDummyArchive = R6Class("MboArchive",
     },
 
     #' @description
-    #' Returns a [data.table::data.table] which contains all performed
+    #' Returns a [data.table::data.table()] which contains all performed
     #' [Objective] function calls.
     #'
     #' @param unnest (`character()`)\cr

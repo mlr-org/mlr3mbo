@@ -46,7 +46,7 @@ bayesop_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * ins
     xydt = archive$data()
     # FIXME: maybe a tryCatch construction may be better here?
     # FIXME: catching errors during training the surrogate depends on whether we encapsulate
-    acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y)  # update surrogate model with new data
+    acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y) #update surrogate model with new data
     sufficient_insample_performance = isTRUE(acq_function$surrogate$test_insample_performance)  # FIXME: do we also want to log if the performance is insufficient?
     # isTRUE currently due to NaN being possible as an insample performance if the update failed (we reset then)
 

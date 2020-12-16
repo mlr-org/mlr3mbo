@@ -3,6 +3,17 @@
 #' @description
 #' S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
 #'
+#' @section Parameters:
+#' * `"lambda"` (`numeric(1)`)\cr
+#'   TODO ...
+#'   Defaults to 1.
+#' * `"eps"` (`numeric(1)`)\cr
+#'   TODO
+#'
+#' TODO Reference
+#'
+#' @family Acquisition Function
+#'
 #' @export
 AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
   inherit = AcqFunction, #FIXME: AcqFunctionMultiCrit?
@@ -38,9 +49,9 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
     #' @description
     #' Evaluates all input values in `xdt`.
     #'
-    #' @param xdt [data.table::data.table].
+    #' @param xdt [data.table::data.table()].
     #'
-    #' @return [data.table::data.table]
+    #' @return [data.table::data.table()]
     eval_dt = function(xdt) {
       ps = self$surrogate$predict(xdt)
       means = map_dtc(ps, "mean")

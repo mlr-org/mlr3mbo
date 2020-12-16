@@ -3,6 +3,10 @@
 #' @description
 #' Expected Improvement.
 #'
+#' TODO DESCRIPTION and Reference
+#'
+#' @family Acquisition Function
+#'
 #' @export
 AcqFunctionEI = R6Class("AcqFunctionEI",
   inherit = AcqFunction,
@@ -24,10 +28,13 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     #' @description
     #' Evaluates all input values in `xdt`.
     #'
-    #' @param xdt [data.table::data.table]
+    #' @param xdt [data.table::data.table()]
     #'
-    #' @return `data.table`
+    #' @return [data.table::data.table()].
     eval_dt = function(xdt) {
+      if (is.null(self$y_best)) {
+        stop("y_best is not set. Missed to call $update(archive)?")
+      }
       p = self$surrogate$predict(xdt)
       mu = p$mean
       se = p$se

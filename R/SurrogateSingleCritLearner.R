@@ -14,7 +14,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' @param learner [mlr3::LearnerRegr].
     initialize = function(learner) {
       self$model = assert_learner(learner)
-      if("se" %in% self$model$predict_types) {
+      if (self$model$predict_type != "se" && "se" %in% self$model$predict_types) {
         self$model$predict_type = "se"
       }
 
@@ -40,7 +40,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #'
     #' @return `NULL`
     update = function(xydt, y_cols) {
-      assert_string(y_cols)
+      assert_xydt(xydt, y_cols)
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = y_cols)
       self$model$train(task)
       #if (self$param_set$values$calculate_insample_performance) {
@@ -59,13 +59,15 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' @description
     #' Returns mean response and standard error.
     #'
-    #' @param xdt [data.table::data.table]\cr
+    #' @param xdt [data.table::data.table()]\cr
     #' New data.
     #'
-    #' @return [data.table::data.table] with the columns `mean` and `se`.
+    #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
+      assert_xdt(xdt)
+
       pred = self$model$predict_newdata(newdata = xdt)
-      if(self$model$predict_type == "se") {
+      if (self$model$predict_type == "se") {
         data.table(mean = pred$response, se = pred$se)
       } else {
         data.table(mean = pred$response)

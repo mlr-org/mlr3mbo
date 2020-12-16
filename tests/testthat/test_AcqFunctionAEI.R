@@ -1,30 +1,28 @@
-test_that("AcqFunctionCB works", {
+test_that("AcqFunctionAEI works", {
   surrogate = SURR_KM_DETERM
   inst = MAKE_INST_1D()
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)
 
-  acqf = AcqFunctionCB$new(surrogate = surrogate)
+  acqf = AcqFunctionAEI$new(surrogate = surrogate)
   acqf$setup(inst$archive)
 
   expect_r6(acqf$codomain, "ParamSet")
   expect_equal(acqf$surrogate_max_to_min, c(y = 1))
-  expect_equal(acqf$direction, "same")
+  expect_equal(acqf$direction, "maximize")
   expect_equal(acqf$search_space, inst$search_space)
   expect_learner(acqf$surrogate$model)
 
   acqf$surrogate$update(xydt = archive_xy(inst$archive), y_cols = inst$archive$cols_y) #update surrogate model with new data
 
   xdt = data.table(x = seq(5))
+
+  expect_error(acqf$eval_dt(xdt), "update")
+
+  acqf$update(inst$archive)
+  xdt = data.table(x = seq(5))
   res = acqf$eval_dt(xdt)
   expect_data_table(res, ncols = 1, nrows = 5, any.missing = FALSE)
-  expect_named(res, "acq_cb")
-
-  acqf$param_set$values$lambda = 4
-  res2 = acqf$eval_dt(xdt)
-  expect_true(all(res2$acq_cb < res$acq_cb))
-
-  # FIXME: Should we assert that the surrogate is already trained? Or that
-  # $setup() was already called
+  expect_named(res, "acq_aei")
 })
 

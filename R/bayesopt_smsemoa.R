@@ -23,8 +23,7 @@ bayesop_smsemoa = function(instance, acq_function, acq_optimizer) {
   acq_function$setup(archive) #setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
-    xydt = archive$data()
-    acq_function$surrogate$update(xydt = xydt[, c(archive$cols_x, archive$cols_y), with = FALSE], y_cols = archive$cols_y) #update surrogate model with new data
+    acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y) #update surrogate model with new data
     acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
     acq_function$update(archive)
     xdt = acq_optimizer$optimize(acq_function)
@@ -59,7 +58,7 @@ if (FALSE) {
   terminator = trm("evals", n_evals = 20)
 
   instance = OptimInstanceMultiCrit$new(
-    objective = obfun, 
+    objective = obfun,
     terminator = terminator
   )
 

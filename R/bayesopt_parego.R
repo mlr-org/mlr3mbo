@@ -30,9 +30,9 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
   # ParEGO Archive
   dummy_codomain = ParamSet$new(list(ParamDbl$new("y_scal", tags = "minimize")))
   dummy_archive = MboDummyArchive$new(archive, codomain = dummy_codomain)
-  #manual fix: #FIXME Write ParEGO Infill Crit? 
+  #manual fix: #FIXME Write ParEGO Infill Crit?
   acq_function$setup(dummy_archive)
-  
+
   repeat {
     xydt = archive$data()
     xdt = xydt[, archive$cols_x, with = FALSE]
@@ -45,16 +45,15 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
       # FIXME: Wrong way to calculate lambda
       lambda = runif(d)
       lambda = lambda / sum(lambda)
-      
+
       mult = Map('*', ydt, lambda)
       y_scal = do.call('+', mult)
       dummy_archive$clear()
       dummy_archive$add_cols(data.table(y_scal = y_scal))
 
-      xydt = dummy_archive$data()
-      acq_function$surrogate$setup(xydt = xydt[, c(dummy_archive$cols_x, dummy_archive$cols_y), with = FALSE], y_cols = dummy_archive$cols_y) #update surrogate model with new data
+      acq_function$surrogate$setup(xydt = archive_xy(dummy_archive), y_cols = dummy_archive$cols_y) #update surrogate model with new data
       acq_function$update(dummy_archive)
-      acq_optimizer$optimize(acq_function)  
+      acq_optimizer$optimize(acq_function)
     })
 
     instance$eval_batch(xdt)
@@ -88,7 +87,7 @@ if (FALSE) {
   terminator = trm("evals", n_evals = 20)
 
   instance = OptimInstanceMultiCrit$new(
-    objective = obfun, 
+    objective = obfun,
     terminator = terminator
   )
 

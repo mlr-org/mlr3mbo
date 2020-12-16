@@ -2,11 +2,20 @@
 % Please edit documentation in R/AcqFunction.R
 \name{AcqFunction}
 \alias{AcqFunction}
-\title{Acquisition Function}
+\title{Acquisition Function Base Class}
 \description{
 Based on a surrogate model, the acquisition function encodes the preference to evaluate
 a new point for evaluation.
 }
+\seealso{
+Other Acquisition Function: 
+\code{\link{AcqFunctionAEI}},
+\code{\link{AcqFunctionCB}},
+\code{\link{AcqFunctionEIPS}},
+\code{\link{AcqFunctionEI}},
+\code{\link{AcqFunctionSmsEmoa}}
+}
+\concept{Acquisition Function}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -20,9 +29,11 @@ a new point for evaluation.
 
 \item{\code{codomain}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
 
-\item{\code{direction}}{(\code{character(1)}).}
+\item{\code{direction}}{(\code{character(1)})\cr
+Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 
-\item{\code{surrogate_max_to_min}}{(\code{numeric(1)}).}
+\item{\code{surrogate_max_to_min}}{(\code{numeric(1)}).
+Optimization direction of the objective function: 1 for minimization, -1 for maximization.}
 }
 \if{html}{\out{</div>}}
 }
@@ -55,7 +66,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 \item{\code{surrogate}}{\link{Surrogate}.}
 
-\item{\code{direction}}{(\code{character(1)}).}
+\item{\code{direction}}{(\code{character(1)}).
+Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -72,21 +84,21 @@ Evaluates all input values in \code{xdt}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}}
+\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} \cr
-The column has to have the same name as the id of the acq_fun, because we
-renamed the id of the codomain
+\code{\link[data.table:data.table]{data.table::data.table()}}.\cr
+The column has to have the same name as the id of the acquisition function,
+because we renamed the id of the codomain.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setup"></a>}}
 \if{latex}{\out{\hypertarget{method-setup}{}}}
 \subsection{Method \code{setup()}}{
-Sets up the acquisition function
+Sets up the acquisition function.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$setup(archive)}\if{html}{\out{</div>}}
 }
@@ -103,7 +115,7 @@ Sets up the acquisition function
 \if{html}{\out{<a id="method-update"></a>}}
 \if{latex}{\out{\hypertarget{method-update}{}}}
 \subsection{Method \code{update()}}{
-Update the acquisition function
+Update the acquisition function given an \link[bbotk:Archive]{bbotk::Archive}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$update(archive)}\if{html}{\out{</div>}}
 }

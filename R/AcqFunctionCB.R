@@ -4,9 +4,10 @@
 #'  Confidence Bound.
 #'
 #' @section Parameters:
-#' \describe{
-#' \item{`lambda`}{`numeric(1)`}.
-#' }
+#' * `lambda` (`numeric(1)`)\cr
+#'   TODO DESCRIPTION and Reference
+#'
+#' @family Acquisition Function
 #'
 #' @export
 AcqFunctionCB = R6Class("AcqFunctionCB",
@@ -30,9 +31,9 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
     #' @description
     #' Evaluates all input values in `xdt`.
     #'
-    #' @param xdt [data.table::data.table]
+    #' @param xdt [data.table::data.table()].
     #'
-    #' @return `data.table`
+    #' @return [data.table::data.table()].
     eval_dt = function(xdt) {
       p = self$surrogate$predict(xdt)
       res = p$mean - self$surrogate_max_to_min * self$param_set$values$lambda * p$se

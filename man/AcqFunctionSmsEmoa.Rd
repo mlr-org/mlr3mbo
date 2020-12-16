@@ -6,6 +6,28 @@
 \description{
 S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
 }
+\section{Parameters}{
+
+\itemize{
+\item \code{"lambda"} (\code{numeric(1)})\cr
+TODO ...
+Defaults to 1.
+\item \code{"eps"} (\code{numeric(1)})\cr
+TODO
+}
+
+TODO Reference
+}
+
+\seealso{
+Other Acquisition Function: 
+\code{\link{AcqFunctionAEI}},
+\code{\link{AcqFunctionCB}},
+\code{\link{AcqFunctionEIPS}},
+\code{\link{AcqFunctionEI}},
+\code{\link{AcqFunction}}
+}
+\concept{Acquisition Function}
 \section{Super class}{
 \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionSmsEmoa}
 }
@@ -68,12 +90,12 @@ Evaluates all input values in \code{xdt}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}.}
+\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\link[data.table:data.table]{data.table::data.table}
+\code{\link[data.table:data.table]{data.table::data.table()}}
 }
 }
 \if{html}{\out{<hr>}}

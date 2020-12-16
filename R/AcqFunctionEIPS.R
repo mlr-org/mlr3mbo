@@ -1,7 +1,11 @@
-#' @title Acquisition Function Expected Improvement
+#' @title Acquisition Function Expected Improvement Per Second
 #'
 #' @description
-#' Expected Improvement.
+#' Expected Improvement per second.
+#'
+#' TODO DESCRIPTION and Reference
+#'
+#' @family Acquisition Function
 #'
 #' @export
 AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
@@ -27,10 +31,13 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #' @description
     #' Evaluates all input values in `xdt`.
     #'
-    #' @param xdt [data.table::data.table]
+    #' @param xdt [data.table::data.table()]
     #'
-    #' @return `data.table`
+    #' @return [data.table::data.table()].
     eval_dt = function(xdt) {
+      if (is.null(self$y_best)) {
+        stop("y_best is not set. Missed to call $update(archive)?")
+      }
       p = self$surrogate$predict(xdt)
       mu = p[[1]]$mean
       se = p[[1]]$se

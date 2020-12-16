@@ -36,13 +36,7 @@ FUN_2D_NOISY = function(xs) {
 OBJ_2D_NOISY = ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D_domain, properties = c("single-crit", "noisy"))
 
 # Instance helper
-MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D,
-                     terminator = 5L) {
-  if (is.integer(terminator)) {
-    tt = TerminatorEvals$new()
-    tt$param_set$values$n_evals = terminator
-    terminator = tt
-  }
+MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 5)) {
   if (objective$codomain$length == 1) {
     OptimInstanceSingleCrit$new(objective = objective, search_space = search_space, terminator = terminator)
   } else {
@@ -51,8 +45,12 @@ MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D,
 
 }
 
-MAKE_INST_1D = function(terminator) {
+MAKE_INST_1D = function(terminator = trm("evals", n_evals = 5)) {
   MAKE_INST(objective = OBJ_1D, search_space = PS_1D, terminator = terminator)
+}
+
+MAKE_DESIGN = function(instance, n = 4) {
+  generate_design_lhs(instance$search_space, n)$data
 }
 
 library(mlr3learners)
@@ -61,3 +59,7 @@ REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", nugget.stability = 10^-8)
 REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
 REGR_KM_DETERM = lrn("regr.km", nugget.estim = TRUE, covtype = "matern3_2", jitter = 0.001)
 REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
+
+SURR_KM_DETERM = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
+SURR_KM_NOISY = SurrogateSingleCritLearner$new(learner = REGR_KM_NOISY)
+SURR2D_KM_DETERM = SurrogateMultiCritLearners$new(learners = replicate(2, REGR_KM_DETERM))

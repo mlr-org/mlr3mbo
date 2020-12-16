@@ -1,7 +1,17 @@
 #' @title Acquisition Function Augmented Expected Improvement
 #'
 #' @description
-#' Expected Improvement.
+#' Augmented Expected Improvement.
+#'
+#' @references
+#' `r format_bib("huang_2012")`
+#'
+#' @section Parameters:
+#' * `c` (`numeric(1)`)\cr
+#'   Constant \eqn{c} as used in formula (14) of Huang 2012 to reflect the
+#'   degree of risk aversion. Defaults to `1`.
+#'
+#' @family Acquisition Function
 #'
 #' @export
 AcqFunctionAEI = R6Class("AcqFunctionAEI",
@@ -30,10 +40,16 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     #' @description
     #' Evaluates all input values in `xdt`.
     #'
-    #' @param xdt [data.table::data.table]
+    #' @param xdt [data.table::data.table()]
     #'
-    #' @return `data.table`
+    #' @return [data.table::data.table()].
     eval_dt = function(xdt) {
+      if (is.null(self$y_effective_best)) {
+        stop("y_effective_best is not set. Missed to call $update(archive)?")
+      }
+      if (is.null(self$y_effective_best)) {
+        stop("noise_var is not set. Missed to call $update(archive)?")
+      }
       p = self$surrogate$predict(xdt)
       mu = p$mean
       se = p$se

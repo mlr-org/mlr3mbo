@@ -5,6 +5,18 @@ format_bib = function(...) {
 
 #' @importFrom utils bibentry
 bibentries = c(
+  huang_2012 = bibentry("article",
+    doi = "10.1007/s10898-011-9821-z",
+    year = "2012",
+    month = "jan",
+    volume = "54",
+    number = "2",
+    pages = "431--431",
+    author = "D. Huang and T. T. Allen and W. I. Notz and N. Zheng",
+    title = "Erratum to: Global optimization of stochastic black-box systems via sequential kriging meta-models",
+    journal = "Journal of Global Optimization"
+  ),
+
   jones_1998 = bibentry("article",
     title = "Efficient Global Optimization of Expensive Black-Box Functions",
     author = "Jones, Donald R. and Schonlau, Matthias and Welch, William J.",
