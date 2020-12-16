@@ -20,13 +20,13 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
 
       private$.param_set = ParamSet$new(list(
         #ParamLgl$new("calculate_insample_performance", default = TRUE),  # FIXME: do we actually want this to be turned off?
-        ParamUty$new("performance_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure,
+        ParamUty$new("performance_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
         ParamDbl$new("performance_epsilon", lower = -Inf, upper = Inf))
       )
       # FIXME: adaptive defaults based on learner and measure?
       #private$.param_set$values$calculate_insample_performance = TRUE
-      private$.param_set$values$performance_measure = msr("regr.mse")
-      private$.param_set$values$performance_epsilon = Inf
+      private$.param_set$values$performance_measure = msr("regr.rsq")
+      private$.param_set$values$performance_epsilon = 0
     },
 
     #' @description
@@ -44,16 +44,18 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = y_cols)
       self$model$train(task)
       #if (self$param_set$values$calculate_insample_performance) {
+      # FIXME: this can likely go once mlr-org/mlr3mbo/issues/33 is fixed (if we encapsulate and provide a fallback we can always predict)
       # only update the insample performance if training was successful and we can actually predict from the Learner
       # otherwise return NULL, this will result in insufficient insample performance later and trigger a fix
       private$.insample_performance = if (!is.null(self$model$model)) {
         assert_measure(self$param_set$values$performance_measure, task = task, learner = self$model)
-        # FIXME: this may need additional safety because the prediction may still fail for some weird reason
+        # FIXME: this may need additional safety checks because the prediction may still fail for some weird reason
         self$model$predict(task)$score(self$param_set$values$performance_measure, task = task, learner = self$model)
       }  else {
         NULL
       }
       #}
+      invisible(NULL)
     },
 
     #' @description
