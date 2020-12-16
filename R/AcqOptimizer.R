@@ -21,7 +21,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     },
 
     #' @description
-    #' #FIXME: better name
+    #' # FIXME: better name
     xdt_fix_distance = function(xdt, previous_xdt, search_space) {
       # FIXME: logging?
       distance_epsilon = self$param_set$values$distance_epsilon
@@ -47,7 +47,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
           for (i in which(!check_passed_new)) {
             # one of the two will always be the point itself
             # FIXME: wrap gower::gower_topn to catch some safe warnings
-            to_replace = gower::gower_topn(xdt[i, ], xdt, n = 2L, nthread = 2L)$index[, 1L]  # NOTE: no parallel execution for now
+            to_replace = gower::gower_topn(xdt[i, ], xdt, n = 2L, nthread = 1L)$index[, 1L]  # NOTE: no parallel execution for now
             xdt[to_replace[to_replace != i], ] = SamplerUnif$new(search_space)$sample(1L)$data
 
             if (check_gower_distance(xdt, previous_xdt = previous_xdt, distance_epsilon = distance_epsilon, compare_to_itself = TRUE)) {

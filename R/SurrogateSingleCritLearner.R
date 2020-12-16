@@ -79,7 +79,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
 
   active = list(
     #' @description
-    #' #FIXME:
+    #' # FIXME:
     test_insample_performance = function(rhs) {  # FIXME: better name
       if (!missing(rhs)) {
         stopf("Field/Binding is read-only")
