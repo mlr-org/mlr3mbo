@@ -28,13 +28,18 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    #' For more information on default values, see `mbo_defaults`.
+    #' For more information on default values for `loop_function`, `acq_function`
+    #' and `acq_optimizer`, see `mbo_defaults`.
     #'
     #' @param loop_function (`function`).
-    #' @param acq_function ([AcqFunction]).
-    #' @param acq_optimizer ([AcqOptimizer]).
-    #' @param args (`list()`).
-    #' @param result_function (`function`).
+    #'   Loop function to run. See `mbo_defaults` for defaults.
+    #' @template param_acq_function
+    #' @template param_acq_optimizer
+    #' @param args (`list()`) \cr
+    #'   Further arguments for the 'loop_function'.
+    #' @param result_function (`function`)\cr
+    #'   Function called after the optimization terminates.
+    #'   Requires arguments 'inst' (the OptimInstance) and 'self' (the Optimizer).
     initialize = function(loop_function, acq_function, acq_optimizer, args = NULL, result_function = NULL) {
       param_set = ParamSet$new()
       param_classes = feature_types_to_param_classes(acq_function$surrogate$model$feature_types)

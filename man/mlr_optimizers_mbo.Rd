@@ -46,7 +46,8 @@ MBO loop as Optimizer.
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
-For more information on default values, see \code{mbo_defaults}.
+For more information on default values for \code{loop_function}, \code{acq_function}
+and \code{acq_optimizer}, see \code{mbo_defaults}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
   loop_function,
@@ -60,15 +61,21 @@ For more information on default values, see \code{mbo_defaults}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{loop_function}}{(\code{function}).}
+\item{\code{loop_function}}{(\code{function}).
+Loop function to run. See \code{mbo_defaults} for defaults.}
 
-\item{\code{acq_function}}{(\link{AcqFunction}).}
+\item{\code{acq_function}}{\link{AcqFunction}\cr
+The acquistion function object.}
 
-\item{\code{acq_optimizer}}{(\link{AcqOptimizer}).}
+\item{\code{acq_optimizer}}{\link{AcqOptimizer}\cr
+The optimizer that optimizes the acquistion function.}
 
-\item{\code{args}}{(\code{list()}).}
+\item{\code{args}}{(\code{list()}) \cr
+Further arguments for the 'loop_function'.}
 
-\item{\code{result_function}}{(\code{function}).}
+\item{\code{result_function}}{(\code{function})\cr
+Function called after the optimization terminates.
+Requires arguments 'inst' (the OptimInstance) and 'self' (the Optimizer).}
 }
 \if{html}{\out{</div>}}
 }
