@@ -55,7 +55,8 @@ AcqFunction = R6Class("AcqFunction",
 
       self$surrogate_max_to_min = mult_max_to_min(archive$codomain)
 
-      self$domain = archive$search_space
+      self$domain = archive$search_space$clone(deep = TRUE)
+      self$domain$trafo = NULL # FIXME is it okay to do this?
     },
 
     #' @description

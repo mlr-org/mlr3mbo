@@ -84,6 +84,7 @@ We choose a simple random search for this task.
 ```{r}
 library(mlr3mbo)
 library(mlr3learners)
+library(bbotk)
 
 set.seed(7823)
 
