@@ -20,29 +20,23 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     #'
     #' @param surrogate [SurrogateSingleCrit].
     initialize = function(surrogate) {
-      param_set = ParamSet$new()
       assert_r6(surrogate, "SurrogateSingleCrit")
-      super$initialize("acq_ei", param_set, surrogate, direction = "maximize")
-    },
 
-    #' @description
-    #' Evaluates all input values in `xdt`.
-    #'
-    #' @param xdt [data.table::data.table()]
-    #'
-    #' @return [data.table::data.table()].
-    eval_dt = function(xdt) {
-      if (is.null(self$y_best)) {
-        stop("y_best is not set. Missed to call $update(archive)?")
+      fun = function(xdt) {
+        if (is.null(self$y_best)) {
+          stop("y_best is not set. Missed to call $update(archive)?")
+        }
+        p = self$surrogate$predict(xdt)
+        mu = p$mean
+        se = p$se
+        d = self$y_best - self$surrogate_max_to_min * mu
+        d_norm = d / se
+        ei = d * pnorm(d_norm) + se * dnorm(d_norm)
+        ei = ifelse(se < 1e-20, 0, ei)
+        data.table(acq_ei = ei)
       }
-      p = self$surrogate$predict(xdt)
-      mu = p$mean
-      se = p$se
-      d = self$y_best - self$surrogate_max_to_min * mu
-      d_norm = d / se
-      ei = d * pnorm(d_norm) + se * dnorm(d_norm)
-      ei = ifelse(se < 1e-20, 0, ei)
-      data.table(acq_ei = ei)
+
+      super$initialize("acq_ei", surrogate = surrogate, direction = "maximize", fun = fun)
     },
 
     #' @description

@@ -20,7 +20,7 @@ Optimizer for \link{AcqFunction} objects.
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator)}\if{html}{\out{</div>}}
 }
 
 }
@@ -39,6 +39,9 @@ Optimize the acquisition function.
 \item{\code{acq_function}}{\link{AcqFunction}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} with 1 row per optimum and x as colums
 }
 }
 \if{html}{\out{<hr>}}

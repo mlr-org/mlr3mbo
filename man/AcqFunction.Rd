@@ -13,21 +13,16 @@ Other Acquisition Function:
 \code{\link{AcqFunctionCB}},
 \code{\link{AcqFunctionEIPS}},
 \code{\link{AcqFunctionEI}},
-\code{\link{AcqFunctionSmsEmoa}}
+\code{\link{AcqFunctionSmsEgo}}
 }
 \concept{Acquisition Function}
+\section{Super classes}{
+\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[bbotk:ObjectiveRFunDt]{bbotk::ObjectiveRFunDt}} -> \code{AcqFunction}
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{id}}{(\code{character(1)}).}
-
 \item{\code{surrogate}}{\link{Surrogate}.}
-
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
-
-\item{\code{search_space}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
-
-\item{\code{codomain}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
 
 \item{\code{direction}}{(\code{character(1)})\cr
 Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
@@ -41,12 +36,21 @@ Optimization direction of the objective function: 1 for minimization, -1 for max
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{AcqFunction$new()}}
-\item \href{#method-eval_dt}{\code{AcqFunction$eval_dt()}}
 \item \href{#method-setup}{\code{AcqFunction$setup()}}
 \item \href{#method-update}{\code{AcqFunction$update()}}
-\item \href{#method-generate_objective}{\code{AcqFunction$generate_objective()}}
 \item \href{#method-clone}{\code{AcqFunction$clone()}}
 }
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval">}\href{../../bbotk/html/Objective.html#method-eval}{\code{bbotk::Objective$eval()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format">}\href{../../bbotk/html/Objective.html#method-format}{\code{bbotk::Objective$format()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print">}\href{../../bbotk/html/Objective.html#method-print}{\code{bbotk::Objective$print()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_dt">}\href{../../bbotk/html/ObjectiveRFunDt.html#method-eval_dt}{\code{bbotk::ObjectiveRFunDt$eval_dt()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_many">}\href{../../bbotk/html/ObjectiveRFunDt.html#method-eval_many}{\code{bbotk::ObjectiveRFunDt$eval_many()}}\out{</span>}
+}
+\out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
@@ -54,7 +58,7 @@ Optimization direction of the objective function: 1 for minimization, -1 for max
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(id, param_set, surrogate, direction)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(id, constants = ParamSet$new(), surrogate, direction, fun)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -62,36 +66,16 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \describe{
 \item{\code{id}}{(\code{character(1)}).}
 
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
+\item{\code{constants}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
 
 \item{\code{surrogate}}{\link{Surrogate}.}
 
-\item{\code{direction}}{(\code{character(1)}).
+\item{\code{direction}}{(\code{character(1)}).}
+
+\item{\code{fun}}{(\verb{function(xdt)}).
 Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-eval_dt"></a>}}
-\if{latex}{\out{\hypertarget{method-eval_dt}{}}}
-\subsection{Method \code{eval_dt()}}{
-Evaluates all input values in \code{xdt}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$eval_dt(xdt)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}}.\cr
-The column has to have the same name as the id of the acquisition function,
-because we renamed the id of the codomain.
 }
 }
 \if{html}{\out{<hr>}}
@@ -126,19 +110,6 @@ Update the acquisition function given an \link[bbotk:Archive]{bbotk::Archive}.
 \item{\code{archive}}{\link[bbotk:Archive]{bbotk::Archive}.}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-generate_objective"></a>}}
-\if{latex}{\out{\hypertarget{method-generate_objective}{}}}
-\subsection{Method \code{generate_objective()}}{
-Generates an objective function for \link[bbotk:Optimizer]{bbotk::Optimizer}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$generate_objective()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\link[bbotk:ObjectiveRFunDt]{bbotk::ObjectiveRFunDt}
 }
 }
 \if{html}{\out{<hr>}}
