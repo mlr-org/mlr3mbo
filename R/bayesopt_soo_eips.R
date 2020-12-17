@@ -25,7 +25,7 @@ if (FALSE) {
 
   surrogate = SurrogateMultiCritLearners$new(learners = replicate(2, lrn("regr.km")))
   acq_function = AcqFunctionEIPS$new(surrogate = surrogate)
-  acq_optimizer = AcqOptimizerRandomSearch$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
   bayesop_soo(instance, acq_function, acq_optimizer)
 
@@ -48,3 +48,4 @@ if (FALSE) {
   g = g + geom_line(data = preds, aes(x = x, y = time.mean), col = "blue")
   g
 }
+

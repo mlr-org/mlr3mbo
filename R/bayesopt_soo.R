@@ -70,7 +70,7 @@ if (FALSE) {
   library(mlr3learners)
 
   obfun = ObjectiveRFun$new(
-    fun = function(xs) sum(unlist(xs)^2),
+    fun = function(xs) list(y = sum(unlist(xs)^2)),
     domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
     id = "test"
   )
@@ -83,8 +83,8 @@ if (FALSE) {
   )
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-  acqfun = AcqFunctionEI$new(surrogate = surrogate)
-  acqopt = AcqOptimizerRandomSearch$new()
+  acq_function = AcqFunctionEI$new(surrogate = surrogate)
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_soo(instance, acqfun, acqopt)
+  bayesop_soo(instance, acq_function, acq_optimizer)
 }

@@ -19,25 +19,28 @@ Other Acquisition Function:
 \code{\link{AcqFunctionAEI}},
 \code{\link{AcqFunctionEIPS}},
 \code{\link{AcqFunctionEI}},
-\code{\link{AcqFunctionSmsEmoa}},
+\code{\link{AcqFunctionSmsEgo}},
 \code{\link{AcqFunction}}
 }
 \concept{Acquisition Function}
-\section{Super class}{
-\code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionCB}
+\section{Super classes}{
+\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[bbotk:ObjectiveRFunDt]{bbotk::ObjectiveRFunDt}} -> \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionCB}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{AcqFunctionCB$new()}}
-\item \href{#method-eval_dt}{\code{AcqFunctionCB$eval_dt()}}
 \item \href{#method-clone}{\code{AcqFunctionCB$clone()}}
 }
 }
 \if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
+\out{<details ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="generate_objective">}\href{../../mlr3mbo/html/AcqFunction.html#method-generate_objective}{\code{mlr3mbo::AcqFunction$generate_objective()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval">}\href{../../bbotk/html/Objective.html#method-eval}{\code{bbotk::Objective$eval()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format">}\href{../../bbotk/html/Objective.html#method-format}{\code{bbotk::Objective$format()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print">}\href{../../bbotk/html/Objective.html#method-print}{\code{bbotk::Objective$print()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_dt">}\href{../../bbotk/html/ObjectiveRFunDt.html#method-eval_dt}{\code{bbotk::ObjectiveRFunDt$eval_dt()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_many">}\href{../../bbotk/html/ObjectiveRFunDt.html#method-eval_many}{\code{bbotk::ObjectiveRFunDt$eval_many()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup">}\href{../../mlr3mbo/html/AcqFunction.html#method-setup}{\code{mlr3mbo::AcqFunction$setup()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="update">}\href{../../mlr3mbo/html/AcqFunction.html#method-update}{\code{mlr3mbo::AcqFunction$update()}}\out{</span>}
 }
@@ -58,26 +61,6 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{surrogate}}{\link{SurrogateSingleCrit}.}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-eval_dt"></a>}}
-\if{latex}{\out{\hypertarget{method-eval_dt}{}}}
-\subsection{Method \code{eval_dt()}}{
-Evaluates all input values in \code{xdt}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionCB$eval_dt(xdt)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}}.
 }
 }
 \if{html}{\out{<hr>}}

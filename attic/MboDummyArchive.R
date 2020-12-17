@@ -135,13 +135,9 @@ MboDummyArchive = R6Class("MboArchive",
     #' Returns a [data.table::data.table()] which contains all performed
     #' [Objective] function calls.
     #'
-    #' @param unnest (`character()`)\cr
-    #' Set of column names for columns to unnest via [mlr3misc::unnest()].
-    #' Unnested columns are stored in separate columns instead of list-columns.
-    #'
     #' @return [data.table::data.table()].
-    data = function(unnest = NULL) {
-      data = self$archive$data(unnest)
+    data = function() {
+      data = self$archive$data
       data = rbindlist(list(data, self$added_rows), fill = TRUE, use.names = TRUE)
       cbind(data, self$added_cols)
     },

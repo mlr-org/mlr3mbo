@@ -89,7 +89,7 @@ set.seed(7823)
 
 surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
 acq_function = AcqFunctionEI$new(surrogate = surrogate)
-acq_optimizer = AcqOptimizerRandomSearch$new()
+acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 ```
 
 `mlr3mbo` offers different loops, which piece together the surrogate model, acquisition model and acquisiton optimizer.

@@ -10,7 +10,7 @@ test_that("AcqFunctionCB works", {
   expect_r6(acqf$codomain, "ParamSet")
   expect_equal(acqf$surrogate_max_to_min, c(y = 1))
   expect_equal(acqf$direction, "same")
-  expect_equal(acqf$search_space, inst$search_space)
+  expect_equal(acqf$domain, inst$search_space)
   expect_learner(acqf$surrogate$model)
 
   acqf$surrogate$update(xydt = archive_xy(inst$archive), y_cols = inst$archive$cols_y) #update surrogate model with new data
@@ -20,7 +20,7 @@ test_that("AcqFunctionCB works", {
   expect_data_table(res, ncols = 1, nrows = 5, any.missing = FALSE)
   expect_named(res, "acq_cb")
 
-  acqf$param_set$values$lambda = 4
+  acqf$constants$values$lambda = 4
   res2 = acqf$eval_dt(xdt)
   expect_true(all(res2$acq_cb < res$acq_cb))
 
