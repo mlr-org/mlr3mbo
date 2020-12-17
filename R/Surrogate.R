@@ -21,28 +21,20 @@ Surrogate = R6Class("Surrogate",
     #' @description
     #' Train model with new points.
     #'
-    #' @param xydt [data.table::data.table()]\cr
-    #' Desing of new points.
-    #'
-    #' @param y_cols (`character()`)\cr
-    #' Names of response columns.
+    #' @param archive [bbotk::Archive].
     #'
     #' @return `NULL`
-    update = function(xydt, y_cols) {
+    update = function(archive) {
       stop("Abstract")
     },
 
     #' @description
     #' Possible setup routine of the surrogate
     #'
-    #' @param xydt [data.table::data.table()]\cr
-    #' Initial design.
-    #'
-    #' @param y_cols (`character()`)\cr
-    #' Names of response columns.
+    #' @param archive [bbotk::Archive].
     #'
     #' @return `NULL`
-    setup = function(xydt, y_cols) {
+    setup = function(archive) {
       assert_xydt(xydt, y_cols)
       self$update(xydt, y_cols)
     },
