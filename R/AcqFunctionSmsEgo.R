@@ -16,7 +16,7 @@
 #' @family Acquisition Function
 #'
 #' @export
-AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEmoa",
+AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
   inherit = AcqFunction, #FIXME: AcqFunctionMultiCrit?
 
   public = list(
