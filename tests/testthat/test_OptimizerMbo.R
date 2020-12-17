@@ -67,7 +67,7 @@ test_that("OptimizerMbo works with different settings", {
 
     opdf = instance$archive$data
     expect_data_table(tail(opdf, -6), any.missing = FALSE, nrows = 12-6)
-    expect_equal(instance$result$y, 0, tolerance = 0.2)
+    expect_equal(instance$result$y, 0, tolerance = 0.6)
   }
 })
 
