@@ -8,6 +8,12 @@ Expected Improvement per second.
 
 TODO DESCRIPTION and Reference
 }
+\references{
+Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).
+\dQuote{Practical Bayesian Optimization of Machine Learning Algorithms.}
+In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neural Information Processing Systems}, volume 25, 2951--2959.
+\url{https://proceedings.neurips.cc/paper/2012/file/05311655a15b75fab86956663e1819cd-Paper.pdf}.
+}
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunctionAEI}},

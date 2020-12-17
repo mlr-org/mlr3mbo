@@ -7,6 +7,7 @@
 #' * `lambda` (`numeric(1)`)\cr
 #'   TODO DESCRIPTION and Reference
 #'
+#'
 #' @family Acquisition Function
 #'
 #' @export

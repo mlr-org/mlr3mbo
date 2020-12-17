@@ -10,7 +10,8 @@
 #' * `"eps"` (`numeric(1)`)\cr
 #'   TODO
 #'
-#' TODO Reference
+#' @references
+#' `r format_bib("beume_2007")`
 #'
 #' @family Acquisition Function
 #'

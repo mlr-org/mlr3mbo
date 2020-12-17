@@ -35,5 +35,30 @@ bibentries = c(
     number   = "1",
     pages    = "131--170",
     journal  = "Journal of Machine Learning Research"
+  ),
+
+  beume_2007 = bibentry("article",
+    doi = "10.1016/j.ejor.2006.08.008",
+    year = "2007",
+    month = "sep",
+    publisher = "Elsevier",
+    volume = "181",
+    number = "3",
+    pages = "1653--1669",
+    author = "Nicola Beume and Boris Naujoks and Michael Emmerich",
+    title = "{SMS}-{EMOA}: Multiobjective selection based on dominated hypervolume",
+    journal = "European Journal of Operational Research"
+  ),
+
+  snoek_2012 = bibentry("inproceedings",
+    author = "Snoek, Jasper and Larochelle, Hugo and Adams, Ryan P",
+    booktitle = "Advances in Neural Information Processing Systems",
+    editor = "F. Pereira and C. J. C. Burges and L. Bottou and K. Q. Weinberger",
+    pages = "2951--2959",
+    publisher = "Curran Associates, Inc.",
+    title = "Practical Bayesian Optimization of Machine Learning Algorithms",
+    url = "https://proceedings.neurips.cc/paper/2012/file/05311655a15b75fab86956663e1819cd-Paper.pdf",
+    volume = "25",
+    year = "2012"
   )
 )

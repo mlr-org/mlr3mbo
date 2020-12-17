@@ -5,6 +5,9 @@
 #'
 #' TODO DESCRIPTION and Reference
 #'
+#' @references
+#' `r format_bib("snoek_2012")`
+#'
 #' @family Acquisition Function
 #'
 #' @export
