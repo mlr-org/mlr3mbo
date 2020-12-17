@@ -30,10 +30,10 @@ if (FALSE) {
   bayesop_soo(instance, acq_function, acq_optimizer)
 
   # Defaults work
-  bayesop_soo(instance, AcqFunctionEIPS$new(surrogate = default_surrogate(instance)))
+  acq_function = AcqFunctionEIPS$new(surrogate = default_surrogate(instance))
+  bayesop_soo(instance, acq_function)
 
-
-  data = instance$archive$data()
+  data = instance$archive$data
 
   xgrid = generate_design_grid(instance$search_space, 200)$data
   preds = do.call(cbind, c(list(xgrid), acq_function$surrogate$predict(xgrid)))

@@ -87,4 +87,8 @@ if (FALSE) {
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
   bayesop_soo(instance, acq_function, acq_optimizer)
+
+  # Defaults work
+  bayesop_soo(instance)
+
 }

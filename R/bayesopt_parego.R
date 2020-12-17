@@ -108,7 +108,7 @@ if (FALSE) {
   # Defaults work
   bayesop_parego(instance, q = 2)
 
-  archdata = instance$archive$data()
+  archdata = instance$archive$data
   library(ggplot2)
   g = ggplot(archdata, aes_string(x = "y1", y = "y2", color = "batch_nr"))
   g + geom_point()
