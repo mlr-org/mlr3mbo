@@ -90,17 +90,17 @@ default_loopfun = function(instance) {
 #' @export
 default_surrogate = function(instance, learner = NULL, n_objectives = NULL) {
   assert_r6(instance, "OptimInstance")
-  assert_integer(n_objectives, null.ok=TRUE)
+  assert_integerish(n_objectives, lower = 1L, upper = instance$objective$ydim, any.missing = FALSE, len = 1L, null.ok = TRUE,)
 
   if (is.null(learner)) {
     is_mixed_space = !all(instance$search_space$class %in% c("ParamDbl", "ParamInt"))
     has_deps = nrow(instance$search_space$deps) > 0L
     if (!is_mixed_space) {
       learner = lrn("regr.km", covtype = "matern3_2", optim.method = "gen")
-      if ("deterministic" %in% instance$objective$properties) {
-        insert_named(learner$param_set$values, list(nugget.stability = 10^-8))
+      if ("noisy" %in% instance$objective$properties) {
+        learner$param_set$values = insert_named(learner$param_set$values, list(nugget.estim = TRUE, jitter = 1e-12))
       } else {
-        insert_named(learner$param_set$values, list(nugget.estim = TRUE, jitter = TRUE))
+        learner$param_set$values = insert_named(learner$param_set$values, list(nugget.stability = 10^-8))
       }
     } else {
       learner = lrn("regr.ranger", num.trees = 500L, keep.inbag = TRUE)
@@ -114,7 +114,8 @@ default_surrogate = function(instance, learner = NULL, n_objectives = NULL) {
 
     if (has_deps) {
       require_namespaces("mlr3pipelines")
-      learner = GraphLearner$new(po("imputeoor") %>>% learner)
+      learner = mlr3pipelines::GraphLearner$new(mlr3pipelines::'%>>%'(mlr3pipelines::po("imputeoor"), learner))
+      learner$encapsulate[c("train", "predict")] = "evaluate"
       learner$fallback = lrn("regr.featureless")
     }
   }
