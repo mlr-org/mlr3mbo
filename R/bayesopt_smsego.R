@@ -7,17 +7,17 @@
 #' @template param_acq_optimizer
 #' @return [bbotk::Archive]
 #' @export
-bayesop_smsemoa = function(instance, acq_function = NULL, acq_optimizer = NULL) {
+bayesop_smsego = function(instance, acq_function, acq_optimizer) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
   if (is.null(acq_function)) {
     surrogate = default_surrogate(instance)
-    acq_function = AcqFunctionSmsEmoa$new(surrogate = surrogate)
+    acq_function = AcqFunctionSmsEgo$new(surrogate = surrogate)
   }
   if (is.null(acq_optimizer)) {
     acq_optimizer = default_acq_optimizer(instance)
   }
-  assert_r6(acq_function, "AcqFunctionSmsEmoa")
+  assert_r6(acq_function, "AcqFunctionSmsEgo")
   assert_r6(acq_optimizer, "AcqOptimizer")
 
   archive = instance$archive
@@ -70,19 +70,16 @@ if (FALSE) {
   )
 
   surrogate = SurrogateMultiCritLearners$new(learners = replicate(2, lrn("regr.km")))
-  acq_function = AcqFunctionSmsEmoa$new(surrogate = surrogate)
+  acq_function = AcqFunctionSmsEgo$new(surrogate = surrogate)
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_smsemoa(instance, acq_function, acq_optimizer)
+  bayesop_smsego(instance, acq_function, acq_optimizer)
   # Defaults work
-  bayesop_smsemoa(instance)
+  bayesop_smsego(instance)
 
   archdata = instance$archive$data
   library(ggplot2)
   g = ggplot(archdata, aes_string(x = "y1", y = "y2", color = "batch_nr"))
   g + geom_point()
 }
-
-
-
 
