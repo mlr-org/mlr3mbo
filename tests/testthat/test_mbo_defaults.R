@@ -1,5 +1,4 @@
 test_that("default_surrogate", {
-
   # singlecrit all numeric, deterministic
   surrogate = default_surrogate(MAKE_INST_1D())
   expect_r6(surrogate, "SurrogateSingleCrit")
