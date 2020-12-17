@@ -27,7 +27,7 @@ bibentries = c(
     doi      = "10.1023/A:1008306431147"
   ),
 
-  ding_2012 = bibentry("article",
+  ding_2010 = bibentry("article",
     title    = "An investigation of missing data methods for classification trees applied to binary response data.",
     author   = "Ding, Yufeng and Simonoff, Jeffrey S",
     year     = "2010",

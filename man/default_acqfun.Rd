@@ -10,12 +10,12 @@ default_acqfun(instance, surrogate = NULL)
 \item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{surrogate}{[\link{SurrogateSingleCritLearner}|\link{SurrogateMultiCritLearners}] \cr
-The surrogate used in the acquisition function. Defaults to \code{\link{default_surrogate}}.}
+\item{surrogate}{\link{SurrogateSingleCritLearner} | \link{SurrogateMultiCritLearners} | \code{NULL} \cr
+The surrogate used in the acquisition function. Defaults to the output of \code{default_surrogate(instance)}.}
 }
 \description{
-Chooses a  default 'acqfun', i.e. the criterion used to select future points.
-If no learner is provided, internally calls \code{\link{default_surrogate}} to select an
+Chooses a default acquisition function, i.e. the criterion used to propose future points.
+If no surrogate learner is provided, internally calls \link{default_surrogate} to select an
 appropriate surrogate learner.
 }
 \seealso{

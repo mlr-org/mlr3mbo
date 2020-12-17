@@ -11,10 +11,10 @@ bayesop_smsemoa(instance, acq_function = NULL, acq_optimizer = NULL)
 The optimization instance object.}
 
 \item{acq_function}{\link{AcqFunction}\cr
-The acquistion function object. For defaults see \code{\link{mbo_defaults}}.}
+The acquistion function object. For defaults see \link{mbo_defaults}.}
 
 \item{acq_optimizer}{\link{AcqOptimizer}\cr
-The optimizer that optimizes the acquistion function.  For defaults see \code{\link{mbo_defaults}}.}
+The optimizer that optimizes the acquistion function. For defaults see \link{mbo_defaults}.}
 }
 \value{
 \link[bbotk:Archive]{bbotk::Archive}

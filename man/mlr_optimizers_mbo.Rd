@@ -65,10 +65,10 @@ and \code{acq_optimizer}, see \code{mbo_defaults}.
 Loop function to run. See \code{mbo_defaults} for defaults.}
 
 \item{\code{acq_function}}{\link{AcqFunction}\cr
-The acquistion function object. For defaults see \code{\link{mbo_defaults}}.}
+The acquistion function object. For defaults see \link{mbo_defaults}.}
 
 \item{\code{acq_optimizer}}{\link{AcqOptimizer}\cr
-The optimizer that optimizes the acquistion function.  For defaults see \code{\link{mbo_defaults}}.}
+The optimizer that optimizes the acquistion function. For defaults see \link{mbo_defaults}.}
 
 \item{\code{args}}{(\code{list()}) \cr
 Further arguments for the 'loop_function'.}

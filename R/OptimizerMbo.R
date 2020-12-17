@@ -12,7 +12,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
   public = list(
 
     #' @field loop_function (`function`).
-    loop_function = NULL, #FIXME: At this point it DOES look ok to have the different mbo algos as objects, right?
+    loop_function = NULL, # FIXME: At this point it DOES look ok to have the different mbo algos as objects, right?
 
     #' @field result_function (`function`).
     result_function = NULL,
@@ -72,3 +72,4 @@ OptimizerMbo = R6Class("OptimizerMbo",
     }
   )
 )
+

@@ -4,14 +4,14 @@
 \alias{mbo_defaults}
 \title{Defaults for OptimizerMbo}
 \description{
-The following defaults are set for \code{\link{OptimizerMbo}} during opimization if the
+The following defaults are set for \link{OptimizerMbo} during optimization if the
 respective fields are not set during initialization.
 \itemize{
-\item Optimization Loop: See \code{\link{default_loopfun}} \cr
-\item Acquisition Funciton: \code{\link{default_acqfun}} \cr
-Internally also sets the surrogate learner using \code{\link{default_surrogate}}.
-\item Surrogate Learner: \code{\link{default_surrogate}} \cr
-\item Acqfun Optimizer: \code{\link{default_acq_optimizer}} \cr
+\item Optimization Loop: See \link{default_loopfun} \cr
+\item Acquisition Funciton: \link{default_acqfun} \cr
+Internally also sets the surrogate learner using \link{default_surrogate}.
+\item Surrogate Learner: \link{default_surrogate} \cr
+\item Acqfun Optimizer: \link{default_acq_optimizer} \cr
 }
 }
 \seealso{

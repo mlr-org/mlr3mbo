@@ -11,8 +11,8 @@ default_acq_optimizer(instance)
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 }
 \description{
-Chooses a  default 'acq_optimizer'
-Defaults to \code{\link{AcqOptimizerRandomSearch}}.
+Chooses a default acquisition function optimizer.
+Defaults to \link{AcqOptimizerRandomSearch}.
 }
 \seealso{
 Other mbo_defaults: 
