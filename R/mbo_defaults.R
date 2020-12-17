@@ -167,5 +167,5 @@ default_acqfun = function(instance, surrogate = NULL) {
 #' @export
 default_acq_optimizer = function(instance) {
   assert_r6(instance, "OptimInstance")
-  AcqOptimizerRandomSearch$new()
+  AcqOptimizer$new(opt("random_search", batch_size = 1000L), trm("evals", n_evals = 1000))  # FIXME:
 }

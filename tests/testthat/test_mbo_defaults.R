@@ -84,6 +84,17 @@ test_that("default_surrogate", {
 
 
 test_that("default_acqfun", {
-  default_acqfun(MAKE_INST_1D())
+  expect_r6(default_acqfun(MAKE_INST_1D()), "AcqFunctionEI")
+  acq = default_acqfun(MAKE_INST_1D(), surrogate = SurrogateSingleCritLearner$new(lrn("regr.featureless")))
+  expect_r6(acq, "AcqFunctionEI")
+  expect_r6(acq$surrogate$model, "LearnerRegrFeatureless")
+})
+
+
+
+test_that("default_acq_optimizer", {
+  acqopt = default_acq_optimizer(MAKE_INST_1D())
+  expect_r6(acqopt, "AcqOptimizer")
+  expect_r6(acqopt$optimizer, "OptimizerRandomSearch")
 })
 
