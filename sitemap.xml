@@ -19,19 +19,10 @@
     <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionEIPS.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionSmsEmoa.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionSmsEgo.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerFromOptimizer.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerRandomSearch.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/MboDummyArchive.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/Surrogate.html</loc>

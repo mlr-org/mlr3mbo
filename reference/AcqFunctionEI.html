@@ -160,11 +160,11 @@ TODO DESCRIPTION and Reference" />
 <code><a href='AcqFunctionAEI.html'>AcqFunctionAEI</a></code>,
 <code><a href='AcqFunctionCB.html'>AcqFunctionCB</a></code>,
 <code><a href='AcqFunctionEIPS.html'>AcqFunctionEIPS</a></code>,
-<code><a href='AcqFunctionSmsEmoa.html'>AcqFunctionSmsEmoa</a></code>,
+<code><a href='AcqFunctionSmsEgo.html'>AcqFunctionSmsEgo</a></code>,
 <code><a href='AcqFunction.html'>AcqFunction</a></code></p></div>
-    <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
+    <h2 class="hasAnchor" id="super-classes"><a class="anchor" href="#super-classes"></a>Super classes</h2>
 
-    <p><code><a href='AcqFunction.html'>mlr3mbo::AcqFunction</a></code> -&gt; <code>AcqFunctionEI</code></p>
+    <p><code><a href='https://bbotk.mlr-org.com/reference/Objective.html'>bbotk::Objective</a></code> -&gt; <code><a href='https://bbotk.mlr-org.com/reference/ObjectiveRFunDt.html'>bbotk::ObjectiveRFunDt</a></code> -&gt; <code><a href='AcqFunction.html'>mlr3mbo::AcqFunction</a></code> -&gt; <code>AcqFunctionEI</code></p>
     <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
 
     <p><div class="r6-fields"></p><dl>
@@ -178,13 +178,16 @@ TODO DESCRIPTION and Reference" />
 
 <ul>
 <li><p><a href='#method-new'><code>AcqFunctionEI$new()</code></a></p></li>
-<li><p><a href='#method-eval_dt'><code>AcqFunctionEI$eval_dt()</code></a></p></li>
 <li><p><a href='#method-update'><code>AcqFunctionEI$update()</code></a></p></li>
 <li><p><a href='#method-clone'><code>AcqFunctionEI$clone()</code></a></p></li>
 </ul>
-<p><details open ><summary>Inherited methods</summary>
+<p><details ><summary>Inherited methods</summary>
 <ul>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="generate_objective"><a href='../../mlr3mbo/html/AcqFunction.html#method-generate_objective'><code>mlr3mbo::AcqFunction$generate_objective()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-eval'><code>bbotk::Objective$eval()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-format'><code>bbotk::Objective$format()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-print'><code>bbotk::Objective$print()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_dt"><a href='../../bbotk/html/ObjectiveRFunDt.html#method-eval_dt'><code>bbotk::ObjectiveRFunDt$eval_dt()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_many"><a href='../../bbotk/html/ObjectiveRFunDt.html#method-eval_many'><code>bbotk::ObjectiveRFunDt$eval_many()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup"><a href='../../mlr3mbo/html/AcqFunction.html#method-setup'><code>mlr3mbo::AcqFunction$setup()</code></a></span></p></li>
 </ul>
 </details>
@@ -199,18 +202,6 @@ TODO DESCRIPTION and Reference" />
 <dt><code>surrogate</code></dt><dd><p><a href='SurrogateSingleCrit.html'>SurrogateSingleCrit</a>.</p></dd>
 
 </dl><p></div></p>
-<p><hr>
-<a id="method-eval_dt"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>eval_dt()</code></h3>
-<p>Evaluates all input values in <code>xdt</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqFunctionEI</span><span class='op'>$</span><span class='fu'>eval_dt</span><span class='op'>(</span><span class='va'>xdt</span><span class='op'>)</span></pre><p></div></p>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><dl>
-<dt><code>xdt</code></dt><dd><p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code></p></dd>
-
-</dl><p></div></p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>.</p>
 <p><hr>
 <a id="method-update"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/update.html'>update()</a></code></h3>
 <p>Updates acquisition function and sets <code>y_best</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>

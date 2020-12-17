@@ -160,27 +160,28 @@
 <span class="va">terminator</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
 
 <span class="va">instance</span> <span class="op">=</span> <span class="va"><a href="https://mlr3tuning.mlr-org.com/reference/TuningInstanceSingleCrit.html">TuningInstanceSingleCrit</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  task <span class="op">=</span> <span class="va">task</span>, 
-  learner <span class="op">=</span> <span class="va">learner</span>, 
-  resampling <span class="op">=</span> <span class="va">resampling</span>, 
-  measure <span class="op">=</span> <span class="va">measure</span>, 
-  terminator <span class="op">=</span> <span class="va">terminator</span>, 
+  task <span class="op">=</span> <span class="va">task</span>,
+  learner <span class="op">=</span> <span class="va">learner</span>,
+  resampling <span class="op">=</span> <span class="va">resampling</span>,
+  measure <span class="op">=</span> <span class="va">measure</span>,
+  terminator <span class="op">=</span> <span class="va">terminator</span>,
   search_space <span class="op">=</span> <span class="va">search_space</span><span class="op">)</span></code></pre></div>
 <p>To start the tuning, we still need to define the optimization algorithm. For model-based optimization we have to choose a surrogate model. We choose the kriging regression learner from the <code>DiceKriging</code> package. Next, we have to select an acquisition function. In this example we use expected improvement. Finally, we need to select an optimizer which optimizes the acquisition function. We choose a simple random search for this task.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3mbo.mlr-org.com">mlr3mbo</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3learners.mlr-org.com">mlr3learners</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bbotk.mlr-org.com">bbotk</a></span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">7823</span><span class="op">)</span>
 
 <span class="va">surrogate</span> <span class="op">=</span> <span class="va"><a href="../reference/SurrogateSingleCritLearner.html">SurrogateSingleCritLearner</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>learner <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">acq_function</span> <span class="op">=</span> <span class="va"><a href="../reference/AcqFunctionEI.html">AcqFunctionEI</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>surrogate <span class="op">=</span> <span class="va">surrogate</span><span class="op">)</span>
-<span class="va">acq_optimizer</span> <span class="op">=</span> <span class="va"><a href="../reference/AcqOptimizerRandomSearch.html">AcqOptimizerRandomSearch</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="va">acq_optimizer</span> <span class="op">=</span> <span class="va"><a href="../reference/AcqOptimizer.html">AcqOptimizer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html">opt</a></span><span class="op">(</span><span class="st">"random_search"</span>, batch_size <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>, <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><code>mlr3mbo</code> offers different loops, which piece together the surrogate model, acquisition model and acquisiton optimizer. We choose the simplest one <code>bayesop_soo</code>. Finally, we construct special tuner class for model-based optimization.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tuner</span> <span class="op">=</span> <span class="va"><a href="../reference/mlr_tuners_mbo.html">TunerMbo</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  loop_function <span class="op">=</span> <span class="va">bayesop_soo</span>, 
-  acq_function <span class="op">=</span> <span class="va">acq_function</span>, 
+  loop_function <span class="op">=</span> <span class="va">bayesop_soo</span>,
+  acq_function <span class="op">=</span> <span class="va">acq_function</span>,
   acq_optimizer <span class="op">=</span> <span class="va">acq_optimizer</span><span class="op">)</span></code></pre></div>
 <p>To trigger the tuning, we pass the tuning instance to the tuner.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -197,12 +198,12 @@
 <span class="co">#&gt;   - nugget : NO</span>
 <span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
 <span class="co">#&gt;   - parameters upper bounds :  0.7146303 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  11.97125 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  7.835542 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
 <span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -11.971  |proj g|=    0.0065093</span>
-<span class="co">#&gt; At iterate     1  f =      -11.972  |proj g|=             0</span>
+<span class="co">#&gt; At iterate     0  f=      -7.8355  |proj g|=     0.021092</span>
+<span class="co">#&gt; At iterate     1  f =      -7.8541  |proj g|=             0</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; iterations 1</span>
 <span class="co">#&gt; function evaluations 2</span>
@@ -210,10 +211,10 @@
 <span class="co">#&gt; BFGS updates skipped 0</span>
 <span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
 <span class="co">#&gt; norm of the final projected gradient 0</span>
-<span class="co">#&gt; final function value -11.9722</span>
+<span class="co">#&gt; final function value -7.85406</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; F = -11.9722</span>
-<span class="co">#&gt; final  value -11.972226 </span>
+<span class="co">#&gt; F = -7.85406</span>
+<span class="co">#&gt; final  value -7.854061 </span>
 <span class="co">#&gt; converged</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; optimisation start</span>
@@ -226,165 +227,29 @@
 <span class="co">#&gt;   - type :  matern5_2 </span>
 <span class="co">#&gt;   - nugget : NO</span>
 <span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  15.04448 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.7931554 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  9.852051 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
 <span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -15.044  |proj g|=       0.1384</span>
-<span class="co">#&gt; At iterate     1  f =      -15.045  |proj g|=      0.013681</span>
-<span class="co">#&gt; At iterate     2  f =      -15.045  |proj g|=    0.00024721</span>
-<span class="co">#&gt; At iterate     3  f =      -15.045  |proj g|=    4.2952e-07</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; iterations 3</span>
-<span class="co">#&gt; function evaluations 5</span>
-<span class="co">#&gt; segments explored during Cauchy searches 3</span>
-<span class="co">#&gt; BFGS updates skipped 0</span>
-<span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 4.29522e-07</span>
-<span class="co">#&gt; final function value -15.0449</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; F = -15.0449</span>
-<span class="co">#&gt; final  value -15.044897 </span>
-<span class="co">#&gt; converged</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; optimisation start</span>
-<span class="co">#&gt; ------------------</span>
-<span class="co">#&gt; * estimation method   : MLE </span>
-<span class="co">#&gt; * optimisation method : BFGS </span>
-<span class="co">#&gt; * analytical gradient : used</span>
-<span class="co">#&gt; * trend model : ~1</span>
-<span class="co">#&gt; * covariance model : </span>
-<span class="co">#&gt;   - type :  matern5_2 </span>
-<span class="co">#&gt;   - nugget : NO</span>
-<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  16.3646 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -16.365  |proj g|=       0.7926</span>
-<span class="co">#&gt; At iterate     1  f =      -16.489  |proj g|=       0.15189</span>
-<span class="co">#&gt; At iterate     2  f =      -16.489  |proj g|=      0.045777</span>
-<span class="co">#&gt; At iterate     3  f =      -16.489  |proj g|=    0.00028802</span>
-<span class="co">#&gt; At iterate     4  f =      -16.489  |proj g|=    2.2785e-07</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; iterations 4</span>
-<span class="co">#&gt; function evaluations 7</span>
-<span class="co">#&gt; segments explored during Cauchy searches 4</span>
-<span class="co">#&gt; BFGS updates skipped 0</span>
-<span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 2.27845e-07</span>
-<span class="co">#&gt; final function value -16.4894</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; F = -16.4894</span>
-<span class="co">#&gt; final  value -16.489369 </span>
-<span class="co">#&gt; converged</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; optimisation start</span>
-<span class="co">#&gt; ------------------</span>
-<span class="co">#&gt; * estimation method   : MLE </span>
-<span class="co">#&gt; * optimisation method : BFGS </span>
-<span class="co">#&gt; * analytical gradient : used</span>
-<span class="co">#&gt; * trend model : ~1</span>
-<span class="co">#&gt; * covariance model : </span>
-<span class="co">#&gt;   - type :  matern5_2 </span>
-<span class="co">#&gt;   - nugget : NO</span>
-<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  16.27756 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -16.278  |proj g|=     0.055539</span>
-<span class="co">#&gt; At iterate     1  f =      -16.503  |proj g|=      0.047054</span>
-<span class="co">#&gt; At iterate     2  f =       -16.53  |proj g|=       0.87745</span>
-<span class="co">#&gt; At iterate     3  f =       -16.53  |proj g|=     0.0037624</span>
-<span class="co">#&gt; At iterate     4  f =       -16.53  |proj g|=    3.5984e-06</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; iterations 4</span>
-<span class="co">#&gt; function evaluations 6</span>
-<span class="co">#&gt; segments explored during Cauchy searches 4</span>
-<span class="co">#&gt; BFGS updates skipped 0</span>
-<span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 3.59842e-06</span>
-<span class="co">#&gt; final function value -16.5304</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; F = -16.5304</span>
-<span class="co">#&gt; final  value -16.530364 </span>
-<span class="co">#&gt; converged</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; optimisation start</span>
-<span class="co">#&gt; ------------------</span>
-<span class="co">#&gt; * estimation method   : MLE </span>
-<span class="co">#&gt; * optimisation method : BFGS </span>
-<span class="co">#&gt; * analytical gradient : used</span>
-<span class="co">#&gt; * trend model : ~1</span>
-<span class="co">#&gt; * covariance model : </span>
-<span class="co">#&gt;   - type :  matern5_2 </span>
-<span class="co">#&gt;   - nugget : NO</span>
-<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  17.33799 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -17.338  |proj g|=     0.091937</span>
-<span class="co">#&gt; At iterate     1  f =      -19.988  |proj g|=      0.063492</span>
-<span class="co">#&gt; At iterate     2  f =      -20.542  |proj g|=      0.054138</span>
-<span class="co">#&gt; Nonpositive definiteness in Cholesky factorization in formk;</span>
-<span class="co">#&gt;    refresh the lbfgs memory and restart the iteration.</span>
-<span class="co">#&gt; At iterate     3  f =      -20.675  |proj g|=      0.049843</span>
-<span class="co">#&gt; At iterate     4  f =      -20.712  |proj g|=       0.87438</span>
-<span class="co">#&gt; At iterate     5  f =      -20.713  |proj g|=       0.04612</span>
-<span class="co">#&gt; At iterate     6  f =      -20.713  |proj g|=    0.00023811</span>
-<span class="co">#&gt; At iterate     7  f =      -20.713  |proj g|=    2.4963e-08</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; iterations 7</span>
-<span class="co">#&gt; function evaluations 11</span>
-<span class="co">#&gt; segments explored during Cauchy searches 8</span>
-<span class="co">#&gt; BFGS updates skipped 0</span>
-<span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 2.49626e-08</span>
-<span class="co">#&gt; final function value -20.7129</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; F = -20.7129</span>
-<span class="co">#&gt; final  value -20.712888 </span>
-<span class="co">#&gt; converged</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; optimisation start</span>
-<span class="co">#&gt; ------------------</span>
-<span class="co">#&gt; * estimation method   : MLE </span>
-<span class="co">#&gt; * optimisation method : BFGS </span>
-<span class="co">#&gt; * analytical gradient : used</span>
-<span class="co">#&gt; * trend model : ~1</span>
-<span class="co">#&gt; * covariance model : </span>
-<span class="co">#&gt;   - type :  matern5_2 </span>
-<span class="co">#&gt;   - nugget : NO</span>
-<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  23.3918 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -23.392  |proj g|=     0.045068</span>
-<span class="co">#&gt; At iterate     1  f =      -24.147  |proj g|=      0.038609</span>
-<span class="co">#&gt; At iterate     2  f =      -24.319  |proj g|=        0.8917</span>
-<span class="co">#&gt; At iterate     3  f =      -24.437  |proj g|=       0.03262</span>
-<span class="co">#&gt; At iterate     4  f =      -24.438  |proj g|=      0.032252</span>
-<span class="co">#&gt; At iterate     5  f =      -24.438  |proj g|=    0.00076568</span>
-<span class="co">#&gt; At iterate     6  f =      -24.438  |proj g|=    9.5563e-08</span>
+<span class="co">#&gt; At iterate     0  f=      -9.8521  |proj g|=     0.082034</span>
+<span class="co">#&gt; At iterate     1  f =       -9.897  |proj g|=      0.069234</span>
+<span class="co">#&gt; At iterate     2  f =      -9.9053  |proj g|=      0.062009</span>
+<span class="co">#&gt; At iterate     3  f =       -9.906  |proj g|=      0.059626</span>
+<span class="co">#&gt; At iterate     4  f =       -9.906  |proj g|=     0.0038209</span>
+<span class="co">#&gt; At iterate     5  f =       -9.906  |proj g|=    3.1135e-05</span>
+<span class="co">#&gt; At iterate     6  f =       -9.906  |proj g|=    1.2462e-08</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; iterations 6</span>
 <span class="co">#&gt; function evaluations 8</span>
 <span class="co">#&gt; segments explored during Cauchy searches 6</span>
 <span class="co">#&gt; BFGS updates skipped 0</span>
 <span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 9.55629e-08</span>
-<span class="co">#&gt; final function value -24.4378</span>
+<span class="co">#&gt; norm of the final projected gradient 1.24617e-08</span>
+<span class="co">#&gt; final function value -9.90601</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; F = -24.4378</span>
-<span class="co">#&gt; final  value -24.437831 </span>
+<span class="co">#&gt; F = -9.90601</span>
+<span class="co">#&gt; final  value -9.906013 </span>
 <span class="co">#&gt; converged</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; optimisation start</span>
@@ -397,24 +262,27 @@
 <span class="co">#&gt;   - type :  matern5_2 </span>
 <span class="co">#&gt;   - nugget : NO</span>
 <span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  13.15166 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.7931554 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  12.91852 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
 <span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -13.152  |proj g|=      0.10891</span>
-<span class="co">#&gt; At iterate     1  f =      -21.661  |proj g|=             0</span>
+<span class="co">#&gt; At iterate     0  f=      -12.919  |proj g|=      0.08942</span>
+<span class="co">#&gt; At iterate     1  f =      -12.925  |proj g|=      0.086133</span>
+<span class="co">#&gt; At iterate     2  f =      -12.926  |proj g|=     0.0066008</span>
+<span class="co">#&gt; At iterate     3  f =      -12.926  |proj g|=    4.9475e-06</span>
+<span class="co">#&gt; At iterate     4  f =      -12.926  |proj g|=    5.2438e-12</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; iterations 1</span>
-<span class="co">#&gt; function evaluations 2</span>
-<span class="co">#&gt; segments explored during Cauchy searches 1</span>
+<span class="co">#&gt; iterations 4</span>
+<span class="co">#&gt; function evaluations 6</span>
+<span class="co">#&gt; segments explored during Cauchy searches 4</span>
 <span class="co">#&gt; BFGS updates skipped 0</span>
-<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
-<span class="co">#&gt; norm of the final projected gradient 0</span>
-<span class="co">#&gt; final function value -21.661</span>
+<span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
+<span class="co">#&gt; norm of the final projected gradient 5.24381e-12</span>
+<span class="co">#&gt; final function value -12.9263</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; F = -21.661</span>
-<span class="co">#&gt; final  value -21.660955 </span>
+<span class="co">#&gt; F = -12.9263</span>
+<span class="co">#&gt; final  value -12.926293 </span>
 <span class="co">#&gt; converged</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; optimisation start</span>
@@ -427,58 +295,28 @@
 <span class="co">#&gt;   - type :  matern5_2 </span>
 <span class="co">#&gt;   - nugget : NO</span>
 <span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  21.69461 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9183056 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  13.54936 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
 <span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -21.695  |proj g|=     0.063874</span>
-<span class="co">#&gt; At iterate     1  f =      -22.008  |proj g|=             0</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; iterations 1</span>
-<span class="co">#&gt; function evaluations 2</span>
-<span class="co">#&gt; segments explored during Cauchy searches 1</span>
-<span class="co">#&gt; BFGS updates skipped 0</span>
-<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
-<span class="co">#&gt; norm of the final projected gradient 0</span>
-<span class="co">#&gt; final function value -22.0079</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; F = -22.0079</span>
-<span class="co">#&gt; final  value -22.007896 </span>
-<span class="co">#&gt; converged</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; optimisation start</span>
-<span class="co">#&gt; ------------------</span>
-<span class="co">#&gt; * estimation method   : MLE </span>
-<span class="co">#&gt; * optimisation method : BFGS </span>
-<span class="co">#&gt; * analytical gradient : used</span>
-<span class="co">#&gt; * trend model : ~1</span>
-<span class="co">#&gt; * covariance model : </span>
-<span class="co">#&gt;   - type :  matern5_2 </span>
-<span class="co">#&gt;   - nugget : NO</span>
-<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  30.85561 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -30.856  |proj g|=     0.031717</span>
-<span class="co">#&gt; At iterate     1  f =      -30.966  |proj g|=      0.030101</span>
-<span class="co">#&gt; At iterate     2  f =      -31.001  |proj g|=       0.89168</span>
-<span class="co">#&gt; At iterate     3  f =      -31.002  |proj g|=      0.028554</span>
-<span class="co">#&gt; At iterate     4  f =      -31.002  |proj g|=    0.00070984</span>
-<span class="co">#&gt; At iterate     5  f =      -31.002  |proj g|=    1.0326e-07</span>
+<span class="co">#&gt; At iterate     0  f=      -13.549  |proj g|=      0.89841</span>
+<span class="co">#&gt; At iterate     1  f =      -15.241  |proj g|=       0.11769</span>
+<span class="co">#&gt; At iterate     2  f =        -15.3  |proj g|=       0.10433</span>
+<span class="co">#&gt; At iterate     3  f =        -15.3  |proj g|=      0.021255</span>
+<span class="co">#&gt; At iterate     4  f =        -15.3  |proj g|=    3.6604e-05</span>
+<span class="co">#&gt; At iterate     5  f =        -15.3  |proj g|=    5.6839e-09</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; iterations 5</span>
-<span class="co">#&gt; function evaluations 7</span>
+<span class="co">#&gt; function evaluations 10</span>
 <span class="co">#&gt; segments explored during Cauchy searches 5</span>
 <span class="co">#&gt; BFGS updates skipped 0</span>
 <span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 1.0326e-07</span>
-<span class="co">#&gt; final function value -31.0018</span>
+<span class="co">#&gt; norm of the final projected gradient 5.68388e-09</span>
+<span class="co">#&gt; final function value -15.3005</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; F = -31.0018</span>
-<span class="co">#&gt; final  value -31.001760 </span>
+<span class="co">#&gt; F = -15.3005</span>
+<span class="co">#&gt; final  value -15.300480 </span>
 <span class="co">#&gt; converged</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; optimisation start</span>
@@ -491,26 +329,27 @@
 <span class="co">#&gt;   - type :  matern5_2 </span>
 <span class="co">#&gt;   - nugget : NO</span>
 <span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  33.4328 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9183056 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  17.61641 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
 <span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -33.433  |proj g|=      0.89537</span>
-<span class="co">#&gt; At iterate     1  f =      -33.682  |proj g|=       0.89161</span>
-<span class="co">#&gt; At iterate     2  f =      -33.682  |proj g|=      0.044894</span>
-<span class="co">#&gt; At iterate     3  f =      -33.682  |proj g|=     2.481e-05</span>
+<span class="co">#&gt; At iterate     0  f=      -17.616  |proj g|=      0.86707</span>
+<span class="co">#&gt; At iterate     1  f =      -18.051  |proj g|=      0.085459</span>
+<span class="co">#&gt; At iterate     2  f =      -18.055  |proj g|=      0.082547</span>
+<span class="co">#&gt; At iterate     3  f =      -18.055  |proj g|=     0.0039616</span>
+<span class="co">#&gt; At iterate     4  f =      -18.055  |proj g|=    5.4044e-06</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; iterations 3</span>
+<span class="co">#&gt; iterations 4</span>
 <span class="co">#&gt; function evaluations 7</span>
-<span class="co">#&gt; segments explored during Cauchy searches 3</span>
+<span class="co">#&gt; segments explored during Cauchy searches 4</span>
 <span class="co">#&gt; BFGS updates skipped 0</span>
 <span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 2.48098e-05</span>
-<span class="co">#&gt; final function value -33.6817</span>
+<span class="co">#&gt; norm of the final projected gradient 5.4044e-06</span>
+<span class="co">#&gt; final function value -18.0553</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; F = -33.6817</span>
-<span class="co">#&gt; final  value -33.681722 </span>
+<span class="co">#&gt; F = -18.0553</span>
+<span class="co">#&gt; final  value -18.055349 </span>
 <span class="co">#&gt; converged</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; optimisation start</span>
@@ -523,32 +362,24 @@
 <span class="co">#&gt;   - type :  matern5_2 </span>
 <span class="co">#&gt;   - nugget : NO</span>
 <span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  31.23409 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9202077 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  14.7094 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
 <span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -31.234  |proj g|=     0.051009</span>
-<span class="co">#&gt; At iterate     1  f =      -34.671  |proj g|=      0.039197</span>
-<span class="co">#&gt; At iterate     2  f =      -35.859  |proj g|=      0.033628</span>
-<span class="co">#&gt; Nonpositive definiteness in Cholesky factorization in formk;</span>
-<span class="co">#&gt;    refresh the lbfgs memory and restart the iteration.</span>
-<span class="co">#&gt; At iterate     3  f =      -36.196  |proj g|=      0.030833</span>
-<span class="co">#&gt; At iterate     4  f =      -36.291  |proj g|=       0.89213</span>
-<span class="co">#&gt; At iterate     5  f =      -36.295  |proj g|=       0.02843</span>
-<span class="co">#&gt; At iterate     6  f =      -36.295  |proj g|=     0.0079521</span>
-<span class="co">#&gt; At iterate     7  f =      -36.295  |proj g|=    4.0795e-06</span>
+<span class="co">#&gt; At iterate     0  f=      -14.709  |proj g|=     0.030188</span>
+<span class="co">#&gt; At iterate     1  f =      -17.623  |proj g|=             0</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; iterations 7</span>
-<span class="co">#&gt; function evaluations 11</span>
-<span class="co">#&gt; segments explored during Cauchy searches 8</span>
+<span class="co">#&gt; iterations 1</span>
+<span class="co">#&gt; function evaluations 2</span>
+<span class="co">#&gt; segments explored during Cauchy searches 1</span>
 <span class="co">#&gt; BFGS updates skipped 0</span>
-<span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 4.07949e-06</span>
-<span class="co">#&gt; final function value -36.2949</span>
+<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
+<span class="co">#&gt; norm of the final projected gradient 0</span>
+<span class="co">#&gt; final function value -17.6226</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; F = -36.2949</span>
-<span class="co">#&gt; final  value -36.294914 </span>
+<span class="co">#&gt; F = -17.6226</span>
+<span class="co">#&gt; final  value -17.622592 </span>
 <span class="co">#&gt; converged</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; optimisation start</span>
@@ -561,28 +392,118 @@
 <span class="co">#&gt;   - type :  matern5_2 </span>
 <span class="co">#&gt;   - nugget : NO</span>
 <span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  33.2517 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9202077 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  -0.6907654 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
 <span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -33.252  |proj g|=      0.91061</span>
-<span class="co">#&gt; At iterate     1  f =      -39.171  |proj g|=      0.029227</span>
-<span class="co">#&gt; At iterate     2  f =      -39.177  |proj g|=       0.89182</span>
-<span class="co">#&gt; At iterate     3  f =      -39.179  |proj g|=      0.028546</span>
-<span class="co">#&gt; At iterate     4  f =      -39.179  |proj g|=    0.00080271</span>
-<span class="co">#&gt; At iterate     5  f =      -39.179  |proj g|=    6.2592e-08</span>
+<span class="co">#&gt; At iterate     0  f=      0.69077  |proj g|=      0.13705</span>
+<span class="co">#&gt; At iterate     1  f =      -19.967  |proj g|=             0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; iterations 1</span>
+<span class="co">#&gt; function evaluations 2</span>
+<span class="co">#&gt; segments explored during Cauchy searches 1</span>
+<span class="co">#&gt; BFGS updates skipped 0</span>
+<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
+<span class="co">#&gt; norm of the final projected gradient 0</span>
+<span class="co">#&gt; final function value -19.9674</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; F = -19.9674</span>
+<span class="co">#&gt; final  value -19.967369 </span>
+<span class="co">#&gt; converged</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; optimisation start</span>
+<span class="co">#&gt; ------------------</span>
+<span class="co">#&gt; * estimation method   : MLE </span>
+<span class="co">#&gt; * optimisation method : BFGS </span>
+<span class="co">#&gt; * analytical gradient : used</span>
+<span class="co">#&gt; * trend model : ~1</span>
+<span class="co">#&gt; * covariance model : </span>
+<span class="co">#&gt;   - type :  matern5_2 </span>
+<span class="co">#&gt;   - nugget : NO</span>
+<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9202077 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  8.846276 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
+<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
+<span class="co">#&gt; At iterate     0  f=      -8.8463  |proj g|=     0.041426</span>
+<span class="co">#&gt; At iterate     1  f =      -22.344  |proj g|=             0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; iterations 1</span>
+<span class="co">#&gt; function evaluations 2</span>
+<span class="co">#&gt; segments explored during Cauchy searches 1</span>
+<span class="co">#&gt; BFGS updates skipped 0</span>
+<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
+<span class="co">#&gt; norm of the final projected gradient 0</span>
+<span class="co">#&gt; final function value -22.3444</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; F = -22.3444</span>
+<span class="co">#&gt; final  value -22.344411 </span>
+<span class="co">#&gt; converged</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; optimisation start</span>
+<span class="co">#&gt; ------------------</span>
+<span class="co">#&gt; * estimation method   : MLE </span>
+<span class="co">#&gt; * optimisation method : BFGS </span>
+<span class="co">#&gt; * analytical gradient : used</span>
+<span class="co">#&gt; * trend model : ~1</span>
+<span class="co">#&gt; * covariance model : </span>
+<span class="co">#&gt;   - type :  matern5_2 </span>
+<span class="co">#&gt;   - nugget : NO</span>
+<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9202077 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  21.31288 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
+<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
+<span class="co">#&gt; At iterate     0  f=      -21.313  |proj g|=     0.020354</span>
+<span class="co">#&gt; At iterate     1  f =      -22.988  |proj g|=             0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; iterations 1</span>
+<span class="co">#&gt; function evaluations 2</span>
+<span class="co">#&gt; segments explored during Cauchy searches 1</span>
+<span class="co">#&gt; BFGS updates skipped 0</span>
+<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
+<span class="co">#&gt; norm of the final projected gradient 0</span>
+<span class="co">#&gt; final function value -22.9878</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; F = -22.9878</span>
+<span class="co">#&gt; final  value -22.987792 </span>
+<span class="co">#&gt; converged</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; optimisation start</span>
+<span class="co">#&gt; ------------------</span>
+<span class="co">#&gt; * estimation method   : MLE </span>
+<span class="co">#&gt; * optimisation method : BFGS </span>
+<span class="co">#&gt; * analytical gradient : used</span>
+<span class="co">#&gt; * trend model : ~1</span>
+<span class="co">#&gt; * covariance model : </span>
+<span class="co">#&gt;   - type :  matern5_2 </span>
+<span class="co">#&gt;   - nugget : NO</span>
+<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9202077 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  25.15711 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
+<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
+<span class="co">#&gt; At iterate     0  f=      -25.157  |proj g|=      0.91873</span>
+<span class="co">#&gt; At iterate     1  f =      -27.637  |proj g|=      0.011282</span>
+<span class="co">#&gt; At iterate     2  f =      -27.701  |proj g|=       0.91061</span>
+<span class="co">#&gt; At iterate     3  f =      -27.712  |proj g|=       0.91017</span>
+<span class="co">#&gt; At iterate     4  f =      -27.712  |proj g|=      0.010061</span>
+<span class="co">#&gt; At iterate     5  f =      -27.712  |proj g|=    3.2036e-05</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; iterations 5</span>
 <span class="co">#&gt; function evaluations 9</span>
 <span class="co">#&gt; segments explored during Cauchy searches 5</span>
 <span class="co">#&gt; BFGS updates skipped 0</span>
 <span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 6.25924e-08</span>
-<span class="co">#&gt; final function value -39.179</span>
+<span class="co">#&gt; norm of the final projected gradient 3.20365e-05</span>
+<span class="co">#&gt; final function value -27.7117</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; F = -39.179</span>
-<span class="co">#&gt; final  value -39.178964 </span>
+<span class="co">#&gt; F = -27.7117</span>
+<span class="co">#&gt; final  value -27.711674 </span>
 <span class="co">#&gt; converged</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; optimisation start</span>
@@ -595,58 +516,28 @@
 <span class="co">#&gt;   - type :  matern5_2 </span>
 <span class="co">#&gt;   - nugget : NO</span>
 <span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  28.4778 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9202077 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  27.55619 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
 <span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -28.478  |proj g|=     0.079663</span>
-<span class="co">#&gt; At iterate     1  f =      -31.495  |proj g|=             0</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; iterations 1</span>
-<span class="co">#&gt; function evaluations 2</span>
-<span class="co">#&gt; segments explored during Cauchy searches 1</span>
-<span class="co">#&gt; BFGS updates skipped 0</span>
-<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
-<span class="co">#&gt; norm of the final projected gradient 0</span>
-<span class="co">#&gt; final function value -31.4946</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; F = -31.4946</span>
-<span class="co">#&gt; final  value -31.494553 </span>
-<span class="co">#&gt; converged</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; optimisation start</span>
-<span class="co">#&gt; ------------------</span>
-<span class="co">#&gt; * estimation method   : MLE </span>
-<span class="co">#&gt; * optimisation method : BFGS </span>
-<span class="co">#&gt; * analytical gradient : used</span>
-<span class="co">#&gt; * trend model : ~1</span>
-<span class="co">#&gt; * covariance model : </span>
-<span class="co">#&gt;   - type :  matern5_2 </span>
-<span class="co">#&gt;   - nugget : NO</span>
-<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9200641 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  43.93157 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -43.932  |proj g|=     0.034366</span>
-<span class="co">#&gt; At iterate     1  f =      -44.161  |proj g|=      0.032255</span>
-<span class="co">#&gt; At iterate     2  f =      -44.217  |proj g|=       0.88969</span>
-<span class="co">#&gt; At iterate     3  f =      -44.218  |proj g|=      0.030611</span>
-<span class="co">#&gt; At iterate     4  f =      -44.218  |proj g|=     0.0022284</span>
-<span class="co">#&gt; At iterate     5  f =      -44.218  |proj g|=    5.0544e-07</span>
+<span class="co">#&gt; At iterate     0  f=      -27.556  |proj g|=     0.019165</span>
+<span class="co">#&gt; At iterate     1  f =      -31.051  |proj g|=      0.013871</span>
+<span class="co">#&gt; At iterate     2  f =      -31.867  |proj g|=      0.010538</span>
+<span class="co">#&gt; At iterate     3  f =      -31.867  |proj g|=        0.6259</span>
+<span class="co">#&gt; At iterate     4  f =      -31.867  |proj g|=    5.4608e-05</span>
+<span class="co">#&gt; At iterate     5  f =      -31.867  |proj g|=    5.4601e-05</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; iterations 5</span>
-<span class="co">#&gt; function evaluations 7</span>
+<span class="co">#&gt; function evaluations 12</span>
 <span class="co">#&gt; segments explored during Cauchy searches 5</span>
 <span class="co">#&gt; BFGS updates skipped 0</span>
 <span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 5.05442e-07</span>
-<span class="co">#&gt; final function value -44.2184</span>
+<span class="co">#&gt; norm of the final projected gradient 5.46005e-05</span>
+<span class="co">#&gt; final function value -31.867</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; F = -44.2184</span>
-<span class="co">#&gt; final  value -44.218427 </span>
+<span class="co">#&gt; F = -31.867</span>
+<span class="co">#&gt; final  value -31.866993 </span>
 <span class="co">#&gt; converged</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; optimisation start</span>
@@ -659,73 +550,163 @@
 <span class="co">#&gt;   - type :  matern5_2 </span>
 <span class="co">#&gt;   - nugget : NO</span>
 <span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9981621 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  26.64861 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9202077 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  30.11598 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
 <span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -26.649  |proj g|=      0.11711</span>
-<span class="co">#&gt; At iterate     1  f =      -34.326  |proj g|=             0</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; iterations 1</span>
-<span class="co">#&gt; function evaluations 2</span>
-<span class="co">#&gt; segments explored during Cauchy searches 1</span>
-<span class="co">#&gt; BFGS updates skipped 0</span>
-<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
-<span class="co">#&gt; norm of the final projected gradient 0</span>
-<span class="co">#&gt; final function value -34.3259</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; F = -34.3259</span>
-<span class="co">#&gt; final  value -34.325930 </span>
-<span class="co">#&gt; converged</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; optimisation start</span>
-<span class="co">#&gt; ------------------</span>
-<span class="co">#&gt; * estimation method   : MLE </span>
-<span class="co">#&gt; * optimisation method : BFGS </span>
-<span class="co">#&gt; * analytical gradient : used</span>
-<span class="co">#&gt; * trend model : ~1</span>
-<span class="co">#&gt; * covariance model : </span>
-<span class="co">#&gt;   - type :  matern5_2 </span>
-<span class="co">#&gt;   - nugget : NO</span>
-<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
-<span class="co">#&gt;   - parameters upper bounds :  0.9981621 </span>
-<span class="co">#&gt;   - best initial criterion value(s) :  42.25582 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
-<span class="co">#&gt; At iterate     0  f=      -42.256  |proj g|=      0.98481</span>
-<span class="co">#&gt; At iterate     1  f =      -45.899  |proj g|=      0.029816</span>
-<span class="co">#&gt; At iterate     2  f =      -46.252  |proj g|=       0.97235</span>
-<span class="co">#&gt; At iterate     3  f =      -46.252  |proj g|=      0.026004</span>
-<span class="co">#&gt; At iterate     4  f =      -46.252  |proj g|=     0.0040071</span>
-<span class="co">#&gt; At iterate     5  f =      -46.252  |proj g|=    1.9015e-06</span>
+<span class="co">#&gt; At iterate     0  f=      -30.116  |proj g|=      0.91759</span>
+<span class="co">#&gt; At iterate     1  f =      -32.166  |proj g|=      0.016467</span>
+<span class="co">#&gt; At iterate     2  f =      -34.364  |proj g|=       0.90994</span>
+<span class="co">#&gt; At iterate     3  f =      -34.391  |proj g|=      0.011047</span>
+<span class="co">#&gt; At iterate     4  f =      -34.394  |proj g|=      0.087894</span>
+<span class="co">#&gt; At iterate     5  f =      -34.394  |proj g|=    2.2824e-05</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; iterations 5</span>
 <span class="co">#&gt; function evaluations 9</span>
 <span class="co">#&gt; segments explored during Cauchy searches 5</span>
 <span class="co">#&gt; BFGS updates skipped 0</span>
 <span class="co">#&gt; active bounds at final generalized Cauchy point 0</span>
-<span class="co">#&gt; norm of the final projected gradient 1.90152e-06</span>
-<span class="co">#&gt; final function value -46.2524</span>
+<span class="co">#&gt; norm of the final projected gradient 2.28241e-05</span>
+<span class="co">#&gt; final function value -34.3939</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; F = -46.2524</span>
-<span class="co">#&gt; final  value -46.252378 </span>
+<span class="co">#&gt; F = -34.3939</span>
+<span class="co">#&gt; final  value -34.393875 </span>
 <span class="co">#&gt; converged</span>
-<span class="co">#&gt;           cp learner_param_vals  x_domain classif.ce</span>
-<span class="co">#&gt; 1: 0.0360144          &lt;list[2]&gt; &lt;list[1]&gt;  0.2563704</span></code></pre></div>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; optimisation start</span>
+<span class="co">#&gt; ------------------</span>
+<span class="co">#&gt; * estimation method   : MLE </span>
+<span class="co">#&gt; * optimisation method : BFGS </span>
+<span class="co">#&gt; * analytical gradient : used</span>
+<span class="co">#&gt; * trend model : ~1</span>
+<span class="co">#&gt; * covariance model : </span>
+<span class="co">#&gt;   - type :  matern5_2 </span>
+<span class="co">#&gt;   - nugget : NO</span>
+<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9202077 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  1.015966 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
+<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
+<span class="co">#&gt; At iterate     0  f=       -1.016  |proj g|=      0.13164</span>
+<span class="co">#&gt; At iterate     1  f =      -30.491  |proj g|=             0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; iterations 1</span>
+<span class="co">#&gt; function evaluations 2</span>
+<span class="co">#&gt; segments explored during Cauchy searches 1</span>
+<span class="co">#&gt; BFGS updates skipped 0</span>
+<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
+<span class="co">#&gt; norm of the final projected gradient 0</span>
+<span class="co">#&gt; final function value -30.4906</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; F = -30.4906</span>
+<span class="co">#&gt; final  value -30.490574 </span>
+<span class="co">#&gt; converged</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; optimisation start</span>
+<span class="co">#&gt; ------------------</span>
+<span class="co">#&gt; * estimation method   : MLE </span>
+<span class="co">#&gt; * optimisation method : BFGS </span>
+<span class="co">#&gt; * analytical gradient : used</span>
+<span class="co">#&gt; * trend model : ~1</span>
+<span class="co">#&gt; * covariance model : </span>
+<span class="co">#&gt;   - type :  matern5_2 </span>
+<span class="co">#&gt;   - nugget : NO</span>
+<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9202077 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  7.562653 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
+<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
+<span class="co">#&gt; At iterate     0  f=      -7.5627  |proj g|=     0.085019</span>
+<span class="co">#&gt; At iterate     1  f =      -32.907  |proj g|=             0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; iterations 1</span>
+<span class="co">#&gt; function evaluations 2</span>
+<span class="co">#&gt; segments explored during Cauchy searches 1</span>
+<span class="co">#&gt; BFGS updates skipped 0</span>
+<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
+<span class="co">#&gt; norm of the final projected gradient 0</span>
+<span class="co">#&gt; final function value -32.9072</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; F = -32.9072</span>
+<span class="co">#&gt; final  value -32.907183 </span>
+<span class="co">#&gt; converged</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; optimisation start</span>
+<span class="co">#&gt; ------------------</span>
+<span class="co">#&gt; * estimation method   : MLE </span>
+<span class="co">#&gt; * optimisation method : BFGS </span>
+<span class="co">#&gt; * analytical gradient : used</span>
+<span class="co">#&gt; * trend model : ~1</span>
+<span class="co">#&gt; * covariance model : </span>
+<span class="co">#&gt;   - type :  matern5_2 </span>
+<span class="co">#&gt;   - nugget : NO</span>
+<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9202077 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  31.45585 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
+<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
+<span class="co">#&gt; At iterate     0  f=      -31.456  |proj g|=     0.027484</span>
+<span class="co">#&gt; At iterate     1  f =      -33.847  |proj g|=             0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; iterations 1</span>
+<span class="co">#&gt; function evaluations 2</span>
+<span class="co">#&gt; segments explored during Cauchy searches 1</span>
+<span class="co">#&gt; BFGS updates skipped 0</span>
+<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
+<span class="co">#&gt; norm of the final projected gradient 0</span>
+<span class="co">#&gt; final function value -33.8469</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; F = -33.8469</span>
+<span class="co">#&gt; final  value -33.846904 </span>
+<span class="co">#&gt; converged</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; optimisation start</span>
+<span class="co">#&gt; ------------------</span>
+<span class="co">#&gt; * estimation method   : MLE </span>
+<span class="co">#&gt; * optimisation method : BFGS </span>
+<span class="co">#&gt; * analytical gradient : used</span>
+<span class="co">#&gt; * trend model : ~1</span>
+<span class="co">#&gt; * covariance model : </span>
+<span class="co">#&gt;   - type :  matern5_2 </span>
+<span class="co">#&gt;   - nugget : NO</span>
+<span class="co">#&gt;   - parameters lower bounds :  1e-10 </span>
+<span class="co">#&gt;   - parameters upper bounds :  0.9208638 </span>
+<span class="co">#&gt;   - best initial criterion value(s) :  8.945022 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; N = 1, M = 5 machine precision = 2.22045e-16</span>
+<span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span>
+<span class="co">#&gt; At iterate     0  f=       -8.945  |proj g|=     0.022229</span>
+<span class="co">#&gt; At iterate     1  f =      -35.855  |proj g|=             0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; iterations 1</span>
+<span class="co">#&gt; function evaluations 2</span>
+<span class="co">#&gt; segments explored during Cauchy searches 1</span>
+<span class="co">#&gt; BFGS updates skipped 0</span>
+<span class="co">#&gt; active bounds at final generalized Cauchy point 1</span>
+<span class="co">#&gt; norm of the final projected gradient 0</span>
+<span class="co">#&gt; final function value -35.855</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; F = -35.855</span>
+<span class="co">#&gt; final  value -35.854996 </span>
+<span class="co">#&gt; converged</span>
+<span class="co">#&gt;             cp learner_param_vals  x_domain classif.ce</span>
+<span class="co">#&gt; 1: 0.004814617          &lt;list[2]&gt; &lt;list[1]&gt;   0.248731</span></code></pre></div>
 <p>The result is printed in the last line but can be also retrieved with <code>instance$result</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">data</span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">cp</span>, <span class="va">classif.ce</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">cp</span>, <span class="va">classif.ce</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="va">batch_nr</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="mlr3mbo_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>We</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">data</span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">batch_nr</span>, <span class="va">classif.ce</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">batch_nr</span>, <span class="va">classif.ce</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="mlr3mbo_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
