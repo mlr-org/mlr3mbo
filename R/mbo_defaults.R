@@ -77,10 +77,7 @@ default_loopfun = function(instance) {
 #' Ding et.al. (2010).
 #'
 #' @references
-#' Ding, Yufeng, and Jeffrey S. Simonoff. An investigation of missing data methods for
-#' classification trees applied to binary response data.
-#' Journal of Machine Learning Research 11.Jan (2010): 131-170.
-#'
+#' `r format_bib("ding_2012")
 #'
 #' @param instance [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
