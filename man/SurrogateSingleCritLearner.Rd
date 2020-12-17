@@ -9,6 +9,14 @@ Surrogate model based on regression \link[mlr3:Learner]{mlr3::Learner} objects.
 \section{Super classes}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{\link[mlr3mbo:SurrogateSingleCrit]{mlr3mbo::SurrogateSingleCrit}} -> \code{SurrogateSingleCritLearner}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{assert_insample_performance}}{(\code{logical(1)})\cr
+Whether the current insample performance meets the \code{perf_threshold}.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -47,6 +55,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{latex}{\out{\hypertarget{method-update}{}}}
 \subsection{Method \code{update()}}{
 Train model with new points.
+Also calculates the insample performance based on the \code{perf_measure} hyperparameter.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateSingleCritLearner$update(xydt, y_cols)}\if{html}{\out{</div>}}
 }
@@ -54,12 +63,16 @@ Train model with new points.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xydt}}{\code{\link[data.table:data.table]{data.table::data.table()}}.}
+\item{\code{xydt}}{\link[data.table:data.table]{data.table::data.table}\cr
+Desing of new points.}
 
-\item{\code{y_cols}}{(\code{character(1)})\cr
-Name of response column.}
+\item{\code{y_cols}}{(\code{character()})\cr
+Names of response columns.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

@@ -36,9 +36,9 @@ test_that("predict_types are recognized", {
 test_that("param_set", {
   surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
   expect_r6(surrogate$param_set, "ParamSet")
-  expect_setequal(surrogate$param_set$ids(), c("performance_measure", "performance_epsilon"))
-  expect_r6(surrogate$param_set$params$performance_measure, "ParamUty")
-  expect_r6(surrogate$param_set$params$performance_epsilon, "ParamDbl")
+  expect_setequal(surrogate$param_set$ids(), c("perf_measure", "perf_threshold"))
+  expect_r6(surrogate$param_set$params$perf_measure, "ParamUty")
+  expect_r6(surrogate$param_set$params$perf_threshold, "ParamDbl")
 })
 
 test_that("insample_performance", {
@@ -48,14 +48,14 @@ test_that("insample_performance", {
 
   surrogate$update(xydt = xydt, y_cols = "y")
   expect_double(surrogate$insample_performance, lower =  -Inf, upper = 1, any.missing = FALSE, len = 1L)
-  expect_equal(names(surrogate$insample_performance), surrogate$param_set$values$performance_measure$id)
+  expect_equal(names(surrogate$insample_performance), surrogate$param_set$values$perf_measure$id)
 
   surrogate_constant = SurrogateSingleCritLearner$new(learner = lrn("regr.featureless"))
+  surrogate_constant$param_set$values$perf_threshold = 0.5
   surrogate_constant$update(xydt = xydt, y_cols = "y")
   expect_double(surrogate_constant$insample_performance, lower =  -Inf, upper = 1, any.missing = FALSE, len = 1L)
-  expect_equal(names(surrogate$insample_performance), surrogate$param_set$values$performance_measure$id)
-  expect_true(surrogate_constant$insample_performance == 0)
-  expect_false(surrogate_constant$test_insample_performance)
-  expect_equal(names(surrogate$test_insample_performance), surrogate$param_set$values$performance_measure$id)
+  expect_equal(names(surrogate$insample_performance), surrogate$param_set$values$perf_measure$id)
+  expect_true(surrogate_constant$insample_performance <= 1e-3)
+  expect_error(surrogate_constant$assert_insample_performance, regexp = "Current insample performance of the Surrogate Model does not meet the performance threshold")
 })
 

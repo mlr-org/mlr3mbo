@@ -87,6 +87,8 @@ Collate:
     'SurrogateSingleCrit.R'
     'SurrogateSingleCritLearner.R'
     'TunerMbo.R'
+    'assertions.R'
+    'bibentries.R'
     'bayesopt_mpcl.R'
     'bayesopt_parego.R'
     'bayesopt_smsemoa.R'

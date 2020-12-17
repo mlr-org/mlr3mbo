@@ -43,22 +43,21 @@ bayesop_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * ins
   acq_function$setup(archive) #setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
-    xydt = archive$data()
-    # FIXME: catching errors during training the surrogate depends on whether we encapsulate, see mlr-org/mlr3mbo/issues/33
-    acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y)  # update surrogate model with new data
-    sufficient_insample_performance = isTRUE(acq_function$surrogate$test_insample_performance)  # FIXME: isTRUE currently due to NaN being possible as an insample performance if the update failed (we reset then)
+    xdt = tryCatch({
+      acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y)  # update surrogate model with new data
 
-    acq_function$update(archive)  # NOTE: necessary becaue we have to dertermine e.g. y_best for ei, there are possible other costy calculations that we just want to do once for each state. We might not want to do these calculation in acq_function$eval_dt() because this can get called several times during the optimization.
-    # one more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design
-    # alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFun),
+      # NOTE: necessary because we have to determine e.g. y_best for ei.
+      # There are possible other costy calculations that we just want to do once for each state.
+      # We might not want to do these calculation in acq_function$eval_dt() because this can get called several times during the optimization.
+      # One more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design.
+      # Alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFunction)
+      acq_function$update(archive)
 
-    xdt = if (sufficient_insample_performance) {
-      xdt = acq_optimizer$optimize(acq_function)
-      acq_optimizer$xdt_fix_distance(xdt, previous_xdt = xydt[which(batch_nr == max(xydt$batch_nr)), archive$cols_x, with = FALSE], search_space = instance$search_space)
-    } else {
-      lg$info("Proposing a randomly sampled point due to insufficient insample performance of the Surrogate Model")  # FIXME: logging?
+      get_xdt(acq_optimizer = acq_optimizer, acq_function = acq_function, previous_xdt = archive_x(archive), search_space = instance$search_space)
+    }, error = function(error_condition) {
+      lg$info("Proposing a randomly sampled point")  # FIXME: logging?
       SamplerUnif$new(instance$search_space)$sample(1L)$data  # NOTE: we always only propose a single random point in this case?
-    }
+    })
 
     instance$eval_batch(xdt)
     if (instance$is_terminated || instance$terminator$is_terminated(archive)) break
@@ -88,7 +87,7 @@ if (FALSE) {
   )
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-  surrogate$model$encapsulate = c(train = "evaluate", predict = "evaluate")
+  #surrogate$model$encapsulate = c(train = "evaluate", predict = "evaluate")
   acqfun = acq_function = AcqFunctionEI$new(surrogate = surrogate)
   acqopt = acq_optimizer = AcqOptimizerRandomSearch$new()
 
@@ -122,7 +121,7 @@ if (FALSE) {
   )
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.ranger", se.method = "jack", keep.inbag = TRUE))
-  surrogate$model$encapsulate = c(train = "evaluate", predict = "evaluate")
+  #surrogate$model$encapsulate = c(train = "evaluate", predict = "evaluate")
   acqfun = acq_function = AcqFunctionEI$new(surrogate = surrogate)
   acqopt = acq_optimizer = AcqOptimizerRandomSearch$new()
 

@@ -24,20 +24,45 @@ archive_xy = function(archive) {
   archive$data()[, c(archive$cols_x, archive$cols_y), with = FALSE]
 }
 
-check_gower_distance = function(xdt, previous_xdt, distance_epsilon, compare_to_itself = FALSE) {
-  # FIXME: catch some safe warnings, i.e., "skipping variable with zero or non-finite range"
-  gower_distance = if (compare_to_itself) {
-    if (nrow(xdt) > 1L) {
-      map(seq_len(nrow(xdt)), function(i) {
-        gower::gower_dist(xdt[-i, ], xdt[i, ], nthread = 1L)  # NOTE: no parallel execution for now
-      })
-    } else {
-      return(TRUE)  # early exit in the case there is only a single new point
-    }
+archive_x = function(archive) {
+  archive$data()[, archive$cols_x, with = FALSE]
+}
+
+get_gower_dist = function(x, y = NULL) {
+  # if y is NULL we get the Gower distance of x pairwaise with itself and set the diagonal to ones
+  # otherwise we get the Gower dist_threshold of x pairwise with y
+  # NOTE: no parallel execution of gower::gower_dist for now
+  if (is.null(y)) {
+    gower_distance = do.call(rbind, map(seq_len(nrow(x)), function(i) {
+      withCallingHandlers(gower::gower_dist(x[i, ], x, nthread = 1L),
+        warning = function(warning_condition) {
+          if (grepl("skipping variable with zero or non-finite range", x = warning_condition$message)) {
+            invokeRestart("muffleWarning")
+          }
+        }
+      )
+    }))
+    diag(gower_distance) = 1
+    gower_distance
   } else {
-    map(seq_len(nrow(xdt)), function(i) {
-      gower::gower_dist(previous_xdt, xdt[i, ], nthread = 1L)  # NOTE: no parallel execution for now
-    })
+    do.call(rbind, map(seq_len(nrow(x)), function(i) {
+      withCallingHandlers(gower::gower_dist(x[i, ], y, nthread = 1L),
+        warning = function(warning_condition) {
+          if (grepl("skipping variable with zero or non-finite range", x = warning_condition$message)) {
+            invokeRestart("muffleWarning")
+          }
+        }
+      )
+    }))
   }
-  map_lgl(gower_distance, function(x) all(x > distance_epsilon))  # FIXME: this is not numerically stable
+}
+
+check_gower_dist = function(gower_distance, dist_threshold) {
+  rowSums(gower_distance > dist_threshold) == ncol(gower_distance)
+}
+
+get_xdt = function(acq_optimizer, acq_function, previous_xdt, search_space) {
+  acq_function$surrogate$assert_insample_performance
+  xdt = acq_optimizer$optimize(acq_function)
+  acq_optimizer$xdt_fix_dist(xdt, previous_xdt = previous_xdt, search_space = search_space)
 }

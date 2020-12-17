@@ -10,13 +10,6 @@ optimization of acquisition functions.
 \section{Super class}{
 \code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerRandomSearch}
 }
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
-}
-\if{html}{\out{</div>}}
-}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -28,6 +21,7 @@ optimization of acquisition functions.
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="xdt_fix_dist">}\href{../../mlr3mbo/html/AcqOptimizer.html#method-xdt_fix_dist}{\code{mlr3mbo::AcqOptimizer$xdt_fix_dist()}}\out{</span>}
 }
 \out{</details>}
 }

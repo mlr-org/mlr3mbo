@@ -80,9 +80,9 @@ Surrogate = R6Class("Surrogate",
       private$.param_set
     },
 
-    #' @description
-    #' #FIXME:
-    test_insample_performance = function(rhs) {
+    #' @field assert_insample_performance (`logical(1)`)\cr
+    #' Whether the current insample performance meets the `perf_threshold`.
+    assert_insample_performance = function(rhs) {  # FIXME: better name
       stop("Abstract")
     }
   ),

@@ -13,6 +13,20 @@ Surrogate Model
 }
 \if{html}{\out{</div>}}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{insample_performance}}{(\code{numeric()})\cr
+Surrogate Model's current insample performance.}
+
+\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+Set of hyperparameters.}
+
+\item{\code{assert_insample_performance}}{(\code{logical(1)})\cr
+Whether the current insample performance meets the \code{perf_threshold}.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{

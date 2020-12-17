@@ -21,44 +21,50 @@ AcqOptimizer = R6Class("AcqOptimizer",
     },
 
     #' @description
-    #' # FIXME: better name
-    xdt_fix_distance = function(xdt, previous_xdt, search_space) {
-      # FIXME: logging?
-      distance_epsilon = self$param_set$values$distance_epsilon
-      # first, we check wether the Gower distance of each newly proposed point to all other newly proposed points is larger than distance_epsilon
-      check_passed_new = check_gower_distance(xdt, previous_xdt = previous_xdt, distance_epsilon = distance_epsilon, compare_to_itself = TRUE)
+    #' Replaces proposed points if their Gower distance with respect to other proposed points or
+    #' previously evaluated points falls below a `dist_threshold`.
+    #'
+    #' @param xdt [data.table::data.table]\cr
+    #' Proposed points.
+    #'
+    #' @param previous_xdt [data.table::data.table]\cr
+    #' Previous evaluated points.
+    #'
+    #' @param search_space [paradox::ParamSet].
+    #' Search space.
+    #'
+    #' @return [data.table::data.table()] with the same structure as the `xdt` input.
+    xdt_fix_dist = function(xdt, previous_xdt, search_space) {
+      dist_threshold = self$param_set$values$dist_threshold
+      # first, we check wether the Gower distance of each newly proposed point to all other newly proposed points is larger than dist_threshold
+      gower_distance_new = get_gower_dist(xdt)
+      check_passed_new = check_gower_dist(gower_distance_new, dist_threshold = dist_threshold)
 
-      # second, we check wether the Gower distance of all newly proposed points to the DIRECTLY previously proposed ones is larger than distance_epsilon
-      # FIXME: don't we actually want to compare to ALL previously proposed points?
-      check_passed_previous = check_gower_distance(xdt, previous_xdt = previous_xdt, distance_epsilon = distance_epsilon, compare_to_itself = FALSE)
+      # second, we check wether the Gower distance of all newly proposed points to the previously evaluated ones is larger than dist_threshold
+      check_passed_previous = check_gower_dist(get_gower_dist(xdt, y = previous_xdt), dist_threshold = dist_threshold)
 
       # if either fails we iteratively replace problematic points with randomly sampled ones until both checks pass
-      while (any(!(check_passed_new & check_passed_previous))) {
-       lg$info("Replacing proposed point(s) to force exploration")  # FIXME: logging?
+      if (any(!(check_passed_new & check_passed_previous))) {
+        lg$info("Replacing proposed point(s) to force exploration")  # FIXME: logging?
+      }
 
-        # first, replace the ones that are too close to the previous ones
-        if (any(!check_passed_previous)) {
-          xdt[!check_passed_previous, ] = SamplerUnif$new(search_space)$sample(sum(!check_passed_previous))$data
-        }
+      # first, replace the ones that are too close to the previous ones
+      if (any(!check_passed_previous)) {
+        xdt[!check_passed_previous, ] = SamplerUnif$new(search_space)$sample(sum(!check_passed_previous))$data  # FIXME: also think about augmented lhs
+      }
 
-        # second, replace the ones that are too close to the other new ones
-        # do this iteratively because the distances change once a single point is replaced and we do not want to replace too many
-        if (any(!check_passed_new)) {
-          for (i in which(!check_passed_new)) {
-            # one of the two will always be the point itself
-            # FIXME: wrap gower::gower_topn to catch some safe warnings
-            to_replace = gower::gower_topn(xdt[i, ], xdt, n = 2L, nthread = 1L)$index[, 1L]  # NOTE: no parallel execution for now
-            xdt[to_replace[to_replace != i], ] = SamplerUnif$new(search_space)$sample(1L)$data
-
-            if (check_gower_distance(xdt, previous_xdt = previous_xdt, distance_epsilon = distance_epsilon, compare_to_itself = TRUE)) {
-              break  # early exit once the distances are ok
-            }
+      # second, replace the ones that are too close to the other new ones
+      # do this iteratively because the distances change once a single point is replaced and we do not want to replace too many
+      if (any(!check_passed_new)) {
+        for (i in seq_len(sum(!check_passed_new))) {
+          xdt[arrayInd(which.min(gower_distance_new), dim(gower_distance_new))[, 1L], ]  = SamplerUnif$new(search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
+          gower_distance_new = get_gower_dist(xdt)
+          if (all(check_gower_dist(gower_distance_new, dist_threshold = dist_threshold))) {
+            break  # early exit once the distances are ok
           }
         }
-        # update both checks
-        check_passed_new = check_gower_distance(xdt, previous_xdt = previous_xdt, distance_epsilon = distance_epsilon, compare_to_itself = TRUE)
-        check_passed_previous = check_gower_distance(xdt, previous_xdt = previous_xdt, distance_epsilon = distance_epsilon, compare_to_itself = FALSE)
       }
+
       xdt
     }
   ),

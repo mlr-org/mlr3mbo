@@ -4,7 +4,7 @@
 \alias{SurrogateMultiCritLearners}
 \title{Surrogate Model for MultiCriteria response surfaces}
 \description{
-Multi Criteria response surfaces modeled by multiple mlr3 regression learners
+Multi Criteria response surfaces modeled by multiple regression \link[mlr3:Learner]{mlr3::Learner} objects.
 }
 \section{Super classes}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{\link[mlr3mbo:SurrogateMultiCrit]{mlr3mbo::SurrogateMultiCrit}} -> \code{SurrogateMultiCritLearners}
@@ -12,7 +12,11 @@ Multi Criteria response surfaces modeled by multiple mlr3 regression learners
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{k}}{Returns the number of models.}
+\item{\code{k}}{(\code{integer(1)})\cr
+Returns the number of models.}
+
+\item{\code{assert_insample_performance}}{(\code{logical(1)})\cr
+Whether the current insample performance meets the \code{perf_threshold}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -54,6 +58,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{latex}{\out{\hypertarget{method-update}{}}}
 \subsection{Method \code{update()}}{
 Train model with new points.
+Also calculates the insample performance based on the \code{perf_measures} hyperparameter.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateMultiCritLearners$update(xydt, y_cols)}\if{html}{\out{</div>}}
 }
@@ -61,12 +66,16 @@ Train model with new points.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xydt}}{(\code{\link[data.table:data.table]{data.table::data.table()}}).}
+\item{\code{xydt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
+Desing of new points.}
 
 \item{\code{y_cols}}{(\code{character()})\cr
 Names of response columns.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

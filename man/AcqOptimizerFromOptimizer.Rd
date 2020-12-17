@@ -28,6 +28,7 @@ Internally used to transform \link[bbotk:Optimizer]{bbotk::Optimizer} to \link{A
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="xdt_fix_dist">}\href{../../mlr3mbo/html/AcqOptimizer.html#method-xdt_fix_dist}{\code{mlr3mbo::AcqOptimizer$xdt_fix_dist()}}\out{</span>}
 }
 \out{</details>}
 }

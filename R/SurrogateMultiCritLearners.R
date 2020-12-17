@@ -1,7 +1,7 @@
 #' @title Surrogate Model for MultiCriteria response surfaces
 #'
 #' @description
-#' Multi Criteria response surfaces modeled by multiple mlr3 regression learners
+#' Multi Criteria response surfaces modeled by multiple regression [mlr3::Learner] objects.
 #'
 #' @export
 SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
@@ -22,19 +22,19 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       }
 
        private$.param_set = ParamSet$new(list(
-        #ParamLgl$new("calculate_insample_performance", default = TRUE),  # FIXME: do we actually want this to be turned off?
-        ParamUty$new("performance_measures", custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(self$model))),  # FIXME: actually want check_measures
-        ParamUty$new("performance_epsilons", custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(self$model))))
+        #ParamLgl$new("calc_insample_perf", default = TRUE),  # FIXME: do we actually want this to be turned off?
+        ParamUty$new("perf_measures", custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(self$model))),  # FIXME: actually want check_measures
+        ParamUty$new("perf_thresholds", custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(self$model))))
       )
-      # FIXME: adaptive defaults based on learner and measure?
-      #private$.param_set$values$calculate_insample_performance = TRUE
-      private$.param_set$values$performance_measures = replicate(length(self$model), msr("regr.rsq"))
-      private$.param_set$values$performance_epsilons = rep(0, length(self$model))
+      #private$.param_set$values$calc_insample_perf = TRUE
+      private$.param_set$values$perf_measures = replicate(length(self$model), msr("regr.rsq"))
+      private$.param_set$values$perf_thresholds = rep(0, length(self$model))
 
     },
 
     #' @description
     #' Train model with new points.
+    #' Also calculates the insample performance based on the `perf_measures` hyperparameter.
     #'
     #' @param xydt ([data.table::data.table()])\cr
     #' Desing of new points.
@@ -67,14 +67,13 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       names(self$model) = y_cols
 
       # FIXME: see comments in SurrogateSingleCritLearner.R
-      private$.insample_performance = if (all(map_lgl(acq_function$surrogate$model, function(x) !is.null(x$model)))) {
-        mapply(function(model, task, performance_measure) {
-          assert_measure(performance_measure, task = task, learner = model)
-          model$predict(task)$score(performance_measure, task = task, learner = model)
-        }, model = self$model, task = tasks, performance_measure = self$param_set$values$performance_measure)
-      } else {
-        NULL
-      }
+      #if (self$param_set$values$calc_insample_perf) {
+      private$.insample_performance = mapply(function(model, task, perf_measure) {
+        assert_measure(perf_measure, task = task, learner = model)
+        model$predict(task)$score(perf_measure, task = task, learner = model)
+      }, model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures)
+      #}
+
       invisible(NULL)
     },
 
@@ -97,38 +96,37 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
         }
       })
       names(preds) = names(self$model)
-      return(preds)
+      preds
     }
   ),
 
   active = list(
-    #' @field k
+
+    #' @field k (`integer(1)`)\cr
     #' Returns the number of models.
     k = function() {
       length(self$model)
     },
 
-    #' @description
-    #' #FIXME:
-    test_insample_performance = function(rhs) {  # FIXME: better name
+    #' @field assert_insample_performance (`logical(1)`)\cr
+    #' Whether the current insample performance meets the `perf_threshold`.
+    assert_insample_performance = function(rhs) {  # FIXME: better name
       if (!missing(rhs)) {
         stopf("Field/Binding is read-only")
       }
 
-      all(mapply(function(insample_performance, performance_epsilon, performance_measure) {
-        if (performance_measure$minimize) {
-          insample_performance < performance_epsilon
+      check = all(mapply(function(insample_performance, perf_threshold, perf_measure) {
+        if (perf_measure$minimize) {
+          insample_performance < perf_threshold
         } else {
-          insample_performance > performance_epsilon
+          insample_performance > perf_threshold
         }
-      }, insample_performance = self$insample_performance, performance_epsilon = self$param_set$values$performance_epsilons, performance_measure = self$param_set$values$performance_measures))
+      }, insample_performance = self$insample_performance, perf_threshold = self$param_set$values$perf_threshold, perf_measure = self$param_set$values$perf_measures))
 
-      #if (check_passed) {
-      #  invisible(TRUE)
-      #} else {
-      #  stopf("Insample performance of the Surrogate Model does not meet the defined criterion.")
-      #}
+      if (!check) {
+        stopf("Current insample performance of the Surrogate Model does not meet the performance threshold")
+      }
+      invisible(self$insample_performance)
     }
-
   )
 )

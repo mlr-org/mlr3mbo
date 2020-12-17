@@ -6,11 +6,20 @@
 \description{
 Optimizer for \link{AcqFunction} objects.
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+Set of hyperparameters.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{AcqOptimizer$new()}}
 \item \href{#method-optimize}{\code{AcqOptimizer$optimize()}}
+\item \href{#method-xdt_fix_dist}{\code{AcqOptimizer$xdt_fix_dist()}}
 \item \href{#method-clone}{\code{AcqOptimizer$clone()}}
 }
 }
@@ -39,6 +48,34 @@ Optimize the acquisition function.
 \item{\code{acq_function}}{\link{AcqFunction}.}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-xdt_fix_dist"></a>}}
+\if{latex}{\out{\hypertarget{method-xdt_fix_dist}{}}}
+\subsection{Method \code{xdt_fix_dist()}}{
+Replaces proposed points if their Gower distance with respect to other proposed points or
+previously evaluated points falls below a \code{dist_threshold}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$xdt_fix_dist(xdt, previous_xdt, search_space)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xdt}}{\link[data.table:data.table]{data.table::data.table}\cr
+Proposed points.}
+
+\item{\code{previous_xdt}}{\link[data.table:data.table]{data.table::data.table}\cr
+Previous evaluated points.}
+
+\item{\code{search_space}}{\link[paradox:ParamSet]{paradox::ParamSet}.
+Search space.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{\link[data.table:data.table]{data.table::data.table()}} with the same structure as the \code{xdt} input.
 }
 }
 \if{html}{\out{<hr>}}

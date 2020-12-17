@@ -24,10 +24,10 @@ AcqOptimizerFromOptimizer = R6Class("AcqOptimizerFromOptimizer",
 
       # FIXME: handle this in the superclass
       private$.param_set = ParamSet$new(list(
-        ParamDbl$new("distance_epsilon", lower = 0, upper = 1))
+        ParamDbl$new("dist_threshold", lower = 0, upper = 1))
       )
       # FIXME: adaptive default based on optimizer?
-      private$.param_set$values$distance_epsilon = 0
+      private$.param_set$values$dist_threshold = 0
     },
 
     #' @description
