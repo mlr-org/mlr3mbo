@@ -20,8 +20,4 @@
   if (Sys.getenv("IN_PKGDOWN") == "true") {
     lg$set_threshold("warn")
   }
-
-  # Add TunerMbo to dictionary
-  x = utils::getFromNamespace("mlr_tuners", ns = "mlr3tuning")
-  x$add("mbo", TunerMbo)
 } # nocov end
