@@ -15,10 +15,14 @@ Defaults to 1.
 \item \code{"eps"} (\code{numeric(1)})\cr
 TODO
 }
-
-TODO Reference
 }
 
+\references{
+Beume N, Naujoks B, Emmerich M (2007).
+\dQuote{SMS-EMOA: Multiobjective selection based on dominated hypervolume.}
+\emph{European Journal of Operational Research}, \bold{181}(3), 1653--1669.
+\doi{10.1016/j.ejor.2006.08.008}.
+}
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunctionAEI}},
