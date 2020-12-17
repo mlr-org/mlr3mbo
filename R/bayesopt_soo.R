@@ -90,5 +90,4 @@ if (FALSE) {
 
   # Defaults work
   bayesop_soo(instance)
-
 }
