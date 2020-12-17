@@ -19,7 +19,7 @@ NULL
 #' @description
 #' Chooses a default 'loopfun', i.e. the MBO flavor to be used for optimization.
 #' For single-criteria optimization, defaults to [bayesop_soo].
-#' For multi-criteria optimization, defaults to [bayesopt_smsemoa].
+#' For multi-criteria optimization, defaults to [bayesop_smsego].
 #'
 #' @param instance [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
@@ -29,7 +29,7 @@ default_loopfun = function(instance) {
   if (inherits(instance, "OptimInstanceSingleCrit")) {
     bayesop_soo
   } else {
-    bayesopt_smsemoa
+    bayesop_smsego
   }
 }
 
@@ -85,7 +85,7 @@ default_loopfun = function(instance) {
 #'   The surrogate learner used in the acquisition function. Default as described above.
 #' @param n_objectives `integer(1)` | `NULL` \cr
 #'   Number of objectives to model. Default queries the instance.
-#' @return [\code{Learner}]
+#' @return [Surrogate]
 #' @family mbo_defaults
 #' @export
 default_surrogate = function(instance, learner = NULL, n_objectives = NULL) {
@@ -159,7 +159,7 @@ default_acqfun = function(instance, surrogate = NULL) {
 #'
 #' @description
 #' Chooses a default acquisition function optimizer.
-#' Defaults to [AcqOptimizerRandomSearch].
+#' Defaults to [bbotk::OptimizerRandomSearch] provided as an [AcqOptimizer].
 #'
 #' @param instance [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
@@ -167,5 +167,5 @@ default_acqfun = function(instance, surrogate = NULL) {
 #' @export
 default_acq_optimizer = function(instance) {
   assert_r6(instance, "OptimInstance")
-  AcqOptimizer$new(opt("random_search", batch_size = 1000L), trm("evals", n_evals = 1000))  # FIXME:
+  AcqOptimizer$new(opt("random_search", batch_size = 1000L), trm("evals", n_evals = 1000))  # FIXME: what do we use
 }

@@ -17,7 +17,7 @@ The surrogate learner used in the acquisition function. Default as described abo
 Number of objectives to model. Default queries the instance.}
 }
 \value{
-\link{\code{Learner}}
+\link{Surrogate}
 }
 \description{
 This is a helper function that generates a default surrogate, based on properties of the objective
