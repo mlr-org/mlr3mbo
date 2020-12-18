@@ -1,7 +1,7 @@
 test_that("OptimizerMbo works", {
 
   optim = OptimizerMbo$new(
-    loop_function = bayesop_soo,
+    loop_function = bayesopt_soo,
     acq_function = AcqFunctionEI$new(surrogate = SURR_KM_DETERM),
     acq_optimizer = ACQ_OPT_DEF
   )
@@ -28,8 +28,8 @@ test_that("OptimizerMbo works with different settings", {
 
   # define combinations
   loop_functions = list(
-    soo = list(fun = bayesop_soo),
-    mpcl = list(fun = bayesop_mpcl, args = list(liar = mean, q = 2))
+    soo = list(fun = bayesopt_soo),
+    mpcl = list(fun = bayesopt_mpcl, args = list(liar = mean, q = 2))
   )
   acq_functions = list(
     aei = AcqFunctionAEI$new(SURR_KM_NOISY),
@@ -76,7 +76,7 @@ test_that("OptimizerMbo works for noisy problems", {
   obfun = OBJ_2D_NOISY
 
   optim = OptimizerMbo$new(
-    loop_function = bayesop_soo,
+    loop_function = bayesopt_soo,
     acq_function = AcqFunctionAEI$new(surrogate = SURR_KM_NOISY),
     acq_optimizer = ACQ_OPT_DEF,
     result_function = result_by_surrogate_design,

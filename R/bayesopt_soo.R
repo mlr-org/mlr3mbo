@@ -23,7 +23,7 @@
 #' `r format_bib("jones_1998")`
 #'
 #' @export
-bayesop_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * instance$search_space$length) {
+bayesopt_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * instance$search_space$length) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstance")
   assert_r6(acq_function, "AcqFunction")
@@ -80,5 +80,5 @@ if (FALSE) {
   acq_function = AcqFunctionEI$new(surrogate = surrogate)
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_soo(instance, acq_function, acq_optimizer)
+  bayesopt_soo(instance, acq_function, acq_optimizer)
 }

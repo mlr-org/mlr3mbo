@@ -1,4 +1,4 @@
-bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
+bayesopt_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceSingleCrit")
   assert_r6(acq_function, "AcqFunction")
@@ -77,7 +77,7 @@ if (FALSE) {
   acq_function = AcqFunctionEI$new(surrogate = surrogate)
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_mpcl(instance, acq_function, acq_optimizer, mean, 2)
+  bayesopt_mpcl(instance, acq_function, acq_optimizer, mean, 2)
   data = instance$archive$data
   plot(y~batch_nr, data[batch_nr>1,], type = "b")
 

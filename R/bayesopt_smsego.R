@@ -7,7 +7,7 @@
 #' @template param_acq_optimizer
 #' @return [bbotk::Archive]
 #' @export
-bayesop_smsego = function(instance, acq_function, acq_optimizer) {
+bayesopt_smsego = function(instance, acq_function, acq_optimizer) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
   assert_r6(acq_function, "AcqFunctionSmsEgo")
@@ -66,7 +66,7 @@ if (FALSE) {
   acq_function = AcqFunctionSmsEgo$new(surrogate = surrogate)
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_smsego(instance, acq_function, acq_optimizer)
+  bayesopt_smsego(instance, acq_function, acq_optimizer)
 
   archdata = instance$archive$data
   library(ggplot2)
