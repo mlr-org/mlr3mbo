@@ -99,7 +99,7 @@ Finally, we construct special tuner class for model-based optimization.
 
 ```{r}
 tuner = TunerMbo$new(
-  loop_function = bayesop_soo,
+  loop_function = bayesopt_soo,
   acq_function = acq_function,
   acq_optimizer = acq_optimizer)
 ```
@@ -118,12 +118,7 @@ ggplot(instance$archive$data, aes(cp, classif.ce)) +
   geom_point(aes(colour = batch_nr))
 ```
 
-We
-
-
 ```{r}
-library(ggplot2)
-
 ggplot(instance$archive$data, aes(batch_nr, classif.ce)) +
   geom_line()
 ```

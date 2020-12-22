@@ -61,7 +61,8 @@ Suggests:
     rmarkdown,
     ggplot2
 Remotes:
-    mlr-org/bbotk
+    mlr-org/bbotk,
+    mlr-org/tuning#288
 ByteCompile: no
 Encoding: UTF-8
 LazyData: true
