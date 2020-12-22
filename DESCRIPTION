@@ -62,7 +62,7 @@ Suggests:
     ggplot2
 Remotes:
     mlr-org/bbotk,
-    mlr-org/tuning#288
+    mlr-org/mlr3tuning#288
 ByteCompile: no
 Encoding: UTF-8
 LazyData: true
