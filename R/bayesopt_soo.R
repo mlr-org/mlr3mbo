@@ -23,7 +23,7 @@
 #' `r format_bib("jones_1998")`
 #'
 #' @export
-bayesop_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * instance$search_space$length) {
+bayesopt_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * instance$search_space$length) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstance")
   assert_r6(acq_function, "AcqFunction")
@@ -74,7 +74,7 @@ if (FALSE) {
   library(mlr3learners)
 
   obfun = ObjectiveRFun$new(
-    fun = function(xs) sum(unlist(xs)^2),
+    fun = function(xs) list(y = sum(unlist(xs)^2)),
     domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
     id = "test"
   )
@@ -87,81 +87,8 @@ if (FALSE) {
   )
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-  #surrogate$model$encapsulate = c(train = "evaluate", predict = "evaluate")
-  acqfun = acq_function = AcqFunctionEI$new(surrogate = surrogate)
-  acqopt = acq_optimizer = AcqOptimizerRandomSearch$new()
+  acq_function = AcqFunctionEI$new(surrogate = surrogate)
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_soo(instance, acqfun, acqopt)
-}
-
-if (FALSE) {
-  set.seed(1)
-  library(bbotk)
-  devtools::load_all()
-  library(paradox)
-  library(mlr3learners)
-
-  obfun = ObjectiveRFun$new(
-    fun = function(xs) {
-      (xs$x1 - switch(xs$x2, "a" = 0, "b" = 1, "c" = 2)) %% xs$x3 + (if (xs$x4) xs$x1 else pi)
-    },
-    domain = ParamSet$new(list(
-      ParamDbl$new("x1", -5, 5),
-      ParamFct$new("x2", levels = c("a", "b", "c")),
-      ParamInt$new("x3", 1, 2),
-      ParamLgl$new("x4"))),
-    id = "test"
-  )
-
-  terminator = trm("evals", n_evals = 20)
-
-  instance = OptimInstanceSingleCrit$new(
-    objective = obfun,
-    terminator = terminator
-  )
-
-  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.ranger", se.method = "jack", keep.inbag = TRUE))
-  #surrogate$model$encapsulate = c(train = "evaluate", predict = "evaluate")
-  acqfun = acq_function = AcqFunctionEI$new(surrogate = surrogate)
-  acqopt = acq_optimizer = AcqOptimizerRandomSearch$new()
-
-  bayesop_soo(instance, acqfun, acqopt)
-}
-
-if (FALSE) {
-  set.seed(1)
-  library(bbotk)
-  devtools::load_all()
-  library(paradox)
-  library(mlr3learners)
-
-  obfun = ObjectiveRFun$new(
-    fun = function(xs) {
-      list(y = (xs$x1 - switch(xs$x2, "a" = 0, "b" = 1, "c" = 2)) %% xs$x3 + (if (xs$x4) xs$x1 else pi),
-        g = xs$x1 - xs$x3)
-    },
-    domain = ParamSet$new(list(
-      ParamDbl$new("x1", -5, 5),
-      ParamFct$new("x2", levels = c("a", "b", "c")),
-      ParamInt$new("x3", 1, 2),
-      ParamLgl$new("x4"))),
-    codomain = ParamSet$new(list(
-       ParamDbl$new("y", tags = "minimize"),
-       ParamDbl$new("g", tags = "minimize"))),
-    properties = "multi-crit",
-    id = "test"
-  )
-
-  terminator = trm("evals", n_evals = 20)
-
-  instance = OptimInstanceMultiCrit$new(
-    objective = obfun,
-    terminator = terminator
-  )
-
-  surrogate = SurrogateMultiCritLearners$new(learner = list(lrn("regr.ranger", se.method = "jack", keep.inbag = TRUE), lrn("regr.ranger", se.method = "jack", keep.inbag = TRUE)))
-  acqfun = acq_function = AcqFunctionEIPS$new(surrogate = surrogate)
-  acqopt = acq_optimizer = AcqOptimizerRandomSearch$new()
-
-  bayesop_soo(instance, acqfun, acqopt)
+  bayesopt_soo(instance, acq_function, acq_optimizer)
 }

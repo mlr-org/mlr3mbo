@@ -1,4 +1,4 @@
-#' @title Acquisition Function SMS EMOA
+#' @title Acquisition Function SMS EGO
 #'
 #' @description
 #' S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
@@ -10,12 +10,13 @@
 #' * `"eps"` (`numeric(1)`)\cr
 #'   TODO
 #'
-#' TODO Reference
+#' @references
+#' `r format_bib("beume_2007")`
 #'
 #' @family Acquisition Function
 #'
 #' @export
-AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
+AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
   inherit = AcqFunction, #FIXME: AcqFunctionMultiCrit?
 
   public = list(
@@ -71,7 +72,7 @@ AcqFunctionSmsEmoa = R6Class("AcqFunctionSmsEmoa",
       super$update(archive)
 
       n_obj = archive$codomain$length
-      ys = archive$data()[, archive$cols_y, with = FALSE]
+      ys = archive$data[, archive$cols_y, with = FALSE]
       ys = as.matrix(ys) %*% diag(self$surrogate_max_to_min)
       self$ys_front = as.matrix(archive$best()[, archive$cols_y, with = FALSE]) %*% diag(self$surrogate_max_to_min)
       self$ref_point = apply(ys, 2L, max) + 1 #offset = 1 like in mlrMBO

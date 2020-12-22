@@ -7,10 +7,10 @@
 #' @template param_acq_optimizer
 #' @return [bbotk::Archive]
 #' @export
-bayesop_smsemoa = function(instance, acq_function, acq_optimizer) {
+bayesopt_smsego = function(instance, acq_function, acq_optimizer) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
-  assert_r6(acq_function, "AcqFunctionSmsEmoa")
+  assert_r6(acq_function, "AcqFunctionSmsEgo")
   assert_r6(acq_optimizer, "AcqOptimizer")
 
   archive = instance$archive
@@ -63,17 +63,14 @@ if (FALSE) {
   )
 
   surrogate = SurrogateMultiCritLearners$new(learners = replicate(2, lrn("regr.km")))
-  acq_function = AcqFunctionSmsEmoa$new(surrogate = surrogate)
-  acq_optimizer = AcqOptimizerRandomSearch$new()
+  acq_function = AcqFunctionSmsEgo$new(surrogate = surrogate)
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_smsemoa(instance, acq_function, acq_optimizer)
+  bayesopt_smsego(instance, acq_function, acq_optimizer)
 
-  archdata = instance$archive$data()
+  archdata = instance$archive$data
   library(ggplot2)
   g = ggplot(archdata, aes_string(x = "y1", y = "y2", color = "batch_nr"))
   g + geom_point()
 }
-
-
-
 

@@ -13,7 +13,7 @@
 # #'   ?
 # #' @return [bbotk::Archive]
 # #' @export
-bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100, rho = 0.05) {
+bayesopt_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100, rho = 0.05) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
   assert_r6(acq_function, "AcqFunction")
@@ -29,12 +29,14 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
 
   # ParEGO Archive
   dummy_codomain = ParamSet$new(list(ParamDbl$new("y_scal", tags = "minimize")))
-  dummy_archive = MboDummyArchive$new(archive, codomain = dummy_codomain)
+  dummy_archive = archive$clone(deep = TRUE)
+  dummy_archive$codomain = dummy_codomain
+
   #manual fix: #FIXME Write ParEGO Infill Crit?
   acq_function$setup(dummy_archive)
 
   repeat {
-    xydt = archive$data()
+    xydt = archive$data
     xdt = xydt[, archive$cols_x, with = FALSE]
     ydt = xydt[, archive$cols_y, with = FALSE]
     d = archive$codomain$length
@@ -48,8 +50,7 @@ bayesop_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100,
 
       mult = Map('*', ydt, lambda)
       y_scal = do.call('+', mult)
-      dummy_archive$clear()
-      dummy_archive$add_cols(data.table(y_scal = y_scal))
+      set(dummy_archive$data, j = "y_scal", value = y_scal)
 
       acq_function$surrogate$setup(xydt = archive_xy(dummy_archive), y_cols = dummy_archive$cols_y) #update surrogate model with new data
       acq_function$update(dummy_archive)
@@ -93,11 +94,11 @@ if (FALSE) {
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
   acq_function = AcqFunctionEI$new(surrogate = surrogate)
-  acq_optimizer = AcqOptimizerRandomSearch$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_parego(instance, acq_function, acq_optimizer, q = 2)
+  bayesopt_parego(instance, acq_function, acq_optimizer, q = 2)
 
-  archdata = instance$archive$data()
+  archdata = instance$archive$data
   library(ggplot2)
   g = ggplot(archdata, aes_string(x = "y1", y = "y2", color = "batch_nr"))
   g + geom_point()

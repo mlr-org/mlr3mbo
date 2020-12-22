@@ -7,6 +7,7 @@
 #' * `lambda` (`numeric(1)`)\cr
 #'   TODO DESCRIPTION and Reference
 #'
+#'
 #' @family Acquisition Function
 #'
 #' @export
@@ -20,25 +21,21 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
     #'
     #' @param surrogate [SurrogateSingleCrit].
     initialize = function(surrogate) {
-      param_set = ParamSet$new(list(
+      assert_r6(surrogate, "SurrogateSingleCrit")
+
+      constants = ParamSet$new(list(
         ParamDbl$new("lambda", lower = 0, default = 2)
       ))
-      param_set$values$lambda = 2
-      assert_r6(surrogate, "SurrogateSingleCrit")
-      super$initialize("acq_cb", param_set, surrogate, direction = "same")
-    },
+      constants$values$lambda = 2
 
-    #' @description
-    #' Evaluates all input values in `xdt`.
-    #'
-    #' @param xdt [data.table::data.table()].
-    #'
-    #' @return [data.table::data.table()].
-    eval_dt = function(xdt) {
-      p = self$surrogate$predict(xdt)
-      res = p$mean - self$surrogate_max_to_min * self$param_set$values$lambda * p$se
-      # FIXME: what do we return here? do we want to see se, mean, too?
-      data.table(acq_cb = res)
+      fun = function(xdt) {
+        p = self$surrogate$predict(xdt)
+        res = p$mean - self$surrogate_max_to_min * self$constants$values$lambda * p$se
+        # FIXME: what do we return here? do we want to see se, mean, too?
+        data.table(acq_cb = res)
+      }
+
+      super$initialize("acq_cb", constants, surrogate, direction = "same", fun = fun)
     }
   )
 )

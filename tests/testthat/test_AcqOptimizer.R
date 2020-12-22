@@ -1,6 +1,12 @@
-test_that("xdt_fix_dist", {
-  set.seed(1)
-  acqo = AcqOptimizerRandomSearch$new()  # FIXME: test AcqOptimizerR directly once param_set is in superclass
+test_that("AcqOptimizer param_set", {
+  acqo = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L))
+  expect_r6(acqo$param_set, "ParamSet")
+  expect_true("dist_threshold" %in% acqo$param_set$ids())
+  expect_r6(acqo$param_set$params$dist_threshold, "ParamDbl")
+})
+
+test_that("AcqOptimizer xdt_fix_dist works", {
+  acqo = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L))
   expect_r6(acqo$param_set, "ParamSet")
   expect_true("dist_threshold" %in% acqo$param_set$ids())
   expect_r6(acqo$param_set$params$dist_threshold, "ParamDbl")
@@ -17,7 +23,7 @@ test_that("xdt_fix_dist", {
   id = "test"
   )
 
-  # FIXME: make this more clear
+  # FIXME: clear this up
   # FIXME: test logging?
   # FIXME: test for multiple redundant proposed points
 
@@ -28,14 +34,16 @@ test_that("xdt_fix_dist", {
   xdt_redundant = previous_xdt[1L, ]
   xdt_fixed = acqo$xdt_fix_dist(xdt_redundant, previous_xdt = previous_xdt, search_space = obfun$domain)
   expect_data_table(xdt_fixed, any.missing = FALSE, nrows = 1L)
-  suppressWarnings(expect_true(gower::gower_dist(xdt_fixed, xdt_redundant) > acqo$param_set$values$dist_threshold))
+  expect_true(check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt), acqo$param_set$values$dist_threshold))
+
 
   ### single point proposal to single previous point
   expect_equal(address(acqo$xdt_fix_dist(xdt_ok, previous_xdt = previous_xdt[4L, ], search_space = obfun$domain)), address(xdt_ok))  # no change at all, not even a copy
   xdt_redundant = previous_xdt[4L, ]
   xdt_fixed = acqo$xdt_fix_dist(xdt_redundant, previous_xdt = previous_xdt[4L, ], search_space = obfun$domain)
   expect_data_table(xdt_fixed, any.missing = FALSE, nrows = 1L)
-  suppressWarnings(expect_true(gower::gower_dist(xdt_fixed, xdt_redundant) > acqo$param_set$values$dist_threshold))
+  expect_true(check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt[4L, ]), acqo$param_set$values$dist_threshold))
+
 
   # multiple point proposal to multiple previous points
   xdt_ok = rbind(xdt_ok, data.table(x1 = 0.6, x2 = "c", x3 = 2L, x4 = FALSE))
@@ -44,12 +52,13 @@ test_that("xdt_fix_dist", {
   xdt_fixed = acqo$xdt_fix_dist(xdt_redundant, previous_xdt = previous_xdt, search_space = obfun$domain)
   expect_data_table(xdt_fixed, any.missing = FALSE, nrows = 4L)
   expect_true(identical(xdt_fixed[1:2, ], xdt_redundant[1:2, ]))
-  suppressWarnings(expect_true(all(map_lgl(seq_len(nrow(xdt_fixed)), function(i) all(gower::gower_dist(xdt_fixed[i, ], previous_xdt) > acqo$param_set$values$dist_threshold)))))
+  expect_true(all(check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt), acqo$param_set$values$dist_threshold)))
 
   # multiple point proposal to single previous point
   expect_equal(address(acqo$xdt_fix_dist(xdt_ok, previous_xdt = previous_xdt[4L, ], search_space = obfun$domain)), address(xdt_ok))  # no change at all, not even a copy
   xdt_fixed = acqo$xdt_fix_dist(xdt_redundant, previous_xdt = previous_xdt[4L, ], search_space = obfun$domain)
   expect_data_table(xdt_fixed, any.missing = FALSE, nrows = 4L)
   expect_true(identical(xdt_fixed[1:3, ], xdt_redundant[1:3, ]))
-  suppressWarnings(expect_true(all(map_lgl(seq_len(nrow(xdt_fixed)), function(i) all(gower::gower_dist(xdt_fixed[i, ], previous_xdt[4L, ]) > acqo$param_set$values$dist_threshold)))))
-})
+  expect_true(all(check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt[4L, ]), acqo$param_set$values$dist_threshold)))
+}
+

@@ -1,4 +1,4 @@
-bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
+bayesopt_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceSingleCrit")
   assert_r6(acq_function, "AcqFunction")
@@ -25,16 +25,16 @@ bayesop_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
     xdt = acq_optimizer$optimize(acq_function)
 
     # prepare lie objects
-    temp_archive = MboDummyArchive$new(archive)
+    temp_archive = archive$clone(deep = TRUE)
     temp_acq_function = acq_function$clone(deep = TRUE) # also generates clone of the surrogate, should be the only reason why we clone the acqfun
-    lie = data.table(liar(archive$data()[[archive$cols_y]]))
+    lie = data.table(liar(archive$data[[archive$cols_y]]))
     colnames(lie) = archive$cols_y
     xdt_new = xdt
 
     # obtain proposals, fill with fake archive lie
     for (i in seq(2, q)) {
       # add lie instead of true eval
-      temp_archive$add_evals(xdt = xdt_new, ydt = lie)
+      temp_archive$add_evals(xdt = xdt_new, transform_xdt_to_xss(xdt_new, temp_archive$search_space), ydt = lie)
 
       # update all objects with lie
       temp_acq_function$surrogate$update(xydt = archive_xy(temp_archive), y_cols = temp_archive$cols_y)
@@ -75,10 +75,10 @@ if (FALSE) {
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.ranger"))
   acq_function = AcqFunctionEI$new(surrogate = surrogate)
-  acq_optimizer = AcqOptimizerRandomSearch$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_mpcl(instance, acq_function, acq_optimizer, mean, 2)
-  data = instance$archive$data()
+  bayesopt_mpcl(instance, acq_function, acq_optimizer, mean, 2)
+  data = instance$archive$data
   plot(y~batch_nr, data[batch_nr>1,], type = "b")
 
   xgrid = generate_design_grid(instance$search_space, 100)$data

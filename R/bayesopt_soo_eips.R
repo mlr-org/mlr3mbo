@@ -19,17 +19,17 @@ if (FALSE) {
   terminator = trm("evals", n_evals = 20)
 
   instance = OptimInstanceMultiCrit$new(
-    objective = obfun, 
+    objective = obfun,
     terminator = terminator
   )
 
   surrogate = SurrogateMultiCritLearners$new(learners = replicate(2, lrn("regr.km")))
   acq_function = AcqFunctionEIPS$new(surrogate = surrogate)
-  acq_optimizer = AcqOptimizerRandomSearch$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_soo(instance, acq_function, acq_optimizer)
+  bayesopt_soo(instance, acq_function, acq_optimizer)
 
-  data = instance$archive$data()
+  data = instance$archive$data
 
   xgrid = generate_design_grid(instance$search_space, 200)$data
   preds = do.call(cbind, c(list(xgrid), acq_function$surrogate$predict(xgrid)))

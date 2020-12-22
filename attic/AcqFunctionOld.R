@@ -7,12 +7,23 @@
 #' @family Acquisition Function
 #'
 #' @export
-AcqFunction = R6Class("AcqFunction",
-  inherit = bbotk::ObjectiveRFunDt,
+AcqFunctionOld = R6Class("AcqFunctionOld",
   public = list(
+
+    #' @field id (`character(1)`).
+    id = NULL,
 
     #' @field surrogate [Surrogate].
     surrogate = NULL,
+
+    #' @field param_set ([paradox::ParamSet]).
+    param_set = NULL,
+
+    #' @field search_space ([paradox::ParamSet]).
+    search_space = NULL,
+
+    #' @field codomain ([paradox::ParamSet]).
+    codomain = NULL,
 
     #' @field direction (`character(1)`)\cr
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
@@ -26,21 +37,27 @@ AcqFunction = R6Class("AcqFunction",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param id (`character(1)`).
-    #' @param constants ([paradox::ParamSet]).
+    #' @param param_set ([paradox::ParamSet]).
     #' @param surrogate [Surrogate].
     #' @param direction (`character(1)`).
-    #' @param fun (`function(xdt)`).
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
-    initialize = function(id, constants = ParamSet$new(), surrogate, direction, fun) {
+    initialize = function(id, param_set, surrogate, direction) {
+      self$id = assert_string(id)
+      self$param_set = assert_param_set(param_set)
       self$surrogate = assert_r6(surrogate, "Surrogate")
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
-      super$initialize(
-        fun = assert_function(fun),
-        domain = ParamSet$new(), #dummy, replaced in $update()
-        id = id,
-        constants = constants,
-        check_values = FALSE
-      )
+    },
+
+    #' @description
+    #' Evaluates all input values in `xdt`.
+    #'
+    #' @param xdt [data.table::data.table()].
+    #'
+    #' @return [data.table::data.table()].\cr
+    #' The column has to have the same name as the id of the acquisition function,
+    #' because we renamed the id of the codomain.
+    eval_dt = function(xdt) {
+      stop("abstract")
     },
 
     #' @description
@@ -55,8 +72,7 @@ AcqFunction = R6Class("AcqFunction",
 
       self$surrogate_max_to_min = mult_max_to_min(archive$codomain)
 
-      self$domain = archive$search_space$clone(deep = TRUE)
-      self$domain$trafo = NULL # FIXME is it okay to do this?
+      self$search_space = archive$search_space
     },
 
     #' @description
@@ -65,6 +81,19 @@ AcqFunction = R6Class("AcqFunction",
     #' @param archive [bbotk::Archive].
     update = function(archive) {
       # it's okay to do nothing here
+    },
+
+    #' @description
+    #' Generates an objective function for [bbotk::Optimizer].
+    #'
+    #' @return [bbotk::ObjectiveRFunDt]
+    generate_objective = function() {
+      ObjectiveRFunDt$new(
+        fun = self$eval_dt,
+        domain = self$search_space,
+        codomain = self$codomain,
+        id = self$id
+      )
     }
   )
 )

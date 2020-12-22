@@ -21,7 +21,7 @@ feature_types_to_param_classes = function(feature_types) {
 }
 
 archive_xy = function(archive) {
-  archive$data()[, c(archive$cols_x, archive$cols_y), with = FALSE]
+  archive$data[, c(archive$cols_x, archive$cols_y), with = FALSE]
 }
 
 archive_x = function(archive) {
@@ -32,6 +32,7 @@ get_gower_dist = function(x, y = NULL) {
   # if y is NULL we get the Gower distance of x pairwaise with itself and set the diagonal to ones
   # otherwise we get the Gower dist_threshold of x pairwise with y
   # NOTE: no parallel execution of gower::gower_dist for now
+  # NOTE: catch the skipping variable warning is useful
   if (is.null(y)) {
     gower_distance = do.call(rbind, map(seq_len(nrow(x)), function(i) {
       withCallingHandlers(gower::gower_dist(x[i, ], x, nthread = 1L),

@@ -62,7 +62,8 @@ Suggests:
     rmarkdown,
     ggplot2
 Remotes:
-    mlr-org/bbotk
+    mlr-org/bbotk,
+    mlr-org/mlr3tuning#288
 ByteCompile: no
 Encoding: UTF-8
 LazyData: true
@@ -75,23 +76,17 @@ Collate:
     'AcqFunctionCB.R'
     'AcqFunctionEI.R'
     'AcqFunctionEIPS.R'
-    'AcqFunctionSmsEmoa.R'
     'AcqOptimizer.R'
-    'AcqOptimizerFromOptimizer.R'
-    'AcqOptimizerRandomSearch.R'
-    'MboDummyArchive.R'
     'OptimizerMbo.R'
     'Surrogate.R'
     'SurrogateMultiCrit.R'
     'SurrogateMultiCritLearners.R'
     'SurrogateSingleCrit.R'
     'SurrogateSingleCritLearner.R'
-    'TunerMbo.R'
     'assertions.R'
     'bibentries.R'
     'bayesopt_mpcl.R'
     'bayesopt_parego.R'
-    'bayesopt_smsemoa.R'
     'bayesopt_soo.R'
     'bayesopt_soo_eips.R'
     'result_by_surrogate_design.R'
