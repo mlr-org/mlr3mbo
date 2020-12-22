@@ -13,7 +13,7 @@
 # #'   ?
 # #' @return [bbotk::Archive]
 # #' @export
-bayesop_parego = function(instance, acq_function = NULL, acq_optimizer = NULL, q = 1, s = 100, rho = 0.05) {
+bayesopt_parego = function(instance, acq_function = NULL, acq_optimizer = NULL, q = 1, s = 100, rho = 0.05) {
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
   if (is.null(acq_function)) {
@@ -103,10 +103,10 @@ if (FALSE) {
   acq_function = AcqFunctionEI$new(surrogate = surrogate)
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
-  bayesop_parego(instance, acq_function, acq_optimizer, q = 2)
+  bayesopt_parego(instance, acq_function, acq_optimizer, q = 2)
 
   # Defaults work
-  bayesop_parego(instance, q = 2)
+  bayesopt_parego(instance, q = 2)
 
   archdata = instance$archive$data
   library(ggplot2)
