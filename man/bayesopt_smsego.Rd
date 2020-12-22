@@ -4,7 +4,7 @@
 \alias{bayesopt_smsego}
 \title{Multi-Objective SMS-MBO}
 \usage{
-bayesopt_smsego(instance, acq_function, acq_optimizer)
+bayesopt_smsego(instance, acq_function = NULL, acq_optimizer = NULL)
 }
 \arguments{
 \item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance}\cr
