@@ -1,5 +1,5 @@
 test_that("default bayesop_soo", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  bayesop_soo(instance)
+  bayesopt_soo(instance)
   expect_true(nrow(instance$archive$data) == 5L)
 })
