@@ -12,8 +12,8 @@ An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 }
 \description{
 Chooses a default 'loopfun', i.e. the MBO flavor to be used for optimization.
-For single-criteria optimization, defaults to \link{bayesop_soo}.
-For multi-criteria optimization, defaults to \link{bayesop_smsego}.
+For single-criteria optimization, defaults to \link{bayesopt_soo}.
+For multi-criteria optimization, defaults to \link{bayesopt_smsego}.
 }
 \seealso{
 Other mbo_defaults: 
