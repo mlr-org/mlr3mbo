@@ -10,8 +10,11 @@ default_loopfun(instance)
 \item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 }
+\value{
+loop \code{function}
+}
 \description{
-Chooses a default 'loopfun', i.e. the MBO flavor to be used for optimization.
+Chooses a default "loopfun", i.e. the MBO flavor to be used for optimization.
 For single-criteria optimization, defaults to \link{bayesopt_soo}.
 For multi-criteria optimization, defaults to \link{bayesopt_smsego}.
 }

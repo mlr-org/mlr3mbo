@@ -83,8 +83,10 @@ test_that("default_surrogate", {
 
 
 test_that("default_acqfun", {
-  expect_r6(default_acqfun(MAKE_INST_1D()), "AcqFunctionEI")
-  acq = default_acqfun(MAKE_INST_1D(), surrogate = SurrogateSingleCritLearner$new(lrn("regr.featureless")))
+  instance = MAKE_INST_1D()
+  surrogate = default_surrogate(instance)
+  expect_r6(default_acqfun(instance, surrogate = surrogate), "AcqFunctionEI")
+  acq = default_acqfun(instance, surrogate = SurrogateSingleCritLearner$new(lrn("regr.featureless")))
   expect_r6(acq, "AcqFunctionEI")
   expect_r6(acq$surrogate$model, "LearnerRegrFeatureless")
 })

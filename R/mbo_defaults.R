@@ -5,9 +5,8 @@
 #' The following defaults are set for [OptimizerMbo] during optimization if the
 #' respective fields are not set during initialization.
 #'
-#' * Optimization Loop: See [default_loopfun] \cr
-#' * Acquisition Funciton: [default_acqfun] \cr
-#'   Internally also sets the surrogate learner using [default_surrogate].
+#' * Optimization Loop: [default_loopfun] \cr
+#' * Acquisition Function: [default_acqfun] \cr
 #' * Surrogate Learner: [default_surrogate] \cr
 #' * Acqfun Optimizer: [default_acq_optimizer] \cr
 #'
@@ -17,12 +16,13 @@ NULL
 #' @title Default loopfun
 #'
 #' @description
-#' Chooses a default 'loopfun', i.e. the MBO flavor to be used for optimization.
+#' Chooses a default "loopfun", i.e. the MBO flavor to be used for optimization.
 #' For single-criteria optimization, defaults to [bayesopt_soo].
 #' For multi-criteria optimization, defaults to [bayesopt_smsego].
 #'
 #' @param instance [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
+#' @return loop `function`
 #' @family mbo_defaults
 #' @export
 default_loopfun = function(instance) {
@@ -65,8 +65,8 @@ default_loopfun = function(instance) {
 #'   This is the \code{se.method = "infjack"} option of the \dQuote{"regr.ranger"} learner (default).
 #'   }
 #' }
-#' In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set, in cases
-#' where the surrogate learner errors. Currently, the following learner is used as a fallback:
+#' In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
+#' in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
 #' \code{GraphLearner$new(po("imputeoor") %>>% lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE))}.
 #'
 #' If additionally dependencies are present in the parameter space, inactive conditional parameters
@@ -84,7 +84,9 @@ default_loopfun = function(instance) {
 #' @param learner [mlr3::LearnerRegr] | `NULL` \cr
 #'   The surrogate learner used in the acquisition function. Default as described above.
 #' @param n_objectives `integer(1)` | `NULL` \cr
-#'   Number of objectives to model. Default queries the instance.
+#'   Number of objectives to model. Default queries the instance. If `1` a
+#'   [SurrogateSingleCritLearner] object is returned, otherwise a [SurrogateMultiCritLearners]
+#'   object.
 #' @return [Surrogate]
 #' @family mbo_defaults
 #' @export
@@ -104,9 +106,6 @@ default_surrogate = function(instance, learner = NULL, n_objectives = NULL) {
       }
     } else {
       learner = lrn("regr.ranger", num.trees = 500L, keep.inbag = TRUE)
-      # FIXME mrMBO: lrn("regr.randomForest", se.method = "jackknife", keep.inbag = TRUE)
-      # This currently does not work because mlr3's random forest does not have
-      # se estimation.
     }
     # Stability: evaluate and add a fallback
     learner$encapsulate[c("train", "predict")] = "evaluate"
@@ -139,19 +138,15 @@ default_surrogate = function(instance, learner = NULL, n_objectives = NULL) {
 #'
 #' @description
 #' Chooses a default acquisition function, i.e. the criterion used to propose future points.
-#' If no surrogate learner is provided, internally calls [default_surrogate] to select an
-#' appropriate surrogate learner.
 #' @param instance [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
-#' @param surrogate [SurrogateSingleCritLearner] | [SurrogateMultiCritLearners] | `NULL` \cr
-#'   The surrogate used in the acquisition function. Defaults to the output of \code{default_surrogate(instance)}.
+#' @param surrogate [SurrogateSingleCritLearner] | [SurrogateMultiCritLearners] \cr
+#'   The surrogate used in the acquisition function.
+#' @return [AcqFunction]
 #' @family mbo_defaults
 #' @export
-default_acqfun = function(instance, surrogate = NULL) {
+default_acqfun = function(instance, surrogate) {
   assert_r6(instance, "OptimInstance")
-  if (is.null(surrogate)) {
-    surrogate = default_surrogate(instance)
-  }
   AcqFunctionEI$new(surrogate = surrogate)
 }
 
@@ -163,6 +158,7 @@ default_acqfun = function(instance, surrogate = NULL) {
 #'
 #' @param instance [bbotk::OptimInstance] \cr
 #'   An object that inherits from [bbotk::OptimInstance].
+#' @return [AcqOptimizer]
 #' @family mbo_defaults
 #' @export
 default_acq_optimizer = function(instance) {

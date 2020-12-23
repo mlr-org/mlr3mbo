@@ -27,7 +27,8 @@ bayesopt_soo = function(instance, acq_function = NULL, acq_optimizer = NULL, n_d
   #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstance")
   if (is.null(acq_function)) {
-    acq_function = default_acqfun(instance)
+    surrogate = default_surrogate(instance)
+    acq_function = default_acqfun(instance, surrogate = surrogate)
   }
   if (is.null(acq_optimizer)) {
     acq_optimizer = default_acq_optimizer(instance)

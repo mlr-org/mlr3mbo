@@ -4,19 +4,20 @@
 \alias{default_acqfun}
 \title{Default Acquisition Function}
 \usage{
-default_acqfun(instance, surrogate = NULL)
+default_acqfun(instance, surrogate)
 }
 \arguments{
 \item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{surrogate}{\link{SurrogateSingleCritLearner} | \link{SurrogateMultiCritLearners} | \code{NULL} \cr
-The surrogate used in the acquisition function. Defaults to the output of \code{default_surrogate(instance)}.}
+\item{surrogate}{\link{SurrogateSingleCritLearner} | \link{SurrogateMultiCritLearners} \cr
+The surrogate used in the acquisition function.}
+}
+\value{
+\link{AcqFunction}
 }
 \description{
 Chooses a default acquisition function, i.e. the criterion used to propose future points.
-If no surrogate learner is provided, internally calls \link{default_surrogate} to select an
-appropriate surrogate learner.
 }
 \seealso{
 Other mbo_defaults: 

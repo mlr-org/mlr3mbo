@@ -14,7 +14,9 @@ An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 The surrogate learner used in the acquisition function. Default as described above.}
 
 \item{n_objectives}{\code{integer(1)} | \code{NULL} \cr
-Number of objectives to model. Default queries the instance.}
+Number of objectives to model. Default queries the instance. If \code{1} a
+\link{SurrogateSingleCritLearner} object is returned, otherwise a \link{SurrogateMultiCritLearners}
+object.}
 }
 \value{
 \link{Surrogate}
@@ -49,8 +51,8 @@ by computing the infinitesimal jackknife.
 This is the \code{se.method = "infjack"} option of the \dQuote{"regr.ranger"} learner (default).
 }
 }
-In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set, in cases
-where the surrogate learner errors. Currently, the following learner is used as a fallback:
+In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
+in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
 \code{GraphLearner$new(po("imputeoor") \%>>\% lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE))}.
 
 If additionally dependencies are present in the parameter space, inactive conditional parameters

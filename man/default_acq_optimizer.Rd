@@ -10,6 +10,9 @@ default_acq_optimizer(instance)
 \item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 }
+\value{
+\link{AcqOptimizer}
+}
 \description{
 Chooses a default acquisition function optimizer.
 Defaults to \link[bbotk:mlr_optimizers_random_search]{bbotk::OptimizerRandomSearch} provided as an \link{AcqOptimizer}.
