@@ -60,10 +60,10 @@ Suggests:
     ggplot2
 Remotes:
     mlr-org/bbotk,
-    mlr-org/mlr3tuning#288
+    mlr-org/mlr3tuning
 ByteCompile: no
 Encoding: UTF-8
 LazyData: true
-NeedsCompilation: no
+NeedsCompilation: yes
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
