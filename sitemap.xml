@@ -40,10 +40,10 @@
     <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateSingleCritLearner.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/bayesop_smsemoa.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_smsego.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/bayesop_soo.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_soo.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/mlr3mbo-package.html</loc>
@@ -52,12 +52,6 @@
     <loc>https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_mbo.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_tuners_mbo.html</loc>
-  </url>
-  <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/result_by_surrogate_design.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/articles/mlr3mbo.html</loc>
   </url>
 </urlset>
