@@ -62,13 +62,13 @@ Surrogate = R6Class("Surrogate",
 
   active = list(
 
-    #' @field insample_performance (`numeric()`)\cr
+    #' @field insample_perf (`numeric()`)\cr
     #' Surrogate Model's current insample performance.
-    insample_performance = function(rhs) {
+    insample_perf = function(rhs) {
       if (!missing(rhs)) {
         stopf("Field/Binding is read-only")
       }
-      private$.insample_performance %??% NaN
+      private$.insample_perf %??% NaN
     },
 
     #' @field param_set ([paradox::ParamSet])\cr
@@ -80,16 +80,16 @@ Surrogate = R6Class("Surrogate",
       private$.param_set
     },
 
-    #' @field assert_insample_performance (`logical(1)`)\cr
-    #' Whether the current insample performance meets the `perf_threshold`.
-    assert_insample_performance = function(rhs) {  # FIXME: better name
+    #' @field assert_insample_perf (`logical(1)`)\cr
+    #' Asserts whether the current insample performance meets the performance threshold.
+    assert_insample_perf = function(rhs) {
       stop("Abstract")
     }
   ),
 
   private = list(
 
-    .insample_performance = NULL,
+    .insample_perf = NULL,
     .param_set = NULL,
 
     deep_clone = function(name, value) {

@@ -6,7 +6,6 @@
 #' @export
 SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
   inherit = SurrogateMultiCrit,
-
   public = list(
 
     #' @description
@@ -21,20 +20,22 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
         }
       }
 
-       private$.param_set = ParamSet$new(list(
-        #ParamLgl$new("calc_insample_perf", default = TRUE),  # FIXME: do we actually want this to be turned off?
+      ps = ParamSet$new(list(
+        ParamLgl$new("calc_insample_perf", default = TRUE),
         ParamUty$new("perf_measures", custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(self$model))),  # FIXME: actually want check_measures
         ParamUty$new("perf_thresholds", custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(self$model))))
       )
-      #private$.param_set$values$calc_insample_perf = TRUE
-      private$.param_set$values$perf_measures = replicate(length(self$model), msr("regr.rsq"))
-      private$.param_set$values$perf_thresholds = rep(0, length(self$model))
-
+      ps$add_dep("perf_measures", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
+      ps$add_dep("perf_thresholds", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
+      ps$values = list(calc_insample_perf = FALSE)
+      #ps$values = list(calc_insample_perf = FALSE, perf_measures = replicate(length(self$model), msr("regr.rsq")), perf_thresholds = rep(0, length(self$model)))
+      private$.param_set = ps
     },
 
     #' @description
     #' Train model with new points.
-    #' Also calculates the insample performance based on the `perf_measures` hyperparameter.
+    #' Also calculates the insample performance based on the `perf_measures`
+    #' hyperparameter if `calc_insample_perf = TRUE`
     #'
     #' @param xydt ([data.table::data.table()])\cr
     #' Desing of new points.
@@ -66,13 +67,12 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       }, model = self$model, task = tasks)
       names(self$model) = y_cols
 
-      # FIXME: see comments in SurrogateSingleCritLearner.R
-      #if (self$param_set$values$calc_insample_perf) {
-      private$.insample_performance = mapply(function(model, task, perf_measure) {
-        assert_measure(perf_measure, task = task, learner = model)
-        model$predict(task)$score(perf_measure, task = task, learner = model)
-      }, model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures)
-      #}
+      if (self$param_set$values$calc_insample_perf) {
+        private$.insample_perf = mapply(function(model, task, perf_measure) {
+          assert_measure(perf_measure, task = task, learner = model)
+          model$predict(task)$score(perf_measure, task = task, learner = model)
+        }, model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures)
+      }
 
       invisible(NULL)
     },
@@ -108,25 +108,29 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       length(self$model)
     },
 
-    #' @field assert_insample_performance (`logical(1)`)\cr
-    #' Whether the current insample performance meets the `perf_threshold`.
-    assert_insample_performance = function(rhs) {  # FIXME: better name
+    #' @field assert_insample_perf (`numeric()`) \cr
+    #' Asserts whether the current insample performance meets the performance threshold.
+    assert_insample_perf = function(rhs) {
       if (!missing(rhs)) {
         stopf("Field/Binding is read-only")
       }
 
-      check = all(mapply(function(insample_performance, perf_threshold, perf_measure) {
+      if (!self$param_set$values$calc_insample_perf) {
+        return(invisible(self$insample_perf))
+      }
+
+      check = all(mapply(function(insample_perf, perf_threshold, perf_measure) {
         if (perf_measure$minimize) {
-          insample_performance < perf_threshold
+          insample_perf < perf_threshold
         } else {
-          insample_performance > perf_threshold
+          insample_perf > perf_threshold
         }
-      }, insample_performance = self$insample_performance, perf_threshold = self$param_set$values$perf_threshold, perf_measure = self$param_set$values$perf_measures))
+      }, insample_perf = self$insample_perf, perf_threshold = self$param_set$values$perf_thresholds, perf_measure = self$param_set$values$perf_measures))
 
       if (!check) {
         stopf("Current insample performance of the Surrogate Model does not meet the performance threshold")
       }
-      invisible(self$insample_performance)
+      invisible(self$insample_perf)
     }
   )
 )
