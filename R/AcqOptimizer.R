@@ -79,7 +79,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
           xdt[arrayInd(which.min(gower_distance_new), dim(gower_distance_new))[, 1L], ]  = SamplerUnif$new(search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
           gower_distance_new = get_gower_dist(xdt)
           if (all(check_gower_dist(gower_distance_new, dist_threshold = dist_threshold))) {
-            break  # early exit once the distances are ok
+            break  # early exit as soon as the distances pass
           }
         }
       }
