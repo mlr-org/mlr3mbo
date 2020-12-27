@@ -58,8 +58,6 @@ Suggests:
     DiceKriging,
     lhs,
     testthat,
-    knitr,
-    rmarkdown,
     ggplot2
 Remotes:
     mlr-org/bbotk,
