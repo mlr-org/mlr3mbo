@@ -55,13 +55,38 @@ MAKE_DESIGN = function(instance, n = 4) {
 
 library(mlr3learners)
 
-REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", nugget.stability = 10^-8)
+REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12)
 REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
-REGR_KM_DETERM = lrn("regr.km", nugget.estim = TRUE, covtype = "matern3_2", jitter = 0.001)
+REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8)
 REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
+REGR_FEATURELESS = lrn("regr.featureless")
+REGR_FEATURELESS$encapsulate = c(train = "callr", predict = "callr")
 
 SURR_KM_DETERM = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
 SURR_KM_NOISY = SurrogateSingleCritLearner$new(learner = REGR_KM_NOISY)
 SURR2D_KM_DETERM = SurrogateMultiCritLearners$new(learners = replicate(2, REGR_KM_DETERM))
+SURR_REGR_FEATURELESS = SurrogateSingleCritLearner$new(learner = REGR_FEATURELESS)
+
 
 ACQ_OPT_DEF = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
+
+OptimizerError = R6Class("OptimizerError",
+  inherit = Optimizer,
+  public = list(
+
+    initialize = function() {
+      super$initialize(
+        param_set = ParamSet$new(),
+        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
+        properties = c("dependencies", "single-crit", "multi-crit")
+      )
+    }
+  ),
+
+  private = list(
+    .optimize = function(inst) {
+      stop("Optimizer Error")
+    }
+  )
+)
+

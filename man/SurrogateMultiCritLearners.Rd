@@ -24,6 +24,7 @@ Asserts whether the current insample performance meets the performance threshold
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SurrogateMultiCritLearners$new()}}
+\item \href{#method-predict}{\code{SurrogateMultiCritLearners$predict()}}
 \item \href{#method-clone}{\code{SurrogateMultiCritLearners$clone()}}
 }
 }
@@ -32,7 +33,6 @@ Asserts whether the current insample performance meets the performance threshold
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup">}\href{../../mlr3mbo/html/Surrogate.html#method-setup}{\code{mlr3mbo::Surrogate$setup()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update">}\href{../../mlr3mbo/html/Surrogate.html#method-update}{\code{mlr3mbo::Surrogate$update()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="SurrogateMultiCrit" data-id="predict">}\href{../../mlr3mbo/html/SurrogateMultiCrit.html#method-predict}{\code{mlr3mbo::SurrogateMultiCrit$predict()}}\out{</span>}
 }
 \out{</details>}
 }
@@ -51,6 +51,27 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-predict"></a>}}
+\if{latex}{\out{\hypertarget{method-predict}{}}}
+\subsection{Method \code{predict()}}{
+Returns mean response and standard error
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SurrogateMultiCritLearners$predict(xdt)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}\cr
+New data.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{\link[data.table:data.table]{data.table::data.table()}} with the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}

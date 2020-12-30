@@ -82,7 +82,9 @@ fix_xdt_distance = function(xdt, previous_xdt, search_space, dist_threshold) {
 
   # second, replace the ones that are too close to the other new ones
   # do this iteratively starting with the lowest distance because the distances change once a single point is replaced and we do not want to replace too many
+  # this could change the results of the first check but we don't care, see comment below
   if (any(!check_passed_new)) {
+    # this does not necessarily imply that the second check eventually passes but again we don't care, see comment below
     for (i in seq_len(sum(!check_passed_new))) {
       xdt[arrayInd(which.min(gower_distance_new), dim(gower_distance_new))[, 1L], ] = SamplerUnif$new(search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
       gower_distance_new = get_gower_dist(xdt)
@@ -91,6 +93,8 @@ fix_xdt_distance = function(xdt, previous_xdt, search_space, dist_threshold) {
       }
     }
   }
+
+  # NOTE: the cleanest way to do this would be a while loop so we can be sure that both checks eventually pass but this is too costly
 
   xdt
 }

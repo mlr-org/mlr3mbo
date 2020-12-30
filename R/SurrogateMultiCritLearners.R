@@ -29,6 +29,28 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       ps$add_dep("perf_measures", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_thresholds", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
       private$.param_set = ps
+    },
+
+    #' @description
+    #' Returns mean response and standard error
+    #'
+    #' @param xdt [data.table::data.table()]\cr
+    #' New data.
+    #'
+    #' @return [data.table::data.table()] with the columns `mean` and `se`.
+    predict = function(xdt) {
+      assert_xdt(xdt)
+
+      preds = lapply(self$model, function(model) {
+        pred = model$predict_newdata(newdata = xdt)
+        if (model$predict_type == "se") {
+          data.table(mean = pred$response, se = pred$se)
+        } else {
+          data.table(mean = pred$response)
+        }
+      })
+      names(preds) = names(self$model)
+      return(preds)
     }
   ),
 

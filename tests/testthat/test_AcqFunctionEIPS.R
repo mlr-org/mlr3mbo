@@ -13,7 +13,7 @@ test_that("AcqFunctionEIPS works", {
   expect_learner(acqf$surrogate$model[[1]])
   expect_learner(acqf$surrogate$model[[2]])
 
-  acqf$surrogate$update(xydt = archive_xy(inst$archive), y_cols = inst$archive$cols_y) #update surrogate model with new data
+  acqf$surrogate$update(xydt = archive_xy(inst$archive), y_cols = inst$archive$cols_y) # update surrogate model with new data
 
   xdt = data.table(x = seq(5))
 
