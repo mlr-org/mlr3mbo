@@ -12,8 +12,8 @@ Surrogate model based on regression \link[mlr3:Learner]{mlr3::Learner} objects.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{assert_insample_performance}}{(\code{logical(1)})\cr
-Whether the current insample performance meets the \code{perf_threshold}.}
+\item{\code{assert_insample_perf}}{(\code{numeric(1)}) \cr
+Asserts whether the current insample performance meets the performance threshold.}
 }
 \if{html}{\out{</div>}}
 }
@@ -21,7 +21,6 @@ Whether the current insample performance meets the \code{perf_threshold}.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SurrogateSingleCritLearner$new()}}
-\item \href{#method-update}{\code{SurrogateSingleCritLearner$update()}}
 \item \href{#method-predict}{\code{SurrogateSingleCritLearner$predict()}}
 \item \href{#method-clone}{\code{SurrogateSingleCritLearner$clone()}}
 }
@@ -30,6 +29,7 @@ Whether the current insample performance meets the \code{perf_threshold}.}
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup">}\href{../../mlr3mbo/html/Surrogate.html#method-setup}{\code{mlr3mbo::Surrogate$setup()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update">}\href{../../mlr3mbo/html/Surrogate.html#method-update}{\code{mlr3mbo::Surrogate$update()}}\out{</span>}
 }
 \out{</details>}
 }
@@ -48,31 +48,6 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{learner}}{\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update"></a>}}
-\if{latex}{\out{\hypertarget{method-update}{}}}
-\subsection{Method \code{update()}}{
-Train model with new points.
-Also calculates the insample performance based on the \code{perf_measure} hyperparameter.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateSingleCritLearner$update(xydt, y_cols)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xydt}}{\link[data.table:data.table]{data.table::data.table}\cr
-Desing of new points.}
-
-\item{\code{y_cols}}{(\code{character()})\cr
-Names of response columns.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

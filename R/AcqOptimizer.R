@@ -16,18 +16,29 @@ AcqOptimizer = R6Class("AcqOptimizer",
       self$optimizer = assert_r6(optimizer, "Optimizer")
       self$terminator = assert_r6(terminator, "Terminator")
       ps = ParamSet$new(list(
+        ParamLgl$new("fix_distance"),
         ParamDbl$new("dist_threshold", lower = 0, upper = 1))
       )
-      ps$values$dist_threshold = 0
+
+      ps$values = list(fix_distance = FALSE, dist_threshold = 0)
+      ps$add_dep("dist_threshold", on = "fix_distance", cond = CondEqual$new(TRUE))
       private$.param_set = ps
     },
 
     #' @description
     #' Optimize the acquisition function.
     #'
-    #' @param acq_function [AcqFunction].
-    #' @return `data.table` with 1 row per optimum and x as colums
-    optimize = function(acq_function) {
+    #' If the `fix_distance` parameter is set to `TRUE`, proposed points are replaced by randomly
+    #' sampled ones if their Gower distance with respect to other proposed points or previously
+    #' evaluated points falls below the `dist_threshold` parameter.
+    #'
+    #' @param acq_function [AcqFunction]\cr
+    #' Acquisition function to optimize.
+    #' @param archive [bbotk::Archive]\cr
+    #' Archive.
+    #'
+    #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
+    optimize = function(acq_function, archive) {
       if (acq_function$codomain$length == 1L) {
         instance = OptimInstanceSingleCrit$new(objective = acq_function, terminator = self$terminator)
       } else {
@@ -36,52 +47,17 @@ AcqOptimizer = R6Class("AcqOptimizer",
         }
         instance = OptimInstanceMultiCrit$new(objective = acq_function, terminator = self$terminator)
       }
-      self$optimizer$optimize(instance)
-    },
 
-    #' @description
-    #' Replaces proposed points if their Gower distance with respect to other proposed points or
-    #' previously evaluated points falls below a `dist_threshold`.
-    #'
-    #' @param xdt [data.table::data.table]\cr
-    #' Proposed points.
-    #'
-    #' @param previous_xdt [data.table::data.table]\cr
-    #' Previous evaluated points.
-    #'
-    #' @param search_space [paradox::ParamSet].
-    #' Search space.
-    #'
-    #' @return [data.table::data.table()] with the same structure as the `xdt` input.
-    xdt_fix_dist = function(xdt, previous_xdt, search_space) {
-      dist_threshold = self$param_set$values$dist_threshold
-      # first, we check wether the Gower distance of each newly proposed point to all other newly proposed points is larger than dist_threshold
-      gower_distance_new = get_gower_dist(xdt)
-      check_passed_new = check_gower_dist(gower_distance_new, dist_threshold = dist_threshold)
-
-      # second, we check wether the Gower distance of all newly proposed points to the previously evaluated ones is larger than dist_threshold
-      check_passed_previous = check_gower_dist(get_gower_dist(xdt, y = previous_xdt), dist_threshold = dist_threshold)
-
-      # if either fails we iteratively replace problematic points with randomly sampled ones until both checks pass
-      if (any(!(check_passed_new & check_passed_previous))) {
-        lg$info("Replacing proposed point(s) to force exploration")  # FIXME: logging?
-      }
-
-      # first, replace the ones that are too close to the previous ones
-      if (any(!check_passed_previous)) {
-        xdt[!check_passed_previous, ] = SamplerUnif$new(search_space)$sample(sum(!check_passed_previous))$data  # FIXME: also think about augmented lhs
-      }
-
-      # second, replace the ones that are too close to the other new ones
-      # do this iteratively because the distances change once a single point is replaced and we do not want to replace too many
-      if (any(!check_passed_new)) {
-        for (i in seq_len(sum(!check_passed_new))) {
-          xdt[arrayInd(which.min(gower_distance_new), dim(gower_distance_new))[, 1L], ]  = SamplerUnif$new(search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
-          gower_distance_new = get_gower_dist(xdt)
-          if (all(check_gower_dist(gower_distance_new, dist_threshold = dist_threshold))) {
-            break  # early exit as soon as the distances pass
-          }
+      xdt = tryCatch(self$optimizer$optimize(instance),
+        error = function(error_condition) {
+          lg$info(error_condition$message)  # FIXME: logging?
+          stop(set_class(list(message = error_condition$message, call = NULL),
+            classes = c("leads_to_exploration_error", "optimize_error", "error", "condition")))
         }
+      )
+
+      if (self$param_set$values$fix_distance) {
+        xdt = fix_xdt_distance(xdt, previous_xdt = archive_x(archive), search_space = acq_function$domain, dist_threshold = self$param_set$values$dist_threshold)
       }
 
       xdt

@@ -19,40 +19,14 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
       }
 
       ps = ParamSet$new(list(
-        ParamLgl$new("calc_insample_perf", default = TRUE),
+        ParamLgl$new("calc_insample_perf"),
         ParamUty$new("perf_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
         ParamDbl$new("perf_threshold", lower = -Inf, upper = Inf))
       )
+      ps$values = list(calc_insample_perf = FALSE, perf_measure = msr("regr.rsq"), perf_threshold = 0)
       ps$add_dep("perf_measure", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_threshold", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
-      ps$values = list(calc_insample_perf = FALSE)
-      #ps$values = list(calc_insample_perf = FALSE, perf_measure = msr("regr.rsq"), perf_threshold = 0)
       private$.param_set = ps
-    },
-
-    #' @description
-    #' Train model with new points.
-    #' Also calculates the insample performance based on the `perf_measure`
-    #' hyperparameter if `calc_insample_perf = TRUE`.
-    #'
-    #' @param xydt [data.table::data.table]\cr
-    #' Desing of new points.
-    #'
-    #' @param y_cols (`character()`)\cr
-    #' Names of response columns.
-    #'
-    #' @return `NULL`
-    update = function(xydt, y_cols) {
-      assert_xydt(xydt, y_cols)
-      task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = y_cols)
-      self$model$train(task)
-
-      if (self$param_set$values$calc_insample_perf) {
-        assert_measure(self$param_set$values$perf_measure, task = task, learner = self$model)
-        private$.insample_perf = self$model$predict(task)$score(self$param_set$values$perf_measure, task = task, learner = self$model)
-      }
-
-      invisible(NULL)
     },
 
     #' @description
@@ -97,6 +71,23 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
         stopf("Current insample performance of the Surrogate Model does not meet the performance threshold")
       }
       invisible(self$insample_perf)
+    }
+  ),
+
+  private = list(
+
+    # Train model with new points.
+    # Also calculates the insample performance based on the `perf_measure` hyperparameter if `calc_insample_perf = TRUE`.
+    .update = function(xydt, y_cols) {
+      assert_xydt(xydt, y_cols)
+      task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = y_cols)
+      self$model$train(task)
+
+      if (self$param_set$values$calc_insample_perf) {
+        assert_measure(self$param_set$values$perf_measure, task = task, learner = self$model)
+        private$.insample_perf = self$model$predict(task)$score(self$param_set$values$perf_measure, task = task, learner = self$model)
+        self$assert_insample_perf
+      }
     }
   )
 )

@@ -15,8 +15,8 @@ Multi Criteria response surfaces modeled by multiple regression \link[mlr3:Learn
 \item{\code{k}}{(\code{integer(1)})\cr
 Returns the number of models.}
 
-\item{\code{assert_insample_performance}}{(\code{logical(1)})\cr
-Whether the current insample performance meets the \code{perf_threshold}.}
+\item{\code{assert_insample_perf}}{(\code{numeric()}) \cr
+Asserts whether the current insample performance meets the performance threshold.}
 }
 \if{html}{\out{</div>}}
 }
@@ -24,8 +24,6 @@ Whether the current insample performance meets the \code{perf_threshold}.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SurrogateMultiCritLearners$new()}}
-\item \href{#method-update}{\code{SurrogateMultiCritLearners$update()}}
-\item \href{#method-predict}{\code{SurrogateMultiCritLearners$predict()}}
 \item \href{#method-clone}{\code{SurrogateMultiCritLearners$clone()}}
 }
 }
@@ -33,6 +31,8 @@ Whether the current insample performance meets the \code{perf_threshold}.}
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup">}\href{../../mlr3mbo/html/Surrogate.html#method-setup}{\code{mlr3mbo::Surrogate$setup()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update">}\href{../../mlr3mbo/html/Surrogate.html#method-update}{\code{mlr3mbo::Surrogate$update()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="SurrogateMultiCrit" data-id="predict">}\href{../../mlr3mbo/html/SurrogateMultiCrit.html#method-predict}{\code{mlr3mbo::SurrogateMultiCrit$predict()}}\out{</span>}
 }
 \out{</details>}
 }
@@ -51,52 +51,6 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update"></a>}}
-\if{latex}{\out{\hypertarget{method-update}{}}}
-\subsection{Method \code{update()}}{
-Train model with new points.
-Also calculates the insample performance based on the \code{perf_measures} hyperparameter.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateMultiCritLearners$update(xydt, y_cols)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xydt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-Desing of new points.}
-
-\item{\code{y_cols}}{(\code{character()})\cr
-Names of response columns.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-predict"></a>}}
-\if{latex}{\out{\hypertarget{method-predict}{}}}
-\subsection{Method \code{predict()}}{
-Returns mean response and standard error
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateMultiCritLearners$predict(xdt)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}\cr
-New data.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} with the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}

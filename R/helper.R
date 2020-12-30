@@ -25,14 +25,14 @@ archive_xy = function(archive) {
 }
 
 archive_x = function(archive) {
-  archive$data()[, archive$cols_x, with = FALSE]
+  archive$data[, archive$cols_x, with = FALSE]
 }
 
 get_gower_dist = function(x, y = NULL) {
-  # if y is NULL we get the Gower distance of x pairwaise with itself and set the diagonal to ones
+  # if y is NULL we get the Gower distance of x pairwise with itself and set the diagonal to ones
   # otherwise we get the Gower dist_threshold of x pairwise with y
   # NOTE: no parallel execution of gower::gower_dist for now
-  # NOTE: catch the skipping variable warning is useful
+  # NOTE: catching the skipping variable warning is useful
   if (is.null(y)) {
     gower_distance = do.call(rbind, map(seq_len(nrow(x)), function(i) {
       withCallingHandlers(gower::gower_dist(x[i, ], x, nthread = 1L),
@@ -62,8 +62,36 @@ check_gower_dist = function(gower_distance, dist_threshold) {
   rowSums(gower_distance > dist_threshold) == ncol(gower_distance)
 }
 
-get_xdt = function(acq_optimizer, acq_function, previous_xdt, search_space) {
-  acq_function$surrogate$assert_insample_performance
-  xdt = acq_optimizer$optimize(acq_function)
-  acq_optimizer$xdt_fix_dist(xdt, previous_xdt = previous_xdt, search_space = search_space)
+fix_xdt_distance = function(xdt, previous_xdt, search_space, dist_threshold) {
+  # first, we check wether the Gower distance of each newly proposed point to all other newly proposed points is larger than dist_threshold
+  gower_distance_new = get_gower_dist(xdt)
+  check_passed_new = check_gower_dist(gower_distance_new, dist_threshold = dist_threshold)
+
+  # second, we check wether the Gower distance of all newly proposed points to the previously evaluated ones is larger than dist_threshold
+  check_passed_previous = check_gower_dist(get_gower_dist(xdt, y = previous_xdt), dist_threshold = dist_threshold)
+
+  # if either fails we iteratively replace problematic points with randomly sampled ones until both checks pass
+  if (any(!(check_passed_new & check_passed_previous))) {
+    lg$info("Replacing proposed point(s) by randomly sampled ones due to low Gower distances")  # FIXME: logging?
+  }
+
+  # first, replace the ones that are too close to the previous ones
+  if (any(!check_passed_previous)) {
+    xdt[!check_passed_previous, ] = SamplerUnif$new(search_space)$sample(sum(!check_passed_previous))$data  # FIXME: also think about augmented lhs
+  }
+
+  # second, replace the ones that are too close to the other new ones
+  # do this iteratively starting with the lowest distance because the distances change once a single point is replaced and we do not want to replace too many
+  if (any(!check_passed_new)) {
+    for (i in seq_len(sum(!check_passed_new))) {
+      xdt[arrayInd(which.min(gower_distance_new), dim(gower_distance_new))[, 1L], ] = SamplerUnif$new(search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
+      gower_distance_new = get_gower_dist(xdt)
+      if (all(check_gower_dist(gower_distance_new, dist_threshold = dist_threshold))) {
+        break  # early exit as soon as the distances pass
+      }
+    }
+  }
+
+  xdt
 }
+

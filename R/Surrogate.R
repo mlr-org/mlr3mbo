@@ -27,9 +27,16 @@ Surrogate = R6Class("Surrogate",
     #' @param y_cols (`character()`)\cr
     #' Names of response columns.
     #'
-    #' @return `NULL`
+    #' @return `NULL`.
     update = function(xydt, y_cols) {
-      stop("Abstract")
+      tryCatch(private$.update(xydt, y_cols = y_cols),
+        error = function(error_condition) {
+          lg$info(error_condition$message)  # FIXME: logging?
+          stop(set_class(list(message = error_condition$message, call = NULL),
+            classes = c("leads_to_exploration_error", "update_error", "error", "condition")))
+        }
+      )
+      invisible(NULL)
     },
 
     #' @description
@@ -41,7 +48,7 @@ Surrogate = R6Class("Surrogate",
     #' @param y_cols (`character()`)\cr
     #' Names of response columns.
     #'
-    #' @return `NULL`
+    #' @return `NULL`.
     setup = function(xydt, y_cols) {
       assert_xydt(xydt, y_cols)
       self$update(xydt, y_cols)
@@ -91,6 +98,10 @@ Surrogate = R6Class("Surrogate",
 
     .insample_perf = NULL,
     .param_set = NULL,
+
+    .update = function(xydt, y_cols) {
+      stop("Abstract")
+    },
 
     deep_clone = function(name, value) {
       switch(name,
