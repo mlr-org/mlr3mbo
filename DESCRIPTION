@@ -58,7 +58,8 @@ Suggests:
     DiceKriging,
     lhs,
     testthat,
-    ggplot2
+    ggplot2,
+    rgenoud
 Remotes:
     mlr-org/bbotk,
     mlr-org/mlr3tuning

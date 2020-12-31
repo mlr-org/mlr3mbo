@@ -24,7 +24,7 @@ test_that("stable bayesop_soo", {
   acq_optimizer$param_set$values$fix_distance = TRUE
   bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
-  acq_function$surrogate$assert_insample_perf
+  expect_number(acq_function$surrogate$assert_insample_perf, upper = 1)
 
   # featureless surrogate with a high perf_threshold of 1
   # this should trigger a leads_to_exploration_error
@@ -50,7 +50,7 @@ test_that("stable bayesop_soo", {
   acq_optimizer$param_set$values$fix_distance = TRUE
   bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
-  acq_function$surrogate$assert_insample_perf
+  expect_number(acq_function$surrogate$assert_insample_perf, upper = 1)
   lines = readLines(f)
   expect_true(sum(grepl("Optimizer Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
   expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 2L)
