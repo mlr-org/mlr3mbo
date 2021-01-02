@@ -1,7 +1,7 @@
 lapply(list.files(system.file("testthat", package = "mlr3"),
   pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
-# Simple 1D Function
+# Simple 1D Functions
 PS_1D = ParamSet$new(list(
   ParamDbl$new("x", lower = -1, upper = 1)
 ))
@@ -10,6 +10,12 @@ FUN_1D = function(xs) {
 }
 FUN_1D_CODOMAIN = ParamSet$new(list(ParamDbl$new("y", tags = c("minimize", "random_tag"))))
 OBJ_1D = ObjectiveRFun$new(fun = FUN_1D, domain = PS_1D, properties = "single-crit")
+
+FUN_1D_2 = function(xs) {
+  list(y1 = as.numeric(xs)^2, y2 = sqrt(abs(as.numeric(xs))))
+}
+FUN_1D_2_CODOMAIN = ParamSet$new(list(ParamDbl$new("y1", tags = c("minimize", "random_tag")), ParamDbl$new("y2", tags = c("minimize", "random_tag"))))
+OBJ_1D_2 = ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
 
 # Simple 2D Function
 PS_2D_domain = ParamSet$new(list(

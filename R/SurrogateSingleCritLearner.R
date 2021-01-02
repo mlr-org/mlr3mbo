@@ -54,7 +54,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
       if (!missing(rhs)) {
-        stopf("Field/Binding is read-only")
+        stopf("Field/Binding is read-only.")
       }
 
       if (!self$param_set$values$calc_insample_perf) {

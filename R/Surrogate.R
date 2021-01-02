@@ -51,7 +51,7 @@ Surrogate = R6Class("Surrogate",
     #' @return `NULL`.
     setup = function(xydt, y_cols) {
       assert_xydt(xydt, y_cols)
-      self$update(xydt, y_cols)
+      private$.update(xydt, y_cols = y_cols)
     },
 
 
@@ -73,7 +73,7 @@ Surrogate = R6Class("Surrogate",
     #' Surrogate Model's current insample performance.
     insample_perf = function(rhs) {
       if (!missing(rhs)) {
-        stopf("Field/Binding is read-only")
+        stopf("Field/Binding is read-only.")
       }
       private$.insample_perf %??% NaN
     },

@@ -1,4 +1,12 @@
-test_that("stable bayesop_soo", {
+test_that("bayesopt_soo", {
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
+  acq_function = AcqFunctionEI$new(surrogate = SURR_KM_DETERM)
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  expect_true(nrow(instance$archive$data) == 5L)
+})
+
+test_that("stable bayesopt_soo", {
   # logger stuff
   # see mlr-org/mlr3#566
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
@@ -54,5 +62,13 @@ test_that("stable bayesop_soo", {
   lines = readLines(f)
   expect_true(sum(grepl("Optimizer Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
   expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 2L)
+})
+
+test_that("bayesopt_soo_eips", {
+  instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
+  acq_function = AcqFunctionEIPS$new(surrogate = SurrogateMultiCritLearners$new(learners = list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE))))
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  expect_true(nrow(instance$archive$data) == 5L)
 })
 

@@ -66,20 +66,27 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #' Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
       if (!missing(rhs)) {
-        stopf("Field/Binding is read-only")
+        stopf("Field/Binding is read-only.")
       }
 
       if (!self$param_set$values$calc_insample_perf) {
         return(invisible(self$insample_perf))
       }
 
-      check = all(mapply(function(insample_perf, perf_threshold, perf_measure) {
-        if (perf_measure$minimize) {
-          insample_perf < perf_threshold
-        } else {
-          insample_perf > perf_threshold
-        }
-      }, insample_perf = self$insample_perf, perf_threshold = self$param_set$values$perf_thresholds, perf_measure = self$param_set$values$perf_measures))
+      check = all(pmap_lgl(
+        list(
+          insample_perf = self$insample_perf,
+          perf_threshold = self$param_set$values$perf_thresholds,
+          perf_measure = self$param_set$values$perf_measures
+        ),
+        .f = function(insample_perf, perf_threshold, perf_measure) {
+          if (perf_measure$minimize) {
+            insample_perf < perf_threshold
+          } else {
+            insample_perf > perf_threshold
+          }
+        })
+      )
 
       if (!check) {
         stopf("Current insample performance of the Surrogate Model does not meet the performance threshold")
@@ -108,20 +115,21 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
         task$col_roles$feature = features
         task
       })
-      # FIXME: do we really want to use mapply? (see also below and in test_insample_performance)
-      mapply(function(model, task) {
+      pmap(list(model = self$model, task = tasks), .f = function(model, task) {
         model$train(task)
         NULL
-      }, model = self$model, task = tasks)
+      })
       names(self$model) = y_cols
 
       if (self$param_set$values$calc_insample_perf) {
-        private$.insample_perf = mapply(function(model, task, perf_measure) {
-          assert_measure(perf_measure, task = task, learner = model)
-          model$predict(task)$score(perf_measure, task = task, learner = model)
-        }, model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures)
+        private$.insample_perf = setNames(pmap_dbl(list(model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures),
+          .f = function(model, task, perf_measure) {
+            assert_measure(perf_measure, task = task, learner = model)
+            model$predict(task)$score(perf_measure, task = task, learner = model)
+          }
+        ), nm = map_chr(self$param_set$values$perf_measures, "id"))
+        self$assert_insample_perf
       }
-      self$assert_insample_perf
     }
   )
 )

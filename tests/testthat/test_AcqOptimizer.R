@@ -1,9 +1,23 @@
+test_that("AcqOptimizer API works", {
+  ### EI, random search
+  instance = OptimInstanceSingleCrit$new(OBJ_1D, terminator = trm("evals", n_evals = 1L))
+  design = generate_design_lhs(PS_1D, 4)$data
+  instance$eval_batch(design)
+  acq = AcqFunctionEI$new(SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM))
+  acqo = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L))
+  acq$setup(instance$archive)
+  acq$surrogate$update(xydt = archive_xy(instance$archive), y_cols = instance$archive$cols_y)
+  acq$update(instance$archive)
+  expect_data_table(acqo$optimize(acq, archive = instance$archive), nrows = 1L)
+})
+
 test_that("AcqOptimizer param_set", {
   acqo = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L))
   expect_r6(acqo$param_set, "ParamSet")
   expect_true(all(c("fix_distance", "dist_threshold") %in% acqo$param_set$ids()))
   expect_r6(acqo$param_set$params$fix_distance, "ParamLgl")
   expect_r6(acqo$param_set$params$dist_threshold, "ParamDbl")
+  expect_error({acqo$param_set = list()}, regexp = "param_set is read-only.")
 })
 
 test_that("AcqOptimizer fix_xdt_distance", {
@@ -14,9 +28,6 @@ test_that("AcqOptimizer fix_xdt_distance", {
     ParamInt$new("x3", 1L, 2L),
     ParamLgl$new("x4"))
   )
-
-  # FIXME: test for multiple redundant proposed points
-  # FIXME: test logging?
 
   dist_threshold = 0
 

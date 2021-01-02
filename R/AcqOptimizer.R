@@ -28,9 +28,13 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' @description
     #' Optimize the acquisition function.
     #'
-    #' If the `fix_distance` parameter is set to `TRUE`, proposed points are replaced by randomly
-    #' sampled ones if their Gower distance with respect to other proposed points or previously
-    #' evaluated points falls below the `dist_threshold` parameter.
+    #' If the `fix_distance` parameter is set to `TRUE`, proposed points are
+    #' replaced by randomly sampled ones if their Gower distance with respect
+    #' to other proposed points or previously evaluated points falls below the
+    #' `dist_threshold` parameter.  Note that these checks are only performed a
+    #' single time (and not after a potential replacement of points), i.e., the
+    #' returned [data.table::data.table()] of optima must not necessarily pass
+    #' the checks but most likely will.
     #'
     #' @param acq_function [AcqFunction]\cr
     #' Acquisition function to optimize.

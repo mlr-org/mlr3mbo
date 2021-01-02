@@ -40,11 +40,15 @@ test_that("param_set", {
   expect_r6(surrogate$param_set$params$calc_insample_perf, "ParamLgl")
   expect_r6(surrogate$param_set$params$perf_measure, "ParamUty")
   expect_r6(surrogate$param_set$params$perf_threshold, "ParamDbl")
+  expect_error({surrogate$param_set = list()}, regexp = "param_set is read-only.")
+
 })
 
 test_that("insample_perf", {
   set.seed(1)
   surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
+  expect_error({surrogate$insample_perf = 0}, regexp = "Field/Binding is read-only.")
+    expect_error({surrogate$assert_insample_perf = 0}, regexp = "Field/Binding is read-only.")
   design = generate_design_lhs(PS_1D, 4)$data
   xydt = cbind(design, OBJ_1D$eval_dt(design))
 
