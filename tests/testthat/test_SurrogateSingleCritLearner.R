@@ -30,7 +30,7 @@ test_that("predict_types are recognized", {
   surrogate$update(xydt = xydt, y_cols = "y")
 
   surrogate$predict(xdt)
-  expect_named(surrogate$predict(xdt), c("mean"))
+  expect_named(surrogate$predict(xdt), "mean")
 })
 
 test_that("param_set", {
