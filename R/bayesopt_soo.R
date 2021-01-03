@@ -53,7 +53,7 @@ bayesopt_soo = function(instance, acq_function, acq_optimizer, n_design = 4 * in
       # Alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFunction).
       acq_function$update(archive)
 
-      xdt = acq_optimizer$optimize(acq_function, archive = archive)  # archive need for fix_xdt_distance()
+      acq_optimizer$optimize(acq_function, archive = archive)  # archive need for fix_xdt_distance()
     }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
       lg$info("Proposing a randomly sampled point")  # FIXME: logging?
       SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
