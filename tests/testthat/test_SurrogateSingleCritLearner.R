@@ -12,8 +12,10 @@ test_that("SurrogateSingleCritLearner API works", {
     any.missing = FALSE)
   expect_named(pred, c("mean", "se"))
 
+  ### upgrading error class works
   expect_error(surrogate$update(xydt = xydt, y_cols = c("y1", "y2")),
-    regexp = "Assertion on 'y_cols' failed: Must be a subset of set \\{x,y\\}.")
+    regexp = "Assertion on 'y_cols' failed: Must be a subset of set \\{x,y\\}.",
+    class = c("leads_to_exploration_error", "update_error"))
 })
 
 test_that("predict_types are recognized", {
@@ -48,7 +50,7 @@ test_that("insample_perf", {
   set.seed(1)
   surrogate = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
   expect_error({surrogate$insample_perf = 0}, regexp = "Field/Binding is read-only.")
-    expect_error({surrogate$assert_insample_perf = 0}, regexp = "Field/Binding is read-only.")
+  expect_error({surrogate$assert_insample_perf = 0}, regexp = "Field/Binding is read-only.")
   design = generate_design_lhs(PS_1D, 4)$data
   xydt = cbind(design, OBJ_1D$eval_dt(design))
 

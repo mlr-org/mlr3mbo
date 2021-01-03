@@ -17,8 +17,10 @@ test_that("SurrogateMultiCritLearners API works", {
   expect_named(pred[[1L]], c("mean", "se"))
   expect_named(pred[[2L]], c("mean", "se"))
 
+  ### upgrading error class works
   expect_error(surrogate$update(xydt = xydt, y_cols = "y"),
-    regexp = "Assertion on 'y_cols' failed: Must be a subset of set \\{x,y1,y2\\}.")
+    regexp = "Assertion on 'y_cols' failed: Must be a subset of set \\{x,y1,y2\\}.",
+    class = c("leads_to_exploration_error", "update_error"))
 })
 
 test_that("predict_types are recognized", {

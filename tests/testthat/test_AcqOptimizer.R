@@ -9,6 +9,10 @@ test_that("AcqOptimizer API works", {
   acq$surrogate$update(xydt = archive_xy(instance$archive), y_cols = instance$archive$cols_y)
   acq$update(instance$archive)
   expect_data_table(acqo$optimize(acq, archive = instance$archive), nrows = 1L)
+
+  ### upgrading error class works
+  acqo = AcqOptimizer$new(OptimizerError$new(), trm("evals", n_evals = 2L))
+  expect_error(acqo$optimize(acq, archive = instance$archive), class = c("leads_to_exploration_error", "optimize_error"))
 })
 
 test_that("AcqOptimizer param_set", {
