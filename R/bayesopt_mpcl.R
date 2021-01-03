@@ -1,5 +1,5 @@
 bayesopt_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
-  #FIXME maybe do not have this here, but have a general assert helper
+  # FIXME: maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceSingleCrit")
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")
@@ -8,21 +8,24 @@ bayesopt_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
 
   archive = instance$archive
 
-  #FIXME maybe do not have this here, but have a general init helper
+  # FIXME: maybe do not have this here, but have a general init helper
   if (archive$n_evals == 0) {
     design = generate_design_lhs(instance$search_space, 4 * instance$search_space$length)$data
     instance$eval_batch(design)
   }
 
-  acq_function$setup(archive) #setup necessary to determine the domain, codomain (for opt direction) of acq function
+  acq_function$setup(archive) # setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
-    # normal soo updates
-    acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y)
-    acq_function$update(archive)
-
-    acq_function$update(instance$archive)
-    xdt = acq_optimizer$optimize(acq_function)
+    # normal soo updates with error catching
+    xdt = tryCatch({
+      acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y)
+      acq_function$update(archive)
+      acq_optimizer$optimize(acq_function, archive = archive)  # archive need for fix_xdt_distance()
+    }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
+      lg$info("Proposing a randomly sampled point")  # FIXME: logging?
+      SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
+    })
 
     # prepare lie objects
     temp_archive = archive$clone(deep = TRUE)
@@ -31,17 +34,22 @@ bayesopt_mpcl = function(instance, acq_function, acq_optimizer, liar, q) {
     colnames(lie) = archive$cols_y
     xdt_new = xdt
 
-    # obtain proposals, fill with fake archive lie
+    # obtain proposals, fill with fake archive lie, also with error catching
     for (i in seq(2, q)) {
-      # add lie instead of true eval
-      temp_archive$add_evals(xdt = xdt_new, transform_xdt_to_xss(xdt_new, temp_archive$search_space), ydt = lie)
+      xdt_new = tryCatch({
+        # add lie instead of true eval
+        temp_archive$add_evals(xdt = xdt_new, transform_xdt_to_xss(xdt_new, temp_archive$search_space), ydt = lie)
 
-      # update all objects with lie
-      temp_acq_function$surrogate$update(xydt = archive_xy(temp_archive), y_cols = temp_archive$cols_y)
+        # update all objects with lie
+        temp_acq_function$surrogate$update(xydt = archive_xy(temp_archive), y_cols = temp_archive$cols_y)
 
-      # obtain new proposal based on lie
-      temp_acq_function$update(temp_archive)
-      xdt_new = acq_optimizer$optimize(temp_acq_function)
+        # obtain new proposal based on lie
+        temp_acq_function$update(temp_archive)
+        acq_optimizer$optimize(temp_acq_function, archive = archive)
+      }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
+        lg$info("Proposing a randomly sampled point")  # FIXME: logging?
+        SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
+      })
       xdt = rbind(xdt, xdt_new)
     }
 
@@ -61,7 +69,7 @@ if (FALSE) {
   library(mlr3learners)
 
   obfun = ObjectiveRFun$new(
-    fun = function(xs) sum(unlist(xs)^2),
+    fun = function(xs) list(y = sum(unlist(xs)^2)),
     domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
     id = "test"
   )

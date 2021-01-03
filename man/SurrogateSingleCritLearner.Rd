@@ -9,11 +9,18 @@ Surrogate model based on regression \link[mlr3:Learner]{mlr3::Learner} objects.
 \section{Super classes}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{\link[mlr3mbo:SurrogateSingleCrit]{mlr3mbo::SurrogateSingleCrit}} -> \code{SurrogateSingleCritLearner}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{assert_insample_perf}}{(\code{numeric(1)}) \cr
+Asserts whether the current insample performance meets the performance threshold.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SurrogateSingleCritLearner$new()}}
-\item \href{#method-update}{\code{SurrogateSingleCritLearner$update()}}
 \item \href{#method-predict}{\code{SurrogateSingleCritLearner$predict()}}
 \item \href{#method-clone}{\code{SurrogateSingleCritLearner$clone()}}
 }
@@ -22,6 +29,7 @@ Surrogate model based on regression \link[mlr3:Learner]{mlr3::Learner} objects.
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup">}\href{../../mlr3mbo/html/Surrogate.html#method-setup}{\code{mlr3mbo::Surrogate$setup()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update">}\href{../../mlr3mbo/html/Surrogate.html#method-update}{\code{mlr3mbo::Surrogate$update()}}\out{</span>}
 }
 \out{</details>}
 }
@@ -38,26 +46,6 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{learner}}{\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update"></a>}}
-\if{latex}{\out{\hypertarget{method-update}{}}}
-\subsection{Method \code{update()}}{
-Train model with new points.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateSingleCritLearner$update(xydt, y_cols)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xydt}}{\code{\link[data.table:data.table]{data.table::data.table()}}.}
-
-\item{\code{y_cols}}{(\code{character(1)})\cr
-Name of response column.}
 }
 \if{html}{\out{</div>}}
 }

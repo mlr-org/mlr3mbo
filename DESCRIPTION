@@ -44,6 +44,7 @@ Imports:
     bbotk (>= 0.2.1),
     checkmate (>= 2.0.0),
     data.table,
+    gower,
     lgr (>= 0.3.0),
     mlr3,
     mlr3misc (>= 0.3.0),
@@ -57,7 +58,8 @@ Suggests:
     DiceKriging,
     lhs,
     testthat,
-    ggplot2
+    ggplot2,
+    rgenoud
 Remotes:
     mlr-org/bbotk,
     mlr-org/mlr3tuning

@@ -21,11 +21,11 @@ The acquistion function object.}
 \item{acq_optimizer}{\link{AcqOptimizer}\cr
 The optimizer that optimizes the acquistion function.}
 
-\item{n_design}{(\code{int(1)})\cr
+\item{n_design}{(\code{integer(1)})\cr
 In case the \code{archive} inside the \code{instance} is empty, we generate a random initial design of \code{n_design} points.}
 }
 \value{
-\link[bbotk:Archive]{bbotk::Archive}
+\link[bbotk:Archive]{bbotk::Archive}.
 }
 \description{
 Function that executes a simple single-objective Bayesian optimization.
