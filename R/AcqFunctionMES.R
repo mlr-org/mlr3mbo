@@ -2,6 +2,7 @@
 #'
 #' @description
 #' Max-value Entropy Search
+#' TODO Currently expects obfun to be maximized!
 #'
 #' TODO DESCRIPTION and Reference
 #'
@@ -33,10 +34,11 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
         mes = map_dbl(seq_len(NROW(p)), function(i) {
           mu = p$mean[i]
           se = p$se[i]
-          gamma = (self$maxes - self$surrogate_max_to_min * mu) / se
+          gamma = (self$maxes - mu) / se
           p_gamma = pnorm(gamma)
           mean(((gamma * dnorm(gamma)) / (2 * p_gamma)) - log(p_gamma), na.rm = TRUE)  # FIXME: check NAs
         })
+        mes[is.na(mes)] = 0  # FIXME:
         data.table(acq_mes = mes)
       }
 
