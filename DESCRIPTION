@@ -41,13 +41,13 @@ Depends:
     R (>= 3.1.0)
 Imports:
     backports,
-    bbotk (>= 0.2.1),
+    bbotk (>= 0.3.0),
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.0),
     mlr3,
     mlr3misc (>= 0.3.0),
-    mlr3tuning,
+    mlr3tuning (>= 0.6.0),
     paradox (>= 0.3),
     R6
 Suggests:
@@ -58,9 +58,6 @@ Suggests:
     lhs,
     testthat,
     ggplot2
-Remotes:
-    mlr-org/bbotk,
-    mlr-org/mlr3tuning
 ByteCompile: no
 Encoding: UTF-8
 LazyData: true
