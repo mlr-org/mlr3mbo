@@ -34,11 +34,11 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
         mes = map_dbl(seq_len(NROW(p)), function(i) {
           mu = p$mean[i]
           se = p$se[i]
-          gamma = (self$maxes - mu) / se
+          gamma = (self$maxes - (- self$surrogate_max_to_min * mu)) / se
           p_gamma = pnorm(gamma)
-          mean(((gamma * dnorm(gamma)) / (2 * p_gamma)) - log(p_gamma), na.rm = TRUE)  # FIXME: check NAs
+          mean(((gamma * dnorm(gamma)) / (2 * p_gamma)) - log(p_gamma), na.rm = TRUE)
         })
-        mes[is.na(mes)] = 0  # FIXME:
+        mes[is.na(mes)] = 0  # FIXME: check NAs
         data.table(acq_mes = mes)
       }
 
@@ -60,7 +60,9 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
       self$domain = archive$search_space$clone(deep = TRUE)
       self$domain$trafo = NULL # FIXME is it okay to do this?
 
-      self$grid = generate_design_lhs(self$domain, n = 1000L)$data  # FIXME: gridsize
+      if (is.null(self$grid)) {
+        self$grid = generate_design_lhs(self$domain, n = 10000L)$data  # FIXME: gridsize
+      }
     },
 
     #' @description
@@ -69,7 +71,7 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
     #' @param archive [bbotk::Archive]
     update = function(archive) {
       super$update(archive)
-      self$maxes = get_maxes(x = archive$data[, archive$cols_x, with = FALSE], grid = self$grid, surrogate = self$surrogate)
+      self$maxes = get_maxes(x = archive$data[, archive$cols_x, with = FALSE], grid = self$grid, surrogate = self$surrogate, surrogate_max_to_min = self$surrogate_max_to_min)
     }
   )
 )
@@ -77,26 +79,26 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
 
 
 # FIXME: AcqFunction ParamSet with at least gridsize and nk
-get_maxes = function(nK = 1000L, grid, x, surrogate) {
+get_maxes = function(nK = 10000L, grid, x, surrogate, surrogate_max_to_min) {
   xgrid = rbind(grid, x)
   p = surrogate$predict(xgrid)
   mu = p$mean
   se = p$se
   se[se < .Machine$double.eps] = .Machine$double.eps  # FIXME:
-  mu_max = max(mu)
+  mu_max = max(- surrogate_max_to_min * mu)
 
   left = mu_max
-  leftprob = probf(left, mu = mu, se = se)
+  leftprob = probf(left, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min)
   while (leftprob > 0.1) {
     left = if (left > 0.01) left / 2 else 2 * left - 0.05
-    leftprob = probf(left, mu = mu, se = se)
+    leftprob = probf(left, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min)
   }
 
-  right = max(mu + 5 * se)
-  rightprob = probf(right, mu = mu, se = se)
+  right = max(- surrogate_max_to_min * (mu - (surrogate_max_to_min * 5 * se)))
+  rightprob = probf(right, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min)
   while (rightprob < 0.95) {
     right = right + right - left
-    rightprob = probf(right, mu = mu, se = se)
+    rightprob = probf(right, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min)
   }
 
   mgrid = seq(from = left, to = right, length.out = 100L)
@@ -111,9 +113,9 @@ get_maxes = function(nK = 1000L, grid, x, surrogate) {
   }
 
   # Gumbel sampling
-  q1 = optimize(function(x) abs(probf(x, mu = mu, se = se) - 0.25), interval = range(mgrid))$minimum
-  q2 = optimize(function(x) abs(probf(x, mu = mu, se = se) - 0.5), interval = range(mgrid))$minimum
-  q3 = optimize(function(x) abs(probf(x, mu = mu, se = se) - 0.75), interval = range(mgrid))$minimum
+  q1 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.25), interval = range(mgrid))$minimum
+  q2 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.5), interval = range(mgrid))$minimum
+  q3 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.75), interval = range(mgrid))$minimum
   beta = (q1 - q3) / (log(log(4 / 3)) - log(log(4)))  # FIXME: assert beta > 0
   alpha = q2 + beta * log(log(2))
 
@@ -123,7 +125,7 @@ get_maxes = function(nK = 1000L, grid, x, surrogate) {
 
 
 
-probf = function(mu_, mu, se) {
-  prod(pnorm((mu_ - mu) / se))
+probf = function(mu_, mu, se, surrogate_max_to_min) {
+  prod(pnorm((mu_ - (- surrogate_max_to_min * mu)) / se))
 }
 
