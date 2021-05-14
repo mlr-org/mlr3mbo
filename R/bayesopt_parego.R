@@ -42,6 +42,7 @@ bayesopt_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100
     d = archive$codomain$length
 
     ydt = Map("*", ydt, mult_max_to_min(archive$codomain))
+    ydt = Map(function(y) (y - min(y, na.rm = TRUE))/diff(range(y, na.rm = TRUE)), ydt) # scale y to 0,1
 
     xdt = map_dtr(seq_len(q), function(i) {
       # FIXME: Wrong way to calculate lambda
