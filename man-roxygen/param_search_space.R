@@ -1,1 +1,1 @@
-#' @param search_space ([paradox::ParamSet]).
+#' @param search_space [paradox::ParamSet].

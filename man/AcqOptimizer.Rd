@@ -6,6 +6,15 @@
 \description{
 Optimizer for \link{AcqFunction} objects.
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{optimizer}}{(\link[bbotk:Optimizer]{bbotk::Optimizer}).}
+
+\item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -23,6 +32,15 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{optimizer}}{(\link[bbotk:Optimizer]{bbotk::Optimizer}).}
+
+\item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-optimize"></a>}}

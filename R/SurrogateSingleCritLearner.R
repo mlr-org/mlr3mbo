@@ -28,7 +28,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' Name of response column.
     update = function(xydt, y_cols) {
       assert_xydt(xydt, y_cols)
-      task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = y_cols)
+      task = TaskRegr$new(id = "surrogate_task", backend = char_to_fct(xydt), target = y_cols)
       self$model$train(task)
     },
 

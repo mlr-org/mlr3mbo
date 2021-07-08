@@ -7,11 +7,17 @@
 AcqOptimizer = R6Class("AcqOptimizer",
   public = list(
 
+    #' @field optimizer ([bbotk::Optimizer]).
     optimizer = NULL,
+
+    #' @field terminator ([bbotk::Terminator]).
     terminator = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param optimizer ([bbotk::Optimizer]).
+    #' @param terminator ([bbotk::Terminator]).
     initialize = function(optimizer, terminator) {
       self$optimizer = assert_r6(optimizer, "Optimizer")
       self$terminator = assert_r6(terminator, "Terminator")

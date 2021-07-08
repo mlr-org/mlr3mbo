@@ -51,6 +51,7 @@ Imports:
     paradox (>= 0.3),
     R6
 Suggests:
+    mlr3pipelines,
     mlr3learners,
     ranger,
     rpart,
