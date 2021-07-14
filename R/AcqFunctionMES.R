@@ -61,7 +61,7 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
       self$domain$trafo = NULL # FIXME is it okay to do this?
 
       if (is.null(self$grid)) {
-        self$grid = generate_design_lhs(self$domain, n = 10000L)$data  # FIXME: gridsize
+        self$grid = generate_design_lhs(self$domain, n = 10000L)$data  # FIXME: gridsize as hyperparameter
       }
     },
 
@@ -79,7 +79,7 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
 
 
 # FIXME: AcqFunction ParamSet with at least gridsize and nk
-get_maxes = function(nK = 10000L, grid, x, surrogate, surrogate_max_to_min) {
+sample_maxes_gumbel = function(n_samples = 1000L, grid, x, surrogate, surrogate_max_to_min) {
   xgrid = rbind(grid, x)
   p = surrogate$predict(xgrid)
   mu = p$mean
@@ -109,23 +109,24 @@ get_maxes = function(nK = 10000L, grid, x, surrogate, surrogate_max_to_min) {
   MARGIN = 1L, FUN = prod)
 
   if (sum(prob > 0.05 & prob < 0.95) == 0L) {
-    return(mu_max + runif(nK, min = 0, max = 1))
+    return(mu_max + runif(n_samples, min = 0, max = 1))
   }
 
-  # Gumbel sampling
+  # inverse Gumbel sampling
   q1 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.25), interval = range(mgrid))$minimum
-  q2 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.5), interval = range(mgrid))$minimum
+  q2 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.50), interval = range(mgrid))$minimum
   q3 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.75), interval = range(mgrid))$minimum
-  beta = (q1 - q3) / (log(log(4 / 3)) - log(log(4)))  # FIXME: assert beta > 0
+  beta = (q1 - q3) / (log(log(4 / 3)) - log(log(4)))
+  if (beta < .Machine$double.eps) beta = sqrt(.Machine$double.eps)
   alpha = q2 + beta * log(log(2))
 
-  -log(-log(runif(nK, min = 0, max = 1))) * beta + alpha
+  -log(-log(runif(n_samples, min = 0, max = 1))) * beta + alpha
   # FIXME: maxes that are <= mu_max + eps should be replaced by mu_max + eps
 }
 
 
 
-probf = function(mu_, mu, se, surrogate_max_to_min) {
-  prod(pnorm((mu_ - (- surrogate_max_to_min * mu)) / se))
+probf = function(x, mu, se, surrogate_max_to_min) {
+  prod(pnorm((x - (- surrogate_max_to_min * mu)) / se))
 }
 
