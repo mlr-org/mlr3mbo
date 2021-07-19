@@ -2,9 +2,8 @@
 #'
 #' @description
 #' Max-value Entropy Search
-#' TODO Currently expects obfun to be maximized!
 #'
-#' TODO DESCRIPTION and Reference
+#' # FIXME: DESCRIPTION and Reference, tests
 #'
 #' @family Acquisition Function
 #'
@@ -26,23 +25,27 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
     initialize = function(surrogate) {
       assert_r6(surrogate, "SurrogateSingleCrit")
 
+      ps = ps(resolution = p_int(lower = 1L, default = 10000L), n_maxes = p_int(lower = 1L, default = 100L))  # FIXME: resolution should depend on dimensionality of problem
+      ps$values = list(resolution = 1000L, n_maxes = 100L)
+
       fun = function(xdt) {
         if (is.null(self$maxes)) {
           stop("maxes is not set. Missed to call $update(archive)?")
         }
         p = self$surrogate$predict(xdt)
-        mes = map_dbl(seq_len(NROW(p)), function(i) {
+        # FIXME: do this in matrix operations
+        mes = map_dbl(seq_len(nrow(p)), function(i) {
           mu = p$mean[i]
           se = p$se[i]
           gamma = (self$maxes - (- self$surrogate_max_to_min * mu)) / se
           p_gamma = pnorm(gamma)
           mean(((gamma * dnorm(gamma)) / (2 * p_gamma)) - log(p_gamma), na.rm = TRUE)
         })
-        mes[is.na(mes)] = 0  # FIXME: check NAs
+        mes[is.na(mes)] = 0  # FIXME: check why NAs can occur
         data.table(acq_mes = mes)
       }
 
-      super$initialize("acq_mes", surrogate = surrogate, direction = "maximize", fun = fun)
+      super$initialize("acq_mes", surrogate = surrogate, direction = "maximize", fun = fun, param_set = ps)
     },
 
     #' @description
@@ -58,10 +61,10 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
       self$surrogate_max_to_min = mult_max_to_min(archive$codomain)
 
       self$domain = archive$search_space$clone(deep = TRUE)
-      self$domain$trafo = NULL # FIXME is it okay to do this?
+      self$domain$trafo = NULL # FIXME: is it okay to do this?
 
       if (is.null(self$grid)) {
-        self$grid = generate_design_lhs(self$domain, n = 10000L)$data  # FIXME: gridsize as hyperparameter
+        self$grid = generate_design_grid(self$domain, resolution = self$param_set$values$resolution)$data
       }
     },
 
@@ -71,62 +74,90 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
     #' @param archive [bbotk::Archive]
     update = function(archive) {
       super$update(archive)
-      self$maxes = get_maxes(x = archive$data[, archive$cols_x, with = FALSE], grid = self$grid, surrogate = self$surrogate, surrogate_max_to_min = self$surrogate_max_to_min)
+      x = archive$data[, archive$cols_x, with = FALSE]  # FIXME: additional safety checks here?
+      self$maxes = sample_maxes_gumbel(x = x, grid = self$grid, surrogate = self$surrogate, surrogate_max_to_min = self$surrogate_max_to_min, n_maxes = self$param_set$values$n_maxes)
     }
   )
 )
 
 
 
-# FIXME: AcqFunction ParamSet with at least gridsize and nk
-sample_maxes_gumbel = function(n_samples = 1000L, grid, x, surrogate, surrogate_max_to_min) {
+# FIXME: document
+# this is written in the perspective of maximization, i.e., surrogate_max_to_min = -1
+sample_maxes_gumbel = function(x, grid, surrogate, surrogate_max_to_min, n_maxes) {
   xgrid = rbind(grid, x)
+  n_grid = nrow(xgrid)
   p = surrogate$predict(xgrid)
   mu = p$mean
   se = p$se
-  se[se < .Machine$double.eps] = .Machine$double.eps  # FIXME:
+  se[se < .Machine$double.eps] = .Machine$double.eps
   mu_max = max(- surrogate_max_to_min * mu)
 
   left = mu_max
-  leftprob = probf(left, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min)
-  while (leftprob > 0.1) {
-    left = if (left > 0.01) left / 2 else 2 * left - 0.05
-    leftprob = probf(left, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min)
+  if (probf(left, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) < 0.25) {
+    right = max(- surrogate_max_to_min * (mu - (surrogate_max_to_min * 5 * se)))
+    while (probf(right, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) < 0.75) {
+      right = 2 * right - left
+    }
+
+    mgrid = seq(from = left, to = right, length.out = n_maxes)
+
+    Z = matrix(mgrid, nrow = n_grid, ncol = n_maxes, byrow = TRUE) - (- surrogate_max_to_min * matrix(mu, nrow = n_grid, ncol = n_maxes)) / matrix(se, nrow = n_grid, ncol = n_maxes)
+
+    prob = apply(pnorm(Z), MARGIN = 1L, FUN = prod)
+
+
+    if (sum(prob > 0.05 & prob < 0.95) == 0L) {
+      return(mu_max + runif(n_maxes, min = 0, max = 1))  # FIXME: some heuristic
+    }
+
+    # inverse Gumbel sampling
+    q1 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.25), interval = range(mgrid))$minimum
+    q2 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.50), interval = range(mgrid))$minimum
+    q3 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.75), interval = range(mgrid))$minimum
+    beta = (q1 - q3) / (log(log(4 / 3)) - log(log(4)))
+    if (beta < .Machine$double.eps) beta = sqrt(.Machine$double.eps)  # FIXME: some heuristic
+    alpha = q2 + beta * log(log(2))
+
+    - log(- log(runif(n_maxes, min = 0, max = 1))) * beta + alpha  # FIXME: https://github.com/zi-w/Max-value-Entropy-Search/blob/master/acFuns/mesg_choose.m l61
+  } else {
+    left + 5 * sd(mu) # FIXME: https://github.com/zi-w/Max-value-Entropy-Search/blob/master/acFuns/mesg_choose.m l62
   }
-
-  right = max(- surrogate_max_to_min * (mu - (surrogate_max_to_min * 5 * se)))
-  rightprob = probf(right, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min)
-  while (rightprob < 0.95) {
-    right = right + right - left
-    rightprob = probf(right, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min)
-  }
-
-  mgrid = seq(from = left, to = right, length.out = 100L)
-
-  prob = apply(pnorm(
-    (matrix(mgrid, nrow = NROW(mu), ncol = 100L, byrow = TRUE) - matrix(mu, nrow = NROW(mu), ncol = 100L)) /
-    matrix(se, nrow = NROW(mu), ncol = 100L)),
-  MARGIN = 1L, FUN = prod)
-
-  if (sum(prob > 0.05 & prob < 0.95) == 0L) {
-    return(mu_max + runif(n_samples, min = 0, max = 1))
-  }
-
-  # inverse Gumbel sampling
-  q1 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.25), interval = range(mgrid))$minimum
-  q2 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.50), interval = range(mgrid))$minimum
-  q3 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.75), interval = range(mgrid))$minimum
-  beta = (q1 - q3) / (log(log(4 / 3)) - log(log(4)))
-  if (beta < .Machine$double.eps) beta = sqrt(.Machine$double.eps)
-  alpha = q2 + beta * log(log(2))
-
-  -log(-log(runif(n_samples, min = 0, max = 1))) * beta + alpha
-  # FIXME: maxes that are <= mu_max + eps should be replaced by mu_max + eps
 }
 
 
 
+# FIXME: document
+# this is written in the perspective of maximization, i.e., surrogate_max_to_min = -1
 probf = function(x, mu, se, surrogate_max_to_min) {
   prod(pnorm((x - (- surrogate_max_to_min * mu)) / se))
 }
 
+
+if (FALSE) {
+  set.seed(1)
+  library(bbotk)
+  devtools::load_all()
+  library(paradox)
+  library(mlr3learners)
+
+  obfun = ObjectiveRFun$new(
+    fun = function(xs) list(y = sum(unlist(xs)^2)),
+    domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
+    codomain = ParamSet$new(list(ParamDbl$new("y", tags = "minimize"))),
+    id = "test"
+  )
+
+  terminator = trm("evals", n_evals = 20)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = obfun,
+    terminator = terminator
+  )
+
+  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km", optim.method = "gen"))
+  acq_function = AcqFunctionMES$new(surrogate = surrogate)
+  acq_optimizer = AcqOptimizer$new(opt("grid_search", resolution = 1000, batch_size = 1000), trm("evals", n_evals = 1000))
+
+  bayesopt_soo(instance, acq_function, acq_optimizer)
+}

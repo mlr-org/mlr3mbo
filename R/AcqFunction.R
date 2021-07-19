@@ -31,9 +31,10 @@ AcqFunction = R6Class("AcqFunction",
     #' @param direction (`character(1)`).
     #' @param fun (`function(xdt)`).
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
-    initialize = function(id, constants = ParamSet$new(), surrogate, direction, fun) {
+    initialize = function(id, constants = ParamSet$new(), surrogate, direction, fun, param_set) {
       self$surrogate = assert_r6(surrogate, "Surrogate")
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
+      private$.param_set = assert_param_set(param_set)
       super$initialize(
         fun = assert_function(fun),
         domain = ParamSet$new(), #dummy, replaced in $update()
@@ -65,6 +66,27 @@ AcqFunction = R6Class("AcqFunction",
     #' @param archive [bbotk::Archive].
     update = function(archive) {
       # it's okay to do nothing here
+    }
+  ),
+
+  active = list(
+    #' @field param_set ([paradox::ParamSet]).
+    param_set = function(rhs) {
+      if (!missing(rhs) && !identical(rhs, private$.param_set)) {
+        stop("param_set is read-only.")
+      }
+      private$.param_set
+    }
+  ),
+
+  private = list(
+    .param_set = NULL,
+
+    deep_clone = function(name, value) {
+      switch(name,
+        .param_set = value$clone(deep = TRUE),
+        value
+      )
     }
   )
 )
