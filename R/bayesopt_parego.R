@@ -27,31 +27,45 @@ bayesopt_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100
     instance$eval_batch(design)
   }
 
-  # ParEGO Archive
   dummy_codomain = ParamSet$new(list(ParamDbl$new("y_scal", tags = "minimize")))
-  dummy_archive = archive$clone(deep = TRUE)
-  dummy_archive$codomain = dummy_codomain
+  d = archive$codomain$length
 
-  #manual fix: #FIXME Write ParEGO Infill Crit?
-  acq_function$setup(dummy_archive)
+  # calculate all possible weights (lambdas) for given s parameter
+  comb_with_sum = function(n, d) {
+    fun = function(n, d) {
+      if (d == 1L)
+        list(n)
+      else
+        unlist(lapply(0:n, function(i) Map(c, i, fun(n - i, d - 1L))), recursive = FALSE)
+    }
+    matrix(unlist(fun(n, d)), ncol = d, byrow = TRUE)
+  }
+  lambdas = comb_with_sum(s, d) / s
 
   repeat {
     xydt = archive$data
     xdt = xydt[, archive$cols_x, with = FALSE]
     ydt = xydt[, archive$cols_y, with = FALSE]
-    d = archive$codomain$length
 
     ydt = Map("*", ydt, mult_max_to_min(archive$codomain))
+    ydt = Map(function(y) (y - min(y, na.rm = TRUE))/diff(range(y, na.rm = TRUE)), ydt) # scale y to 0,1
+
+    # Temp ParEGO Archive
+    dummy_archive = archive$clone(deep = TRUE)
+    dummy_archive$codomain = dummy_codomain
 
     xdt = map_dtr(seq_len(q), function(i) {
-      # FIXME: Wrong way to calculate lambda
-      lambda = runif(d)
-      lambda = lambda / sum(lambda)
 
+      # scalarize y
+      lambda = lambdas[sample.int(nrow(lambdas), 1), , drop = TRUE]
       mult = Map('*', ydt, lambda)
       y_scal = do.call('+', mult)
+      y_scal = do.call(pmax, mult) + rho * y_scal # augmented Tchebycheff function
       set(dummy_archive$data, j = "y_scal", value = y_scal)
 
+      # opt surrogate
+      #manual fix: #FIXME Write ParEGO Infill Crit?
+      acq_function$setup(dummy_archive)
       acq_function$surrogate$setup(xydt = archive_xy(dummy_archive), y_cols = dummy_archive$cols_y) #update surrogate model with new data
       acq_function$update(dummy_archive)
       acq_optimizer$optimize(acq_function)
