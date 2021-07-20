@@ -23,17 +23,18 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
     #'
     #' @param surrogate [SurrogateSingleCrit].
     initialize = function(surrogate) {
+      # FIXME: maybe restrict this to GPs and purely numerical search spaces and deterministic objective
       assert_r6(surrogate, "SurrogateSingleCrit")
 
-      ps = ps(resolution = p_int(lower = 1L, default = 10000L), n_maxes = p_int(lower = 1L, default = 100L))  # FIXME: resolution should depend on dimensionality of problem
-      ps$values = list(resolution = 1000L, n_maxes = 100L)
+      ps = ps(grid_size = p_int(lower = 1L, default = 10000L), n_maxes = p_int(lower = 1L, default = 100L))
+      ps$values = list(grid_size = 10000L, n_maxes = 100L)
 
       fun = function(xdt) {
         if (is.null(self$maxes)) {
           stop("maxes is not set. Missed to call $update(archive)?")
         }
         p = self$surrogate$predict(xdt)
-        # FIXME: do this in matrix operations
+        # Note: we probably do not want to do this in matrix operations because of bad scaling in nrow(p)
         mes = map_dbl(seq_len(nrow(p)), function(i) {
           mu = p$mean[i]
           se = p$se[i]
@@ -64,7 +65,8 @@ AcqFunctionMES = R6Class("AcqFunctionMES",
       self$domain$trafo = NULL # FIXME: is it okay to do this?
 
       if (is.null(self$grid)) {
-        self$grid = generate_design_grid(self$domain, resolution = self$param_set$values$resolution)$data
+        resolution = ceiling(self$param_set$values$grid_size ^ (1 / sum(self$domain$is_number)))
+        self$grid = generate_design_grid(self$domain, resolution = resolution)$data
       }
     },
 
@@ -106,11 +108,6 @@ sample_maxes_gumbel = function(x, grid, surrogate, surrogate_max_to_min, n_maxes
 
     prob = apply(pnorm(Z), MARGIN = 1L, FUN = prod)
 
-
-    if (sum(prob > 0.05 & prob < 0.95) == 0L) {
-      return(mu_max + runif(n_maxes, min = 0, max = 1))  # FIXME: some heuristic
-    }
-
     # inverse Gumbel sampling
     q1 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.25), interval = range(mgrid))$minimum
     q2 = optimize(function(x) abs(probf(x, mu = mu, se = se, surrogate_max_to_min = surrogate_max_to_min) - 0.50), interval = range(mgrid))$minimum
@@ -121,7 +118,7 @@ sample_maxes_gumbel = function(x, grid, surrogate, surrogate_max_to_min, n_maxes
 
     - log(- log(runif(n_maxes, min = 0, max = 1))) * beta + alpha  # FIXME: https://github.com/zi-w/Max-value-Entropy-Search/blob/master/acFuns/mesg_choose.m l61
   } else {
-    left + 5 * sd(mu) # FIXME: https://github.com/zi-w/Max-value-Entropy-Search/blob/master/acFuns/mesg_choose.m l62
+    left + sd(mu) # FIXME: https://github.com/zi-w/Max-value-Entropy-Search/blob/master/acFuns/mesg_choose.m l62
   }
 }
 
@@ -140,24 +137,113 @@ if (FALSE) {
   devtools::load_all()
   library(paradox)
   library(mlr3learners)
+  library(ggplot2)
 
+  # global minimum of 0.397887 at (-pi, 12.275), (pi, 2.275), (9.42478, 2.475)
   obfun = ObjectiveRFun$new(
-    fun = function(xs) list(y = sum(unlist(xs)^2)),
-    domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
+    fun = function(xs) {
+      a = 1
+      b = 5.1 / (4 * (pi ^ 2))
+      c = 5 / pi
+      r = 6
+      s = 10
+      t = 1 / (8 * pi)
+      y = a * ((xs[["x2"]] - b * (xs[["x1"]] ^ 2) + c * xs[["x1"]] - r) ^ 2) +
+        s * (1 - t) * cos(xs[["x1"]]) + s
+      list(y = y)
+    },
+    domain = ParamSet$new(list(ParamDbl$new("x1", -5, 10), ParamDbl$new("x2", 0, 15))),
     codomain = ParamSet$new(list(ParamDbl$new("y", tags = "minimize"))),
-    id = "test"
+    id = "Branin"
+  )
+  # obfun$eval_dt(data.table(x1 = c(-pi, pi, 9.42478), x2 = c(12.275, 2.275, 2.475)))
+
+  obfun_ = ObjectiveRFun$new(
+    fun = function(xs) {
+      a = 1
+      b = 5.1 / (4 * (pi ^ 2))
+      c = 5 / pi
+      r = 6
+      s = 10
+      t = 1 / (8 * pi)
+      y = a * ((xs[["x2"]] - b * (xs[["x1"]] ^ 2) + c * xs[["x1"]] - r) ^ 2) +
+        s * (1 - t) * cos(xs[["x1"]]) + s
+      list(y = - y)
+    },
+    domain = ParamSet$new(list(ParamDbl$new("x1", -5, 10), ParamDbl$new("x2", 0, 15))),
+    codomain = ParamSet$new(list(ParamDbl$new("y", tags = "maximize"))),
+    id = "Branin"
   )
 
-  terminator = trm("evals", n_evals = 20)
+  terminator = trm("evals", n_evals = 30)
 
   instance = OptimInstanceSingleCrit$new(
     objective = obfun,
     terminator = terminator
   )
 
-  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km", optim.method = "gen"))
-  acq_function = AcqFunctionMES$new(surrogate = surrogate)
-  acq_optimizer = AcqOptimizer$new(opt("grid_search", resolution = 1000, batch_size = 1000), trm("evals", n_evals = 1000))
+  instance_ = OptimInstanceSingleCrit$new(
+    objective = obfun_,
+    terminator = terminator
+  )
 
-  bayesopt_soo(instance, acq_function, acq_optimizer)
+  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km", covtype = "gauss", optim.method = "gen", nugget.stability = 10^-8))
+  acq_function_mes = AcqFunctionMES$new(surrogate = surrogate)
+  acq_function_ei = AcqFunctionEI$new(surrogate = surrogate)
+  acq_optimizer = AcqOptimizer$new(opt("grid_search", resolution = 2000, batch_size = 1000), trm("evals", n_evals = 1000))
+
+  # FIXME: cloning should be handled in loops
+  res = data.table()
+  for (i in 1:10) {
+    design = generate_design_random(instance$search_space, n = 10L)$data
+
+    instance$archive$clear()
+    instance$eval_batch(design)
+    mes_res = bayesopt_soo(instance, acq_function_mes, acq_optimizer)$clone(deep = TRUE)
+    instance$archive$clear()
+    instance$eval_batch(design)
+    ei_res = bayesopt_soo(instance, acq_function_ei, acq_optimizer)$clone(deep = TRUE)
+
+    instance_$archive$clear()
+    instance_$eval_batch(design)
+    mes_res_ = bayesopt_soo(instance_, acq_function_mes, acq_optimizer)$clone(deep = TRUE)
+    instance_$archive$clear()
+    instance_$eval_batch(design)
+    ei_res_ = bayesopt_soo(instance_, acq_function_ei, acq_optimizer)$clone(deep = TRUE)
+
+    get_trace = function(archive, inverted = FALSE) {
+      tmp = map_dtr(unique(archive$data$batch_nr), function(bn) archive$best(batch = 1:bn))
+      if (inverted) {
+        tmp$y = - tmp$y
+      }
+      tmp$iteration = seq_len(nrow(tmp))
+      tmp$regret = tmp$y - 0.397887
+      tmp
+    }
+    mes_resx = get_trace(mes_res)
+    mes_resx$method = "mes"
+    mes_resx$i = i
+    ei_resx = get_trace(ei_res)
+    ei_resx$method = "ei"
+    ei_resx$i = i
+
+    mes_resx_ = get_trace(mes_res_, inverted = TRUE)
+    mes_resx_$method = "mes_"
+    mes_resx_$i = i
+    ei_resx_ = get_trace(ei_res_, inverted = TRUE)
+    ei_resx_$method = "ei__"
+    ei_resx_$i = i
+
+    res = rbind(res, mes_resx, ei_resx, mes_resx_, ei_resx_, fill = TRUE)
+  }
+
+  dat = setNames(res[, mean(regret), by = .(iteration, method)], c("iteration", "method", "mean_regret"))
+  dat$sd = res[, sd(regret), by = .(iteration, method)]$V1
+  dat$se = dat$sd / sqrt(10)
+  dat$upper = dat$mean_regret + dat$se
+  dat$lower = dat$mean_regret - dat$se
+
+  ggplot(aes(x = iteration, y = log(mean_regret), colour = method, fill = method), data = dat) +
+    geom_line() +
+    geom_ribbon(aes(x = iteration, max = log(upper), min = log(lower)), alpha = 0.25, colour = NA)
 }
