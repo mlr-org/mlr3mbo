@@ -13,6 +13,7 @@ Other Acquisition Function:
 \code{\link{AcqFunctionCB}},
 \code{\link{AcqFunctionEIPS}},
 \code{\link{AcqFunctionEI}},
+\code{\link{AcqFunctionMES}},
 \code{\link{AcqFunctionSmsEgo}}
 }
 \concept{Acquisition Function}
@@ -29,6 +30,13 @@ Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 
 \item{\code{surrogate_max_to_min}}{(\code{numeric(1)}).
 Optimization direction of the objective function: 1 for minimization, -1 for maximization.}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -58,7 +66,14 @@ Optimization direction of the objective function: 1 for minimization, -1 for max
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(id, constants = ParamSet$new(), surrogate, direction, fun)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(
+  id,
+  constants = ParamSet$new(),
+  surrogate,
+  direction,
+  fun,
+  param_set = ps()
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
