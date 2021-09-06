@@ -28,7 +28,7 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
       ))
       constants$values$lambda = 2
 
-      fun = function(xdt) {
+      fun = function(xdt, ...) {
         p = self$surrogate$predict(xdt)
         res = p$mean - self$surrogate_max_to_min * self$constants$values$lambda * p$se
         # FIXME: what do we return here? do we want to see se, mean, too?
