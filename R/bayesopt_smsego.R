@@ -8,25 +8,31 @@
 #' @return [bbotk::Archive]
 #' @export
 bayesopt_smsego = function(instance, acq_function, acq_optimizer) {
-  #FIXME maybe do not have this here, but have a general assert helper
+  # FIXME: maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
   assert_r6(acq_function, "AcqFunctionSmsEgo")
   assert_r6(acq_optimizer, "AcqOptimizer")
 
   archive = instance$archive
-  #FIXME maybe do not have this here, but have a general init helper
+  # FIXME: maybe do not have this here, but have a general init helper
   if (archive$n_evals == 0) {
     design = generate_design_lhs(instance$search_space, 4 * instance$search_space$length)$data
     instance$eval_batch(design)
   }
 
-  acq_function$setup(archive) #setup necessary to determine the domain, codomain (for opt direction) of acq function
+  acq_function$setup(archive) # setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
-    acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y) #update surrogate model with new data
-    acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
-    acq_function$update(archive)
-    xdt = acq_optimizer$optimize(acq_function)
+    xdt = tryCatch({
+      acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y) # update surrogate model with new data
+      acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
+      acq_function$update(archive)
+      acq_optimizer$optimize(acq_function)
+    }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
+      lg$info("Proposing a randomly sampled point")  # FIXME: logging?
+      SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
+    })
+
     instance$eval_batch(xdt)
     if (instance$is_terminated || instance$terminator$is_terminated(archive)) break
   }

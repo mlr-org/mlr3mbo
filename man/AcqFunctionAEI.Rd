@@ -10,8 +10,7 @@ Augmented Expected Improvement.
 
 \itemize{
 \item \code{c} (\code{numeric(1)})\cr
-Constant \eqn{c} as used in formula (14) of Huang 2012 to reflect the
-degree of risk aversion. Defaults to \code{1}.
+Constant \eqn{c} as used in formula (14) of Huang 2012 to reflect the degree of risk aversion. Defaults to \code{1}.
 }
 }
 

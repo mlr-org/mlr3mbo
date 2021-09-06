@@ -10,7 +10,7 @@ if (FALSE) {
     domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
     codomain = ParamSet$new(list(
       ParamDbl$new("y", tags = "minimize"),
-      ParamDbl$new("time", tags = "minimize") #FIXME: Use other tag e.g. budget, resource
+      ParamDbl$new("time", tags = "minimize") # FIXME: Use other tag e.g. budget, resource
     )),
     properties = "multi-crit",
     id = "test"
@@ -44,6 +44,5 @@ if (FALSE) {
   g = g + geom_line(data = preds, aes(x = x, y = time.mean), col = "blue")
   g
 }
-
 
 

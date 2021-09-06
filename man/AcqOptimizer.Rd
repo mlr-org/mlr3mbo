@@ -6,6 +6,15 @@
 \description{
 Optimizer for \link{AcqFunction} objects.
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{optimizer}}{\link[bbotk:Optimizer]{bbotk::Optimizer}}
+
+\item{\code{terminator}}{\link[bbotk:Terminator]{bbotk::Terminator}}
+}
+\if{html}{\out{</div>}}
+}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
@@ -31,6 +40,15 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{optimizer}}{\link[bbotk:Optimizer]{bbotk::Optimizer}}
+
+\item{\code{terminator}}{\link[bbotk:Terminator]{bbotk::Terminator}}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-optimize"></a>}}
@@ -41,7 +59,7 @@ Optimize the acquisition function.
 If the \code{fix_distance} parameter is set to \code{TRUE}, proposed points are
 replaced by randomly sampled ones if their Gower distance with respect
 to other proposed points or previously evaluated points falls below the
-\code{dist_threshold} parameter.  Note that these checks are only performed a
+\code{dist_threshold} parameter. Note that these checks are only performed a
 single time (and not after a potential replacement of points), i.e., the
 returned \code{\link[data.table:data.table]{data.table::data.table()}} of optima must not necessarily pass
 the checks but most likely will.
