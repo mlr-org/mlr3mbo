@@ -1,6 +1,3 @@
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # mlr3mbo
 
 A new R6 and much more modular implementation for single- and multicrit
@@ -9,7 +6,7 @@ beware!
 
 <!-- badges: start -->
 
-[![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=master)](https://github.com/mlr-org/mlr3mbo/actions)
+[![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=main)](https://github.com/mlr-org/mlr3mbo/actions)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
 [![StackOverflow](https://img.shields.io/badge/stackoverflow-mlr3-orange.svg)](https://stackoverflow.com/questions/tagged/mlr3)
