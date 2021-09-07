@@ -30,7 +30,12 @@ Authors@R:
       person(given = "Julia",
              family = "Moosbauer",
              role = "aut",
-             email = "ju.moosbauer@gmail.com"))
+             email = "ju.moosbauer@gmail.com"),
+      person(given = "Lennart",
+             family = "Schneider",
+             role = "aut",
+             email = "lennart.sch@web.de",
+             comment = c(ORCID = "0000-0003-4152-5308")))
 Description: A modern and flexible approach to Bayesian
     Optimization in R.
 License: LGPL-3

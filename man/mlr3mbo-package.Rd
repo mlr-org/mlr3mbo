@@ -28,6 +28,7 @@ Authors:
   \item Bernd Bischl \email{bernd_bischl@gmx.net} (\href{https://orcid.org/0000-0001-6002-6980}{ORCID})
   \item Martin Binder \email{mlr.developer@mb706.com}
   \item Julia Moosbauer \email{ju.moosbauer@gmail.com}
+  \item Lennart Schneider \email{lennart.sch@web.de} (\href{https://orcid.org/0000-0003-4152-5308}{ORCID})
 }
 
 }
