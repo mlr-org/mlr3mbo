@@ -15,6 +15,14 @@ Optimizer for \link{AcqFunction} objects.
 }
 \if{html}{\out{</div>}}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+Set of hyperparameters.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -47,19 +55,31 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{latex}{\out{\hypertarget{method-optimize}{}}}
 \subsection{Method \code{optimize()}}{
 Optimize the acquisition function.
+
+If the \code{fix_distance} parameter is set to \code{TRUE}, proposed points are
+replaced by randomly sampled ones if their Gower distance with respect
+to other proposed points or previously evaluated points falls below the
+\code{dist_threshold} parameter. Note that these checks are only performed a
+single time (and not after a potential replacement of points), i.e., the
+returned \code{\link[data.table:data.table]{data.table::data.table()}} of optima must not necessarily pass
+the checks but most likely will.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$optimize(acq_function)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$optimize(acq_function, archive)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{acq_function}}{\link{AcqFunction}.}
+\item{\code{acq_function}}{\link{AcqFunction}\cr
+Acquisition function to optimize.}
+
+\item{\code{archive}}{\link[bbotk:Archive]{bbotk::Archive}\cr
+Archive.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} with 1 row per optimum and x as colums
+\code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per optimum and x as columns.
 }
 }
 \if{html}{\out{<hr>}}

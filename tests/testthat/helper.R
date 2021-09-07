@@ -50,6 +50,12 @@ FUN_1D_2_MIXED = function(xs) {
 OBJ_1D_2_MIXED = ObjectiveRFun$new(fun = FUN_1D_2_MIXED, domain = PS_1D_MIXED, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
 
 
+FUN_1D_2 = function(xs) {
+  list(y1 = as.numeric(xs)^2, y2 = sqrt(abs(as.numeric(xs))))
+}
+FUN_1D_2_CODOMAIN = ParamSet$new(list(ParamDbl$new("y1", tags = c("minimize", "random_tag")), ParamDbl$new("y2", tags = c("minimize", "random_tag"))))
+OBJ_1D_2 = ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
+
 # Simple 2D Function
 PS_2D_domain = ParamSet$new(list(
   ParamDbl$new("x1", lower = -1, upper = 1),
@@ -98,13 +104,80 @@ MAKE_DESIGN = function(instance, n = 4) {
 
 library(mlr3learners)
 
-REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", nugget.stability = 10^-8)
+REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12)
 REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
-REGR_KM_DETERM = lrn("regr.km", nugget.estim = TRUE, covtype = "matern3_2", jitter = 0.001)
+REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8)
 REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
+REGR_FEATURELESS = lrn("regr.featureless")
+REGR_FEATURELESS$encapsulate = c(train = "callr", predict = "callr")
 
 SURR_KM_DETERM = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
 SURR_KM_NOISY = SurrogateSingleCritLearner$new(learner = REGR_KM_NOISY)
 SURR2D_KM_DETERM = SurrogateMultiCritLearners$new(learners = replicate(2, REGR_KM_DETERM))
+SURR_REGR_FEATURELESS = SurrogateSingleCritLearner$new(learner = REGR_FEATURELESS)
+
 
 ACQ_OPT_DEF = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
+
+OptimizerError = R6Class("OptimizerError",
+  inherit = Optimizer,
+  public = list(
+
+    initialize = function() {
+      super$initialize(
+        param_set = ParamSet$new(),
+        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
+        properties = c("dependencies", "single-crit", "multi-crit")
+      )
+    }
+  ),
+
+  private = list(
+    .optimize = function(inst) {
+      stop("Optimizer Error")
+    }
+  )
+)
+
+LearnerRegrError = R6Class("LearnerRegrError",
+  inherit = LearnerRegr,
+  public = list(
+
+    initialize = function() {
+      ps = ps(error_train = p_lgl(default = TRUE, tags = "train"), error_predict = p_lgl(default = TRUE, tags = "predict"))
+      ps$values = list(error_train = TRUE, error_predict = TRUE)
+      super$initialize(
+        id = "regr.error",
+        feature_types = c("logical", "integer", "numeric", "factor", "ordered"),
+        predict_types = c("response", "se"),
+        param_set = ps
+      )
+    }
+  ),
+
+  private = list(
+    .train = function(task) {
+      if (self$param_set$values$error_train) {
+        stop("Surrogate Train Error")
+      } else {
+        mu = mean(task$data(cols = task$target_names)[[1L]])
+        sigma = sd(task$data(cols = task$target_names)[[1L]])
+        list(mu = mu, sigma = sigma)
+      }
+    },
+
+    .predict = function(task) {
+      if (self$param_set$values$error_predict) {
+        stop("Surrogate Predict Error")
+      } else {
+        n = task$nrow
+        if (l$predict_type == "se") {
+          list(response = rep(self$model$mu, n), se = rep(self$model$sigma, n))
+        } else {
+          list(response = rep(self$model$mu, n), se = rep(self$model$sigma, n))
+        }
+      }
+    }
+  )
+)
+

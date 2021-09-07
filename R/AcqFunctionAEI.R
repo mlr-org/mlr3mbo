@@ -5,8 +5,7 @@
 #'
 #' @section Parameters:
 #' * `c` (`numeric(1)`)\cr
-#'   Constant \eqn{c} as used in formula (14) of Huang 2012 to reflect the
-#'   degree of risk aversion. Defaults to `1`.
+#'   Constant \eqn{c} as used in formula (14) of Huang 2012 to reflect the degree of risk aversion. Defaults to `1`.
 #'
 #' @references
 #' `r format_bib("huang_2012")`
@@ -22,7 +21,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     y_effective_best = NULL,
 
     #' @field noise_var (`numeric()`).
-    noise_var = NULL, # noise of the function
+    noise_var = NULL,  # noise of the function
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -36,7 +35,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       ))
       constants$values$c = 1
 
-      fun = function(xdt) {
+      fun = function(xdt, ...) {
         if (is.null(self$y_effective_best)) {
           stop("y_effective_best is not set. Missed to call $update(archive)?")
         }
@@ -65,20 +64,19 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       xdt = archive$data[, archive$cols_x, with = FALSE]
       p = self$surrogate$predict(xdt)
       if (self$surrogate_max_to_min == 1) { # minimization
-        y_effective = p$mean + self$constants$values$c * p$se # pessimistic prediction
+        y_effective = p$mean + self$constants$values$c * p$se  # pessimistic prediction
         self$y_effective_best = min(y_effective)
-      } else { # maximization
-        y_effective = p$mean - self$constants$values$c * p$se # pessimistic prediction
+      } else {  # maximization
+        y_effective = p$mean - self$constants$values$c * p$se  # pessimistic prediction
         self$y_effective_best = max(y_effective)
       }
 
       if (!is.null(self$surrogate$model$model) && length(self$surrogate$model$model@covariance@nugget) == 1) {
-        self$noise_var = self$surrogate$model$model@covariance@nugget #FIXME: Check that this value really exists (otherwise calculate residual variance?)
+        self$noise_var = self$surrogate$model$model@covariance@nugget  # FIXME: Check that this value really exists (otherwise calculate residual variance?)
       } else {
         lgr$warn("AEI currently only works correctly with regr.km and nugget estim = TRUE or given!")
         self$noise_var = 0
       }
-
 
     }
   )

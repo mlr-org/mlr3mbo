@@ -1,4 +1,4 @@
-#FIXME: should we pass the arvive here, too?
+# FIXME: should we pass the arvive here, too?
 
 # most important controls:
 # - the acqf, with its settings
@@ -15,16 +15,15 @@
 #' @template param_instance
 #' @template param_acq_function
 #' @template param_acq_optimizer
-#' @param n_design (`int(1)`)\cr
+#' @param n_design (`integer(1)`)\cr
 #'   In case the `archive` inside the `instance` is empty, we generate a random initial design of `n_design` points.
-#' @return [bbotk::Archive]
+#' @return [bbotk::Archive].
 #'
 #' @references
 #' `r format_bib("jones_1998")`
 #'
 #' @export
 bayesopt_soo = function(instance, acq_function = NULL, acq_optimizer = NULL, n_design = 4 * instance$search_space$length) {
-  #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstance")
   if (is.null(acq_function)) {
     surrogate = default_surrogate(instance)
@@ -37,7 +36,7 @@ bayesopt_soo = function(instance, acq_function = NULL, acq_optimizer = NULL, n_d
   assert_r6(acq_optimizer, "AcqOptimizer")
   archive = instance$archive
 
-  #FIXME maybe do not have this here, but have a general init helper
+  # FIXME maybe do not have this here, but have a general init helper
   if (archive$n_evals == 0) {
     design = if(instance$search_space$has_deps) {
       generate_design_random(instance$search_space, n_design)$data
@@ -47,15 +46,25 @@ bayesopt_soo = function(instance, acq_function = NULL, acq_optimizer = NULL, n_d
     instance$eval_batch(design)
   }
 
-  acq_function$setup(archive) #setup necessary to determine the domain, codomain (for opt direction) of acq function
+  acq_function$setup(archive) # setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
-    acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y) #update surrogate model with new data
+    xdt = tryCatch({
+      acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y)  # update surrogate model with new data
 
-    acq_function$update(archive) # NOTE: necessary becaue we have to dertermine e.g. y_best for ei, there are possible other costy calculations that we just want to do once for each state. We might not want to do these calculation in acq_function$eval_dt() because this can get called several times during the optimization.
-    # one more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design
-    # alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFun),
-    xdt = acq_optimizer$optimize(acq_function)
+      # NOTE: necessary because we have to determine e.g. y_best for ei.
+      # There are possible other costy calculations that we just want to do once for each state.
+      # We might not want to do these calculation in acq_function$fun() because this can get called several times during the optimization.
+      # One more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design.
+      # Alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFunction).
+      acq_function$update(archive)
+
+      acq_optimizer$optimize(acq_function, archive = archive)  # archive need for fix_xdt_distance()
+    }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
+      lg$info("Proposing a randomly sampled point")  # FIXME: logging?
+      SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
+    })
+
     instance$eval_batch(xdt)
     if (instance$is_terminated || instance$terminator$is_terminated(archive)) break
   }
