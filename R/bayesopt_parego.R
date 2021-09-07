@@ -14,14 +14,14 @@
 # #' @return [bbotk::Archive]
 # #' @export
 bayesopt_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100, rho = 0.05) {
-  #FIXME maybe do not have this here, but have a general assert helper
+  # FIXME: maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")
   assert_int(q, lower = 1)
 
   archive = instance$archive
-  #FIXME maybe do not have this here, but have a general init helper
+  # FIXME: maybe do not have this here, but have a general init helper
   if (archive$n_evals == 0) {
     design = generate_design_lhs(instance$search_space, 4 * instance$search_space$length)$data
     instance$eval_batch(design)
@@ -41,6 +41,7 @@ bayesopt_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100
     matrix(unlist(fun(n, d)), ncol = d, byrow = TRUE)
   }
   lambdas = comb_with_sum(s, d) / s
+  q_sec = seq_len(q)
 
   repeat {
     xydt = archive$data
@@ -48,28 +49,39 @@ bayesopt_parego = function(instance, acq_function, acq_optimizer, q = 1, s = 100
     ydt = xydt[, archive$cols_y, with = FALSE]
 
     ydt = Map("*", ydt, mult_max_to_min(archive$codomain))
-    ydt = Map(function(y) (y - min(y, na.rm = TRUE))/diff(range(y, na.rm = TRUE)), ydt) # scale y to 0,1
+    ydt = Map(function(y) (y - min(y, na.rm = TRUE))/diff(range(y, na.rm = TRUE)), ydt)  # scale y to 0,1
 
     # Temp ParEGO Archive
     dummy_archive = archive$clone(deep = TRUE)
     dummy_archive$codomain = dummy_codomain
 
-    xdt = map_dtr(seq_len(q), function(i) {
+    xdt = map(q_sec, function(i) {
 
       # scalarize y
-      lambda = lambdas[sample.int(nrow(lambdas), 1), , drop = TRUE]
+      lambda = lambdas[sample.int(nrow(lambdas), 1L), , drop = TRUE]
       mult = Map('*', ydt, lambda)
       y_scal = do.call('+', mult)
-      y_scal = do.call(pmax, mult) + rho * y_scal # augmented Tchebycheff function
+      y_scal = do.call(pmax, mult) + rho * y_scal  # augmented Tchebycheff function
       set(dummy_archive$data, j = "y_scal", value = y_scal)
 
       # opt surrogate
-      #manual fix: #FIXME Write ParEGO Infill Crit?
-      acq_function$setup(dummy_archive)
-      acq_function$surrogate$setup(xydt = archive_xy(dummy_archive), y_cols = dummy_archive$cols_y) #update surrogate model with new data
-      acq_function$update(dummy_archive)
-      acq_optimizer$optimize(acq_function)
+      # manual fix: # FIXME: Write ParEGO Infill Crit?
+      tryCatch({
+        acq_function$setup(dummy_archive)
+        acq_function$surrogate$setup(xydt = archive_xy(dummy_archive), y_cols = dummy_archive$cols_y)  # update surrogate model with new data
+        acq_function$update(dummy_archive)
+        acq_optimizer$optimize(acq_function)
+      }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
+        leads_to_exploration_error_condition
+      })
     })
+
+    error_ids = which(map_lgl(xdt, function(x) "leads_to_exploration_error" %in% class(x)))
+    for (i in error_ids) {
+      lg$info("Proposing a randomly sampled point")  # FIXME: logging?
+      xdt[[i]] = SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
+    }
+    xdt = rbindlist(xdt, fill = TRUE)
 
     instance$eval_batch(xdt)
     if (instance$is_terminated || instance$terminator$is_terminated(instance$archive)) break
@@ -117,7 +129,4 @@ if (FALSE) {
   g = ggplot(archdata, aes_string(x = "y1", y = "y2", color = "batch_nr"))
   g + geom_point()
 }
-
-
-
 

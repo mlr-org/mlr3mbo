@@ -1,8 +1,7 @@
 #' @title Acquisition Function Base Class
 #'
 #' @description
-#' Based on a surrogate model, the acquisition function encodes the preference to evaluate
-#' a new point for evaluation.
+#' Based on a surrogate model, the acquisition function encodes the preference to evaluate a new point for evaluation.
 #'
 #' @family Acquisition Function
 #'
@@ -16,11 +15,11 @@ AcqFunction = R6Class("AcqFunction",
 
     #' @field direction (`character(1)`)\cr
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
-    direction = NULL, # optim direction of the acq function
+    direction = NULL,  # optim direction of the acq function
 
     #' @field surrogate_max_to_min (`numeric(1)`).
     #'   Optimization direction of the objective function: 1 for minimization, -1 for maximization.
-    surrogate_max_to_min = NULL, # FIXME: make this private
+    surrogate_max_to_min = NULL,  # FIXME: make this private
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -56,7 +55,7 @@ AcqFunction = R6Class("AcqFunction",
       self$surrogate_max_to_min = mult_max_to_min(archive$codomain)
 
       self$domain = archive$search_space$clone(deep = TRUE)
-      self$domain$trafo = NULL # FIXME is it okay to do this?
+      self$domain$trafo = NULL  # FIXME: is it okay to do this?
     },
 
     #' @description

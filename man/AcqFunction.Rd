@@ -4,8 +4,7 @@
 \alias{AcqFunction}
 \title{Acquisition Function Base Class}
 \description{
-Based on a surrogate model, the acquisition function encodes the preference to evaluate
-a new point for evaluation.
+Based on a surrogate model, the acquisition function encodes the preference to evaluate a new point for evaluation.
 }
 \seealso{
 Other Acquisition Function: 

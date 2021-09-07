@@ -7,23 +7,51 @@
 AcqOptimizer = R6Class("AcqOptimizer",
   public = list(
 
+    #' @field optimizer [bbotk::Optimizer]
     optimizer = NULL,
+
+    #' @field terminator [bbotk::Terminator]
     terminator = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' @param optimizer [bbotk::Optimizer]
+    #'
+    #' @param terminator [bbotk::Terminator]
     initialize = function(optimizer, terminator) {
       self$optimizer = assert_r6(optimizer, "Optimizer")
       self$terminator = assert_r6(terminator, "Terminator")
+      ps = ParamSet$new(list(
+        ParamLgl$new("fix_distance"),
+        ParamDbl$new("dist_threshold", lower = 0, upper = 1))
+      )
+
+      ps$values = list(fix_distance = FALSE, dist_threshold = 0)
+      ps$add_dep("dist_threshold", on = "fix_distance", cond = CondEqual$new(TRUE))
+      private$.param_set = ps
     },
 
     #' @description
     #' Optimize the acquisition function.
     #'
-    #' @param acq_function [AcqFunction].
-    #' @return `data.table` with 1 row per optimum and x as colums
-    optimize = function(acq_function) {
-      if (acq_function$codomain$length == 1) {
+    #' If the `fix_distance` parameter is set to `TRUE`, proposed points are
+    #' replaced by randomly sampled ones if their Gower distance with respect
+    #' to other proposed points or previously evaluated points falls below the
+    #' `dist_threshold` parameter. Note that these checks are only performed a
+    #' single time (and not after a potential replacement of points), i.e., the
+    #' returned [data.table::data.table()] of optima must not necessarily pass
+    #' the checks but most likely will.
+    #'
+    #' @param acq_function [AcqFunction]\cr
+    #' Acquisition function to optimize.
+    #'
+    #' @param archive [bbotk::Archive]\cr
+    #' Archive.
+    #'
+    #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
+    optimize = function(acq_function, archive) {
+      if (acq_function$codomain$length == 1L) {
         instance = OptimInstanceSingleCrit$new(objective = acq_function, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
       } else {
         if (!"multi-crit" %in% self$optimizer$properties) {
@@ -31,7 +59,45 @@ AcqOptimizer = R6Class("AcqOptimizer",
         }
         instance = OptimInstanceMultiCrit$new(objective = acq_function, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
       }
-      self$optimizer$optimize(instance)
+
+      xdt = tryCatch(self$optimizer$optimize(instance),
+        error = function(error_condition) {
+          lg$info(error_condition$message)  # FIXME: logging?
+          # FIXME: this could potentially also fail if the surrogate cannot predict
+          stop(set_class(list(message = error_condition$message, call = NULL),
+            classes = c("leads_to_exploration_error", "optimize_error", "error", "condition")))
+        }
+      )
+
+      if (self$param_set$values$fix_distance) {
+        xdt = fix_xdt_distance(xdt, previous_xdt = archive_x(archive), search_space = acq_function$domain, dist_threshold = self$param_set$values$dist_threshold)
+      }
+
+      xdt
+    }
+  ),
+
+  active = list(
+
+    #' @field param_set ([paradox::ParamSet])\cr
+    #' Set of hyperparameters.
+    param_set = function(rhs) {
+      if (!missing(rhs) && !identical(rhs, private$.param_set)) {
+        stop("param_set is read-only.")
+      }
+      private$.param_set
+    }
+  ),
+
+  private = list(
+
+    .param_set = NULL,
+
+    deep_clone = function(name, value) {
+      switch(name,
+        .param_set = value$clone(deep = TRUE),
+        value
+      )
     }
   )
 )

@@ -30,7 +30,12 @@ Authors@R:
       person(given = "Julia",
              family = "Moosbauer",
              role = "aut",
-             email = "ju.moosbauer@gmail.com"))
+             email = "ju.moosbauer@gmail.com"),
+      person(given = "Lennart",
+             family = "Schneider",
+             role = "aut",
+             email = "lennart.sch@web.de",
+             comment = c(ORCID = "0000-0003-4152-5308")))
 Description: A modern and flexible approach to Bayesian
     Optimization in R.
 License: LGPL-3
@@ -44,6 +49,7 @@ Imports:
     bbotk (>= 0.3.0),
     checkmate (>= 2.0.0),
     data.table,
+    gower,
     lgr (>= 0.3.0),
     mlr3,
     mlr3misc (>= 0.3.0),
@@ -57,7 +63,11 @@ Suggests:
     DiceKriging,
     lhs,
     testthat,
-    ggplot2
+    ggplot2,
+    rgenoud
+Remotes:
+    mlr-org/bbotk,
+    mlr-org/mlr3tuning
 ByteCompile: no
 Encoding: UTF-8
 LazyData: true
