@@ -96,3 +96,45 @@ OptimizerError = R6Class("OptimizerError",
   )
 )
 
+LearnerRegrError = R6Class("LearnerRegrError",
+  inherit = LearnerRegr,
+  public = list(
+
+    initialize = function() {
+      ps = ps(error_train = p_lgl(default = TRUE, tags = "train"), error_predict = p_lgl(default = TRUE, tags = "predict"))
+      ps$values = list(error_train = TRUE, error_predict = TRUE)
+      super$initialize(
+        id = "regr.error",
+        feature_types = c("logical", "integer", "numeric", "factor", "ordered"),
+        predict_types = c("response", "se"),
+        param_set = ps
+      )
+    }
+  ),
+
+  private = list(
+    .train = function(task) {
+      if (self$param_set$values$error_train) {
+        stop("Surrogate Train Error")
+      } else {
+        mu = mean(task$data(cols = task$target_names)[[1L]])
+        sigma = sd(task$data(cols = task$target_names)[[1L]])
+        list(mu = mu, sigma = sigma)
+      }
+    },
+
+    .predict = function(task) {
+      if (self$param_set$values$error_predict) {
+        stop("Surrogate Predict Error")
+      } else {
+        n = task$nrow
+        if (l$predict_type == "se") {
+          list(response = rep(self$model$mu, n), se = rep(self$model$sigma, n))
+        } else {
+          list(response = rep(self$model$mu, n), se = rep(self$model$sigma, n))
+        }
+      }
+    }
+  )
+)
+
