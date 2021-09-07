@@ -48,7 +48,7 @@
 
 
 <meta property="og:title" content="Surrogate Model for MultiCriteria response surfaces — SurrogateMultiCritLearners" />
-<meta property="og:description" content="Multi Criteria response surfaces modeled by multiple regression mlr3::Learner objects." />
+<meta property="og:description" content="Multi Criteria response surfaces modeled by multiple mlr3 regression learners" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -144,7 +144,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Multi Criteria response surfaces modeled by multiple regression <a href='https://mlr3.mlr-org.com/reference/Learner.html'>mlr3::Learner</a> objects.</p>
+    <p>Multi Criteria response surfaces modeled by multiple mlr3 regression learners</p>
     </div>
 
 
@@ -155,11 +155,7 @@
     <h2 class="hasAnchor" id="active-bindings"><a class="anchor" href="#active-bindings"></a>Active bindings</h2>
 
     <p><div class="r6-active-bindings"></p><dl>
-<dt><code>k</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>)<br />
-Returns the number of models.</p></dd>
-
-<dt><code>assert_insample_perf</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>) <br />
-Asserts whether the current insample performance meets the performance threshold.</p></dd>
+<dt><code>k</code></dt><dd><p>Returns the number of models.</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
@@ -169,13 +165,13 @@ Asserts whether the current insample performance meets the performance threshold
 
 <ul>
 <li><p><a href='#method-new'><code>SurrogateMultiCritLearners$new()</code></a></p></li>
+<li><p><a href='#method-update'><code>SurrogateMultiCritLearners$update()</code></a></p></li>
 <li><p><a href='#method-predict'><code>SurrogateMultiCritLearners$predict()</code></a></p></li>
 <li><p><a href='#method-clone'><code>SurrogateMultiCritLearners$clone()</code></a></p></li>
 </ul>
 <p><details open ><summary>Inherited methods</summary>
 <ul>
 <li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup"><a href='../../mlr3mbo/html/Surrogate.html#method-setup'><code>mlr3mbo::Surrogate$setup()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href='../../mlr3mbo/html/Surrogate.html#method-update'><code>mlr3mbo::Surrogate$update()</code></a></span></p></li>
 </ul>
 </details>
 
@@ -187,6 +183,19 @@ Asserts whether the current insample performance meets the performance threshold
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
 <dt><code>learners</code></dt><dd><p>(list of <a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3::LearnerRegr</a>).</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-update"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/update.html'>update()</a></code></h3>
+<p>Train model with new points.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>SurrogateMultiCritLearners</span><span class='op'>$</span><span class='fu'>update</span><span class='op'>(</span><span class='va'>xydt</span>, <span class='va'>y_cols</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>xydt</code></dt><dd><p>(<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>).</p></dd>
+
+<dt><code>y_cols</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character()</a></code>)<br />
+Names of response columns.</p></dd>
 
 </dl><p></div></p>
 <p><hr>
@@ -226,7 +235,7 @@ New data.</p></dd>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jakob Richter, Marc Becker, Michel Lang, Bernd Bischl, Martin Binder, Julia Moosbauer, Lennart Schneider.</p>
+  <p>Developed by Jakob Richter, Marc Becker, Michel Lang, Bernd Bischl, Martin Binder, Julia Moosbauer.</p>
 </div>
 
 <div class="pkgdown">
