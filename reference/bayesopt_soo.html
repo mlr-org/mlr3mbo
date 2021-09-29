@@ -149,8 +149,8 @@
 
     <pre class="usage"><span class='fu'>bayesopt_soo</span><span class='op'>(</span>
   <span class='va'>instance</span>,
-  <span class='va'>acq_function</span>,
-  <span class='va'>acq_optimizer</span>,
+  acq_function <span class='op'>=</span> <span class='cn'>NULL</span>,
+  acq_optimizer <span class='op'>=</span> <span class='cn'>NULL</span>,
   n_design <span class='op'>=</span> <span class='fl'>4</span> <span class='op'>*</span> <span class='va'>instance</span><span class='op'>$</span><span class='va'>search_space</span><span class='op'>$</span><span class='va'>length</span>
 <span class='op'>)</span></pre>
 
@@ -165,12 +165,12 @@ The optimization instance object.</p></td>
     <tr>
       <th>acq_function</th>
       <td><p><a href='AcqFunction.html'>AcqFunction</a><br />
-The acquistion function object.</p></td>
+The acquistion function object. For defaults see <a href='mbo_defaults.html'>mbo_defaults</a>.</p></td>
     </tr>
     <tr>
       <th>acq_optimizer</th>
       <td><p><a href='AcqOptimizer.html'>AcqOptimizer</a><br />
-The optimizer that optimizes the acquistion function.</p></td>
+The optimizer that optimizes the acquistion function. For defaults see <a href='mbo_defaults.html'>mbo_defaults</a>.</p></td>
     </tr>
     <tr>
       <th>n_design</th>
