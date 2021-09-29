@@ -185,26 +185,34 @@
 
 <hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
-<p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.
+For more information on default values for <code>loop_function</code>, <code>acq_function</code>
+and <code>acq_optimizer</code>, see <code>mbo_defaults</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>OptimizerMbo</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
-  <span class='va'>loop_function</span>,
-  <span class='va'>acq_function</span>,
-  <span class='va'>acq_optimizer</span>,
+  loop_function <span class='op'>=</span> <span class='cn'>NULL</span>,
+  acq_function <span class='op'>=</span> <span class='cn'>NULL</span>,
+  acq_optimizer <span class='op'>=</span> <span class='cn'>NULL</span>,
   args <span class='op'>=</span> <span class='cn'>NULL</span>,
   result_function <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>loop_function</code></dt><dd><p>(<code>function</code>).</p></dd>
+<dt><code>loop_function</code></dt><dd><p>(<code>function</code>).
+Loop function to run. See <code>mbo_defaults</code> for defaults.</p></dd>
 
-<dt><code>acq_function</code></dt><dd><p>(<a href='AcqFunction.html'>AcqFunction</a>).</p></dd>
+<dt><code>acq_function</code></dt><dd><p><a href='AcqFunction.html'>AcqFunction</a><br />
+The acquistion function object. For defaults see <a href='mbo_defaults.html'>mbo_defaults</a>.</p></dd>
 
-<dt><code>acq_optimizer</code></dt><dd><p>(<a href='AcqOptimizer.html'>AcqOptimizer</a>).</p></dd>
+<dt><code>acq_optimizer</code></dt><dd><p><a href='AcqOptimizer.html'>AcqOptimizer</a><br />
+The optimizer that optimizes the acquistion function. For defaults see <a href='mbo_defaults.html'>mbo_defaults</a>.</p></dd>
 
-<dt><code>args</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>).</p></dd>
+<dt><code>args</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>) <br />
+Further arguments for the 'loop_function'.</p></dd>
 
-<dt><code>result_function</code></dt><dd><p>(<code>function</code>).</p></dd>
+<dt><code>result_function</code></dt><dd><p>(<code>function</code>)<br />
+Function called after the optimization terminates.
+Requires arguments 'inst' (the OptimInstance) and 'self' (the Optimizer).</p></dd>
 
 </dl><p></div></p>
 <p><hr>

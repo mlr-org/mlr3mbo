@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • mlr3mbo</title>
+<title>Default loopfun — default_loopfun • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,7 +47,11 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Default loopfun — default_loopfun" />
+<meta property="og:description" content="Chooses a default &quot;loopfun&quot;, i.e. the MBO flavor to be used for optimization.
+For single-criteria optimization, defaults to bayesopt_soo.
+For multi-criteria optimization, defaults to bayesopt_smsego." />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -66,7 +70,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -134,168 +138,43 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Default loopfun</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/mbo_defaults.R'><code>R/mbo_defaults.R</code></a></small>
+    <div class="hidden name"><code>default_loopfun.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Chooses a default "loopfun", i.e. the MBO flavor to be used for optimization.
+For single-criteria optimization, defaults to <a href='bayesopt_soo.html'>bayesopt_soo</a>.
+For multi-criteria optimization, defaults to <a href='bayesopt_smsego.html'>bayesopt_smsego</a>.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>default_loopfun</span><span class='op'>(</span><span class='va'>instance</span><span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="AcqFunction.html">AcqFunction</a></code> </p>
-        </td>
-        <td><p>Acquisition Function Base Class</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="AcqFunctionAEI.html">AcqFunctionAEI</a></code> </p>
-        </td>
-        <td><p>Acquisition Function Augmented Expected Improvement</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="AcqFunctionCB.html">AcqFunctionCB</a></code> </p>
-        </td>
-        <td><p>Acquisition Function Confidence Bound</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="AcqFunctionEI.html">AcqFunctionEI</a></code> </p>
-        </td>
-        <td><p>Acquisition Function Expected Improvement</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="AcqFunctionEIPS.html">AcqFunctionEIPS</a></code> </p>
-        </td>
-        <td><p>Acquisition Function Expected Improvement Per Second</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="AcqFunctionSmsEgo.html">AcqFunctionSmsEgo</a></code> </p>
-        </td>
-        <td><p>Acquisition Function SMS EGO</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="AcqOptimizer.html">AcqOptimizer</a></code> </p>
-        </td>
-        <td><p>Acquisition Optimizer</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Surrogate.html">Surrogate</a></code> </p>
-        </td>
-        <td><p>Surrogate Model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="SurrogateMultiCrit.html">SurrogateMultiCrit</a></code> </p>
-        </td>
-        <td><p>Surrogate Model for MultiCriteria response surfaces</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="SurrogateMultiCritLearners.html">SurrogateMultiCritLearners</a></code> </p>
-        </td>
-        <td><p>Surrogate Model for MultiCriteria response surfaces</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="SurrogateSingleCrit.html">SurrogateSingleCrit</a></code> </p>
-        </td>
-        <td><p>Surrogate Model for Single criteria response surfaces</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="SurrogateSingleCritLearner.html">SurrogateSingleCritLearner</a></code> </p>
-        </td>
-        <td><p>Surrogate Model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="bayesopt_smsego.html">bayesopt_smsego()</a></code> </p>
-        </td>
-        <td><p>Multi-Objective SMS-MBO</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="bayesopt_soo.html">bayesopt_soo()</a></code> </p>
-        </td>
-        <td><p>Single Objective Bayesian Optimization</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="default_acq_optimizer.html">default_acq_optimizer()</a></code> </p>
-        </td>
-        <td><p>Default Acquisition Function Optimizer</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="default_acqfun.html">default_acqfun()</a></code> </p>
-        </td>
-        <td><p>Default Acquisition Function</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="default_loopfun.html">default_loopfun()</a></code> </p>
-        </td>
-        <td><p>Default loopfun</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="default_surrogate.html">default_surrogate()</a></code> </p>
-        </td>
-        <td><p>Generate default surrogate</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mbo_defaults.html">mbo_defaults</a></code> </p>
-        </td>
-        <td><p>Defaults for OptimizerMbo</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mlr3mbo-package.html">mlr3mbo-package</a></code> </p>
-        </td>
-        <td><p>mlr3mbo: Flexible Bayesian Optimization in R</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mlr_optimizers_mbo.html">mlr_optimizers_mbo</a></code> </p>
-        </td>
-        <td><p>OptimizerMbo</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="result_by_surrogate_design.html">result_by_surrogate_design()</a></code> </p>
-        </td>
-        <td><p>Choose final point by Surrogate Mean</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>instance</th>
+      <td><p><a href='https://bbotk.mlr-org.com/reference/OptimInstance.html'>bbotk::OptimInstance</a> <br />
+An object that inherits from <a href='https://bbotk.mlr-org.com/reference/OptimInstance.html'>bbotk::OptimInstance</a>.</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>loop <code>function</code></p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other mbo_defaults: 
+<code><a href='default_acq_optimizer.html'>default_acq_optimizer</a>()</code>,
+<code><a href='default_acqfun.html'>default_acqfun</a>()</code>,
+<code><a href='default_surrogate.html'>default_surrogate</a>()</code>,
+<code><a href='mbo_defaults.html'>mbo_defaults</a></code></p></div>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
