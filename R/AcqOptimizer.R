@@ -52,12 +52,12 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
     optimize = function(acq_function, archive) {
       if (acq_function$codomain$length == 1L) {
-        instance = OptimInstanceSingleCrit$new(objective = acq_function, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
+        instance = OptimInstanceSingleCrit$new(objective = acq_function, search_space = acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
       } else {
         if (!"multi-crit" %in% self$optimizer$properties) {
           stopf("Optimizer %s is not multi-crit compatible but %s is multi-crit.", self$self$optimizer$format(), acq_function$id)
         }
-        instance = OptimInstanceMultiCrit$new(objective = acq_function, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
+        instance = OptimInstanceMultiCrit$new(objective = acq_function, search_space = acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
       }
 
       xdt = tryCatch(self$optimizer$optimize(instance),

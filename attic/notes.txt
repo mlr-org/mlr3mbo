@@ -1,3 +1,5 @@
 learner default mit evaluate wrappen? eher nicht weil das wird mit random propsal gecatched
 
+tuner instance noisy flag?
+
 formats und printer definieren

@@ -35,7 +35,7 @@ AcqFunction = R6Class("AcqFunction",
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
       super$initialize(
         fun = assert_function(fun),
-        domain = ParamSet$new(), #dummy, replaced in $update()
+        domain = ParamSet$new(),  # dummy, replaced in $update()
         id = id,
         constants = constants,
         check_values = FALSE
