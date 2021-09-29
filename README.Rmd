@@ -1,11 +1,18 @@
+---
+output: github_document
+---
+
+```{r, include = FALSE}
+lgr::get_logger("mlr3")$set_threshold("warn")
+lgr::get_logger("bbotk")$set_threshold("warn")
+
+```
 
 # mlr3mbo
 
-A new R6 and much more modular implementation for single- and multicrit
-Bayesian optimization.
+A new R6 and much more modular implementation for single- and multicrit Bayesian optimization.
 
 <!-- badges: start -->
-
 [![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=main)](https://github.com/mlr-org/mlr3mbo/actions)
 [![CRANstatus](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
 [![StackOverflow](https://img.shields.io/badge/stackoverflow-mlr3-orange.svg)](https://stackoverflow.com/questions/tagged/mlr3)
@@ -14,10 +21,9 @@ Bayesian optimization.
 
 ## Simple Example
 
-Minimize `y = x^2` via sequential BO using a GP as surrogate and EI
-optimized via random search as aquisition function:
+Minimize `y = x^2` via sequential BO using a GP as surrogate and EI optimized via random search as aquisition function:
 
-``` r
+```{r, message = FALSE}
 set.seed(1)
 library(bbotk)
 library(mlr3)
@@ -49,16 +55,3 @@ acqopt = AcqOptimizer$new(
 )
 bayesopt_soo(instance, acqfun, acqopt)
 ```
-
-    ## <Archive>
-    ##          x       y           timestamp batch_nr  acq_ei
-    ##  1:  1.652 2.7e+00 2021-09-29 11:35:25        1      NA
-    ##  2:  4.073 1.7e+01 2021-09-29 11:35:25        1      NA
-    ##  3: -4.846 2.3e+01 2021-09-29 11:35:25        1      NA
-    ##  4: -1.985 3.9e+00 2021-09-29 11:35:25        1      NA
-    ##  5:  1.471 2.2e+00 2021-09-29 11:35:26        2 1.4e+00
-    ##  6: -0.227 5.1e-02 2021-09-29 11:35:26        3 2.4e+00
-    ##  7:  0.023 5.1e-04 2021-09-29 11:35:26        4 4.3e-02
-    ##  8: -0.033 1.1e-03 2021-09-29 11:35:26        5 3.4e-04
-    ##  9:  0.019 3.8e-04 2021-09-29 11:35:26        6 1.3e-04
-    ## 10:  0.330 1.1e-01 2021-09-29 11:35:26        7 2.0e-68
