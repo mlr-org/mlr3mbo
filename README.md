@@ -29,12 +29,12 @@ library(paradox)
 library(mlr3learners)
 
 obfun = ObjectiveRFun$new(
-  fun = function(xs) sum(unlist(xs)^2),
+  fun = function(xs) list(y = sum(unlist(xs)^2)),
   domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
   id = "test"
 )
 
-terminator = trm("evals", n_evals = 20)
+terminator = trm("evals", n_evals = 10)
 
 instance = OptimInstanceSingleCrit$new(
   objective = obfun,
@@ -45,12 +45,12 @@ design = generate_design_lhs(obfun$domain, 4)$data
 instance$eval_batch(design)
 
 surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-acqfun = AcqFunctionCB$new(surrogate = surrogate)
-acqopt = AcqOptimizerFromOptimizer$new(
+acqfun = AcqFunctionEI$new(surrogate = surrogate)
+acqopt = AcqOptimizer$new(
   opt("random_search", batch_size = 100),
   trm("evals", n_evals = 100)
 )
-bayesop_soo(instance, acqfun, acqopt)
+bayesopt_soo(instance, acqfun, acqopt)
 plot(y~batch_nr, instance$archive$data[batch_nr>1,], type = "b")
 ```
 
@@ -67,11 +67,11 @@ design = generate_design_lhs(obfun$domain, 4)$data
 instance$eval_batch(design)
 
 surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-acqfun = AcqFunctionCB$new(surrogate = surrogate)
-acqopt = AcqOptimizerFromOptimizer$new(
+acqfun = AcqFunctionEI$new(surrogate = surrogate)
+acqopt = AcqOptimizer$new(
   opt("random_search", batch_size = 100),
   trm("evals", n_evals = 100)
 )
-bayesop_mpcl(instance, acqfun, acqopt)
-plot(y~batch_nr, instance$archive$data()[batch_nr>1,], type = "b")
+bayesopt_mpcl(instance, acqfun, acqopt, mean, 2)
+plot(y~batch_nr, instance$archive$data[batch_nr>1,], type = "b")
 ```
