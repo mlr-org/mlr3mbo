@@ -17,7 +17,6 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
       if (self$model$predict_type != "se" && "se" %in% self$model$predict_types) {
         self$model$predict_type = "se"
       }
-
       ps = ParamSet$new(list(
         ParamLgl$new("calc_insample_perf"),
         ParamUty$new("perf_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
@@ -39,7 +38,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     predict = function(xdt) {
       assert_xdt(xdt)
 
-      pred = self$model$predict_newdata(newdata = xdt)
+      pred = self$model$predict_newdata(newdata = char_to_fct(xdt))
       if (self$model$predict_type == "se") {
         data.table(mean = pred$response, se = pred$se)
       } else {
@@ -80,7 +79,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `calc_insample_perf = TRUE`.
     .update = function(xydt, y_cols) {
       assert_xydt(xydt, y_cols)
-      task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = y_cols)
+      task = TaskRegr$new(id = "surrogate_task", backend = char_to_fct(xydt), target = y_cols)
       self$model$train(task)
 
       if (self$param_set$values$calc_insample_perf) {

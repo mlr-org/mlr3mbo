@@ -12,7 +12,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
   public = list(
 
     #' @field loop_function (`function`).
-    loop_function = NULL, #FIXME: At this point it DOES look ok to have the different mbo algos as objects, right?
+    loop_function = NULL, # FIXME: At this point it DOES look ok to have the different mbo algos as objects, right?
 
     #' @field result_function (`function`).
     result_function = NULL,
@@ -28,21 +28,27 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
+    #' For more information on default values for `loop_function`, `acq_function`
+    #' and `acq_optimizer`, see `mbo_defaults`.
     #'
     #' @param loop_function (`function`).
-    #' @param acq_function ([AcqFunction]).
-    #' @param acq_optimizer ([AcqOptimizer]).
-    #' @param args (`list()`).
-    #' @param result_function (`function`).
-    initialize = function(loop_function, acq_function, acq_optimizer, args = NULL, result_function = NULL) {
+    #'   Loop function to run. See `mbo_defaults` for defaults.
+    #' @template param_acq_function
+    #' @template param_acq_optimizer
+    #' @param args (`list()`) \cr
+    #'   Further arguments for the 'loop_function'.
+    #' @param result_function (`function`)\cr
+    #'   Function called after the optimization terminates.
+    #'   Requires arguments 'inst' (the OptimInstance) and 'self' (the Optimizer).
+    initialize = function(loop_function = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
       param_set = ParamSet$new()
       param_classes = feature_types_to_param_classes(acq_function$surrogate$model$feature_types)
       properties = c("single-crit", "dependencies") # FIXME: Should depend on the settings?
       packages = character() # Maybe not so important? Surrogate package etc?
       super$initialize(param_set, param_classes, properties, packages)
-      self$loop_function = assert_function(loop_function)
-      self$acq_function = assert_r6(acq_function, "AcqFunction")
-      self$acq_optimizer = assert_r6(acq_optimizer, "AcqOptimizer")
+      self$loop_function = assert_function(loop_function, null.ok = TRUE)
+      self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
+      self$acq_optimizer = assert_r6(acq_optimizer, "AcqOptimizer", null.ok = TRUE)
       self$args = assert_list(args, names = "named", null.ok = TRUE)
       self$result_function = assert_function(result_function, null.ok = TRUE)
     }
@@ -50,6 +56,9 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
   private = list(
     .optimize = function(inst) {
+      if (is.null(self$loop_function)) {
+        self$loop_function = default_loopfun(inst)
+      }
       do.call(self$loop_function, c(list(instance = inst, acq_function = self$acq_function, acq_optimizer = self$acq_optimizer), self$args))
     },
 
@@ -63,3 +72,4 @@ OptimizerMbo = R6Class("OptimizerMbo",
     }
   )
 )
+

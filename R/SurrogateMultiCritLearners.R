@@ -19,7 +19,6 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
           model$predict_type = "se"
         }
       }
-
       ps = ParamSet$new(list(
         ParamLgl$new("calc_insample_perf"),
         ParamUty$new("perf_measures", custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(self$model))),  # FIXME: actually want check_measures
@@ -42,7 +41,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       assert_xdt(xdt)
 
       preds = lapply(self$model, function(model) {
-        pred = model$predict_newdata(newdata = xdt)
+        pred = model$predict_newdata(newdata = char_to_fct(xdt))
         if (model$predict_type == "se") {
           data.table(mean = pred$response, se = pred$se)
         } else {
@@ -102,7 +101,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     .update = function(xydt, y_cols) {
       assert_xydt(xydt, y_cols)
 
-      backend = as_data_backend(xydt)
+      backend = as_data_backend(char_to_fct(xydt))
       features = setdiff(names(xydt), y_cols)
 
       tasks = lapply(y_cols, function(y_col) {
@@ -117,7 +116,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       })
       pmap(list(model = self$model, task = tasks), .f = function(model, task) {
         model$train(task)
-        NULL
+        invisible(NULL)
       })
       names(self$model) = y_cols
 

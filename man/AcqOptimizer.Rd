@@ -9,9 +9,9 @@ Optimizer for \link{AcqFunction} objects.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{optimizer}}{\link[bbotk:Optimizer]{bbotk::Optimizer}}
+\item{\code{optimizer}}{(\link[bbotk:Optimizer]{bbotk::Optimizer}).}
 
-\item{\code{terminator}}{\link[bbotk:Terminator]{bbotk::Terminator}}
+\item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -43,9 +43,9 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{optimizer}}{\link[bbotk:Optimizer]{bbotk::Optimizer}}
+\item{\code{optimizer}}{(\link[bbotk:Optimizer]{bbotk::Optimizer}).}
 
-\item{\code{terminator}}{\link[bbotk:Terminator]{bbotk::Terminator}}
+\item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 }
 \if{html}{\out{</div>}}
 }

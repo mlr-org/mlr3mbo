@@ -29,6 +29,10 @@ if (FALSE) {
 
   bayesopt_soo(instance, acq_function, acq_optimizer)
 
+  # Defaults work
+  acq_function = AcqFunctionEIPS$new(surrogate = default_surrogate(instance))
+  bayesopt_soo(instance, acq_function)
+
   data = instance$archive$data
 
   xgrid = generate_design_grid(instance$search_space, 200)$data
@@ -44,5 +48,4 @@ if (FALSE) {
   g = g + geom_line(data = preds, aes(x = x, y = time.mean), col = "blue")
   g
 }
-
 
