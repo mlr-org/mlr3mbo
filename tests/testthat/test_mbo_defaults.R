@@ -39,7 +39,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate$model[[1L]]$fallback, "LearnerRegrRanger")
   expect_equal(surrogate$model[[1L]]$param_set$values, surrogate$model[[2L]]$param_set$values)
   expect_equal(surrogate$model[[1L]]$encapsulate, surrogate$model[[2L]]$encapsulate)
-  #expect_equal(surrogate$model[[1L]]$fallback, surrogate$model[[2L]]$fallback)
+  expect_equal(surrogate$model[[1L]]$fallback, surrogate$model[[2L]]$fallback)
 
   # singlecrit mixed input
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED))
@@ -60,7 +60,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate$model[[1L]]$fallback, "LearnerRegrRanger")
   expect_equal(surrogate$model[[1L]]$param_set$values, surrogate$model[[2L]]$param_set$values)
   expect_equal(surrogate$model[[1L]]$encapsulate, surrogate$model[[2L]]$encapsulate)
-  #expect_equal(surrogate$model[[1L]]$fallback, surrogate$model[[2L]]$fallback)
+  expect_equal(surrogate$model[[1L]]$fallback, surrogate$model[[2L]]$fallback)
 
   # singlecrit mixed input deps
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED_DEPS))
@@ -85,10 +85,8 @@ test_that("default_surrogate", {
 test_that("default_acqfun", {
   instance = MAKE_INST_1D()
   surrogate = default_surrogate(instance)
-  expect_r6(default_acqfun(instance, surrogate = surrogate), "AcqFunctionEI")
-  acq = default_acqfun(instance, surrogate = SurrogateSingleCritLearner$new(lrn("regr.featureless")))
+  acq = default_acqfun(instance, surrogate = surrogate)
   expect_r6(acq, "AcqFunctionEI")
-  expect_r6(acq$surrogate$model, "LearnerRegrFeatureless")
 })
 
 
@@ -97,5 +95,60 @@ test_that("default_acq_optimizer", {
   acqopt = default_acq_optimizer(MAKE_INST_1D())
   expect_r6(acqopt, "AcqOptimizer")
   expect_r6(acqopt$optimizer, "OptimizerRandomSearch")
+})
+
+
+
+test_that("stability and defaults", {
+  console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
+  f = tempfile("bbotklog_", fileext = "log")
+  th1 = lg$threshold
+  th2 = console_appender$threshold
+
+  lg$set_threshold("debug")
+  lg$add_appender(lgr::AppenderFile$new(f, threshold = "debug"), name = "testappender")
+  console_appender$set_threshold("warn")
+
+  on.exit({
+    lg$remove_appender("testappender")
+    lg$set_threshold(th1)
+    console_appender$set_threshold(th2)
+  })
+
+  # Surrogate using LearnerRegrError as Learner that will fail during train
+  # this should trigger a leads_to_exploration_error
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
+  learner = LearnerRegrError$new()
+  learner$encapsulate[c("train", "predict")] = "evaluate"
+  learner$fallback = lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)
+  surrogate = default_surrogate(instance, learner = learner, n_objectives = 1L)
+  expect_r6(surrogate, "SurrogateSingleCrit")
+  expect_r6(surrogate$model, "LearnerRegrError")
+  expect_equal(surrogate$model$encapsulate, c(train = "evaluate", predict = "evaluate"))
+  expect_r6(surrogate$model$fallback, "LearnerRegrRanger")
+  acq_function = default_acqfun(instance, surrogate = surrogate)
+  expect_r6(acq_function, "AcqFunctionEI")
+  acq_optimizer = default_acq_optimizer(MAKE_INST_1D())
+  expect_r6(acq_optimizer, "AcqOptimizer")
+  expect_r6(acq_optimizer$optimizer, "OptimizerRandomSearch")
+
+  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  expect_true(nrow(instance$archive$data) == 5L)
+  expect_equal(acq_function$surrogate$model$errors, "Surrogate Train Error")
+  lines = readLines(f)
+  # Nothing should happen here due to the fallback learner
+  expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)
+
+  acq_function$surrogate$model$reset()
+  acq_function$surrogate$model$fallback = NULL
+  instance$archive$clear()
+  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  expect_true(nrow(instance$archive$data) == 5L)
+  lines = readLines(f)
+  # Training fails but this error is not logged due to the "evaluate" encapsulate
+  expect_equal(acq_function$surrogate$model$errors, "Surrogate Train Error")
+  expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)
+  expect_true(sum(grepl("Cannot predict", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
+  expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
 })
 

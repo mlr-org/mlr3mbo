@@ -1,3 +1,5 @@
+learner default mit evaluate wrappen? eher nicht weil das wird mit random propsal gecatched
+
 eval mit callr in extra prozess? (https://github.com/mlr-org/mlr3mbo/issues/1)
 
 tuning instance code kopieren?
