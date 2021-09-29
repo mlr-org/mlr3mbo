@@ -147,7 +147,11 @@ default_surrogate = function(instance, learner = NULL, n_objectives = NULL) {
 #' @export
 default_acqfun = function(instance, surrogate) {
   assert_r6(instance, "OptimInstance")
-  AcqFunctionEI$new(surrogate = surrogate)
+  if (testR6(instance, classes = "OptimInstanceSingleCrit")) {
+    AcqFunctionEI$new(surrogate = surrogate)
+  } else if (testR6(instance, classes = "OptimInstanceMultiCrit")) {
+    AcqFunctionSmsEgo$new(surrogate = surrogate)
+  }
 }
 
 #' @title Default Acquisition Function Optimizer

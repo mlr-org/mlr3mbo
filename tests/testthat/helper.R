@@ -12,7 +12,7 @@ FUN_1D_CODOMAIN = ParamSet$new(list(ParamDbl$new("y", tags = c("minimize", "rand
 OBJ_1D = ObjectiveRFun$new(fun = FUN_1D, domain = PS_1D, codomain = FUN_1D_CODOMAIN, properties = "single-crit")
 
 FUN_1D_2 = function(xs) {
-  list(y1 = as.numeric(xs)^2, y2 = sqrt(abs(as.numeric(xs))))
+  list(y1 = as.numeric(xs)^2, y2 = - sqrt(abs(as.numeric(xs))))
 }
 FUN_1D_2_CODOMAIN = ParamSet$new(list(ParamDbl$new("y1", tags = c("minimize", "random_tag")), ParamDbl$new("y2", tags = c("minimize", "random_tag"))))
 OBJ_1D_2 = ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
@@ -48,13 +48,6 @@ FUN_1D_2_MIXED = function(xs) {
   list(y1 = (xs$x1 - switch(xs$x2, "a" = 0, "b" = 1, "c" = 2)) %% xs$x3 + (if (xs$x4) xs$x1 else pi), y2 = xs$x1)
 }
 OBJ_1D_2_MIXED = ObjectiveRFun$new(fun = FUN_1D_2_MIXED, domain = PS_1D_MIXED, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
-
-
-FUN_1D_2 = function(xs) {
-  list(y1 = as.numeric(xs)^2, y2 = sqrt(abs(as.numeric(xs))))
-}
-FUN_1D_2_CODOMAIN = ParamSet$new(list(ParamDbl$new("y1", tags = c("minimize", "random_tag")), ParamDbl$new("y2", tags = c("minimize", "random_tag"))))
-OBJ_1D_2 = ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
 
 # Simple 2D Function
 PS_2D_domain = ParamSet$new(list(

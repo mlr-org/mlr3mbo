@@ -23,7 +23,7 @@ bayesopt_smsego = function(instance, acq_function = NULL, acq_optimizer = NULL) 
   archive = instance$archive
   # FIXME: maybe do not have this here, but have a general init helper
   if (archive$n_evals == 0) {
-    design = generate_design_lhs(instance$search_space, 4 * instance$search_space$length)$data
+    design = generate_design_random(instance$search_space, 4 * instance$search_space$length)$data
     instance$eval_batch(design)
   }
 

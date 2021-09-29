@@ -17,7 +17,7 @@ test_that("OptimizerMbo works", {
 
   opdf = instance$archive$data
   expect_data_table(opdf, any.missing = TRUE, nrows = 10)
-  expect_data_table(tail(opdf, -nrow(design)), any.missing = FALSE, nrows = 10-nrow(design))
+  expect_data_table(tail(opdf, - nrow(design)), any.missing = FALSE, nrows = 10 - nrow(design))
   expect_equal(instance$result$y, 0, tolerance = 0.1)
 
   optim$optimize(instance)
@@ -66,7 +66,7 @@ test_that("OptimizerMbo works with different settings", {
     optim$optimize(instance)
 
     opdf = instance$archive$data
-    expect_data_table(tail(opdf, -6), any.missing = FALSE, nrows = 12-6)
+    expect_data_table(tail(opdf, -6), any.missing = FALSE, nrows = 12 - 6)
     expect_equal(instance$result$y, 0, tolerance = 0.6)
   }
 })
@@ -88,13 +88,13 @@ test_that("OptimizerMbo works for noisy problems", {
     search_space = PS_2D
   )
 
-  design = MAKE_DESIGN(instance, 12L)
+  design = MAKE_DESIGN(instance, 12)
   instance$eval_batch(design)
 
   optim$optimize(instance)
 
   opdf = instance$archive$data
-  expect_data_table(tail(opdf, -12L), any.missing = FALSE, nrows = 20L-12L)
+  expect_data_table(tail(opdf, -12), any.missing = FALSE, nrows = 20 - 12)
   #FIXME: Can we test that the surrogate actually influneces the choice?
   #expect_true(instance$result$y > min(opdf$y)) # we have not chosen the overoptimistic noisy y
   #expect_equal(instance$result$y, 0, tolerance = 0.1)
