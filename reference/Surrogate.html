@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Surrogate Model — Surrogate • mlr3mbo</title>
+<title>Surrogate model — Surrogate • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,8 +47,8 @@
 
 
 
-<meta property="og:title" content="Surrogate Model — Surrogate" />
-<meta property="og:description" content="Surrogate Model" />
+<meta property="og:title" content="Surrogate model — Surrogate" />
+<meta property="og:description" content="Surrogate model." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -138,13 +138,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Surrogate Model</h1>
+    <h1>Surrogate model</h1>
     <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/Surrogate.R'><code>R/Surrogate.R</code></a></small>
     <div class="hidden name"><code>Surrogate.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Surrogate Model</p>
+    <p>Surrogate model.</p>
     </div>
 
 
@@ -152,14 +152,14 @@
     <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
 
     <p><div class="r6-fields"></p><dl>
-<dt><code>model</code></dt><dd><p>Surrogate Model</p></dd>
+<dt><code>model</code></dt><dd><p>Surrogate model</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="active-bindings"><a class="anchor" href="#active-bindings"></a>Active bindings</h2>
 
     <p><div class="r6-active-bindings"></p><dl>
 <dt><code>insample_perf</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>)<br />
-Surrogate Model's current insample performance.</p></dd>
+Surrogate model's current insample performance.</p></dd>
 
 <dt><code>param_set</code></dt><dd><p>(<a href='https://paradox.mlr-org.com/reference/ParamSet.html'>paradox::ParamSet</a>)<br />
 Set of hyperparameters.</p></dd>
@@ -187,7 +187,7 @@ Asserts whether the current insample performance meets the performance threshold
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>model</code></dt><dd><p>Model</p></dd>
+<dt><code>model</code></dt><dd><p>(Model).</p></dd>
 
 </dl><p></div></p>
 <p><hr>
@@ -197,7 +197,7 @@ Asserts whether the current insample performance meets the performance threshold
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>xydt</code></dt><dd><p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code><br />
+<dt><code>xydt</code></dt><dd><p>(<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>)<br />
 Desing of new points.</p></dd>
 
 <dt><code>y_cols</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character()</a></code>)<br />
@@ -208,12 +208,12 @@ Names of response columns.</p></dd>
 <p><code>NULL</code>.</p>
 <p><hr>
 <a id="method-setup"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>setup()</code></h3>
-<p>Possible setup routine of the surrogate</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p>Possible setup routine of the surrogate.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>Surrogate</span><span class='op'>$</span><span class='fu'>setup</span><span class='op'>(</span><span class='va'>xydt</span>, <span class='va'>y_cols</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>xydt</code></dt><dd><p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code><br />
+<dt><code>xydt</code></dt><dd><p>(<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>)<br />
 Initial design.</p></dd>
 
 <dt><code>y_cols</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character()</a></code>)<br />
@@ -224,12 +224,12 @@ Names of response columns.</p></dd>
 <p><code>NULL</code>.</p>
 <p><hr>
 <a id="method-predict"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/predict.html'>predict()</a></code></h3>
-<p>Returns mean response and standard error</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p>Returns mean response and standard error.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>Surrogate</span><span class='op'>$</span><span class='fu'>predict</span><span class='op'>(</span><span class='va'>xdt</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>xdt</code></dt><dd><p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code><br />
+<dt><code>xdt</code></dt><dd><p>(<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>)<br />
 New data.</p></dd>
 
 </dl><p></div></p>

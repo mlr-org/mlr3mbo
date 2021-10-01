@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Surrogate Model — SurrogateSingleCritLearner • mlr3mbo</title>
+<title>Acquisition Function Probability of Improvement — AcqFunctionPI • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,8 +47,9 @@
 
 
 
-<meta property="og:title" content="Surrogate Model — SurrogateSingleCritLearner" />
-<meta property="og:description" content="Surrogate model based on regression mlr3::Learner objects." />
+<meta property="og:title" content="Acquisition Function Probability of Improvement — AcqFunctionPI" />
+<meta property="og:description" content="Probability of Improvement.
+See Kushner (1964)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -138,25 +139,39 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Surrogate Model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/SurrogateSingleCritLearner.R'><code>R/SurrogateSingleCritLearner.R</code></a></small>
-    <div class="hidden name"><code>SurrogateSingleCritLearner.Rd</code></div>
+    <h1>Acquisition Function Probability of Improvement</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/AcqFunctionPI.R'><code>R/AcqFunctionPI.R</code></a></small>
+    <div class="hidden name"><code>AcqFunctionPI.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Surrogate model based on regression <a href='https://mlr3.mlr-org.com/reference/Learner.html'>mlr3::Learner</a> objects.</p>
+    <p>Probability of Improvement.</p>
+<p>See Kushner (1964).</p>
     </div>
 
 
 
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Ding, Yufeng, Simonoff, S J (2010).
+&#8220;An investigation of missing data methods for classification trees applied to binary response data.&#8221;
+<em>Journal of Machine Learning Research</em>, <b>11</b>(1), 131--170.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Acquisition Function: 
+<code><a href='AcqFunctionAEI.html'>AcqFunctionAEI</a></code>,
+<code><a href='AcqFunctionCB.html'>AcqFunctionCB</a></code>,
+<code><a href='AcqFunctionEIPS.html'>AcqFunctionEIPS</a></code>,
+<code><a href='AcqFunctionEI.html'>AcqFunctionEI</a></code>,
+<code><a href='AcqFunctionSmsEgo.html'>AcqFunctionSmsEgo</a></code>,
+<code><a href='AcqFunction.html'>AcqFunction</a></code></p></div>
     <h2 class="hasAnchor" id="super-classes"><a class="anchor" href="#super-classes"></a>Super classes</h2>
 
-    <p><code><a href='Surrogate.html'>mlr3mbo::Surrogate</a></code> -&gt; <code><a href='SurrogateSingleCrit.html'>mlr3mbo::SurrogateSingleCrit</a></code> -&gt; <code>SurrogateSingleCritLearner</code></p>
-    <h2 class="hasAnchor" id="active-bindings"><a class="anchor" href="#active-bindings"></a>Active bindings</h2>
+    <p><code><a href='https://bbotk.mlr-org.com/reference/Objective.html'>bbotk::Objective</a></code> -&gt; <code><a href='https://bbotk.mlr-org.com/reference/ObjectiveRFunDt.html'>bbotk::ObjectiveRFunDt</a></code> -&gt; <code><a href='AcqFunction.html'>mlr3mbo::AcqFunction</a></code> -&gt; <code>AcqFunctionPI</code></p>
+    <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
 
-    <p><div class="r6-active-bindings"></p><dl>
-<dt><code>assert_insample_perf</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>) <br />
-Asserts whether the current insample performance meets the performance threshold.</p></dd>
+    <p><div class="r6-fields"></p><dl>
+<dt><code>y_best</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
@@ -165,44 +180,45 @@ Asserts whether the current insample performance meets the performance threshold
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
-<li><p><a href='#method-new'><code>SurrogateSingleCritLearner$new()</code></a></p></li>
-<li><p><a href='#method-predict'><code>SurrogateSingleCritLearner$predict()</code></a></p></li>
-<li><p><a href='#method-clone'><code>SurrogateSingleCritLearner$clone()</code></a></p></li>
+<li><p><a href='#method-new'><code>AcqFunctionPI$new()</code></a></p></li>
+<li><p><a href='#method-update'><code>AcqFunctionPI$update()</code></a></p></li>
+<li><p><a href='#method-clone'><code>AcqFunctionPI$clone()</code></a></p></li>
 </ul>
-<p><details open ><summary>Inherited methods</summary>
+<p><details ><summary>Inherited methods</summary>
 <ul>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup"><a href='../../mlr3mbo/html/Surrogate.html#method-setup'><code>mlr3mbo::Surrogate$setup()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href='../../mlr3mbo/html/Surrogate.html#method-update'><code>mlr3mbo::Surrogate$update()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-eval'><code>bbotk::Objective$eval()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-format'><code>bbotk::Objective$format()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-print'><code>bbotk::Objective$print()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_dt"><a href='../../bbotk/html/ObjectiveRFunDt.html#method-eval_dt'><code>bbotk::ObjectiveRFunDt$eval_dt()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_many"><a href='../../bbotk/html/ObjectiveRFunDt.html#method-eval_many'><code>bbotk::ObjectiveRFunDt$eval_many()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup"><a href='../../mlr3mbo/html/AcqFunction.html#method-setup'><code>mlr3mbo::AcqFunction$setup()</code></a></span></p></li>
 </ul>
 </details>
 
 <hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
 <p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>SurrogateSingleCritLearner</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>learner</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>AcqFunctionPI</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>surrogate</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>learner</code></dt><dd><p>(<a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3::LearnerRegr</a>).</p></dd>
+<dt><code>surrogate</code></dt><dd><p>(<a href='SurrogateSingleCrit.html'>SurrogateSingleCrit</a>).</p></dd>
 
 </dl><p></div></p>
 <p><hr>
-<a id="method-predict"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/predict.html'>predict()</a></code></h3>
-<p>Returns mean response and standard error.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>SurrogateSingleCritLearner</span><span class='op'>$</span><span class='fu'>predict</span><span class='op'>(</span><span class='va'>xdt</span><span class='op'>)</span></pre><p></div></p>
+<a id="method-update"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/update.html'>update()</a></code></h3>
+<p>Updates acquisition function and sets <code>y_best</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqFunctionPI</span><span class='op'>$</span><span class='fu'>update</span><span class='op'>(</span><span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>xdt</code></dt><dd><p>(<code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>)<br />
-New data.</p></dd>
+<dt><code>archive</code></dt><dd><p>(<a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>).</p></dd>
 
 </dl><p></div></p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code> with the columns <code>mean</code> and <code>se</code>.</p>
 <p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>SurrogateSingleCritLearner</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>AcqFunctionPI</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>

@@ -19,6 +19,9 @@
     <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionEIPS.html</loc>
   </url>
   <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionPI.html</loc>
+  </url>
+  <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionSmsEgo.html</loc>
   </url>
   <url>
@@ -46,10 +49,10 @@
     <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_soo.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/default_acq_optimizer.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/default_acqfun.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/default_acqfun.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/default_acqoptimizer.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/default_loopfun.html</loc>
