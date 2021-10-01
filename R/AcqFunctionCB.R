@@ -7,6 +7,8 @@
 #' * `lambda` (`numeric(1)`)\cr
 #'   TODO DESCRIPTION and Reference
 #'
+#' @references
+#' `r format_bib("snoek_2012")`
 #'
 #' @family Acquisition Function
 #'
@@ -31,7 +33,6 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
       fun = function(xdt, ...) {
         p = self$surrogate$predict(xdt)
         res = p$mean - self$surrogate_max_to_min * self$constants$values$lambda * p$se
-        # FIXME: what do we return here? do we want to see se, mean, too?
         data.table(acq_cb = res)
       }
 

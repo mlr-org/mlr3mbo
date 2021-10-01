@@ -12,8 +12,7 @@ bibentries = c(
     volume   = "54",
     number   = "2",
     pages    = "431--431",
-    journal  = "Journal of Global Optimization",
-    doi      = "10.1007/s10898-011-9821-z"
+    journal  = "Journal of Global Optimization"
   ),
 
   jones_1998 = bibentry("article",
@@ -23,8 +22,7 @@ bibentries = c(
     volume   = "13",
     number   = "4",
     pages    = "455--492",
-    journal  = "Journal of Global optimization",
-    doi      = "10.1023/A:1008306431147"
+    journal  = "Journal of Global optimization"
   ),
 
   ding_2010 = bibentry("article",
@@ -44,8 +42,7 @@ bibentries = c(
     volume   = "181",
     number   = "3",
     pages    = "1653--1669",
-    journal  = "European Journal of Operational Research",
-    doi = "10.1016/j.ejor.2006.08.008"
+    journal  = "European Journal of Operational Research"
   ),
 
   snoek_2012  = bibentry("inproceedings",
@@ -55,17 +52,24 @@ bibentries = c(
     booktitle = "Advances in Neural Information Processing Systems",
     editor    = "F. Pereira and C. J. C. Burges and L. Bottou and K. Q. Weinberger",
     pages     = "2951--2959",
-    publisher = "Curran Associates, Inc.",
     volume    = "25"
   ),
 
   kushner_1964 = bibentry("article",
-    author     = "Kushner, H. J.",
     title      = "A New Method of Locating the Maximum Point of an Arbitrary Multipeak Curve in the Presence of Noise",
+    author     = "Kushner, H. J.",
+    year       = "1964",
     journal    = "Journal of Basic Engineering",
     volume     = "86",
     number     = "1",
     pages      = "97-106",
-    year       = "1964"
+  ),
+
+  ponweiser_2007 = bibentry("inproceedings",
+    title        = "Multiobjective Optimization on a Limited Budget of Evaluations Using Model-Assisted S-Metric Selection",
+    author       = "Ponweiser, Wolfgang and Wagner, Tobias and Biermann, Dirk and Vincze, Markus",
+    year         = "2008",
+    booktitle    = "Proceedings of the 10th International Conference on Parallel Problem Solving from Nature",
+    pages        = "784–794"
   )
 )

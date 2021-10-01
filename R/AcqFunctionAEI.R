@@ -71,7 +71,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
         self$y_effective_best = max(y_effective)
       }
 
-      if (!is.null(self$surrogate$model$model) && length(self$surrogate$model$model@covariance@nugget) == 1) {
+      if (!is.null(self$surrogate$model$model) && length(self$surrogate$model$model@covariance@nugget) == 1L) {
         self$noise_var = self$surrogate$model$model@covariance@nugget  # FIXME: Check that this value really exists (otherwise calculate residual variance?)
       } else {
         lgr$warn("AEI currently only works correctly with regr.km and nugget estim = TRUE or given!")

@@ -18,7 +18,7 @@ bayesopt_parego = function(instance, acq_function = NULL, acq_optimizer = NULL, 
   assert_r6(instance, "OptimInstanceMultiCrit")
   if (is.null(acq_function)) {
     surrogate = default_surrogate(instance, n_objectives = 1L)
-    acq_function = default_acqfun(instance, surrogate)
+    acq_function = AcqFunctionEI$new(surrogate = surrogate)
   }
   if (is.null(acq_optimizer)) {
     acq_optimizer = default_acqoptimizer(instance)

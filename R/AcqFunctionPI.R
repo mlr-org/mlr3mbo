@@ -6,7 +6,7 @@
 #' See Kushner (1964).
 #'
 #' @references
-#' `r format_bib("ding_2010")`
+#' `r format_bib("kushner_1964")`
 #'
 #' @family Acquisition Function
 #'
