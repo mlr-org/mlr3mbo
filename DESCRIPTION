@@ -46,7 +46,7 @@ Depends:
     R (>= 3.1.0)
 Imports:
     backports,
-    bbotk (>= 0.3.0),
+    bbotk (>= 0.4.0.9000),
     checkmate (>= 2.0.0),
     data.table,
     gower,
@@ -67,7 +67,7 @@ Suggests:
     ggplot2,
     rgenoud
 Remotes:
-    mlr-org/bbotk (>= 0.4.0.9000),
+    mlr-org/bbotk,
     mlr-org/mlr3tuning
 ByteCompile: no
 Encoding: UTF-8
