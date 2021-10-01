@@ -57,5 +57,15 @@ bibentries = c(
     pages     = "2951--2959",
     publisher = "Curran Associates, Inc.",
     volume    = "25"
+  ),
+
+  kushner_1964 = bibentry("article",
+    author     = "Kushner, H. J.",
+    title      = "A New Method of Locating the Maximum Point of an Arbitrary Multipeak Curve in the Presence of Noise",
+    journal    = "Journal of Basic Engineering",
+    volume     = "86",
+    number     = "1",
+    pages      = "97-106",
+    year       = "1964"
   )
 )
