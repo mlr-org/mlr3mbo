@@ -12,7 +12,6 @@ TODO DESCRIPTION and Reference
 Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).
 \dQuote{Practical Bayesian Optimization of Machine Learning Algorithms.}
 In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neural Information Processing Systems}, volume 25, 2951--2959.
-\url{https://proceedings.neurips.cc/paper/2012/file/05311655a15b75fab86956663e1819cd-Paper.pdf}.
 }
 \seealso{
 Other Acquisition Function: 
@@ -65,7 +64,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{surrogate}}{\link{SurrogateSingleCrit}.}
+\item{\code{surrogate}}{(\link{SurrogateSingleCrit}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -82,7 +81,7 @@ Updates acquisition function and sets \code{y_best}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{archive}}{\link[bbotk:Archive]{bbotk::Archive}}
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
 }
 \if{html}{\out{</div>}}
 }

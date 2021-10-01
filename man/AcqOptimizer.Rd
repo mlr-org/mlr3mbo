@@ -70,10 +70,10 @@ the checks but most likely will.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{acq_function}}{\link{AcqFunction}\cr
+\item{\code{acq_function}}{(\link{AcqFunction})\cr
 Acquisition function to optimize.}
 
-\item{\code{archive}}{\link[bbotk:Archive]{bbotk::Archive}\cr
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive})\cr
 Archive.}
 }
 \if{html}{\out{</div>}}

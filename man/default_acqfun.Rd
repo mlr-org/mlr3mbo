@@ -7,10 +7,10 @@
 default_acqfun(instance, surrogate)
 }
 \arguments{
-\item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
+\item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance})\cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{surrogate}{\link{SurrogateSingleCritLearner} | \link{SurrogateMultiCritLearners} \cr
+\item{surrogate}{(\link{SurrogateSingleCritLearner} | \link{SurrogateMultiCritLearners})\cr
 The surrogate used in the acquisition function.}
 }
 \value{
@@ -21,7 +21,7 @@ Chooses a default acquisition function, i.e. the criterion used to propose futur
 }
 \seealso{
 Other mbo_defaults: 
-\code{\link{default_acq_optimizer}()},
+\code{\link{default_acqoptimizer}()},
 \code{\link{default_loopfun}()},
 \code{\link{default_surrogate}()},
 \code{\link{mbo_defaults}}

@@ -2,9 +2,9 @@
 % Please edit documentation in R/SurrogateSingleCrit.R
 \name{SurrogateSingleCrit}
 \alias{SurrogateSingleCrit}
-\title{Surrogate Model for Single criteria response surfaces}
+\title{Surrogate model for single criteria response surfaces}
 \description{
-Surrogate Model for Single criteria response surfaces
+Surrogate model for single criteria response surfaces.
 }
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateSingleCrit}
@@ -38,7 +38,7 @@ Each contains the mean response and standard error for one dimension.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}\cr
+\item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
 New data.}
 }
 \if{html}{\out{</div>}}

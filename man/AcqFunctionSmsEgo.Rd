@@ -46,7 +46,7 @@ Other Acquisition Function:
 
 \item{\code{progress}}{(\code{numeric()}).}
 
-\item{\code{param_set}}{\link[paradox:ParamSet]{paradox::ParamSet}}
+\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -82,7 +82,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{surrogate}}{\link{SurrogateMultiCrit}.}
+\item{\code{surrogate}}{(\link{SurrogateMultiCrit}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -99,7 +99,7 @@ Updates acquisition function and sets \verb{$y_best}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{archive}}{\link[bbotk:Archive]{bbotk::Archive}.}
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
 }
 \if{html}{\out{</div>}}
 }

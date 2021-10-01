@@ -7,16 +7,16 @@
 The following defaults are set for \link{OptimizerMbo} during optimization if the
 respective fields are not set during initialization.
 \itemize{
-\item Optimization Loop: \link{default_loopfun} \cr
-\item Acquisition Function: \link{default_acqfun} \cr
-\item Surrogate Learner: \link{default_surrogate} \cr
-\item Acqfun Optimizer: \link{default_acq_optimizer} \cr
+\item Optimization Loop: \link{default_loopfun}\cr
+\item Acquisition Function: \link{default_acqfun}\cr
+\item Surrogate Learner: \link{default_surrogate}\cr
+\item Acqfun Optimizer: \link{default_acqoptimizer}\cr
 }
 }
 \seealso{
 Other mbo_defaults: 
-\code{\link{default_acq_optimizer}()},
 \code{\link{default_acqfun}()},
+\code{\link{default_acqoptimizer}()},
 \code{\link{default_loopfun}()},
 \code{\link{default_surrogate}()}
 }

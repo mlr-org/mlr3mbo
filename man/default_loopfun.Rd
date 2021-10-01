@@ -7,7 +7,7 @@
 default_loopfun(instance)
 }
 \arguments{
-\item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
+\item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance})\cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 }
 \value{
@@ -20,8 +20,8 @@ For multi-criteria optimization, defaults to \link{bayesopt_smsego}.
 }
 \seealso{
 Other mbo_defaults: 
-\code{\link{default_acq_optimizer}()},
 \code{\link{default_acqfun}()},
+\code{\link{default_acqoptimizer}()},
 \code{\link{default_surrogate}()},
 \code{\link{mbo_defaults}}
 }

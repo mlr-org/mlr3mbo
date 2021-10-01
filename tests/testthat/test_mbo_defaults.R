@@ -91,8 +91,8 @@ test_that("default_acqfun", {
 
 
 
-test_that("default_acq_optimizer", {
-  acqopt = default_acq_optimizer(MAKE_INST_1D())
+test_that("default_acqoptimizer", {
+  acqopt = default_acqoptimizer(MAKE_INST_1D())
   expect_r6(acqopt, "AcqOptimizer")
   expect_r6(acqopt$optimizer, "OptimizerRandomSearch")
 })
@@ -128,7 +128,7 @@ test_that("stability and defaults", {
   expect_r6(surrogate$model$fallback, "LearnerRegrRanger")
   acq_function = default_acqfun(instance, surrogate = surrogate)
   expect_r6(acq_function, "AcqFunctionEI")
-  acq_optimizer = default_acq_optimizer(MAKE_INST_1D())
+  acq_optimizer = default_acqoptimizer(MAKE_INST_1D())
   expect_r6(acq_optimizer, "AcqOptimizer")
   expect_r6(acq_optimizer$optimizer, "OptimizerRandomSearch")
 

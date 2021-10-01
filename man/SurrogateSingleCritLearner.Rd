@@ -45,7 +45,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{learner}}{\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.}
+\item{\code{learner}}{(\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -62,7 +62,7 @@ Returns mean response and standard error.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}\cr
+\item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
 New data.}
 }
 \if{html}{\out{</div>}}

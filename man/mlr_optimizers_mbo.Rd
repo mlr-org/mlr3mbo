@@ -5,7 +5,10 @@
 \alias{OptimizerMbo}
 \title{OptimizerMbo}
 \description{
-MBO loop as Optimizer.
+\code{OptimizerMbo} class that implements model based optimization.
+The implementation follows a modular layout relying on a loop function` determining the MBO
+flavor to be used, e.g., \link{bayesopt_soo} for sequential MBO, an acquisition function, e.g.,
+\link{AcqFunctionEI} for expected improvement and an acquisition function optimizer.
 }
 \section{Super class}{
 \code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{OptimizerMbo}
@@ -13,15 +16,15 @@ MBO loop as Optimizer.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{loop_function}}{(\code{function}).}
+\item{\code{loop_function}}{(\code{function} | NULL).}
 
-\item{\code{result_function}}{(\code{function}).}
+\item{\code{result_function}}{(\code{function} | NULL).}
 
-\item{\code{acq_function}}{(\link{AcqFunction}).}
+\item{\code{acq_function}}{(\link{AcqFunction} | NULL).}
 
-\item{\code{acq_optimizer}}{(\link{AcqOptimizer}).}
+\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | NULL).}
 
-\item{\code{args}}{(\code{list()}).}
+\item{\code{args}}{(named \code{list()} | NULL).}
 }
 \if{html}{\out{</div>}}
 }
@@ -46,8 +49,8 @@ MBO loop as Optimizer.
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
-For more information on default values for \code{loop_function}, \code{acq_function}
-and \code{acq_optimizer}, see \code{mbo_defaults}.
+For more information on default values for \code{loop_function}, \code{acq_function} and
+\code{acq_optimizer}, see \code{mbo_defaults}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
   loop_function = NULL,
@@ -61,7 +64,7 @@ and \code{acq_optimizer}, see \code{mbo_defaults}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{loop_function}}{(\code{function}).
+\item{\code{loop_function}}{(\code{function})\cr
 Loop function to run. See \code{mbo_defaults} for defaults.}
 
 \item{\code{acq_function}}{\link{AcqFunction}\cr
@@ -70,12 +73,14 @@ The acquistion function object. For defaults see \link{mbo_defaults}.}
 \item{\code{acq_optimizer}}{\link{AcqOptimizer}\cr
 The optimizer that optimizes the acquistion function. For defaults see \link{mbo_defaults}.}
 
-\item{\code{args}}{(\code{list()}) \cr
-Further arguments for the 'loop_function'.}
+\item{\code{args}}{(named \code{list()})\cr
+Further arguments for the \code{loop_function}.}
 
 \item{\code{result_function}}{(\code{function})\cr
 Function called after the optimization terminates.
-Requires arguments 'inst' (the OptimInstance) and 'self' (the Optimizer).}
+Determines how the final result of the optimization is calculated.
+Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
+See for example \link{result_by_surrogate_design}.}
 }
 \if{html}{\out{</div>}}
 }

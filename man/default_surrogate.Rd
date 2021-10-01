@@ -7,15 +7,15 @@
 default_surrogate(instance, learner = NULL, n_objectives = NULL)
 }
 \arguments{
-\item{instance}{\link[bbotk:OptimInstance]{bbotk::OptimInstance} \cr
+\item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance})\cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{learner}{\link[mlr3:LearnerRegr]{mlr3::LearnerRegr} | \code{NULL} \cr
+\item{learner}{(\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}) | \code{NULL}\cr
 The surrogate learner used in the acquisition function. Default as described above.}
 
-\item{n_objectives}{\code{integer(1)} | \code{NULL} \cr
-Number of objectives to model. Default queries the instance. If \code{1} a
-\link{SurrogateSingleCritLearner} object is returned, otherwise a \link{SurrogateMultiCritLearners}
+\item{n_objectives}{(\code{integer(1)} | \code{NULL})\cr
+Number of objectives to model. Default queries the instance.
+If \code{1} a \link{SurrogateSingleCritLearner} object is returned, otherwise a \link{SurrogateMultiCritLearners}
 object.}
 }
 \value{
@@ -35,8 +35,10 @@ Whether the objective function is deterministic can be observed from the objecti
 properties.}
 \item{If the objective function is noisy the nugget effect will be estimated with
 \code{nugget.estim = TRUE}}
-Also \code{jitter} is set to \code{TRUE} to circumvent a problem with \CRANpkg{DiceKriging}
+\item{Also \code{jitter} is set to \code{TRUE} to circumvent a problem with \CRANpkg{DiceKriging}
 where already trained input values produce the exact trained output.
+Whether the objective function is noisy can be observed from the objective functions
+properties.}
 \item{Instead of the default \code{"BFGS"} optimization method we use rgenoud (\code{"gen"}),
 which is a hybrid algorithm, to combine global search based on genetic algorithms and local search
 based on gradients.
@@ -56,7 +58,7 @@ in cases where the surrogate learner errors. Currently, the following learner is
 \code{GraphLearner$new(po("imputeoor") \%>>\% lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE))}.
 
 If additionally dependencies are present in the parameter space, inactive conditional parameters
-are represented by missing \code{NA} values in the training design data.frame.
+are represented by missing \code{NA} values in the training design data.
 We simply handle those with an imputation method, added to the ranger random forest, more concretely we
 use \code{po("imputeoor")} from package \CRANpkg{mlr3pipelines}.
 Both of these techniques make sense for tree-based methods and are usually hard to beat, see
@@ -69,8 +71,8 @@ Ding, Yufeng, Simonoff, S J (2010).
 }
 \seealso{
 Other mbo_defaults: 
-\code{\link{default_acq_optimizer}()},
 \code{\link{default_acqfun}()},
+\code{\link{default_acqoptimizer}()},
 \code{\link{default_loopfun}()},
 \code{\link{mbo_defaults}}
 }

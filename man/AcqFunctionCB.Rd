@@ -58,7 +58,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{surrogate}}{\link{SurrogateSingleCrit}.}
+\item{\code{surrogate}}{(\link{SurrogateSingleCrit}).}
 }
 \if{html}{\out{</div>}}
 }

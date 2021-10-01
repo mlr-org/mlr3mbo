@@ -2,9 +2,9 @@
 % Please edit documentation in R/SurrogateMultiCrit.R
 \name{SurrogateMultiCrit}
 \alias{SurrogateMultiCrit}
-\title{Surrogate Model for MultiCriteria response surfaces}
+\title{Surrogate model for multi criteria response surfaces}
 \description{
-Surrogate Model for MultiCriteria response surfaces
+Surrogate model for multi criteria response surfaces.
 }
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateMultiCrit}
@@ -45,7 +45,7 @@ Each contains the mean response and standard error for one dimension.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}\cr
+\item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
 New data.}
 }
 \if{html}{\out{</div>}}

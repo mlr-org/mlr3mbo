@@ -67,7 +67,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 \item{\code{constants}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
 
-\item{\code{surrogate}}{\link{Surrogate}.}
+\item{\code{surrogate}}{(\link{Surrogate}).}
 
 \item{\code{direction}}{(\code{character(1)}).}
 
@@ -89,7 +89,7 @@ Sets up the acquisition function.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{archive}}{\link[bbotk:Archive]{bbotk::Archive}.}
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -106,7 +106,7 @@ Update the acquisition function given an \link[bbotk:Archive]{bbotk::Archive}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{archive}}{\link[bbotk:Archive]{bbotk::Archive}.}
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
 }
 \if{html}{\out{</div>}}
 }

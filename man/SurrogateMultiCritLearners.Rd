@@ -2,7 +2,7 @@
 % Please edit documentation in R/SurrogateMultiCritLearners.R
 \name{SurrogateMultiCritLearners}
 \alias{SurrogateMultiCritLearners}
-\title{Surrogate Model for MultiCriteria response surfaces}
+\title{Surrogate Model for Multi-Criteria response surfaces}
 \description{
 Multi Criteria response surfaces modeled by multiple regression \link[mlr3:Learner]{mlr3::Learner} objects.
 }
@@ -57,7 +57,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<a id="method-predict"></a>}}
 \if{latex}{\out{\hypertarget{method-predict}{}}}
 \subsection{Method \code{predict()}}{
-Returns mean response and standard error
+Returns mean response and standard error.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateMultiCritLearners$predict(xdt)}\if{html}{\out{</div>}}
 }
@@ -65,7 +65,7 @@ Returns mean response and standard error
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{xdt}}{\code{\link[data.table:data.table]{data.table::data.table()}}\cr
+\item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
 New data.}
 }
 \if{html}{\out{</div>}}
