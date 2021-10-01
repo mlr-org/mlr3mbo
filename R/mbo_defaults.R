@@ -5,10 +5,10 @@
 #' The following defaults are set for [OptimizerMbo] during optimization if the
 #' respective fields are not set during initialization.
 #'
-#' * Optimization Loop: [default_loopfun] \cr
-#' * Acquisition Function: [default_acqfun] \cr
-#' * Surrogate Learner: [default_surrogate] \cr
-#' * Acqfun Optimizer: [default_acq_optimizer] \cr
+#' * Optimization Loop: [default_loopfun]\cr
+#' * Acquisition Function: [default_acqfun]\cr
+#' * Surrogate Learner: [default_surrogate]\cr
+#' * Acqfun Optimizer: [default_acqoptimizer]\cr
 #'
 #' @family mbo_defaults
 NULL
@@ -20,7 +20,7 @@ NULL
 #' For single-criteria optimization, defaults to [bayesopt_soo].
 #' For multi-criteria optimization, defaults to [bayesopt_smsego].
 #'
-#' @param instance [bbotk::OptimInstance] \cr
+#' @param instance ([bbotk::OptimInstance])\cr
 #'   An object that inherits from [bbotk::OptimInstance].
 #' @return loop `function`
 #' @family mbo_defaults
@@ -49,8 +49,10 @@ default_loopfun = function(instance) {
 #'   properties.}
 #' \item{If the objective function is noisy the nugget effect will be estimated with
 #'   \code{nugget.estim = TRUE}}
-#'   Also \code{jitter} is set to \code{TRUE} to circumvent a problem with \CRANpkg{DiceKriging}
+#' \item{Also \code{jitter} is set to \code{TRUE} to circumvent a problem with \CRANpkg{DiceKriging}
 #'   where already trained input values produce the exact trained output.
+#'   Whether the objective function is noisy can be observed from the objective functions
+#'   properties.}
 #' \item{Instead of the default \code{"BFGS"} optimization method we use rgenoud (\code{"gen"}),
 #'   which is a hybrid algorithm, to combine global search based on genetic algorithms and local search
 #'   based on gradients.
@@ -70,7 +72,7 @@ default_loopfun = function(instance) {
 #' \code{GraphLearner$new(po("imputeoor") %>>% lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE))}.
 #'
 #' If additionally dependencies are present in the parameter space, inactive conditional parameters
-#' are represented by missing \code{NA} values in the training design data.frame.
+#' are represented by missing \code{NA} values in the training design data.
 #' We simply handle those with an imputation method, added to the ranger random forest, more concretely we
 #' use \code{po("imputeoor")} from package \CRANpkg{mlr3pipelines}.
 #' Both of these techniques make sense for tree-based methods and are usually hard to beat, see
@@ -79,13 +81,13 @@ default_loopfun = function(instance) {
 #' @references
 #' `r format_bib("ding_2010")`
 #'
-#' @param instance [bbotk::OptimInstance] \cr
+#' @param instance ([bbotk::OptimInstance])\cr
 #'   An object that inherits from [bbotk::OptimInstance].
-#' @param learner [mlr3::LearnerRegr] | `NULL` \cr
+#' @param learner ([mlr3::LearnerRegr]) | `NULL`\cr
 #'   The surrogate learner used in the acquisition function. Default as described above.
-#' @param n_objectives `integer(1)` | `NULL` \cr
-#'   Number of objectives to model. Default queries the instance. If `1` a
-#'   [SurrogateSingleCritLearner] object is returned, otherwise a [SurrogateMultiCritLearners]
+#' @param n_objectives (`integer(1)` | `NULL`)\cr
+#'   Number of objectives to model. Default queries the instance.
+#'   If `1` a [SurrogateSingleCritLearner] object is returned, otherwise a [SurrogateMultiCritLearners]
 #'   object.
 #' @return [Surrogate]
 #' @family mbo_defaults
@@ -138,9 +140,9 @@ default_surrogate = function(instance, learner = NULL, n_objectives = NULL) {
 #'
 #' @description
 #' Chooses a default acquisition function, i.e. the criterion used to propose future points.
-#' @param instance [bbotk::OptimInstance] \cr
+#' @param instance ([bbotk::OptimInstance])\cr
 #'   An object that inherits from [bbotk::OptimInstance].
-#' @param surrogate [SurrogateSingleCritLearner] | [SurrogateMultiCritLearners] \cr
+#' @param surrogate ([SurrogateSingleCritLearner] | [SurrogateMultiCritLearners])\cr
 #'   The surrogate used in the acquisition function.
 #' @return [AcqFunction]
 #' @family mbo_defaults
@@ -160,12 +162,12 @@ default_acqfun = function(instance, surrogate) {
 #' Chooses a default acquisition function optimizer.
 #' Defaults to [bbotk::OptimizerRandomSearch] provided as an [AcqOptimizer].
 #'
-#' @param instance [bbotk::OptimInstance] \cr
+#' @param instance ([bbotk::OptimInstance])\cr
 #'   An object that inherits from [bbotk::OptimInstance].
 #' @return [AcqOptimizer]
 #' @family mbo_defaults
 #' @export
-default_acq_optimizer = function(instance) {
+default_acqoptimizer = function(instance) {
   assert_r6(instance, "OptimInstance")
   AcqOptimizer$new(opt("random_search", batch_size = 1000L), trm("evals", n_evals = 1000))  # FIXME: what do we use
 }

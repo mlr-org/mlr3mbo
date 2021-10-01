@@ -19,7 +19,7 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param surrogate [SurrogateSingleCrit].
+    #' @param surrogate ([SurrogateSingleCrit]).
     initialize = function(surrogate) {
       assert_r6(surrogate, "SurrogateSingleCrit")
 

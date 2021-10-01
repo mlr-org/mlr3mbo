@@ -6,14 +6,14 @@ format_bib = function(...) {
 #' @importFrom utils bibentry
 bibentries = c(
   huang_2012 = bibentry("article",
-    title     = "Erratum to: Global optimization of stochastic black-box systems via sequential kriging meta-models",
-    author    = "D. Huang and T. T. Allen and W. I. Notz and N. Zheng",
-    year      = "2012",
-    volume    = "54",
-    number    = "2",
-    pages     = "431--431",
-    journal   = "Journal of Global Optimization",
-    doi       = "10.1007/s10898-011-9821-z"
+    title    = "Erratum to: Global optimization of stochastic black-box systems via sequential kriging meta-models",
+    author   = "D. Huang and T. T. Allen and W. I. Notz and N. Zheng",
+    year     = "2012",
+    volume   = "54",
+    number   = "2",
+    pages    = "431--431",
+    journal  = "Journal of Global Optimization",
+    doi      = "10.1007/s10898-011-9821-z"
   ),
 
   jones_1998 = bibentry("article",
@@ -28,37 +28,34 @@ bibentries = c(
   ),
 
   ding_2010 = bibentry("article",
-    title    = "An investigation of missing data methods for classification trees applied to binary response data.",
-    author   = "Ding, Yufeng and Simonoff, Jeffrey S",
-    year     = "2010",
-    volume   = "11",
-    number   = "1",
-    pages    = "131--170",
-    journal  = "Journal of Machine Learning Research"
+    title   = "An investigation of missing data methods for classification trees applied to binary response data.",
+    author  = "Ding, Yufeng and Simonoff, Jeffrey S",
+    year    = "2010",
+    volume  = "11",
+    number  = "1",
+    pages   = "131--170",
+    journal = "Journal of Machine Learning Research"
   ),
 
   beume_2007 = bibentry("article",
-    doi = "10.1016/j.ejor.2006.08.008",
-    year = "2007",
-    month = "sep",
-    publisher = "Elsevier",
-    volume = "181",
-    number = "3",
-    pages = "1653--1669",
-    author = "Nicola Beume and Boris Naujoks and Michael Emmerich",
-    title = "{SMS}-{EMOA}: Multiobjective selection based on dominated hypervolume",
-    journal = "European Journal of Operational Research"
+    title    = "{SMS}-{EMOA}: Multiobjective selection based on dominated hypervolume",
+    author   = "Nicola Beume and Boris Naujoks and Michael Emmerich",
+    year     = "2007",
+    volume   = "181",
+    number   = "3",
+    pages    = "1653--1669",
+    journal  = "European Journal of Operational Research",
+    doi = "10.1016/j.ejor.2006.08.008"
   ),
 
-  snoek_2012 = bibentry("inproceedings",
-    author = "Snoek, Jasper and Larochelle, Hugo and Adams, Ryan P",
+  snoek_2012  = bibentry("inproceedings",
+    title     = "Practical Bayesian Optimization of Machine Learning Algorithms",
+    author    = "Snoek, Jasper and Larochelle, Hugo and Adams, Ryan P",
+    year      = "2012",
     booktitle = "Advances in Neural Information Processing Systems",
-    editor = "F. Pereira and C. J. C. Burges and L. Bottou and K. Q. Weinberger",
-    pages = "2951--2959",
+    editor    = "F. Pereira and C. J. C. Burges and L. Bottou and K. Q. Weinberger",
+    pages     = "2951--2959",
     publisher = "Curran Associates, Inc.",
-    title = "Practical Bayesian Optimization of Machine Learning Algorithms",
-    url = "https://proceedings.neurips.cc/paper/2012/file/05311655a15b75fab86956663e1819cd-Paper.pdf",
-    volume = "25",
-    year = "2012"
+    volume    = "25"
   )
 )

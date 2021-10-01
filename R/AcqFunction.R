@@ -26,7 +26,7 @@ AcqFunction = R6Class("AcqFunction",
     #'
     #' @param id (`character(1)`).
     #' @param constants ([paradox::ParamSet]).
-    #' @param surrogate [Surrogate].
+    #' @param surrogate ([Surrogate]).
     #' @param direction (`character(1)`).
     #' @param fun (`function(xdt)`).
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
@@ -45,7 +45,7 @@ AcqFunction = R6Class("AcqFunction",
     #' @description
     #' Sets up the acquisition function.
     #'
-    #' @param archive [bbotk::Archive].
+    #' @param archive ([bbotk::Archive]).
     setup = function(archive) {
       # FIXME: Should we allow alternative search_space as additional argument?
 
@@ -61,7 +61,7 @@ AcqFunction = R6Class("AcqFunction",
     #' @description
     #' Update the acquisition function given an [bbotk::Archive].
     #'
-    #' @param archive [bbotk::Archive].
+    #' @param archive ([bbotk::Archive]).
     update = function(archive) {
       # it's okay to do nothing here
     }

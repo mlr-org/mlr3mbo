@@ -3,9 +3,9 @@
 #' @description
 #' Choose final point by best surrogate mean prediction on all evaluated points on the search space.
 #'
-#' @param instance ([bbotk::OptimInstanceSingleCrit]|[bbotk::OptimInstanceMultiCrit])\cr
+#' @param instance ([bbotk::OptimInstanceSingleCrit] | [bbotk::OptimInstanceMultiCrit])\cr
 #'   The OptimInstance object the result should be assigned to.
-#' @param optimizer_mbo [OptimizerMbo]\cr
+#' @param optimizer_mbo ([OptimizerMbo])\cr
 #'   The OptimizerMbo object that generates the final result.
 #' @return NULL
 #' @export

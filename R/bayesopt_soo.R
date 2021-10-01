@@ -6,7 +6,6 @@
 # - the design?
 # - the optimizer?
 
-# and why do we pass some tings in "control" and some separately?
 
 #' @title Single Objective Bayesian Optimization
 #'
@@ -30,7 +29,7 @@ bayesopt_soo = function(instance, acq_function = NULL, acq_optimizer = NULL, n_d
     acq_function = default_acqfun(instance, surrogate = surrogate)
   }
   if (is.null(acq_optimizer)) {
-    acq_optimizer = default_acq_optimizer(instance)
+    acq_optimizer = default_acqoptimizer(instance)
   }
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")

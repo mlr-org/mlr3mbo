@@ -18,7 +18,7 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param surrogate [SurrogateSingleCrit].
+    #' @param surrogate ([SurrogateSingleCrit]).
     initialize = function(surrogate) {
       assert_r6(surrogate, "SurrogateSingleCrit")
 
@@ -42,7 +42,7 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     #' @description
     #' Updates acquisition function and sets `y_best`.
     #'
-    #' @param archive [bbotk::Archive]
+    #' @param archive ([bbotk::Archive]).
     update = function(archive) {
       super$update(archive)
       self$y_best = archive$best()[[archive$cols_y]]

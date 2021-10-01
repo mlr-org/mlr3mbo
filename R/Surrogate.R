@@ -1,19 +1,19 @@
-#' @title Surrogate Model
+#' @title Surrogate model
 #'
 #' @description
-#' Surrogate Model
+#' Surrogate model.
 #'
 #' @export
 Surrogate = R6Class("Surrogate",
   public = list(
 
-    #' @field model Surrogate Model
+    #' @field model Surrogate model
     model = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param model Model
+    #' @param model (Model).
     initialize = function(model) {
       stop("Abstract")
     },
@@ -21,7 +21,7 @@ Surrogate = R6Class("Surrogate",
     #' @description
     #' Train model with new points.
     #'
-    #' @param xydt [data.table::data.table()]\cr
+    #' @param xydt ([data.table::data.table()])\cr
     #' Desing of new points.
     #'
     #' @param y_cols (`character()`)\cr
@@ -40,9 +40,9 @@ Surrogate = R6Class("Surrogate",
     },
 
     #' @description
-    #' Possible setup routine of the surrogate
+    #' Possible setup routine of the surrogate.
     #'
-    #' @param xydt [data.table::data.table()]\cr
+    #' @param xydt ([data.table::data.table()])\cr
     #' Initial design.
     #'
     #' @param y_cols (`character()`)\cr
@@ -56,9 +56,9 @@ Surrogate = R6Class("Surrogate",
 
 
     #' @description
-    #' Returns mean response and standard error
+    #' Returns mean response and standard error.
     #'
-    #' @param xdt [data.table::data.table()]\cr
+    #' @param xdt ([data.table::data.table()])\cr
     #' New data.
     #'
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
@@ -70,7 +70,7 @@ Surrogate = R6Class("Surrogate",
   active = list(
 
     #' @field insample_perf (`numeric()`)\cr
-    #' Surrogate Model's current insample performance.
+    #' Surrogate model's current insample performance.
     insample_perf = function(rhs) {
       if (!missing(rhs)) {
         stopf("Field/Binding is read-only.")

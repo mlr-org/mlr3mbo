@@ -17,7 +17,6 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param optimizer ([bbotk::Optimizer]).
-    #'
     #' @param terminator ([bbotk::Terminator]).
     initialize = function(optimizer, terminator) {
       self$optimizer = assert_r6(optimizer, "Optimizer")
@@ -43,10 +42,9 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' returned [data.table::data.table()] of optima must not necessarily pass
     #' the checks but most likely will.
     #'
-    #' @param acq_function [AcqFunction]\cr
+    #' @param acq_function ([AcqFunction])\cr
     #' Acquisition function to optimize.
-    #'
-    #' @param archive [bbotk::Archive]\cr
+    #' @param archive ([bbotk::Archive])\cr
     #' Archive.
     #'
     #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
@@ -63,7 +61,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
       xdt = tryCatch(self$optimizer$optimize(instance),
         error = function(error_condition) {
           lg$info(error_condition$message)  # FIXME: logging?
-          # FIXME: this could potentially also fail if the surrogate cannot predict
+          # FIXME: this could potentially also fail if the surrogate cannot predict?
           stop(set_class(list(message = error_condition$message, call = NULL),
             classes = c("leads_to_exploration_error", "optimize_error", "error", "condition")))
         }

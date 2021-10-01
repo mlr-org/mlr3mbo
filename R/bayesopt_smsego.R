@@ -15,7 +15,7 @@ bayesopt_smsego = function(instance, acq_function = NULL, acq_optimizer = NULL) 
     acq_function = AcqFunctionSmsEgo$new(surrogate = surrogate)
   }
   if (is.null(acq_optimizer)) {
-    acq_optimizer = default_acq_optimizer(instance)
+    acq_optimizer = default_acqoptimizer(instance)
   }
   assert_r6(acq_function, "AcqFunctionSmsEgo")
   assert_r6(acq_optimizer, "AcqOptimizer")

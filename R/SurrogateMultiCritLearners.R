@@ -1,4 +1,4 @@
-#' @title Surrogate Model for MultiCriteria response surfaces
+#' @title Surrogate Model for Multi-Criteria response surfaces
 #'
 #' @description
 #' Multi Criteria response surfaces modeled by multiple regression [mlr3::Learner] objects.
@@ -31,9 +31,9 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     },
 
     #' @description
-    #' Returns mean response and standard error
+    #' Returns mean response and standard error.
     #'
-    #' @param xdt [data.table::data.table()]\cr
+    #' @param xdt ([data.table::data.table()])\cr
     #' New data.
     #'
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
@@ -105,8 +105,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       features = setdiff(names(xydt), y_cols)
 
       tasks = lapply(y_cols, function(y_col) {
-        # If this turns out to be a bottleneck, we can also operate on a
-        # single task here
+        # If this turns out to be a bottleneck, we can also operate on a single task here
         task = TaskRegr$new(
           id = paste0("surrogate_task_", y_col),
           backend = backend,

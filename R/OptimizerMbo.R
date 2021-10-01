@@ -3,7 +3,10 @@
 #' @name mlr_optimizers_mbo
 #'
 #' @description
-#' MBO loop as Optimizer.
+#' `OptimizerMbo` class that implements model based optimization.
+#' The implementation follows a modular layout relying on a loop function` determining the MBO
+#' flavor to be used, e.g., [bayesopt_soo] for sequential MBO, an acquisition function, e.g.,
+#' [AcqFunctionEI] for expected improvement and an acquisition function optimizer.
 #'
 #' @export
 OptimizerMbo = R6Class("OptimizerMbo",
@@ -11,40 +14,42 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
   public = list(
 
-    #' @field loop_function (`function`).
+    #' @field loop_function (`function` | NULL).
     loop_function = NULL,
 
-    #' @field result_function (`function`).
+    #' @field result_function (`function` | NULL).
     result_function = NULL,
 
-    #' @field acq_function ([AcqFunction]).
+    #' @field acq_function ([AcqFunction] | NULL).
     acq_function = NULL,
 
-    #' @field acq_optimizer ([AcqOptimizer]).
+    #' @field acq_optimizer ([AcqOptimizer] | NULL).
     acq_optimizer = NULL,
 
-    #' @field args (`list()`).
+    #' @field args (named `list()` | NULL).
     args = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    #' For more information on default values for `loop_function`, `acq_function`
-    #' and `acq_optimizer`, see `mbo_defaults`.
+    #' For more information on default values for `loop_function`, `acq_function` and
+    #' `acq_optimizer`, see `mbo_defaults`.
     #'
-    #' @param loop_function (`function`).
+    #' @param loop_function (`function`)\cr
     #'   Loop function to run. See `mbo_defaults` for defaults.
     #' @template param_acq_function
     #' @template param_acq_optimizer
-    #' @param args (`list()`) \cr
-    #'   Further arguments for the 'loop_function'.
+    #' @param args (named `list()`)\cr
+    #'   Further arguments for the `loop_function`.
     #' @param result_function (`function`)\cr
     #'   Function called after the optimization terminates.
-    #'   Requires arguments 'inst' (the OptimInstance) and 'self' (the Optimizer).
+    #'   Determines how the final result of the optimization is calculated.
+    #'   Requires arguments `inst` (the [bbotk::OptimInstance]) and `self` (the [OptimizerMbo]).
+    #'   See for example [result_by_surrogate_design].
     initialize = function(loop_function = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
       param_set = ParamSet$new()
       param_classes = feature_types_to_param_classes(acq_function$surrogate$model$feature_types)
       properties = c("dependencies", "multi-crit", "single-crit")
-      packages = character()  # Maybe not so important? Surrogate package etc?
+      packages = character()  # FIXME: Maybe not so important? Surrogate package etc?
       super$initialize(param_set, param_classes, properties, packages)
       self$loop_function = assert_function(loop_function, null.ok = TRUE)
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
@@ -59,14 +64,13 @@ OptimizerMbo = R6Class("OptimizerMbo",
       if (is.null(self$loop_function)) {
         self$loop_function = default_loopfun(inst)
       }
-      do.call(self$loop_function, c(list(instance = inst, acq_function = self$acq_function, acq_optimizer = self$acq_optimizer), self$args))
+      invoke(self$loop_function, instance = inst, acq_function = self$acq_function, acq_optimizer = self$acq_optimizer, .args = self$args)
     },
 
     .assign_result = function(inst) {
       if (is.null(self$result_function)) {
         super$.assign_result(inst)
       } else {
-        # FIXME: Where do we define how to assign the result? i.e. if the problem is stochastic we dont want to chose the best point but the point with the best mean prediction
         self$result_function(inst, self)  # FIXME: Maybe not final API
       }
     }

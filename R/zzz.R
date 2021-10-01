@@ -15,8 +15,13 @@
   # nocov start
   backports::import(pkgname)
 
+  # add mbo to optimizer dictionary
+  x = utils::getFromNamespace("mlr_optimizers", ns = "bbotk")
+  x$add("mbo", OptimizerMbo)
+
   # setup logger
   assign("lg", lgr::get_logger("bbotk"), envir = parent.env(environment()))
+
   if (Sys.getenv("IN_PKGDOWN") == "true") {
     lg$set_threshold("warn")
   }

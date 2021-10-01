@@ -1,7 +1,7 @@
-#' @title Surrogate Model for MultiCriteria response surfaces
+#' @title Surrogate model for multi criteria response surfaces
 #'
 #' @description
-#' Surrogate Model for MultiCriteria response surfaces
+#' Surrogate model for multi criteria response surfaces.
 #'
 #' @export
 SurrogateMultiCrit = R6Class("SurrogateMultiCrit",
@@ -12,11 +12,11 @@ SurrogateMultiCrit = R6Class("SurrogateMultiCrit",
     #' Returns a named list of data.tables.
     #' Each contains the mean response and standard error for one dimension.
     #'
-    #' @param xdt [data.table::data.table()]\cr
+    #' @param xdt ([data.table::data.table()])\cr
     #' New data.
     #'
     #' @return [list] of [data.table::data.table()] objects.
-    #'   Each contains the columns `mean` and `se`.
+    #' Each contains the columns `mean` and `se`.
     predict = function(xdt) {
       stop("abstract")
     }
@@ -27,7 +27,7 @@ SurrogateMultiCrit = R6Class("SurrogateMultiCrit",
     #' Returns number of models.
     k = function() {
       stop("abstract")
-      #FIXME: Should we allow SurrogateMultiCrit for arbitrary d?
+      # FIXME: Should we allow SurrogateMultiCrit for arbitrary d?
     }
   )
 )

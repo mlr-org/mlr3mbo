@@ -1,10 +1,10 @@
 generate_acq_codomain = function(codomain, id, direction = "same") {
   assert_choice(direction, c("same", "minimize", "maximize"))
   if (direction == "same") {
-    if (codomain$length > 1) {
-      stop("not supportet yet")  # FIXME: But should be
+    if (codomain$length > 1L) {
+      stop("not supported yet")  # FIXME: But should be
     }
-    tags = codomain$params[[1]]$tags
+    tags = codomain$params[[1L]]$tags
     tags = tags[tags %in% c("minimize", "maximize")]  # only filter out the relevant one
   } else {
     tags = direction
@@ -74,11 +74,11 @@ check_gower_dist = function(gower_distance, dist_threshold) {
 }
 
 fix_xdt_distance = function(xdt, previous_xdt, search_space, dist_threshold) {
-  # first, we check wether the Gower distance of each newly proposed point to all other newly proposed points is larger than dist_threshold
+  # first, we check whether the Gower distance of each newly proposed point to all other newly proposed points is larger than dist_threshold
   gower_distance_new = get_gower_dist(xdt)
   check_passed_new = check_gower_dist(gower_distance_new, dist_threshold = dist_threshold)
 
-  # second, we check wether the Gower distance of all newly proposed points to the previously evaluated ones is larger than dist_threshold
+  # second, we check weather the Gower distance of all newly proposed points to the previously evaluated ones is larger than dist_threshold
   check_passed_previous = check_gower_dist(get_gower_dist(xdt, y = previous_xdt), dist_threshold = dist_threshold)
 
   # if either fails we iteratively replace problematic points with randomly sampled ones until both checks pass
@@ -106,7 +106,6 @@ fix_xdt_distance = function(xdt, previous_xdt, search_space, dist_threshold) {
   }
 
   # NOTE: the cleanest way to do this would be a while loop so we can be sure that both checks eventually pass but this is too costly
-
   xdt
 }
 

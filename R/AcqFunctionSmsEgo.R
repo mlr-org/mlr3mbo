@@ -34,13 +34,13 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     progress = NULL,
 
     # FIXME: also in super class? private?
-    #' @field param_set [paradox::ParamSet]
+    #' @field param_set ([paradox::ParamSet]).
     param_set = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param surrogate [SurrogateMultiCrit].
+    #' @param surrogate ([SurrogateMultiCrit]).
     initialize = function(surrogate) {  # FIXME: If we have a multi-output learner we might only want to use this learner as a single surrogate, alternatively we might want to have a SurrogateMulti class that abstracts this idea and allows both (a MultiOutput learner or multiple single learners)
       param_set = ParamSet$new(list(
         ParamDbl$new("lambda", lower = 0, default = 1),
@@ -68,7 +68,7 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     #' @description
     #' Updates acquisition function and sets `$y_best`.
     #'
-    #' @param archive [bbotk::Archive].
+    #' @param archive ([bbotk::Archive]).
     update = function(archive) {
       super$update(archive)
 

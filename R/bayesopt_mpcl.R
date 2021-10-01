@@ -1,12 +1,12 @@
 bayesopt_mpcl = function(instance, acq_function = NULL, acq_optimizer = NULL, liar, q) {
-  #FIXME maybe do not have this here, but have a general assert helper
+  # FIXME: maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceSingleCrit")
   if (is.null(acq_function)) {
     surrogate = default_surrogate(instance)
     acq_function = default_acqfun(instance, surrogate = surrogate)
   }
   if (is.null(acq_optimizer)) {
-    acq_optimizer = default_acq_optimizer(instance)
+    acq_optimizer = default_acqoptimizer(instance)
   }
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")
@@ -54,6 +54,7 @@ bayesopt_mpcl = function(instance, acq_function = NULL, acq_optimizer = NULL, li
         temp_acq_function$update(temp_archive)
         acq_optimizer$optimize(temp_acq_function, archive = archive)
       }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
+
         lg$info("Proposing a randomly sampled point")  # FIXME: logging?
         SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
       })
@@ -97,7 +98,7 @@ if (FALSE) {
   # Defaults work
   bayesopt_mpcl(instance, liar = mean, q = 2L)
 
-  data = instance$archive$data()
+  data = instance$archive$data
   plot(y~batch_nr, data[batch_nr>1,], type = "b")
 
   xgrid = generate_design_grid(instance$search_space, 100)$data

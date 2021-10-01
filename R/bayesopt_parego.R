@@ -14,14 +14,14 @@
 # #' @return [bbotk::Archive]
 # #' @export
 bayesopt_parego = function(instance, acq_function = NULL, acq_optimizer = NULL, q = 1, s = 100, rho = 0.05) {
-  #FIXME maybe do not have this here, but have a general assert helper
+  # FIXME: maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
   if (is.null(acq_function)) {
     surrogate = default_surrogate(instance, n_objectives = 1L)
     acq_function = default_acqfun(instance, surrogate)
   }
   if (is.null(acq_optimizer)) {
-    acq_optimizer = default_acq_optimizer(instance)
+    acq_optimizer = default_acqoptimizer(instance)
   }
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")
@@ -56,7 +56,7 @@ bayesopt_parego = function(instance, acq_function = NULL, acq_optimizer = NULL, 
     ydt = xydt[, archive$cols_y, with = FALSE]
 
     ydt = Map("*", ydt, mult_max_to_min(archive$codomain))
-    ydt = Map(function(y) (y - min(y, na.rm = TRUE))/diff(range(y, na.rm = TRUE)), ydt)  # scale y to 0,1
+    ydt = Map(function(y) (y - min(y, na.rm = TRUE)) / diff(range(y, na.rm = TRUE)), ydt)  # scale y to [0, 1]
 
     # Temp ParEGO Archive
     dummy_archive = archive$clone(deep = TRUE)
