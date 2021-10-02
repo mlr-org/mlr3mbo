@@ -56,3 +56,33 @@ ggplot(aes(x = batch_nr, y = mb, colour = method, fill = method), data = agg) +
   geom_line() +
   geom_ribbon(aes(ymin = mb - seb, ymax = mb + seb) , colour = NA, alpha = 0.25)
 
+###
+instance = OptimInstanceSingleCrit$new(objective, terminator = trm("evals", n_evals = 50))
+
+acqo = AcqOptimizer$new(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"), trm("evals", n_evals = 100))
+
+bo_gp_ei_rs = OptimizerMbo$new()
+bo_gp_ei_dr = OptimizerMbo$new(acq_optimizer = acqo)
+
+res = map_dtr(1:30, function(i) {
+  instance$archive$clear()
+  bo_gp_ei_rs$optimize(instance)
+  tmp1 = instance$archive$data[, c("y", "batch_nr")]
+  tmp1[, method := "rs"]
+  instance$archive$clear()
+  bo_gp_ei_dr$optimize(instance)
+  tmp2 = instance$archive$data[, c("y", "batch_nr")]
+  tmp2[, method := "dr"]
+  tmp = rbind(tmp1, tmp2)
+  tmp[, repl := i]
+})
+
+res[, best := cummin(y), by = .(method, repl)]
+agg = res[, .(mb = mean(best), sdb = sd(best), n = length(best)), by = .(batch_nr, method)]
+agg[, seb := sdb / sqrt(n) ]
+
+ggplot(aes(x = batch_nr, y = mb, colour = method, fill = method), data = agg) +
+  geom_line() +
+  geom_ribbon(aes(ymin = mb - seb, ymax = mb + seb) , colour = NA, alpha = 0.25)
+
+

@@ -62,7 +62,7 @@ bibentries = c(
     journal    = "Journal of Basic Engineering",
     volume     = "86",
     number     = "1",
-    pages      = "97-106",
+    pages      = "97--106",
   ),
 
   ponweiser_2007 = bibentry("inproceedings",
@@ -70,6 +70,6 @@ bibentries = c(
     author       = "Ponweiser, Wolfgang and Wagner, Tobias and Biermann, Dirk and Vincze, Markus",
     year         = "2008",
     booktitle    = "Proceedings of the 10th International Conference on Parallel Problem Solving from Nature",
-    pages        = "784–794"
+    pages        = "784--794"
   )
 )
