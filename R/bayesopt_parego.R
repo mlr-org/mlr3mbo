@@ -14,7 +14,6 @@
 # #' @return [bbotk::Archive]
 # #' @export
 bayesopt_parego = function(instance, acq_function = NULL, acq_optimizer = NULL, q = 1, s = 100, rho = 0.05) {
-  # FIXME: maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
   if (is.null(acq_function)) {
     surrogate = default_surrogate(instance, n_objectives = 1L)
@@ -27,13 +26,8 @@ bayesopt_parego = function(instance, acq_function = NULL, acq_optimizer = NULL, 
   assert_r6(acq_optimizer, "AcqOptimizer")
   assert_int(q, lower = 1)
 
+  eval_initial_design(instance)
   archive = instance$archive
-  # FIXME: maybe do not have this here, but have a general init helper
-  if (archive$n_evals == 0) {
-    design = generate_design_lhs(instance$search_space, 4 * instance$search_space$length)$data
-    instance$eval_batch(design)
-  }
-
   dummy_codomain = ParamSet$new(list(ParamDbl$new("y_scal", tags = "minimize")))
   d = archive$codomain$length
 

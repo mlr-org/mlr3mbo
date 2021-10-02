@@ -65,7 +65,7 @@ bibentries = c(
     pages      = "97--106",
   ),
 
-  ponweiser_2007 = bibentry("inproceedings",
+  ponweiser_2008 = bibentry("inproceedings",
     title        = "Multiobjective Optimization on a Limited Budget of Evaluations Using Model-Assisted S-Metric Selection",
     author       = "Ponweiser, Wolfgang and Wagner, Tobias and Biermann, Dirk and Vincze, Markus",
     year         = "2008",

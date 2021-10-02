@@ -109,3 +109,24 @@ fix_xdt_distance = function(xdt, previous_xdt, search_space, dist_threshold) {
   xdt
 }
 
+eval_initial_design = function(instance, method = "lhs") {
+  if (instance$archive$n_evals == 0L) {
+    if (instance$search_space$has_deps) {
+      method = "random"
+    }
+    assert_choice(method, choices = c("grid", "lhs", "random"))
+    d = instance$objective$ydim
+    design = switch(method,
+      grid = {
+        resolution = max(1, floor(((4 * d) ^ (1 / d))))
+        generate_design_grid(instance$search_space, resolution = resolution)$data
+      },
+      lhs = generate_design_lhs(instance$search_space, n = 4 * d)$data,
+      random = generate_design_random(instance$search_space, n = 4 * d)$data
+    )
+    instance$eval_batch(design)
+  } else {
+    instance
+  }
+}
+

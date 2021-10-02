@@ -1,5 +1,4 @@
 bayesopt_mpcl = function(instance, acq_function = NULL, acq_optimizer = NULL, liar, q) {
-  # FIXME: maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceSingleCrit")
   if (is.null(acq_function)) {
     surrogate = default_surrogate(instance)
@@ -13,14 +12,8 @@ bayesopt_mpcl = function(instance, acq_function = NULL, acq_optimizer = NULL, li
   assert_function(liar)
   assert_int(q, lower = 2L)
 
+  eval_initial_design(instance)
   archive = instance$archive
-
-  # FIXME: maybe do not have this here, but have a general init helper
-  if (archive$n_evals == 0) {
-    design = generate_design_lhs(instance$search_space, 4 * instance$search_space$length)$data
-    instance$eval_batch(design)
-  }
-
   acq_function$setup(archive) # setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {

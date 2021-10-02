@@ -33,31 +33,15 @@ bayesopt_soo = function(instance, acq_function = NULL, acq_optimizer = NULL, n_d
   }
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")
+
+  eval_initial_design(instance)
   archive = instance$archive
-
-  # FIXME maybe do not have this here, but have a general init helper
-  if (archive$n_evals == 0) {
-    design = if(instance$search_space$has_deps) {
-      generate_design_random(instance$search_space, n_design)$data
-    } else {
-      generate_design_lhs(instance$search_space, n_design)$data
-    }
-    instance$eval_batch(design)
-  }
-
   acq_function$setup(archive) # setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
     xdt = tryCatch({
       acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y)  # update surrogate model with new data
-
-      # NOTE: necessary because we have to determine e.g. y_best for ei.
-      # There are possible other costy calculations that we just want to do once for each state.
-      # We might not want to do these calculation in acq_function$fun() because this can get called several times during the optimization.
-      # One more costy example would be AEI, where we ask the surrogate for the mean prediction of the points in the design.
-      # Alternatively the update could be called by the AcqOptimizer (but he should not need to know about the archive, so then the archive also has to live in the AcqFunction).
       acq_function$update(archive)
-
       acq_optimizer$optimize(acq_function, archive = archive)  # archive need for fix_xdt_distance()
     }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
       lg$info("Proposing a randomly sampled point")  # FIXME: logging?

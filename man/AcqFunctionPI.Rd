@@ -9,9 +9,9 @@ Probability of Improvement.
 See Kushner (1964).
 }
 \references{
-Ding, Yufeng, Simonoff, S J (2010).
-\dQuote{An investigation of missing data methods for classification trees applied to binary response data.}
-\emph{Journal of Machine Learning Research}, \bold{11}(1), 131--170.
+Kushner, J. H (1964).
+\dQuote{A New Method of Locating the Maximum Point of an Arbitrary Multipeak Curve in the Presence of Noise.}
+\emph{Journal of Basic Engineering}, \bold{86}(1), 97--106.
 }
 \seealso{
 Other Acquisition Function: 

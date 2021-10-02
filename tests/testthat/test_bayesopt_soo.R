@@ -94,7 +94,7 @@ test_that("stable bayesopt_soo", {
 })
 
 test_that("bayesopt_soo_eips", {
-  instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
+  instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 10L))
   acq_function = AcqFunctionEIPS$new(surrogate = SurrogateMultiCritLearners$new(learners = list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE))))
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)

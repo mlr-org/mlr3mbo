@@ -8,7 +8,6 @@
 #' @return [bbotk::Archive]
 #' @export
 bayesopt_smsego = function(instance, acq_function = NULL, acq_optimizer = NULL) {
-  #FIXME maybe do not have this here, but have a general assert helper
   assert_r6(instance, "OptimInstanceMultiCrit")
   if (is.null(acq_function)) {
     surrogate = default_surrogate(instance)
@@ -20,13 +19,8 @@ bayesopt_smsego = function(instance, acq_function = NULL, acq_optimizer = NULL) 
   assert_r6(acq_function, "AcqFunctionSmsEgo")
   assert_r6(acq_optimizer, "AcqOptimizer")
 
+  eval_initial_design(instance)
   archive = instance$archive
-  # FIXME: maybe do not have this here, but have a general init helper
-  if (archive$n_evals == 0) {
-    design = generate_design_random(instance$search_space, 4 * instance$search_space$length)$data
-    instance$eval_batch(design)
-  }
-
   acq_function$setup(archive) # setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {

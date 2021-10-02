@@ -10,18 +10,22 @@ S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
 
 \itemize{
 \item \code{"lambda"} (\code{numeric(1)})\cr
-TODO ...
+\eqn{lambda} value used for the confidence bound.
 Defaults to 1.
+Based on \code{confidence = (1 - 2 * dnorm(lambda)) ^ m} you can calculate a
+lambda for a given confidence level, see Ponweiser et al. 2008.
 \item \code{"eps"} (\code{numeric(1)})\cr
-TODO
+\eqn{epsilon} used for the additive epsilon dominance.
+Can either be a single numeric value > 0 or \code{NULL}.
+In the case of being \code{NULL}, an epsilon vector is maintained dynamically as
+described in Ponweiser et al. 2008.
 }
 }
 
 \references{
-Beume N, Naujoks B, Emmerich M (2007).
-\dQuote{SMS-EMOA: Multiobjective selection based on dominated hypervolume.}
-\emph{European Journal of Operational Research}, \bold{181}(3), 1653--1669.
-\doi{10.1016/j.ejor.2006.08.008}.
+Ponweiser, Wolfgang, Wagner, Tobias, Biermann, Dirk, Vincze, Markus (2008).
+\dQuote{Multiobjective Optimization on a Limited Budget of Evaluations Using Model-Assisted S-Metric Selection.}
+In \emph{Proceedings of the 10th International Conference on Parallel Problem Solving from Nature}, 784--794.
 }
 \seealso{
 Other Acquisition Function: 
@@ -45,7 +49,7 @@ Other Acquisition Function:
 
 \item{\code{eps}}{(\code{numeric()}).}
 
-\item{\code{progress}}{(\code{numeric()}).}
+\item{\code{progress}}{(\code{numeric(1)}).}
 
 \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
 }

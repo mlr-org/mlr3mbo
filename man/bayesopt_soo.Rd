@@ -34,5 +34,4 @@ Function that executes a simple single-objective Bayesian optimization.
 Jones, R. D, Schonlau, Matthias, Welch, J. W (1998).
 \dQuote{Efficient Global Optimization of Expensive Black-Box Functions.}
 \emph{Journal of Global optimization}, \bold{13}(4), 455--492.
-\doi{10.1023/A:1008306431147}.
 }

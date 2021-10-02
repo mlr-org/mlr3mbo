@@ -4,9 +4,7 @@
 \alias{AcqFunctionEIPS}
 \title{Acquisition Function Expected Improvement Per Second}
 \description{
-Expected Improvement per second.
-
-TODO DESCRIPTION and Reference
+Expected improvement per second.
 }
 \references{
 Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).

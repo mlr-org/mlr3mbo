@@ -18,7 +18,6 @@ Constant \eqn{c} as used in formula (14) of Huang 2012 to reflect the degree of 
 Huang D, Allen TT, Notz WI, Zheng N (2012).
 \dQuote{Erratum to: Global optimization of stochastic black-box systems via sequential kriging meta-models.}
 \emph{Journal of Global Optimization}, \bold{54}(2), 431--431.
-\doi{10.1007/s10898-011-9821-z}.
 }
 \seealso{
 Other Acquisition Function: 
