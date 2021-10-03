@@ -155,19 +155,22 @@
 
 <ul>
 <li><p><code>"lambda"</code> (<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>)<br />
-TODO ...
-Defaults to 1.</p></li>
+\(lambda\) value used for the confidence bound.
+Defaults to 1.
+Based on <code>confidence = (1 - 2 * dnorm(lambda)) ^ m</code> you can calculate a
+lambda for a given confidence level, see Ponweiser et al. 2008.</p></li>
 <li><p><code>"eps"</code> (<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>)<br />
-TODO</p></li>
+\(epsilon\) used for the additive epsilon dominance.
+Can either be a single numeric value &gt; 0 or <code>NULL</code>.
+In the case of being <code>NULL</code>, an epsilon vector is maintained dynamically as
+described in Ponweiser et al. 2008.</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Beume N, Naujoks B, Emmerich M (2007).
-&#8220;SMS-EMOA: Multiobjective selection based on dominated hypervolume.&#8221;
-<em>European Journal of Operational Research</em>, <b>181</b>(3), 1653--1669.
-doi: <a href='https://doi.org/10.1016/j.ejor.2006.08.008'>10.1016/j.ejor.2006.08.008</a>
-.</p>
+    <p>Ponweiser, Wolfgang, Wagner, Tobias, Biermann, Dirk, Vincze, Markus (2008).
+&#8220;Multiobjective Optimization on a Limited Budget of Evaluations Using Model-Assisted S-Metric Selection.&#8221;
+In <em>Proceedings of the 10th International Conference on Parallel Problem Solving from Nature</em>, 784--794.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Acquisition Function: 
@@ -189,7 +192,7 @@ doi: <a href='https://doi.org/10.1016/j.ejor.2006.08.008'>10.1016/j.ejor.2006.08
 
 <dt><code>eps</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
 
-<dt><code>progress</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
+<dt><code>progress</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).</p></dd>
 
 <dt><code>param_set</code></dt><dd><p>(<a href='https://paradox.mlr-org.com/reference/ParamSet.html'>paradox::ParamSet</a>).</p></dd>
 
