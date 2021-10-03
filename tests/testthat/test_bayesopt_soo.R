@@ -98,6 +98,6 @@ test_that("bayesopt_soo_eips", {
   acq_function = AcqFunctionEIPS$new(surrogate = SurrogateMultiCritLearners$new(learners = list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE))))
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
-  expect_true(nrow(instance$archive$data) == 5L)
+  expect_true(nrow(instance$archive$data) == 10L)
 })
 

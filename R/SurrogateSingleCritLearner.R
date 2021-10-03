@@ -53,7 +53,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
       if (!missing(rhs)) {
-        stopf("Field/Binding is read-only.")
+        stop("Field/Binding is read-only.")
       }
 
       if (!self$param_set$values$calc_insample_perf) {
@@ -67,7 +67,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
       }
 
       if (!check) {
-        stopf("Current insample performance of the Surrogate Model does not meet the performance threshold")
+        stop("Current insample performance of the Surrogate Model does not meet the performance threshold")
       }
       invisible(self$insample_perf)
     }
@@ -80,6 +80,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     .update = function(xydt, y_cols) {
       assert_xydt(xydt, y_cols)
       task = TaskRegr$new(id = "surrogate_task", backend = char_to_fct(xydt), target = y_cols)
+      assert_learnable(task, learner = self$model)
       self$model$train(task)
 
       if (self$param_set$values$calc_insample_perf) {

@@ -53,7 +53,7 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     update = function(archive) {
       super$update(archive)
       y = archive$data[,archive$cols_y, with = FALSE][[1L]]
-      y = y * mult_max_to_min(archive$codomain)
+      y = y * mult_max_to_min(archive$codomain)[1L]
       self$y_best = min(y)
     }
   )

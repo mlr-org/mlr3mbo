@@ -65,7 +65,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #' Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
       if (!missing(rhs)) {
-        stopf("Field/Binding is read-only.")
+        stop("Field/Binding is read-only.")
       }
 
       if (!self$param_set$values$calc_insample_perf) {
@@ -88,7 +88,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       )
 
       if (!check) {
-        stopf("Current insample performance of the Surrogate Model does not meet the performance threshold")
+        stop("Current insample performance of the Surrogate Model does not meet the performance threshold")
       }
       invisible(self$insample_perf)
     }
@@ -114,6 +114,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
         task
       })
       pmap(list(model = self$model, task = tasks), .f = function(model, task) {
+        assert_learnable(task, learner = model)
         model$train(task)
         invisible(NULL)
       })
