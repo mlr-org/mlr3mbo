@@ -2,8 +2,6 @@ learner default mit evaluate wrappen? eher nicht weil das wird mit random propsa
 
 EIPS currently uses simply 1L for all its stuff
 
-warning EIPS, mult_max_to_min
-
 SMS EGO finish
 
 mlr3mbo yahpo gym

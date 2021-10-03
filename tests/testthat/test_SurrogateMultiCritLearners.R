@@ -72,3 +72,8 @@ test_that("insample_perf", {
   expect_equal(names(surrogate$insample_perf), map_chr(surrogate$param_set$values$perf_measures, "id"))
 })
 
+test_that("unique in memory", {
+  learner = lrn("regr.ranger")
+  expect_error(SurrogateMultiCritLearners$new(learners = list(learner, learner)), "Redundant Learners")
+})
+

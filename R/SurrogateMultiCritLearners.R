@@ -2,6 +2,7 @@
 #'
 #' @description
 #' Multi Criteria response surfaces modeled by multiple regression [mlr3::Learner] objects.
+#' Note that redundant [mlr3::Learner]s must be deep clones.
 #'
 #' @export
 SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
@@ -13,6 +14,10 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #'
     #' @param learners (list of [mlr3::LearnerRegr]).
     initialize = function(learners) {
+      adresses = map(learners, address)
+      if (length(unique(adresses)) != length(adresses)) {
+        stop("Redundant Learners must be unique in memory, i.e., deep clones.")
+      }
       self$model = assert_learners(learners)
       for (model in self$model) {
         if (model$predict_type != "se" && "se" %in% model$predict_types) {
