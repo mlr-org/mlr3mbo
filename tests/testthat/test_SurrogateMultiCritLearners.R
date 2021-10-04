@@ -7,7 +7,7 @@ test_that("SurrogateMultiCritLearners API works", {
   expect_learner(surrogate$model[[1L]])
   expect_learner(surrogate$model[[2L]])
 
-  xdt = data.table(x = seq(5))
+  xdt = data.table(x = 1:5)
   pred = surrogate$predict(xdt)
   expect_list(pred, len = 2L)
   expect_data_table(pred[[1L]], col.names = "named", nrows = 5, ncols = 2,
@@ -30,7 +30,7 @@ test_that("predict_types are recognized", {
 
   surrogate$update(xydt = xydt, y_cols = c("y1", "y2"))
 
-  xdt = data.table(x = seq(5))
+  xdt = data.table(x = 1:5)
   pred = surrogate$predict(xdt)
   expect_named(pred[[1L]], c("mean", "se"))
   expect_named(pred[[2L]], "mean")
@@ -73,7 +73,15 @@ test_that("insample_perf", {
 })
 
 test_that("unique in memory", {
-  learner = lrn("regr.ranger")
+  learner = REGR_KM_DETERM
   expect_error(SurrogateMultiCritLearners$new(learners = list(learner, learner)), "Redundant Learners")
+})
+
+test_that("deep clone", {
+  learner = REGR_KM_DETERM
+  surrogate1 = SurrogateMultiCritLearners$new(learners = list(learner, learner$clone(deep = TRUE)))
+  surrogate2 = surrogate1$clone(deep = TRUE)
+  expect_true(address(surrogate1) != address(surrogate2))
+  expect_true(address(surrogate1$model) != address(surrogate2$model))
 })
 

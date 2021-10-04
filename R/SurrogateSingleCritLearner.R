@@ -88,6 +88,10 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
         private$.insample_perf = self$model$predict(task)$score(self$param_set$values$perf_measure, task = task, learner = self$model)
         self$assert_insample_perf
       }
+    },
+
+    deep_clone = function(name, value) {
+      switch(name, model = value$clone(deep = TRUE), value)
     }
   )
 )

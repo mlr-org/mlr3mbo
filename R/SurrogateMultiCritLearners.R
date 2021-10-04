@@ -14,8 +14,8 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #'
     #' @param learners (list of [mlr3::LearnerRegr]).
     initialize = function(learners) {
-      adresses = map(learners, address)
-      if (length(unique(adresses)) != length(adresses)) {
+      addresses = map(learners, address)
+      if (length(unique(addresses)) != length(addresses)) {
         stop("Redundant Learners must be unique in memory, i.e., deep clones.")
       }
       self$model = assert_learners(learners)
@@ -134,6 +134,10 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
         ), nm = map_chr(self$param_set$values$perf_measures, "id"))
         self$assert_insample_perf
       }
+    },
+
+    deep_clone = function(name, value) {
+      switch(name, model = map(value, function(x) x$clone(deep = TRUE)), value)
     }
   )
 )

@@ -6,7 +6,7 @@ test_that("SurrogateSingleCritLearner API works", {
   surrogate$update(xydt = xydt, y_cols = "y")
   expect_learner(surrogate$model)
 
-  xdt = data.table(x = seq(5))
+  xdt = data.table(x = 1:5)
   pred = surrogate$predict(xdt)
   expect_data_table(pred, col.names = "named", nrows = 5, ncols = 2,
     any.missing = FALSE)
@@ -25,7 +25,7 @@ test_that("predict_types are recognized", {
 
   surrogate$update(xydt = xydt, y_cols = "y")
 
-  xdt = data.table(x = seq(5))
+  xdt = data.table(x = 1:5)
   expect_named(surrogate$predict(xdt), c("mean", "se"))
 
   surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.rpart"))
@@ -69,5 +69,12 @@ test_that("insample_perf", {
   expect_double(surrogate_constant$insample_perf, lower = -Inf, upper = 1, any.missing = FALSE, len = 1L)
   expect_true(surrogate_constant$insample_perf <= 1e-3)
   expect_equal(names(surrogate$insample_perf), surrogate$param_set$values$perf_measure$id)
+})
+
+test_that("deep clone", {
+  surrogate1 = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
+  surrogate2 = surrogate1$clone(deep = TRUE)
+  expect_true(address(surrogate1) != address(surrogate2))
+  expect_true(address(surrogate1$model) != address(surrogate2$model))
 })
 
