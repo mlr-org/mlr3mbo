@@ -15,7 +15,7 @@ test_that("AcqFunctionPI works", {
 
   acqf$surrogate$update(xydt = archive_xy(inst$archive), y_cols = inst$archive$cols_y)  # update surrogate model with new data
 
-  xdt = data.table(x = seq(5))
+  xdt = data.table(x = 1:5)
 
   expect_error(acqf$eval_dt(xdt), "update")
 

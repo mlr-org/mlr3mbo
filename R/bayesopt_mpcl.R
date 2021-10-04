@@ -19,7 +19,7 @@ bayesopt_mpcl = function(instance, acq_function = NULL, acq_optimizer = NULL, li
   repeat {
     # normal soo updates with error catching
     xdt = tryCatch({
-      acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y)
+      acq_function$update_surrogate(archive)
       acq_function$update(archive)
       acq_optimizer$optimize(acq_function, archive = archive)  # archive need for fix_xdt_distance()
     }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {

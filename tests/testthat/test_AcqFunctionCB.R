@@ -13,11 +13,11 @@ test_that("AcqFunctionCB works", {
   expect_equal(acqf$domain, inst$search_space)
   expect_learner(acqf$surrogate$model)
 
-  acqf$surrogate$update(xydt = archive_xy(inst$archive), y_cols = inst$archive$cols_y) #update surrogate model with new data
+  acqf$surrogate$update(xydt = archive_xy(inst$archive), y_cols = inst$archive$cols_y)  # update surrogate model with new data
 
-  xdt = data.table(x = seq(5))
+  xdt = data.table(x = 1:5)
   res = acqf$eval_dt(xdt)
-  expect_data_table(res, ncols = 1, nrows = 5, any.missing = FALSE)
+  expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
   expect_named(res, "acq_cb")
 
   acqf$constants$values$lambda = 4

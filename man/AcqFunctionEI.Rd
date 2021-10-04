@@ -24,7 +24,7 @@ Other Acquisition Function:
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{y_best}}{(\code{numeric()}).}
+\item{\code{y_best}}{(\code{numeric(1)}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -45,6 +45,7 @@ Other Acquisition Function:
 \item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_dt">}\href{../../bbotk/html/ObjectiveRFunDt.html#method-eval_dt}{\code{bbotk::ObjectiveRFunDt$eval_dt()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_many">}\href{../../bbotk/html/ObjectiveRFunDt.html#method-eval_many}{\code{bbotk::ObjectiveRFunDt$eval_many()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup">}\href{../../mlr3mbo/html/AcqFunction.html#method-setup}{\code{mlr3mbo::AcqFunction$setup()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="update_surrogate">}\href{../../mlr3mbo/html/AcqFunction.html#method-update_surrogate}{\code{mlr3mbo::AcqFunction$update_surrogate()}}\out{</span>}
 }
 \out{</details>}
 }

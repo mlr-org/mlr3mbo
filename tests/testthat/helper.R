@@ -74,7 +74,7 @@ FUN_2D_NOISY = function(xs) {
 OBJ_2D_NOISY = ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D_domain, properties = c("single-crit", "noisy"))
 
 # Instance helper
-MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 5)) {
+MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 10L)) {
   if (objective$codomain$length == 1) {
     OptimInstanceSingleCrit$new(objective = objective, search_space = search_space, terminator = terminator)
   } else {
@@ -87,11 +87,11 @@ MAKE_INST_1D = function(terminator = trm("evals", n_evals = 5)) {
   MAKE_INST(objective = OBJ_1D, search_space = PS_1D, terminator = terminator)
 }
 
-MAKE_INST_1D_NOISY = function(terminator = trm("evals", n_evals = 5)) {
+MAKE_INST_1D_NOISY = function(terminator = trm("evals", n_evals = 5L)) {
   MAKE_INST(objective = OBJ_1D_NOISY, search_space = PS_1D, terminator = terminator)
 }
 
-MAKE_DESIGN = function(instance, n = 4) {
+MAKE_DESIGN = function(instance, n = 5L) {
   generate_design_lhs(instance$search_space, n)$data
 }
 
@@ -108,7 +108,6 @@ SURR_KM_DETERM = SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM)
 SURR_KM_NOISY = SurrogateSingleCritLearner$new(learner = REGR_KM_NOISY)
 SURR2D_KM_DETERM = SurrogateMultiCritLearners$new(learners = replicate(2, REGR_KM_DETERM$clone(deep = TRUE)))
 SURR_REGR_FEATURELESS = SurrogateSingleCritLearner$new(learner = REGR_FEATURELESS)
-
 
 ACQ_OPT_DEF = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 

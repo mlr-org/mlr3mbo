@@ -69,7 +69,7 @@ bayesopt_parego = function(instance, acq_function = NULL, acq_optimizer = NULL, 
       # manual fix: # FIXME: Write ParEGO Infill Crit?
       tryCatch({
         acq_function$setup(dummy_archive)
-        acq_function$surrogate$setup(xydt = archive_xy(dummy_archive), y_cols = dummy_archive$cols_y)  # update surrogate model with new data
+        acq_function$update_surrogate(dummy_archive)
         acq_function$update(dummy_archive)
         acq_optimizer$optimize(acq_function)
       }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {

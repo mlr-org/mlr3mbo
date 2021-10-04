@@ -5,6 +5,7 @@
 \title{Surrogate Model for Multi-Criteria response surfaces}
 \description{
 Multi Criteria response surfaces modeled by multiple regression \link[mlr3:Learner]{mlr3::Learner} objects.
+Note that redundant \link[mlr3:Learner]{mlr3::Learner}s must be deep clones.
 }
 \section{Super classes}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{\link[mlr3mbo:SurrogateMultiCrit]{mlr3mbo::SurrogateMultiCrit}} -> \code{SurrogateMultiCritLearners}

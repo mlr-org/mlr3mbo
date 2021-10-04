@@ -49,6 +49,7 @@ Other Acquisition Function:
 \item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_many">}\href{../../bbotk/html/ObjectiveRFunDt.html#method-eval_many}{\code{bbotk::ObjectiveRFunDt$eval_many()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup">}\href{../../mlr3mbo/html/AcqFunction.html#method-setup}{\code{mlr3mbo::AcqFunction$setup()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="update">}\href{../../mlr3mbo/html/AcqFunction.html#method-update}{\code{mlr3mbo::AcqFunction$update()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="update_surrogate">}\href{../../mlr3mbo/html/AcqFunction.html#method-update_surrogate}{\code{mlr3mbo::AcqFunction$update_surrogate()}}\out{</span>}
 }
 \out{</details>}
 }

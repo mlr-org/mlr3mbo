@@ -12,7 +12,7 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
   inherit = AcqFunction,
   public = list(
 
-    #' @field y_best (`numeric()`).
+    #' @field y_best (`numeric(1)`).
     y_best = NULL,
 
     #' @description

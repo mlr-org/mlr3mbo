@@ -38,6 +38,7 @@ Optimization direction of the objective function: 1 for minimization, -1 for max
 \item \href{#method-new}{\code{AcqFunction$new()}}
 \item \href{#method-setup}{\code{AcqFunction$setup()}}
 \item \href{#method-update}{\code{AcqFunction$update()}}
+\item \href{#method-update_surrogate}{\code{AcqFunction$update_surrogate()}}
 \item \href{#method-clone}{\code{AcqFunction$clone()}}
 }
 }
@@ -102,6 +103,24 @@ Sets up the acquisition function.
 Update the acquisition function given an \link[bbotk:Archive]{bbotk::Archive}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$update(archive)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-update_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-update_surrogate}{}}}
+\subsection{Method \code{update_surrogate()}}{
+Update the \link{Surrogate} model(s) with new data.
+FIXME: probably moves this simply to $update()
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$update_surrogate(archive)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

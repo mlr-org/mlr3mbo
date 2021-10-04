@@ -1,12 +1,10 @@
 learner default mit evaluate wrappen? eher nicht weil das wird mit random propsal gecatched
 
-EIPS currently uses simply 1L for all its stuff
-
 SMS EGO finish
 
-mlr3mbo yahpo gym
+mlr3mbo yahpo gym benchmark
 
-tuner instance noisy flag? --> JA
+tuner instance noisy flag? --> Marc
 
 formats und printer definieren
 

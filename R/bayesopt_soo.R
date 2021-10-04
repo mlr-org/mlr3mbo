@@ -40,7 +40,7 @@ bayesopt_soo = function(instance, acq_function = NULL, acq_optimizer = NULL, n_d
 
   repeat {
     xdt = tryCatch({
-      acq_function$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y)  # update surrogate model with new data
+      acq_function$update_surrogate(archive)
       acq_function$update(archive)
       acq_optimizer$optimize(acq_function, archive = archive)  # archive need for fix_xdt_distance()
     }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
