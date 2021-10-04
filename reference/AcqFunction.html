@@ -182,6 +182,7 @@ Optimization direction of the objective function: 1 for minimization, -1 for max
 <li><p><a href='#method-new'><code>AcqFunction$new()</code></a></p></li>
 <li><p><a href='#method-setup'><code>AcqFunction$setup()</code></a></p></li>
 <li><p><a href='#method-update'><code>AcqFunction$update()</code></a></p></li>
+<li><p><a href='#method-update_surrogate'><code>AcqFunction$update_surrogate()</code></a></p></li>
 <li><p><a href='#method-clone'><code>AcqFunction$clone()</code></a></p></li>
 </ul>
 <p><details open ><summary>Inherited methods</summary>
@@ -227,6 +228,17 @@ Must be <code>"same"</code>, <code>"minimize"</code>, or <code>"maximize"</code>
 <a id="method-update"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/update.html'>update()</a></code></h3>
 <p>Update the acquisition function given an <a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>update</span><span class='op'>(</span><span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>archive</code></dt><dd><p>(<a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>).</p></dd>
+
+</dl><p></div></p>
+<p><hr>
+<a id="method-update_surrogate"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>update_surrogate()</code></h3>
+<p>Update the <a href='Surrogate.html'>Surrogate</a> model(s) with new data.
+FIXME: probably moves this simply to $update()</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>update_surrogate</span><span class='op'>(</span><span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
