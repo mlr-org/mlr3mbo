@@ -5,6 +5,34 @@
 \title{Acquisition Function Expected Improvement Per Second}
 \description{
 Expected improvement per second.
+
+It is assumed that calculations are performed on an \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit}.
+Additionally to target values of the codomain that should be minimized or maximized, the
+\link[bbotk:Objective]{bbotk::Objective} of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} should return time values.
+The id of the column containing the time values must be passed as the \code{time_id} argument during construction.
+}
+\examples{
+library(bbotk)
+library(paradox)
+library(data.table)
+library(mlr3)
+library(mlr3learners)
+
+objective = ObjectiveRFunDt$new(
+  fun = function(xdt) data.table(y = xdt$x ^ 2, time = abs(xdt$x)),
+  domain = ps(x = p_dbl(lower = -10, upper = 10)),
+  codomain = ps(y = p_dbl(tags = "minimize"))
+)
+
+instance = OptimInstanceSingleCrit$new(objective, terminator = trm("evals", n_evals = 10L))
+
+learner = lrn("regr.km", covtype = "matern3_2", optim.method = "gen")
+surrogate = SurrogateSingleCritLearner$new(learner)
+surrogate_time = surrogate$clone(deep = TRUE)
+
+acq_function = AcqFunctionEIPS$new(surrogate, surrogate_time = surrogate_time, time_id = "time")
+
+bayesopt_soo(instance, acq_function)
 }
 \references{
 Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).
@@ -27,7 +55,9 @@ Other Acquisition Function:
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{y_best}}{(\code{numeric()}).}
+\item{\code{y_best}}{(\code{numeric(1)}).}
+
+\item{\code{surrogate_time}}{\link{Surrogate}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -35,19 +65,20 @@ Other Acquisition Function:
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{AcqFunctionEIPS$new()}}
+\item \href{#method-setup}{\code{AcqFunctionEIPS$setup()}}
 \item \href{#method-update}{\code{AcqFunctionEIPS$update()}}
+\item \href{#method-update_surrogate}{\code{AcqFunctionEIPS$update_surrogate()}}
 \item \href{#method-clone}{\code{AcqFunctionEIPS$clone()}}
 }
 }
 \if{html}{
-\out{<details ><summary>Inherited methods</summary>}
+\out{<details open ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval">}\href{../../bbotk/html/Objective.html#method-eval}{\code{bbotk::Objective$eval()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format">}\href{../../bbotk/html/Objective.html#method-format}{\code{bbotk::Objective$format()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print">}\href{../../bbotk/html/Objective.html#method-print}{\code{bbotk::Objective$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_dt">}\href{../../bbotk/html/ObjectiveRFunDt.html#method-eval_dt}{\code{bbotk::ObjectiveRFunDt$eval_dt()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_many">}\href{../../bbotk/html/ObjectiveRFunDt.html#method-eval_many}{\code{bbotk::ObjectiveRFunDt$eval_many()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup">}\href{../../mlr3mbo/html/AcqFunction.html#method-setup}{\code{mlr3mbo::AcqFunction$setup()}}\out{</span>}
 }
 \out{</details>}
 }
@@ -57,13 +88,34 @@ Other Acquisition Function:
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEIPS$new(surrogate)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEIPS$new(surrogate, surrogate_time, time_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{surrogate}}{(\link{SurrogateSingleCrit}).}
+
+\item{\code{surrogate_time}}{(\link{SurrogateSingleCrit}).}
+
+\item{\code{time_id}}{(\code{character(1)}).}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setup"></a>}}
+\if{latex}{\out{\hypertarget{method-setup}{}}}
+\subsection{Method \code{setup()}}{
+Sets up the acquisition function.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEIPS$setup(archive)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -75,6 +127,24 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 Updates acquisition function and sets \code{y_best}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEIPS$update(archive)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-update_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-update_surrogate}{}}}
+\subsection{Method \code{update_surrogate()}}{
+Update the \link{Surrogate} model(s) with new data.
+FIXME: probably moves this simply to $update()
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEIPS$update_surrogate(archive)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

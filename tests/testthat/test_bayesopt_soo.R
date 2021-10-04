@@ -10,6 +10,7 @@ test_that("bayesopt_soo", {
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
+  expect_true(!is.na(instance$archive$data$acq_ei[5L]))
 })
 
 test_that("stable bayesopt_soo", {
@@ -94,10 +95,18 @@ test_that("stable bayesopt_soo", {
 })
 
 test_that("bayesopt_soo_eips", {
-  instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 10L))
-  acq_function = AcqFunctionEIPS$new(surrogate = SurrogateMultiCritLearners$new(learners = list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE))))
+  objective = ObjectiveRFunDt$new(
+    fun = function(xdt) data.table(y = xdt$x ^ 2, time = xdt$x + 10),
+    domain = PS_1D,
+    codomain = ps(y = p_dbl(tags = "minimize"))
+  )
+  instance = MAKE_INST(objective = objective, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
+
+  acq_function = AcqFunctionEIPS$new(surrogate = SURR_KM_DETERM, surrogate_time = SURR_KM_DETERM$clone(deep = TRUE), time_id = "time")
+
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
-  expect_true(nrow(instance$archive$data) == 10L)
+  expect_true(nrow(instance$archive$data) == 5L)
+  expect_true(!is.na(instance$archive$data$acq_eips[5L]))
 })
 
