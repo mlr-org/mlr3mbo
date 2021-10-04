@@ -64,6 +64,15 @@ AcqFunction = R6Class("AcqFunction",
     #' @param archive ([bbotk::Archive]).
     update = function(archive) {
       # it's okay to do nothing here
+    },
+
+    #' @description
+    #' Update the [Surrogate] model(s) with new data.
+    #' FIXME: probably moves this simply to $update()
+    #'
+    #' @param archive ([bbotk::Archive]).
+    update_surrogate = function(archive) {
+      self$surrogate$update(xydt = archive_xy(archive), y_cols = archive$cols_y)  # update surrogate model with new data
     }
   )
 )
