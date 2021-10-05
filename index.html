@@ -99,12 +99,29 @@
 <div id="mlr3mbo" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#mlr3mbo" class="anchor"></a>mlr3mbo</h1></div>
-<p>A new R6 and much more modular implementation for single- and multicrit Bayesian optimization.</p>
+<p>A new R6 and much more modular implementation for single- and multi-crit Bayesian optimization.</p>
 <!-- badges: start -->
 <p><a href="https://github.com/mlr-org/mlr3mbo/actions"><img src="https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=main" alt="tic"></a> <a href="https://cran.r-project.org/package=mlr3mbo"><img src="https://www.r-pkg.org/badges/version/mlr3mbo" alt="CRANstatus"></a> <a href="https://stackoverflow.com/questions/tagged/mlr3"><img src="https://img.shields.io/badge/stackoverflow-mlr3-orange.svg" alt="StackOverflow"></a> <a href="https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/"><img src="https://img.shields.io/badge/chat-mattermost-orange.svg" alt="Mattermost"></a> <!-- badges: end --></p>
-<div id="simple-example" class="section level2">
+<div id="design" class="section level2">
 <h2 class="hasAnchor">
-<a href="#simple-example" class="anchor"></a>Simple Example</h2>
+<a href="#design" class="anchor"></a>Design</h2>
+<p><code>mlr3mbo</code> is built modular relying on the following <a href="https://cran.r-project.org/package=R6">R6</a> classes: - <code>Surrogate</code>: Surrogate Model - <code>AcqFunction</code>: Acquisition Function - <code>AcqOptimizer</code>: Acquisition Function Optimizer</p>
+<p>Based on these, simple Bayesian optimization loops can be written, see, e.g., <code>bayesopt_soo</code> for sequential Bayesian optimization.</p>
+<p><code>mlr3mbo</code> also provides an <code>OptimizerMbo</code> class behaving like any other <code>Optimizer</code> from the <a href="https://cran.r-project.org/package=bbotk">bbotk</a> package.</p>
+<p>The respective <code>TunerMbo</code> is part of the <a href="https://cran.r-project.org/package=mlr3tuning">mlr3tuning</a> package.</p>
+<p><code>mlr3mbo</code> uses sensible defaults for the <code>Surrogate</code>, <code>AcqFunction</code>, <code>AcqOptimizer</code>, and even the loop function. See <code><a href="reference/mbo_defaults.html">?mbo_defaults</a></code> for more details.</p>
+</div>
+<div id="api" class="section level2">
+<h2 class="hasAnchor">
+<a href="#api" class="anchor"></a>API</h2>
+</div>
+<div id="robustness" class="section level2">
+<h2 class="hasAnchor">
+<a href="#robustness" class="anchor"></a>Robustness</h2>
+</div>
+<div id="simple-optimization-example" class="section level2">
+<h2 class="hasAnchor">
+<a href="#simple-optimization-example" class="anchor"></a>Simple Optimization Example</h2>
 <p>Minimize <code>y = x^2</code> via sequential BO using a GP as surrogate and EI optimized via random search as aquisition function:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
@@ -136,19 +153,36 @@
   <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html">opt</a></span><span class="op">(</span><span class="st">"random_search"</span>, batch_size <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,
   <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
 <span class="op">)</span>
-<span class="fu"><a href="reference/bayesopt_soo.html">bayesopt_soo</a></span><span class="op">(</span><span class="va">instance</span>, <span class="va">acqfun</span>, <span class="va">acqopt</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">## &lt;Archive&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="co">##          x       y           timestamp batch_nr  acq_ei</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="co">##  1:  1.652 2.7e+00 2021-09-29 11:35:25        1      NA</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co">##  2:  4.073 1.7e+01 2021-09-29 11:35:25        1      NA</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co">##  3: -4.846 2.3e+01 2021-09-29 11:35:25        1      NA</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co">##  4: -1.985 3.9e+00 2021-09-29 11:35:25        1      NA</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co">##  5:  1.471 2.2e+00 2021-09-29 11:35:26        2 1.4e+00</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="co">##  6: -0.227 5.1e-02 2021-09-29 11:35:26        3 2.4e+00</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="co">##  7:  0.023 5.1e-04 2021-09-29 11:35:26        4 4.3e-02</span></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="co">##  8: -0.033 1.1e-03 2021-09-29 11:35:26        5 3.4e-04</span></span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="co">##  9:  0.019 3.8e-04 2021-09-29 11:35:26        6 1.3e-04</span></span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="co">## 10:  0.330 1.1e-01 2021-09-29 11:35:26        7 2.0e-68</span></span></code></pre></div>
+
+<span class="va">optimizer</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html">opt</a></span><span class="op">(</span><span class="st">"mbo"</span>, loop_function <span class="op">=</span> <span class="va">bayesopt_soo</span>, acq_function <span class="op">=</span> <span class="va">acqfun</span>, acq_optimizer <span class="op">=</span> <span class="va">acqopt</span><span class="op">)</span>
+<span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">##             x  x_domain           y</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co">## 1: 0.01948605 &lt;list[1]&gt; 0.000379706</span></span></code></pre></div>
+</div>
+<div id="simple-tuning-example" class="section level2">
+<h2 class="hasAnchor">
+<a href="#simple-tuning-example" class="anchor"></a>Simple Tuning Example</h2>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3.mlr-org.com">mlr3</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3tuning.mlr-org.com">mlr3tuning</a></span><span class="op">)</span>
+
+<span class="va">task</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">tsk</a></span><span class="op">(</span><span class="st">"pima"</span><span class="op">)</span>
+
+<span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"classif.rpart"</span>, cp <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html">to_tune</a></span><span class="op">(</span><span class="fl">1e-04</span>, <span class="fl">1e-1</span>, logscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">instance</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3tuning.mlr-org.com/reference/tune.html">tune</a></span><span class="op">(</span>
+       method <span class="op">=</span> <span class="st">"mbo"</span>,
+       task <span class="op">=</span> <span class="va">task</span>,
+       learner <span class="op">=</span> <span class="va">learner</span>,
+       resampling <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">rsmp</a></span><span class="op">(</span><span class="st">"holdout"</span><span class="op">)</span>,
+       measure <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">msr</a></span><span class="op">(</span><span class="st">"classif.ce"</span><span class="op">)</span>,
+       term_evals <span class="op">=</span> <span class="fl">10</span>
+     <span class="op">)</span>
+
+<span class="va">instance</span><span class="op">$</span><span class="va">result</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">##           cp learner_param_vals  x_domain classif.ce</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">## 1: -4.993139          &lt;list[2]&gt; &lt;list[1]&gt;  0.1914062</span></span></code></pre></div>
 </div>
 </div>
   </div>

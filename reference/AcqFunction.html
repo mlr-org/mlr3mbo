@@ -48,7 +48,8 @@
 
 
 <meta property="og:title" content="Acquisition Function Base Class — AcqFunction" />
-<meta property="og:description" content="Based on a surrogate model, the acquisition function encodes the preference to evaluate a new point for evaluation." />
+<meta property="og:description" content="Based on a surrogate model, the acquisition function encodes the preference to evaluate a new
+point for evaluation." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -144,7 +145,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Based on a surrogate model, the acquisition function encodes the preference to evaluate a new point for evaluation.</p>
+    <p>Based on a surrogate model, the acquisition function encodes the preference to evaluate a new
+point for evaluation.</p>
     </div>
 
 
@@ -167,10 +169,13 @@
 <dt><code>surrogate</code></dt><dd><p><a href='Surrogate.html'>Surrogate</a>.</p></dd>
 
 <dt><code>direction</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>)<br />
+Optimization direction of the acquisition function relative to the direction of the
+objective function of the <a href='https://bbotk.mlr-org.com/reference/OptimInstance.html'>bbotk::OptimInstance</a>.
 Must be <code>"same"</code>, <code>"minimize"</code>, or <code>"maximize"</code>.</p></dd>
 
-<dt><code>surrogate_max_to_min</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).
-Optimization direction of the objective function: 1 for minimization, -1 for maximization.</p></dd>
+<dt><code>surrogate_max_to_min</code></dt><dd><p>(<code>-1</code> | <code>1</code>).
+Multiplicative factor to correct for minimization or maximization of
+the acquisition function.</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
@@ -236,8 +241,8 @@ Must be <code>"same"</code>, <code>"minimize"</code>, or <code>"maximize"</code>
 </dl><p></div></p>
 <p><hr>
 <a id="method-update_surrogate"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>update_surrogate()</code></h3>
-<p>Update the <a href='Surrogate.html'>Surrogate</a> model(s) with new data.
-FIXME: probably moves this simply to $update()</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p>Update the <a href='Surrogate.html'>Surrogate</a> model(s) with new data in an <a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>.
+FIXME: probably move this simply to $update()</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>AcqFunction</span><span class='op'>$</span><span class='fu'>update_surrogate</span><span class='op'>(</span><span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
