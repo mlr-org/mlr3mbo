@@ -105,8 +105,16 @@
 <div id="design" class="section level2">
 <h2 class="hasAnchor">
 <a href="#design" class="anchor"></a>Design</h2>
-<p><code>mlr3mbo</code> is built modular relying on the following <a href="https://cran.r-project.org/package=R6">R6</a> classes: * <code>Surrogate</code>: Surrogate Model * <code>AcqFunction</code>: Acquisition Function * <code>AcqOptimizer</code>: Acquisition Function Optimizer</p>
-<p>Based on these, simple Bayesian optimization loops can be written, see, e.g., <code>bayesopt_soo</code> for sequential single objective BO.</p>
+<p><code>mlr3mbo</code> is built modular relying on the following <a href="https://cran.r-project.org/package=R6">R6</a> classes:</p>
+<ul>
+<li>
+<code>Surrogate</code>: Surrogate Model</li>
+<li>
+<code>AcqFunction</code>: Acquisition Function</li>
+<li>
+<code>AcqOptimizer</code>: Acquisition Function Optimizer</li>
+</ul>
+<p>Based on these, Bayesian optimization loops can be written, see, e.g., <code>bayesopt_soo</code> for sequential single objective BO.</p>
 <p><code>mlr3mbo</code> also provides an <code>OptimizerMbo</code> class behaving like any other <code>Optimizer</code> from the <a href="https://cran.r-project.org/package=bbotk">bbotk</a> package.</p>
 <p>The respective <code>TunerMbo</code> is part of the <a href="https://cran.r-project.org/package=mlr3tuning">mlr3tuning</a> package.</p>
 <p><code>mlr3mbo</code> uses sensible defaults for the <code>Surrogate</code>, <code>AcqFunction</code>, <code>AcqOptimizer</code>, and even the loop function. See <code><a href="reference/mbo_defaults.html">?mbo_defaults</a></code> for more details.</p>
@@ -122,7 +130,7 @@
 <div id="simple-optimization-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#simple-optimization-example" class="anchor"></a>Simple Optimization Example</h2>
-<p>Minimize <code>y = x^2</code> via sequential BO using a GP as surrogate and EI optimized via random search as aquisition function:</p>
+<p>Minimize <code>y = x^2</code> via sequential single objective BO using a GP as surrogate and EI optimized via random search as aquisition function:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bbotk.mlr-org.com">bbotk</a></span><span class="op">)</span>
@@ -159,9 +167,9 @@
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">##             x  x_domain           y</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="co">## 1: 0.01948605 &lt;list[1]&gt; 0.000379706</span></span></code></pre></div>
 </div>
-<div id="simple-tuning-example" class="section level2">
+<div id="simple-tuning-example-using-defaults" class="section level2">
 <h2 class="hasAnchor">
-<a href="#simple-tuning-example" class="anchor"></a>Simple Tuning Example</h2>
+<a href="#simple-tuning-example-using-defaults" class="anchor"></a>Simple Tuning Example Using Defaults</h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3.mlr-org.com">mlr3</a></span><span class="op">)</span>
