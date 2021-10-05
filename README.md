@@ -15,12 +15,12 @@ Bayesian optimization.
 ## Design
 
 `mlr3mbo` is built modular relying on the following
-[R6](https://cran.r-project.org/package=R6) classes: - `Surrogate`:
-Surrogate Model - `AcqFunction`: Acquisition Function - `AcqOptimizer`:
-Acquisition Function Optimizer
+[R6](https://cran.r-project.org/package=R6) classes: \* `Surrogate`:
+Surrogate Model \* `AcqFunction`: Acquisition Function \*
+`AcqOptimizer`: Acquisition Function Optimizer
 
 Based on these, simple Bayesian optimization loops can be written, see,
-e.g., `bayesopt_soo` for sequential Bayesian optimization.
+e.g., `bayesopt_soo` for sequential single objective BO.
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other
 `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk)
