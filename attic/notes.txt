@@ -1,3 +1,5 @@
+ParamSet --> ps
+
 learner default mit evaluate wrappen? eher nicht weil das wird mit random propsal gecatched
 
 Optimizer should infer properties from surrogate, acqf, acqo and loop
@@ -11,4 +13,3 @@ mlr3mbo yahpo gym benchmark
 tuner instance noisy flag? --> Marc
 
 formats und printer definieren
-
