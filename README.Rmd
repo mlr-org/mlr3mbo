@@ -22,11 +22,12 @@ A new R6 and much more modular implementation for single- and multi-crit Bayesia
 ## Design
 
 `mlr3mbo` is built modular relying on the following [R6](https://cran.r-project.org/package=R6) classes:
+
 * `Surrogate`: Surrogate Model
 *  `AcqFunction`: Acquisition Function
 *  `AcqOptimizer`: Acquisition Function Optimizer
 
-Based on these, simple Bayesian optimization loops can be written, see, e.g., `bayesopt_soo` for sequential single objective BO.
+Based on these, Bayesian optimization loops can be written, see, e.g., `bayesopt_soo` for sequential single objective BO.
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk) package.
 
@@ -41,7 +42,7 @@ See `?mbo_defaults` for more details.
 
 ## Simple Optimization Example
 
-Minimize `y = x^2` via sequential BO using a GP as surrogate and EI optimized via random search as aquisition function:
+Minimize `y = x^2` via sequential single objective BO using a GP as surrogate and EI optimized via random search as aquisition function:
 
 ```{r, message = FALSE}
 set.seed(1)
@@ -78,7 +79,7 @@ optimizer = opt("mbo", loop_function = bayesopt_soo, acq_function = acqfun, acq_
 optimizer$optimize(instance)
 ```
 
-## Simple Tuning Example
+## Simple Tuning Example Using Defaults
 
 ```{r, message = FALSE}
 set.seed(1)

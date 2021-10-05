@@ -15,12 +15,14 @@ Bayesian optimization.
 ## Design
 
 `mlr3mbo` is built modular relying on the following
-[R6](https://cran.r-project.org/package=R6) classes: \* `Surrogate`:
-Surrogate Model \* `AcqFunction`: Acquisition Function \*
-`AcqOptimizer`: Acquisition Function Optimizer
+[R6](https://cran.r-project.org/package=R6) classes:
 
-Based on these, simple Bayesian optimization loops can be written, see,
-e.g., `bayesopt_soo` for sequential single objective BO.
+-   `Surrogate`: Surrogate Model
+-   `AcqFunction`: Acquisition Function
+-   `AcqOptimizer`: Acquisition Function Optimizer
+
+Based on these, Bayesian optimization loops can be written, see, e.g.,
+`bayesopt_soo` for sequential single objective BO.
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other
 `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk)
@@ -39,8 +41,8 @@ details.
 
 ## Simple Optimization Example
 
-Minimize `y = x^2` via sequential BO using a GP as surrogate and EI
-optimized via random search as aquisition function:
+Minimize `y = x^2` via sequential single objective BO using a GP as
+surrogate and EI optimized via random search as aquisition function:
 
 ``` r
 set.seed(1)
@@ -80,7 +82,7 @@ optimizer$optimize(instance)
     ##             x  x_domain           y
     ## 1: 0.01948605 <list[1]> 0.000379706
 
-## Simple Tuning Example
+## Simple Tuning Example Using Defaults
 
 ``` r
 set.seed(1)
