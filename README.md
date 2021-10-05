@@ -53,7 +53,7 @@ library(paradox)
 library(mlr3learners)
 
 obfun = ObjectiveRFun$new(
-  fun = function(xs) list(y = sum(unlist(xs)^2)),
+  fun = function(xs) list(y = sum(xs$x^2)),
   domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
   id = "xsq"
 )
@@ -94,16 +94,16 @@ task = tsk("pima")
 learner = lrn("classif.rpart", cp = to_tune(1e-04, 1e-1, logscale = TRUE))
 
 instance = tune(
-       method = "mbo",
-       task = task,
-       learner = learner,
-       resampling = rsmp("holdout"),
-       measure = msr("classif.ce"),
-       term_evals = 10
-     )
+  method = "mbo",
+  task = task,
+  learner = learner,
+  resampling = rsmp("holdout"),
+  measure = msr("classif.ce"),
+  term_evals = 10
+)
 
 instance$result
 ```
 
     ##           cp learner_param_vals  x_domain classif.ce
-    ## 1: -4.993139          <list[2]> <list[1]>  0.1914062
+    ## 1: -4.961105          <list[2]> <list[1]>  0.1914062
