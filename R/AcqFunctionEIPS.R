@@ -43,7 +43,7 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #' @field y_best (`numeric(1)`).
     y_best = NULL,
 
-    #' @field surrogate_time [Surrogate].
+    #' @field surrogate_time [SurrogateSingleCrit].
     surrogate_time = NULL,
 
     #' @description

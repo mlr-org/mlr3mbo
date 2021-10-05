@@ -1,5 +1,7 @@
 learner default mit evaluate wrappen? eher nicht weil das wird mit random propsal gecatched
 
+Optimizer should infer properties from surrogate, acqf, acqo and loop
+
 constants in acqfunction? ... in functions
 
 SMS EGO finish

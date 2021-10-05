@@ -10,7 +10,7 @@ lgr::get_logger("bbotk")$set_threshold("warn")
 
 # mlr3mbo
 
-A new R6 and much more modular implementation for single- and multicrit Bayesian optimization.
+A new R6 and much more modular implementation for single- and multi-crit Bayesian optimization.
 
 <!-- badges: start -->
 [![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=main)](https://github.com/mlr-org/mlr3mbo/actions)
@@ -19,7 +19,27 @@ A new R6 and much more modular implementation for single- and multicrit Bayesian
 [![Mattermost](https://img.shields.io/badge/chat-mattermost-orange.svg)](https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/)
 <!-- badges: end -->
 
-## Simple Example
+## Design
+
+`mlr3mbo` is built modular relying on the following [R6](https://cran.r-project.org/package=R6) classes:
+- `Surrogate`: Surrogate Model
+- `AcqFunction`: Acquisition Function
+- `AcqOptimizer`: Acquisition Function Optimizer
+
+Based on these, simple Bayesian optimization loops can be written, see, e.g., `bayesopt_soo` for sequential Bayesian optimization.
+
+`mlr3mbo` also provides an `OptimizerMbo` class behaving like any other `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk) package.
+
+The respective `TunerMbo` is part of the [mlr3tuning](https://cran.r-project.org/package=mlr3tuning) package.
+
+`mlr3mbo` uses sensible defaults for the `Surrogate`, `AcqFunction`, `AcqOptimizer`, and even the loop function.
+See `?mbo_defaults` for more details.
+
+## API
+
+## Robustness
+
+## Simple Optimization Example
 
 Minimize `y = x^2` via sequential BO using a GP as surrogate and EI optimized via random search as aquisition function:
 
@@ -53,5 +73,30 @@ acqopt = AcqOptimizer$new(
   opt("random_search", batch_size = 100),
   trm("evals", n_evals = 100)
 )
-bayesopt_soo(instance, acqfun, acqopt)
+
+optimizer = opt("mbo", loop_function = bayesopt_soo, acq_function = acqfun, acq_optimizer = acqopt)
+optimizer$optimize(instance)
+```
+
+## Simple Tuning Example
+
+```{r, message = FALSE}
+set.seed(1)
+library(mlr3)
+library(mlr3tuning)
+
+task = tsk("pima")
+
+learner = lrn("classif.rpart", cp = to_tune(1e-04, 1e-1, logscale = TRUE))
+
+instance = tune(
+       method = "mbo",
+       task = task,
+       learner = learner,
+       resampling = rsmp("holdout"),
+       measure = msr("classif.ce"),
+       term_evals = 10
+     )
+
+instance$result
 ```

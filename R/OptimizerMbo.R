@@ -17,9 +17,6 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @field loop_function (`function` | NULL).
     loop_function = NULL,
 
-    #' @field result_function (`function` | NULL).
-    result_function = NULL,
-
     #' @field acq_function ([AcqFunction] | NULL).
     acq_function = NULL,
 
@@ -28,6 +25,9 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
     #' @field args (named `list()` | NULL).
     args = NULL,
+
+    #' @field result_function (`function` | NULL).
+    result_function = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.

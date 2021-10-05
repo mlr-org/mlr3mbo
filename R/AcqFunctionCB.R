@@ -1,10 +1,10 @@
 #' @title Acquisition Function Confidence Bound
 #'
 #' @description
-#'  Confidence Bound.
+#' Confidence Bound.
 #'
 #' @section Parameters:
-#' * `lambda` (`numeric(1)`)\cr
+#' * `"lambda"` (`numeric(1)`)\cr
 #'   TODO DESCRIPTION and Reference
 #'
 #' @references

@@ -4,7 +4,7 @@
 #' Augmented Expected Improvement.
 #'
 #' @section Parameters:
-#' * `c` (`numeric(1)`)\cr
+#' * `"c"` (`numeric(1)`)\cr
 #'   Constant \eqn{c} as used in formula (14) of Huang 2012 to reflect the degree of risk aversion. Defaults to `1`.
 #'
 #' @references

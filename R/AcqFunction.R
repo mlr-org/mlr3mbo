@@ -33,7 +33,6 @@ AcqFunction = R6Class("AcqFunction",
     #' @param surrogate ([Surrogate]).
     #' @param direction (`character(1)`).
     #' @param fun (`function(xdt)`).
-    #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
     initialize = function(id, constants = ParamSet$new(), surrogate, direction, fun) {
       self$surrogate = assert_r6(surrogate, classes = "Surrogate")
       self$direction = assert_choice(direction, choices = c("same", "minimize", "maximize"))
