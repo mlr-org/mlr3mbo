@@ -110,3 +110,21 @@ test_that("bayesopt_soo_eips", {
   expect_true(!is.na(instance$archive$data$acq_eips[5L]))
 })
 
+test_that("bayesopt_soo with trafo", {
+  domain = ps(x = p_dbl(lower = 10, upper = 20, trafo = function(x) x - 15))
+  objective = ObjectiveRFunDt$new(
+    fun = function(xdt) data.table(y = xdt$x ^ 2),
+    domain = domain,
+    codomain = ps(y = p_dbl(tags = "minimize")),
+    check_values = FALSE
+  )
+  instance = MAKE_INST(objective = objective, search_space = domain, terminator = trm("evals", n_evals = 5L))
+
+  acq_function = AcqFunctionEI$new(surrogate = SURR_KM_DETERM)
+
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  expect_true(nrow(instance$archive$data) == 5L)
+  expect_true(!is.na(instance$archive$data$acq_ei[5L]))
+})
+

@@ -51,6 +51,8 @@ AcqFunction = R6Class("AcqFunction",
     #' @param archive ([bbotk::Archive]).
     setup = function(archive) {
       # FIXME: Should we allow alternative search_space as additional argument?
+      # If we do, we need to trafo values before updating the surrogate and
+      # predicting?
 
       # here we can change the optim direction of the codomain for the acq function
       self$codomain = generate_acq_codomain(archive$codomain, id = self$id, direction = self$direction)
