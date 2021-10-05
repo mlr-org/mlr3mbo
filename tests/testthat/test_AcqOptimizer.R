@@ -25,7 +25,6 @@ test_that("AcqOptimizer param_set", {
 })
 
 test_that("AcqOptimizer fix_xdt_distance", {
-  # FIXME: use MIXED 1D helpers in #35
   domain = ParamSet$new(list(
     ParamDbl$new("x1", -5, 5),
     ParamFct$new("x2", levels = c("a", "b", "c")),
@@ -72,5 +71,25 @@ test_that("AcqOptimizer fix_xdt_distance", {
   dist_threshold = 1
   xdt_fixed = fix_xdt_distance(xdt_redundant, previous_xdt = previous_xdt, search_space = domain, dist_threshold = dist_threshold)
   check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt), dist_threshold = dist_threshold)
+})
+
+test_that("AcqOptimizer trafo", {
+  domain = ps(x = p_dbl(lower = 10, upper = 20, trafo = function(x) x - 15))
+  objective = ObjectiveRFunDt$new(
+    fun = function(xdt) data.table(y = xdt$x ^ 2),
+    domain = domain,
+    codomain = ps(y = p_dbl(tags = "minimize")),
+    check_values = FALSE
+  )
+  instance = MAKE_INST(objective = objective, search_space = domain, terminator = trm("evals", n_evals = 5L))
+  design = MAKE_DESIGN(instance)
+  instance$eval_batch(design)
+  acq = AcqFunctionEI$new(surrogate = SURR_KM_DETERM)
+  acqo = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L))
+  acq$setup(instance$archive)
+  acq$surrogate$update(xydt = archive_xy(instance$archive), y_cols = instance$archive$cols_y)
+  acq$update(instance$archive)
+  res = acqo$optimize(acq, archive = instance$archive)
+  expect_equal(res$x, res$x_domain[[1L]][[1L]])
 })
 
