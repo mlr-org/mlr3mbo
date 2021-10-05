@@ -77,8 +77,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 \item{\code{direction}}{(\code{character(1)}).}
 
-\item{\code{fun}}{(\verb{function(xdt)}).
-Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
+\item{\code{fun}}{(\verb{function(xdt)}).}
 }
 \if{html}{\out{</div>}}
 }

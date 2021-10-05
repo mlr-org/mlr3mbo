@@ -72,7 +72,7 @@ Ding, Yufeng, Simonoff, S J (2010).
 \seealso{
 Other mbo_defaults: 
 \code{\link{default_acqfun}()},
-\code{\link{default_acqoptimizer}()},
+\code{\link{default_acqopt}()},
 \code{\link{default_loopfun}()},
 \code{\link{mbo_defaults}}
 }

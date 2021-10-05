@@ -50,7 +50,7 @@ New data.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{list} of \code{\link[data.table:data.table]{data.table::data.table()}}s. Each contains the columns \code{mean} and \code{se}.
+list of \code{\link[data.table:data.table]{data.table::data.table()}}s. Each contains the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}

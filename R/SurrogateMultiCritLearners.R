@@ -12,7 +12,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param learners (`list` of [mlr3::LearnerRegr]).
+    #' @param learners (list of [mlr3::LearnerRegr]).
     initialize = function(learners) {
       addresses = map(learners, address)
       if (length(unique(addresses)) != length(addresses)) {
@@ -42,7 +42,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #' @param xdt ([data.table::data.table()])\cr
     #'   New data.
     #'
-    #' @return `list` of [data.table::data.table()]s with the columns `mean` and `se`.
+    #' @return list of [data.table::data.table()]s with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
 

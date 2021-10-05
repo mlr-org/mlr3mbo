@@ -21,7 +21,7 @@ Chooses a default acquisition function, i.e. the criterion used to propose futur
 }
 \seealso{
 Other mbo_defaults: 
-\code{\link{default_acqoptimizer}()},
+\code{\link{default_acqopt}()},
 \code{\link{default_loopfun}()},
 \code{\link{default_surrogate}()},
 \code{\link{mbo_defaults}}

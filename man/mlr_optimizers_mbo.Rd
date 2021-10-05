@@ -18,13 +18,13 @@ flavor to be used, e.g., \link{bayesopt_soo} for sequential MBO, an acquisition 
 \describe{
 \item{\code{loop_function}}{(\code{function} | NULL).}
 
-\item{\code{result_function}}{(\code{function} | NULL).}
-
 \item{\code{acq_function}}{(\link{AcqFunction} | NULL).}
 
 \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | NULL).}
 
 \item{\code{args}}{(named \code{list()} | NULL).}
+
+\item{\code{result_function}}{(\code{function} | NULL).}
 }
 \if{html}{\out{</div>}}
 }
@@ -80,7 +80,9 @@ Further arguments for the \code{loop_function}.}
 Function called after the optimization terminates.
 Determines how the final result of the optimization is calculated.
 Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
-See for example \link{result_by_surrogate_design}.}
+See for example \link{result_by_surrogate_design} which is used by default if the
+\link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
+\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit})}
 }
 \if{html}{\out{</div>}}
 }

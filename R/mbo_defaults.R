@@ -8,7 +8,7 @@
 #' * Optimization Loop: [default_loopfun]\cr
 #' * Acquisition Function: [default_acqfun]\cr
 #' * Surrogate Learner: [default_surrogate]\cr
-#' * Acqfun Optimizer: [default_acqoptimizer]\cr
+#' * Acqfun Optimizer: [default_acqopt]\cr
 #'
 #' @family mbo_defaults
 NULL
@@ -167,7 +167,7 @@ default_acqfun = function(instance, surrogate) {
 #' @return [AcqOptimizer]
 #' @family mbo_defaults
 #' @export
-default_acqoptimizer = function(instance) {
+default_acqopt = function(instance) {
   assert_r6(instance, "OptimInstance")
   AcqOptimizer$new(opt("random_search", batch_size = 1000L), trm("evals", n_evals = 1000))  # FIXME: what do we use
 }

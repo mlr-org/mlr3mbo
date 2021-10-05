@@ -15,7 +15,7 @@ SurrogateMultiCrit = R6Class("SurrogateMultiCrit",
     #' @param xdt ([data.table::data.table()])\cr
     #'   New data.
     #'
-    #' @return `list` of [data.table::data.table()]s. Each contains the columns `mean` and `se`.
+    #' @return list of [data.table::data.table()]s. Each contains the columns `mean` and `se`.
     predict = function(xdt) {
       stop("abstract")
     }

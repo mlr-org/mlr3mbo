@@ -9,7 +9,7 @@ Confidence Bound.
 \section{Parameters}{
 
 \itemize{
-\item \code{lambda} (\code{numeric(1)})\cr
+\item \code{"lambda"} (\code{numeric(1)})\cr
 TODO DESCRIPTION and Reference
 }
 }

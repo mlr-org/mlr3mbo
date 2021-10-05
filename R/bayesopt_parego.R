@@ -20,7 +20,7 @@ bayesopt_parego = function(instance, acq_function = NULL, acq_optimizer = NULL, 
     acq_function = AcqFunctionEI$new(surrogate = surrogate)
   }
   if (is.null(acq_optimizer)) {
-    acq_optimizer = default_acqoptimizer(instance)
+    acq_optimizer = default_acqopt(instance)
   }
   assert_r6(acq_function, "AcqFunction")
   assert_r6(acq_optimizer, "AcqOptimizer")

@@ -10,13 +10,13 @@ respective fields are not set during initialization.
 \item Optimization Loop: \link{default_loopfun}\cr
 \item Acquisition Function: \link{default_acqfun}\cr
 \item Surrogate Learner: \link{default_surrogate}\cr
-\item Acqfun Optimizer: \link{default_acqoptimizer}\cr
+\item Acqfun Optimizer: \link{default_acqopt}\cr
 }
 }
 \seealso{
 Other mbo_defaults: 
 \code{\link{default_acqfun}()},
-\code{\link{default_acqoptimizer}()},
+\code{\link{default_acqopt}()},
 \code{\link{default_loopfun}()},
 \code{\link{default_surrogate}()}
 }

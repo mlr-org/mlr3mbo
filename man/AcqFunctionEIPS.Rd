@@ -57,7 +57,7 @@ Other Acquisition Function:
 \describe{
 \item{\code{y_best}}{(\code{numeric(1)}).}
 
-\item{\code{surrogate_time}}{\link{Surrogate}.}
+\item{\code{surrogate_time}}{\link{SurrogateSingleCrit}.}
 }
 \if{html}{\out{</div>}}
 }

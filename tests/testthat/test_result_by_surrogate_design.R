@@ -3,7 +3,7 @@ test_that("result_by_surrogate_design works", {
   optimizer = OptimizerMbo$new(
     loop_function = default_loopfun(instance),
     acq_function = default_acqfun(instance, default_surrogate(instance)),
-    acq_optimizer = default_acqoptimizer(instance)
+    acq_optimizer = default_acqopt(instance)
   )
   optimizer$optimize(instance)
   out = result_by_surrogate_design(instance, optimizer)

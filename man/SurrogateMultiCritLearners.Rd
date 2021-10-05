@@ -48,7 +48,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{learners}}{(\code{list} of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
+\item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -72,7 +72,7 @@ New data.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{list} of \code{\link[data.table:data.table]{data.table::data.table()}}s with the columns \code{mean} and \code{se}.
+list of \code{\link[data.table:data.table]{data.table::data.table()}}s with the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}

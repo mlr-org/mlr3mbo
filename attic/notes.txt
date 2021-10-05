@@ -10,6 +10,4 @@ SMS EGO finish
 
 mlr3mbo yahpo gym benchmark
 
-tuner instance noisy flag? --> Marc
-
 formats und printer definieren

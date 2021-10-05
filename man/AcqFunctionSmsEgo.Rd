@@ -10,12 +10,12 @@ S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
 
 \itemize{
 \item \code{"lambda"} (\code{numeric(1)})\cr
-\eqn{lambda} value used for the confidence bound.
+\eqn{\lambda} value used for the confidence bound.
 Defaults to 1.
 Based on \code{confidence = (1 - 2 * dnorm(lambda)) ^ m} you can calculate a
 lambda for a given confidence level, see Ponweiser et al. 2008.
 \item \code{"eps"} (\code{numeric(1)})\cr
-\eqn{epsilon} used for the additive epsilon dominance.
+\eqn{\epsilon} used for the additive epsilon dominance.
 Can either be a single numeric value > 0 or \code{NULL}.
 In the case of being \code{NULL}, an epsilon vector is maintained dynamically as
 described in Ponweiser et al. 2008.

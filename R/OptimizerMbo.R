@@ -44,7 +44,9 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #'   Function called after the optimization terminates.
     #'   Determines how the final result of the optimization is calculated.
     #'   Requires arguments `inst` (the [bbotk::OptimInstance]) and `self` (the [OptimizerMbo]).
-    #'   See for example [result_by_surrogate_design].
+    #'   See for example [result_by_surrogate_design] which is used by default if the
+    #'   [bbotk::OptimInstance] has the property `"noisy"` (which is the case for a
+    #'   [mlr3tuning::TuningInstanceSingleCrit] or [mlr3tuning::TuningInstanceMultiCrit])
     initialize = function(loop_function = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
       param_set = ParamSet$new()
       param_classes = feature_types_to_param_classes(acq_function$surrogate$model$feature_types)
@@ -61,15 +63,27 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
   private = list(
     .optimize = function(inst) {
+      # FIXME: we could log the defaults chosen?
       if (is.null(self$loop_function)) {
         self$loop_function = default_loopfun(inst)
+      }
+      if (is.null(self$acq_function)) {
+        surrogate = default_surrogate(inst)
+        self$acq_function = default_acqfun(inst, surrogate = surrogate)
+      }
+      if (is.null(self$acq_optimizer)) {
+        self$acq_optimizer = default_acqopt(inst)
       }
       invoke(self$loop_function, instance = inst, acq_function = self$acq_function, acq_optimizer = self$acq_optimizer, .args = self$args)
     },
 
     .assign_result = function(inst) {
       if (is.null(self$result_function)) {
-        super$.assign_result(inst)
+        if ("noisy" %in% inst$objective$properties) {
+          result_by_surrogate_design(inst, self)
+        } else {
+          super$.assign_result(inst)
+        }
       } else {
         self$result_function(inst, self)  # FIXME: Maybe not final API
       }
