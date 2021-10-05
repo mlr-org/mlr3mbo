@@ -2,7 +2,7 @@
 % Please edit documentation in R/SurrogateSingleCrit.R
 \name{SurrogateSingleCrit}
 \alias{SurrogateSingleCrit}
-\title{Surrogate model for single criteria response surfaces}
+\title{Surrogate Model for Single Criteria Response Surfaces}
 \description{
 Surrogate model for single criteria response surfaces.
 }
@@ -20,7 +20,6 @@ Surrogate model for single criteria response surfaces.
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="initialize">}\href{../../mlr3mbo/html/Surrogate.html#method-initialize}{\code{mlr3mbo::Surrogate$initialize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup">}\href{../../mlr3mbo/html/Surrogate.html#method-setup}{\code{mlr3mbo::Surrogate$setup()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update">}\href{../../mlr3mbo/html/Surrogate.html#method-update}{\code{mlr3mbo::Surrogate$update()}}\out{</span>}
 }
 \out{</details>}
@@ -29,8 +28,7 @@ Surrogate model for single criteria response surfaces.
 \if{html}{\out{<a id="method-predict"></a>}}
 \if{latex}{\out{\hypertarget{method-predict}{}}}
 \subsection{Method \code{predict()}}{
-Returns a named list of data.tables.
-Each contains the mean response and standard error for one dimension.
+Predict mean response and standard error.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateSingleCrit$predict(xdt)}\if{html}{\out{</div>}}
 }

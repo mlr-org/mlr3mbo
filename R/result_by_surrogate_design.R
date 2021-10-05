@@ -1,12 +1,12 @@
-#' @title Choose final point by Surrogate Mean
+#' @title Choose Final Point by Surrogate Mean
 #'
 #' @description
-#' Choose final point by best surrogate mean prediction on all evaluated points on the search space.
+#' Choose final point by best surrogate mean prediction on all evaluated points.
 #'
 #' @param instance ([bbotk::OptimInstanceSingleCrit] | [bbotk::OptimInstanceMultiCrit])\cr
-#'   The OptimInstance object the result should be assigned to.
+#'   The [bbotk::OptimInstance] the result should be assigned to.
 #' @param optimizer_mbo ([OptimizerMbo])\cr
-#'   The OptimizerMbo object that generates the final result.
+#'   The [OptimizerMbo] that generates the final result.
 #' @return NULL
 #' @export
 result_by_surrogate_design = function(instance, optimizer_mbo) {
@@ -14,7 +14,7 @@ result_by_surrogate_design = function(instance, optimizer_mbo) {
   surrogate = optimizer_mbo$acq_function$surrogate
   xydt = archive_xy(archive)
   surrogate$update(xydt = xydt, y_cols = archive$cols_y)  # update surrogate model with new data
-  preds = surrogate$predict(xydt[, archive$cols_x, with = FALSE])  # FIXME: remember to set jitter to 0.001 or something if using regr.km
+  preds = surrogate$predict(xydt[, archive$cols_x, with = FALSE])
   means = if (testR6(surrogate, classes = "SurrogateSingleCrit")) {
     preds$mean
   } else if (testR6(surrogate, classes = "SurrogateMultiCrit")) {

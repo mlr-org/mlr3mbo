@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbo_defaults.R
 \name{default_loopfun}
 \alias{default_loopfun}
-\title{Default loopfun}
+\title{Default Loop Function}
 \usage{
 default_loopfun(instance)
 }

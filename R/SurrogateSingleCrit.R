@@ -1,4 +1,4 @@
-#' @title Surrogate model for single criteria response surfaces
+#' @title Surrogate Model for Single Criteria Response Surfaces
 #'
 #' @description
 #' Surrogate model for single criteria response surfaces.
@@ -9,11 +9,10 @@ SurrogateSingleCrit = R6Class("SurrogateSingleCrit",
 
   public = list(
     #' @description
-    #' Returns a named list of data.tables.
-    #' Each contains the mean response and standard error for one dimension.
+    #' Predict mean response and standard error.
     #'
     #' @param xdt ([data.table::data.table()])\cr
-    #' New data.
+    #'   New data.
     #'
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbo_defaults.R
 \name{default_surrogate}
 \alias{default_surrogate}
-\title{Generate default surrogate}
+\title{Generate Default Surrogate}
 \usage{
 default_surrogate(instance, learner = NULL, n_objectives = NULL)
 }

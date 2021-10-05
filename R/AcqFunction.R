@@ -1,7 +1,8 @@
 #' @title Acquisition Function Base Class
 #'
 #' @description
-#' Based on a surrogate model, the acquisition function encodes the preference to evaluate a new point for evaluation.
+#' Based on a surrogate model, the acquisition function encodes the preference to evaluate a new
+#' point for evaluation.
 #'
 #' @family Acquisition Function
 #'
@@ -14,11 +15,14 @@ AcqFunction = R6Class("AcqFunction",
     surrogate = NULL,
 
     #' @field direction (`character(1)`)\cr
+    #'   Optimization direction of the acquisition function relative to the direction of the
+    #'   objective function of the [bbotk::OptimInstance].
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
-    direction = NULL,  # optim direction of the acq function
+    direction = NULL,
 
-    #' @field surrogate_max_to_min (`numeric(1)`).
-    #'   Optimization direction of the objective function: 1 for minimization, -1 for maximization.
+    #' @field surrogate_max_to_min (`-1` | `1`).
+    #'   Multiplicative factor to correct for minimization or maximization of
+    #'   the acquisition function.
     surrogate_max_to_min = NULL,  # FIXME: make this private
 
     #' @description
@@ -31,8 +35,8 @@ AcqFunction = R6Class("AcqFunction",
     #' @param fun (`function(xdt)`).
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
     initialize = function(id, constants = ParamSet$new(), surrogate, direction, fun) {
-      self$surrogate = assert_r6(surrogate, "Surrogate")
-      self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
+      self$surrogate = assert_r6(surrogate, classes = "Surrogate")
+      self$direction = assert_choice(direction, choices = c("same", "minimize", "maximize"))
       super$initialize(
         fun = assert_function(fun),
         domain = ParamSet$new(),  # dummy, replaced in $update()
@@ -51,7 +55,6 @@ AcqFunction = R6Class("AcqFunction",
 
       # here we can change the optim direction of the codomain for the acq function
       self$codomain = generate_acq_codomain(archive$codomain, id = self$id, direction = self$direction)
-
       self$surrogate_max_to_min = mult_max_to_min(archive$codomain)
 
       self$domain = archive$search_space$clone(deep = TRUE)
@@ -67,8 +70,8 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @description
-    #' Update the [Surrogate] model(s) with new data.
-    #' FIXME: probably moves this simply to $update()
+    #' Update the [Surrogate] model(s) with new data in an [bbotk::Archive].
+    #' FIXME: probably move this simply to $update()
     #'
     #' @param archive ([bbotk::Archive]).
     update_surrogate = function(archive) {

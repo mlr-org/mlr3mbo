@@ -1,5 +1,7 @@
 learner default mit evaluate wrappen? eher nicht weil das wird mit random propsal gecatched
 
+constants in acqfunction? ... in functions
+
 SMS EGO finish
 
 mlr3mbo yahpo gym benchmark

@@ -1,4 +1,4 @@
-#' @title OptimizerMbo
+#' @title Model Based Optimization
 #'
 #' @name mlr_optimizers_mbo
 #'

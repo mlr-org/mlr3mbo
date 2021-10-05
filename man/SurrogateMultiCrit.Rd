@@ -2,7 +2,7 @@
 % Please edit documentation in R/SurrogateMultiCrit.R
 \name{SurrogateMultiCrit}
 \alias{SurrogateMultiCrit}
-\title{Surrogate model for multi criteria response surfaces}
+\title{Surrogate Model for Multi Criteria Response Surfaces}
 \description{
 Surrogate model for multi criteria response surfaces.
 }
@@ -27,7 +27,6 @@ Surrogate model for multi criteria response surfaces.
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="initialize">}\href{../../mlr3mbo/html/Surrogate.html#method-initialize}{\code{mlr3mbo::Surrogate$initialize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup">}\href{../../mlr3mbo/html/Surrogate.html#method-setup}{\code{mlr3mbo::Surrogate$setup()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update">}\href{../../mlr3mbo/html/Surrogate.html#method-update}{\code{mlr3mbo::Surrogate$update()}}\out{</span>}
 }
 \out{</details>}
@@ -51,8 +50,7 @@ New data.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\link{list} of \code{\link[data.table:data.table]{data.table::data.table()}} objects.
-Each contains the columns \code{mean} and \code{se}.
+\code{list} of \code{\link[data.table:data.table]{data.table::data.table()}}s. Each contains the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}

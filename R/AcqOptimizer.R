@@ -1,7 +1,7 @@
-#' @title Acquisition Optimizer
+#' @title Acquisition Function Optimizer
 #'
 #' @description
-#' Optimizer for [AcqFunction] objects.
+#' Optimizer for [AcqFunction]s.
 #'
 #' @export
 AcqOptimizer = R6Class("AcqOptimizer",
@@ -21,9 +21,9 @@ AcqOptimizer = R6Class("AcqOptimizer",
     initialize = function(optimizer, terminator) {
       self$optimizer = assert_r6(optimizer, "Optimizer")
       self$terminator = assert_r6(terminator, "Terminator")
-      ps = ParamSet$new(list(
-        ParamLgl$new("fix_distance"),
-        ParamDbl$new("dist_threshold", lower = 0, upper = 1))
+      ps = ps(
+        fix_distance = p_lgl(),
+        dist_threshold = p_dbl(lower = 0, upper = 1)
       )
 
       ps$values = list(fix_distance = FALSE, dist_threshold = 0)
@@ -43,9 +43,9 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' the checks but most likely will.
     #'
     #' @param acq_function ([AcqFunction])\cr
-    #' Acquisition function to optimize.
+    #'   Acquisition function to optimize.
     #' @param archive ([bbotk::Archive])\cr
-    #' Archive.
+    #'   Archive.
     #'
     #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
     optimize = function(acq_function, archive) {
@@ -93,7 +93,9 @@ AcqOptimizer = R6Class("AcqOptimizer",
 
     deep_clone = function(name, value) {
       switch(name,
+        optimizer = value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
+        terminator = values$clone(deep = TRUE),
         value
       )
     }

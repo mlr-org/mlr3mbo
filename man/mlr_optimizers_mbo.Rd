@@ -3,7 +3,7 @@
 \name{mlr_optimizers_mbo}
 \alias{mlr_optimizers_mbo}
 \alias{OptimizerMbo}
-\title{OptimizerMbo}
+\title{Model Based Optimization}
 \description{
 \code{OptimizerMbo} class that implements model based optimization.
 The implementation follows a modular layout relying on a loop function` determining the MBO

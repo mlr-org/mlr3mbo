@@ -1,7 +1,7 @@
-#' @title Surrogate Model for Multi-Criteria response surfaces
+#' @title Surrogate Model for Multi Criteria Response Surfaces
 #'
 #' @description
-#' Multi Criteria response surfaces modeled by multiple regression [mlr3::Learner] objects.
+#' Surrogate model for multi criteria response surfaces modeled by multiple regression [mlr3::Learner] objects.
 #' Note that redundant [mlr3::Learner]s must be deep clones.
 #'
 #' @export
@@ -12,7 +12,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param learners (list of [mlr3::LearnerRegr]).
+    #' @param learners (`list` of [mlr3::LearnerRegr]).
     initialize = function(learners) {
       addresses = map(learners, address)
       if (length(unique(addresses)) != length(addresses)) {
@@ -36,12 +36,13 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     },
 
     #' @description
-    #' Returns mean response and standard error.
+    #' Returns a named list of data.tables.
+    #' Each contains the mean response and standard error for one dimension.
     #'
     #' @param xdt ([data.table::data.table()])\cr
-    #' New data.
+    #'   New data.
     #'
-    #' @return [data.table::data.table()] with the columns `mean` and `se`.
+    #' @return `list` of [data.table::data.table()]s with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
 
@@ -66,7 +67,7 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       length(self$model)
     },
 
-    #' @field assert_insample_perf (`numeric()`) \cr
+    #' @field assert_insample_perf (`numeric()`)\cr
     #' Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
       if (!missing(rhs)) {
@@ -101,8 +102,8 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
 
   private = list(
 
-    # Train model with new points.
-    # Also calculates the insample performance based on the `perf_measures` hyperparameter if `calc_insample_perf = TRUE`.
+    # Train model with new data
+    # Also calculates the insample performance based on the `perf_measures` hyperparameter if `calc_insample_perf = TRUE`
     .update = function(xydt, y_cols) {
       assert_xydt(xydt, y_cols)
 
@@ -137,7 +138,11 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
     },
 
     deep_clone = function(name, value) {
-      switch(name, model = map(value, function(x) x$clone(deep = TRUE)), value)
+      switch(name,
+        model = map(value, function(x) x$clone(deep = TRUE)),
+        .param_set = value$clone(deep = TRUE),
+        value
+      )
     }
   )
 )

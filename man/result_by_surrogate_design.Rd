@@ -2,17 +2,17 @@
 % Please edit documentation in R/result_by_surrogate_design.R
 \name{result_by_surrogate_design}
 \alias{result_by_surrogate_design}
-\title{Choose final point by Surrogate Mean}
+\title{Choose Final Point by Surrogate Mean}
 \usage{
 result_by_surrogate_design(instance, optimizer_mbo)
 }
 \arguments{
 \item{instance}{(\link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} | \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit})\cr
-The OptimInstance object the result should be assigned to.}
+The \link[bbotk:OptimInstance]{bbotk::OptimInstance} the result should be assigned to.}
 
 \item{optimizer_mbo}{(\link{OptimizerMbo})\cr
-The OptimizerMbo object that generates the final result.}
+The \link{OptimizerMbo} that generates the final result.}
 }
 \description{
-Choose final point by best surrogate mean prediction on all evaluated points on the search space.
+Choose final point by best surrogate mean prediction on all evaluated points.
 }

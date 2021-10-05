@@ -13,7 +13,7 @@
 #' @family mbo_defaults
 NULL
 
-#' @title Default loopfun
+#' @title Default Loop Function
 #'
 #' @description
 #' Chooses a default "loopfun", i.e. the MBO flavor to be used for optimization.
@@ -33,7 +33,7 @@ default_loopfun = function(instance) {
   }
 }
 
-#' @title Generate default surrogate
+#' @title Generate Default Surrogate
 #'
 #' @description
 #' This is a helper function that generates a default surrogate, based on properties of the objective
@@ -171,3 +171,4 @@ default_acqoptimizer = function(instance) {
   assert_r6(instance, "OptimInstance")
   AcqOptimizer$new(opt("random_search", batch_size = 1000L), trm("evals", n_evals = 1000))  # FIXME: what do we use
 }
+

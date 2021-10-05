@@ -2,9 +2,9 @@
 % Please edit documentation in R/AcqOptimizer.R
 \name{AcqOptimizer}
 \alias{AcqOptimizer}
-\title{Acquisition Optimizer}
+\title{Acquisition Function Optimizer}
 \description{
-Optimizer for \link{AcqFunction} objects.
+Optimizer for \link{AcqFunction}s.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

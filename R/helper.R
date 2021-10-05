@@ -118,11 +118,11 @@ eval_initial_design = function(instance, method = "lhs") {
     d = instance$objective$ydim
     design = switch(method,
       grid = {
-        resolution = max(1, floor(((4 * d) ^ (1 / d))))
+        resolution = max(1, floor(((4L * d) ^ (1 / d))))
         generate_design_grid(instance$search_space, resolution = resolution)$data
       },
-      lhs = generate_design_lhs(instance$search_space, n = 4 * d)$data,
-      random = generate_design_random(instance$search_space, n = 4 * d)$data
+      lhs = generate_design_lhs(instance$search_space, n = 4L * d)$data,
+      random = generate_design_random(instance$search_space, n = 4L * d)$data
     )
     instance$eval_batch(design)
   } else {

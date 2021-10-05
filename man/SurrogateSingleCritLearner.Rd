@@ -2,9 +2,9 @@
 % Please edit documentation in R/SurrogateSingleCritLearner.R
 \name{SurrogateSingleCritLearner}
 \alias{SurrogateSingleCritLearner}
-\title{Surrogate Model}
+\title{Surrogate Model for Single Criteria Response Surfaces}
 \description{
-Surrogate model based on regression \link[mlr3:Learner]{mlr3::Learner} objects.
+Surrogate model for single criteria response surfaces based on regression \link[mlr3:Learner]{mlr3::Learner} objects.
 }
 \section{Super classes}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{\link[mlr3mbo:SurrogateSingleCrit]{mlr3mbo::SurrogateSingleCrit}} -> \code{SurrogateSingleCritLearner}
@@ -12,7 +12,7 @@ Surrogate model based on regression \link[mlr3:Learner]{mlr3::Learner} objects.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{assert_insample_perf}}{(\code{numeric(1)}) \cr
+\item{\code{assert_insample_perf}}{(\code{numeric(1)})\cr
 Asserts whether the current insample performance meets the performance threshold.}
 }
 \if{html}{\out{</div>}}
@@ -28,7 +28,6 @@ Asserts whether the current insample performance meets the performance threshold
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup">}\href{../../mlr3mbo/html/Surrogate.html#method-setup}{\code{mlr3mbo::Surrogate$setup()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update">}\href{../../mlr3mbo/html/Surrogate.html#method-update}{\code{mlr3mbo::Surrogate$update()}}\out{</span>}
 }
 \out{</details>}

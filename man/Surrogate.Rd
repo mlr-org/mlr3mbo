@@ -2,7 +2,7 @@
 % Please edit documentation in R/Surrogate.R
 \name{Surrogate}
 \alias{Surrogate}
-\title{Surrogate model}
+\title{Surrogate Model}
 \description{
 Surrogate model.
 }
@@ -32,7 +32,6 @@ Asserts whether the current insample performance meets the performance threshold
 \itemize{
 \item \href{#method-new}{\code{Surrogate$new()}}
 \item \href{#method-update}{\code{Surrogate$update()}}
-\item \href{#method-setup}{\code{Surrogate$setup()}}
 \item \href{#method-predict}{\code{Surrogate$predict()}}
 \item \href{#method-clone}{\code{Surrogate$clone()}}
 }
@@ -58,7 +57,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<a id="method-update"></a>}}
 \if{latex}{\out{\hypertarget{method-update}{}}}
 \subsection{Method \code{update()}}{
-Train model with new points.
+Train model with new data.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$update(xydt, y_cols)}\if{html}{\out{</div>}}
 }
@@ -67,34 +66,10 @@ Train model with new points.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{xydt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-Desing of new points.}
+New data.}
 
 \item{\code{y_cols}}{(\code{character()})\cr
-Names of response columns.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setup"></a>}}
-\if{latex}{\out{\hypertarget{method-setup}{}}}
-\subsection{Method \code{setup()}}{
-Possible setup routine of the surrogate.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$setup(xydt, y_cols)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xydt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-Initial design.}
-
-\item{\code{y_cols}}{(\code{character()})\cr
-Names of response columns.}
+Name(s) of response column(s).}
 }
 \if{html}{\out{</div>}}
 }
@@ -106,7 +81,7 @@ Names of response columns.}
 \if{html}{\out{<a id="method-predict"></a>}}
 \if{latex}{\out{\hypertarget{method-predict}{}}}
 \subsection{Method \code{predict()}}{
-Returns mean response and standard error.
+Predict mean response and standard error.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$predict(xdt)}\if{html}{\out{</div>}}
 }
@@ -120,7 +95,7 @@ New data.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} with the columns \code{mean} and \code{se}.
+Arbitrary prediction object.
 }
 }
 \if{html}{\out{<hr>}}

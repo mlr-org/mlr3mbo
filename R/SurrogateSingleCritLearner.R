@@ -1,7 +1,7 @@
-#' @title Surrogate Model
+#' @title Surrogate Model for Single Criteria Response Surfaces
 #'
 #' @description
-#' Surrogate model based on regression [mlr3::Learner] objects.
+#' Surrogate model for single criteria response surfaces based on regression [mlr3::Learner] objects.
 #'
 #' @export
 SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
@@ -32,7 +32,7 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     #' Returns mean response and standard error.
     #'
     #' @param xdt ([data.table::data.table()])\cr
-    #' New data.
+    #'   New data.
     #'
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
@@ -49,8 +49,8 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
 
   active = list(
 
-    #' @field assert_insample_perf (`numeric(1)`) \cr
-    #' Asserts whether the current insample performance meets the performance threshold.
+    #' @field assert_insample_perf (`numeric(1)`)\cr
+    #'   Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
       if (!missing(rhs)) {
         stop("Field/Binding is read-only.")
@@ -75,8 +75,8 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
 
   private = list(
 
-    # Train model with new points.
-    # Also calculates the insample performance based on the `perf_measure` hyperparameter if `calc_insample_perf = TRUE`.
+    # Train model with new data
+    # Also calculates the insample performance based on the `perf_measure` hyperparameter if `calc_insample_perf = TRUE`
     .update = function(xydt, y_cols) {
       assert_xydt(xydt, y_cols)
       task = TaskRegr$new(id = "surrogate_task", backend = char_to_fct(xydt), target = y_cols)
@@ -91,7 +91,11 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
     },
 
     deep_clone = function(name, value) {
-      switch(name, model = value$clone(deep = TRUE), value)
+      switch(name,
+        model = value$clone(deep = TRUE),
+        .param_set = value$clone(deep = TRUE),
+        value
+      )
     }
   )
 )

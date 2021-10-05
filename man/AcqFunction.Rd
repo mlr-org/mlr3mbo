@@ -4,7 +4,8 @@
 \alias{AcqFunction}
 \title{Acquisition Function Base Class}
 \description{
-Based on a surrogate model, the acquisition function encodes the preference to evaluate a new point for evaluation.
+Based on a surrogate model, the acquisition function encodes the preference to evaluate a new
+point for evaluation.
 }
 \seealso{
 Other Acquisition Function: 
@@ -25,10 +26,13 @@ Other Acquisition Function:
 \item{\code{surrogate}}{\link{Surrogate}.}
 
 \item{\code{direction}}{(\code{character(1)})\cr
+Optimization direction of the acquisition function relative to the direction of the
+objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 
-\item{\code{surrogate_max_to_min}}{(\code{numeric(1)}).
-Optimization direction of the objective function: 1 for minimization, -1 for maximization.}
+\item{\code{surrogate_max_to_min}}{(\code{-1} | \code{1}).
+Multiplicative factor to correct for minimization or maximization of
+the acquisition function.}
 }
 \if{html}{\out{</div>}}
 }
@@ -117,8 +121,8 @@ Update the acquisition function given an \link[bbotk:Archive]{bbotk::Archive}.
 \if{html}{\out{<a id="method-update_surrogate"></a>}}
 \if{latex}{\out{\hypertarget{method-update_surrogate}{}}}
 \subsection{Method \code{update_surrogate()}}{
-Update the \link{Surrogate} model(s) with new data.
-FIXME: probably moves this simply to $update()
+Update the \link{Surrogate} model(s) with new data in an \link[bbotk:Archive]{bbotk::Archive}.
+FIXME: probably move this simply to $update()
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$update_surrogate(archive)}\if{html}{\out{</div>}}
 }

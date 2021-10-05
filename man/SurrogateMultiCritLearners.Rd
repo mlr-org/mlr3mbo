@@ -2,9 +2,9 @@
 % Please edit documentation in R/SurrogateMultiCritLearners.R
 \name{SurrogateMultiCritLearners}
 \alias{SurrogateMultiCritLearners}
-\title{Surrogate Model for Multi-Criteria response surfaces}
+\title{Surrogate Model for Multi Criteria Response Surfaces}
 \description{
-Multi Criteria response surfaces modeled by multiple regression \link[mlr3:Learner]{mlr3::Learner} objects.
+Surrogate model for multi criteria response surfaces modeled by multiple regression \link[mlr3:Learner]{mlr3::Learner} objects.
 Note that redundant \link[mlr3:Learner]{mlr3::Learner}s must be deep clones.
 }
 \section{Super classes}{
@@ -16,7 +16,7 @@ Note that redundant \link[mlr3:Learner]{mlr3::Learner}s must be deep clones.
 \item{\code{k}}{(\code{integer(1)})\cr
 Returns the number of models.}
 
-\item{\code{assert_insample_perf}}{(\code{numeric()}) \cr
+\item{\code{assert_insample_perf}}{(\code{numeric()})\cr
 Asserts whether the current insample performance meets the performance threshold.}
 }
 \if{html}{\out{</div>}}
@@ -32,7 +32,6 @@ Asserts whether the current insample performance meets the performance threshold
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="setup">}\href{../../mlr3mbo/html/Surrogate.html#method-setup}{\code{mlr3mbo::Surrogate$setup()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update">}\href{../../mlr3mbo/html/Surrogate.html#method-update}{\code{mlr3mbo::Surrogate$update()}}\out{</span>}
 }
 \out{</details>}
@@ -49,7 +48,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
+\item{\code{learners}}{(\code{list} of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -58,7 +57,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<a id="method-predict"></a>}}
 \if{latex}{\out{\hypertarget{method-predict}{}}}
 \subsection{Method \code{predict()}}{
-Returns mean response and standard error.
+Returns a named list of data.tables.
+Each contains the mean response and standard error for one dimension.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateMultiCritLearners$predict(xdt)}\if{html}{\out{</div>}}
 }
@@ -72,7 +72,7 @@ New data.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} with the columns \code{mean} and \code{se}.
+\code{list} of \code{\link[data.table:data.table]{data.table::data.table()}}s with the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}
