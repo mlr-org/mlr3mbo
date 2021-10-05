@@ -163,13 +163,13 @@ flavor to be used, e.g., <a href='bayesopt_soo.html'>bayesopt_soo</a> for sequen
     <p><div class="r6-fields"></p><dl>
 <dt><code>loop_function</code></dt><dd><p>(<code>function</code> | NULL).</p></dd>
 
-<dt><code>result_function</code></dt><dd><p>(<code>function</code> | NULL).</p></dd>
-
 <dt><code>acq_function</code></dt><dd><p>(<a href='AcqFunction.html'>AcqFunction</a> | NULL).</p></dd>
 
 <dt><code>acq_optimizer</code></dt><dd><p>(<a href='AcqOptimizer.html'>AcqOptimizer</a> | NULL).</p></dd>
 
 <dt><code>args</code></dt><dd><p>(named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code> | NULL).</p></dd>
+
+<dt><code>result_function</code></dt><dd><p>(<code>function</code> | NULL).</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
@@ -220,7 +220,9 @@ Further arguments for the <code>loop_function</code>.</p></dd>
 Function called after the optimization terminates.
 Determines how the final result of the optimization is calculated.
 Requires arguments <code>inst</code> (the <a href='https://bbotk.mlr-org.com/reference/OptimInstance.html'>bbotk::OptimInstance</a>) and <code>self</code> (the OptimizerMbo).
-See for example <a href='result_by_surrogate_design.html'>result_by_surrogate_design</a>.</p></dd>
+See for example <a href='result_by_surrogate_design.html'>result_by_surrogate_design</a> which is used by default if the
+<a href='https://bbotk.mlr-org.com/reference/OptimInstance.html'>bbotk::OptimInstance</a> has the property <code>"noisy"</code> (which is the case for a
+<a href='https://mlr3tuning.mlr-org.com/reference/TuningInstanceSingleCrit.html'>mlr3tuning::TuningInstanceSingleCrit</a> or <a href='https://mlr3tuning.mlr-org.com/reference/TuningInstanceMultiCrit.html'>mlr3tuning::TuningInstanceMultiCrit</a>)</p></dd>
 
 </dl><p></div></p>
 <p><hr>
