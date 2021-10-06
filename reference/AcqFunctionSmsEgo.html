@@ -159,7 +159,7 @@
 Defaults to 1.
 Based on <code>confidence = (1 - 2 * dnorm(lambda)) ^ m</code> you can calculate a
 lambda for a given confidence level, see Ponweiser et al. 2008.</p></li>
-<li><p><code>"eps"</code> (<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>)<br />
+<li><p><code>"epsilon"</code> (<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>)<br />
 \(\epsilon\) used for the additive epsilon dominance.
 Can either be a single numeric value &gt; 0 or <code>NULL</code>.
 In the case of being <code>NULL</code>, an epsilon vector is maintained dynamically as
@@ -190,11 +190,9 @@ In <em>Proceedings of the 10th International Conference on Parallel Problem Solv
 
 <dt><code>ref_point</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
 
-<dt><code>eps</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
+<dt><code>epsilon</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
 
 <dt><code>progress</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).</p></dd>
-
-<dt><code>param_set</code></dt><dd><p>(<a href='https://paradox.mlr-org.com/reference/ParamSet.html'>paradox::ParamSet</a>).</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
