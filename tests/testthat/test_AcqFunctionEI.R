@@ -51,6 +51,6 @@ test_that("AcqFunctionEI trafo", {
   res = acqf$eval_dt(xdt)
   expect_data_table(res, ncols = 1L, nrows = 11L, any.missing = FALSE)
   expect_named(res, "acq_ei")
-  expect_true(xdt[which.max(res$acq_ei)]$x == 15)
+  expect_true(max(res$acq_ei) == res$acq_ei[6])  # at x = 15
 })
 

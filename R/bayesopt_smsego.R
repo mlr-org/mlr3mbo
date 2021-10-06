@@ -50,27 +50,26 @@ if (FALSE) {
   library(mlr3learners)
 
   FUN_2D_2D = function(xs) {
-    list(y1 = xs[[1]]^2, y2 = -xs[[2]]^2)
+    list(y1 = xs$x1 ^ 2, y2 = (xs$x1 - 2) ^ 2)
   }
   PS_2D = ParamSet$new(list(
-    ParamDbl$new("x1", lower = -1, upper = 1),
-    ParamDbl$new("x2", lower = -1, upper = 1)
+    ParamDbl$new("x1", lower = -10, upper = 10)
   ))
   FUN_2D_2D_CODOMAIN = ParamSet$new(list(
     ParamDbl$new("y1", tags = "minimize"),
-    ParamDbl$new("y2", tags = "maximize")
+    ParamDbl$new("y2", tags = "minimize")
   ))
   obfun = ObjectiveRFun$new(fun = FUN_2D_2D, domain = PS_2D,
     codomain = FUN_2D_2D_CODOMAIN, properties = "multi-crit")
 
-  terminator = trm("evals", n_evals = 20)
+  terminator = trm("evals", n_evals = 30)
 
   instance = OptimInstanceMultiCrit$new(
     objective = obfun,
     terminator = terminator
   )
 
-  surrogate = SurrogateMultiCritLearners$new(learners = replicate(2, lrn("regr.km")))
+  surrogate = SurrogateMultiCritLearners$new(learners = replicate(2, lrn("regr.ranger")))
   acq_function = AcqFunctionSmsEgo$new(surrogate = surrogate)
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
@@ -81,6 +80,7 @@ if (FALSE) {
   archdata = instance$archive$data
   library(ggplot2)
   g = ggplot(archdata, aes_string(x = "y1", y = "y2", color = "batch_nr"))
-  g + geom_point()
+  g = g + geom_point()
+  g + geom_point(data = best, color = "red")
 }
 

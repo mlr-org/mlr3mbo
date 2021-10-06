@@ -8,7 +8,7 @@ Optimizer should infer properties from surrogate, acqf, acqo and loop
 
 constants in acqfunction? ... in functions
 
-SMS EGO finish
+SMS EGO finish (name, docs, tests)
 
 mlr3mbo yahpo gym benchmark
 

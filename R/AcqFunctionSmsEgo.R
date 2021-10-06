@@ -9,7 +9,7 @@
 #'   Defaults to 1.
 #'   Based on `confidence = (1 - 2 * dnorm(lambda)) ^ m` you can calculate a
 #'   lambda for a given confidence level, see Ponweiser et al. 2008.
-#' * `"eps"` (`numeric(1)`)\cr
+#' * `"epsilon"` (`numeric(1)`)\cr
 #'   \eqn{\epsilon} used for the additive epsilon dominance.
 #'   Can either be a single numeric value > 0 or `NULL`.
 #'   In the case of being `NULL`, an epsilon vector is maintained dynamically as
@@ -32,43 +32,39 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     #' @field ref_point (`numeric()`).
     ref_point = NULL,
 
-    #' @field eps (`numeric()`).
-    eps = NULL,
+    #' @field epsilon (`numeric()`).
+    epsilon = NULL,
 
     # FIXME:
     #' @field progress (`numeric(1)`).
     progress = NULL,
-
-    # FIXME: also in super class? private?
-    #' @field param_set ([paradox::ParamSet]).
-    param_set = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param surrogate ([SurrogateMultiCrit]).
     initialize = function(surrogate) {
-      param_set = ParamSet$new(list(
+      constants = ParamSet$new(list(
         ParamDbl$new("lambda", lower = 0, default = 1),
-        ParamDbl$new("eps", lower = 0, default = NULL, special_vals = list(NULL))  # for NULL, it will be calculated dynamically
+        ParamDbl$new("epsilon", lower = 0, default = NULL, special_vals = list(NULL))  # for NULL, it will be calculated dynamically
       ))
-      param_set$values$lambda = 1
-      self$param_set = param_set
+      constants$values$lambda = 1
 
       assert_r6(surrogate, "SurrogateMultiCrit")
 
-      fun = function(xdt) {
+      fun = function(xdt, ...) {
+        # FIXME: that all relevant fields are not NULL
         ps = self$surrogate$predict(xdt)
         means = map_dtc(ps, "mean")
         ses = map_dtc(ps, "se")
-        cbs = as.matrix(means) %*% diag(self$surrogate_max_to_min) - self$param_set$values$lambda * as.matrix(ses)
+        cbs = as.matrix(means) %*% diag(self$surrogate_max_to_min) - self$constants$values$lambda * as.matrix(ses)
         # allocate memory for adding points to front for HV calculation in C
         front2 = t(rbind(self$ys_front, 0))
-        sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$eps, self$ref_point)
-        data.table(acq_sms = sms)
+        sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$epsilon, self$ref_point)
+        data.table(acq_sms_ego = sms)
       }
 
-      super$initialize("acq_sms", surrogate = surrogate, direction = "minimize", fun = fun)
+      super$initialize("acq_sms_ego", constants = constants, surrogate = surrogate, direction = "minimize", fun = fun)
     },
 
     #' @description
@@ -85,18 +81,18 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       self$ys_front = as.matrix(archive$best()[, archive$cols_y, with = FALSE]) %*% diag(self$surrogate_max_to_min)
       self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1  # offset = 1 like in mlrMBO
 
-      if (is.null(self$param_set$values$eps)) {
+      if (is.null(self$constants$values$epsilon)) {
         c_val = 1 - 1 / 2^n_obj
-        eps = map_dbl(
+        epsilon = map_dbl(
           seq_col(self$ys_front),
           function(i) {
             (max(self$ys_front[, i]) - min(self$ys_front[, i])) /
             (ncol(self$ys_front) + c_val * self$progress)  # FIXME: Need self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
           }
         )
-        self$eps = eps
+        self$epsilon = epsilon
       } else {
-        self$eps = self$param_set$values$eps
+        self$epsilon = self$constants$values$epsilon
       }
     }
   )

@@ -14,7 +14,7 @@ S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
 Defaults to 1.
 Based on \code{confidence = (1 - 2 * dnorm(lambda)) ^ m} you can calculate a
 lambda for a given confidence level, see Ponweiser et al. 2008.
-\item \code{"eps"} (\code{numeric(1)})\cr
+\item \code{"epsilon"} (\code{numeric(1)})\cr
 \eqn{\epsilon} used for the additive epsilon dominance.
 Can either be a single numeric value > 0 or \code{NULL}.
 In the case of being \code{NULL}, an epsilon vector is maintained dynamically as
@@ -47,11 +47,9 @@ Other Acquisition Function:
 
 \item{\code{ref_point}}{(\code{numeric()}).}
 
-\item{\code{eps}}{(\code{numeric()}).}
+\item{\code{epsilon}}{(\code{numeric()}).}
 
 \item{\code{progress}}{(\code{numeric(1)}).}
-
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
 }
 \if{html}{\out{</div>}}
 }

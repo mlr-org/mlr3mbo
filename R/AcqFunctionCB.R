@@ -31,6 +31,7 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
       constants$values$lambda = 2
 
       fun = function(xdt, ...) {
+        # FIXME: ... should already pass constants
         p = self$surrogate$predict(xdt)
         res = p$mean - self$surrogate_max_to_min * self$constants$values$lambda * p$se
         data.table(acq_cb = res)
