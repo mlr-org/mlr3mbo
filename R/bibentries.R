@@ -36,7 +36,7 @@ bibentries = c(
   ),
 
   beume_2007 = bibentry("article",
-    title    = "{SMS}-{EMOA}: Multiobjective selection based on dominated hypervolume",
+    title    = "SMS-EMOA: Multiobjective selection based on dominated hypervolume",
     author   = "Nicola Beume and Boris Naujoks and Michael Emmerich",
     year     = "2007",
     volume   = "181",
@@ -71,5 +71,22 @@ bibentries = c(
     year         = "2008",
     booktitle    = "Proceedings of the 10th International Conference on Parallel Problem Solving from Nature",
     pages        = "784--794"
+  ),
+
+  wang_2019 = bibentry("article",
+    title   = "Parallel Bayesian Global Optimization of Expensive Functions",
+    author  = "Wang, Jialei and Clark, Scott C. and Liu, Eric and Frazier, Peter I.",
+    year    = "2019",
+    journal = "arXiv:1602.05149 [math, stat]"
+  ),
+
+  knowles_2006 = bibentry("article",
+    title      = "ParEGO: A Hybrid Algorithm With On-Line Landscape Approximation for Expensive Multiobjective Optimization Problems",
+    volume     = "10",
+    number     = "1",
+    journal    = "IEEE Transactions on Evolutionary Computation",
+    author     = "Knowles, Joshua",
+    year       = "2006",
+    pages      = "50--66"
   )
 )

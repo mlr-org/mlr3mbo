@@ -1,18 +1,25 @@
 #' @title Acquisition Function Confidence Bound
 #'
+#' @include AcqFunction.R
+#' @name mlr_acqfunctions_cb
+#'
+#' @templateVar id cb
+#' @template section_dictionary_acqfunctions
+#'
 #' @description
 #' Confidence Bound.
 #'
 #' @section Parameters:
 #' * `"lambda"` (`numeric(1)`)\cr
-#'   TODO DESCRIPTION and Reference
+#'   \eqn{\lambda} value used for the confidence bound.
+#'   Defaults to `2`.
 #'
 #' @references
 #' `r format_bib("snoek_2012")`
 #'
 #' @family Acquisition Function
-#'
 #' @export
+# FIXME: DESCRIPTION and Reference.
 AcqFunctionCB = R6Class("AcqFunctionCB",
   inherit = AcqFunction,
 
@@ -21,23 +28,27 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param surrogate ([SurrogateSingleCrit]).
-    initialize = function(surrogate) {
-      assert_r6(surrogate, "SurrogateSingleCrit")
+    #' @param surrogate (`NULL` | [SurrogateLearner]).
+    #' @param lambda (`numeric(1)`).
+    initialize = function(surrogate = NULL, lambda = 2) {
+      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
+      assert_number(lambda, lower = 0, finite = TRUE)
 
-      constants = ParamSet$new(list(
-        ParamDbl$new("lambda", lower = 0, default = 2)
-      ))
-      constants$values$lambda = 2
+      constants = ps(lambda = p_dbl(lower = 0, default = 2))
+      constants$values$lambda = lambda
 
-      fun = function(xdt, ...) {
-        # FIXME: ... should already pass constants
-        p = self$surrogate$predict(xdt)
-        res = p$mean - self$surrogate_max_to_min * self$constants$values$lambda * p$se
-        data.table(acq_cb = res)
-      }
+      super$initialize("acq_cb", constants = constants, surrogate = surrogate, direction = "same")
+    }
+  ),
 
-      super$initialize("acq_cb", constants, surrogate, direction = "same", fun = fun)
+  private = list(
+    .fun = function(xdt, ...) {
+      # FIXME: check that lambda is in ... and use this
+      p = self$surrogate$predict(xdt)
+      res = p$mean - self$surrogate_max_to_min * self$constants$values$lambda * p$se
+      data.table(acq_cb = res)
     }
   )
 )
+
+mlr_acqfunctions$add("cb", AcqFunctionCB)

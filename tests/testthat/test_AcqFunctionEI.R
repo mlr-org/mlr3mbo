@@ -1,25 +1,22 @@
 test_that("AcqFunctionEI works", {
-  surrogate = SURR_KM_DETERM
   inst = MAKE_INST_1D()
-  design = MAKE_DESIGN(inst)
-  inst$eval_batch(design)
-
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = inst$archive)
   acqf = AcqFunctionEI$new(surrogate = surrogate)
-  acqf$setup(inst$archive)
 
   expect_r6(acqf$codomain, "ParamSet")
+  expect_equal(acqf$codomain$ids(), "acq_ei")
   expect_equal(acqf$surrogate_max_to_min, c(y = 1))
   expect_equal(acqf$direction, "maximize")
   expect_equal(acqf$domain, inst$search_space)
   expect_learner(acqf$surrogate$model)
 
-  acqf$surrogate$update(xydt = archive_xy(inst$archive), y_cols = inst$archive$cols_y)  # update surrogate model with new data
+  design = MAKE_DESIGN(inst)
+  inst$eval_batch(design)
 
-  xdt = data.table(x = 1:5)
-
+  acqf$surrogate$update()
+  xdt = data.table(x = seq(-1, 1, length.out = 5L))
   expect_error(acqf$eval_dt(xdt), "update")
-
-  acqf$update(inst$archive)
+  acqf$update()
   res = acqf$eval_dt(xdt)
   expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
   expect_named(res, "acq_ei")
@@ -35,19 +32,18 @@ test_that("AcqFunctionEI trafo", {
     check_values = FALSE
   )
   inst = MAKE_INST(objective = obj, search_space = domain, terminator = trm("evals", n_evals = 5L))
-  design = data.table(x = c(10, 14, 16, 20))
-  inst$eval_batch(design)
-
-  acqf = AcqFunctionEI$new(surrogate = SURR_KM_DETERM)
-  acqf$setup(inst$archive)
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = inst$archive)
+  acqf = AcqFunctionEI$new(surrogate = surrogate)
 
   expect_r6(acqf$codomain, "ParamSet")
   expect_true(!acqf$domain$has_trafo)
 
-  acqf$surrogate$update(xydt = archive_xy(inst$archive), y_cols = inst$archive$cols_y)  # update surrogate model with new data
+  design = data.table(x = c(10, 14, 16, 20))
+  inst$eval_batch(design)
 
+  acqf$surrogate$update()
   xdt = data.table(x = 10:20)
-  acqf$update(inst$archive)
+  acqf$update()
   res = acqf$eval_dt(xdt)
   expect_data_table(res, ncols = 1L, nrows = 11L, any.missing = FALSE)
   expect_named(res, "acq_ei")

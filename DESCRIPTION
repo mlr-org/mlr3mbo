@@ -67,7 +67,7 @@ Suggests:
     ggplot2,
     rgenoud
 Remotes:
-    mlr-org/bbotk,
+    mlr-org/bbotk@extended_codomain,
     mlr-org/mlr3tuning
 ByteCompile: no
 Encoding: UTF-8
@@ -75,3 +75,28 @@ LazyData: true
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Collate:
+    'mlr_acqfunctions.R'
+    'AcqFunction.R'
+    'AcqFunctionAEI.R'
+    'AcqFunctionCB.R'
+    'AcqFunctionEI.R'
+    'AcqFunctionEIPS.R'
+    'AcqFunctionPI.R'
+    'AcqFunctionSmsEgo.R'
+    'AcqOptimizer.R'
+    'OptimizerMbo.R'
+    'Surrogate.R'
+    'SurrogateLearner.R'
+    'SurrogateLearners.R'
+    'assertions.R'
+    'bayesopt_ego.R'
+    'bayesopt_mpcl.R'
+    'bayesopt_parego.R'
+    'bayesopt_smsego.R'
+    'bibentries.R'
+    'helper.R'
+    'mbo_defaults.R'
+    'result_by_surrogate_design.R'
+    'sugar.R'
+    'zzz.R'

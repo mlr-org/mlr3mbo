@@ -1,27 +1,26 @@
 test_that("AcqOptimizer API works", {
   ### EI, random search
   instance = OptimInstanceSingleCrit$new(OBJ_1D, terminator = trm("evals", n_evals = 1L))
-  design = generate_design_lhs(PS_1D, 4)$data
+  design = MAKE_DESIGN(instance)
   instance$eval_batch(design)
-  acq = AcqFunctionEI$new(SurrogateSingleCritLearner$new(learner = REGR_KM_DETERM))
-  acqo = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L))
-  acq$setup(instance$archive)
-  acq$surrogate$update(xydt = archive_xy(instance$archive), y_cols = instance$archive$cols_y)
-  acq$update(instance$archive)
-  expect_data_table(acqo$optimize(acq, archive = instance$archive), nrows = 1L)
+  acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
+  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
+  acqfun$surrogate$update()
+  acqfun$update()
+  expect_data_table(acqopt$optimize(), nrows = 1L)
 
   ### upgrading error class works
-  acqo = AcqOptimizer$new(OptimizerError$new(), trm("evals", n_evals = 2L))
-  expect_error(acqo$optimize(acq, archive = instance$archive), class = c("leads_to_exploration_error", "optimize_error"))
+  acqopt = AcqOptimizer$new(OptimizerError$new(), trm("evals", n_evals = 2L), acq_function = acqfun)
+  expect_error(acqopt$optimize(), class = c("mbo_error", "optimize_error"))
 })
 
 test_that("AcqOptimizer param_set", {
-  acqo = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L))
-  expect_r6(acqo$param_set, "ParamSet")
-  expect_true(all(c("fix_distance", "dist_threshold") %in% acqo$param_set$ids()))
-  expect_r6(acqo$param_set$params$fix_distance, "ParamLgl")
-  expect_r6(acqo$param_set$params$dist_threshold, "ParamDbl")
-  expect_error({acqo$param_set = list()}, regexp = "param_set is read-only.")
+  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L))
+  expect_r6(acqopt$param_set, "ParamSet")
+  expect_true(all(c("fix_distance", "dist_threshold") %in% acqopt$param_set$ids()))
+  expect_r6(acqopt$param_set$params$fix_distance, "ParamLgl")
+  expect_r6(acqopt$param_set$params$dist_threshold, "ParamDbl")
+  expect_error({acqopt$param_set = list()}, regexp = "param_set is read-only.")
 })
 
 test_that("AcqOptimizer fix_xdt_distance", {
@@ -84,12 +83,11 @@ test_that("AcqOptimizer trafo", {
   instance = MAKE_INST(objective = objective, search_space = domain, terminator = trm("evals", n_evals = 5L))
   design = MAKE_DESIGN(instance)
   instance$eval_batch(design)
-  acq = AcqFunctionEI$new(surrogate = SURR_KM_DETERM)
-  acqo = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L))
-  acq$setup(instance$archive)
-  acq$surrogate$update(xydt = archive_xy(instance$archive), y_cols = instance$archive$cols_y)
-  acq$update(instance$archive)
-  res = acqo$optimize(acq, archive = instance$archive)
+  acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
+  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
+  acqfun$surrogate$update()
+  acqfun$update()
+  res = acqopt$optimize()
   expect_equal(res$x, res$x_domain[[1L]][[1L]])
 })
 

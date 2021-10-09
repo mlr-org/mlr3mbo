@@ -1,19 +1,19 @@
-test_that("default bayesopt_soo", {
+test_that("default bayesopt_ego", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  bayesopt_soo(instance)
+  bayesopt_ego(instance)
   expect_true(nrow(instance$archive$data) == 5L)
 })
 
-test_that("bayesopt_soo", {
+test_that("bayesopt_ego", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  acq_function = AcqFunctionEI$new(surrogate = SURR_KM_DETERM)
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
-  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
+  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_true(!is.na(instance$archive$data$acq_ei[5L]))
 })
 
-test_that("stable bayesopt_soo", {
+test_that("stable bayesopt_ego", {
   # logger stuff
   # see mlr-org/mlr3#566
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
@@ -33,23 +33,20 @@ test_that("stable bayesopt_soo", {
 
   # KM surrogate
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  acq_function = AcqFunctionEI$new(surrogate = SURR_KM_DETERM)
+  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
   acq_function$surrogate$param_set$values$calc_insample_perf = TRUE
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
   acq_optimizer$param_set$values$fix_distance = TRUE
-  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_number(acq_function$surrogate$assert_insample_perf, upper = 1)
 
   # featureless surrogate with a high perf_threshold of 1
-  # this should trigger a leads_to_exploration_error and log the appropriate error message
-  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  acq_function = AcqFunctionEI$new(surrogate = SURR_REGR_FEATURELESS)
-  acq_function$surrogate$param_set$values$calc_insample_perf = TRUE
+  # this should trigger a mbo_error and log the appropriate error message
+  instance$archive$clear()
+  acq_function$surrogate$model = REGR_FEATURELESS
   acq_function$surrogate$param_set$values$perf_threshold = 1
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
-  acq_optimizer$param_set$values$fix_distance = TRUE
-  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_error(acq_function$surrogate$assert_insample_perf, regexp = "Current insample performance of the Surrogate Model does not meet the performance threshold")
   lines = readLines(f)
@@ -58,12 +55,12 @@ test_that("stable bayesopt_soo", {
 
   # KM surrogate but OptimizerError as Optimizer that will fail
   # this again should trigger a leads_to_exploration_error and log the appropriate error message
-  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  acq_function = AcqFunctionEI$new(surrogate = SURR_KM_DETERM)
-  acq_function$surrogate$param_set$values$calc_insample_perf = TRUE
-  acq_optimizer = AcqOptimizer$new(OptimizerError$new(), terminator = trm("evals", n_evals = 2L))
+  instance$archive$clear()
+  acq_function$surrogate$model = REGR_KM_DETERM
+  acq_function$surrogate$param_set$values$perf_threshold = 0
+  acq_optimizer = AcqOptimizer$new(OptimizerError$new(), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
   acq_optimizer$param_set$values$fix_distance = TRUE
-  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_number(acq_function$surrogate$assert_insample_perf, upper = 1)
   lines = readLines(f)
@@ -72,10 +69,10 @@ test_that("stable bayesopt_soo", {
 
   # Surrogate using LearnerRegrError as Learner that will fail during train
   # this again should trigger a leads_to_exploration_error and log the appropriate error message
-  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  acq_function = AcqFunctionEI$new(surrogate = SurrogateSingleCritLearner$new(LearnerRegrError$new()))
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
-  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  instance$archive$clear()
+  acq_function$surrogate$model = LearnerRegrError$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
+  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   lines = readLines(f)
   expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
@@ -83,34 +80,16 @@ test_that("stable bayesopt_soo", {
 
   # Surrogate using LearnerRegrError as Learner that will fail during predict
   # this again should trigger a leads_to_exploration_error and log the appropriate error message
-  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  acq_function = AcqFunctionEI$new(surrogate = SurrogateSingleCritLearner$new(LearnerRegrError$new()))
+  instance$archive$clear()
   acq_function$surrogate$model$param_set$values$error_train = FALSE
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
-  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   lines = readLines(f)
   expect_true(sum(grepl("Surrogate Predict Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
   expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 4L)
 })
 
-test_that("bayesopt_soo_eips", {
-  objective = ObjectiveRFunDt$new(
-    fun = function(xdt) data.table(y = xdt$x ^ 2, time = xdt$x + 10),
-    domain = PS_1D,
-    codomain = ps(y = p_dbl(tags = "minimize"))
-  )
-  instance = MAKE_INST(objective = objective, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
-
-  acq_function = AcqFunctionEIPS$new(surrogate = SURR_KM_DETERM, surrogate_time = SURR_KM_DETERM$clone(deep = TRUE), time_id = "time")
-
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
-  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
-  expect_true(nrow(instance$archive$data) == 5L)
-  expect_true(!is.na(instance$archive$data$acq_eips[5L]))
-})
-
-test_that("bayesopt_soo with trafo", {
+test_that("bayesopt_ego with trafo", {
   domain = ps(x = p_dbl(lower = 10, upper = 20, trafo = function(x) x - 15))
   objective = ObjectiveRFunDt$new(
     fun = function(xdt) data.table(y = xdt$x ^ 2),
@@ -120,10 +99,9 @@ test_that("bayesopt_soo with trafo", {
   )
   instance = MAKE_INST(objective = objective, search_space = domain, terminator = trm("evals", n_evals = 5L))
 
-  acq_function = AcqFunctionEI$new(surrogate = SURR_KM_DETERM)
-
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
-  bayesopt_soo(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
+  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_true(!is.na(instance$archive$data$acq_ei[5L]))
 })

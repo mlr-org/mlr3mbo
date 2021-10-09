@@ -1,86 +1,114 @@
-#' @title Multi-Objective SMS-MBO
+#' @title Sequential Multicriteria Bayesian Optimization Via SmsEGO.
 #'
 #' @description
-#' Function that executes a SMS multi-objective Bayesian optimization.
-#' @template param_instance
-#' @template param_acq_function
-#' @template param_acq_optimizer
-#' @return [bbotk::Archive]
+#' MBO loop function for sequential multicriteria Bayesian optimization via SmsEGO.
+#' Normaly used inside an [OptimizerMbo].
+#'
+#' @param instance ([bbotk::OptimInstanceMultiCrit])\cr
+#'   The [bbotk::OptimInstanceMultiCrit] to be optimized.
+#' @param init_design_size (`NULL` | `integer(1)`)\cr
+#'   Size of the initial design.
+#'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
+#' @param surrogate (`NULL` | [SurrogateLearners])\cr
+#'   [SurrogateLearners] to be used as a surrogate.
+#'   If `NULL` \code{default_surrogate(instance)} is used.
+#' @param acq_function (`NULL` | [AcqFunctionSmsEgo]).\cr
+#'   [AcqFunctionSmsEgo] to be used as acquisition function.
+#'   If `NULL` an [AcqFunctionSmsEgo] is used.
+#' @param acq_optimizer ([AcqOptimizer])\cr
+#'   [AcqOptimizer] to be used as acquisition function optimizer.
+#'   If `NULL` \code{default_acqopt(acqfun)} is used.
+#'
+#' @note
+#' * If `surrogate` is `NULL` but `acq_function` is given and contains a `$surrogate`, this
+#'   [SurrogateLearners] is used.
+#' * You can pass a `surrogate` that was not given the [bbotk::Archive] of the
+#'   `instance` during initialization.
+#'   In this case, the [bbotk::Archive] of the given `instance` is set during execution.
+#' * Similarly, you can pass an `acq_function` that was not given the `surrogate` during initialization
+#'   and an `acq_optimizer` that was not given the `acq_function`, i.e., delayed initialization is
+#'   handled automatically.
+#'
+#' @return invisible(instance)\cr
+#'   The original instance is modified in-place and returned invisible.
+#'
+#' @references
+#' * `r format_bib("beume_2007")`
+#' * `r format_bib("ponweiser_2008")`
+#' @family Loop Function
 #' @export
-bayesopt_smsego = function(instance, acq_function = NULL, acq_optimizer = NULL) {
+#' @examples
+#' library(bbotk)
+#' library(paradox)
+#' library(mlr3learners)
+#'
+#' fun = function(xs) {
+#'   list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+#' }
+#' domain = ps(x = p_dbl(lower = -10, upper = 10))
+#' codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
+#' objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+#'
+#' terminator = trm("evals", n_evals = 10)
+#'
+#' instance = OptimInstanceMultiCrit$new(
+#'   objective = objective,
+#'   terminator = terminator
+#' )
+#'
+#' bayesopt_smsego(instance)
+bayesopt_smsego = function(
+    instance,
+    init_design_size = NULL,
+    surrogate = NULL,
+    acq_function = NULL,
+    acq_optimizer = NULL
+  ) {
+
+  # assertions and defaults
   assert_r6(instance, "OptimInstanceMultiCrit")
-  if (is.null(acq_function)) {
-    surrogate = default_surrogate(instance)
-    acq_function = AcqFunctionSmsEgo$new(surrogate = surrogate)
-  }
-  if (is.null(acq_optimizer)) {
-    acq_optimizer = default_acqopt(instance)
-  }
-  assert_r6(acq_function, "AcqFunctionSmsEgo")
-  assert_r6(acq_optimizer, "AcqOptimizer")
+  assert_r6(instance$terminator, "TerminatorEvals")
+  assert_int(init_design_size, lower = 1L, null.ok = TRUE)
+  assert_r6(surrogate, classes = "SurrogateLearners", null.ok = TRUE)
+  assert_r6(acq_function, classes = "AcqFunctionSmsEgo", null.ok = TRUE)
+  assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
 
-  eval_initial_design(instance)
+  surrogate = surrogate %??% acq_function$surrogate
+
   archive = instance$archive
-  acq_function$setup(archive) # setup necessary to determine the domain, codomain (for opt direction) of acq function
+  domain = instance$search_space
+  d = domain$length
+  k = length(archive$cols_y)  # FIXME: this is not in conflict with bbotk @extended_codomain?
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
+  if (is.null(surrogate)) surrogate = default_surrogate(instance)
+  if (is.null(acq_function)) acq_function = AcqFunctionSmsEgo$new()
+  if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
+  surrogate$archive = archive
+  acq_function$surrogate = surrogate
+  acq_optimizer$acq_function = acq_function
 
+  # initial design
+  if (isTRUE(init_design_size > 0L)) {
+    design = generate_design_random(domain, n = init_design_size)$data
+    instance$eval_batch(design)
+  }
+
+  # loop
   repeat {
     xdt = tryCatch({
-      # FIXME:
-      acq_function$update_surrogate(archive)
       acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
-      acq_function$update(archive)
-      acq_optimizer$optimize(acq_function)
-    }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
-      lg$info("Proposing a randomly sampled point")  # FIXME: logging?
-      SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
+      acq_function$surrogate$update()
+      acq_function$update()
+      acq_optimizer$optimize()
+    }, mbo_error = function(mbo_error_condition) {
+      lg$info("Proposing a randomly sampled point")
+      SamplerUnif$new(domain)$sample(1L)$data
     })
 
     instance$eval_batch(xdt)
-    if (instance$is_terminated || instance$terminator$is_terminated(archive)) break
+    if (instance$is_terminated) break
   }
 
-  return(instance$archive)
-}
-
-if (FALSE) {
-  set.seed(1)
-  devtools::load_all()
-  library(bbotk)
-  library(paradox)
-  library(mlr3learners)
-
-  FUN_2D_2D = function(xs) {
-    list(y1 = xs$x1 ^ 2, y2 = (xs$x1 - 2) ^ 2)
-  }
-  PS_2D = ParamSet$new(list(
-    ParamDbl$new("x1", lower = -10, upper = 10)
-  ))
-  FUN_2D_2D_CODOMAIN = ParamSet$new(list(
-    ParamDbl$new("y1", tags = "minimize"),
-    ParamDbl$new("y2", tags = "minimize")
-  ))
-  obfun = ObjectiveRFun$new(fun = FUN_2D_2D, domain = PS_2D,
-    codomain = FUN_2D_2D_CODOMAIN, properties = "multi-crit")
-
-  terminator = trm("evals", n_evals = 30)
-
-  instance = OptimInstanceMultiCrit$new(
-    objective = obfun,
-    terminator = terminator
-  )
-
-  surrogate = SurrogateMultiCritLearners$new(learners = replicate(2, lrn("regr.ranger")))
-  acq_function = AcqFunctionSmsEgo$new(surrogate = surrogate)
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
-
-  bayesopt_smsego(instance, acq_function, acq_optimizer)
-  # Defaults work
-  bayesopt_smsego(instance)
-
-  archdata = instance$archive$data
-  library(ggplot2)
-  g = ggplot(archdata, aes_string(x = "y1", y = "y2", color = "batch_nr"))
-  g = g + geom_point()
-  g + geom_point(data = best, color = "red")
+  return(invisible(instance))
 }
 

@@ -7,33 +7,35 @@
 Surrogate = R6Class("Surrogate",
   public = list(
 
-    #' @field model Surrogate model
+    #' @field model Surrogate model.
     model = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param model (Model).
-    initialize = function(model) {
-      stop("Abstract")
+    #' @param archive (`NULL` | [bbotk::Archive]).
+    #' @param y_cols (`NULL` | `character()`).
+    #' @param param_set ([paradox::ParamSet]).
+    initialize = function(model, archive, y_cols, param_set) {
+      # most assertions are done in derived classes
+      self$model = model
+      private$.archive = archive
+      private$.y_cols = y_cols  # assertion is done in SurrogateLearner or SurrogateLearners
+      private$.param_set = assert_r6(param_set, classes = "ParamSet")
     },
 
     #' @description
     #' Train model with new data.
     #'
-    #' @param xydt ([data.table::data.table()])\cr
-    #'   New data.
-    #'
-    #' @param y_cols (`character()`)\cr
-    #'   Name(s) of response column(s).
-    #'
     #' @return `NULL`.
-    update = function(xydt, y_cols) {
-      tryCatch(private$.update(xydt, y_cols = y_cols),
+    update = function() {
+      if (is.null(self$archive)) stop("archive must be set during construction or manually prior before calling $update().")
+      tryCatch(private$.update(),
         error = function(error_condition) {
-          lg$info(error_condition$message)  # FIXME: logging?
+          lg$info(error_condition$message)
           stop(set_class(list(message = error_condition$message, call = NULL),
-            classes = c("leads_to_exploration_error", "update_error", "error", "condition")))
+            classes = c("mbo_error", "surrogate_update_error", "error", "condition")))
         }
       )
       invisible(NULL)
@@ -53,11 +55,36 @@ Surrogate = R6Class("Surrogate",
 
   active = list(
 
+    #' @field archive ([bbotk::Archive]).
+    archive = function(rhs) {
+      if (missing(rhs)) {
+        private$.archive
+      } else {
+        private$.archive = assert_r6(rhs, classes = "Archive")
+        invisible(private$.archive)
+      }
+    },
+
+    #' @field n_learner (`integer(1)`)\cr
+    #'   Returns the number of [mlr3::Learner]s.
+    n_learner = function() {
+      stop("Abstract.")
+    },
+
+    #' @field y_cols (`character()`).
+    y_cols = function(rhs) {
+      if (missing(rhs)) {
+        if (is.null(private$.y_cols)) self$archive$cols_y else private$.y_cols
+      } else {
+        private$.y_cols = assert_character(rhs, len = self$n_learner)
+      }
+    },
+
     #' @field insample_perf (`numeric()`)\cr
     #' Surrogate model's current insample performance.
     insample_perf = function(rhs) {
       if (!missing(rhs)) {
-        stopf("Field/Binding is read-only.")
+        stopf("insample_perf is read-only.")
       }
       private$.insample_perf %??% NaN
     },
@@ -74,17 +101,22 @@ Surrogate = R6Class("Surrogate",
     #' @field assert_insample_perf (`logical(1)`)\cr
     #' Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
-      stop("Abstract")
+      stop("Abstract.")
     }
   ),
 
   private = list(
 
+    .archive = NULL,
+
+    .y_cols = NULL,
+
     .insample_perf = NULL,
+
     .param_set = NULL,
 
-    .update = function(xydt, y_cols) {
-      stop("Abstract")
+    .update = function() {
+      stop("Abstract.")
     },
 
     deep_clone = function(name, value) {
