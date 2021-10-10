@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Surrogate Model for Single Criteria Response Surfaces — SurrogateSingleCrit • mlr3mbo</title>
+<title>Surrogate Model Containing Multiple Learners — SurrogateLearners • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,8 +47,10 @@
 
 
 
-<meta property="og:title" content="Surrogate Model for Single Criteria Response Surfaces — SurrogateSingleCrit" />
-<meta property="og:description" content="Surrogate model for single criteria response surfaces." />
+<meta property="og:title" content="Surrogate Model Containing Multiple Learners — SurrogateLearners" />
+<meta property="og:description" content="Surrogate model containing multiple regression mlr3::Learners.
+The mlr3::Learners are fit on the target variables as indicated via y_cols.
+Note that redundant mlr3::Learners must be deep clones." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -138,40 +140,67 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Surrogate Model for Single Criteria Response Surfaces</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/SurrogateSingleCrit.R'><code>R/SurrogateSingleCrit.R</code></a></small>
-    <div class="hidden name"><code>SurrogateSingleCrit.Rd</code></div>
+    <h1>Surrogate Model Containing Multiple Learners</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/SurrogateLearners.R'><code>R/SurrogateLearners.R</code></a></small>
+    <div class="hidden name"><code>SurrogateLearners.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Surrogate model for single criteria response surfaces.</p>
+    <p>Surrogate model containing multiple regression <a href='https://mlr3.mlr-org.com/reference/Learner.html'>mlr3::Learner</a>s.
+The <a href='https://mlr3.mlr-org.com/reference/Learner.html'>mlr3::Learner</a>s are fit on the target variables as indicated via <code>y_cols</code>.
+Note that redundant <a href='https://mlr3.mlr-org.com/reference/Learner.html'>mlr3::Learner</a>s must be deep clones.</p>
     </div>
 
 
 
     <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
 
-    <p><code><a href='Surrogate.html'>mlr3mbo::Surrogate</a></code> -&gt; <code>SurrogateSingleCrit</code></p>
+    <p><code><a href='Surrogate.html'>mlr3mbo::Surrogate</a></code> -&gt; <code>SurrogateLearners</code></p>
+    <h2 class="hasAnchor" id="active-bindings"><a class="anchor" href="#active-bindings"></a>Active bindings</h2>
+
+    <p><div class="r6-active-bindings"></p><dl>
+<dt><code>n_learner</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>)<br />
+Returns the number of <a href='https://mlr3.mlr-org.com/reference/Learner.html'>mlr3::Learner</a>s.</p></dd>
+
+<dt><code>assert_insample_perf</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>)<br />
+Asserts whether the current insample performance meets the performance threshold.</p></dd>
+
+</dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
     
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
-<li><p><a href='#method-predict'><code>SurrogateSingleCrit$predict()</code></a></p></li>
-<li><p><a href='#method-clone'><code>SurrogateSingleCrit$clone()</code></a></p></li>
+<li><p><a href='#method-new'><code>SurrogateLearners$new()</code></a></p></li>
+<li><p><a href='#method-predict'><code>SurrogateLearners$predict()</code></a></p></li>
+<li><p><a href='#method-clone'><code>SurrogateLearners$clone()</code></a></p></li>
 </ul>
 <p><details open ><summary>Inherited methods</summary>
 <ul>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="initialize"><a href='../../mlr3mbo/html/Surrogate.html#method-initialize'><code>mlr3mbo::Surrogate$initialize()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href='../../mlr3mbo/html/Surrogate.html#method-update'><code>mlr3mbo::Surrogate$update()</code></a></span></p></li>
 </ul>
 </details>
 
 <hr>
+<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
+<p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>SurrogateLearners</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>learners</span>, archive <span class='op'>=</span> <span class='cn'>NULL</span>, y_cols <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>learners</code></dt><dd><p>(list of <a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3::LearnerRegr</a>).</p></dd>
+
+<dt><code>archive</code></dt><dd><p>(<code>NULL</code> | <a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>).</p></dd>
+
+<dt><code>y_cols</code></dt><dd><p>(<code>NULL</code> | <code><a href='https://rdrr.io/r/base/character.html'>character()</a></code>).</p></dd>
+
+</dl><p></div></p>
+<p><hr>
 <a id="method-predict"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/predict.html'>predict()</a></code></h3>
-<p>Predict mean response and standard error.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>SurrogateSingleCrit</span><span class='op'>$</span><span class='fu'>predict</span><span class='op'>(</span><span class='va'>xdt</span><span class='op'>)</span></pre><p></div></p>
+<p>Returns a named list of data.tables.
+Each contains the mean response and standard error for one <code>y_col</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>SurrogateLearners</span><span class='op'>$</span><span class='fu'>predict</span><span class='op'>(</span><span class='va'>xdt</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
@@ -180,11 +209,11 @@ New data.</p></dd>
 
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code> with the columns <code>mean</code> and <code>se</code>.</p>
+<p>list of <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code>s with the columns <code>mean</code> and <code>se</code>.</p>
 <p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>SurrogateSingleCrit</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>SurrogateLearners</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>

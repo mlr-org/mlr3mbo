@@ -7,46 +7,31 @@
     <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunction.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionAEI.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionCB.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionEI.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionEIPS.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionPI.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/AcqFunctionSmsEgo.html</loc>
-  </url>
-  <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/Surrogate.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateMultiCrit.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateLearner.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateMultiCritLearners.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateLearners.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateSingleCrit.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/acqf.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/SurrogateSingleCritLearner.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_ego.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_mpcl.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_parego.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_smsego.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_soo.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/default_acqfun.html</loc>
@@ -65,6 +50,27 @@
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/mlr3mbo-package.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_aei.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_cb.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_ei.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_eips.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_pi.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_sms_ego.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_mbo.html</loc>

@@ -49,7 +49,7 @@
 
 <meta property="og:title" content="Default Acquisition Function Optimizer — default_acqopt" />
 <meta property="og:description" content="Chooses a default acquisition function optimizer.
-Defaults to bbotk::OptimizerRandomSearch provided as an AcqOptimizer." />
+Defaults to wrapping bbotk::OptimizerRandomSearch allowing 1000 function evaludations." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -146,18 +146,17 @@ Defaults to bbotk::OptimizerRandomSearch provided as an AcqOptimizer." />
 
     <div class="ref-description">
     <p>Chooses a default acquisition function optimizer.
-Defaults to <a href='https://bbotk.mlr-org.com/reference/mlr_optimizers_random_search.html'>bbotk::OptimizerRandomSearch</a> provided as an <a href='AcqOptimizer.html'>AcqOptimizer</a>.</p>
+Defaults to wrapping <a href='https://bbotk.mlr-org.com/reference/mlr_optimizers_random_search.html'>bbotk::OptimizerRandomSearch</a> allowing 1000 function evaludations.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>default_acqopt</span><span class='op'>(</span><span class='va'>instance</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>default_acqopt</span><span class='op'>(</span><span class='va'>acq_function</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>instance</th>
-      <td><p>(<a href='https://bbotk.mlr-org.com/reference/OptimInstance.html'>bbotk::OptimInstance</a>)<br />
-An object that inherits from <a href='https://bbotk.mlr-org.com/reference/OptimInstance.html'>bbotk::OptimInstance</a>.</p></td>
+      <th>acq_function</th>
+      <td><p>(<a href='AcqFunction.html'>AcqFunction</a>).</p></td>
     </tr>
     </table>
 

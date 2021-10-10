@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate Default Surrogate — default_surrogate • mlr3mbo</title>
+<title>Default Surrogate — default_surrogate • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,18 +47,18 @@
 
 
 
-<meta property="og:title" content="Generate Default Surrogate — default_surrogate" />
-<meta property="og:description" content="This is a helper function that generates a default surrogate, based on properties of the objective
-function and the selected infill criterion.
+<meta property="og:title" content="Default Surrogate — default_surrogate" />
+<meta property="og:description" content="This is a helper function that generates a default Surrogate based on properties of the
+bbotk::OptimInstance.
 For numeric-only (including integers) parameter spaces without any dependencies:
 A Kriging model &amp;#8220;&quot;regr.km&quot;&amp;#8221; with kernel &amp;#8220;&quot;matern3_2&quot;&amp;#8221; is created.
 If the objective function is deterministic we add a small nugget effect (10^-8*Var(y),
 y is vector of observed outcomes in current design) to increase numerical stability to
 hopefully prevent crashes of DiceKriging.
-Whether the objective function is deterministic can be observed from the objective functions
+Whether the objective function is deterministic can be observed from the objective function's
 properties.
 If the objective function is noisy the nugget effect will be estimated with
-nugget.estim = TRUE
+nugget.estim = TRUE.
 Also jitter is set to TRUE to circumvent a problem with DiceKriging
 where already trained input values produce the exact trained output.
 Whether the objective function is noisy can be observed from the objective functions
@@ -76,13 +76,19 @@ by computing the infinitesimal jackknife.
 This is the se.method = &quot;infjack&quot; option of the &amp;#8220;&quot;regr.ranger&quot;&amp;#8221; learner (default).
 In any case, learners are encapsulated using &amp;#8220;&quot;evaluate&quot;&amp;#8221;, and a fallback learner is set,
 in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
-GraphLearner$new(po(&quot;imputeoor&quot;) %&amp;gt;&amp;gt;% lrn(&quot;regr.ranger&quot;, num.trees = 20L, keep.inbag = TRUE)).
+lrn(&quot;regr.ranger&quot;, num.trees = 20L, keep.inbag = TRUE).
 If additionally dependencies are present in the parameter space, inactive conditional parameters
 are represented by missing NA values in the training design data.
-We simply handle those with an imputation method, added to the ranger random forest, more concretely we
-use po(&quot;imputeoor&quot;) from package mlr3pipelines.
-Both of these techniques make sense for tree-based methods and are usually hard to beat, see
-Ding et al. (2010)." />
+We simply handle those with an imputation method, added to the ranger random forest, more
+concretely we use po(&quot;imputeoor&quot;) from package mlr3pipelines.  Both of these
+techniques make sense for tree-based methods and are usually hard to beat, see Ding et al.
+(2010).
+In the case of dependencies, the following learner is used as a fallback:
+lrn(&quot;regr.featureless&quot;).
+If the instance is of class bbotk::OptimInstanceSingleCrit the learner is wrapped as a
+SurrogateLearner.
+If the instance is of class bbotk::OptimInstanceMultiCrit deep clones of the learner are
+wrapped as a SurrogateLearners." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -172,23 +178,23 @@ Ding et al. (2010)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate Default Surrogate</h1>
+    <h1>Default Surrogate</h1>
     <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/mbo_defaults.R'><code>R/mbo_defaults.R</code></a></small>
     <div class="hidden name"><code>default_surrogate.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This is a helper function that generates a default surrogate, based on properties of the objective
-function and the selected infill criterion.</p>
+    <p>This is a helper function that generates a default <a href='Surrogate.html'>Surrogate</a> based on properties of the
+<a href='https://bbotk.mlr-org.com/reference/OptimInstance.html'>bbotk::OptimInstance</a>.</p>
 <p>For numeric-only (including integers) parameter spaces without any dependencies:</p><ul>
 <li><p>A Kriging model &#8220;"regr.km"&#8221; with kernel &#8220;"matern3_2"&#8221; is created.</p></li>
 <li><p>If the objective function is deterministic we add a small nugget effect (10^-8*Var(y),
 y is vector of observed outcomes in current design) to increase numerical stability to
 hopefully prevent crashes of <a href='https://CRAN.R-project.org/package=DiceKriging'><span class="pkg">DiceKriging</span></a>.
-Whether the objective function is deterministic can be observed from the objective functions
+Whether the objective function is deterministic can be observed from the objective function's
 properties.</p></li>
 <li><p>If the objective function is noisy the nugget effect will be estimated with
-<code>nugget.estim = TRUE</code></p></li>
+<code>nugget.estim = TRUE</code>.</p></li>
 <li><p>Also <code>jitter</code> is set to <code>TRUE</code> to circumvent a problem with <a href='https://CRAN.R-project.org/package=DiceKriging'><span class="pkg">DiceKriging</span></a>
 where already trained input values produce the exact trained output.
 Whether the objective function is noisy can be observed from the objective functions
@@ -206,16 +212,22 @@ by computing the infinitesimal jackknife.
 This is the <code>se.method = "infjack"</code> option of the &#8220;"regr.ranger"&#8221; learner (default).</p></li>
 </ul><p>In any case, learners are encapsulated using &#8220;"evaluate"&#8221;, and a fallback learner is set,
 in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
-<code>GraphLearner$new(po("imputeoor") %&gt;&gt;% lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE))</code>.</p>
+<code><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)</a></code>.</p>
 <p>If additionally dependencies are present in the parameter space, inactive conditional parameters
 are represented by missing <code>NA</code> values in the training design data.
-We simply handle those with an imputation method, added to the ranger random forest, more concretely we
-use <code>po("imputeoor")</code> from package <a href='https://CRAN.R-project.org/package=mlr3pipelines'><span class="pkg">mlr3pipelines</span></a>.
-Both of these techniques make sense for tree-based methods and are usually hard to beat, see
-Ding et al. (2010).</p>
+We simply handle those with an imputation method, added to the ranger random forest, more
+concretely we use <code>po("imputeoor")</code> from package <a href='https://CRAN.R-project.org/package=mlr3pipelines'><span class="pkg">mlr3pipelines</span></a>.  Both of these
+techniques make sense for tree-based methods and are usually hard to beat, see Ding et al.
+(2010).
+In the case of dependencies, the following learner is used as a fallback:
+<code><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>lrn("regr.featureless")</a></code>.</p>
+<p>If the instance is of class <a href='https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html'>bbotk::OptimInstanceSingleCrit</a> the learner is wrapped as a
+<a href='SurrogateLearner.html'>SurrogateLearner</a>.</p>
+<p>If the instance is of class <a href='https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html'>bbotk::OptimInstanceMultiCrit</a> deep clones of the learner are
+wrapped as a <a href='SurrogateLearners.html'>SurrogateLearners</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>default_surrogate</span><span class='op'>(</span><span class='va'>instance</span>, learner <span class='op'>=</span> <span class='cn'>NULL</span>, n_objectives <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>default_surrogate</span><span class='op'>(</span><span class='va'>instance</span>, learner <span class='op'>=</span> <span class='cn'>NULL</span>, n_learner <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -227,15 +239,11 @@ An object that inherits from <a href='https://bbotk.mlr-org.com/reference/OptimI
     </tr>
     <tr>
       <th>learner</th>
-      <td><p>(<a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3::LearnerRegr</a>) | <code>NULL</code><br />
-The surrogate learner used in the acquisition function. Default as described above.</p></td>
+      <td><p>(<code>NULL</code> | <a href='https://mlr3.mlr-org.com/reference/Learner.html'>mlr3::Learner</a>).</p></td>
     </tr>
     <tr>
-      <th>n_objectives</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code> | <code>NULL</code>)<br />
-Number of objectives to model. Default queries the instance.
-If <code>1</code> a <a href='SurrogateSingleCritLearner.html'>SurrogateSingleCritLearner</a> object is returned, otherwise a <a href='SurrogateMultiCritLearners.html'>SurrogateMultiCritLearners</a>
-object.</p></td>
+      <th>n_learner</th>
+      <td><p>(<code>NULL</code> | <code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>).</p></td>
     </tr>
     </table>
 

@@ -48,7 +48,8 @@
 
 
 <meta property="og:title" content="Acquisition Function Optimizer — AcqOptimizer" />
-<meta property="og:description" content="Optimizer for AcqFunctions." />
+<meta property="og:description" content="Optimizer for AcqFunctions.
+Wraps an bbotk::Optimizer and bbotk::Terminator." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -144,7 +145,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Optimizer for <a href='AcqFunction.html'>AcqFunction</a>s.</p>
+    <p>Optimizer for <a href='AcqFunction.html'>AcqFunction</a>s.
+Wraps an <a href='https://bbotk.mlr-org.com/reference/Optimizer.html'>bbotk::Optimizer</a> and <a href='https://bbotk.mlr-org.com/reference/Terminator.html'>bbotk::Terminator</a>.</p>
     </div>
 
 
@@ -155,6 +157,8 @@
 <dt><code>optimizer</code></dt><dd><p>(<a href='https://bbotk.mlr-org.com/reference/Optimizer.html'>bbotk::Optimizer</a>).</p></dd>
 
 <dt><code>terminator</code></dt><dd><p>(<a href='https://bbotk.mlr-org.com/reference/Terminator.html'>bbotk::Terminator</a>).</p></dd>
+
+<dt><code>acq_function</code></dt><dd><p>(<a href='AcqFunction.html'>AcqFunction</a>).</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="active-bindings"><a class="anchor" href="#active-bindings"></a>Active bindings</h2>
@@ -177,13 +181,15 @@ Set of hyperparameters.</p></dd>
 <p><hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
 <p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqOptimizer</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>optimizer</span>, <span class='va'>terminator</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>AcqOptimizer</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>optimizer</span>, <span class='va'>terminator</span>, acq_function <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
 <dt><code>optimizer</code></dt><dd><p>(<a href='https://bbotk.mlr-org.com/reference/Optimizer.html'>bbotk::Optimizer</a>).</p></dd>
 
 <dt><code>terminator</code></dt><dd><p>(<a href='https://bbotk.mlr-org.com/reference/Terminator.html'>bbotk::Terminator</a>).</p></dd>
+
+<dt><code>acq_function</code></dt><dd><p>(<code>NULL</code> | <a href='AcqFunction.html'>AcqFunction</a>).</p></dd>
 
 </dl><p></div></p>
 <p><hr>
@@ -196,17 +202,8 @@ to other proposed points or previously evaluated points falls below the
 single time (and not after a potential replacement of points), i.e., the
 returned <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code> of optima must not necessarily pass
 the checks but most likely will.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqOptimizer</span><span class='op'>$</span><span class='fu'>optimize</span><span class='op'>(</span><span class='va'>acq_function</span>, <span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>AcqOptimizer</span><span class='op'>$</span><span class='fu'>optimize</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><dl>
-<dt><code>acq_function</code></dt><dd><p>(<a href='AcqFunction.html'>AcqFunction</a>)<br />
-Acquisition function to optimize.</p></dd>
-
-<dt><code>archive</code></dt><dd><p>(<a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>)<br />
-Archive.</p></dd>
-
-</dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
 <p><code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table::data.table()</a></code> with 1 row per optimum and x as columns.</p>
 <p><hr>

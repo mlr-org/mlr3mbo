@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sequential Multicriteria Bayesian Optimization Via SmsEGO. — bayesopt_smsego • mlr3mbo</title>
+<title>Sequential Singlecriteria Bayesian Optimization Via Multipoint Constant Liar — bayesopt_mpcl • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,8 +47,8 @@
 
 
 
-<meta property="og:title" content="Sequential Multicriteria Bayesian Optimization Via SmsEGO. — bayesopt_smsego" />
-<meta property="og:description" content="MBO loop function for sequential multicriteria Bayesian optimization via SmsEGO.
+<meta property="og:title" content="Sequential Singlecriteria Bayesian Optimization Via Multipoint Constant Liar — bayesopt_mpcl" />
+<meta property="og:description" content="MBO loop function for sequential singlecriteria Bayesian optimization via multipoint constant liar.
 Normally used inside an OptimizerMbo." />
 <meta name="twitter:card" content="summary" />
 
@@ -139,22 +139,24 @@ Normally used inside an OptimizerMbo." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Sequential Multicriteria Bayesian Optimization Via SmsEGO.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/bayesopt_smsego.R'><code>R/bayesopt_smsego.R</code></a></small>
-    <div class="hidden name"><code>bayesopt_smsego.Rd</code></div>
+    <h1>Sequential Singlecriteria Bayesian Optimization Via Multipoint Constant Liar</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/bayesopt_mpcl.R'><code>R/bayesopt_mpcl.R</code></a></small>
+    <div class="hidden name"><code>bayesopt_mpcl.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>MBO loop function for sequential multicriteria Bayesian optimization via SmsEGO.
+    <p>MBO loop function for sequential singlecriteria Bayesian optimization via multipoint constant liar.
 Normally used inside an <a href='mlr_optimizers_mbo.html'>OptimizerMbo</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bayesopt_smsego</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>bayesopt_mpcl</span><span class='op'>(</span>
   <span class='va'>instance</span>,
   init_design_size <span class='op'>=</span> <span class='cn'>NULL</span>,
   surrogate <span class='op'>=</span> <span class='cn'>NULL</span>,
   acq_function <span class='op'>=</span> <span class='cn'>NULL</span>,
-  acq_optimizer <span class='op'>=</span> <span class='cn'>NULL</span>
+  acq_optimizer <span class='op'>=</span> <span class='cn'>NULL</span>,
+  q <span class='op'>=</span> <span class='fl'>2L</span>,
+  liar <span class='op'>=</span> <span class='va'>mean</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -162,8 +164,8 @@ Normally used inside an <a href='mlr_optimizers_mbo.html'>OptimizerMbo</a>.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>instance</th>
-      <td><p>(<a href='https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html'>bbotk::OptimInstanceMultiCrit</a>)<br />
-The <a href='https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html'>bbotk::OptimInstanceMultiCrit</a> to be optimized.</p></td>
+      <td><p>(<a href='https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html'>bbotk::OptimInstanceSingleCrit</a>)<br />
+The <a href='https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html'>bbotk::OptimInstanceSingleCrit</a> to be optimized.</p></td>
     </tr>
     <tr>
       <th>init_design_size</th>
@@ -174,21 +176,34 @@ Points are drawn uniformly at random.</p></td>
     </tr>
     <tr>
       <th>surrogate</th>
-      <td><p>(<code>NULL</code> | <a href='SurrogateLearners.html'>SurrogateLearners</a>)<br />
-<a href='SurrogateLearners.html'>SurrogateLearners</a> to be used as a surrogate.
+      <td><p>(<code>NULL</code> | <a href='Surrogate.html'>Surrogate</a>)<br />
+<a href='Surrogate.html'>Surrogate</a> to be used as a surrogate.
+Typically a <a href='SurrogateLearner.html'>SurrogateLearner</a>.
 If <code>NULL</code> <code><a href='default_surrogate.html'>default_surrogate(instance)</a></code> is used.</p></td>
     </tr>
     <tr>
       <th>acq_function</th>
-      <td><p>(<code>NULL</code> | <a href='mlr_acqfunctions_sms_ego.html'>AcqFunctionSmsEgo</a>).<br />
-<a href='mlr_acqfunctions_sms_ego.html'>AcqFunctionSmsEgo</a> to be used as acquisition function.
-If <code>NULL</code> an <a href='mlr_acqfunctions_sms_ego.html'>AcqFunctionSmsEgo</a> is used.</p></td>
+      <td><p>(<code>NULL</code> | <a href='AcqFunction.html'>AcqFunction</a>).
+<a href='AcqFunction.html'>AcqFunction</a> to be used as acquisition function.
+If <code>NULL</code> <code><a href='default_acqfun.html'>default_acqfun(instance)</a></code> is used.</p></td>
     </tr>
     <tr>
       <th>acq_optimizer</th>
       <td><p>(<a href='AcqOptimizer.html'>AcqOptimizer</a>)<br />
 <a href='AcqOptimizer.html'>AcqOptimizer</a> to be used as acquisition function optimizer.
 If <code>NULL</code> <code><a href='default_acqopt.html'>default_acqopt(acqfun)</a></code> is used.</p></td>
+    </tr>
+    <tr>
+      <th>q</th>
+      <td><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>)<br />
+Batch size &gt; <code>1</code>.
+Default is <code>2</code>.</p></td>
+    </tr>
+    <tr>
+      <th>liar</th>
+      <td><p>(<code>function</code>)<br />
+Any function accepting a numeric vector as input and returning a single numeric output.
+Default is <code>mean</code>.</p></td>
     </tr>
     </table>
 
@@ -201,7 +216,7 @@ The original instance is modified in-place and returned invisible.</p>
     
 <ul>
 <li><p>If <code>surrogate</code> is <code>NULL</code> but <code>acq_function</code> is given and contains a <code>$surrogate</code>, this
-<a href='SurrogateLearners.html'>SurrogateLearners</a> is used.</p></li>
+<a href='Surrogate.html'>Surrogate</a> is used.</p></li>
 <li><p>You can pass a <code>surrogate</code> that was not given the <a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a> of the
 <code>instance</code> during initialization.
 In this case, the <a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a> of the given <code>instance</code> is set during execution.</p></li>
@@ -212,43 +227,35 @@ handled automatically.</p></li>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    
-<ul>
-<li><p>Beume N, Naujoks B, Emmerich M (2007).
-&#8220;SMS-EMOA: Multiobjective selection based on dominated hypervolume.&#8221;
-<em>European Journal of Operational Research</em>, <b>181</b>(3), 1653--1669.</p></li>
-<li><p>Ponweiser, Wolfgang, Wagner, Tobias, Biermann, Dirk, Vincze, Markus (2008).
-&#8220;Multiobjective Optimization on a Limited Budget of Evaluations Using Model-Assisted S-Metric Selection.&#8221;
-In <em>Proceedings of the 10th International Conference on Parallel Problem Solving from Nature</em>, 784--794.</p></li>
-</ul>
-
+    <p>Wang, Jialei, Clark, C. S, Liu, Eric, Frazier, I. P (2020).
+&#8220;Parallel Bayesian Global Optimization of Expensive Functions.&#8221;
+<em>Operations Research</em>, <b>68</b>(6), 1850--1865.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Loop Function: 
 <code><a href='bayesopt_ego.html'>bayesopt_ego</a>()</code>,
-<code><a href='bayesopt_mpcl.html'>bayesopt_mpcl</a>()</code>,
-<code><a href='bayesopt_parego.html'>bayesopt_parego</a>()</code></p></div>
+<code><a href='bayesopt_parego.html'>bayesopt_parego</a>()</code>,
+<code><a href='bayesopt_smsego.html'>bayesopt_smsego</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://bbotk.mlr-org.com'>bbotk</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://paradox.mlr-org.com'>paradox</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://mlr3learners.mlr-org.com'>mlr3learners</a></span><span class='op'>)</span>
 
-<span class='va'>fun</span> <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>xs</span><span class='op'>)</span> <span class='op'>{</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>y1 <span class='op'>=</span> <span class='va'>xs</span><span class='op'>$</span><span class='va'>x</span><span class='op'>^</span><span class='fl'>2</span>, y2 <span class='op'>=</span> <span class='op'>(</span><span class='va'>xs</span><span class='op'>$</span><span class='va'>x</span> <span class='op'>-</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>^</span> <span class='fl'>2</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='va'>domain</span> <span class='op'>=</span> <span class='fu'><a href='https://paradox.mlr-org.com/reference/ps.html'>ps</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://paradox.mlr-org.com/reference/Domain.html'>p_dbl</a></span><span class='op'>(</span>lower <span class='op'>=</span> <span class='op'>-</span><span class='fl'>10</span>, upper <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>codomain</span> <span class='op'>=</span> <span class='fu'><a href='https://paradox.mlr-org.com/reference/ps.html'>ps</a></span><span class='op'>(</span>y1 <span class='op'>=</span> <span class='fu'><a href='https://paradox.mlr-org.com/reference/Domain.html'>p_dbl</a></span><span class='op'>(</span>tags <span class='op'>=</span> <span class='st'>"minimize"</span><span class='op'>)</span>, y2 <span class='op'>=</span> <span class='fu'><a href='https://paradox.mlr-org.com/reference/Domain.html'>p_dbl</a></span><span class='op'>(</span>tags <span class='op'>=</span> <span class='st'>"minimize"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>objective</span> <span class='op'>=</span> <span class='va'><a href='https://bbotk.mlr-org.com/reference/ObjectiveRFun.html'>ObjectiveRFun</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>fun <span class='op'>=</span> <span class='va'>fun</span>, domain <span class='op'>=</span> <span class='va'>domain</span>, codomain <span class='op'>=</span> <span class='va'>codomain</span><span class='op'>)</span>
+<span class='va'>objective</span> <span class='op'>=</span> <span class='va'><a href='https://bbotk.mlr-org.com/reference/ObjectiveRFun.html'>ObjectiveRFun</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
+  fun <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>xs</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>xs</span><span class='op'>$</span><span class='va'>x</span> <span class='op'>^</span> <span class='fl'>2</span><span class='op'>)</span>,
+  domain <span class='op'>=</span> <span class='fu'><a href='https://paradox.mlr-org.com/reference/ps.html'>ps</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://paradox.mlr-org.com/reference/Domain.html'>p_dbl</a></span><span class='op'>(</span>lower <span class='op'>=</span> <span class='op'>-</span><span class='fl'>5</span>, upper <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>,
+  codomain <span class='op'>=</span> <span class='fu'><a href='https://paradox.mlr-org.com/reference/ps.html'>ps</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fu'><a href='https://paradox.mlr-org.com/reference/Domain.html'>p_dbl</a></span><span class='op'>(</span>tags <span class='op'>=</span> <span class='st'>"minimize"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
 
 <span class='va'>terminator</span> <span class='op'>=</span> <span class='fu'><a href='https://bbotk.mlr-org.com/reference/trm.html'>trm</a></span><span class='op'>(</span><span class='st'>"evals"</span>, n_evals <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
 
-<span class='va'>instance</span> <span class='op'>=</span> <span class='va'><a href='https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html'>OptimInstanceMultiCrit</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
+<span class='va'>instance</span> <span class='op'>=</span> <span class='va'><a href='https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html'>OptimInstanceSingleCrit</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
   objective <span class='op'>=</span> <span class='va'>objective</span>,
   terminator <span class='op'>=</span> <span class='va'>terminator</span>
 <span class='op'>)</span>
 
-<span class='fu'>bayesopt_smsego</span><span class='op'>(</span><span class='va'>instance</span><span class='op'>)</span>
+<span class='fu'>bayesopt_mpcl</span><span class='op'>(</span><span class='va'>instance</span><span class='op'>)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

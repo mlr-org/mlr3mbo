@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Acquisition Function Augmented Expected Improvement — AcqFunctionAEI • mlr3mbo</title>
+<title>Acquisition Function SMS EGO — mlr_acqfunctions_sms_ego • mlr3mbo</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,8 +47,8 @@
 
 
 
-<meta property="og:title" content="Acquisition Function Augmented Expected Improvement — AcqFunctionAEI" />
-<meta property="og:description" content="Augmented Expected Improvement." />
+<meta property="og:title" content="Acquisition Function SMS EGO — mlr_acqfunctions_sms_ego" />
+<meta property="og:description" content="S-Metric Selection Evolutionary Multiobjective Optimization Algorithm." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -138,13 +138,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Acquisition Function Augmented Expected Improvement</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/AcqFunctionAEI.R'><code>R/AcqFunctionAEI.R</code></a></small>
-    <div class="hidden name"><code>AcqFunctionAEI.Rd</code></div>
+    <h1>Acquisition Function SMS EGO</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mlr-org/mlr3mbo/blob/master/R/AcqFunctionSmsEgo.R'><code>R/AcqFunctionSmsEgo.R</code></a></small>
+    <div class="hidden name"><code>mlr_acqfunctions_sms_ego.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Augmented Expected Improvement.</p>
+    <p>S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.</p>
     </div>
 
 
@@ -154,33 +154,45 @@
     
 
 <ul>
-<li><p><code>"c"</code> (<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>)<br />
-Constant \(c\) as used in formula (14) of Huang 2012 to reflect the degree of risk aversion. Defaults to <code>1</code>.</p></li>
+<li><p><code>"lambda"</code> (<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>)<br />
+\(\lambda\) value used for the confidence bound.
+Defaults to <code>1</code>.
+Based on <code>confidence = (1 - 2 * dnorm(lambda)) ^ m</code> you can calculate a
+lambda for a given confidence level, see Ponweiser et al. 2008.</p></li>
+<li><p><code>"epsilon"</code> (<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>)<br />
+\(\epsilon\) used for the additive epsilon dominance.
+Can either be a single numeric value &gt; 0 or <code>NULL</code>.
+In the case of being <code>NULL</code>, an epsilon vector is maintained dynamically as
+described in Ponweiser et al. 2008.</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Huang D, Allen TT, Notz WI, Zheng N (2012).
-&#8220;Erratum to: Global optimization of stochastic black-box systems via sequential kriging meta-models.&#8221;
-<em>Journal of Global Optimization</em>, <b>54</b>(2), 431--431.</p>
+    <p>Ponweiser, Wolfgang, Wagner, Tobias, Biermann, Dirk, Vincze, Markus (2008).
+&#8220;Multiobjective Optimization on a Limited Budget of Evaluations Using Model-Assisted S-Metric Selection.&#8221;
+In <em>Proceedings of the 10th International Conference on Parallel Problem Solving from Nature</em>, 784--794.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Acquisition Function: 
-<code><a href='AcqFunctionCB.html'>AcqFunctionCB</a></code>,
-<code><a href='AcqFunctionEIPS.html'>AcqFunctionEIPS</a></code>,
-<code><a href='AcqFunctionEI.html'>AcqFunctionEI</a></code>,
-<code><a href='AcqFunctionPI.html'>AcqFunctionPI</a></code>,
-<code><a href='AcqFunctionSmsEgo.html'>AcqFunctionSmsEgo</a></code>,
-<code><a href='AcqFunction.html'>AcqFunction</a></code></p></div>
+<code><a href='AcqFunction.html'>AcqFunction</a></code>,
+<code><a href='mlr_acqfunctions_aei.html'>mlr_acqfunctions_aei</a></code>,
+<code><a href='mlr_acqfunctions_cb.html'>mlr_acqfunctions_cb</a></code>,
+<code><a href='mlr_acqfunctions_eips.html'>mlr_acqfunctions_eips</a></code>,
+<code><a href='mlr_acqfunctions_ei.html'>mlr_acqfunctions_ei</a></code>,
+<code><a href='mlr_acqfunctions_pi.html'>mlr_acqfunctions_pi</a></code></p></div>
     <h2 class="hasAnchor" id="super-classes"><a class="anchor" href="#super-classes"></a>Super classes</h2>
 
-    <p><code><a href='https://bbotk.mlr-org.com/reference/Objective.html'>bbotk::Objective</a></code> -&gt; <code><a href='https://bbotk.mlr-org.com/reference/ObjectiveRFunDt.html'>bbotk::ObjectiveRFunDt</a></code> -&gt; <code><a href='AcqFunction.html'>mlr3mbo::AcqFunction</a></code> -&gt; <code>AcqFunctionAEI</code></p>
+    <p><code><a href='https://bbotk.mlr-org.com/reference/Objective.html'>bbotk::Objective</a></code> -&gt; <code><a href='AcqFunction.html'>mlr3mbo::AcqFunction</a></code> -&gt; <code>AcqFunctionSmsEgo</code></p>
     <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
 
     <p><div class="r6-fields"></p><dl>
-<dt><code>y_effective_best</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
+<dt><code>ys_front</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/matrix.html'>matrix()</a></code>).</p></dd>
 
-<dt><code>noise_var</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
+<dt><code>ref_point</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
+
+<dt><code>epsilon</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
+
+<dt><code>progress</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
@@ -189,46 +201,43 @@ Constant \(c\) as used in formula (14) of Huang 2012 to reflect the degree of ri
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
-<li><p><a href='#method-new'><code>AcqFunctionAEI$new()</code></a></p></li>
-<li><p><a href='#method-update'><code>AcqFunctionAEI$update()</code></a></p></li>
-<li><p><a href='#method-clone'><code>AcqFunctionAEI$clone()</code></a></p></li>
+<li><p><a href='#method-new'><code>AcqFunctionSmsEgo$new()</code></a></p></li>
+<li><p><a href='#method-update'><code>AcqFunctionSmsEgo$update()</code></a></p></li>
+<li><p><a href='#method-clone'><code>AcqFunctionSmsEgo$clone()</code></a></p></li>
 </ul>
-<p><details ><summary>Inherited methods</summary>
+<p><details open ><summary>Inherited methods</summary>
 <ul>
 <li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-eval'><code>bbotk::Objective$eval()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-format'><code>bbotk::Objective$format()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-print'><code>bbotk::Objective$print()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_dt"><a href='../../bbotk/html/ObjectiveRFunDt.html#method-eval_dt'><code>bbotk::ObjectiveRFunDt$eval_dt()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="ObjectiveRFunDt" data-id="eval_many"><a href='../../bbotk/html/ObjectiveRFunDt.html#method-eval_many'><code>bbotk::ObjectiveRFunDt$eval_many()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="setup"><a href='../../mlr3mbo/html/AcqFunction.html#method-setup'><code>mlr3mbo::AcqFunction$setup()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="update_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-update_surrogate'><code>mlr3mbo::AcqFunction$update_surrogate()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></p></li>
 </ul>
 </details>
 
 <hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
 <p>Creates a new instance of this <a href='https://r6.r-lib.org/reference/R6Class.html'>R6</a> class.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqFunctionAEI</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>surrogate</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>AcqFunctionSmsEgo</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>surrogate <span class='op'>=</span> <span class='cn'>NULL</span>, lambda <span class='op'>=</span> <span class='fl'>1</span>, epsilon <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>surrogate</code></dt><dd><p>(<a href='SurrogateSingleCrit.html'>SurrogateSingleCrit</a>).</p></dd>
+<dt><code>surrogate</code></dt><dd><p>(<code>NULL</code> | <a href='SurrogateLearners.html'>SurrogateLearners</a>).</p></dd>
+
+<dt><code>lambda</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).</p></dd>
+
+<dt><code>epsilon</code></dt><dd><p>(<code>NULL</code> | <code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).</p></dd>
 
 </dl><p></div></p>
 <p><hr>
 <a id="method-update"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='https://rdrr.io/r/stats/update.html'>update()</a></code></h3>
-<p>Updates acquisition function and sets <code>y_effective_best</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqFunctionAEI</span><span class='op'>$</span><span class='fu'>update</span><span class='op'>(</span><span class='va'>archive</span><span class='op'>)</span></pre><p></div></p>
+<p>Updates acquisition function and sets <code>ys_front</code>, <code>ref_point</code>, <code>epsilon</code>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>AcqFunctionSmsEgo</span><span class='op'>$</span><span class='fu'>update</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
 
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><dl>
-<dt><code>archive</code></dt><dd><p>(<a href='https://bbotk.mlr-org.com/reference/Archive.html'>bbotk::Archive</a>).</p></dd>
-
-</dl><p></div></p>
 <p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>AcqFunctionAEI</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>AcqFunctionSmsEgo</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
