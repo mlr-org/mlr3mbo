@@ -6,9 +6,9 @@
 \title{Model Based Optimization}
 \description{
 \code{OptimizerMbo} class that implements model based optimization.
-The implementation follows a modular layout relying on a loop function` determining the MBO
-flavor to be used, e.g., \link{bayesopt_soo} for sequential MBO, an acquisition function, e.g.,
-\link{AcqFunctionEI} for expected improvement and an acquisition function optimizer.
+The implementation follows a modular layout relying on a loop function determining the MBO flavor
+to be used, e.g., \link{bayesopt_ego} for sequential single objective MBO, a \link{Surrogate}, an
+\link{AcqFunction}, e.g., \link{AcqFunctionEI} for expected improvement and an \link{AcqOptimizer}.
 }
 \section{Super class}{
 \code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{OptimizerMbo}
@@ -17,6 +17,8 @@ flavor to be used, e.g., \link{bayesopt_soo} for sequential MBO, an acquisition 
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{loop_function}}{(\code{function} | NULL).}
+
+\item{\code{surrogate}}{(\link{Surrogate} | NULL)}
 
 \item{\code{acq_function}}{(\link{AcqFunction} | NULL).}
 
@@ -49,11 +51,11 @@ flavor to be used, e.g., \link{bayesopt_soo} for sequential MBO, an acquisition 
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
-For more information on default values for \code{loop_function}, \code{acq_function} and
-\code{acq_optimizer}, see \code{mbo_defaults}.
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{mbo_defaults}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
   loop_function = NULL,
+  surrogate = NULL,
   acq_function = NULL,
   acq_optimizer = NULL,
   args = NULL,
@@ -67,6 +69,9 @@ For more information on default values for \code{loop_function}, \code{acq_funct
 \item{\code{loop_function}}{(\code{function})\cr
 Loop function to run. See \code{mbo_defaults} for defaults.}
 
+\item{\code{surrogate}}{\link{Surrogate}\cr
+The surrogate object. For defaults see \link{mbo_defaults}.}
+
 \item{\code{acq_function}}{\link{AcqFunction}\cr
 The acquistion function object. For defaults see \link{mbo_defaults}.}
 
@@ -74,7 +79,7 @@ The acquistion function object. For defaults see \link{mbo_defaults}.}
 The optimizer that optimizes the acquistion function. For defaults see \link{mbo_defaults}.}
 
 \item{\code{args}}{(named \code{list()})\cr
-Further arguments for the \code{loop_function}.}
+Further arguments passed to the \code{loop_function}.}
 
 \item{\code{result_function}}{(\code{function})\cr
 Function called after the optimization terminates.

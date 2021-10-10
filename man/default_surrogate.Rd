@@ -2,28 +2,24 @@
 % Please edit documentation in R/mbo_defaults.R
 \name{default_surrogate}
 \alias{default_surrogate}
-\title{Generate Default Surrogate}
+\title{Default Surrogate}
 \usage{
-default_surrogate(instance, learner = NULL, n_objectives = NULL)
+default_surrogate(instance, learner = NULL, n_learner = NULL)
 }
 \arguments{
 \item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance})\cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{learner}{(\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}) | \code{NULL}\cr
-The surrogate learner used in the acquisition function. Default as described above.}
+\item{learner}{(\code{NULL} | \link[mlr3:Learner]{mlr3::Learner}).}
 
-\item{n_objectives}{(\code{integer(1)} | \code{NULL})\cr
-Number of objectives to model. Default queries the instance.
-If \code{1} a \link{SurrogateSingleCritLearner} object is returned, otherwise a \link{SurrogateMultiCritLearners}
-object.}
+\item{n_learner}{(\code{NULL} | \code{integer(1)}).}
 }
 \value{
 \link{Surrogate}
 }
 \description{
-This is a helper function that generates a default surrogate, based on properties of the objective
-function and the selected infill criterion.
+This is a helper function that generates a default \link{Surrogate} based on properties of the
+\link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 
 For numeric-only (including integers) parameter spaces without any dependencies:
 \itemize{
@@ -31,10 +27,10 @@ For numeric-only (including integers) parameter spaces without any dependencies:
 \item{If the objective function is deterministic we add a small nugget effect (10^-8*Var(y),
 y is vector of observed outcomes in current design) to increase numerical stability to
 hopefully prevent crashes of \CRANpkg{DiceKriging}.
-Whether the objective function is deterministic can be observed from the objective functions
+Whether the objective function is deterministic can be observed from the objective function's
 properties.}
 \item{If the objective function is noisy the nugget effect will be estimated with
-\code{nugget.estim = TRUE}}
+\code{nugget.estim = TRUE}.}
 \item{Also \code{jitter} is set to \code{TRUE} to circumvent a problem with \CRANpkg{DiceKriging}
 where already trained input values produce the exact trained output.
 Whether the objective function is noisy can be observed from the objective functions
@@ -55,14 +51,22 @@ This is the \code{se.method = "infjack"} option of the \dQuote{"regr.ranger"} le
 }
 In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
 in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
-\code{GraphLearner$new(po("imputeoor") \%>>\% lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE))}.
+\code{lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)}.
 
 If additionally dependencies are present in the parameter space, inactive conditional parameters
 are represented by missing \code{NA} values in the training design data.
-We simply handle those with an imputation method, added to the ranger random forest, more concretely we
-use \code{po("imputeoor")} from package \CRANpkg{mlr3pipelines}.
-Both of these techniques make sense for tree-based methods and are usually hard to beat, see
-Ding et al. (2010).
+We simply handle those with an imputation method, added to the ranger random forest, more
+concretely we use \code{po("imputeoor")} from package \CRANpkg{mlr3pipelines}.  Both of these
+techniques make sense for tree-based methods and are usually hard to beat, see Ding et al.
+(2010).
+In the case of dependencies, the following learner is used as a fallback:
+\code{lrn("regr.featureless")}.
+
+If the instance is of class \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} the learner is wrapped as a
+\link{SurrogateLearner}.
+
+If the instance is of class \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} deep clones of the learner are
+wrapped as a \link{SurrogateLearners}.
 }
 \references{
 Ding, Yufeng, Simonoff, S J (2010).

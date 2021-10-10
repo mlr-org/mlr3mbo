@@ -22,7 +22,7 @@
 #' `r format_bib("jones_1998")`
 #'
 #' @export
-bayesopt_soo = function(instance, acq_function = NULL, acq_optimizer = NULL, n_design = 4 * instance$search_space$length) {
+bayesopt_soo = function(instance, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, n_design = 4 * instance$search_space$length) {
   assert_r6(instance, "OptimInstance")
   if (is.null(acq_function)) {
     surrogate = default_surrogate(instance)
@@ -36,12 +36,11 @@ bayesopt_soo = function(instance, acq_function = NULL, acq_optimizer = NULL, n_d
 
   eval_initial_design(instance)
   archive = instance$archive
-  acq_function$setup(archive) # setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
     xdt = tryCatch({
-      acq_function$update_surrogate(archive)
-      acq_function$update(archive)
+    surrogate(archive)
+      acq_function$update()
       acq_optimizer$optimize(acq_function, archive = archive)  # archive need for fix_xdt_distance()
     }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
       lg$info("Proposing a randomly sampled point")  # FIXME: logging?

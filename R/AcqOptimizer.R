@@ -2,6 +2,7 @@
 #'
 #' @description
 #' Optimizer for [AcqFunction]s.
+#' Wraps an [bbotk::Optimizer] and [bbotk::Terminator].
 #'
 #' @export
 AcqOptimizer = R6Class("AcqOptimizer",
@@ -13,14 +14,19 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' @field terminator ([bbotk::Terminator]).
     terminator = NULL,
 
+    #' @field acq_function ([AcqFunction]).
+    acq_function = NULL,
+
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param optimizer ([bbotk::Optimizer]).
     #' @param terminator ([bbotk::Terminator]).
-    initialize = function(optimizer, terminator) {
+    #' @param acq_function (`NULL` | [AcqFunction]).
+    initialize = function(optimizer, terminator, acq_function = NULL) {
       self$optimizer = assert_r6(optimizer, "Optimizer")
       self$terminator = assert_r6(terminator, "Terminator")
+      self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       ps = ps(
         fix_distance = p_lgl(),
         dist_threshold = p_dbl(lower = 0, upper = 1)
@@ -42,33 +48,28 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' returned [data.table::data.table()] of optima must not necessarily pass
     #' the checks but most likely will.
     #'
-    #' @param acq_function ([AcqFunction])\cr
-    #'   Acquisition function to optimize.
-    #' @param archive ([bbotk::Archive])\cr
-    #'   Archive.
-    #'
     #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
-    optimize = function(acq_function, archive) {
-      if (acq_function$codomain$length == 1L) {
-        instance = OptimInstanceSingleCrit$new(objective = acq_function, search_space = acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
+    optimize = function() {
+      instance = if (self$acq_function$codomain$length == 1L) {
+        OptimInstanceSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
       } else {
         if (!"multi-crit" %in% self$optimizer$properties) {
-          stopf("Optimizer %s is not multi-crit compatible but %s is multi-crit.", self$self$optimizer$format(), acq_function$id)
+          stopf("Optimizer %s is not multi-crit compatible but %s is multi-crit.", self$self$optimizer$format(), self$acq_function$id)
         }
-        instance = OptimInstanceMultiCrit$new(objective = acq_function, search_space = acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
+        OptimInstanceMultiCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
       }
 
       xdt = tryCatch(self$optimizer$optimize(instance),
         error = function(error_condition) {
-          lg$info(error_condition$message)  # FIXME: logging?
+          lg$info(error_condition$message)
           # FIXME: this could potentially also fail if the surrogate cannot predict?
           stop(set_class(list(message = error_condition$message, call = NULL),
-            classes = c("leads_to_exploration_error", "optimize_error", "error", "condition")))
+            classes = c("mbo_error", "acq_optimizer_error", "error", "condition")))
         }
       )
 
       if (self$param_set$values$fix_distance) {
-        xdt = fix_xdt_distance(xdt, previous_xdt = archive_x(archive), search_space = acq_function$domain, dist_threshold = self$param_set$values$dist_threshold)
+        xdt = fix_xdt_distance(xdt, previous_xdt = archive_x(self$acq_function$archive), search_space = self$acq_function$domain, dist_threshold = self$param_set$values$dist_threshold)
       }
 
       xdt
@@ -94,8 +95,9 @@ AcqOptimizer = R6Class("AcqOptimizer",
     deep_clone = function(name, value) {
       switch(name,
         optimizer = value$clone(deep = TRUE),
-        .param_set = value$clone(deep = TRUE),
         terminator = values$clone(deep = TRUE),
+        acq_function = values$clone(deep = TRUE),
+        .param_set = value$clone(deep = TRUE),
         value
       )
     }

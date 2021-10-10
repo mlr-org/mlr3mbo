@@ -15,7 +15,7 @@ loop \code{function}
 }
 \description{
 Chooses a default "loopfun", i.e. the MBO flavor to be used for optimization.
-For single-criteria optimization, defaults to \link{bayesopt_soo}.
+For single-criteria optimization, defaults to \link{bayesopt_ego}.
 For multi-criteria optimization, defaults to \link{bayesopt_smsego}.
 }
 \seealso{

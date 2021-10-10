@@ -109,24 +109,49 @@ fix_xdt_distance = function(xdt, previous_xdt, search_space, dist_threshold) {
   xdt
 }
 
-eval_initial_design = function(instance, method = "lhs") {
-  if (instance$archive$n_evals == 0L) {
-    if (instance$search_space$has_deps) {
-      method = "random"
-    }
-    assert_choice(method, choices = c("grid", "lhs", "random"))
-    d = instance$objective$ydim
-    design = switch(method,
-      grid = {
-        resolution = max(1, floor(((4L * d) ^ (1 / d))))
-        generate_design_grid(instance$search_space, resolution = resolution)$data
-      },
-      lhs = generate_design_lhs(instance$search_space, n = 4L * d)$data,
-      random = generate_design_random(instance$search_space, n = 4L * d)$data
-    )
-    instance$eval_batch(design)
-  } else {
-    instance
+# FIXME: in instance? do we want an Mbo Instance?
+#eval_initial_design = function(instance, method = "lhs") {
+#  if (instance$archive$n_evals == 0L) {
+#    if (instance$search_space$has_deps) {
+#      method = "random"
+#    }
+#    assert_choice(method, choices = c("grid", "lhs", "random"))
+#    d = instance$objective$ydim
+#    design = switch(method,
+#      grid = {
+#        resolution = max(1, floor(((4L * d) ^ (1 / d))))
+#        generate_design_grid(instance$search_space, resolution = resolution)$data
+#      },
+#      lhs = generate_design_lhs(instance$search_space, n = 4L * d)$data,
+#      random = generate_design_random(instance$search_space, n = 4L * d)$data
+#    )
+#    instance$eval_batch(design)
+#  } else {
+#    instance
+#  }
+#}
+
+# FIXME: document properly
+# calculate all possible weights (lambdas) for given s parameter and dimensionality d taken von mlrMBO
+calculate_parego_weights = function(s, d) {
+  fun = function(s, d) {
+    if (d == 1L)
+      list(s)
+    else
+      unlist(lapply(0:s, function(i) Map(c, i, fun(s - i, d - 1L))), recursive = FALSE)
   }
+  matrix(unlist(fun(s, d)), ncol = d, byrow = TRUE) / s
+}
+
+# FIXME: document properly
+surrogate_mult_max_to_min = function(codomain, y_cols) {
+  mult = map_int(y_cols, function(y_col) {
+    mult = if (y_col %in% codomain$ids()) {
+      if(has_element(codomain$tags[[y_col]], "minimize")) 1L else -1L
+    } else {
+      1L
+    }
+  })
+  setNames(mult, nm = y_cols)
 }
 
