@@ -2,13 +2,14 @@
 #'
 #' @description
 #' MBO loop function for sequential multicriteria Bayesian optimization via SmsEGO.
-#' Normaly used inside an [OptimizerMbo].
+#' Normally used inside an [OptimizerMbo].
 #'
 #' @param instance ([bbotk::OptimInstanceMultiCrit])\cr
 #'   The [bbotk::OptimInstanceMultiCrit] to be optimized.
 #' @param init_design_size (`NULL` | `integer(1)`)\cr
 #'   Size of the initial design.
 #'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
+#'   Points are drawn uniformly at random.
 #' @param surrogate (`NULL` | [SurrogateLearners])\cr
 #'   [SurrogateLearners] to be used as a surrogate.
 #'   If `NULL` \code{default_surrogate(instance)} is used.

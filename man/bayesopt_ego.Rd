@@ -18,7 +18,8 @@ The \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} to be o
 
 \item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
 Size of the initial design.
-If \code{NULL} \code{4 * d} is used with \code{d} being the dimensionality of the search space.}
+If \code{NULL} \code{4 * d} is used with \code{d} being the dimensionality of the search space.
+Points are drawn uniformly at random.}
 
 \item{surrogate}{(\code{NULL} | \link{Surrogate})\cr
 \link{Surrogate} to be used as a surrogate.
@@ -39,7 +40,7 @@ The original instance is modified in-place and returned invisible.
 }
 \description{
 MBO loop function for sequential singlecriteria Bayesian optimization.
-Normaly used inside an \link{OptimizerMbo}.
+Normally used inside an \link{OptimizerMbo}.
 }
 \note{
 \itemize{

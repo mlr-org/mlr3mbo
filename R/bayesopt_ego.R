@@ -2,13 +2,14 @@
 #'
 #' @description
 #' MBO loop function for sequential singlecriteria Bayesian optimization.
-#' Normaly used inside an [OptimizerMbo].
+#' Normally used inside an [OptimizerMbo].
 #'
 #' @param instance ([bbotk::OptimInstanceSingleCrit])\cr
 #'   The [bbotk::OptimInstanceSingleCrit] to be optimized.
 #' @param init_design_size (`NULL` | `integer(1)`)\cr
 #'   Size of the initial design.
 #'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
+#'   Points are drawn uniformly at random.
 #' @param surrogate (`NULL` | [Surrogate])\cr
 #'   [Surrogate] to be used as a surrogate.
 #'   Typically a [SurrogateLearner].

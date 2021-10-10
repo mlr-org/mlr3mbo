@@ -73,11 +73,14 @@ bibentries = c(
     pages        = "784--794"
   ),
 
-  wang_2019 = bibentry("article",
+  wang_2020 = bibentry("article",
     title   = "Parallel Bayesian Global Optimization of Expensive Functions",
     author  = "Wang, Jialei and Clark, Scott C. and Liu, Eric and Frazier, Peter I.",
-    year    = "2019",
-    journal = "arXiv:1602.05149 [math, stat]"
+    year    = "2020",
+    journal = "Operations Research",
+    volume  = "68",
+    number  = "6",
+    pages   = "1850--1865"
   ),
 
   knowles_2006 = bibentry("article",

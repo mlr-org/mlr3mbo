@@ -25,7 +25,8 @@ If \code{NULL} \code{4 * d} is used with \code{d} being the dimensionality of th
 
 \item{surrogate}{(\code{NULL} | \link{SurrogateLearner})\cr
 \link{SurrogateLearner} to be used as a surrogate.
-If \code{NULL} \code{default_surrogate(instance), n_learner = 1} is used.}
+If \code{NULL} \code{default_surrogate(instance), n_learner = 1} is used.
+Points are drawn uniformly at random.}
 
 \item{acq_function}{(\code{NULL} | \link{AcqFunction}).\cr
 \link{AcqFunction} to be used as an acquisition function.
@@ -55,7 +56,7 @@ The original instance is modified in-place and returned invisible.
 }
 \description{
 MBO loop function for sequential multicriteria Bayesian optimization via ParEGO.
-Normaly used inside an \link{OptimizerMbo}.
+Normally used inside an \link{OptimizerMbo}.
 }
 \note{
 \itemize{

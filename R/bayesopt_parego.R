@@ -2,7 +2,7 @@
 #'
 #' @description
 #' MBO loop function for sequential multicriteria Bayesian optimization via ParEGO.
-#' Normaly used inside an [OptimizerMbo].
+#' Normally used inside an [OptimizerMbo].
 #'
 #' @param instance ([bbotk::OptimInstanceMultiCrit])\cr
 #'   The [bbotk::OptimInstanceMultiCrit] to be optimized.
@@ -12,6 +12,7 @@
 #' @param surrogate (`NULL` | [SurrogateLearner])\cr
 #'   [SurrogateLearner] to be used as a surrogate.
 #'   If `NULL` \code{default_surrogate(instance), n_learner = 1} is used.
+#'   Points are drawn uniformly at random.
 #' @param acq_function (`NULL` | [AcqFunction]).\cr
 #'   [AcqFunction] to be used as an acquisition function.
 #'   If `NULL` an [AcqFunctionEI] is used.

@@ -106,3 +106,28 @@ test_that("bayesopt_ego with trafo", {
   expect_true(!is.na(instance$archive$data$acq_ei[5L]))
 })
 
+test_that("bayesopt_ego eips", {
+  objective = ObjectiveRFun$new(
+    fun = function(xs) list(y = xs$x ^ 2, time = abs(xs$x)),
+    domain = ps(x = p_dbl(lower = -5, upper = 5)),
+    codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time")),
+    id = "xsq"
+  )
+
+  terminator = trm("evals", n_evals = 5L)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = terminator
+  )
+
+  surrogate = default_surrogate(instance, n_learner = 2L)
+  surrogate$y_cols = c("y", "time")
+
+  acq_function = AcqFunctionEIPS$new()
+
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function)
+  expect_true(nrow(instance$archive$data) == 5L)
+  expect_true("acq_eips" %in% names(instance$archive$data))
+  expect_equal(names(surrogate$model), c("y", "time"))
+})
