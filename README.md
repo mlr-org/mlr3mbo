@@ -1,8 +1,8 @@
 
 # mlr3mbo
 
-A new R6 and much more modular implementation for single- and multi-crit
-Bayesian optimization.
+A new R6 and much more modular implementation for single- and
+multicriteria Bayesian optimization.
 
 <!-- badges: start -->
 
@@ -22,7 +22,7 @@ Bayesian optimization.
 -   `AcqOptimizer`: Acquisition Function Optimizer
 
 Based on these, Bayesian optimization loops can be written, see, e.g.,
-`bayesopt_soo` for sequential single objective BO.
+`bayesopt_ego` for sequential single objective BO.
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other
 `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk)
@@ -41,7 +41,7 @@ details.
 
 ## Simple Optimization Example
 
-Minimize `y = x^2` via sequential single objective BO using a GP as
+Minimize `y = x^2` via sequential singlecriteria BO using a GP as
 surrogate and EI optimized via random search as aquisition function:
 
 ``` r
@@ -53,9 +53,9 @@ library(paradox)
 library(mlr3learners)
 
 obfun = ObjectiveRFun$new(
-  fun = function(xs) list(y = sum(xs$x^2)),
-  domain = ParamSet$new(list(ParamDbl$new("x", -5, 5))),
-  id = "xsq"
+  fun = function(xs) list(y = xs$x ^ 2),
+  domain = ps(x = p_dbl(lower = -5, upper = 5)),
+  codomain = ps(y = p_dbl(tags = "minimize"))
 )
 
 terminator = trm("evals", n_evals = 10)
@@ -68,14 +68,19 @@ instance = OptimInstanceSingleCrit$new(
 design = generate_design_lhs(obfun$domain, 4)$data
 instance$eval_batch(design)
 
-surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km", control = list(trace = FALSE)))
-acqfun = AcqFunctionEI$new(surrogate = surrogate)
+surrogate = SurrogateLearner$new(lrn("regr.km", control = list(trace = FALSE)))
+acqfun = AcqFunctionEI$new()
 acqopt = AcqOptimizer$new(
   opt("random_search", batch_size = 100),
-  trm("evals", n_evals = 100)
-)
+  terminator = trm("evals", n_evals = 100)
+ )
 
-optimizer = opt("mbo", loop_function = bayesopt_soo, acq_function = acqfun, acq_optimizer = acqopt)
+optimizer = opt("mbo",
+  loop_function = bayesopt_ego,
+  surrogate = surrogate,
+  acq_function = acqfun,
+  acq_optimizer = acqopt
+)
 optimizer$optimize(instance)
 ```
 
@@ -91,7 +96,7 @@ library(mlr3tuning)
 
 task = tsk("pima")
 
-learner = lrn("classif.rpart", cp = to_tune(1e-04, 1e-1, logscale = TRUE))
+learner = lrn("classif.rpart", cp = to_tune(lower = 1e-04, upper = 1e-1, logscale = TRUE))
 
 instance = tune(
   method = "mbo",
@@ -106,4 +111,4 @@ instance$result
 ```
 
     ##           cp learner_param_vals  x_domain classif.ce
-    ## 1: -4.961105          <list[2]> <list[1]>  0.1914062
+    ## 1: -3.438787          <list[2]> <list[1]>  0.2039062
