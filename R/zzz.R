@@ -7,7 +7,7 @@
 #' @import lgr
 #' @import mlr3
 #' @import mlr3tuning
-#' @importFrom stats runif
+#' @importFrom stats setNames runif dnorm pnorm
 #' @useDynLib mlr3mbo c_sms_indicator c_eps_indicator
 "_PACKAGE"
 
@@ -26,3 +26,6 @@
     lg$set_threshold("warn")
   }
 } # nocov end
+
+# static code checks should not complain about commonly used data.table columns
+utils::globalVariables("y_scal")

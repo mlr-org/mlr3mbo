@@ -1,4 +1,28 @@
+test_OptimizerMbo works with different settings expand
+
+document initial design random and you can supply your own
+
+mbo_defaults, doc and links etc., default_surrogate
+
+results_by_surrogate with eips
+
+test_r6 --> inherits
+
+deep clones
+
+check return()
+
+$setup was actually nice for OptimizerMBO design.
+check if we use setup_acqfun and setup_acqopt that we can flawlessly switch between instances
+maybe drop y_cols again and make ab, simply rely on tags in codomain
+
+why does Acqf constructor get archive if we could use surrogate archive
+
+check surrogate_max_to_min(codomain) for parEgo?
+
 ParamSet --> ps
+
+stop(.) period
 
 check if tests use helpers
 
@@ -8,8 +32,9 @@ Optimizer should infer properties from surrogate, acqf, acqo and loop
 
 constants in acqfunction? ... in functions
 
-SMS EGO finish (name, docs, tests)
-
 mlr3mbo yahpo gym benchmark
 
 formats und printer definieren
+
+dicts:
+  acqf should get singlecrit multicrit tags

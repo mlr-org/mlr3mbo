@@ -5,6 +5,7 @@
 \title{Acquisition Function Optimizer}
 \description{
 Optimizer for \link{AcqFunction}s.
+Wraps an \link[bbotk:Optimizer]{bbotk::Optimizer} and \link[bbotk:Terminator]{bbotk::Terminator}.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -12,6 +13,8 @@ Optimizer for \link{AcqFunction}s.
 \item{\code{optimizer}}{(\link[bbotk:Optimizer]{bbotk::Optimizer}).}
 
 \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
+
+\item{\code{acq_function}}{(\link{AcqFunction}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,7 +40,7 @@ Set of hyperparameters.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator, acq_function = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -46,6 +49,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{optimizer}}{(\link[bbotk:Optimizer]{bbotk::Optimizer}).}
 
 \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
+
+\item{\code{acq_function}}{(\code{NULL} | \link{AcqFunction}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -64,20 +69,9 @@ single time (and not after a potential replacement of points), i.e., the
 returned \code{\link[data.table:data.table]{data.table::data.table()}} of optima must not necessarily pass
 the checks but most likely will.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$optimize(acq_function, archive)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$optimize()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{acq_function}}{(\link{AcqFunction})\cr
-Acquisition function to optimize.}
-
-\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive})\cr
-Archive.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per optimum and x as columns.
 }

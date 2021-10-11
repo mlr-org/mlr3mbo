@@ -1,10 +1,6 @@
 test_that("result_by_surrogate_design works", {
   instance = MAKE_INST(OBJ_1D_2_NOISY, PS_1D, trm("evals", n_evals = 10))
-  optimizer = OptimizerMbo$new(
-    loop_function = default_loopfun(instance),
-    acq_function = default_acqfun(instance, default_surrogate(instance)),
-    acq_optimizer = default_acqopt(instance)
-  )
+  optimizer = OptimizerMbo$new()
   optimizer$optimize(instance)
   out = result_by_surrogate_design(instance, optimizer)
   expect_r6(out, classes = "OptimInstance")

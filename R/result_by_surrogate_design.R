@@ -12,16 +12,17 @@
 result_by_surrogate_design = function(instance, optimizer_mbo) {
   archive = instance$archive
   surrogate = optimizer_mbo$acq_function$surrogate
-  xydt = archive_xy(archive)
-  surrogate$update(xydt = xydt, y_cols = archive$cols_y)  # update surrogate model with new data
-  preds = surrogate$predict(xydt[, archive$cols_x, with = FALSE])
-  means = if (testR6(surrogate, classes = "SurrogateSingleCrit")) {
+  surrogate$archive = archive
+  xdt = archive_x(archive)
+  surrogate$update()
+  preds = surrogate$predict(xdt)
+  means = if (testR6(surrogate, classes = "SurrogateLearner")) {
     preds$mean
-  } else if (testR6(surrogate, classes = "SurrogateMultiCrit")) {
+  } else if (testR6(surrogate, classes = "SurrogateLearners")) {
     map_dtc(preds, "mean")
   }
   archive_tmp = archive$clone(deep = TRUE)
-  archive_tmp$data[, archive$cols_y := means]
+  archive_tmp$data[, surrogate$y_cols := means]
   best = archive_tmp$best()
   best_y = if (test_r6(instance, classes = "OptimInstanceSingleCrit")) {
     unlist(best[, archive$cols_y, with = FALSE])

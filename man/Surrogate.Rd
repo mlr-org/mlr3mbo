@@ -9,13 +9,20 @@ Surrogate model.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{model}}{Surrogate model}
+\item{\code{model}}{Surrogate model.}
 }
 \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
+
+\item{\code{n_learner}}{(\code{integer(1)})\cr
+Returns the number of \link[mlr3:Learner]{mlr3::Learner}s.}
+
+\item{\code{y_cols}}{(\code{character()}).}
+
 \item{\code{insample_perf}}{(\code{numeric()})\cr
 Surrogate model's current insample performance.}
 
@@ -42,13 +49,19 @@ Asserts whether the current insample performance meets the performance threshold
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$new(model)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Surrogate$new(model, archive, y_cols, param_set)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{model}}{(Model).}
+
+\item{\code{archive}}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive}).}
+
+\item{\code{y_cols}}{(\code{NULL} | \code{character()}).}
+
+\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -59,20 +72,9 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Method \code{update()}}{
 Train model with new data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$update(xydt, y_cols)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Surrogate$update()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xydt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-New data.}
-
-\item{\code{y_cols}}{(\code{character()})\cr
-Name(s) of response column(s).}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 \code{NULL}.
 }

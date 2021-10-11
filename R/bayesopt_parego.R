@@ -1,136 +1,149 @@
-# #' @title Multi-Objective ParEGO
-# #'
-# #' @description
-# #' Function that executes a ParEGO multi-objective Bayesian optimization.
-# #' @template param_instance
-# #' @template param_acq_function
-# #' @template param_acq_optimizer
-# #' @param q (`int(1)`)\cr
-# #'   Batch size of proposal
-# #' @param s (`int(1)`)\cr
-# #'   ?
-# #' @param rho (`numeric(1)`)\cr
-# #'   ?
-# #' @return [bbotk::Archive]
-# #' @export
-bayesopt_parego = function(instance, acq_function = NULL, acq_optimizer = NULL, q = 1, s = 100, rho = 0.05) {
+#' @title Sequential Multicriteria Bayesian Optimization Via ParEGO
+#'
+#' @description
+#' MBO loop function for sequential multicriteria Bayesian optimization via ParEGO.
+#' Normally used inside an [OptimizerMbo].
+#'
+#' @param instance ([bbotk::OptimInstanceMultiCrit])\cr
+#'   The [bbotk::OptimInstanceMultiCrit] to be optimized.
+#' @param init_design_size (`NULL` | `integer(1)`)\cr
+#'   Size of the initial design.
+#'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
+#' @param surrogate (`NULL` | [SurrogateLearner])\cr
+#'   [SurrogateLearner] to be used as a surrogate.
+#'   If `NULL` \code{default_surrogate(instance), n_learner = 1} is used.
+#'   Points are drawn uniformly at random.
+#' @param acq_function (`NULL` | [AcqFunction]).\cr
+#'   [AcqFunction] to be used as an acquisition function.
+#'   If `NULL` an [AcqFunctionEI] is used.
+#' @param acq_optimizer ([AcqOptimizer])\cr
+#'   [AcqOptimizer] to be used as acquisition function optimizer.
+#'   If `NULL` \code{default_acqopt(acqfun)} is used.
+#' @param q (`integer(1)`)\cr
+#'   Batch size.
+#'   Default is `1`.
+#' @param s (`integer(1)`)\cr
+#'   \eqn{s} in Equation 1 in Knowles (2006).
+#'   Determines the total number of possible random weight vectors.
+#'   Default is `100`.
+#' @param rho (`numeric(1)`)\cr
+#'   \eqn{\rho} in Equation 2 in Knowles (2006) scaling the linear part of the augmented Tchebycheff
+#'   function.
+#'   Default is `0.05`
+#'
+#' @note
+#' * If `surrogate` is `NULL` but `acq_function` is given and contains a `$surrogate`, this
+#'   [SurrogateLearner] is used.
+#' * You can pass a `surrogate` that was not given the [bbotk::Archive] of the
+#'   `instance` during initialization.
+#'   In this case, the [bbotk::Archive] of the given `instance` is set during execution.
+#' * Similarly, you can pass an `acq_function` that was not given the `surrogate` during initialization
+#'   and an `acq_optimizer` that was not given the `acq_function`, i.e., delayed initialization is
+#'   handled automatically.
+#' * The scalarizations of the target variables are stored as the `y_scal` column in the
+#'   [bbotk::Archive] of the [bbotk::OptimInstanceMultiCrit].
+#'
+#' @return invisible(instance)\cr
+#'   The original instance is modified in-place and returned invisible.
+#'
+#' @references
+#' `r format_bib("knowles_2006")`
+#' @family Loop Function
+#' @export
+#' @examples
+#' library(bbotk)
+#' library(paradox)
+#' library(mlr3learners)
+#'
+#' fun = function(xs) {
+#'   list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+#' }
+#' domain = ps(x = p_dbl(lower = -10, upper = 10))
+#' codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
+#' objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+#'
+#' terminator = trm("evals", n_evals = 10)
+#'
+#' instance = OptimInstanceMultiCrit$new(
+#'   objective = objective,
+#'   terminator = terminator
+#' )
+#'
+#' bayesopt_parego(instance)
+bayesopt_parego = function(
+    instance,
+    init_design_size = NULL,
+    surrogate = NULL,
+    acq_function = NULL,
+    acq_optimizer = NULL,
+    q = 1L,
+    s = 100L,
+    rho = 0.05
+  ) {
+
+  # assertions and defaults
   assert_r6(instance, "OptimInstanceMultiCrit")
-  if (is.null(acq_function)) {
-    surrogate = default_surrogate(instance, n_objectives = 1L)
-    acq_function = AcqFunctionEI$new(surrogate = surrogate)
-  }
-  if (is.null(acq_optimizer)) {
-    acq_optimizer = default_acqopt(instance)
-  }
-  assert_r6(acq_function, "AcqFunction")
-  assert_r6(acq_optimizer, "AcqOptimizer")
-  assert_int(q, lower = 1)
+  assert_int(init_design_size, lower = 1L, null.ok = TRUE)
+  assert_r6(surrogate, classes = "SurrogateLearner", null.ok = TRUE)
+  assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
+  assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
+  assert_int(q, lower = 1L)
+  assert_int(s, lower = 1L)
+  assert_number(rho, lower = 0, upper = 1)
 
-  eval_initial_design(instance)
+  surrogate = surrogate %??% acq_function$surrogate
+
   archive = instance$archive
-  dummy_codomain = ParamSet$new(list(ParamDbl$new("y_scal", tags = "minimize")))
-  d = archive$codomain$length
+  domain = instance$search_space
+  d = domain$length
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
+  if (is.null(surrogate)) surrogate = default_surrogate(instance, n_learner = 1L)
+  if (is.null(acq_function)) acq_function = AcqFunctionEI$new()
+  if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
+  surrogate$archive = archive
+  surrogate$y_cols = "y_scal"
+  acq_function$surrogate = surrogate
+  acq_optimizer$acq_function = acq_function
 
-  # calculate all possible weights (lambdas) for given s parameter
-  comb_with_sum = function(n, d) {
-    fun = function(n, d) {
-      if (d == 1L)
-        list(n)
-      else
-        unlist(lapply(0:n, function(i) Map(c, i, fun(n - i, d - 1L))), recursive = FALSE)
-    }
-    matrix(unlist(fun(n, d)), ncol = d, byrow = TRUE)
+  # initial design
+  if (isTRUE(init_design_size > 0L)) {
+    design = generate_design_random(domain, n = init_design_size)$data
+    instance$eval_batch(design)
   }
-  lambdas = comb_with_sum(s, d) / s
-  q_sec = seq_len(q)
 
+  lambdas = calculate_parego_weights(s, d)
+  qs = seq_len(q)
+
+  # loop
   repeat {
-    xydt = archive$data
-    xdt = xydt[, archive$cols_x, with = FALSE]
-    ydt = xydt[, archive$cols_y, with = FALSE]
-
-    ydt = Map("*", ydt, mult_max_to_min(archive$codomain))
+    data = archive$data
+    ydt = data[, archive$cols_y, with = FALSE]
+    # FIXME: use inplace operations
+    ydt = Map("*", ydt, mult_max_to_min(archive$codomain))  # we always assume minimization
     ydt = Map(function(y) (y - min(y, na.rm = TRUE)) / diff(range(y, na.rm = TRUE)), ydt)  # scale y to [0, 1]
 
-    # Temp ParEGO Archive
-    dummy_archive = archive$clone(deep = TRUE)
-    dummy_archive$codomain = dummy_codomain
-
-    xdt = map(q_sec, function(i) {
-
+    xdt = map_dtr(qs, function(q) {
       # scalarize y
       lambda = lambdas[sample.int(nrow(lambdas), 1L), , drop = TRUE]
-      mult = Map('*', ydt, lambda)
-      y_scal = do.call('+', mult)
-      y_scal = do.call(pmax, mult) + rho * y_scal  # augmented Tchebycheff function
-      set(dummy_archive$data, j = "y_scal", value = y_scal)
+      mult = Map("*", ydt, lambda)
+      yscal = do.call("+", mult)
+      yscal = do.call(pmax, mult) + rho * yscal  # augmented Tchebycheff function
+      data[, y_scal := yscal]  # need to name it yscal due to data.table's behavior
 
-      # opt surrogate
-      # manual fix: # FIXME: Write ParEGO Infill Crit?
       tryCatch({
-        acq_function$setup(dummy_archive)
-        acq_function$update_surrogate(dummy_archive)
-        acq_function$update(dummy_archive)
-        acq_optimizer$optimize(acq_function)
-      }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
-        leads_to_exploration_error_condition
+        acq_function$surrogate$update()
+        acq_function$update()
+        acq_optimizer$optimize()
+      }, mbo_error = function(mbo_error_condition) {
+        lg$info("Proposing a randomly sampled point")
+        SamplerUnif$new(domain)$sample(1L)$data
       })
-    })
-
-    error_ids = which(map_lgl(xdt, function(x) "leads_to_exploration_error" %in% class(x)))
-    for (i in error_ids) {
-      lg$info("Proposing a randomly sampled point")  # FIXME: logging?
-      xdt[[i]] = SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
-    }
-    xdt = rbindlist(xdt, fill = TRUE)
+    }, .fill = TRUE)
 
     instance$eval_batch(xdt)
-    if (instance$is_terminated || instance$terminator$is_terminated(instance$archive)) break
+    if (instance$is_terminated) break
   }
 
-  return(instance$archive)
-}
-
-if (FALSE) {
-  set.seed(1)
-  devtools::load_all()
-  library(bbotk)
-  library(paradox)
-  library(mlr3learners)
-
-  FUN_2D_2D = function(xs) {
-    list(y1 = xs[[1]]^2, y2 = -xs[[2]]^2)
-  }
-  PS_2D = ParamSet$new(list(
-    ParamDbl$new("x1", lower = -1, upper = 1),
-    ParamDbl$new("x2", lower = -1, upper = 1)
-  ))
-  FUN_2D_2D_CODOMAIN = ParamSet$new(list(
-    ParamDbl$new("y1", tags = "minimize"),
-    ParamDbl$new("y2", tags = "maximize")
-  ))
-  obfun = ObjectiveRFun$new(fun = FUN_2D_2D, domain = PS_2D,
-    codomain = FUN_2D_2D_CODOMAIN, properties = "multi-crit")
-
-  terminator = trm("evals", n_evals = 20)
-
-  instance = OptimInstanceMultiCrit$new(
-    objective = obfun,
-    terminator = terminator
-  )
-
-  surrogate = SurrogateSingleCritLearner$new(learner = lrn("regr.km"))
-  acq_function = AcqFunctionEI$new(surrogate = surrogate)
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
-
-  bayesopt_parego(instance, acq_function, acq_optimizer, q = 2)
-
-  # Defaults work
-  bayesopt_parego(instance, q = 2)
-
-  archdata = instance$archive$data
-  library(ggplot2)
-  g = ggplot(archdata, aes_string(x = "y1", y = "y2", color = "batch_nr"))
-  g + geom_point()
+  return(invisible(instance))
 }
 

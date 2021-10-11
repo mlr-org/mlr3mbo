@@ -8,8 +8,8 @@ The following defaults are set for \link{OptimizerMbo} during optimization if th
 respective fields are not set during initialization.
 \itemize{
 \item Optimization Loop: \link{default_loopfun}\cr
+\item Surrogate: \link{default_surrogate}\cr
 \item Acquisition Function: \link{default_acqfun}\cr
-\item Surrogate Learner: \link{default_surrogate}\cr
 \item Acqfun Optimizer: \link{default_acqopt}\cr
 }
 }
