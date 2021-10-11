@@ -3,9 +3,14 @@ Package: mlr3mbo
 Title: Flexible Bayesian Optimization in R
 Version: 0.0.0.9000
 Authors@R:
-    c(person(given = "Jakob",
-             family = "Richter",
+    c(person(given = "Lennart",
+             family = "Schneider",
              role = c("cre", "aut"),
+             email = "lennart.sch@web.de",
+             comment = c(ORCID = "0000-0003-4152-5308")),
+      person(given = "Jakob",
+             family = "Richter",
+             role = "aut",
              email = "jakob1richter@gmail.com",
              comment = c(ORCID = "0000-0003-4481-5554")),
       person(given = "Marc",
@@ -30,12 +35,7 @@ Authors@R:
       person(given = "Julia",
              family = "Moosbauer",
              role = "aut",
-             email = "ju.moosbauer@gmail.com"),
-      person(given = "Lennart",
-             family = "Schneider",
-             role = "aut",
-             email = "lennart.sch@web.de",
-             comment = c(ORCID = "0000-0003-4152-5308")))
+             email = "ju.moosbauer@gmail.com"))
 Description: A modern and flexible approach to Bayesian
     Optimization in R.
 License: LGPL-3
