@@ -99,7 +99,7 @@
 <div id="mlr3mbo" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#mlr3mbo" class="anchor"></a>mlr3mbo</h1></div>
-<p>A new R6 and much more modular implementation for single- and multi-crit Bayesian optimization.</p>
+<p>A new R6 and much more modular implementation for single- and multicriteria Bayesian optimization.</p>
 <!-- badges: start -->
 <p><a href="https://github.com/mlr-org/mlr3mbo/actions"><img src="https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=main" alt="tic"></a> <a href="https://cran.r-project.org/package=mlr3mbo"><img src="https://www.r-pkg.org/badges/version/mlr3mbo" alt="CRANstatus"></a> <a href="https://stackoverflow.com/questions/tagged/mlr3"><img src="https://img.shields.io/badge/stackoverflow-mlr3-orange.svg" alt="StackOverflow"></a> <a href="https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/"><img src="https://img.shields.io/badge/chat-mattermost-orange.svg" alt="Mattermost"></a> <!-- badges: end --></p>
 <div id="design" class="section level2">
@@ -114,7 +114,7 @@
 <li>
 <code>AcqOptimizer</code>: Acquisition Function Optimizer</li>
 </ul>
-<p>Based on these, Bayesian optimization loops can be written, see, e.g., <code>bayesopt_soo</code> for sequential single objective BO.</p>
+<p>Based on these, Bayesian optimization loops can be written, see, e.g., <code>bayesopt_ego</code> for sequential single objective BO.</p>
 <p><code>mlr3mbo</code> also provides an <code>OptimizerMbo</code> class behaving like any other <code>Optimizer</code> from the <a href="https://cran.r-project.org/package=bbotk">bbotk</a> package.</p>
 <p>The respective <code>TunerMbo</code> is part of the <a href="https://cran.r-project.org/package=mlr3tuning">mlr3tuning</a> package.</p>
 <p><code>mlr3mbo</code> uses sensible defaults for the <code>Surrogate</code>, <code>AcqFunction</code>, <code>AcqOptimizer</code>, and even the loop function. See <code><a href="reference/mbo_defaults.html">?mbo_defaults</a></code> for more details.</p>
@@ -130,7 +130,7 @@
 <div id="simple-optimization-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#simple-optimization-example" class="anchor"></a>Simple Optimization Example</h2>
-<p>Minimize <code>y = x^2</code> via sequential single objective BO using a GP as surrogate and EI optimized via random search as aquisition function:</p>
+<p>Minimize <code>y = x^2</code> via sequential singlecriteria BO using a GP as surrogate and EI optimized via random search as aquisition function:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bbotk.mlr-org.com">bbotk</a></span><span class="op">)</span>
@@ -140,9 +140,9 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3learners.mlr-org.com">mlr3learners</a></span><span class="op">)</span>
 
 <span class="va">obfun</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/ObjectiveRFun.html">ObjectiveRFun</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">xs</span><span class="op">$</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,
-  domain <span class="op">=</span> <span class="va"><a href="https://paradox.mlr-org.com/reference/ParamSet.html">ParamSet</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va"><a href="https://paradox.mlr-org.com/reference/ParamDbl.html">ParamDbl</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"x"</span>, <span class="op">-</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-  id <span class="op">=</span> <span class="st">"xsq"</span>
+  fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">xs</span><span class="op">$</span><span class="va">x</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span>,
+  domain <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html">ps</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html">p_dbl</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="op">-</span><span class="fl">5</span>, upper <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,
+  codomain <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html">ps</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html">p_dbl</a></span><span class="op">(</span>tags <span class="op">=</span> <span class="st">"minimize"</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span>
 
 <span class="va">terminator</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
@@ -155,14 +155,19 @@
 <span class="va">design</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/generate_design_lhs.html">generate_design_lhs</a></span><span class="op">(</span><span class="va">obfun</span><span class="op">$</span><span class="va">domain</span>, <span class="fl">4</span><span class="op">)</span><span class="op">$</span><span class="va">data</span>
 <span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="va">design</span><span class="op">)</span>
 
-<span class="va">surrogate</span> <span class="op">=</span> <span class="va">SurrogateSingleCritLearner</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>learner <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span>, control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="va">acqfun</span> <span class="op">=</span> <span class="va"><a href="reference/mlr_acqfunctions_ei.html">AcqFunctionEI</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>surrogate <span class="op">=</span> <span class="va">surrogate</span><span class="op">)</span>
+<span class="va">surrogate</span> <span class="op">=</span> <span class="va"><a href="reference/SurrogateLearner.html">SurrogateLearner</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span>, control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">acqfun</span> <span class="op">=</span> <span class="va"><a href="reference/mlr_acqfunctions_ei.html">AcqFunctionEI</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
 <span class="va">acqopt</span> <span class="op">=</span> <span class="va"><a href="reference/AcqOptimizer.html">AcqOptimizer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
   <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html">opt</a></span><span class="op">(</span><span class="st">"random_search"</span>, batch_size <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,
-  <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
-<span class="op">)</span>
+  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
+ <span class="op">)</span>
 
-<span class="va">optimizer</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html">opt</a></span><span class="op">(</span><span class="st">"mbo"</span>, loop_function <span class="op">=</span> <span class="va">bayesopt_soo</span>, acq_function <span class="op">=</span> <span class="va">acqfun</span>, acq_optimizer <span class="op">=</span> <span class="va">acqopt</span><span class="op">)</span>
+<span class="va">optimizer</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html">opt</a></span><span class="op">(</span><span class="st">"mbo"</span>,
+  loop_function <span class="op">=</span> <span class="va">bayesopt_ego</span>,
+  surrogate <span class="op">=</span> <span class="va">surrogate</span>,
+  acq_function <span class="op">=</span> <span class="va">acqfun</span>,
+  acq_optimizer <span class="op">=</span> <span class="va">acqopt</span>
+<span class="op">)</span>
 <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">##             x  x_domain           y</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="co">## 1: 0.01948605 &lt;list[1]&gt; 0.000379706</span></span></code></pre></div>
@@ -177,7 +182,7 @@
 
 <span class="va">task</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">tsk</a></span><span class="op">(</span><span class="st">"pima"</span><span class="op">)</span>
 
-<span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"classif.rpart"</span>, cp <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html">to_tune</a></span><span class="op">(</span><span class="fl">1e-04</span>, <span class="fl">1e-1</span>, logscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"classif.rpart"</span>, cp <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1e-04</span>, upper <span class="op">=</span> <span class="fl">1e-1</span>, logscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">instance</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3tuning.mlr-org.com/reference/tune.html">tune</a></span><span class="op">(</span>
   method <span class="op">=</span> <span class="st">"mbo"</span>,
@@ -190,7 +195,7 @@
 
 <span class="va">instance</span><span class="op">$</span><span class="va">result</span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">##           cp learner_param_vals  x_domain classif.ce</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="co">## 1: -4.961105          &lt;list[2]&gt; &lt;list[1]&gt;  0.1914062</span></span></code></pre></div>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">## 1: -3.438787          &lt;list[2]&gt; &lt;list[1]&gt;  0.2039062</span></span></code></pre></div>
 </div>
 </div>
   </div>
@@ -214,13 +219,13 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Jakob Richter <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0003-4481-5554" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Lennart Schneider <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0003-4152-5308" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Jakob Richter <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-4481-5554" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Marc Becker <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-8115-0400" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Michel Lang <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9754-0393" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Bernd Bischl <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6002-6980" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Martin Binder <br><small class="roles"> Author </small>  </li>
 <li>Julia Moosbauer <br><small class="roles"> Author </small>  </li>
-<li>Lennart Schneider <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-4152-5308" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
@@ -229,7 +234,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Jakob Richter, Marc Becker, Michel Lang, Bernd Bischl, Martin Binder, Julia Moosbauer, Lennart Schneider.</p>
+  <p>Developed by Lennart Schneider, Jakob Richter, Marc Becker, Michel Lang, Bernd Bischl, Martin Binder, Julia Moosbauer.</p>
 </div>
 
 <div class="pkgdown">
