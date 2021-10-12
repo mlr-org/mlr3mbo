@@ -128,7 +128,7 @@ AcqFunction = R6Class("AcqFunction",
         self$surrogate_max_to_min = surrogate_mult_max_to_min(codomain, y_cols = rhs$y_cols)
         domain = rhs$archive$search_space$clone(deep = TRUE)
         domain$trafo = NULL
-        self$codomain = codomain
+        self$codomain = Codomain$new(codomain$params)  # lazy initialization requires this
         self$domain = domain
         invisible(private$.surrogate)
       }

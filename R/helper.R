@@ -155,3 +155,7 @@ surrogate_mult_max_to_min = function(codomain, y_cols) {
   setNames(mult, nm = y_cols)
 }
 
+# FIXME: bbotk dropped this and codomains now have a maximization_to_minimization method
+mult_max_to_min = function(codomain) {
+  ifelse(map_lgl(codomain$tags, has_element, "minimize"), 1, -1)
+}
