@@ -47,7 +47,7 @@ AcqFunction = R6Class("AcqFunction",
         private$.surrogate = surrogate
         private$.archive = assert_r6(surrogate$archive, classes = "Archive")
         codomain = generate_acq_codomain(surrogate$archive$codomain, id = id, direction = direction)
-        self$surrogate_max_to_min = surrogate_mult_max_to_min(codomain, y_cols = surrogate$y_cols)
+        self$surrogate_max_to_min = surrogate_mult_max_to_min(surrogate$archive$codomain, y_cols = surrogate$y_cols)
         domain = surrogate$archive$search_space$clone(deep = TRUE)
         domain$trafo = NULL
       }
@@ -125,7 +125,7 @@ AcqFunction = R6Class("AcqFunction",
         private$.surrogate = assert_r6(rhs, classes = "Surrogate")
         private$.archive = assert_r6(rhs$archive, classes = "Archive")
         codomain = generate_acq_codomain(rhs$archive$codomain, id = self$id, direction = self$direction)
-        self$surrogate_max_to_min = surrogate_mult_max_to_min(codomain, y_cols = rhs$y_cols)
+        self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs$archive$codomain, y_cols = rhs$y_cols)
         domain = rhs$archive$search_space$clone(deep = TRUE)
         domain$trafo = NULL
         self$codomain = Codomain$new(codomain$params)  # lazy initialization requires this
