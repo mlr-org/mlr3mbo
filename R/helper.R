@@ -147,7 +147,7 @@ calculate_parego_weights = function(s, d) {
 surrogate_mult_max_to_min = function(codomain, y_cols) {
   mult = map_int(y_cols, function(y_col) {
     mult = if (y_col %in% codomain$ids()) {
-      if(has_element(codomain$tags[[y_col]], "minimize")) 1L else -1L
+      if(has_element(codomain$tags[[y_col]], "maximize")) -1L else 1L
     } else {
       1L
     }
