@@ -154,12 +154,12 @@
     
 
 <ul>
-<li><p><code>"lambda"</code> (<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>)<br />
+<li><p><code>"lambda"</code> (<code>numeric(1)</code>)<br />
 \(\lambda\) value used for the confidence bound.
 Defaults to <code>1</code>.
 Based on <code>confidence = (1 - 2 * dnorm(lambda)) ^ m</code> you can calculate a
 lambda for a given confidence level, see Ponweiser et al. 2008.</p></li>
-<li><p><code>"epsilon"</code> (<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>)<br />
+<li><p><code>"epsilon"</code> (<code>numeric(1)</code>)<br />
 \(\epsilon\) used for the additive epsilon dominance.
 Can either be a single numeric value &gt; 0 or <code>NULL</code>.
 In the case of being <code>NULL</code>, an epsilon vector is maintained dynamically as
@@ -192,7 +192,7 @@ In <em>Proceedings of the 10th International Conference on Parallel Problem Solv
 
 <dt><code>epsilon</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>).</p></dd>
 
-<dt><code>progress</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).</p></dd>
+<dt><code>progress</code></dt><dd><p>(<code>numeric(1)</code>).</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
@@ -224,9 +224,9 @@ In <em>Proceedings of the 10th International Conference on Parallel Problem Solv
 <p><div class="arguments"></p><dl>
 <dt><code>surrogate</code></dt><dd><p>(<code>NULL</code> | <a href='SurrogateLearners.html'>SurrogateLearners</a>).</p></dd>
 
-<dt><code>lambda</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).</p></dd>
+<dt><code>lambda</code></dt><dd><p>(<code>numeric(1)</code>).</p></dd>
 
-<dt><code>epsilon</code></dt><dd><p>(<code>NULL</code> | <code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>).</p></dd>
+<dt><code>epsilon</code></dt><dd><p>(<code>NULL</code> | <code>numeric(1)</code>).</p></dd>
 
 </dl><p></div></p>
 <p><hr>

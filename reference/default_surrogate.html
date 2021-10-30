@@ -212,7 +212,7 @@ by computing the infinitesimal jackknife.
 This is the <code>se.method = "infjack"</code> option of the &#8220;"regr.ranger"&#8221; learner (default).</p></li>
 </ul><p>In any case, learners are encapsulated using &#8220;"evaluate"&#8221;, and a fallback learner is set,
 in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
-<code><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)</a></code>.</p>
+<code>lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)</code>.</p>
 <p>If additionally dependencies are present in the parameter space, inactive conditional parameters
 are represented by missing <code>NA</code> values in the training design data.
 We simply handle those with an imputation method, added to the ranger random forest, more
@@ -220,7 +220,7 @@ concretely we use <code>po("imputeoor")</code> from package <a href='https://CRA
 techniques make sense for tree-based methods and are usually hard to beat, see Ding et al.
 (2010).
 In the case of dependencies, the following learner is used as a fallback:
-<code><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>lrn("regr.featureless")</a></code>.</p>
+<code>lrn("regr.featureless")</code>.</p>
 <p>If the instance is of class <a href='https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html'>bbotk::OptimInstanceSingleCrit</a> the learner is wrapped as a
 <a href='SurrogateLearner.html'>SurrogateLearner</a>.</p>
 <p>If the instance is of class <a href='https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html'>bbotk::OptimInstanceMultiCrit</a> deep clones of the learner are
@@ -243,7 +243,7 @@ An object that inherits from <a href='https://bbotk.mlr-org.com/reference/OptimI
     </tr>
     <tr>
       <th>n_learner</th>
-      <td><p>(<code>NULL</code> | <code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>).</p></td>
+      <td><p>(<code>NULL</code> | <code>integer(1)</code>).</p></td>
     </tr>
     </table>
 
