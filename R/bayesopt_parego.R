@@ -96,6 +96,7 @@ bayesopt_parego = function(
   archive = instance$archive
   domain = instance$search_space
   d = domain$length
+  k = length(archive$cols_y)  # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
   if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
   if (is.null(surrogate)) surrogate = default_surrogate(instance, n_learner = 1L)
   if (is.null(acq_function)) acq_function = AcqFunctionEI$new()
@@ -111,7 +112,7 @@ bayesopt_parego = function(
     instance$eval_batch(design)
   }
 
-  lambdas = calculate_parego_weights(s, d)
+  lambdas = calculate_parego_weights(s, d = k)
   qs = seq_len(q)
 
   # loop
