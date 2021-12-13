@@ -33,6 +33,7 @@ In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neur
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
 \code{\link{mlr_acqfunctions_aei}},
+\code{\link{mlr_acqfunctions_ehvi}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_pi}},

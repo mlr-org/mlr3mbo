@@ -11,6 +11,7 @@ point for evaluation.
 Other Acquisition Function: 
 \code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
+\code{\link{mlr_acqfunctions_ehvi}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_pi}},

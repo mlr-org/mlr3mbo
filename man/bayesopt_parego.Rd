@@ -101,6 +101,7 @@ Knowles, Joshua (2006).
 \seealso{
 Other Loop Function: 
 \code{\link{bayesopt_ego}()},
+\code{\link{bayesopt_moo}()},
 \code{\link{bayesopt_mpcl}()},
 \code{\link{bayesopt_smsego}()}
 }

@@ -92,6 +92,7 @@ Wang, Jialei, Clark, C. S, Liu, Eric, Frazier, I. P (2020).
 \seealso{
 Other Loop Function: 
 \code{\link{bayesopt_ego}()},
+\code{\link{bayesopt_moo}()},
 \code{\link{bayesopt_parego}()},
 \code{\link{bayesopt_smsego}()}
 }

@@ -65,7 +65,9 @@ Suggests:
     lhs,
     testthat,
     ggplot2,
-    rgenoud
+    rgenoud,
+    emoa,
+    mvtnorm
 Remotes:
     mlr-org/bbotk,
     mlr-org/mlr3tuning
@@ -80,6 +82,7 @@ Collate:
     'AcqFunction.R'
     'AcqFunctionAEI.R'
     'AcqFunctionCB.R'
+    'AcqFunctionEHVI.R'
     'AcqFunctionEI.R'
     'AcqFunctionEIPS.R'
     'AcqFunctionPI.R'
@@ -91,6 +94,7 @@ Collate:
     'SurrogateLearners.R'
     'assertions.R'
     'bayesopt_ego.R'
+    'bayesopt_moo.R'
     'bayesopt_mpcl.R'
     'bayesopt_parego.R'
     'bayesopt_smsego.R'
