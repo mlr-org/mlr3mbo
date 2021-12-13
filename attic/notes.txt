@@ -1,7 +1,4 @@
-assert abkuerzung schreiben
-  asserts_bayesopt(inst, initdes, surrogate, acq, a_opt)
-  muss man minimal parametrizieren, wird aber trotzdem den code kuerzer machen
-
+asserts_bayesopt(inst, initdes, surrogate, acq, a_opt)
 
 das initial design generieren sollte vielleicht doch in die instance
 das passiert ja schon konfigurierbare logik.
@@ -20,7 +17,6 @@ single step geht ueber teminator n_evals = 1, dann terminate clear wenn weiter
 
 bayesopt_dictionary, properties: batch, single & multicrit
 
-
 run_mbo_block(expr) {
    trycatch {
      eval(expr)
@@ -33,8 +29,6 @@ optimzer_mbo
   - my_asserts
   - mbo_loop_function. kann man auch ueberschreiben und komplett selber machen?
   - mbo_propose_step: abstract
-
-
 
 test_OptimizerMbo works with different settings expand
 
@@ -67,8 +61,6 @@ check if tests use helpers
 learner default mit evaluate wrappen? eher nicht weil das wird mit random propsal gecatched
 
 Optimizer should infer properties from surrogate, acqf, acqo and loop
-
-constants in acqfunction? ... in functions
 
 mlr3mbo yahpo gym benchmark
 
