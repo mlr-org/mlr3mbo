@@ -1,7 +1,7 @@
-#' @title Sequential Multicriteria Bayesian Optimization
+#' @title Sequential Multicriteria Bayesian Optimization via Expected Hypervolume Improvement
 #'
 #' @description
-#' MBO loop function for sequential multicriteria Bayesian optimization.
+#' MBO loop function for sequential multicriteria Bayesian optimization via expected hypervolume improvement.
 #' Normally used inside an [OptimizerMbo].
 #'
 #' @param instance ([bbotk::OptimInstanceMultiCrit])\cr
@@ -10,17 +10,16 @@
 #'   Size of the initial design.
 #'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
 #'   Points are drawn uniformly at random.
-#' @param surrogate (`NULL` | [Surrogate])\cr
-#'   [Surrogate] to be used as a surrogate.
-#'   Typically a [SurrogateLearner].
+#' @param surrogate (`NULL` | [SurrogateLearners])\cr
+#'   [SurrogateLearners] to be used as a surrogate.
 #'   If `NULL` \code{default_surrogate(instance)} is used.
-#' @param acq_function ([AcqFunction]).\cr
-#'   [AcqFunction] to be used as acquisition function, i.e., [AcqFunctionEHVI].
+#' @param acq_function (`NULL` | [AcqFunctionEHVI]).\cr
+#'   [AcqFunctionEHVI] to be used as acquisition function.
 #' @param acq_optimizer ([AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
 #'
 #' @note
-#' * If `surrogate` is `NULL` but `acq_function` contains a `$surrogate`, this [Surrogate] is used.
+#' * If `surrogate` is `NULL` but `acq_function` contains a `$surrogate`, this [SurrogateLearners] is used.
 #' * You can pass a `surrogate` that was not given the [bbotk::Archive] of the
 #'   `instance` during initialization.
 #'   In this case, the [bbotk::Archive] of the given `instance` is set during execution.
@@ -52,21 +51,22 @@
 #'   terminator = terminator,
 #' )
 #'
-#' acq_function = AcqFunctionEHVI$new()
-#' bayesopt_moo(instance, acq_function = acq_function)
-bayesopt_moo = function(
+#' bayesopt_ehvi(instance)
+bayesopt_ehvi = function(
     instance,
     init_design_size = NULL,
     surrogate = NULL,
-    acq_function,
+    acq_function = NULL,
     acq_optimizer = NULL
   ) {
+
+  # FIXME: think about a general loop function, this doesn't do much different than ego/mego
 
   # assertions and defaults
   assert_r6(instance, "OptimInstanceMultiCrit")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
   assert_r6(surrogate, classes = "SurrogateLearners", null.ok = TRUE)
-  assert_r6(acq_function, classes = "AcqFunction")
+  assert_r6(acq_function, classes = "AcqFunctionEHVI", null.ok = TRUE)
   assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
 
   surrogate = surrogate %??% acq_function$surrogate
@@ -76,7 +76,7 @@ bayesopt_moo = function(
   d = domain$length
   if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
   if (is.null(surrogate)) surrogate = default_surrogate(instance)
-  if (is.null(acq_function)) acq_function = default_acqfun(instance)
+  if (is.null(acq_function)) acq_function = AcqFunctionEHVI$new()
   if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
   surrogate$archive = archive
   acq_function$surrogate = surrogate

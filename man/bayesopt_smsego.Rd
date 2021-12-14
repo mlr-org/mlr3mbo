@@ -87,7 +87,8 @@ In \emph{Proceedings of the 10th International Conference on Parallel Problem So
 \seealso{
 Other Loop Function: 
 \code{\link{bayesopt_ego}()},
-\code{\link{bayesopt_moo}()},
+\code{\link{bayesopt_ehvi}()},
+\code{\link{bayesopt_mego}()},
 \code{\link{bayesopt_mpcl}()},
 \code{\link{bayesopt_parego}()}
 }

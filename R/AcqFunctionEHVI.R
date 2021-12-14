@@ -29,6 +29,12 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
     #' @param surrogate (`NULL` | [SurrogateLearners]).
     #' @param n_mc (`integer(1)`).
     initialize = function(surrogate = NULL, n_mc = 100L) {
+      if (!requireNamespace("emoa", quietly = TRUE)) {
+        stop("The 'emoa' package is required for AcqFunctionEHVI.")
+      }
+      if (!requireNamespace("mvtnorm", quietly = TRUE)) {
+        stop("The 'mvtnorm' package is required for AcqFunctionEHVI.")
+      }
       assert_r6(surrogate, "SurrogateLearners", null.ok = TRUE)
       assert_int(n_mc, lower = 2L)
 

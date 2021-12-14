@@ -109,7 +109,8 @@ In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neur
 }
 \seealso{
 Other Loop Function: 
-\code{\link{bayesopt_moo}()},
+\code{\link{bayesopt_ehvi}()},
+\code{\link{bayesopt_mego}()},
 \code{\link{bayesopt_mpcl}()},
 \code{\link{bayesopt_parego}()},
 \code{\link{bayesopt_smsego}()}
