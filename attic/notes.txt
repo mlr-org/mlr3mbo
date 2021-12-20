@@ -1,3 +1,22 @@
+wir wollen fuer standard gp auf numerischen raeumen: https://arxiv.org/pdf/2103.16649.pdf
+scaling auf den unit cube (offen: fixed oder nicht fixed nach initial design?)
+gp optimized mit multistart? starting points lhs 2d
+
+nur als fallback jitter
+
+x = 0:10
+y = runif(11, 0, 20)
+task = TaskRegr$new("test", backend = data.table(x = x, y = y), target = "y")
+d = 1
+U = 10
+L = 0
+upper = (U-L)/sqrt(d)
+lower = upper / 100
+actually want lhs design for init of multistart
+learner = lrn("regr.km", covtype = "matern5_2", upper = upper, lower = lower, multistart = 3L, optim.method = "BFGS")
+learner$fallback = lrn("regr.km", covtype = "matern5_2", upper = upper, lower = lower, multistart = 3L, optim.method = "BFGS", nugget.stability = 10^-8)
+
+
 asserts_bayesopt(inst, initdes, surrogate, acq, a_opt)
 
 das initial design generieren sollte vielleicht doch in die instance
