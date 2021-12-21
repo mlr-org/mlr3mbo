@@ -89,6 +89,19 @@ bayesopt_ego = function(
     acq_optimizer = NULL
   ) {
 
+  # coco changes:
+  # 1. lhs initial design
+  # 2. scale and normalize y
+  # 3. surrogate should be:
+  #    upper = (problem$optim_instance[[1L]]$search_space$upper - problem$optim_instance[[1L]]$search_space$lower) / sqrt(problem$optim_instance[[1L]]$search_space$length)
+  #    lower = upper / 100
+  #    
+  #    learner = lrn("regr.km", covtype = "matern5_2", upper = upper, lower = lower, multistart = 3L, optim.method = "BFGS")
+  #    learner$fallback = lrn("regr.km", covtype = "matern5_2", upper = upper, lower = lower, multistart = 3L, optim.method = "BFGS", nugget.stability = 10^-8)
+  #    
+  #    surrogate = default_surrogate(problem$optim_instance[[1L]], learner = learner)
+  # 4. acq_optimizer should be AcqOptimizer$new(opt("global_local"), terminator = trm("none"))
+
   # assertions and defaults
   assert_r6(instance, "OptimInstanceSingleCrit")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
@@ -111,9 +124,15 @@ bayesopt_ego = function(
 
   # initial design
   if (isTRUE(init_design_size > 0L)) {
-    design = generate_design_random(domain, n = init_design_size)$data
+    design = generate_design_lhs(domain, n = init_design_size)$data
     instance$eval_batch(design)
   }
+
+  # scaling based on initial design
+  # FIXME: if optimization is interrupted, instance$archive may not be rescaled
+  scaling = archive$data[, .(mean_y = mean(get(archive$cols_y)), sd_y = sd(get(archive$cols_y)))]
+  archive$data[, archive$cols_y := (get(archive$cols_y) - scaling$mean_y) / scaling$sd_y]
+  on.exit({archive$data[, archive$cols_y := (get(archive$cols_y) *  scaling$sd_y) + scaling$mean_y]})  # rescale on exit
 
   # loop
   repeat {
@@ -127,9 +146,11 @@ bayesopt_ego = function(
     })
 
     instance$eval_batch(xdt)
+    archive$data[batch_nr == archive$n_batch, archive$cols_y := (get(archive$cols_y) - scaling$mean_y) / scaling$sd_y]
+
     if (instance$is_terminated) break
   }
-
+  
   return(invisible(instance))
 }
 
