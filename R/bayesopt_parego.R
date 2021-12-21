@@ -127,7 +127,7 @@ bayesopt_parego = function(
       # scalarize y
       lambda = lambdas[sample.int(nrow(lambdas), 1L), , drop = TRUE]
       mult = Map("*", ydt, lambda)
-      yscal = do.call("+", mult)
+      yscal = Reduce("+", mult)
       yscal = do.call(pmax, mult) + rho * yscal  # augmented Tchebycheff function
       data[, y_scal := yscal]  # need to name it yscal due to data.table's behavior
 
