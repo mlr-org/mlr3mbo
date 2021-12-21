@@ -97,7 +97,7 @@ bayesopt_smsego = function(
   # loop
   repeat {
     xdt = tryCatch({
-      acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
+      acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals  # FIXME: this needs to be handled differently
       acq_function$surrogate$update()
       acq_function$update()
       acq_optimizer$optimize()

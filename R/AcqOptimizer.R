@@ -28,11 +28,12 @@ AcqOptimizer = R6Class("AcqOptimizer",
       self$terminator = assert_r6(terminator, "Terminator")
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       ps = ps(
+        warmstart = p_lgl(),
         fix_distance = p_lgl(),
         dist_threshold = p_dbl(lower = 0, upper = 1)
       )
 
-      ps$values = list(fix_distance = FALSE, dist_threshold = 0)
+      ps$values = list(warmstart = FALSE, fix_distance = FALSE)
       ps$add_dep("dist_threshold", on = "fix_distance", cond = CondEqual$new(TRUE))
       private$.param_set = ps
     },
@@ -57,6 +58,11 @@ AcqOptimizer = R6Class("AcqOptimizer",
           stopf("Optimizer %s is not multi-crit compatible but %s is multi-crit.", self$self$optimizer$format(), self$acq_function$id)
         }
         OptimInstanceMultiCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "all")
+      }
+
+      if (self$param_set$values$warmstart) {
+        # NOTE: is this save if e.g. mu < nrow(best) in miesmuschel?
+        instance$eval_batch(self$acq_function$archive$best()[, instance$search_space$ids(), with = FALSE])
       }
 
       xdt = tryCatch(self$optimizer$optimize(instance),

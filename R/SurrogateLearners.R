@@ -61,7 +61,10 @@ SurrogateLearners = R6Class("SurrogateLearners",
       # because they way transform_xdt_to_xss works
       # we fix this here and readd those columns with NA again
       # because a learner expects consistency between train and predict task
-      xdt[, (self$archive$cols_x[self$archive$cols_x %nin% colnames(xdt)]) := NA]
+      cols_to_add = self$archive$cols_x[self$archive$cols_x %nin% colnames(xdt)]
+      if (length(cols_to_add)) {
+        xdt[, (cols_to_add) := NA]
+      }
 
       preds = lapply(self$model, function(model) {
         pred = model$predict_newdata(newdata = char_to_fct(xdt))
