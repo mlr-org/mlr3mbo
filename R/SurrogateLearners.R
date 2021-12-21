@@ -56,6 +56,13 @@ SurrogateLearners = R6Class("SurrogateLearners",
     predict = function(xdt) {
       assert_xdt(xdt)
 
+      # FIXME: within acquisition function optimization instance$eval_batch() may drop NA
+      # https://github.com/mlr-org/bbotk/blob/1559ea9fd1d60816ad5c375984134d6445bf5867/R/OptimInstance.R#L141
+      # because they way transform_xdt_to_xss works
+      # we fix this here and readd those columns with NA again
+      # because a learner expects consistency between train and predict task
+      xdt[, (self$archive$cols_x[self$archive$cols_x %nin% colnames(xdt)]) := NA]
+
       preds = lapply(self$model, function(model) {
         pred = model$predict_newdata(newdata = char_to_fct(xdt))
         if (model$predict_type == "se") {
