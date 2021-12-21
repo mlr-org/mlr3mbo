@@ -51,12 +51,12 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
     optimize = function() {
       instance = if (self$acq_function$codomain$length == 1L) {
-        OptimInstanceSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
+        OptimInstanceSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "all")
       } else {
         if (!"multi-crit" %in% self$optimizer$properties) {
           stopf("Optimizer %s is not multi-crit compatible but %s is multi-crit.", self$self$optimizer$format(), self$acq_function$id)
         }
-        OptimInstanceMultiCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "best")
+        OptimInstanceMultiCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "all")
       }
 
       xdt = tryCatch(self$optimizer$optimize(instance),
@@ -95,8 +95,8 @@ AcqOptimizer = R6Class("AcqOptimizer",
     deep_clone = function(name, value) {
       switch(name,
         optimizer = value$clone(deep = TRUE),
-        terminator = values$clone(deep = TRUE),
-        acq_function = values$clone(deep = TRUE),
+        terminator = value$clone(deep = TRUE),
+        acq_function = if (!is.null(value)) value$clone(deep = TRUE) else NULL,
         .param_set = value$clone(deep = TRUE),
         value
       )
