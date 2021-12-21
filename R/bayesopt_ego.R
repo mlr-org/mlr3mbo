@@ -95,10 +95,10 @@ bayesopt_ego = function(
   # 3. surrogate should be:
   #    upper = (problem$optim_instance[[1L]]$search_space$upper - problem$optim_instance[[1L]]$search_space$lower) / sqrt(problem$optim_instance[[1L]]$search_space$length)
   #    lower = upper / 100
-  #    
+  #
   #    learner = lrn("regr.km", covtype = "matern5_2", upper = upper, lower = lower, multistart = 3L, optim.method = "BFGS")
   #    learner$fallback = lrn("regr.km", covtype = "matern5_2", upper = upper, lower = lower, multistart = 3L, optim.method = "BFGS", nugget.stability = 10^-8)
-  #    
+  # 
   #    surrogate = default_surrogate(problem$optim_instance[[1L]], learner = learner)
   # 4. acq_optimizer should be AcqOptimizer$new(opt("global_local"), terminator = trm("none"))
 
@@ -150,7 +150,7 @@ bayesopt_ego = function(
 
     if (instance$is_terminated) break
   }
-  
+
   return(invisible(instance))
 }
 
