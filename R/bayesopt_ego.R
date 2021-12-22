@@ -130,7 +130,7 @@ bayesopt_ego = function(
 
   # scaling based on initial design
   # FIXME: if optimization is interrupted, instance$archive may not be rescaled
-  scaling = archive$data[, .(mean_y = mean(get(archive$cols_y)), sd_y = sd(get(archive$cols_y)))]
+  scaling = archive$data[, .(mean_y = mean(get(archive$cols_y)), sd_y = stats::sd(get(archive$cols_y)))]
   archive$data[, archive$cols_y := (get(archive$cols_y) - scaling$mean_y) / scaling$sd_y]
   on.exit({archive$data[, archive$cols_y := (get(archive$cols_y) *  scaling$sd_y) + scaling$mean_y]})  # rescale on exit
 

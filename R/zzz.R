@@ -18,6 +18,7 @@
   # add mbo to optimizer dictionary
   x = utils::getFromNamespace("mlr_optimizers", ns = "bbotk")
   x$add("mbo", OptimizerMbo)
+  x$add("global_local", OptimizerGlobalLocal)
 
   # setup logger
   assign("lg", lgr::get_logger("bbotk"), envir = parent.env(environment()))
@@ -29,3 +30,7 @@
 
 # static code checks should not complain about commonly used data.table columns
 utils::globalVariables("y_scal")
+utils::globalVariables("y_scal")
+utils::globalVariables(".")
+utils::globalVariables("batch_nr")
+

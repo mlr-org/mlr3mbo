@@ -1,21 +1,14 @@
 #' @title Global Followed by Local Optimization
 #'
-#' @include Optimizer.R
 #' @name mlr_optimizers_global_local
 #'
 #' @description
 #' `OptimizerGlobalLocal` class that starts with `min(2000, 500d)` random evaluations (with `d` being the
 #' dimensionality of the search space) and then uses the thereby best obtained point to further optimize via L-BFGS-B.
 #'
-#' @templateVar id global_local
-#' @template section_dictionary_optimizers
-#'
-#' @template section_progress_bars
-#'
 #' @export
-#' @template example
 OptimizerGlobalLocal = R6Class("OptimizerGlobalLocal",
-  inherit = Optimizer,
+  inherit = bbotk::Optimizer,
   public = list(
 
     #' @description
@@ -61,4 +54,3 @@ OptimizerGlobalLocal = R6Class("OptimizerGlobalLocal",
   )
 )
 
-mlr_optimizers$add("global_local", OptimizerGlobalLocal)

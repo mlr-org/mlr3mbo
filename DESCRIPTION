@@ -75,7 +75,7 @@ LazyData: true
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Collate:
+Collate: 
     'mlr_acqfunctions.R'
     'AcqFunction.R'
     'AcqFunctionAEI.R'
@@ -85,6 +85,7 @@ Collate:
     'AcqFunctionPI.R'
     'AcqFunctionSmsEgo.R'
     'AcqOptimizer.R'
+    'OptimizerGlobalLocal.R'
     'OptimizerMbo.R'
     'Surrogate.R'
     'SurrogateLearner.R'
