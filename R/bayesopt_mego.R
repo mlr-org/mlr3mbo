@@ -236,6 +236,12 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
     .archive = NULL,
 
     .fun = function(xdt) {
+      # due to earlier eval_many calls some columns that are completely NA may have been dropped
+      # readd those here, so that transform_xdt_to_xss works again for the individual acq_functions
+      cols_to_add = self$archive$cols_x[self$archive$cols_x %nin% colnames(xdt)]
+      if (length(cols_to_add)) {
+        xdt[, (cols_to_add) := NA]
+      }
       xss = transform_xdt_to_xss(xdt, self$domain)
       setNames(map_dtc(self$acq_functions, function(acqf) acqf$eval_many(xss)), nm = self$codomain$ids())
     }
