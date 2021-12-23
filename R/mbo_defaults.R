@@ -120,7 +120,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
 
     if (has_deps) {
       require_namespaces("mlr3pipelines")
-      learner = mlr3pipelines::GraphLearner$new(mlr3pipelines::'%>>%'(mlr3pipelines::po("imputeoor"), learner))
+      learner = mlr3pipelines::GraphLearner$new(mlr3pipelines::'%>>%'(mlr3pipelines::'%>>%'(mlr3pipelines::po("imputesample", affect_columns = mlr3pipelines::selector_type("logical")), mlr3pipelines::po("imputeoor")), learner))
       learner$encapsulate[c("train", "predict")] = "evaluate"
       learner$fallback = lrn("regr.featureless")
     }
