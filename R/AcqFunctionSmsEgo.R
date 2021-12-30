@@ -70,19 +70,20 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
 
       super$update()
 
-      n_obj = self$archive$codomain$length
+      n_obj = length(self$archive$cols_y)
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
       ys = as.matrix(ys) %*% diag(self$surrogate_max_to_min)
       self$ys_front = as.matrix(self$archive$best()[, self$archive$cols_y, with = FALSE]) %*% diag(self$surrogate_max_to_min)
       self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1  # offset = 1 like in mlrMBO
 
       if (is.null(self$constants$values$epsilon)) {
-        c_val = 1 - 1 / 2^n_obj
+        c_val = 1 - (1 / (2 ^ n_obj))
+        # FIXME: this is different than in the paper?
         epsilon = map_dbl(
           seq_col(self$ys_front),
           function(i) {
             (max(self$ys_front[, i]) - min(self$ys_front[, i])) /
-            (ncol(self$ys_front) + c_val * self$progress)  # FIXME: Need self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
+            (ncol(self$ys_front) + c_val * self$progress)  # FIXME: need self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
           }
         )
         self$epsilon = epsilon

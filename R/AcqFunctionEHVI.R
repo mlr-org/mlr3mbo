@@ -76,6 +76,7 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
       ys = as.matrix(ys) %*% diag(self$surrogate_max_to_min)
       n_mc = self$constants$values$n_mc
 
+      # FIXME: could also adapt interal C code and use this for dhv
       ehvi = map_dbl(seq_len(nrow(xdt)), function(i) {
         hvis = map_dbl(seq_len(n_mc), function(j) {
           y = mvtnorm::rmvnorm(1L, mean = means[i, ], sigma = diag(vars[i, ])) * self$surrogate_max_to_min

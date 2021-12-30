@@ -33,6 +33,8 @@ AcqOptimizer = R6Class("AcqOptimizer",
         dist_threshold = p_dbl(lower = 0, upper = 1)
       )
 
+      # FIXME: not having a dist_threshold may be problematic if only fix_distance is set to TRUE
+      # FIXME: assert this
       ps$values = list(warmstart = FALSE, fix_distance = FALSE)
       ps$add_dep("dist_threshold", on = "fix_distance", cond = CondEqual$new(TRUE))
       private$.param_set = ps
@@ -51,7 +53,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #'
     #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
     optimize = function() {
-      instance = if (self$acq_function$codomain$length == 1L) {
+      instance = if (length(self$acq_function$archive$cols_y) == 1L) {
         OptimInstanceSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "all")
       } else {
         if (!"multi-crit" %in% self$optimizer$properties) {
