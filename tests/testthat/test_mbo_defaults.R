@@ -66,9 +66,9 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED_DEPS))
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$model, "GraphLearner")
-  expect_equal(surrogate$model$graph$ids(), c("imputeoor", "regr.ranger"))
+  expect_equal(surrogate$model$graph$ids(), c("imputesample", "imputeoor", "regr.ranger"))
   expect_equal(surrogate$model$param_set$values,
-    list(imputeoor.min = TRUE, imputeoor.offset = 1, imputeoor.multiplier = 1, regr.ranger.num.threads = 1L, regr.ranger.num.trees = 500L, regr.ranger.keep.inbag = TRUE))
+    list(imputesample.affect_columns = mlr3pipelines::selector_type("logical"), imputeoor.min = TRUE, imputeoor.offset = 1, imputeoor.multiplier = 1, regr.ranger.num.threads = 1L, regr.ranger.num.trees = 500L, regr.ranger.keep.inbag = TRUE))
   expect_r6(surrogate$model$fallback, "LearnerRegrFeatureless")
 
   # specify own learner, specify n_objectives, twocrit all numeric, deterministic
