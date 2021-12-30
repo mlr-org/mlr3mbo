@@ -53,7 +53,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #'
     #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
     optimize = function() {
-      instance = if (length(self$acq_function$archive$cols_y) == 1L) {
+      instance = if (self$acq_function$codomain$length == 1L) {
         OptimInstanceSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "all")
       } else {
         if (!"multi-crit" %in% self$optimizer$properties) {
