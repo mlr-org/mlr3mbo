@@ -28,7 +28,7 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
     #'
     #' @param surrogate (`NULL` | [SurrogateLearners]).
     #' @param n_mc (`integer(1)`).
-    initialize = function(surrogate = NULL, n_mc = 100L) {
+    initialize = function(surrogate = NULL, n_mc = 10L) {
       if (!requireNamespace("emoa", quietly = TRUE)) {
         stop("The 'emoa' package is required for AcqFunctionEHVI.")
       }
@@ -39,7 +39,7 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
       assert_int(n_mc, lower = 2L)
 
       constants = ParamSet$new(list(
-        ParamInt$new("n_mc", lower = 2L, default = 100L)
+        ParamInt$new("n_mc", lower = 2L, default = 10L)
       ))
       constants$values$n_mc = n_mc
 
