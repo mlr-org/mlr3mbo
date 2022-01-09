@@ -90,7 +90,7 @@ bayesopt_ego = function(
   ) {
 
   # coco changes:
-  # 1. lhs initial design
+  # 1. lhs initial design  --> reverted to random due to dim > 20
   # 2. scale and normalize y
   # 3. surrogate should be:
   #    upper = (problem$optim_instance[[1L]]$search_space$upper - problem$optim_instance[[1L]]$search_space$lower) / sqrt(problem$optim_instance[[1L]]$search_space$length)
@@ -124,7 +124,7 @@ bayesopt_ego = function(
 
   # initial design
   if (isTRUE(init_design_size > 0L)) {
-    design = generate_design_lhs(domain, n = init_design_size)$data
+    design = generate_design_random(domain, n = init_design_size)$data
     instance$eval_batch(design)
   }
 
