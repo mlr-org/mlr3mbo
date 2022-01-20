@@ -6,8 +6,7 @@
 \alias{mlr3mbo-package}
 \title{mlr3mbo: Flexible Bayesian Optimization in R}
 \description{
-A modern and flexible approach to Bayesian
-    Optimization in R.
+A modern and flexible approach to Bayesian Optimization in R.
 }
 \seealso{
 Useful links:

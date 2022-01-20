@@ -44,7 +44,7 @@ test_that("param_set", {
 })
 
 test_that("insample_perf", {
-  set.seed(1)
+  withr::local_seed(1)
   inst = MAKE_INST_1D()
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)

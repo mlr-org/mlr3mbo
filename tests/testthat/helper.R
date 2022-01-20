@@ -1,3 +1,5 @@
+library(mlr3learners)
+
 lapply(list.files(system.file("testthat", package = "mlr3"),
   pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
@@ -93,8 +95,6 @@ MAKE_INST_1D_NOISY = function(terminator = trm("evals", n_evals = 5L)) {
 MAKE_DESIGN = function(instance, n = 5L) {
   generate_design_lhs(instance$search_space, n)$data
 }
-
-library(mlr3learners)
 
 REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12)
 REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
