@@ -83,7 +83,7 @@ objective = ObjectiveRFun$new(
   id = "xsq"
 )
 
-terminator = trm("evals", n_evals = 20)
+terminator = trm("evals", n_evals = 5)
 
 instance = OptimInstanceSingleCrit$new(
   objective = objective,
