@@ -33,7 +33,6 @@ AcqFunctionPI = R6Class("AcqFunctionPI",
     #' @description
     #' Updates acquisition function and sets `y_best`.
     update = function() {
-      super$update()
       self$y_best = min(self$surrogate_max_to_min * self$archive$data[[self$surrogate$y_cols]])
     }
   ),
