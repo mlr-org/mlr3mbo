@@ -69,8 +69,6 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
         stop("progress is not set.")  # needs self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
       }
 
-      super$update()
-
       n_obj = length(self$archive$cols_y)
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
       ys = as.matrix(ys) %*% diag(self$surrogate_max_to_min)
