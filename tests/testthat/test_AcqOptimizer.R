@@ -66,7 +66,7 @@ test_that("AcqOptimizer fix_xdt_distance", {
   expect_true(all(check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt[4L, ]), dist_threshold)))
 
   # multiple point proposal to multiple previous points, threshold higher to allow for second loop testing
-  set.seed(1)
+  withr::local_seed(1)
   dist_threshold = 1
   xdt_fixed = fix_xdt_distance(xdt_redundant, previous_xdt = previous_xdt, search_space = domain, dist_threshold = dist_threshold)
   check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt), dist_threshold = dist_threshold)

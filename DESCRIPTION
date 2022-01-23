@@ -67,7 +67,8 @@ Suggests:
     ggplot2,
     rgenoud,
     emoa,
-    mvtnorm
+    mvtnorm,
+    withr
 Remotes:
     mlr-org/bbotk,
     mlr-org/mlr3tuning
