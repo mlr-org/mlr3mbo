@@ -29,6 +29,8 @@
 #' * Similarly, you can pass an `acq_function` that was not given the `surrogate` during initialization
 #'   and an `acq_optimizer` that was not given the `acq_function`, i.e., delayed initialization is
 #'   handled automatically.
+#' * Due to the iterative computation of the epsilon within the [AcqFunctionSmsEgo], requires the [bbotk::Terminator] of
+#'   the [bbotk::OptimInstanceMultiCrit] to be a [bbotk::TerminatorEvals].
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.
@@ -50,7 +52,7 @@
 #' codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 #' objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#' terminator = trm("evals", n_evals = 10)
+#' terminator = trm("evals", n_evals = 5)
 #'
 #' instance = OptimInstanceMultiCrit$new(
 #'   objective = objective,
@@ -97,7 +99,7 @@ bayesopt_smsego = function(
   # loop
   repeat {
     xdt = tryCatch({
-      acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals  # FIXME: this needs to be handled differently
+      acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
       acq_function$surrogate$update()
       acq_function$update()
       acq_optimizer$optimize()
