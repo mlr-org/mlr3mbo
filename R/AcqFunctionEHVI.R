@@ -50,7 +50,6 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
     #' @description
     #' Updates acquisition function and sets `ys_front`, `ref_point`, `epsilon`.
     update = function() {
-      super$update()
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
       ys = as.matrix(ys) %*% diag(self$surrogate_max_to_min)
       ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1  # offset = 1 like in mlrMBO
