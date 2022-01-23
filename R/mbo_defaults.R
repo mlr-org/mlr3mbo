@@ -74,9 +74,8 @@ default_loopfun = function(instance) {
 #' If additionally dependencies are present in the parameter space, inactive conditional parameters
 #' are represented by missing \code{NA} values in the training design data.
 #' We simply handle those with an imputation method, added to the ranger random forest, more
-#' concretely we use \code{po("imputeoor")} from package \CRANpkg{mlr3pipelines}.  Both of these
-#' techniques make sense for tree-based methods and are usually hard to beat, see Ding et al.
-#' (2010).
+#' concretely we use \code{po("imputesample")} and \code{po("imputeoor")} from package \CRANpkg{mlr3pipelines}.
+#' Both of these techniques make sense for tree-based methods and are usually hard to beat, see Ding et al. (2010).
 #' In the case of dependencies, the following learner is used as a fallback:
 #' \code{lrn("regr.featureless")}.
 #'
@@ -120,7 +119,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
 
     if (has_deps) {
       require_namespaces("mlr3pipelines")
-      learner = mlr3pipelines::GraphLearner$new(mlr3pipelines::'%>>%'(mlr3pipelines::po("imputeoor"), learner))
+      learner = mlr3pipelines::GraphLearner$new(mlr3pipelines::'%>>%'(mlr3pipelines::'%>>%'(mlr3pipelines::po("imputesample", affect_columns = mlr3pipelines::selector_type("logical")), mlr3pipelines::po("imputeoor")), learner))
       learner$encapsulate[c("train", "predict")] = "evaluate"
       learner$fallback = lrn("regr.featureless")
     }
@@ -164,7 +163,6 @@ default_acqfun = function(instance) {
 #' @export
 default_acqopt = function(acq_function) {
   assert_r6(acq_function, classes = "AcqFunction")
-  # FIXME: do we have multicrit acqfunctions?
   AcqOptimizer$new(optimizer = opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 1000L))  # FIXME: what do we use
 }
 

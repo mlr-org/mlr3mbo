@@ -55,7 +55,7 @@ OBJ_1D_2_MIXED = ObjectiveRFun$new(fun = FUN_1D_2_MIXED, domain = PS_1D_MIXED, c
 PS_2D_domain = ParamSet$new(list(
   ParamDbl$new("x1", lower = -1, upper = 1),
   ParamDbl$new("x2", lower = -1, upper = 1),
-  ParamUty$new("foo") # the domain of the function should not matter.
+  ParamUty$new("foo")  # the domain of the function should not matter
 ))
 PS_2D = ParamSet$new(list(
   ParamDbl$new("x1", lower = -1, upper = 1),
@@ -77,14 +77,14 @@ OBJ_2D_NOISY = ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D_domain, prop
 
 # Instance helper
 MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 10L)) {
-  if (objective$codomain$length == 1) {
+  if (objective$codomain$length == 1L) {
     OptimInstanceSingleCrit$new(objective = objective, search_space = search_space, terminator = terminator)
   } else {
     OptimInstanceMultiCrit$new(objective = objective, search_space = search_space, terminator = terminator)
   }
 }
 
-MAKE_INST_1D = function(terminator = trm("evals", n_evals = 5)) {
+MAKE_INST_1D = function(terminator = trm("evals", n_evals = 5L)) {
   MAKE_INST(objective = OBJ_1D, search_space = PS_1D, terminator = terminator)
 }
 

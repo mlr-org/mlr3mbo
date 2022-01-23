@@ -91,5 +91,13 @@ bibentries = c(
     author     = "Knowles, Joshua",
     year       = "2006",
     pages      = "50--66"
+  ),
+
+  horn_2015 = bibentry("inproceedings",
+    title      = "Model-Based Multi-objective Optimization: Taxonomy, Multi-Point Proposal, Toolbox and Benchmark",
+    author     = "Horn, Daniel and Wagner, Tobias and Biermann, Dirk and Weihs, Claus and Bischl, Bernd",
+    year       = "2015",
+    booktitle  = "International Conference on Evolutionary Multi-Criterion Optimization",
+    pages      = "64--78"
   )
 )

@@ -1,6 +1,7 @@
 generate_acq_codomain = function(codomain, id, direction = "same") {
   assert_choice(direction, c("same", "minimize", "maximize"))
   if (direction == "same") {
+    # FIXME: this is somewhat in conflict with bbotk due to archive$cols_y now only containing the "real" codomain
     if (codomain$length > 1L) {
       stop("not supported yet")  # FIXME: But should be
     }
