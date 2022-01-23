@@ -31,9 +31,8 @@ lrn(&quot;regr.ranger&quot;, num.trees = 20L, keep.inbag = TRUE).
 If additionally dependencies are present in the parameter space, inactive conditional parameters
 are represented by missing NA values in the training design data.
 We simply handle those with an imputation method, added to the ranger random forest, more
-concretely we use po(&quot;imputeoor&quot;) from package mlr3pipelines.  Both of these
-techniques make sense for tree-based methods and are usually hard to beat, see Ding et al.
-(2010).
+concretely we use po(&quot;imputesample&quot;) and po(&quot;imputeoor&quot;) from package mlr3pipelines.
+Both of these techniques make sense for tree-based methods and are usually hard to beat, see Ding et al. (2010).
 In the case of dependencies, the following learner is used as a fallback:
 lrn(&quot;regr.featureless&quot;).
 If the instance is of class bbotk::OptimInstanceSingleCrit the learner is wrapped as a
@@ -143,9 +142,8 @@ in cases where the surrogate learner errors. Currently, the following learner is
 <p>If additionally dependencies are present in the parameter space, inactive conditional parameters
 are represented by missing <code>NA</code> values in the training design data.
 We simply handle those with an imputation method, added to the ranger random forest, more
-concretely we use <code>po("imputeoor")</code> from package <a href="https://CRAN.R-project.org/package=mlr3pipelines" class="external-link"><span class="pkg">mlr3pipelines</span></a>.  Both of these
-techniques make sense for tree-based methods and are usually hard to beat, see Ding et al.
-(2010).
+concretely we use <code>po("imputesample")</code> and <code>po("imputeoor")</code> from package <a href="https://CRAN.R-project.org/package=mlr3pipelines" class="external-link"><span class="pkg">mlr3pipelines</span></a>.
+Both of these techniques make sense for tree-based methods and are usually hard to beat, see Ding et al. (2010).
 In the case of dependencies, the following learner is used as a fallback:
 <code>lrn("regr.featureless")</code>.</p>
 <p>If the instance is of class <a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html" class="external-link">bbotk::OptimInstanceSingleCrit</a> the learner is wrapped as a
