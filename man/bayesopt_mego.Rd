@@ -73,7 +73,7 @@ domain = ps(x = p_dbl(lower = -10, upper = 10))
 codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-terminator = trm("evals", n_evals = 10)
+terminator = trm("evals", n_evals = 5)
 
 instance = OptimInstanceMultiCrit$new(
   objective = objective,

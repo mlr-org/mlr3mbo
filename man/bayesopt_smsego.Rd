@@ -51,6 +51,8 @@ In this case, the \link[bbotk:Archive]{bbotk::Archive} of the given \code{instan
 \item Similarly, you can pass an \code{acq_function} that was not given the \code{surrogate} during initialization
 and an \code{acq_optimizer} that was not given the \code{acq_function}, i.e., delayed initialization is
 handled automatically.
+\item Due to the iterative computation of the epsilon within the \link{AcqFunctionSmsEgo}, requires the \link[bbotk:Terminator]{bbotk::Terminator} of
+the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
 }
 }
 \examples{
@@ -65,7 +67,7 @@ domain = ps(x = p_dbl(lower = -10, upper = 10))
 codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-terminator = trm("evals", n_evals = 10)
+terminator = trm("evals", n_evals = 5)
 
 instance = OptimInstanceMultiCrit$new(
   objective = objective,
