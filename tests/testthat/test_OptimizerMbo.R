@@ -20,7 +20,7 @@ test_that("OptimizerMbo works", {
 })
 
 test_that("OptimizerMbo works with different settings - singlecrit", {
-  # ego,mpcl x cb,ei,pi x rs default_surrogate
+  # ego,mpcl x cb,ei,pi x rs x default_surrogate
 
   # define combinations
   loop_functions = list(
