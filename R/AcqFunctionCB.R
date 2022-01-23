@@ -19,7 +19,6 @@
 #'
 #' @family Acquisition Function
 #' @export
-# FIXME: DESCRIPTION and Reference.
 AcqFunctionCB = R6Class("AcqFunctionCB",
   inherit = AcqFunction,
 
@@ -43,7 +42,8 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
 
   private = list(
     .fun = function(xdt, ...) {
-      # FIXME: check that lambda is in ... and use this
+      constants = list(...)
+      lambda  = constants$lambda
       p = self$surrogate$predict(xdt)
       res = p$mean - self$surrogate_max_to_min * self$constants$values$lambda * p$se
       data.table(acq_cb = res)

@@ -5,6 +5,7 @@
 #'
 #' @description
 #' Expected Hypervolume Improvement.
+#' Computed via expensive MC integration.
 #'
 #' @section Parameters:
 #' * `"n_mc"` (`integer(1)`)\cr
@@ -60,9 +61,9 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
 
   private = list(
     .fun = function(xdt, ...) {
+      constants = list(...)
       # FIXME: this is just brute force MC integration
       # should also implement Yang et al. (2019) or Daulton et al. (2020)
-      # FIXME: check that n_mc is in ... and use this
       if (is.null(self$ref_point)) {
         stop("ref_point is not set. Missed to call $update()?")
       }
@@ -74,7 +75,7 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
       vars = as.matrix(map_dtc(ps, "se")) ^ 2
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
       ys = as.matrix(ys) %*% diag(self$surrogate_max_to_min)
-      n_mc = self$constants$values$n_mc
+      n_mc = constants$n_mc
 
       # FIXME: could also adapt interal C code and use this for dhv
       ehvi = map_dbl(seq_len(nrow(xdt)), function(i) {
