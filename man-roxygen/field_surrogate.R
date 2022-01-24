@@ -1,0 +1,1 @@
+#' @field surrogate ([Surrogate] | NULL)

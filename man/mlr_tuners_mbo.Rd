@@ -12,6 +12,23 @@ For additional information and documentation see \link{OptimizerMbo}.
 \section{Super classes}{
 \code{\link[mlr3tuning:Tuner]{mlr3tuning::Tuner}} -> \code{\link[mlr3tuning:TunerFromOptimizer]{mlr3tuning::TunerFromOptimizer}} -> \code{TunerMbo}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{loop_function}}{(\code{function} | NULL).}
+
+\item{\code{surrogate}}{(\link{Surrogate} | NULL)}
+
+\item{\code{acq_function}}{(\link{AcqFunction} | NULL).}
+
+\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | NULL).}
+
+\item{\code{args}}{(named \code{list()} | NULL).}
+
+\item{\code{result_function}}{(\code{function} | NULL).}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -33,14 +50,46 @@ For additional information and documentation see \link{OptimizerMbo}.
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{mbo_defaults}.
+
+Note that all the parameters below are simply passed to the \link{OptimizerMbo} and
+the respective fields are simply (settable) active bindings to the fields of the \link{OptimizerMbo}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TunerMbo$new(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TunerMbo$new(
+  loop_function = NULL,
+  surrogate = NULL,
+  acq_function = NULL,
+  acq_optimizer = NULL,
+  args = NULL,
+  result_function = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Parameters passed to \link{OptimizerMbo}.}
+\item{\code{loop_function}}{(\code{function})\cr
+Loop function to run. See \code{mbo_defaults} for defaults.}
+
+\item{\code{surrogate}}{\link{Surrogate}\cr
+The surrogate object. For defaults see \link{mbo_defaults}.}
+
+\item{\code{acq_function}}{\link{AcqFunction}\cr
+The acquistion function object. For defaults see \link{mbo_defaults}.}
+
+\item{\code{acq_optimizer}}{\link{AcqOptimizer}\cr
+The optimizer that optimizes the acquistion function. For defaults see \link{mbo_defaults}.}
+
+\item{\code{args}}{(named \code{list()})\cr
+Further arguments passed to the \code{loop_function}.}
+
+\item{\code{result_function}}{(\code{function})\cr
+Optional function called after the optimization terminates.
+Determines how the final result of the optimization is calculated.
+Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
+See for example \link{result_by_surrogate_design} which is used by default if the
+\link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
+\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
 }
 \if{html}{\out{</div>}}
 }

@@ -82,12 +82,12 @@ The optimizer that optimizes the acquistion function. For defaults see \link{mbo
 Further arguments passed to the \code{loop_function}.}
 
 \item{\code{result_function}}{(\code{function})\cr
-Function called after the optimization terminates.
+Optional function called after the optimization terminates.
 Determines how the final result of the optimization is calculated.
 Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
 See for example \link{result_by_surrogate_design} which is used by default if the
 \link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
-\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit})}
+\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
 }
 \if{html}{\out{</div>}}
 }
