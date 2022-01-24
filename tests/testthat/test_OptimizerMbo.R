@@ -90,14 +90,13 @@ test_that("OptimizerMbo works for noisy problems", {
 })
 
 test_that("OptimizerMbo sugar", {
-  instance = bb_optimize(
+  result = bb_optimize(
     OBJ_1D,
-    method = "mbo",
+    method = opt("mbo", acq_function = acqf("cb")),
     max_evals = 5L
-    #acq_function = acqf("cb")  # FIXME: https://github.com/mlr-org/bbotk/issues/169
   )
 
-  expect_true(NROW(instance$instance$archive$data) == 5L)  # FIXME: this is somewhat inconsistent to the tune sugar output
-  #expect_true("acq_cb" %in% colnames(instance$archive$data))
+  expect_true(NROW(result$instance$archive$data) == 5L)
+  expect_true("acq_cb" %in% colnames(result$instance$archive$data))
 })
 
