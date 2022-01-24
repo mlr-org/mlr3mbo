@@ -16,7 +16,6 @@ actually want lhs design for init of multistart
 learner = lrn("regr.km", covtype = "matern5_2", upper = upper, lower = lower, multistart = 3L, optim.method = "BFGS")
 learner$fallback = lrn("regr.km", covtype = "matern5_2", upper = upper, lower = lower, multistart = 3L, optim.method = "BFGS", nugget.stability = 10^-8)
 
-
 asserts_bayesopt(inst, initdes, surrogate, acq, a_opt)
 
 das initial design generieren sollte vielleicht doch in die instance
@@ -49,8 +48,6 @@ optimzer_mbo
   - mbo_loop_function. kann man auch ueberschreiben und komplett selber machen?
   - mbo_propose_step: abstract
 
-test_OptimizerMbo works with different settings expand
-
 document initial design random and you can supply your own
 
 mbo_defaults, doc and links etc., default_surrogate
@@ -67,8 +64,6 @@ $setup was actually nice for OptimizerMBO design.
 check if we use setup_acqfun and setup_acqopt that we can flawlessly switch between instances
 maybe drop y_cols again and make ab, simply rely on tags in codomain
 
-why does Acqf constructor get archive if we could use surrogate archive
-
 check surrogate_max_to_min(codomain) for parEgo?
 
 ParamSet --> ps
@@ -80,8 +75,6 @@ check if tests use helpers
 learner default mit evaluate wrappen? eher nicht weil das wird mit random propsal gecatched
 
 Optimizer should infer properties from surrogate, acqf, acqo and loop
-
-mlr3mbo yahpo gym benchmark
 
 formats und printer definieren
 

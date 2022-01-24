@@ -59,7 +59,7 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       constants$values$lambda = lambda
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_sms_ego", constants = constants, surrogate = surrogate, direction = "minimize")
+      super$initialize("acq_sms_ego", constants = constants, surrogate = surrogate, direction = "minimize")  # indeed, we minimize, see comments below about C code
     },
 
     #' @description
@@ -76,6 +76,9 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1  # offset = 1 like in mlrMBO
 
       if (is.null(self$constants$values$epsilon)) {
+        # The following formula is taken from Horn et al. 2015.
+        # Note that the one in Ponweiser et al. 2008 has a typo.
+        # Note that nrow(self$ys_front) is correct and mlrMBO has a bug https://github.com/mlr-org/mlrMBO/blob/2dd83601ed80030713dfe0f55d4a5b8661919ce1/R/infill_crits.R#L292
         c_val = 1 - (1 / (2 ^ n_obj))
         epsilon = map_dbl(
           seq_col(self$ys_front),
@@ -109,7 +112,7 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       cbs = as.matrix(means) %*% diag(self$surrogate_max_to_min) - lambda * as.matrix(ses)
       # allocate memory for adding points to front for HV calculation in C
       front2 = t(rbind(self$ys_front, 0))
-      sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$epsilon, self$ref_point)
+      sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$epsilon, self$ref_point)  # note that the negative indicator is returned from C
       data.table(acq_sms_ego = sms)
     }
   )
