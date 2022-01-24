@@ -54,7 +54,7 @@ Imports:
     lgr,
     mlr3 (>= 0.13.0),
     mlr3misc (>= 0.7.0),
-    paradox (>= 0.7.0),
+    paradox (>= 0.7.1),
     R6
 Suggests:
     mlr3pipelines,
