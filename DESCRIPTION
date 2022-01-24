@@ -66,8 +66,6 @@ Suggests:
     testthat (>= 3.0.0),
     rgenoud,
     withr
-Remotes:
-    mlr-org/paradox
 ByteCompile: no
 Encoding: UTF-8
 LazyData: true
