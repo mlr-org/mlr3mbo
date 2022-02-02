@@ -14,42 +14,34 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
   public = list(
 
-    #' @field loop_function (`function` | NULL).
+    #' @template field_loop_function
     loop_function = NULL,
 
-    #' @field surrogate ([Surrogate] | NULL)
+    #' @template field_surrogate
     surrogate = NULL,
 
-    #' @field acq_function ([AcqFunction] | NULL).
+    #' @template field_acq_function
     acq_function = NULL,
 
-    #' @field acq_optimizer ([AcqOptimizer] | NULL).
+    #' @template field_acq_optimizer
     acq_optimizer = NULL,
 
-    #' @field args (named `list()` | NULL).
+    #' @template field_args
     args = NULL,
 
-    #' @field result_function (`function` | NULL).
+    #' @template field_result_function
     result_function = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `mbo_defaults`.
     #'
-    #' @param loop_function (`function`)\cr
-    #'   Loop function to run. See `mbo_defaults` for defaults.
+    #' @template param_loop_function
     #' @template param_surrogate
     #' @template param_acq_function
     #' @template param_acq_optimizer
-    #' @param args (named `list()`)\cr
-    #'   Further arguments passed to the `loop_function`.
-    #' @param result_function (`function`)\cr
-    #'   Function called after the optimization terminates.
-    #'   Determines how the final result of the optimization is calculated.
-    #'   Requires arguments `inst` (the [bbotk::OptimInstance]) and `self` (the [OptimizerMbo]).
-    #'   See for example [result_by_surrogate_design] which is used by default if the
-    #'   [bbotk::OptimInstance] has the property `"noisy"` (which is the case for a
-    #'   [mlr3tuning::TuningInstanceSingleCrit] or [mlr3tuning::TuningInstanceMultiCrit])
+    #' @template param_args
+    #' @template param_result_function
     initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
       param_set = ParamSet$new()
       param_classes = feature_types_to_param_classes(acq_function$surrogate$model$feature_types)
@@ -100,7 +92,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
           super$.assign_result(inst)
         }
       } else {
-        self$result_function(inst, self)  # FIXME: maybe not final API?
+        self$result_function(inst, self)
       }
     }
   )

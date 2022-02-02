@@ -15,6 +15,10 @@
   # nocov start
   backports::import(pkgname)
 
+  # add mbo to tuner dictionary
+  x = utils::getFromNamespace("mlr_tuners", ns = "mlr3tuning")
+  x$add("mbo", TunerMbo)
+
   # add mbo to optimizer dictionary
   x = utils::getFromNamespace("mlr_optimizers", ns = "bbotk")
   x$add("mbo", OptimizerMbo)

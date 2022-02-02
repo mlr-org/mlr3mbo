@@ -92,7 +92,7 @@ MAKE_INST_1D_NOISY = function(terminator = trm("evals", n_evals = 5L)) {
   MAKE_INST(objective = OBJ_1D_NOISY, search_space = PS_1D, terminator = terminator)
 }
 
-MAKE_DESIGN = function(instance, n = 5L) {
+MAKE_DESIGN = function(instance, n = 4L) {
   generate_design_lhs(instance$search_space, n)$data
 }
 

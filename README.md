@@ -26,10 +26,9 @@ Based on these, Bayesian optimization loops can be written, see, e.g.,
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other
 `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk)
+package as well as a `TunerMbo` class behaving like any other `Tuner`
+from the [mlr3tuning](https://cran.r-project.org/package=mlr3tuning)
 package.
-
-The respective `TunerMbo` is part of the
-[mlr3tuning](https://cran.r-project.org/package=mlr3tuning) package.
 
 `mlr3mbo` uses sensible defaults for the `Surrogate`, `AcqFunction`,
 `AcqOptimizer`, and even the loop function. See `?mbo_defaults` for more
