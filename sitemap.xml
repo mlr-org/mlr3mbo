@@ -85,6 +85,9 @@
     <loc>https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_mbo.html</loc>
   </url>
   <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_tuners_mbo.html</loc>
+  </url>
+  <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/result_by_surrogate_design.html</loc>
   </url>
 </urlset>
