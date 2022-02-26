@@ -46,7 +46,6 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     #' @description
     #' Updates acquisition function and sets `y_effective_best`.
     update = function() {
-      super$update()
       xdt = self$archive$data[, self$archive$cols_x, with = FALSE]
       p = self$surrogate$predict(xdt)
       if (self$surrogate_max_to_min == 1) {  # minimization

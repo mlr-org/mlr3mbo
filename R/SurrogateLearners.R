@@ -115,7 +115,7 @@ SurrogateLearners = R6Class("SurrogateLearners",
     # Train model with new data.
     # Also calculates the insample performance based on the `perf_measures` hyperparameter if `calc_insample_perf = TRUE`.
     .update = function() {
-      xydt = self$archive$data[, c(self$archive$cols_x, self$y_cols), with = FALSE]
+      xydt = char_to_fct(self$archive$data[, c(self$archive$cols_x, self$y_cols), with = FALSE])
       backend = as_data_backend(xydt)  # we do this here to save time in the lapply below
       features = setdiff(names(xydt), self$y_cols)
 

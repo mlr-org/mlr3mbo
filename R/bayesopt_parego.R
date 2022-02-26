@@ -62,7 +62,7 @@
 #' codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 #' objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#' terminator = trm("evals", n_evals = 10)
+#' terminator = trm("evals", n_evals = 5)
 #'
 #' instance = OptimInstanceMultiCrit$new(
 #'   objective = objective,
@@ -127,7 +127,7 @@ bayesopt_parego = function(
       # scalarize y
       lambda = lambdas[sample.int(nrow(lambdas), 1L), , drop = TRUE]
       mult = Map("*", ydt, lambda)
-      yscal = do.call("+", mult)
+      yscal = Reduce("+", mult)
       yscal = do.call(pmax, mult) + rho * yscal  # augmented Tchebycheff function
       data[, y_scal := yscal]  # need to name it yscal due to data.table's behavior
 

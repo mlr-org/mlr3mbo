@@ -51,7 +51,7 @@
 #'   codomain = ps(y = p_dbl(tags = "minimize"))
 #' )
 #'
-#' terminator = trm("evals", n_evals = 10)
+#' terminator = trm("evals", n_evals = 5)
 #'
 #' instance = OptimInstanceSingleCrit$new(
 #'   objective = objective,
@@ -68,7 +68,7 @@
 #'   id = "xsq"
 #' )
 #'
-#' terminator = trm("evals", n_evals = 20)
+#' terminator = trm("evals", n_evals = 5)
 #'
 #' instance = OptimInstanceSingleCrit$new(
 #'   objective = objective,

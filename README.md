@@ -26,10 +26,9 @@ Based on these, Bayesian optimization loops can be written, see, e.g.,
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other
 `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk)
+package as well as a `TunerMbo` class behaving like any other `Tuner`
+from the [mlr3tuning](https://cran.r-project.org/package=mlr3tuning)
 package.
-
-The respective `TunerMbo` is part of the
-[mlr3tuning](https://cran.r-project.org/package=mlr3tuning) package.
 
 `mlr3mbo` uses sensible defaults for the `Surrogate`, `AcqFunction`,
 `AcqOptimizer`, and even the loop function. See `?mbo_defaults` for more
@@ -53,9 +52,9 @@ library(paradox)
 library(mlr3learners)
 
 obfun = ObjectiveRFun$new(
-  fun = function(xs) list(y = xs$x ^ 2),
+  fun = function(xs) list(y1 = xs$x ^ 2),
   domain = ps(x = p_dbl(lower = -5, upper = 5)),
-  codomain = ps(y = p_dbl(tags = "minimize"))
+  codomain = ps(y1 = p_dbl(tags = "minimize"))
 )
 
 terminator = trm("evals", n_evals = 10)
@@ -73,7 +72,7 @@ acqfun = AcqFunctionEI$new()
 acqopt = AcqOptimizer$new(
   opt("random_search", batch_size = 100),
   terminator = trm("evals", n_evals = 100)
- )
+)
 
 optimizer = opt("mbo",
   loop_function = bayesopt_ego,
@@ -84,8 +83,37 @@ optimizer = opt("mbo",
 optimizer$optimize(instance)
 ```
 
-    ##             x  x_domain           y
+    ##             x  x_domain          y1
     ## 1: 0.01948605 <list[1]> 0.000379706
+
+Note that you can also use `bb_optimize` as a shorthand:
+
+``` r
+set.seed(1)
+
+fun = function(xs) list(y1 = xs$x ^ 2)
+
+surrogate = SurrogateLearner$new(lrn("regr.km", control = list(trace = FALSE)))
+acqfun = AcqFunctionEI$new()
+acqopt = AcqOptimizer$new(
+  opt("random_search", batch_size = 100),
+  terminator = trm("evals", n_evals = 100)
+)
+optimizer = opt("mbo",
+  loop_function = bayesopt_ego,
+  surrogate = surrogate,
+  acq_function = acqfun,
+  acq_optimizer = acqopt
+)
+
+result = bb_optimize(
+  fun,
+  method = optimizer,
+  lower = c(x = -5),
+  upper = c(x = 5),
+  max_evals = 10
+)
+```
 
 ## Simple Tuning Example Using Defaults
 
@@ -109,6 +137,3 @@ instance = tune(
 
 instance$result
 ```
-
-    ##           cp learner_param_vals  x_domain classif.ce
-    ## 1: -3.438787          <list[2]> <list[1]>  0.2039062

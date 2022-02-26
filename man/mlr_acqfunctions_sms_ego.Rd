@@ -19,7 +19,7 @@ lambda for a given confidence level, see Ponweiser et al. 2008.
 \eqn{\epsilon} used for the additive epsilon dominance.
 Can either be a single numeric value > 0 or \code{NULL}.
 In the case of being \code{NULL}, an epsilon vector is maintained dynamically as
-described in Ponweiser et al. 2008.
+described in Horn et al. 2015.
 }
 }
 
@@ -27,6 +27,9 @@ described in Ponweiser et al. 2008.
 Ponweiser, Wolfgang, Wagner, Tobias, Biermann, Dirk, Vincze, Markus (2008).
 \dQuote{Multiobjective Optimization on a Limited Budget of Evaluations Using Model-Assisted S-Metric Selection.}
 In \emph{Proceedings of the 10th International Conference on Parallel Problem Solving from Nature}, 784--794.
+Horn, Daniel, Wagner, Tobias, Biermann, Dirk, Weihs, Claus, Bischl, Bernd (2015).
+\dQuote{Model-Based Multi-objective Optimization: Taxonomy, Multi-Point Proposal, Toolbox and Benchmark.}
+In \emph{International Conference on Evolutionary Multi-Criterion Optimization}, 64--78.
 }
 \seealso{
 Other Acquisition Function: 

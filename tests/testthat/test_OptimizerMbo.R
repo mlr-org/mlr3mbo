@@ -20,7 +20,7 @@ test_that("OptimizerMbo works", {
 })
 
 test_that("OptimizerMbo works with different settings - singlecrit", {
-  # ego,mpcl x cb,ei,pi x rs default_surrogate
+  # ego,mpcl x cb,ei,pi x rs x default_surrogate
 
   # define combinations
   loop_functions = list(
@@ -87,5 +87,16 @@ test_that("OptimizerMbo works for noisy problems", {
   #FIXME: can we test that the surrogate actually influneces the choice?
   #expect_true(instance$result$y > min(opdf$y)) # we have not chosen the overoptimistic noisy y
   #expect_equal(instance$result$y, 0, tolerance = 0.2)
+})
+
+test_that("OptimizerMbo sugar", {
+  result = bb_optimize(
+    OBJ_1D,
+    method = opt("mbo", acq_function = acqf("cb")),
+    max_evals = 5L
+  )
+
+  expect_true(NROW(result$instance$archive$data) == 5L)
+  expect_true("acq_cb" %in% colnames(result$instance$archive$data))
 })
 

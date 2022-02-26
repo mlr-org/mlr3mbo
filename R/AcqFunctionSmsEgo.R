@@ -16,10 +16,11 @@
 #'   \eqn{\epsilon} used for the additive epsilon dominance.
 #'   Can either be a single numeric value > 0 or `NULL`.
 #'   In the case of being `NULL`, an epsilon vector is maintained dynamically as
-#'   described in Ponweiser et al. 2008.
+#'   described in Horn et al. 2015.
 #'
 #' @references
 #' `r format_bib("ponweiser_2008")`
+#' `r format_bib("horn_2015")`
 #'
 #' @family Acquisition Function
 #' @export
@@ -58,31 +59,31 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       constants$values$lambda = lambda
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_sms_ego", constants = constants, surrogate = surrogate, direction = "minimize")
+      super$initialize("acq_sms_ego", constants = constants, surrogate = surrogate, direction = "minimize")  # indeed, we minimize, see comments below about C code
     },
 
     #' @description
     #' Updates acquisition function and sets `ys_front`, `ref_point`, `epsilon`.
     update = function() {
       if (is.null(self$progress)) {
-        stop("progress is not set.")
+        stop("progress is not set.")  # needs self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
       }
 
-      super$update()
-
-      n_obj = self$archive$codomain$length
+      n_obj = length(self$archive$cols_y)
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
       ys = as.matrix(ys) %*% diag(self$surrogate_max_to_min)
       self$ys_front = as.matrix(self$archive$best()[, self$archive$cols_y, with = FALSE]) %*% diag(self$surrogate_max_to_min)
       self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1  # offset = 1 like in mlrMBO
 
       if (is.null(self$constants$values$epsilon)) {
-        c_val = 1 - 1 / 2^n_obj
+        # The following formula is taken from Horn et al. 2015.
+        # Note that the one in Ponweiser et al. 2008 has a typo.
+        # Note that nrow(self$ys_front) is correct and mlrMBO has a bug https://github.com/mlr-org/mlrMBO/blob/2dd83601ed80030713dfe0f55d4a5b8661919ce1/R/infill_crits.R#L292
+        c_val = 1 - (1 / (2 ^ n_obj))
         epsilon = map_dbl(
           seq_col(self$ys_front),
           function(i) {
-            (max(self$ys_front[, i]) - min(self$ys_front[, i])) /
-            (ncol(self$ys_front) + c_val * self$progress)  # FIXME: Need self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
+            (max(self$ys_front[, i]) - min(self$ys_front[, i])) / (nrow(self$ys_front) + c_val * self$progress)
           }
         )
         self$epsilon = epsilon
@@ -94,8 +95,8 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
 
   private = list(
     .fun = function(xdt, ...) {
-      # FIXME: check that lambda is in ... and use this
-      # FIXME: clean up below
+      constants = list(...)
+      lambda = constants$lambda
       if (is.null(self$ys_front)) {
         stop("ys_front is not set. Missed to call $update()?")
       }
@@ -108,10 +109,10 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       ps = self$surrogate$predict(xdt)
       means = map_dtc(ps, "mean")
       ses = map_dtc(ps, "se")
-      cbs = as.matrix(means) %*% diag(self$surrogate_max_to_min) - self$constants$values$lambda * as.matrix(ses)
+      cbs = as.matrix(means) %*% diag(self$surrogate_max_to_min) - lambda * as.matrix(ses)
       # allocate memory for adding points to front for HV calculation in C
       front2 = t(rbind(self$ys_front, 0))
-      sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$epsilon, self$ref_point)
+      sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$epsilon, self$ref_point)  # note that the negative indicator is returned from C
       data.table(acq_sms_ego = sms)
     }
   )

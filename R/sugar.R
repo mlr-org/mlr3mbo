@@ -24,7 +24,7 @@
 #' acqf("ei")
 #' @export
 acqf = function(.key, ...) {
-  dictionary_sugar(mlr_acqfunctions, .key, ...)
+  dictionary_sugar_get(mlr_acqfunctions, .key, ...)
 }
 
 #' @rdname acqf

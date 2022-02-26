@@ -23,7 +23,7 @@ test_that("AcqFunctionEI works", {
 })
 
 test_that("AcqFunctionEI trafo", {
-  set.seed(1)
+  withr::local_seed(1)
   domain = ps(x = p_dbl(lower = 10, upper = 20, trafo = function(x) x - 15))
   obj = ObjectiveRFunDt$new(
     fun = function(xdt) data.table(y = xdt$x ^ 2),
