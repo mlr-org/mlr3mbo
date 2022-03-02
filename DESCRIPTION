@@ -2,45 +2,23 @@ Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization in R
 Version: 0.0.0.9000
-Authors@R:
-    c(person(given = "Lennart",
-             family = "Schneider",
-             role = c("cre", "aut"),
-             email = "lennart.sch@web.de",
-             comment = c(ORCID = "0000-0003-4152-5308")),
-      person(given = "Jakob",
-             family = "Richter",
-             role = "aut",
-             email = "jakob1richter@gmail.com",
-             comment = c(ORCID = "0000-0003-4481-5554")),
-      person(given = "Marc",
-             family = "Becker",
-             role = "aut",
-             email = "marcbecker@posteo.de",
-             comment = c(ORCID = "0000-0002-8115-0400")),
-      person(given = "Michel",
-             family = "Lang",
-             role = "aut",
-             email = "michellang@gmail.com",
-             comment = c(ORCID = "0000-0001-9754-0393")),
-      person(given = "Bernd",
-             family = "Bischl",
-             role = "aut",
-             email = "bernd_bischl@gmx.net",
-             comment = c(ORCID = "0000-0001-6002-6980")),
-      person(given = "Martin",
-             family = "Binder",
-             role = "aut",
-             email = "mlr.developer@mb706.com"),
-      person(given = "Julia",
-             family = "Moosbauer",
-             role = "aut",
-             email = "ju.moosbauer@gmail.com"))
-Description: A modern and flexible approach to Bayesian
-    Optimization in R.
+Authors@R:c(
+    person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
+           comment = c(ORCID = "0000-0003-4152-5308")),
+    person("Jakob", "Richter", , "jakob1richter@gmail.com", role = "aut",
+           comment = c(ORCID = "0000-0003-4481-5554")),
+    person("Marc", "Becker", , "marcbecker@posteo.de", role = "aut",
+           comment = c(ORCID = "0000-0002-8115-0400")),
+    person("Michel", "Lang", , "michellang@gmail.com", role = "aut",
+           comment = c(ORCID = "0000-0001-9754-0393")),
+    person("Bernd", "Bischl", , "bernd_bischl@gmx.net", role = "aut",
+           comment = c(ORCID = "0000-0001-6002-6980")),
+    person("Martin", "Binder", , "mlr.developer@mb706.com", role = "aut"),
+    person("Julia", "Moosbauer", , "ju.moosbauer@gmail.com", role = "aut")
+  )
+Description: A modern and flexible approach to Bayesian Optimization in R.
 License: LGPL-3
-URL: https://mlr3mbo.mlr-org.com,
-    https://github.com/mlr-org/mlr3mbo
+URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
     mlr3tuning (>= 0.10.0),
@@ -57,14 +35,14 @@ Imports:
     paradox (>= 0.8.0),
     R6
 Suggests:
-    mlr3pipelines,
-    mlr3learners,
-    ranger,
-    rpart,
     DiceKriging,
     lhs,
-    testthat (>= 3.0.0),
+    mlr3learners,
+    mlr3pipelines,
+    ranger,
     rgenoud,
+    rpart,
+    testthat (>= 3.0.0),
     withr
 ByteCompile: no
 Encoding: UTF-8
