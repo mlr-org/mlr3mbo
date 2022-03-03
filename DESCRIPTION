@@ -45,8 +45,8 @@ Suggests:
     testthat (>= 3.0.0),
     withr
 Remotes:
-    mlr-org/bbotk
-    mlr-org/mlr3tuning,
+    mlr-org/bbotk,
+    mlr-org/mlr3tuning
 ByteCompile: no
 Encoding: UTF-8
 NeedsCompilation: yes
