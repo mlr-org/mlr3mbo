@@ -21,7 +21,7 @@ License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
-    mlr3tuning (>= 0.10.0),
+    mlr3tuning (>= 0.12.1.9000),
     R (>= 3.1.0)
 Imports:
     backports,
