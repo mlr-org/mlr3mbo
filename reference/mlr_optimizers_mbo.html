@@ -126,6 +126,7 @@ to be used, e.g., <a href="bayesopt_ego.html">bayesopt_ego</a> for sequential si
 <ul><li><p><a href="#method-new"><code>OptimizerMbo$new()</code></a></p></li>
 <li><p><a href="#method-clone"><code>OptimizerMbo$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Optimizer.html#method-format"><code>bbotk::Optimizer$format()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href="https://bbotk.mlr-org.com/reference/Optimizer.html#method-help"><code>bbotk::Optimizer$help()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="optimize"><a href="https://bbotk.mlr-org.com/reference/Optimizer.html#method-optimize"><code>bbotk::Optimizer$optimize()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="print"><a href="https://bbotk.mlr-org.com/reference/Optimizer.html#method-print"><code>bbotk::Optimizer$print()</code></a></span></p></li>
 </ul></details></p><hr><a id="method-new"></a><div class="section">
@@ -167,7 +168,8 @@ The optimizer that optimizes the acquistion function. For defaults see <a href="
 
 <dt><code>args</code></dt>
 <dd><p>(named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>)<br>
-Further arguments passed to the <code>loop_function</code>.</p></dd>
+Further arguments passed to the <code>loop_function</code>.
+For example, <code>random_interleave_iter</code>.</p></dd>
 
 
 <dt><code>result_function</code></dt>

@@ -124,6 +124,7 @@ For additional information and documentation see <a href="mlr_optimizers_mbo.htm
 <ul><li><p><a href="#method-new"><code>TunerMbo$new()</code></a></p></li>
 <li><p><a href="#method-clone"><code>TunerMbo$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><p><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format"><a href="https://mlr3tuning.mlr-org.com/reference/Tuner.html#method-format"><code>mlr3tuning::Tuner$format()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href="https://mlr3tuning.mlr-org.com/reference/Tuner.html#method-help"><code>mlr3tuning::Tuner$help()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="print"><a href="https://mlr3tuning.mlr-org.com/reference/Tuner.html#method-print"><code>mlr3tuning::Tuner$print()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerFromOptimizer" data-id="optimize"><a href="https://mlr3tuning.mlr-org.com/reference/TunerFromOptimizer.html#method-optimize"><code>mlr3tuning::TunerFromOptimizer$optimize()</code></a></span></p></li>
 </ul></details></p><hr><a id="method-new"></a><div class="section">
@@ -167,7 +168,8 @@ The optimizer that optimizes the acquistion function. For defaults see <a href="
 
 <dt><code>args</code></dt>
 <dd><p>(named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>)<br>
-Further arguments passed to the <code>loop_function</code>.</p></dd>
+Further arguments passed to the <code>loop_function</code>.
+For example, <code>random_interleave_iter</code>.</p></dd>
 
 
 <dt><code>result_function</code></dt>

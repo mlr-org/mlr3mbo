@@ -88,7 +88,8 @@ Normally used inside an <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>.</p>
   acq_function <span class="op">=</span> <span class="cn">NULL</span>,
   acq_optimizer <span class="op">=</span> <span class="cn">NULL</span>,
   q <span class="op">=</span> <span class="fl">2L</span>,
-  liar <span class="op">=</span> <span class="va">mean</span>
+  liar <span class="op">=</span> <span class="va">mean</span>,
+  random_interleave_iter <span class="op">=</span> <span class="fl">0L</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -121,6 +122,13 @@ Default is <code>2</code>.</p></dd>
 <dd><p>(<code>function</code>)<br>
 Any function accepting a numeric vector as input and returning a single numeric output.
 Default is <code>mean</code>.</p></dd>
+<dt>random_interleave_iter</dt>
+<dd><p>(<code>integer(1)</code>)<br>
+Every "random_interleave_iter" iteration (starting after the initial design), a point is
+sampled uniformly at random and evaluated (instead of a model based proposal).
+For example, if <code>random_interleave_iter = 2</code>, random interleaving is performed in the second,
+fourth, sixth, ... iteration.
+Default is <code>0</code>, i.e., no random interleaving is performed at all.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
