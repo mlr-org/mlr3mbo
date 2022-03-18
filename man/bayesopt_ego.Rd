@@ -9,7 +9,8 @@ bayesopt_ego(
   init_design_size = NULL,
   surrogate = NULL,
   acq_function = NULL,
-  acq_optimizer = NULL
+  acq_optimizer = NULL,
+  random_interleave_iter = 0L
 )
 }
 \arguments{
@@ -33,6 +34,13 @@ If \code{NULL} \code{default_acqfun(instance)} is used.}
 \item{acq_optimizer}{(\link{AcqOptimizer})\cr
 \link{AcqOptimizer} to be used as acquisition function optimizer.
 If \code{NULL} \code{default_acqopt(acqfun)} is used.}
+
+\item{random_interleave_iter}{(\code{integer(1)})\cr
+Every "random_interleave_iter" iteration (starting after the initial design), a point is
+sampled uniformly at random and evaluated (instead of a model based proposal).
+For example, if \code{random_interleave_iter = 2}, random interleaving is performed in the second,
+fourth, sixth, ... iteration.
+Default is \code{0}, i.e., no random interleaving is performed at all.}
 }
 \value{
 invisible(instance)\cr

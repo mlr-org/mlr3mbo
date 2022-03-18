@@ -26,6 +26,12 @@
 #' @param liar (`function`)\cr
 #'   Any function accepting a numeric vector as input and returning a single numeric output.
 #'   Default is `mean`.
+#' @param random_interleave_iter (`integer(1)`)\cr
+#'   Every "random_interleave_iter" iteration (starting after the initial design), a point is
+#'   sampled uniformly at random and evaluated (instead of a model based proposal).
+#'   For example, if `random_interleave_iter = 2`, random interleaving is performed in the second,
+#'   fourth, sixth, ... iteration.
+#'   Default is `0`, i.e., no random interleaving is performed at all.
 #'
 #' @note
 #' * If `surrogate` is `NULL` but `acq_function` is given and contains a `$surrogate`, this
@@ -70,7 +76,8 @@ bayesopt_mpcl = function(
     acq_function = NULL,
     acq_optimizer = NULL,
     q = 2L,
-    liar = mean
+    liar = mean,
+    random_interleave_iter = 0L
   ) {
 
   # assertions and defaults
@@ -81,6 +88,7 @@ bayesopt_mpcl = function(
   assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
   assert_int(q, lower = 2L)
   assert_function(liar)
+  assert_int(random_interleave_iter, lower = 0L)
 
   surrogate = surrogate %??% acq_function$surrogate
 
@@ -126,6 +134,11 @@ bayesopt_mpcl = function(
       tryCatch({
         # add lie instead of true eval
         tmp_archive$add_evals(xdt = xdt_new, xss_trafoed = transform_xdt_to_xss(xdt_new, tmp_archive$search_space), ydt = lie)
+
+        # random interleaving is handled here
+        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+          stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("mbo_error", "random_interleave", "error", "condition")))
+        }
 
         # update all objects with lie
         acq_function$surrogate$update()

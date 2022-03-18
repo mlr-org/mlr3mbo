@@ -12,7 +12,8 @@ bayesopt_parego(
   acq_optimizer = NULL,
   q = 1L,
   s = 100L,
-  rho = 0.05
+  rho = 0.05,
+  random_interleave_iter = 0L
 )
 }
 \arguments{
@@ -49,6 +50,13 @@ Default is \code{100}.}
 \eqn{\rho} in Equation 2 in Knowles (2006) scaling the linear part of the augmented Tchebycheff
 function.
 Default is \code{0.05}}
+
+\item{random_interleave_iter}{(\code{integer(1)})\cr
+Every "random_interleave_iter" iteration (starting after the initial design), a point is
+sampled uniformly at random and evaluated (instead of a model based proposal).
+For example, if \code{random_interleave_iter = 2}, random interleaving is performed in the second,
+fourth, sixth, ... iteration.
+Default is \code{0}, i.e., no random interleaving is performed at all.}
 }
 \value{
 invisible(instance)\cr

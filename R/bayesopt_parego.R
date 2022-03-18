@@ -30,6 +30,12 @@
 #'   \eqn{\rho} in Equation 2 in Knowles (2006) scaling the linear part of the augmented Tchebycheff
 #'   function.
 #'   Default is `0.05`
+#' @param random_interleave_iter (`integer(1)`)\cr
+#'   Every "random_interleave_iter" iteration (starting after the initial design), a point is
+#'   sampled uniformly at random and evaluated (instead of a model based proposal).
+#'   For example, if `random_interleave_iter = 2`, random interleaving is performed in the second,
+#'   fourth, sixth, ... iteration.
+#'   Default is `0`, i.e., no random interleaving is performed at all.
 #'
 #' @note
 #' * If `surrogate` is `NULL` but `acq_function` is given and contains a `$surrogate`, this
@@ -78,7 +84,8 @@ bayesopt_parego = function(
     acq_optimizer = NULL,
     q = 1L,
     s = 100L,
-    rho = 0.05
+    rho = 0.05,
+    random_interleave_iter = 0L
   ) {
 
   # assertions and defaults
@@ -90,6 +97,7 @@ bayesopt_parego = function(
   assert_int(q, lower = 1L)
   assert_int(s, lower = 1L)
   assert_number(rho, lower = 0, upper = 1)
+  assert_int(random_interleave_iter, lower = 0L)
 
   surrogate = surrogate %??% acq_function$surrogate
 
@@ -132,6 +140,10 @@ bayesopt_parego = function(
       data[, y_scal := yscal]  # need to name it yscal due to data.table's behavior
 
       tryCatch({
+        # random interleaving is handled here
+        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+          stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("mbo_error", "random_interleave", "error", "condition")))
+        }
         acq_function$surrogate$update()
         acq_function$update()
         acq_optimizer$optimize()

@@ -11,7 +11,8 @@ bayesopt_mpcl(
   acq_function = NULL,
   acq_optimizer = NULL,
   q = 2L,
-  liar = mean
+  liar = mean,
+  random_interleave_iter = 0L
 )
 }
 \arguments{
@@ -43,6 +44,13 @@ Default is \code{2}.}
 \item{liar}{(\code{function})\cr
 Any function accepting a numeric vector as input and returning a single numeric output.
 Default is \code{mean}.}
+
+\item{random_interleave_iter}{(\code{integer(1)})\cr
+Every "random_interleave_iter" iteration (starting after the initial design), a point is
+sampled uniformly at random and evaluated (instead of a model based proposal).
+For example, if \code{random_interleave_iter = 2}, random interleaving is performed in the second,
+fourth, sixth, ... iteration.
+Default is \code{0}, i.e., no random interleaving is performed at all.}
 }
 \value{
 invisible(instance)\cr
