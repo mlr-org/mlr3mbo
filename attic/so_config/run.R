@@ -143,12 +143,12 @@ objective = ObjectiveRFunDt$new(
     })
   },
   domain = search_space,
-  codomain = ps(mean_perf = p_dbl(lower = 0, upper = 1, tags = "maximize"))
+  codomain = ps(mean_perf = p_dbl(tags = "maximize"))
 )
 
 ac_instance = OptimInstanceSingleCrit$new(
   objective = objective,
-  terminator = trm("evals", n_evals = 130L)  # 30 init design + 100
+  terminator = trm("evals", n_evals = 230L)  # 30 init design + 200
 )
 
 surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% lrn("regr.ranger", num.trees = 2000L, keep.inbag = TRUE)))
