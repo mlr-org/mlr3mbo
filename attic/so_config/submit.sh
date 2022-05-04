@@ -2,7 +2,7 @@
 
 sbatch <<EOT
 #!/bin/sh
-#SBATCH --time=1-01:00:0
+#SBATCH --time=4-00:00:0
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=35
 #SBATCH --mem-per-cpu=2000
@@ -16,5 +16,5 @@ module load r/4.0.5-py27
 module load python/3.8.7
 module load swig/3.0.12
 
-srun Rscript run.R
+srun ./run.R -r $1
 EOT

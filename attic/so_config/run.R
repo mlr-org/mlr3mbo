@@ -1,3 +1,6 @@
+#!/usr/bin/env Rscript
+# chmod ug+x
+library(argparse)
 library(data.table)
 library(mlr3)
 library(mlr3misc)
@@ -14,34 +17,47 @@ library("future.apply")
 
 # FIXME: test stability stuff?
 
-set.seed(2409)
+parser = ArgumentParser()
+parser$add_argument("-r", "--run", type = "integer", default = 1, help = "Id of run, should be within 1-5")
+args = parser$parse_args()
+run_id = args$run
+stopifnot(run_id %in% 1:5)
+cat("run_id:", run_id, "\n")
+
+seeds = c(2409, 2906, 0905, 1234, 1010)
+
+set.seed(seeds[run_id])
 
 search_space = ps(
   init = p_fct(c("random", "lhs")),
-  init_size_factor = p_int(lower = 4L, upper = 6L),
+  init_size_factor = p_int(lower = 0L, upper = 6L),
   random_interleave = p_lgl(),
   random_interleave_iter = p_int(lower = 2L, upper = 10L, depends = random_interleave == TRUE),
-  surrogate = p_fct(c("GP", "RF")),  # FIXME: BANANAS NN ensemble
-  splitrule = p_fct(c("variance", "extratrees"), depends = surrogate == "RF"),
-  num.random.splits = p_int(lower = 1L, upper = 10L, depends = surrogate == "RF" && splitrule == "extratrees"),
+  #surrogate = p_fct(c("GP", "RF")),  # FIXME: BANANAS NN ensemble
+  #splitrule = p_fct(c("variance", "extratrees"), depends = surrogate == "RF"),
+  #num.random.splits = p_int(lower = 1L, upper = 10L, depends = surrogate == "RF" && splitrule == "extratrees"),
+  num.trees = p_int(lower = 100L, upper = 2000L),
+  splitrule = p_fct(c("variance", "extratrees")),
+  num.random.splits = p_int(lower = 1L, upper = 10L, depends = splitrule == "extratrees"),
   acqf = p_fct(c("EI", "CB", "PI")),
   lambda = p_dbl(lower = 0, upper = 3L, depends = acqf == "CB"),
-  acqopt_iter_factor = p_int(lower = 10L, upper = 100L),
+  acqopt_iter_factor = p_int(lower = 10L, upper = 50L),
   acqopt = p_fct(c("RS", "FS")),  # FIXME: miesmuschel
   fs_behavior = p_fct(c("global", "local"), depends = acqopt == "FS")
 )
 
 # budget = ceiling(20 + sqrt(d) * 40)
-instances = data.table(scenario = rep(paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost")), each = 5L),
-                       instance = c("40499", "1476", "6", "12", "41150",
-                                    "40979", "1501", "40966", "1478", "40984",
-                                    "12", "458", "1510", "1515", "307",
-                                    "1478", "40979", "12", "28", "1501",
-                                    "41164", "37", "1515", "1510", "42",
-                                    "1478", "1501", "40499", "40979", "300",
-                                    "40984", "40979", "40966", "28", "22"),
-                       target = "acc",
-                       budget = rep(c(118, 90, 134, 110, 267, 118, 170), each = 5L))
+instances = readRDS("instances.rds")
+#instances = data.table(scenario = rep(paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost")), each = 5L),
+#                       instance = c("40499", "1476", "6", "12", "41150",
+#                                    "40979", "1501", "40966", "1478", "40984",
+#                                    "12", "458", "1510", "1515", "307",
+#                                    "1478", "40979", "12", "28", "1501",
+#                                    "41164", "37", "1515", "1510", "42",
+#                                    "1478", "1501", "40499", "40979", "300",
+#                                    "40984", "40979", "40966", "28", "22"),
+#                       target = "acc",
+#                       budget = rep(c(118, 90, 134, 110, 267, 118, 170), each = 5L))
 
 make_optim_instance = function(instance) {
   benchmark = BenchmarkSet$new(instance$scenario, instance = instance$instance)
@@ -53,6 +69,11 @@ make_optim_instance = function(instance) {
 }
 
 evaluate = function(xdt, instance) {
+  logger = lgr::get_logger("mlr3")
+  logger$set_threshold("warn")
+  logger = lgr::get_logger("bbotk")
+  logger$set_threshold("warn")
+
   optim_instance = make_optim_instance(instance)
 
   d = optim_instance$search_space$length
@@ -62,18 +83,25 @@ evaluate = function(xdt, instance) {
   
   random_interleave_iter = if(xdt$random_interleave) xdt$random_interleave_iter else 0L
   
-  surrogate = if(xdt$surrogate == "GP") {
-    learner = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8)
-    SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% po("encodeimpact", affect_columns = selector_type(c("logical", "character", "factor", "ordered"))) %>>% learner))
-  } else if (xdt$surrogate == "RF") {
-    learner = if (xdt$splitrule == "extratrees") {
-      lrn("regr.ranger", num.trees = 500L, keep.inbag = TRUE, splitrule = xdt$splitrule, num.random.splits = xdt$num.random.splits)
-    } else if (xdt$splitrule == "variance") {
-      lrn("regr.ranger", num.trees = 500L, keep.inbag = TRUE, splitrule = xdt$splitrule)
-    }
-    SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
+  #surrogate = if(xdt$surrogate == "GP") {
+  #  learner = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8)
+  #  SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% po("encodeimpact", affect_columns = selector_type(c("logical", "character", "factor", "ordered"))) %>>% learner))
+  #} else if (xdt$surrogate == "RF") {
+  #  learner = if (xdt$splitrule == "extratrees") {
+  #    lrn("regr.ranger", num.trees = xdt$num.trees, keep.inbag = TRUE, splitrule = xdt$splitrule, num.random.splits = xdt$num.random.splits)
+  #  } else if (xdt$splitrule == "variance") {
+  #    lrn("regr.ranger", num.trees = xdt$num.trees, keep.inbag = TRUE, splitrule = xdt$splitrule)
+  #  }
+  #  SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
+  #}
+
+  learner = if (xdt$splitrule == "extratrees") {
+    lrn("regr.ranger", num.trees = xdt$num.trees, keep.inbag = TRUE, splitrule = xdt$splitrule, num.random.splits = xdt$num.random.splits)
+  } else if (xdt$splitrule == "variance") {
+    lrn("regr.ranger", num.trees = xdt$num.trees, keep.inbag = TRUE, splitrule = xdt$splitrule)
   }
-  
+  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
+
   acq_function = if (xdt$acqf == "EI") {
     AcqFunctionEI$new()
   } else if (xdt$acqf == "CB") {
@@ -99,16 +127,18 @@ evaluate = function(xdt, instance) {
   
   bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
   
-  optim_instance$archive$best()[[instance$target]]
+  best = optim_instance$archive$best()[[instance$target]]
+  (best - instance$mean) / instance$sd  # normalize best w.r.t min_max.R empirical mean and sd
 }
 
+# FIXME: maybe add that the objective stores its state on disk after each eval
 objective = ObjectiveRFunDt$new(
   fun = function(xdt) {
     map_dtr(seq_len(nrow(xdt)), function(i) {
       plan("multicore")
       tmp = future_lapply(transpose_list(instances), function(instance) {
         evaluate(xdt[i, ], instance)
-      })
+      }, future.seed = TRUE)
       data.table(mean_perf = mean(unlist(tmp)), raw_perfs = list(tmp))
     })
   },
@@ -118,14 +148,14 @@ objective = ObjectiveRFunDt$new(
 
 ac_instance = OptimInstanceSingleCrit$new(
   objective = objective,
-  terminator = trm("run_time", secs = 3600L * 24L)
+  terminator = trm("evals", n_evals = 130L)  # 30 init design + 100
 )
 
-surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% lrn("regr.ranger", num.trees = 500L, keep.inbag = TRUE)))
+surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% lrn("regr.ranger", num.trees = 2000L, keep.inbag = TRUE)))
 acq_function = AcqFunctionEI$new()
 acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))
 design = generate_design_lhs(ac_instance$search_space, n = 30L)$data
 ac_instance$eval_batch(design)
 bayesopt_ego(ac_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = 5L)
-saveRDS(ac_instance, "ac_instance.rds")
+saveRDS(ac_instance, paste0("ac_instance_", run_id, ".rds"))
 

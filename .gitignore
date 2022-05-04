@@ -36,3 +36,5 @@ src/*.so
 inst/doc
 doc
 Meta
+attic/so_config/fanova.py
+attic/so_config/Pipfile
