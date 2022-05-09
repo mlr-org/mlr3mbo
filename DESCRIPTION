@@ -21,18 +21,18 @@ License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
-    mlr3tuning (>= 0.10.0),
+    mlr3tuning (>= 0.12.1),
     R (>= 3.1.0)
 Imports:
     backports,
-    bbotk (>= 0.5.0),
+    bbotk (>= 0.5.2),
     checkmate (>= 2.0.0),
     data.table,
     gower,
     lgr,
     mlr3 (>= 0.13.0),
     mlr3misc (>= 0.7.0),
-    paradox (>= 0.8.0),
+    paradox (>= 0.9.0.9000),
     R6
 Suggests:
     DiceKriging,
@@ -44,6 +44,7 @@ Suggests:
     rpart,
     testthat (>= 3.0.0),
     withr
+Remotes: mlr-org/paradox
 ByteCompile: no
 Encoding: UTF-8
 NeedsCompilation: yes

@@ -26,7 +26,7 @@ TunerMbo = R6Class("TunerMbo",
     #' @template param_args
     #' @template param_result_function
     initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
-      super$initialize(optimizer = OptimizerMbo$new(loop_function = loop_function, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, args = args, result_function = result_function))
+      super$initialize(optimizer = OptimizerMbo$new(loop_function = loop_function, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, args = args, result_function = result_function), man = "mlr3mbo::TunerMbo")
     }
   ),
 
