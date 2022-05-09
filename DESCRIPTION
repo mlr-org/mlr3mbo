@@ -25,7 +25,7 @@ Depends:
     R (>= 3.1.0)
 Imports:
     backports,
-    bbotk (>= 0.5.2),
+    bbotk (>= 0.5.3),
     checkmate (>= 2.0.0),
     data.table,
     gower,
