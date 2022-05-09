@@ -44,6 +44,7 @@ Suggests:
     rpart,
     testthat (>= 3.0.0),
     withr
+Remotes: mlr-org/paradox
 ByteCompile: no
 Encoding: UTF-8
 NeedsCompilation: yes
