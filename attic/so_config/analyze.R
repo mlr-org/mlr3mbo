@@ -9,8 +9,19 @@ library(GGally)
 x1 = readRDS("ac_instance_1.rds")
 x2 = readRDS("ac_instance_2.rds")
 x3 = readRDS("ac_instance_3.rds")
+x4 = readRDS("ac_instance_4.rds")
+x5 = readRDS("ac_instance_5.rds")
 
-data = rbind(x1$archive$data, x2$archive$data, x3$archive$data)[, c(x1$archive$cols_x, x1$archive$cols_y), with = FALSE]
+data = rbind(x1$archive$data, x2$archive$data, x3$archive$data, x4$archive$data, x5$archive$data)[, c(x1$archive$cols_x, x1$archive$cols_y), with = FALSE]
+data[is.na(random_interleave_iter), random_interleave_iter := 0]
+data[is.na(num.random.splits), num.random.splits := 0]
+data[is.na(lambda), lambda := 0]
+data[is.na(fs_behavior), fs_behavior := "none"]
+chars = c("init", "splitrule", "acqf", "acqopt", "fs_behavior")
+data[, (chars) := lapply(.SD, as.factor), .SDcols = chars]
+
+lmx = lm(mean_perf ~ init * init_size_factor + random_interleave * random_interleave_iter + num.trees + splitrule * num.random.splits + acqf * lambda + acqopt_iter_factor * acqopt * fs_behavior, data = data)
+
 task = TaskRegr$new("mbo", backend = data, target = "mean_perf")
 learner = default_surrogate(x1)$model
 learner$param_set$values$regr.ranger.importance = "permutation"
@@ -40,10 +51,6 @@ best[, acqf := as.factor(acqf)]
 best[, acqopt := as.factor(acqopt)]
 best[, fs_behavior := as.factor(fs_behavior)]
 
-ggparcoord(data = data, columns = c(1, 2, 4, 6, 8, 9),
-           alphaLines = 0.2,
-           groupColumn = "top5",
-           order = "Outlying")
 write.table(task$data(), "tmp.csv")
 
 data = read.table("tmp.csv")
