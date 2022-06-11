@@ -96,21 +96,31 @@ Normally used inside an <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>.</p>
     <dl><dt>instance</dt>
 <dd><p>(<a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html" class="external-link">bbotk::OptimInstanceSingleCrit</a>)<br>
 The <a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html" class="external-link">bbotk::OptimInstanceSingleCrit</a> to be optimized.</p></dd>
+
+
 <dt>init_design_size</dt>
 <dd><p>(<code>NULL</code> | <code>integer(1)</code>)<br>
 Size of the initial design.
 If <code>NULL</code> <code>4 * d</code> is used with <code>d</code> being the dimensionality of the search space.
 Points are drawn uniformly at random.</p></dd>
+
+
 <dt>surrogate</dt>
 <dd><p>(<code>NULL</code> | <a href="Surrogate.html">Surrogate</a>)<br><a href="Surrogate.html">Surrogate</a> to be used as a surrogate.
 Typically a <a href="SurrogateLearner.html">SurrogateLearner</a>.
 If <code>NULL</code> <code>default_surrogate(instance)</code> is used.</p></dd>
+
+
 <dt>acq_function</dt>
 <dd><p>(<code>NULL</code> | <a href="AcqFunction.html">AcqFunction</a>).<br><a href="AcqFunction.html">AcqFunction</a> to be used as acquisition function.
 If <code>NULL</code> <code>default_acqfun(instance)</code> is used.</p></dd>
+
+
 <dt>acq_optimizer</dt>
 <dd><p>(<a href="AcqOptimizer.html">AcqOptimizer</a>)<br><a href="AcqOptimizer.html">AcqOptimizer</a> to be used as acquisition function optimizer.
 If <code>NULL</code> <code>default_acqopt(acqfun)</code> is used.</p></dd>
+
+
 <dt>random_interleave_iter</dt>
 <dd><p>(<code>integer(1)</code>)<br>
 Every "random_interleave_iter" iteration (starting after the initial design), a point is
@@ -118,10 +128,16 @@ sampled uniformly at random and evaluated (instead of a model based proposal).
 For example, if <code>random_interleave_iter = 2</code>, random interleaving is performed in the second,
 fourth, sixth, ... iteration.
 Default is <code>0</code>, i.e., no random interleaving is performed at all.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>invisible(instance)<br>The original instance is modified in-place and returned invisible.</p>
+    
+
+<p>invisible(instance)<br></p>
+
+
+<p>The original instance is modified in-place and returned invisible.</p>
     </div>
     <div id="note">
     <h2>Note</h2>
@@ -210,7 +226,7 @@ In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), <em>Advances in Neural
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
