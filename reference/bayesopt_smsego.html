@@ -81,14 +81,14 @@ Normally used inside an <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">bayesopt_smsego</span><span class="op">(</span>
-  <span class="va">instance</span>,
-  init_design_size <span class="op">=</span> <span class="cn">NULL</span>,
-  surrogate <span class="op">=</span> <span class="cn">NULL</span>,
-  acq_function <span class="op">=</span> <span class="cn">NULL</span>,
-  acq_optimizer <span class="op">=</span> <span class="cn">NULL</span>,
-  random_interleave_iter <span class="op">=</span> <span class="fl">0L</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bayesopt_smsego</span><span class="op">(</span></span>
+<span>  <span class="va">instance</span>,</span>
+<span>  init_design_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  surrogate <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  acq_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  acq_optimizer <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  random_interleave_iter <span class="op">=</span> <span class="fl">0L</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -172,25 +172,25 @@ In <em>Proceedings of the 10th International Conference on Parallel Problem Solv
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bbotk.mlr-org.com" class="external-link">bbotk</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paradox.mlr-org.com" class="external-link">paradox</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3learners.mlr-org.com" class="external-link">mlr3learners</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">fun</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y1 <span class="op">=</span> <span class="va">xs</span><span class="op">$</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span>, y2 <span class="op">=</span> <span class="op">(</span><span class="va">xs</span><span class="op">$</span><span class="va">x</span> <span class="op">-</span> <span class="fl">2</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"><span class="va">domain</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html" class="external-link">ps</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="op">-</span><span class="fl">10</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">codomain</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html" class="external-link">ps</a></span><span class="op">(</span>y1 <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>tags <span class="op">=</span> <span class="st">"minimize"</span><span class="op">)</span>, y2 <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>tags <span class="op">=</span> <span class="st">"minimize"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">objective</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/ObjectiveRFun.html" class="external-link">ObjectiveRFun</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>fun <span class="op">=</span> <span class="va">fun</span>, domain <span class="op">=</span> <span class="va">domain</span>, codomain <span class="op">=</span> <span class="va">codomain</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">terminator</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">instance</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html" class="external-link">OptimInstanceMultiCrit</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
-<span class="r-in">  objective <span class="op">=</span> <span class="va">objective</span>,</span>
-<span class="r-in">  terminator <span class="op">=</span> <span class="va">terminator</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">bayesopt_smsego</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bbotk.mlr-org.com" class="external-link">bbotk</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paradox.mlr-org.com" class="external-link">paradox</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3learners.mlr-org.com" class="external-link">mlr3learners</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">fun</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y1 <span class="op">=</span> <span class="va">xs</span><span class="op">$</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span>, y2 <span class="op">=</span> <span class="op">(</span><span class="va">xs</span><span class="op">$</span><span class="va">x</span> <span class="op">-</span> <span class="fl">2</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="va">domain</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html" class="external-link">ps</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="op">-</span><span class="fl">10</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">codomain</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html" class="external-link">ps</a></span><span class="op">(</span>y1 <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>tags <span class="op">=</span> <span class="st">"minimize"</span><span class="op">)</span>, y2 <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>tags <span class="op">=</span> <span class="st">"minimize"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">objective</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/ObjectiveRFun.html" class="external-link">ObjectiveRFun</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>fun <span class="op">=</span> <span class="va">fun</span>, domain <span class="op">=</span> <span class="va">domain</span>, codomain <span class="op">=</span> <span class="va">codomain</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">terminator</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">instance</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html" class="external-link">OptimInstanceMultiCrit</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  objective <span class="op">=</span> <span class="va">objective</span>,</span></span>
+<span class="r-in"><span>  terminator <span class="op">=</span> <span class="va">terminator</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">bayesopt_smsego</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
