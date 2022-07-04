@@ -114,10 +114,12 @@ result = bb_optimize(
 
 ## Simple Tuning Example Using Defaults
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE, eval = TRUE}
 set.seed(1)
 library(mlr3)
+library(mlr3learners)
 library(mlr3tuning)
+library(mlr3mbo)
 
 task = tsk("pima")
 

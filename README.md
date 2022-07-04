@@ -120,7 +120,9 @@ result = bb_optimize(
 ``` r
 set.seed(1)
 library(mlr3)
+library(mlr3learners)
 library(mlr3tuning)
+library(mlr3mbo)
 
 task = tsk("pima")
 
@@ -137,3 +139,6 @@ instance = tune(
 
 instance$result
 ```
+
+    ##           cp learner_param_vals  x_domain classif.ce
+    ## 1: -4.885851          <list[2]> <list[1]>  0.1911911
