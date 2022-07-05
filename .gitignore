@@ -38,3 +38,4 @@ doc
 Meta
 attic/so_config/fanova.py
 attic/so_config/Pipfile
+attic/so_config/*.rds
