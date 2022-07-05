@@ -41,7 +41,7 @@ search_space = ps(
   num.random.splits = p_int(lower = 1L, upper = 10L, depends = splitrule == "extratrees"),
   acqf = p_fct(c("EI", "CB", "PI")),
   lambda = p_dbl(lower = 0, upper = 3L, depends = acqf == "CB"),
-  acqopt_iter_factor = p_int(lower = 10L, upper = 50L),
+  acqopt_iter_factor = p_int(lower = 20L, upper = 60L),  # lowest acqopt_iter is 20 * 90 for rbv2_gl,met
   acqopt = p_fct(c("RS", "FS")),  # FIXME: miesmuschel
   fs_behavior = p_fct(c("global", "local"), depends = acqopt == "FS")
 )
@@ -111,24 +111,26 @@ evaluate = function(xdt, instance) {
   }
   
   acq_budget = optim_instance$terminator$param_set$values$n_evals * xdt$acqopt_iter_factor
+  batch_size = optim_instance$terminator$param_set$values$n_evals
   
   acq_optimizer = if (xdt$acqopt == "RS") {
-    AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = acq_budget))
+    AcqOptimizer$new(opt("random_search", batch_size = batch_size), terminator = trm("evals", n_evals = acq_budget))
   } else if (xdt$acqopt == "FS") {
     if (xdt$fs_behavior == "global") {
       n_repeats = 10L
-      maxit = ceiling(((acq_budget / n_repeats) - 1000L) / 1000L)
+      maxit = floor(((acq_budget / n_repeats) - batch_size) / batch_size)
     } else if (xdt$fs_behavior == "local") {
-      n_repeats = 3L
-      maxit = ceiling(((acq_budget / n_repeats) - 1000L) / 1000L)
+      n_repeats = 1L
+      maxit = floor(((acq_budget / n_repeats) - batch_size) / batch_size)
     }
-    AcqOptimizer$new(opt("focus_search", n_points = 1000L, maxit = maxit), terminator = trm("evals", n_evals = acq_budget))
+    AcqOptimizer$new(opt("focus_search", n_points = batch_size, maxit = maxit), terminator = trm("evals", n_evals = acq_budget))
   }
   
   bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
   
   best = optim_instance$archive$best()[[instance$target]]
-  (best - instance$mean) / instance$sd  # normalize best w.r.t min_max.R empirical mean and sd
+  # (best - instance$mean) / instance$sd  # normalize best w.r.t min_max.R empirical mean and sd
+  instance$ecdf(best)  # evaluate the precomputed ecdf for the best value found; our target is effectively P(X <= best)
 }
 
 # FIXME: maybe add that the objective stores its state on disk after each eval
@@ -148,7 +150,7 @@ objective = ObjectiveRFunDt$new(
 
 ac_instance = OptimInstanceSingleCrit$new(
   objective = objective,
-  terminator = trm("evals", n_evals = 230L)  # 30 init design + 200
+  terminator = trm("evals", n_evals = 280L)  # 30 init design + 250
 )
 
 surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% lrn("regr.ranger", num.trees = 2000L, keep.inbag = TRUE)))

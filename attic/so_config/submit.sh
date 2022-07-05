@@ -2,7 +2,7 @@
 
 sbatch <<EOT
 #!/bin/sh
-#SBATCH --time=4-00:00:0
+#SBATCH --time=7-00:00:0
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=35
 #SBATCH --mem-per-cpu=2000
