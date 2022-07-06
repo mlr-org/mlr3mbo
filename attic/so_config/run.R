@@ -41,7 +41,7 @@ search_space = ps(
   num.random.splits = p_int(lower = 1L, upper = 10L, depends = splitrule == "extratrees"),
   acqf = p_fct(c("EI", "CB", "PI")),
   lambda = p_dbl(lower = 0, upper = 3L, depends = acqf == "CB"),
-  acqopt_iter_factor = p_int(lower = 20L, upper = 60L),  # lowest acqopt_iter is 20 * 90 for rbv2_gl,met
+  acqopt_iter_factor = p_int(lower = 1L, upper = 20L),  # lowest acqopt_iter is 1000 * 1
   acqopt = p_fct(c("RS", "FS")),  # FIXME: miesmuschel
   fs_behavior = p_fct(c("global", "local"), depends = acqopt == "FS")
 )
@@ -110,18 +110,19 @@ evaluate = function(xdt, instance) {
     AcqFunctionPI$new()
   }
   
-  acq_budget = optim_instance$terminator$param_set$values$n_evals * xdt$acqopt_iter_factor
-  batch_size = optim_instance$terminator$param_set$values$n_evals
+  acq_budget = 1000 * xdt$acqopt_iter_factor
   
   acq_optimizer = if (xdt$acqopt == "RS") {
-    AcqOptimizer$new(opt("random_search", batch_size = batch_size), terminator = trm("evals", n_evals = acq_budget))
+    AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = acq_budget))
   } else if (xdt$acqopt == "FS") {
     if (xdt$fs_behavior == "global") {
       n_repeats = 10L
-      maxit = floor(((acq_budget / n_repeats) - batch_size) / batch_size)
+      maxit = 2L
+      batch_size = ceiling((acq_budget / n_repeats) / (1 + maxit))
     } else if (xdt$fs_behavior == "local") {
-      n_repeats = 1L
-      maxit = floor(((acq_budget / n_repeats) - batch_size) / batch_size)
+      n_repeats = 2L
+      maxit = 10L
+      batch_size = ceiling((acq_budget / n_repeats) / (1 + maxit))
     }
     AcqOptimizer$new(opt("focus_search", n_points = batch_size, maxit = maxit), terminator = trm("evals", n_evals = acq_budget))
   }
@@ -130,7 +131,9 @@ evaluate = function(xdt, instance) {
   
   best = optim_instance$archive$best()[[instance$target]]
   # (best - instance$mean) / instance$sd  # normalize best w.r.t min_max.R empirical mean and sd
-  instance$ecdf(best)  # evaluate the precomputed ecdf for the best value found; our target is effectively P(X <= best)
+  ecdf_best = instance$ecdf(best)  # evaluate the precomputed ecdf for the best value found; our target is effectively P(X <= best)
+  cat("scenario:", instance$scenario, "instance:", instance$instance, "ECDF_best:", ecdf_best, "\n")
+  ecdf_best
 }
 
 # FIXME: maybe add that the objective stores its state on disk after each eval
@@ -150,7 +153,7 @@ objective = ObjectiveRFunDt$new(
 
 ac_instance = OptimInstanceSingleCrit$new(
   objective = objective,
-  terminator = trm("evals", n_evals = 280L)  # 30 init design + 250
+  terminator = trm("evals", n_evals = 230L)  # 30 init design + 200
 )
 
 surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% lrn("regr.ranger", num.trees = 2000L, keep.inbag = TRUE)))
@@ -158,6 +161,7 @@ acq_function = AcqFunctionEI$new()
 acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))
 design = generate_design_lhs(ac_instance$search_space, n = 30L)$data
 ac_instance$eval_batch(design)
+saveRDS(ac_instance, paste0("ac_instance_", run_id, ".rds"))
 bayesopt_ego(ac_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = 5L)
 saveRDS(ac_instance, paste0("ac_instance_", run_id, ".rds"))
 
