@@ -40,6 +40,18 @@ archive_x = function(archive) {
   archive$data[, archive$cols_x, with = FALSE]
 }
 
+# durring surrogate prediction it may have happened the whole columns where dropped (e.g., during focussearch if the search space was shrinked)
+fix_xdt_missing = function(xdt, archive) {
+  missing = archive$cols_x[archive$cols_x %nin% colnames(xdt)]
+  types = map_chr(missing, function(x) typeof(archive$data[[x]]))
+  NA_types = list(double = NA_real_, integer = NA_integer_, character = NA_character_)[types]
+  for (i in seq_along(missing)) {
+    xdt[, eval(missing[i]) := NA_types[i]]
+  }
+  assert_set_equal(colnames(xdt), archive$cols_x)
+  xdt
+}
+
 get_gower_dist = function(x, y = NULL) {
   # if y is NULL we get the Gower distance of x pairwise with itself and set the diagonal to ones
   # otherwise we get the Gower dist_threshold of x pairwise with y

@@ -55,9 +55,11 @@ SurrogateLearners = R6Class("SurrogateLearners",
     #' @return list of [data.table::data.table()]s with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
+      xdt = fix_xdt_missing(xdt, archive = self$archive)
+      xdt = char_to_fct(xdt)
 
       preds = lapply(self$model, function(model) {
-        pred = model$predict_newdata(newdata = char_to_fct(xdt))
+        pred = model$predict_newdata(newdata = xdt)
         if (model$predict_type == "se") {
           data.table(mean = pred$response, se = pred$se)
         } else {
