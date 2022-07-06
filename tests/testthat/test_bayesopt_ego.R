@@ -133,3 +133,13 @@ test_that("bayesopt_ego eips", {
   expect_true("acq_eips" %in% names(instance$archive$data))
   expect_equal(names(surrogate$model), c("y", "time"))
 })
+
+test_that("bayesopt_ego random interleave", {
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
+  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
+  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = 2L)
+  expect_true(nrow(instance$archive$data) == 10L)
+  expect_identical(is.na(instance$archive$data$acq_ei), c(rep(TRUE, 4L), FALSE, TRUE, FALSE, TRUE, FALSE, TRUE))
+})
+

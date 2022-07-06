@@ -30,7 +30,7 @@ set.seed(seeds[run_id])
 
 search_space = ps(
   init = p_fct(c("random", "lhs")),
-  init_size_factor = p_int(lower = 0L, upper = 6L),
+  init_size_factor = p_int(lower = 1L, upper = 6L),
   random_interleave = p_lgl(),
   random_interleave_iter = p_int(lower = 2L, upper = 10L, depends = random_interleave == TRUE),
   #surrogate = p_fct(c("GP", "RF")),  # FIXME: BANANAS NN ensemble
@@ -136,15 +136,15 @@ evaluate = function(xdt, instance) {
   ecdf_best
 }
 
-# FIXME: maybe add that the objective stores its state on disk after each eval
 objective = ObjectiveRFunDt$new(
   fun = function(xdt) {
+    saveRDS(ac_instance, paste0("ac_instance_", run_id, ".rds"))
     map_dtr(seq_len(nrow(xdt)), function(i) {
       plan("multicore")
       tmp = future_lapply(transpose_list(instances), function(instance) {
-        evaluate(xdt[i, ], instance)
+        res_instance = tryCatch(evaluate(xdt[i, ], instance), error = function(error_condition) NA_real_)
       }, future.seed = TRUE)
-      data.table(mean_perf = mean(unlist(tmp)), raw_perfs = list(tmp))
+      data.table(mean_perf = mean(unlist(tmp), na.rm = TRUE), raw_perfs = list(tmp), n_na = sum(is.na(unlist(tmp))))
     })
   },
   domain = search_space,

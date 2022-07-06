@@ -47,7 +47,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
       param_classes = feature_types_to_param_classes(acq_function$surrogate$model$feature_types)
       properties = c("dependencies", "multi-crit", "single-crit")  # FIXME: properties should be inferred automatically
       packages = "mlr3mbo" # FIXME: maybe not so important? Surrogate package etc.?
-      super$initialize(param_set, param_classes, properties, packages)
+      super$initialize("mbo", param_set, param_classes, properties, packages, label = "Model Based Optimization", man = "mlr3mbo::OptimizerMbo")
       self$loop_function = assert_function(loop_function, null.ok = TRUE)
       self$surrogate = assert_r6(surrogate, "Surrogate", null.ok = TRUE)
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
