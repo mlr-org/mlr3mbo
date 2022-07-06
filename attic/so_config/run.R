@@ -6,7 +6,7 @@ library(mlr3)
 library(mlr3misc)
 library(mlr3learners)
 library(mlr3pipelines)
-library(bbotk)  # @focussearch
+library(bbotk)
 library(paradox)
 library(mlr3mbo)  # @so_config
 reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
