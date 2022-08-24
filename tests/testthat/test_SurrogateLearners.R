@@ -4,6 +4,7 @@ test_that("SurrogateLearners API works", {
   inst$eval_batch(design)
   surrogate = SurrogateLearners$new(learners = list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)), archive = inst$archive)
   expect_r6(surrogate$archive, "Archive")
+  expect_equal(surrogate$x_cols, "x")
   expect_equal(surrogate$y_cols, c("y1", "y2"))
   surrogate$update()
   expect_learner(surrogate$model[[1L]])

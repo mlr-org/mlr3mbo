@@ -15,8 +15,9 @@ SurrogateLearners = R6Class("SurrogateLearners",
     #'
     #' @param learners (list of [mlr3::LearnerRegr]).
     #' @param archive (`NULL` | [bbotk::Archive]).
+    #' @param x_cols (`NULL` | `character()`).
     #' @param y_cols (`NULL` | `character()`).
-    initialize = function(learners, archive = NULL, y_cols = NULL) {
+    initialize = function(learners, archive = NULL, x_cols = NULL, y_cols = NULL) {
       # FIXME: deep clone learners?
       addresses = map(learners, address)
       if (length(unique(addresses)) != length(addresses)) {
@@ -31,6 +32,7 @@ SurrogateLearners = R6Class("SurrogateLearners",
 
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 
+      assert_character(x_cols, min.len = 1L, null.ok = TRUE)
       assert_character(y_cols, len = length(learners), null.ok = TRUE)
 
       ps = ParamSet$new(list(
@@ -42,7 +44,7 @@ SurrogateLearners = R6Class("SurrogateLearners",
       ps$add_dep("perf_measures", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_thresholds", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
 
-      super$initialize(model = learners, archive = archive, y_cols = y_cols, param_set = ps)
+      super$initialize(model = learners, archive = archive, x_cols = x_cols, y_cols = y_cols, param_set = ps)
     },
 
     #' @description
@@ -55,7 +57,7 @@ SurrogateLearners = R6Class("SurrogateLearners",
     #' @return list of [data.table::data.table()]s with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
-      xdt = fix_xdt_missing(xdt, archive = self$archive)
+      xdt = fix_xdt_missing(xdt, x_cols = self$x_cols, archive = self$archive)
       xdt = char_to_fct(xdt)
 
       preds = lapply(self$model, function(model) {
@@ -117,7 +119,7 @@ SurrogateLearners = R6Class("SurrogateLearners",
     # Train model with new data.
     # Also calculates the insample performance based on the `perf_measures` hyperparameter if `calc_insample_perf = TRUE`.
     .update = function() {
-      xydt = char_to_fct(self$archive$data[, c(self$archive$cols_x, self$y_cols), with = FALSE])
+      xydt = char_to_fct(self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE])
       backend = as_data_backend(xydt)  # we do this here to save time in the lapply below
       features = setdiff(names(xydt), self$y_cols)
 

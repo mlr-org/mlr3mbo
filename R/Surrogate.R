@@ -15,12 +15,14 @@ Surrogate = R6Class("Surrogate",
     #'
     #' @param model (Model).
     #' @param archive (`NULL` | [bbotk::Archive]).
+    #' @param x_cols (`NULL` | `character()`).
     #' @param y_cols (`NULL` | `character()`).
     #' @param param_set ([paradox::ParamSet]).
-    initialize = function(model, archive, y_cols, param_set) {
+    initialize = function(model, archive, x_cols, y_cols, param_set) {
       # most assertions are done in derived classes
       self$model = model
       private$.archive = archive
+      private$.x_cols = x_cols  # assertion is done in SurrogateLearner or SurrogateLearners
       private$.y_cols = y_cols  # assertion is done in SurrogateLearner or SurrogateLearners
       private$.param_set = assert_r6(param_set, classes = "ParamSet")
     },
@@ -71,6 +73,16 @@ Surrogate = R6Class("Surrogate",
       stop("Abstract.")
     },
 
+    #' @field x_cols (`character()`).
+    x_cols = function(rhs) {
+      if (missing(rhs)) {
+        if (is.null(private$.x_cols)) self$archive$cols_x else private$.x_cols
+      } else {
+        private$.x_cols = assert_character(rhs, min.len = 1L)
+      }
+    },
+
+
     #' @field y_cols (`character()`).
     y_cols = function(rhs) {
       if (missing(rhs)) {
@@ -108,6 +120,8 @@ Surrogate = R6Class("Surrogate",
   private = list(
 
     .archive = NULL,
+
+    .x_cols = NULL,
 
     .y_cols = NULL,
 

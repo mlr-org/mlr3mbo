@@ -43,7 +43,7 @@ Asserts whether the current insample performance meets the performance threshold
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearners$new(learners, archive = NULL, y_cols = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearners$new(learners, archive = NULL, x_cols = NULL, y_cols = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -52,6 +52,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
 
 \item{\code{archive}}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive}).}
+
+\item{\code{x_cols}}{(\code{NULL} | \code{character()}).}
 
 \item{\code{y_cols}}{(\code{NULL} | \code{character()}).}
 }

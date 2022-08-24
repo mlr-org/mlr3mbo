@@ -41,14 +41,14 @@ archive_x = function(archive) {
 }
 
 # durring surrogate prediction it may have happened the whole columns where dropped (e.g., during focussearch if the search space was shrinked)
-fix_xdt_missing = function(xdt, archive) {
-  missing = archive$cols_x[archive$cols_x %nin% colnames(xdt)]
+fix_xdt_missing = function(xdt, x_cols, archive) {
+  missing = x_cols[x_cols %nin% colnames(xdt)]
   types = map_chr(missing, function(x) typeof(archive$data[[x]]))
   NA_types = list(double = NA_real_, integer = NA_integer_, character = NA_character_)[types]
   for (i in seq_along(missing)) {
     xdt[, eval(missing[i]) := NA_types[i]]
   }
-  assert_set_equal(colnames(xdt), archive$cols_x)
+  assert_subset(x_cols, colnames(xdt))
   xdt
 }
 

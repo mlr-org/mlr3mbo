@@ -13,8 +13,9 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #'
     #' @param learner ([mlr3::LearnerRegr]).
     #' @param archive (`NULL` | [bbotk::Archive]).
+    #' @param x_cols (`NULL` | `character()`).
     #' @param y_col (`NULL` | `character(1)`).
-    initialize = function(learner, archive = NULL, y_col = NULL) {
+    initialize = function(learner, archive = NULL, x_cols = NULL, y_col = NULL) {
       # FIXME: deep clone learner?
       assert_learner(learner)
       if (learner$predict_type != "se" && "se" %in% learner$predict_types) {
@@ -23,6 +24,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
 
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 
+      assert_character(x_cols, min.len = 1L, null.ok = TRUE)
       assert_string(y_col, null.ok = TRUE)
 
       ps = ParamSet$new(list(
@@ -34,7 +36,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
       ps$add_dep("perf_measure", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_threshold", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
 
-      super$initialize(model = learner, archive = archive, y_cols = y_col, param_set = ps)
+      super$initialize(model = learner, archive = archive, x_cols = x_cols, y_cols = y_col, param_set = ps)
     },
 
     #' @description
@@ -46,7 +48,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
-      xdt = fix_xdt_missing(xdt, archive = self$archive)
+      xdt = fix_xdt_missing(xdt, x_cols = self$x_cols, archive = self$archive)
       xdt = char_to_fct(xdt)
 
       pred = self$model$predict_newdata(newdata = xdt)
@@ -95,7 +97,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Train model with new data.
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `calc_insample_perf = TRUE`.
     .update = function() {
-      xydt = self$archive$data[, c(self$archive$cols_x, self$y_cols), with = FALSE]
+      xydt = self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE]
       task = TaskRegr$new(id = "surrogate_task", backend = char_to_fct(xydt), target = self$y_cols)
       assert_learnable(task, learner = self$model)
       self$model$train(task)

@@ -21,6 +21,8 @@ Surrogate model.
 \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of \link[mlr3:Learner]{mlr3::Learner}s.}
 
+\item{\code{x_cols}}{(\code{character()}).}
+
 \item{\code{y_cols}}{(\code{character()}).}
 
 \item{\code{insample_perf}}{(\code{numeric()})\cr
@@ -49,7 +51,7 @@ Asserts whether the current insample performance meets the performance threshold
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$new(model, archive, y_cols, param_set)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Surrogate$new(model, archive, x_cols, y_cols, param_set)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -58,6 +60,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{model}}{(Model).}
 
 \item{\code{archive}}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive}).}
+
+\item{\code{x_cols}}{(\code{NULL} | \code{character()}).}
 
 \item{\code{y_cols}}{(\code{NULL} | \code{character()}).}
 
