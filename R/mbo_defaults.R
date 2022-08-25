@@ -129,7 +129,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
     require_namespaces("ranger")
     fallback = mlr3learners::LearnerRegrRanger$new()
     fallback$param_set$values = insert_named(
-      learner$param_set$values,
+      fallback$param_set$values,
       list(num.trees = 500L, keep.inbag = TRUE)
     )
     learner$fallback = fallback
