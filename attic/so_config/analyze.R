@@ -9,7 +9,7 @@ library(GGally)
 x1 = readRDS("ac_instance_1.rds")
 x2 = readRDS("ac_instance_2.rds")
 x3 = readRDS("ac_instance_3.rds")
-x4 = readRDS("ac_instance_4.rds")
+x4 = readRDS("ac_instance_4.rds")  # FIXME: currently only 166/230 evals
 x5 = readRDS("ac_instance_5.rds")
 
 data = rbind(x1$archive$data, x2$archive$data, x3$archive$data, x4$archive$data, x5$archive$data)[, c(x1$archive$cols_x, x1$archive$cols_y), with = FALSE]
@@ -51,14 +51,7 @@ best[, acqf := as.factor(acqf)]
 best[, acqopt := as.factor(acqopt)]
 best[, fs_behavior := as.factor(fs_behavior)]
 
-write.table(task$data(), "tmp.csv")
+summary(best[random_interleave == FALSE & acqopt == "FS" & fs_behavior == "global"])
 
-data = read.table("tmp.csv")
-task = TaskRegr$new("mbo", backend = data, target = "mean_perf")
-task = ppl("robustify", impute_missings = TRUE, factors_to_numeric = TRUE)$train(task)[[1L]]
-data = task$data()
-data[, random_interleave := as.integer(random_interleave)]
-
-write.table(data[, - 1], "X.csv", sep = ",", row.names = FALSE, col.names = FALSE)
-write.table(data[, 1], "Y.csv", sep = ",", row.names = FALSE, col.names = FALSE)
-
+# we go with
+# init = lhs, init_size_factor = 6, random_interleave = FALSE, num.trees = 250, splitrule = extratrees, num.random.splits = 8, acqf = CB, lambda = 2.8, acqopt_iter_factor = 6, acqopt = FS, fs_behavior = global
