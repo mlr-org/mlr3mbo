@@ -2,7 +2,7 @@ Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization in R
 Version: 0.0.0.9000
-Authors@R:c(
+Authors@R: c(
     person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0003-4152-5308")),
     person("Jakob", "Richter", , "jakob1richter@gmail.com", role = "aut",
@@ -37,6 +37,7 @@ Imports:
 Suggests:
     DiceKriging,
     lhs,
+    ggplot2,
     mlr3learners,
     mlr3pipelines,
     ranger,
@@ -60,6 +61,7 @@ Collate:
     'AcqFunctionPI.R'
     'AcqFunctionSmsEgo.R'
     'AcqOptimizer.R'
+    'LearnerRegrRangerCustom.R'
     'OptimizerMbo.R'
     'Surrogate.R'
     'SurrogateLearner.R'

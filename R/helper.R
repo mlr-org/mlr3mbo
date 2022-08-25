@@ -31,9 +31,19 @@ archive_xy = function(archive) {
 char_to_fct = function(xydt) {
   # Convert character params to factors
   chr_cols = names(xydt)[map_chr(xydt, class) == "character"]
-  if (length(chr_cols))
+  if (length(chr_cols)) {
     xydt[, (chr_cols) := map(.SD, as.factor), .SDcols = chr_cols]
-  return(xydt)
+  }
+  xydt
+}
+
+fct_to_char = function(xydt) {
+  # Convert factor params to character
+  fct_cols = names(xydt)[map_chr(xydt, class) %in% c("factor", "ordered")]
+  if (length(fct_cols)) {
+    xydt[, (fct_cols) := map(.SD, as.character), .SDcols = fct_cols]
+  }
+  xydt
 }
 
 archive_x = function(archive) {

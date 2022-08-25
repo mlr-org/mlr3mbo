@@ -15,6 +15,10 @@
   # nocov start
   backports::import(pkgname)
 
+  # add rregr.ranger_custom to learner dictionary
+  x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
+  x$add("regr.ranger_custom", LearnerRegrRangerCustom)
+
   # add mbo to tuner dictionary
   x = utils::getFromNamespace("mlr_tuners", ns = "mlr3tuning")
   x$add("mbo", TunerMbo)
