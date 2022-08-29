@@ -103,19 +103,36 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
   if (is.null(learner)) {
     is_mixed_space = !all(instance$search_space$class %in% c("ParamDbl", "ParamInt"))
     has_deps = nrow(instance$search_space$deps) > 0L
+    require_namespaces("mlr3learners")
     if (!is_mixed_space) {
-      learner = lrn("regr.km", covtype = "matern3_2", optim.method = "gen")
+      require_namespaces("DiceKriging")
+      learner = mlr3learners::LearnerRegrKM$new()
+      learner$param_set$values = insert_named(
+        learner$param_set$values,
+        list(covtype = "matern3_2", optim.method = "gen")
+      )
       if ("noisy" %in% instance$objective$properties) {
         learner$param_set$values = insert_named(learner$param_set$values, list(nugget.estim = TRUE, jitter = 1e-12))
       } else {
         learner$param_set$values = insert_named(learner$param_set$values, list(nugget.stability = 10^-8))
       }
     } else {
-      learner = lrn("regr.ranger", num.trees = 500L, keep.inbag = TRUE)
+      require_namespaces("ranger")
+      learner = mlr3learners::LearnerRegrRanger$new()
+      learner$param_set$values = insert_named(
+        learner$param_set$values,
+        list(num.trees = 500L, keep.inbag = TRUE)
+      )
     }
     # Stability: evaluate and add a fallback
     learner$encapsulate[c("train", "predict")] = "evaluate"
-    learner$fallback = lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)
+    require_namespaces("ranger")
+    fallback = mlr3learners::LearnerRegrRanger$new()
+    fallback$param_set$values = insert_named(
+      fallback$param_set$values,
+      list(num.trees = 500L, keep.inbag = TRUE)
+    )
+    learner$fallback = fallback
 
     if (has_deps) {
       require_namespaces("mlr3pipelines")
