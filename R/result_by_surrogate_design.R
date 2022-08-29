@@ -1,7 +1,7 @@
-#' @title Choose Final Point by Surrogate Mean
+#' @title Choose Final Point(s) by Surrogate Mean
 #'
 #' @description
-#' Choose final point by best surrogate mean prediction on all evaluated points.
+#' Choose final point(s) by best surrogate mean prediction on all evaluated points.
 #'
 #' @param instance ([bbotk::OptimInstanceSingleCrit] | [bbotk::OptimInstanceMultiCrit])\cr
 #'   The [bbotk::OptimInstance] the result should be assigned to.
@@ -23,13 +23,15 @@ result_by_surrogate_design = function(instance, optimizer_mbo) {
   }
   archive_tmp = archive$clone(deep = TRUE)
   archive_tmp$data[, surrogate$y_cols := means]
-  best = archive_tmp$best()
+  best = archive_tmp$best()[, archive_tmp$cols_x, with = FALSE]
+
+  # ys are still the ones originally evaluated
   best_y = if (test_r6(instance, classes = "OptimInstanceSingleCrit")) {
-    unlist(best[, archive$cols_y, with = FALSE])
+    unlist(archive$data[best, on = archive$cols_x][, archive$cols_y, with = FALSE])
   } else if (test_r6(instance, classes = "OptimInstanceMultiCrit")) {
-    best[, archive$cols_y, with = FALSE]
+    archive$data[best, on = archive$cols_x][, archive$cols_y, with = FALSE]
   }
-  instance$assign_result(xdt = best[, archive$cols_x, with = FALSE], best_y)
+  instance$assign_result(xdt = best, best_y)
   invisible(instance)
 }
 
