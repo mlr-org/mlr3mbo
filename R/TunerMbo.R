@@ -82,7 +82,7 @@ TunerMbo = R6Class("TunerMbo",
      if (missing(rhs)) {
         private$.optimizer$result_function
       } else {
-        private$.optimizer$result_function = assert_function(result_function, null.ok = TRUE)
+        private$.optimizer$result_function = assert_function(rhs, null.ok = TRUE)
       }
     }
   )
