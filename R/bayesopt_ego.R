@@ -109,7 +109,7 @@ bayesopt_ego = function(
   archive = instance$archive
   domain = instance$search_space
   d = domain$length
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d else init_design_size = instance$archive$n_evals 
   if (is.null(surrogate)) surrogate = default_surrogate(instance)
   if (is.null(acq_function)) acq_function = default_acqfun(instance)
   if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)

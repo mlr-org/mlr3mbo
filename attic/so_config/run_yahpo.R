@@ -246,12 +246,42 @@ mlr3mbo_wrapper_new_rf = function(job, data, instance, ...) {
   optim_instance
 }
 
+mlr3mbo_wrapper_new_rf_ls = function(job, data, instance, ...) {
+  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
+  library(yahpogym)
+  logger = lgr::get_logger("bbotk")
+  logger$set_threshold("warn")
+  future::plan("sequential")
+
+  optim_instance = make_optim_instance(instance)
+
+  d = optim_instance$search_space$length
+  init_design_size = max(c(3L, d * 1L))
+  init_design = generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
+  optim_instance$eval_batch(init_design)
+  
+  random_interleave_iter = 3L
+  
+  learner = lrn("regr.ranger_custom")
+  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
+
+  acq_function = AcqFunctionEI$new()
+  
+  acq_optimizer = AcqOptimizer$new(opt("local_search", n_points = 100L), terminator = trm("evals", n_evals = 10000L))
+  acq_optimizer$param_set$values$warmstart = TRUE
+  acq_optimizer$param_set$values$warmstart_size = 10L
+  
+  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
+  optim_instance
+}
+
 # add algorithms
 addAlgorithm("mlr3mbo", fun = mlr3mbo_wrapper)
 addAlgorithm("mlrintermbo", fun = mlrintermbo_wrapper)
 addAlgorithm("mlr3mbo_default", fun = mlr3mbo_default_wrapper)
 addAlgorithm("mlr3mbo_custom", fun = mlr3mbo_wrapper_custom)
 addAlgorithm("mlr3mbo_new_rf", fun = mlr3mbo_wrapper_new_rf)
+addAlgorithm("mlr3mbo_new_rf_ls", fun = mlr3mbo_wrapper_new_rf_ls)
 
 # setup scenarios and instances
 get_nb301_setup = function(budget_factor = 40L) {
@@ -323,7 +353,7 @@ prob_designs = unlist(prob_designs, recursive = FALSE, use.names = FALSE)
 names(prob_designs) = nn
 
 # add jobs for optimizers
-optimizers = data.table(algorithm = c("mlr3mbo", "mlrintermbo", "mlr3mbo_default", "mlr3mbo_custom", "mlr3mbo_new_rf"))
+optimizers = data.table(algorithm = c("mlr3mbo", "mlrintermbo", "mlr3mbo_default", "mlr3mbo_custom", "mlr3mbo_new_rf", "mlr3mbo_new_rf_ls"))
 
 for (i in seq_len(nrow(optimizers))) {
   algo_designs = setNames(list(optimizers[i, ]), nm = optimizers[i, ]$algorithm)
@@ -337,7 +367,7 @@ for (i in seq_len(nrow(optimizers))) {
 }
 
 jobs = findJobs()
-resources.default = list(walltime = 3600 * 5L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
+resources.default = list(walltime = 3600 * 12L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()

@@ -4,7 +4,7 @@ library(pammtools)
 library(mlr3misc)
 
 #dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method != "mlrintermbo"]
-dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method %in% c("mlr3mbo", "mlrintermbo", "mlr3mbo_default", "random", "smac4hpo")]
+dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method %in% c("mlr3mbo", "mlrintermbo", "random", "smac4hpo", "smac4mf", "mlr3mbo_new_rf")]
 dat[, cumbudget := cumsum(budget), by = .(method, scenario, instance, repl)]
 dat[, cumbudget_scaled := cumbudget / max(cumbudget), by = .(method, scenario, instance, repl)]
 dat[, normalized_regret := (target - min(target)) / (max(target) - min(target)), by = .(scenario, instance)]
