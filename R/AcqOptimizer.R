@@ -30,7 +30,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
       ps = ps(
         logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
         warmstart = p_lgl(default = FALSE),
-        warmstart_size = p_int(lower = 1L),
+        warmstart_size = p_int(lower = 1L, special_vals = list("all")),
         fix_distance = p_lgl(default = FALSE),
         dist_threshold = p_dbl(lower = 0, upper = 1)
       )
@@ -59,6 +59,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
       logger = lgr::get_logger("bbotk")
       old_threshold = logger$threshold
       logger$set_threshold(self$param_set$values$logging_level)
+      on.exit(logger$set_threshold(old_threshold))
 
       instance = if (self$acq_function$codomain$length == 1L) {
         OptimInstanceSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "all")
@@ -70,11 +71,13 @@ AcqOptimizer = R6Class("AcqOptimizer",
       }
 
       if (self$param_set$values$warmstart) {
+        warmstart_size = if (self$param_set$values$warmstart_size == "all") Inf
         # NOTE: is this save if e.g. mu < nrow(best) in miesmuschel?
-        n_select = min(nrow(self$acq_function$archive$data), self$param_set$values$warmstart_size)
+        n_select = min(nrow(self$acq_function$archive$data), warmstart_size)
         instance$eval_batch(self$acq_function$archive$best(n_select = n_select)[, instance$search_space$ids(), with = FALSE])
       }
 
+      # FIXME: how do we handle multic-rit here
       xdt = tryCatch(self$optimizer$optimize(instance),
         error = function(error_condition) {
           lg$info(error_condition$message)
@@ -83,12 +86,20 @@ AcqOptimizer = R6Class("AcqOptimizer",
             classes = c("mbo_error", "acq_optimizer_error", "error", "condition")))
         }
       )
+      # check if candidate was already evaluated and if so get the best one not evaluated so far
+      if (nrow(self$acq_function$archive$data[xdt[, instance$archive$cols_x, with = FALSE], on = instance$archive$cols_x]) > 0L) {
+        xdt = tryCatch(get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data),
+          error = function(error_condition) {
+            lg$info(error_condition$message)
+            stop(set_class(list(message = error_condition$message, call = NULL),
+              classes = c("mbo_error", "acq_optimizer_error", "error", "condition")))
+          }
+        )
+      }
 
       if (self$param_set$values$fix_distance) {
         xdt = fix_xdt_distance(xdt, previous_xdt = archive_x(self$acq_function$archive), search_space = self$acq_function$domain, dist_threshold = self$param_set$values$dist_threshold)
       }
-
-      logger$set_threshold(old_threshold)
 
       xdt
     }
@@ -121,3 +132,16 @@ AcqOptimizer = R6Class("AcqOptimizer",
     }
   )
 )
+
+# FIXME: document
+get_best_not_evaluated = function(instance, evaluated) {
+  assert_r6(instance, classes = "OptimInstanceSingleCrit")
+  data = copy(instance$archive$data[, c(instance$archive$cols_x, instance$archive$cols_y), with = FALSE])
+  evaluated = copy(evaluated)
+  data[, overlap := FALSE][evaluated, overlap := TRUE, on = instance$archive$cols_x]
+  candidates = data[overlap == FALSE]
+  candidates[[instance$archive$cols_y]] = candidates[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
+  xdt = setorderv(candidates, cols = instance$archive$cols_y)[1L, ]
+  xdt[[instance$archive$cols_y]] = xdt[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
+  xdt
+}
