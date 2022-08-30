@@ -7,11 +7,14 @@ library(mlr3misc)
 library(mlr3mbo)  # @so_config
 library(bbotk)
 library(paradox)
+library(R6)
+library(checkmate)
+
 reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
 library(reticulate)
 yahpo_gym = import("yahpo_gym")
 
-packages = c("data.table", "mlr3", "mlr3learners", "mlr3pipelines", "mlr3misc", "mlr3mbo", "bbotk", "paradox", "mlrintermbo")
+packages = c("data.table", "mlr3", "mlr3learners", "mlr3pipelines", "mlr3misc", "mlr3mbo", "bbotk", "paradox", "mlrintermbo", "R6", "checkmate")
 
 RhpcBLASctl::blas_set_num_threads(1L)
 RhpcBLASctl::omp_set_num_threads(1L)
@@ -272,6 +275,7 @@ mlr3mbo_wrapper_new_rf_ls = function(job, data, instance, ...) {
 
   acq_optimizer$param_set$values$warmstart = TRUE
   acq_optimizer$param_set$values$warmstart_size = "all"
+  acq_optimizer$param_set$values$logging_level = "info"
   
   bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
   optim_instance
