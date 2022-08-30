@@ -19,7 +19,7 @@ RhpcBLASctl::omp_set_num_threads(1L)
 root = here::here()
 experiments_dir = file.path(root)
 
-source_files = map_chr("helpers.R", function(x) file.path(experiments_dir, x))
+source_files = map_chr(c("helpers.R", "OptimizerChain.R"), function(x) file.path(experiments_dir, x))
 for (sf in source_files) {
   source(sf)
 }
@@ -222,7 +222,7 @@ mlr3mbo_wrapper_new_rf = function(job, data, instance, ...) {
   optim_instance = make_optim_instance(instance)
 
   d = optim_instance$search_space$length
-  init_design_size = max(c(3L, d * 1L))
+  init_design_size = 4L * d
   init_design = generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
   optim_instance$eval_batch(init_design)
   
@@ -256,20 +256,22 @@ mlr3mbo_wrapper_new_rf_ls = function(job, data, instance, ...) {
   optim_instance = make_optim_instance(instance)
 
   d = optim_instance$search_space$length
-  init_design_size = max(c(3L, d * 1L))
+  init_design_size = 4L * d
   init_design = generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
   optim_instance$eval_batch(init_design)
   
-  random_interleave_iter = 3L
+  random_interleave_iter = 0L
   
   learner = lrn("regr.ranger_custom")
   surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
 
   acq_function = AcqFunctionEI$new()
-  
-  acq_optimizer = AcqOptimizer$new(opt("local_search", n_points = 100L), terminator = trm("evals", n_evals = 10000L))
+ 
+  optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10000L), trm("evals", n_evals = 10000L)))
+  acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20000L))
+
   acq_optimizer$param_set$values$warmstart = TRUE
-  acq_optimizer$param_set$values$warmstart_size = 10L
+  acq_optimizer$param_set$values$warmstart_size = "all"
   
   bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
   optim_instance
@@ -367,7 +369,7 @@ for (i in seq_len(nrow(optimizers))) {
 }
 
 jobs = findJobs()
-resources.default = list(walltime = 3600 * 12L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
+resources.default = list(walltime = 3600 * 6L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()

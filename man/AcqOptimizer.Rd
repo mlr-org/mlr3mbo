@@ -29,14 +29,14 @@ Set of hyperparameters.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{AcqOptimizer$new()}}
-\item \href{#method-optimize}{\code{AcqOptimizer$optimize()}}
-\item \href{#method-clone}{\code{AcqOptimizer$clone()}}
+\item \href{#method-AcqOptimizer-new}{\code{AcqOptimizer$new()}}
+\item \href{#method-AcqOptimizer-optimize}{\code{AcqOptimizer$optimize()}}
+\item \href{#method-AcqOptimizer-clone}{\code{AcqOptimizer$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-AcqOptimizer-new"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
@@ -56,8 +56,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-optimize"></a>}}
-\if{latex}{\out{\hypertarget{method-optimize}{}}}
+\if{html}{\out{<a id="method-AcqOptimizer-optimize"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-optimize}{}}}
 \subsection{Method \code{optimize()}}{
 Optimize the acquisition function.
 
@@ -77,8 +77,8 @@ the checks but most likely will.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-AcqOptimizer-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

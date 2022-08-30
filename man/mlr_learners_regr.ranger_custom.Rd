@@ -9,24 +9,26 @@ Custom random regression forest.
 Calls \code{\link[ranger:ranger]{ranger::ranger()}} from package \CRANpkg{ranger}.
 This custom random regression forest tries to mimic the behaviour of a Gaussian process and therefore may be more suitable for Bayesian optimization compared to a normal random regression forest.
 
-By default, the \code{"extratrees"} splitting rule is used with \code{num.random.splits = 1}.
+The \code{"extratrees"} splitting rule is used with \code{num.random.splits = 1}.
 This results in a rather smooth prediction function.
 No bootstrap or subsampling is used but rather all training data (\code{replace = FALSE} and \code{sample.fraction = 1}).
 This may seem counter-intuitive at first but ensures that training data is almost perfectly interpolated (given \code{min.node.size = 1}).
 Per default, \code{1000} trees are used.
-Classical standard error estimation is no longer possible but \code{se.method = "simple"} allows for estimating the variance based on the variance of the trees due to the \code{"extratrees"} splitting rule (simply taking the variance over the predictions of the trees).
+Classical standard error estimation is no longer possible, but the \code{"extratrees"} splitting rule allows for estimating the variance based on the variance of the trees (simply taking the variance over the predictions of the trees).
 This results in low variance close to training data points.
 If \code{se.simple.spatial = TRUE} this point-wise variance is upwardly biased by adding the pointwise variance again scaled by the minimum Gower distance of the point to the training data (recall that a Gower distance of 0 means an identical point is present in the training data, whereas a distance of 1 means total dissimilarity to the training data).
 This ensures that the variance is larger in regions dissimilar to the training data.
 Summarizing, the standard error for a point is calculated as follows:
-\deqn{\hat{\mathrm{SE}}(x_{i}) = \sqrt{\hat{\mathrm{VAR}}(x_{i}) + (\hat{\mathrm{VAR}}(x_{i}) + \epsilon) * \mathrm{GD}_{i})}}
+\deqn{\hat{\mathrm{SE}}(x_{i}) = \sqrt{(\hat{\mathrm{VAR}}(x_{i}) + \epsilon) + (\hat{\mathrm{VAR}}(x_{i}) + \epsilon) * \mathrm{GD}_{i})}}
 Here, \eqn{\epsilon} is given by \code{se.simple.spatial.nugget} which can be set larger than 0 in the case of noisy function observations.
 }
 \section{Dictionary}{
 
-This \link{Learner} can be instantiated via the \link[mlr3misc:Dictionary]{dictionary} \link{mlr_learners} or with the associated sugar function \code{\link[=lrn]{lrn()}}:\preformatted{mlr_learners$get("regr.ranger_custom")
+This \link{Learner} can be instantiated via the \link[mlr3misc:Dictionary]{dictionary} \link{mlr_learners} or with the associated sugar function \code{\link[=lrn]{lrn()}}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{mlr_learners$get("regr.ranger_custom")
 lrn("regr.ranger_custom")
-}
+}\if{html}{\out{</div>}}
 }
 
 \section{Meta Information}{
@@ -42,35 +44,26 @@ lrn("regr.ranger_custom")
 \section{Parameters}{
 \tabular{lllll}{
    Id \tab Type \tab Default \tab Levels \tab Range \cr
-   alpha \tab numeric \tab 0.5 \tab  \tab \eqn{(-\infty, \infty)}{(-Inf, Inf)} \cr
    always.split.variables \tab untyped \tab - \tab  \tab - \cr
    holdout \tab logical \tab FALSE \tab TRUE, FALSE \tab - \cr
    importance \tab character \tab - \tab none, impurity, impurity_corrected, permutation \tab - \cr
    keep.inbag \tab logical \tab FALSE \tab TRUE, FALSE \tab - \cr
    local.importance \tab logical \tab FALSE \tab TRUE, FALSE \tab - \cr
    max.depth \tab integer \tab NULL \tab  \tab \eqn{[0, \infty)}{[0, Inf)} \cr
-   min.node.size \tab integer \tab 1 \tab  \tab \eqn{[1, \infty)}{[1, Inf)} \cr
-   min.prop \tab numeric \tab 0.1 \tab  \tab \eqn{(-\infty, \infty)}{(-Inf, Inf)} \cr
-   minprop \tab numeric \tab 0.1 \tab  \tab \eqn{(-\infty, \infty)}{(-Inf, Inf)} \cr
    mtry \tab integer \tab - \tab  \tab \eqn{[1, \infty)}{[1, Inf)} \cr
    mtry.ratio \tab numeric \tab - \tab  \tab \eqn{[0, 1]}{[0, 1]} \cr
-   num.random.splits \tab integer \tab 1 \tab  \tab \eqn{[1, \infty)}{[1, Inf)} \cr
    num.threads \tab integer \tab 1 \tab  \tab \eqn{[1, \infty)}{[1, Inf)} \cr
    num.trees \tab integer \tab 1000 \tab  \tab \eqn{[1, \infty)}{[1, Inf)} \cr
-   oob.error \tab logical \tab TRUE \tab TRUE, FALSE \tab - \cr
+   oob.error \tab logical \tab FALSE \tab TRUE, FALSE \tab - \cr
    regularization.factor \tab untyped \tab 1 \tab  \tab - \cr
    regularization.usedepth \tab logical \tab FALSE \tab TRUE, FALSE \tab - \cr
-   replace \tab logical \tab FALSE \tab TRUE, FALSE \tab - \cr
    respect.unordered.factors \tab character \tab ignore \tab ignore, order, partition \tab - \cr
-   sample.fraction \tab numeric \tab 1 \tab  \tab \eqn{[0, 1]}{[0, 1]} \cr
    save.memory \tab logical \tab FALSE \tab TRUE, FALSE \tab - \cr
    scale.permutation.importance \tab logical \tab FALSE \tab TRUE, FALSE \tab - \cr
-   se.method \tab character \tab simple \tab jack, infjack, simple \tab - \cr
    se.simple.spatial \tab logical \tab TRUE \tab TRUE, FALSE \tab - \cr
-   se.simple.spatial.nugget \tab numeric \tab 0 \tab  \tab \eqn{[0, 1]}{[0, 1]} \cr
+   se.simple.spatial.nugget \tab numeric \tab 0 \tab  \tab \eqn{[0, \infty)}{[0, Inf)} \cr
    seed \tab integer \tab NULL \tab  \tab \eqn{(-\infty, \infty)}{(-Inf, Inf)} \cr
    split.select.weights \tab untyped \tab  \tab  \tab - \cr
-   splitrule \tab character \tab extratrees \tab variance, extratrees, maxstat \tab - \cr
    verbose \tab logical \tab TRUE \tab TRUE, FALSE \tab - \cr
    write.forest \tab logical \tab TRUE \tab TRUE, FALSE \tab - \cr
 }
@@ -122,29 +115,29 @@ for established default tuning spaces.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{LearnerRegrRangerCustom$new()}}
-\item \href{#method-importance}{\code{LearnerRegrRangerCustom$importance()}}
-\item \href{#method-oob_error}{\code{LearnerRegrRangerCustom$oob_error()}}
-\item \href{#method-clone}{\code{LearnerRegrRangerCustom$clone()}}
+\item \href{#method-LearnerRegrRangerCustom-new}{\code{LearnerRegrRangerCustom$new()}}
+\item \href{#method-LearnerRegrRangerCustom-importance}{\code{LearnerRegrRangerCustom$importance()}}
+\item \href{#method-LearnerRegrRangerCustom-oob_error}{\code{LearnerRegrRangerCustom$oob_error()}}
+\item \href{#method-LearnerRegrRangerCustom-clone}{\code{LearnerRegrRangerCustom$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="base_learner">}\href{../../mlr3/html/Learner.html#method-base_learner}{\code{mlr3::Learner$base_learner()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="format">}\href{../../mlr3/html/Learner.html#method-format}{\code{mlr3::Learner$format()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="help">}\href{../../mlr3/html/Learner.html#method-help}{\code{mlr3::Learner$help()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="predict">}\href{../../mlr3/html/Learner.html#method-predict}{\code{mlr3::Learner$predict()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="predict_newdata">}\href{../../mlr3/html/Learner.html#method-predict_newdata}{\code{mlr3::Learner$predict_newdata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="print">}\href{../../mlr3/html/Learner.html#method-print}{\code{mlr3::Learner$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="reset">}\href{../../mlr3/html/Learner.html#method-reset}{\code{mlr3::Learner$reset()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="train">}\href{../../mlr3/html/Learner.html#method-train}{\code{mlr3::Learner$train()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="base_learner"><a href='../../mlr3/html/Learner.html#method-Learner-base_learner'><code>mlr3::Learner$base_learner()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="format"><a href='../../mlr3/html/Learner.html#method-Learner-format'><code>mlr3::Learner$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="help"><a href='../../mlr3/html/Learner.html#method-Learner-help'><code>mlr3::Learner$help()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="predict"><a href='../../mlr3/html/Learner.html#method-Learner-predict'><code>mlr3::Learner$predict()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="predict_newdata"><a href='../../mlr3/html/Learner.html#method-Learner-predict_newdata'><code>mlr3::Learner$predict_newdata()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="print"><a href='../../mlr3/html/Learner.html#method-Learner-print'><code>mlr3::Learner$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="reset"><a href='../../mlr3/html/Learner.html#method-Learner-reset'><code>mlr3::Learner$reset()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3" data-topic="Learner" data-id="train"><a href='../../mlr3/html/Learner.html#method-Learner-train'><code>mlr3::Learner$train()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-LearnerRegrRangerCustom-new"></a>}}
+\if{latex}{\out{\hypertarget{method-LearnerRegrRangerCustom-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
@@ -153,8 +146,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-importance"></a>}}
-\if{latex}{\out{\hypertarget{method-importance}{}}}
+\if{html}{\out{<a id="method-LearnerRegrRangerCustom-importance"></a>}}
+\if{latex}{\out{\hypertarget{method-LearnerRegrRangerCustom-importance}{}}}
 \subsection{Method \code{importance()}}{
 The importance scores are extracted from the model slot \code{variable.importance}.
 Parameter \code{importance.mode} must be set to \code{"impurity"}, \code{"impurity_corrected"}, or
@@ -168,8 +161,8 @@ Named \code{numeric()}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-oob_error"></a>}}
-\if{latex}{\out{\hypertarget{method-oob_error}{}}}
+\if{html}{\out{<a id="method-LearnerRegrRangerCustom-oob_error"></a>}}
+\if{latex}{\out{\hypertarget{method-LearnerRegrRangerCustom-oob_error}{}}}
 \subsection{Method \code{oob_error()}}{
 The out-of-bag error, extracted from model slot \code{prediction.error}.
 \subsection{Usage}{
@@ -181,8 +174,8 @@ The out-of-bag error, extracted from model slot \code{prediction.error}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-LearnerRegrRangerCustom-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-LearnerRegrRangerCustom-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
