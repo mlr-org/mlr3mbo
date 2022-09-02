@@ -23,10 +23,10 @@ parser = ArgumentParser()
 parser$add_argument("-r", "--run", type = "integer", default = 1, help = "Id of run, should be within 1-5")
 args = parser$parse_args()
 run_id = args$run
-stopifnot(run_id %in% 1:3)
+stopifnot(run_id %in% 1:5)
 cat("run_id:", run_id, "\n")
 
-seeds = c(2409, 2906, 0905)
+seeds = c(2409, 2906, 0905, 2412, 3112)
 
 set.seed(seeds[run_id])
 
