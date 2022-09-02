@@ -270,12 +270,11 @@ mlr3mbo_wrapper_new_rf_ls = function(job, data, instance, ...) {
 
   acq_function = AcqFunctionEI$new()
  
-  optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10000L), trm("evals", n_evals = 10000L)))
-  acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20000L))
+  optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
+  acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20010L))
 
   acq_optimizer$param_set$values$warmstart = TRUE
   acq_optimizer$param_set$values$warmstart_size = "all"
-  acq_optimizer$param_set$values$logging_level = "info"
   
   bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
   optim_instance
@@ -373,7 +372,7 @@ for (i in seq_len(nrow(optimizers))) {
 }
 
 jobs = findJobs()
-resources.default = list(walltime = 3600 * 6L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
+resources.default = list(walltime = 3600 * 9L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()
