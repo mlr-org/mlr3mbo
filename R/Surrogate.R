@@ -114,6 +114,17 @@ Surrogate = R6Class("Surrogate",
     #' Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
       stop("Abstract.")
+    },
+
+    #' @field packages (`character`)\cr
+    #' Set of required packages. A warning is signaled by the constructor if at least one of the packages is not
+    #' installed, but loaded (not attached) later on-demand via 'requireNamespace()'.
+    packages = function(rhs) {
+      if (missing(rhs)) {
+        stop("Abstract.")
+      } else {
+        stop("'packages' field is read-only.")  # FIXME: check wording
+      }
     }
   ),
 

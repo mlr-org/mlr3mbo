@@ -23,7 +23,9 @@ For additional information and documentation see \link{OptimizerMbo}.
 
 \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | NULL).}
 
-\item{\code{args}}{(named \code{list()} | NULL).}
+\item{\code{args}}{(named \code{list()})\cr
+Further arguments passed to the \code{loop_function}.
+For example, \code{random_interleave_iter}.}
 
 \item{\code{result_function}}{(\code{function} | NULL).}
 }
@@ -32,23 +34,23 @@ For additional information and documentation see \link{OptimizerMbo}.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{TunerMbo$new()}}
-\item \href{#method-clone}{\code{TunerMbo$clone()}}
+\item \href{#method-TunerMbo-new}{\code{TunerMbo$new()}}
+\item \href{#method-TunerMbo-clone}{\code{TunerMbo$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format">}\href{../../mlr3tuning/html/Tuner.html#method-format}{\code{mlr3tuning::Tuner$format()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help">}\href{../../mlr3tuning/html/Tuner.html#method-help}{\code{mlr3tuning::Tuner$help()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="print">}\href{../../mlr3tuning/html/Tuner.html#method-print}{\code{mlr3tuning::Tuner$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerFromOptimizer" data-id="optimize">}\href{../../mlr3tuning/html/TunerFromOptimizer.html#method-optimize}{\code{mlr3tuning::TunerFromOptimizer$optimize()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-format'><code>mlr3tuning::Tuner$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-help'><code>mlr3tuning::Tuner$help()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="print"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-print'><code>mlr3tuning::Tuner$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerFromOptimizer" data-id="optimize"><a href='../../mlr3tuning/html/TunerFromOptimizer.html#method-TunerFromOptimizer-optimize'><code>mlr3tuning::TunerFromOptimizer$optimize()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-TunerMbo-new"></a>}}
+\if{latex}{\out{\hypertarget{method-TunerMbo-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{mbo_defaults}.
@@ -97,8 +99,8 @@ See for example \link{result_by_surrogate_design} which is used by default if th
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-TunerMbo-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-TunerMbo-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

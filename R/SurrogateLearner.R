@@ -89,6 +89,16 @@ SurrogateLearner = R6Class("SurrogateLearner",
         stop("Current insample performance of the Surrogate Model does not meet the performance threshold.")
       }
       invisible(self$insample_perf)
+    },
+
+    #' @field packages (`character()`)\cr
+    #'   Set of required packages.
+    packages = function(rhs) {
+      if (!missing(rhs) && !identical(rhs, private$.packages)) {
+        stop("$packages is read-only.")
+      } else {
+        self$model$packages
+      }
     }
   ),
 

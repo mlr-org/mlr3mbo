@@ -17,27 +17,30 @@ Returns the number of \link[mlr3:Learner]{mlr3::Learner}s.}
 
 \item{\code{assert_insample_perf}}{(\code{numeric(1)})\cr
 Asserts whether the current insample performance meets the performance threshold.}
+
+\item{\code{packages}}{(\code{character()})\cr
+Set of required packages.}
 }
 \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{SurrogateLearner$new()}}
-\item \href{#method-predict}{\code{SurrogateLearner$predict()}}
-\item \href{#method-clone}{\code{SurrogateLearner$clone()}}
+\item \href{#method-SurrogateLearner-new}{\code{SurrogateLearner$new()}}
+\item \href{#method-SurrogateLearner-predict}{\code{SurrogateLearner$predict()}}
+\item \href{#method-SurrogateLearner-clone}{\code{SurrogateLearner$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update">}\href{../../mlr3mbo/html/Surrogate.html#method-update}{\code{mlr3mbo::Surrogate$update()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-update'><code>mlr3mbo::Surrogate$update()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-SurrogateLearner-new"></a>}}
+\if{latex}{\out{\hypertarget{method-SurrogateLearner-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
@@ -59,8 +62,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-predict"></a>}}
-\if{latex}{\out{\hypertarget{method-predict}{}}}
+\if{html}{\out{<a id="method-SurrogateLearner-predict"></a>}}
+\if{latex}{\out{\hypertarget{method-SurrogateLearner-predict}{}}}
 \subsection{Method \code{predict()}}{
 Returns mean response and standard error.
 \subsection{Usage}{
@@ -80,8 +83,8 @@ New data.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-SurrogateLearner-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-SurrogateLearner-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
