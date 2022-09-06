@@ -4,7 +4,7 @@ library(pammtools)
 library(mlr3misc)
 
 #dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method != "mlrintermbo"]
-dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method %in% c("mlr3mbo", "mlrintermbo", "mlr3mbo_new_rf", "mlr3mbo_new_rf_ls", "smac4hpo", "random")]
+dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method %in% c("mlr3mbo", "mlrintermbo", "mlr3mbo_new_rf", "mlr3mbo_new_rf_ls", "mlr3mbo_xxx_ls", "smac4hpo", "random")]
 dat = dat[scenario %nin% c("nb301", "rbv2_super")]
 dat[, cumbudget := cumsum(budget), by = .(method, scenario, instance, repl)]
 dat[, cumbudget_scaled := cumbudget / max(cumbudget), by = .(method, scenario, instance, repl)]
@@ -35,7 +35,7 @@ g = ggplot(aes(x = cumbudget_scaled, y = mean, colour = method, fill = method), 
   labs(x = "Fraction of Budget Used", y = "Mean Normalized Regret", colour = "Optimizer", fill = "Optimizer") +
   facet_wrap(~ scenario + instance, scales = "free", ncol = 4) +
   theme_minimal() +
-  theme(legend.position = "bottom", legend.title = element_text(size = rel(0.75)), legend.text = element_text(size = rel(0.75)))
+  theme(legend.position = "bottom", legend.title = element_text(size = rel(0.75)), legend.text = element_text(size = rel(0.5)))
 ggsave("anytime.pdf", plot = g, device = "pdf", width = 12, height = 15)
 
 overall_budget = agg_budget[, .(mean = mean(mean), se = sd(mean) / sqrt(.N)), by = .(method, cumbudget_scaled)]
