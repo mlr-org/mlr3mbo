@@ -94,10 +94,22 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
     packages = function(rhs) {
-      if (!missing(rhs) && !identical(rhs, private$.packages)) {
-        stop("$packages is read-only.")
-      } else {
+      if (missing(rhs)) {
         self$model$packages
+      } else {
+        stop("$packages is read-only.")
+      }
+
+    },
+
+    #' @field feature_types (`character()`)\cr
+    #' Stores the feature types the learner can handle, e.g. `"logical"`, `"numeric"`, or `"factor"`.
+    #' A complete list of candidate feature types, grouped by task type, is stored in [`mlr_reflections$task_feature_types`][mlr_reflections].
+    feature_types = function(rhs) {
+      if (missing(rhs)) {
+        self$model$feature_types
+      } else {
+        stop("'feature_types' field is read-only.")
       }
     }
   ),

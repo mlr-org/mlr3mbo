@@ -42,6 +42,9 @@ test_that("Constructing TunerMbo and ABs", {
   expect_identical(tuner$acq_optimizer, optimizer$acq_optimizer)
   expect_identical(tuner$args, optimizer$args)
   expect_identical(tuner$result_function, optimizer$result_function)
+  expect_identical(tuner$param_classes, optimizer$param_classes)
+  expect_identical(tuner$properties, optimizer$properties)
+  expect_identical(tuner$packages, optimizer$packages)
 
   tuner$optimize(instance)
 
@@ -51,6 +54,9 @@ test_that("Constructing TunerMbo and ABs", {
   expect_identical(tuner$acq_optimizer, optimizer$acq_optimizer)
   expect_identical(tuner$args, optimizer$args)
   expect_identical(tuner$result_function, optimizer$result_function)
+  expect_identical(tuner$param_classes, optimizer$param_classes)
+  expect_identical(tuner$properties, optimizer$properties)
+  expect_identical(tuner$packages, optimizer$packages)
 })
 
 test_that("TunerMbo sugar", {
@@ -69,5 +75,49 @@ test_that("TunerMbo sugar", {
 
   expect_true(NROW(instance$archive$data) == 5L)
   expect_true("acq_cb" %in% colnames(instance$archive$data))
+})
+
+test_that("TunerMbo param_classes", {
+  tuner = tnr("mbo")
+  expect_equal(tuner$param_classes, NULL)
+  instance = TuningInstanceSingleCrit$new(tsk("pima"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  tuner$surrogate = default_surrogate(instance)
+  expect_equal(tuner$param_classes, c("ParamLgl", "ParamInt", "ParamDbl"))
+  tuner$acq_optimizer = AcqOptimizer$new(opt("nloptr"), terminator = trm("evals", n_evals = 5L))
+  expect_equal(tuner$param_classes, "ParamDbl")
+})
+
+test_that("OptimizerMbo properties", {
+  tuner = opt("mbo")
+  expect_equal(tuner$properties, c("dependencies", "multi-crit", "single-crit"))
+  expect_error({tuner$properties = "test"}, "Must be a subset of \\{'dependencies','single-crit','multi-crit'\\}")
+  tuner$properties = c("dependencies", "single-crit")
+  expect_equal(tuner$properties, c("dependencies", "single-crit"))
+})
+
+test_that("OptimizerMbo packages", {
+  tuner = opt("mbo")
+  expect_equal(tuner$packages, "mlr3mbo")
+  instance = TuningInstanceSingleCrit$new(tsk("pima"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  tuner$surrogate = default_surrogate(instance)
+  expect_equal(tuner$packages, c("mlr3mbo", "mlr3", "mlr3learners", "DiceKriging"))
+  tuner$acq_optimizer = AcqOptimizer$new(opt("nloptr"), terminator = trm("evals", n_evals = 5L))
+  expect_equal(tuner$packages, c("mlr3mbo", "mlr3", "mlr3learners", "DiceKriging", "bbotk", "nloptr"))
+  tuner$surrogate = SurrogateLearner$new(lrn("regr.ranger"))
+  expect_equal(tuner$packages, c("mlr3mbo", "mlr3", "mlr3learners", "ranger", "bbotk", "nloptr"))
+})
+
+test_that("TunerMbo args", {
+  tuner = tnr("mbo", args = list(test = 1))
+  expect_equal(tuner$args, list(test = 1))
+  tuner$loop_function = bayesopt_ego
+  expect_error(tuner$args, "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}.")
+  instance = TuningInstanceSingleCrit$new(tsk("pima"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  expect_error(tuner$optimize(instance), "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}.")
+  expect_equal(instance$archive$data, data.table())
+  tuner$args = list(random_interleave_iter = 1L)
+  tuner$optimize(instance)
+  expect_equal(nrow(instance$archive$data), 5L)
+  expect_true(tuner$acq_function$id %nin% colnames(instance$archive$data))
 })
 

@@ -114,7 +114,7 @@ result = bb_optimize(
 
 ## Simple Tuning Example Using Defaults
 
-```{r, message = FALSE, eval = TRUE}
+```{r, message = FALSE}
 set.seed(1)
 library(mlr3)
 library(mlr3learners)

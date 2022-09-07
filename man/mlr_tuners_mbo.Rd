@@ -5,7 +5,7 @@
 \alias{TunerMbo}
 \title{Tuner using Bayesian Optimization}
 \description{
-Tune hyperparameters using Bayesian Optimization.
+Tune hyperparameters using model based optimization.
 This is a minimal interface internally passing on to \link{OptimizerMbo}.
 For additional information and documentation see \link{OptimizerMbo}.
 }
@@ -17,7 +17,7 @@ For additional information and documentation see \link{OptimizerMbo}.
 \describe{
 \item{\code{loop_function}}{(\code{function} | NULL).}
 
-\item{\code{surrogate}}{(\link{Surrogate} | NULL)}
+\item{\code{surrogate}}{(\link{Surrogate} | NULL).}
 
 \item{\code{acq_function}}{(\link{AcqFunction} | NULL).}
 
@@ -28,6 +28,22 @@ Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
 
 \item{\code{result_function}}{(\code{function} | NULL).}
+
+\item{\code{param_classes}}{(\code{character()})\cr
+Supported parameter classes that the optimizer can optimize.
+Determined based on the \code{surrogate} and the \code{acq_optimizer}.
+Subclasses of \link[paradox:Param]{paradox::Param}.}
+
+\item{\code{properties}}{(\code{character()})\cr
+Set of properties of the optimizer.
+Must be a subset of \code{\link[=bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
+MBO in principle is very flexible and by default we assume that the optimizer has all properties.
+Still, properties can be changed here manually, depending on the \code{loop_function}, \code{surrogate}, acq_function\code{and}acq_optimizer` at hand.}
+
+\item{\code{packages}}{(\code{character()})\cr
+Set of required packages.
+A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.
+Required packages are determined based on the \code{surrogate} and the \code{acq_optimizer}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -53,7 +69,7 @@ For example, \code{random_interleave_iter}.}
 \if{latex}{\out{\hypertarget{method-TunerMbo-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
-For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{mbo_defaults}.
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
 
 Note that all the parameters below are simply passed to the \link{OptimizerMbo} and
 the respective fields are simply (settable) active bindings to the fields of the \link{OptimizerMbo}.

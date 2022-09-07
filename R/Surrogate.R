@@ -123,7 +123,18 @@ Surrogate = R6Class("Surrogate",
       if (missing(rhs)) {
         stop("Abstract.")
       } else {
-        stop("'packages' field is read-only.")  # FIXME: check wording
+        stop("'packages' field is read-only.")
+      }
+    },
+
+    #' @field feature_types (`character()`)\cr
+    #' Stores the feature types the learner can handle, e.g. `"logical"`, `"numeric"`, or `"factor"`.
+    #' A complete list of candidate feature types, grouped by task type, is stored in [`mlr_reflections$task_feature_types`][mlr_reflections].
+    feature_types = function(rhs) {
+      if (missing(rhs)) {
+        stop("Abstract.")
+      } else {
+        stop("'feature_types' field is read-only.")
       }
     }
   ),

@@ -37,6 +37,10 @@ Asserts whether the current insample performance meets the performance threshold
 \item{\code{packages}}{(\code{character})\cr
 Set of required packages. A warning is signaled by the constructor if at least one of the packages is not
 installed, but loaded (not attached) later on-demand via 'requireNamespace()'.}
+
+\item{\code{feature_types}}{(\code{character()})\cr
+Stores the feature types the learner can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
+A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
 }
 \if{html}{\out{</div>}}
 }

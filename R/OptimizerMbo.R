@@ -8,30 +8,16 @@
 #' to be used, e.g., [bayesopt_ego] for sequential single objective MBO, a [Surrogate], an
 #' [AcqFunction], e.g., [AcqFunctionEI] for expected improvement and an [AcqOptimizer].
 #'
+#' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
+#'
 #' @export
 OptimizerMbo = R6Class("OptimizerMbo",
   inherit = bbotk::Optimizer,
 
   public = list(
-
-    #' @template field_loop_function
-    loop_function = NULL,
-
-    #' @template field_surrogate
-    surrogate = NULL,
-
-    #' @template field_acq_function
-    acq_function = NULL,
-
-    #' @template field_acq_optimizer
-    acq_optimizer = NULL,
-
-    #' @template field_result_function
-    result_function = NULL,
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `mbo_defaults`.
+    #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
     #'
     #' @template param_loop_function
     #' @template param_surrogate
@@ -39,49 +25,131 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template param_acq_optimizer
     #' @template param_args
     #' @template param_result_function
-    initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
+    #' @template param_properties
+    initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL, properties = c("dependencies", "multi-crit", "single-crit")) {
       param_set = ParamSet$new()
-      param_classes = feature_types_to_param_classes(acq_function$surrogate$model$feature_types)  # FIXME: delayed initialization?
-      properties = c("dependencies", "multi-crit", "single-crit")  # FIXME: properties should be inferred automatically
-      super$initialize("mbo", param_set, param_classes, properties, c("mlr3mbo"), label = "Model Based Optimization", man = "mlr3mbo::OptimizerMbo")
-      self$loop_function = assert_function(loop_function, null.ok = TRUE)
-      self$surrogate = assert_r6(surrogate, "Surrogate", null.ok = TRUE)
-      self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
-      self$acq_optimizer = assert_r6(acq_optimizer, "AcqOptimizer", null.ok = TRUE)
-      self$args = assert_list(args, names = "named", null.ok = TRUE)
-      self$result_function = assert_function(result_function, null.ok = TRUE)
+      super$initialize("mbo",
+                       param_set = param_set,
+                       param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),  # is replaced with dynamic AB after construction
+                       properties = assert_subset(properties, choices = bbotk_reflections$optimizer_properties, empty.ok = FALSE),  # is replaced with rw AB after construction
+                       packages = "mlr3mbo",  # is replaced with dynamic AB after construction
+                       label = "Model Based Optimization",
+                       man = "mlr3mbo::OptimizerMbo")
+      # the following are all asserted in the AB
+      self$loop_function = loop_function
+      self$surrogate = surrogate
+      self$acq_function = acq_function
+      self$acq_optimizer = acq_optimizer
+      self$args = args
+      self$result_function = result_function
     }
   ),
 
   active = list(
+    #' @template field_loop_function
+    loop_function = function(rhs) {
+      if (missing(rhs)) {
+        private$.loop_function
+      } else {
+        private$.loop_function = assert_function(rhs, null.ok = TRUE)
+      }
+    },
+
+    #' @template field_surrogate
+    surrogate = function(rhs) {
+      if (missing(rhs)) {
+        private$.surrogate
+      } else {
+        private$.surrogate = assert_r6(rhs, classes = "Surrogate", null.ok = TRUE)
+      }
+    },
+
+    #' @template field_acq_function
+    acq_function = function(rhs) {
+      if (missing(rhs)) {
+        private$.acq_function
+      } else {
+        private$.acq_function = assert_r6(rhs, classes = "AcqFunction", null.ok = TRUE)
+      }
+    },
+
+    #' @template field_acq_optimizer
+    acq_optimizer = function(rhs) {
+      if (missing(rhs)) {
+        private$.acq_optimizer
+      } else {
+        private$.acq_optimizer = assert_r6(rhs, classes = "AcqOptimizer", null.ok = TRUE)
+      }
+    },
+
     #' @template field_args
     args = function(rhs) {
       if (missing(rhs)) {
+        if (!is.null(self$loop_function)) {
+          assert_subset(names(private$.args), choices = setdiff(names(formals(self$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)  # args could have been set prior to a loop_function
+        }
         private$.args
       } else {
         assert_list(rhs, names = "named", null.ok = TRUE)
         if (!is.null(self$loop_function)) {
-          assert_subset(rhs, choices = formals(self$loop_function), empty.ok = TRUE)
+          assert_subset(names(rhs), choices = setdiff(names(formals(self$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)
         }
         private$.args = rhs
       }
     },
 
-    #' @field packages (`character()`)\cr
-    #'   Set of required packages.
-    #'   A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
-    #'   Required packages are determined based on the `surrogate` and the `acq_optimizer`.
-    packages = function(rhs) {
-      if (!missing(rhs) && !identical(rhs, private$.packages)) {
-        stop("$packages is read-only.")
+    #' @template field_result_function
+    result_function = function(rhs) {
+      if (missing(rhs)) {
+        private$.result_function
       } else {
+        private$.result_function = assert_function(rhs, args = c("instance", "optimizer_mbo"), null.ok = TRUE)
+      }
+    },
+
+    #' @template field_param_classes
+    param_classes = function(rhs) {
+      if (missing(rhs)) {
+        param_classes_surrogate = c("logical" = "ParamLgl", "integer" = "ParamInt", "numeric" = "ParamDbl", "factor" = "ParamFct")
+        param_classes_surrogate = if (!is.null(self$surrogate$feature_types)) {
+          param_classes_surrogate[c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types] # surrogate has prio before acq_function$surrogate
+        }
+        param_classes_acq_opt = if (!is.null(self$acq_optimizer)) {
+          self$acq_optimizer$optimizer$param_classes
+        } else {
+          c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct")
+        }
+        intersect(param_classes_surrogate, param_classes_acq_opt)
+      } else {
+        stop("param_classes is read-only.")
+      }
+    },
+
+    #' @template field_properties
+    properties = function(rhs) {
+      if (missing(rhs)) {
+        private$.properties
+      } else {
+        private$.properties = assert_subset(rhs, bbotk_reflections$optimizer_properties, empty.ok = FALSE)
+      }
+    },
+
+    #' @template field_packages
+    packages = function(rhs) {
+      if (missing(rhs)) {
         union("mlr3mbo", c(self$surrogate$packages, self$acq_optimizer$optimizer$packages))
+      } else {
+        stop("$packages is read-only.")
       }
     }
-
   ),
 
   private = list(
+    .loop_function = NULL,
+    .surrogate = NULL,
+    .acq_function = NULL,
+    .acq_optimizer = NULL,
+    .result_function = NULL,
     .args = NULL,
 
     .optimize = function(inst) {

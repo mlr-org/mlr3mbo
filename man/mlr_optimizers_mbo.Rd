@@ -9,31 +9,39 @@
 The implementation follows a modular layout relying on a loop function determining the MBO flavor
 to be used, e.g., \link{bayesopt_ego} for sequential single objective MBO, a \link{Surrogate}, an
 \link{AcqFunction}, e.g., \link{AcqFunctionEI} for expected improvement and an \link{AcqOptimizer}.
+
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
 }
 \section{Super class}{
 \code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{OptimizerMbo}
 }
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{loop_function}}{(\code{function} | NULL).}
 
-\item{\code{surrogate}}{(\link{Surrogate} | NULL)}
+\item{\code{surrogate}}{(\link{Surrogate} | NULL).}
 
 \item{\code{acq_function}}{(\link{AcqFunction} | NULL).}
 
 \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | NULL).}
 
-\item{\code{result_function}}{(\code{function} | NULL).}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
 \item{\code{args}}{(named \code{list()})\cr
 Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
+
+\item{\code{result_function}}{(\code{function} | NULL).}
+
+\item{\code{param_classes}}{(\code{character()})\cr
+Supported parameter classes that the optimizer can optimize.
+Determined based on the \code{surrogate} and the \code{acq_optimizer}.
+Subclasses of \link[paradox:Param]{paradox::Param}.}
+
+\item{\code{properties}}{(\code{character()})\cr
+Set of properties of the optimizer.
+Must be a subset of \code{\link[=bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
+MBO in principle is very flexible and by default we assume that the optimizer has all properties.
+Still, properties can be changed here manually, depending on the \code{loop_function}, \code{surrogate}, acq_function\code{and}acq_optimizer` at hand.}
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
@@ -64,7 +72,7 @@ Required packages are determined based on the \code{surrogate} and the \code{acq
 \if{latex}{\out{\hypertarget{method-OptimizerMbo-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
-For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{mbo_defaults}.
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
   loop_function = NULL,
@@ -72,7 +80,8 @@ For more information on default values for \code{loop_function}, \code{surrogate
   acq_function = NULL,
   acq_optimizer = NULL,
   args = NULL,
-  result_function = NULL
+  result_function = NULL,
+  properties = c("dependencies", "multi-crit", "single-crit")
 )}\if{html}{\out{</div>}}
 }
 
@@ -102,6 +111,13 @@ Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInsta
 See for example \link{result_by_surrogate_design} which is used by default if the
 \link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
 \link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
+
+\item{\code{properties}}{(\code{character()})\cr
+Set of properties of the optimizer.
+Must be a subset of \code{\link[=bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
+MBO in principle is very flexible and by default we assume that the optimizer has all properties.
+The user must then take care that the choice of the \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer} match their use case.
+Nevertheless, properties can also be changed manually after construction by using the \code{properties} active binding.}
 }
 \if{html}{\out{</div>}}
 }
