@@ -16,14 +16,6 @@ generate_acq_codomain = function(codomain, id, direction = "same") {
   return(codomain)
 }
 
-feature_types_to_param_classes = function(feature_types) {
-  if (is.null(feature_types)) {
-    feature_types = c("logical", "integer", "numeric", "factor")
-  }
-  param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct")
-  param_classes[c("logical", "integer", "numeric", "factor") %in% feature_types]
-}
-
 archive_xy = function(archive) {
   archive$data[, c(archive$cols_x, archive$cols_y), with = FALSE]
 }
@@ -121,28 +113,6 @@ fix_xdt_distance = function(xdt, previous_xdt, search_space, dist_threshold) {
   # NOTE: the cleanest way to do this would be a while loop so we can be sure that both checks eventually pass but this is too costly
   xdt
 }
-
-# FIXME: in instance? do we want an Mbo Instance?
-#eval_initial_design = function(instance, method = "lhs") {
-#  if (instance$archive$n_evals == 0L) {
-#    if (instance$search_space$has_deps) {
-#      method = "random"
-#    }
-#    assert_choice(method, choices = c("grid", "lhs", "random"))
-#    d = instance$objective$ydim
-#    design = switch(method,
-#      grid = {
-#        resolution = max(1, floor(((4L * d) ^ (1 / d))))
-#        generate_design_grid(instance$search_space, resolution = resolution)$data
-#      },
-#      lhs = generate_design_lhs(instance$search_space, n = 4L * d)$data,
-#      random = generate_design_random(instance$search_space, n = 4L * d)$data
-#    )
-#    instance$eval_batch(design)
-#  } else {
-#    instance
-#  }
-#}
 
 # FIXME: document properly
 # calculate all possible weights (lambdas) for given s parameter and dimensionality d taken von mlrMBO
