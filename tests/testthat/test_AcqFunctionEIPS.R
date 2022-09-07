@@ -5,7 +5,7 @@ test_that("AcqFunctionEIPS works", {
     codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time"))
   )
   inst = MAKE_INST(objective = objective, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
-  surrogate = SurrogateLearners$new(list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)), archive = inst$archive, y_cols = c("y", "time"))
+  surrogate = SurrogateLearnerCollection$new(list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)), archive = inst$archive, y_cols = c("y", "time"))
   acqf = AcqFunctionEIPS$new(surrogate = surrogate)
 
   expect_r6(acqf$codomain, "ParamSet")

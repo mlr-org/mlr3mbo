@@ -10,8 +10,8 @@
 #'   Size of the initial design.
 #'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
 #'   Points are drawn uniformly at random.
-#' @param surrogate (`NULL` | [SurrogateLearners])\cr
-#'   [SurrogateLearners] to be used as a surrogate.
+#' @param surrogate (`NULL` | [SurrogateLearnerCollection])\cr
+#'   [SurrogateLearnerCollection] to be used as a surrogate.
 #'   If `NULL` \code{default_surrogate(instance)} is used.
 #' @param acq_function (`NULL` | [AcqFunctionSmsEgo]).\cr
 #'   [AcqFunctionSmsEgo] to be used as acquisition function.
@@ -28,7 +28,7 @@
 #'
 #' @note
 #' * If `surrogate` is `NULL` but `acq_function` is given and contains a `$surrogate`, this
-#'   [SurrogateLearners] is used.
+#'   [SurrogateLearnerCollection] is used.
 #' * You can pass a `surrogate` that was not given the [bbotk::Archive] of the
 #'   `instance` during initialization.
 #'   In this case, the [bbotk::Archive] of the given `instance` is set during execution.
@@ -79,7 +79,7 @@ bayesopt_smsego = function(
   assert_r6(instance, "OptimInstanceMultiCrit")
   assert_r6(instance$terminator, "TerminatorEvals")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
-  assert_r6(surrogate, classes = "SurrogateLearners", null.ok = TRUE)
+  assert_r6(surrogate, classes = "SurrogateLearnerCollection", null.ok = TRUE)
   assert_r6(acq_function, classes = "AcqFunctionSmsEgo", null.ok = TRUE)
   assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
   assert_int(random_interleave_iter, lower = 0L)

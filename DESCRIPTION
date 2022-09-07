@@ -64,7 +64,7 @@ Collate:
     'OptimizerMbo.R'
     'Surrogate.R'
     'SurrogateLearner.R'
-    'SurrogateLearners.R'
+    'SurrogateLearnerCollection.R'
     'TunerMbo.R'
     'assertions.R'
     'bayesopt_ego.R'

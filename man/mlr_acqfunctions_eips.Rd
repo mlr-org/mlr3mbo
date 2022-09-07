@@ -11,7 +11,7 @@ It is assumed that calculations are performed on an \link[bbotk:OptimInstanceSin
 Additionally to target values of the codomain that should be minimized or maximized, the
 \link[bbotk:Objective]{bbotk::Objective} of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} should return time values.
 The column names of the target variable and time variable must be passed as \code{y_cols} in the
-order \verb{(target, time)} when constructing the \link{SurrogateLearners} that is being used as a
+order \verb{(target, time)} when constructing the \link{SurrogateLearnerCollection} that is being used as a
 surrogate.
 }
 \section{Dictionary}{
@@ -89,7 +89,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearners}).}
+\item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearnerCollection}).}
 }
 \if{html}{\out{</div>}}
 }

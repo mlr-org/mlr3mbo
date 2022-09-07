@@ -65,7 +65,7 @@ If the instance is of class \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimIns
 \link{SurrogateLearner}.
 
 If the instance is of class \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} deep clones of the learner are
-wrapped as a \link{SurrogateLearners}.
+wrapped as a \link{SurrogateLearnerCollection}.
 }
 \references{
 Ding, Yufeng, Simonoff, S J (2010).

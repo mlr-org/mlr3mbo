@@ -83,7 +83,7 @@ default_loopfun = function(instance) {
 #' [SurrogateLearner].
 #'
 #' If the instance is of class [bbotk::OptimInstanceMultiCrit] deep clones of the learner are
-#' wrapped as a [SurrogateLearners].
+#' wrapped as a [SurrogateLearnerCollection].
 #'
 #' @references
 #' `r format_bib("ding_2010")`
@@ -147,7 +147,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
     SurrogateLearner$new(learner)
   } else  {
     learners = replicate(n_learner, learner$clone(deep = TRUE), simplify = FALSE)
-    SurrogateLearners$new(learners)
+    SurrogateLearnerCollection$new(learners)
   }
 }
 

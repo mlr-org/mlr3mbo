@@ -19,7 +19,7 @@ test_that("default_surrogate", {
 
   # twocrit all numeric, deterministic
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2, search_space = PS_1D))
-  expect_r6(surrogate, "SurrogateLearners")
+  expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$model, types = "LearnerRegrKM")
   expect_equal(surrogate$model[[1L]]$param_set$values,
     list(covtype = "matern3_2", optim.method = "gen", nugget.stability = 1e-08))
@@ -31,7 +31,7 @@ test_that("default_surrogate", {
 
   # twocrit all numeric, noisy
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2_NOISY, search_space = PS_1D))
-  expect_r6(surrogate, "SurrogateLearners")
+  expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$model, types = "LearnerRegrKM")
   expect_equal(surrogate$model[[1L]]$param_set$values,
     list(covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12))
@@ -52,7 +52,7 @@ test_that("default_surrogate", {
 
   # twocrit mixed input
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2_MIXED, search_space = PS_1D_MIXED))
-  expect_r6(surrogate, "SurrogateLearners")
+  expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$model, types = "LearnerRegrRanger")
   expect_equal(surrogate$model[[1L]]$param_set$values,
     list(num.threads = 1L, num.trees = 500L, keep.inbag = TRUE, se.method = "jack"))
@@ -77,7 +77,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate$model, "LearnerRegrFeatureless")
 
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2, search_space = PS_1D), learner = lrn("regr.featureless"), n_learner = 3L)
-  expect_r6(surrogate, "SurrogateLearners")
+  expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$model, types = "LearnerRegrFeatureless")
 })
 

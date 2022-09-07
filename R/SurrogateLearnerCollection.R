@@ -6,7 +6,7 @@
 #' Note that redundant [mlr3::Learner]s must be deep clones.
 #'
 #' @export
-SurrogateLearners = R6Class("SurrogateLearners",
+SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
   inherit = Surrogate,
   public = list(
 

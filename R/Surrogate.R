@@ -22,8 +22,8 @@ Surrogate = R6Class("Surrogate",
       # most assertions are done in derived classes
       self$model = model
       private$.archive = archive
-      private$.x_cols = x_cols  # assertion is done in SurrogateLearner or SurrogateLearners
-      private$.y_cols = y_cols  # assertion is done in SurrogateLearner or SurrogateLearners
+      private$.x_cols = x_cols  # assertion is done in SurrogateLearner or SurrogateLearnerCollection
+      private$.y_cols = y_cols  # assertion is done in SurrogateLearner or SurrogateLearnerCollection
       private$.param_set = assert_r6(param_set, classes = "ParamSet")
     },
 
