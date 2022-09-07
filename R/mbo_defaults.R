@@ -68,7 +68,7 @@ default_loopfun = function(instance) {
 #' }
 #' In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
 #' in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
-#' \code{lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)}.
+#' \code{lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE, se.method = "jack")}.
 #'
 #' If additionally dependencies are present in the parameter space, inactive conditional parameters
 #' are represented by missing \code{NA} values in the training design data.
@@ -130,7 +130,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
     fallback = mlr3learners::LearnerRegrRanger$new()
     fallback$param_set$values = insert_named(
       fallback$param_set$values,
-      list(num.trees = 500L, keep.inbag = TRUE, se.method = "jack")
+      list(num.trees = 20L, keep.inbag = TRUE, se.method = "jack")
     )
     learner$fallback = fallback
 

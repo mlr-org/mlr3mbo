@@ -46,7 +46,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$model, "LearnerRegrRanger")
   expect_equal(surrogate$model$param_set$values,
-    list(num.threads = 1L, num.trees = 500L, keep.inbag = TRUE))
+    list(num.threads = 1L, num.trees = 500L, keep.inbag = TRUE, se.method = "jack"))
   expect_equal(surrogate$model$encapsulate, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$model$fallback, "LearnerRegrRanger")
 
@@ -55,7 +55,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate, "SurrogateLearners")
   expect_list(surrogate$model, types = "LearnerRegrRanger")
   expect_equal(surrogate$model[[1L]]$param_set$values,
-    list(num.threads = 1L, num.trees = 500L, keep.inbag = TRUE))
+    list(num.threads = 1L, num.trees = 500L, keep.inbag = TRUE, se.method = "jack"))
   expect_equal(surrogate$model[[1L]]$encapsulate, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$model[[1L]]$fallback, "LearnerRegrRanger")
   expect_equal(surrogate$model[[1L]]$param_set$values, surrogate$model[[2L]]$param_set$values)
@@ -68,7 +68,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate$model, "GraphLearner")
   expect_equal(surrogate$model$graph$ids(), c("imputesample", "imputeoor", "regr.ranger"))
   expect_equal(surrogate$model$param_set$values,
-    list(imputesample.affect_columns = mlr3pipelines::selector_type("logical"), imputeoor.min = TRUE, imputeoor.offset = 1, imputeoor.multiplier = 1, regr.ranger.num.threads = 1L, regr.ranger.num.trees = 500L, regr.ranger.keep.inbag = TRUE))
+    list(imputesample.affect_columns = mlr3pipelines::selector_type("logical"), imputeoor.min = TRUE, imputeoor.offset = 1, imputeoor.multiplier = 2, regr.ranger.num.threads = 1L, regr.ranger.num.trees = 500L, regr.ranger.keep.inbag = TRUE, regr.ranger.se.method = "jack"))
   expect_r6(surrogate$model$fallback, "LearnerRegrFeatureless")
 
   # specify own learner, specify n_objectives, twocrit all numeric, deterministic
@@ -120,7 +120,7 @@ test_that("stability and defaults", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   learner = LearnerRegrError$new()
   learner$encapsulate[c("train", "predict")] = "evaluate"
-  learner$fallback = lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)
+  learner$fallback = lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE, se.method = "jack")
   surrogate = default_surrogate(instance, learner = learner, n_learner = 1L)
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$model, "LearnerRegrError")
