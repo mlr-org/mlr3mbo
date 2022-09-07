@@ -45,6 +45,21 @@ AcqOptimizer = R6Class("AcqOptimizer",
     },
 
     #' @description
+    #' Helper for print outputs.
+    format = function() {
+      sprintf("<%s>", class(self)[1L])
+    },
+
+    #' @description
+    #' Print method.
+    #'
+    #' @return (`character()`).
+    print = function() {
+      catn(format(self), paste0(": ", self$print_id))
+      catn(str_indent("* Parameters:", as_short_string(self$param_set$values)))
+    },
+
+    #' @description
     #' Optimize the acquisition function.
     #'
     #' If the `fix_distance` parameter is set to `TRUE`, proposed points are
@@ -109,6 +124,16 @@ AcqOptimizer = R6Class("AcqOptimizer",
   ),
 
   active = list(
+
+    #' @field print_id (`character`)\cr
+    #' Id used when printing.
+    print_id = function(rhs) {
+      if (missing(rhs)) {
+        paste0("(", class(self$optimizer)[1L], " | ", class(self$terminator)[1L], ")")
+      } else {
+        stop("'print_id' field is read-only.")
+      }
+    },
 
     #' @field param_set ([paradox::ParamSet])\cr
     #' Set of hyperparameters.

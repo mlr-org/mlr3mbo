@@ -54,6 +54,7 @@ Required packages are determined based on the \code{surrogate} and the \code{acq
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-OptimizerMbo-new}{\code{OptimizerMbo$new()}}
+\item \href{#method-OptimizerMbo-print}{\code{OptimizerMbo$print()}}
 \item \href{#method-OptimizerMbo-clone}{\code{OptimizerMbo$clone()}}
 }
 }
@@ -63,7 +64,6 @@ Required packages are determined based on the \code{surrogate} and the \code{acq
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="optimize"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-optimize'><code>bbotk::Optimizer$optimize()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="print"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-print'><code>bbotk::Optimizer$print()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -120,6 +120,19 @@ The user must then take care that the choice of the \code{loop_function}, \code{
 Nevertheless, properties can also be changed manually after construction by using the \code{properties} active binding.}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-OptimizerMbo-print"></a>}}
+\if{latex}{\out{\hypertarget{method-OptimizerMbo-print}{}}}
+\subsection{Method \code{print()}}{
+Print method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$print()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character()}).
 }
 }
 \if{html}{\out{<hr>}}

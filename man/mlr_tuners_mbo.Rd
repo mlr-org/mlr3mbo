@@ -51,6 +51,7 @@ Required packages are determined based on the \code{surrogate} and the \code{acq
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-TunerMbo-new}{\code{TunerMbo$new()}}
+\item \href{#method-TunerMbo-print}{\code{TunerMbo$print()}}
 \item \href{#method-TunerMbo-clone}{\code{TunerMbo$clone()}}
 }
 }
@@ -59,7 +60,6 @@ Required packages are determined based on the \code{surrogate} and the \code{acq
 <ul>
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-format'><code>mlr3tuning::Tuner$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-help'><code>mlr3tuning::Tuner$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="print"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-print'><code>mlr3tuning::Tuner$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerFromOptimizer" data-id="optimize"><a href='../../mlr3tuning/html/TunerFromOptimizer.html#method-TunerFromOptimizer-optimize'><code>mlr3tuning::TunerFromOptimizer$optimize()</code></a></span></li>
 </ul>
 </details>
@@ -112,6 +112,19 @@ See for example \link{result_by_surrogate_design} which is used by default if th
 \link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TunerMbo-print"></a>}}
+\if{latex}{\out{\hypertarget{method-TunerMbo-print}{}}}
+\subsection{Method \code{print()}}{
+Print method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TunerMbo$print()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character()}).
 }
 }
 \if{html}{\out{<hr>}}

@@ -27,6 +27,22 @@ TunerMbo = R6Class("TunerMbo",
     #' @template param_result_function
     initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
       super$initialize(optimizer = OptimizerMbo$new(loop_function = loop_function, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, args = args, result_function = result_function), man = "mlr3mbo::TunerMbo")
+    },
+
+    #' @description
+    #' Print method.
+    #'
+    #' @return (`character()`).
+    print = function() {
+      catn(format(self), if (is.na(self$label)) "" else paste0(": ", self$label))
+      catn(str_indent("* Parameters:", as_short_string(self$param_set$values)))
+      catn(str_indent("* Parameter classes:", self$param_classes))
+      catn(str_indent("* Properties:", self$properties))
+      catn(str_indent("* Packages:", self$packages))
+      catn(str_indent("* Loop function:", if (is.null(self$loop_function)) "-" else "x"))
+      catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
+      catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
+      catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
     }
   ),
 

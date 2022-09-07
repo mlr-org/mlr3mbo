@@ -16,6 +16,9 @@ Surrogate model.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{print_id}}{(\code{character})\cr
+Id used when printing.}
+
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
 
 \item{\code{n_learner}}{(\code{integer(1)})\cr
@@ -50,6 +53,8 @@ A complete list of candidate feature types, grouped by task type, is stored in \
 \item \href{#method-Surrogate-new}{\code{Surrogate$new()}}
 \item \href{#method-Surrogate-update}{\code{Surrogate$update()}}
 \item \href{#method-Surrogate-predict}{\code{Surrogate$predict()}}
+\item \href{#method-Surrogate-format}{\code{Surrogate$format()}}
+\item \href{#method-Surrogate-print}{\code{Surrogate$print()}}
 \item \href{#method-Surrogate-clone}{\code{Surrogate$clone()}}
 }
 }
@@ -110,6 +115,29 @@ New data.}
 }
 \subsection{Returns}{
 Arbitrary prediction object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Surrogate-format"></a>}}
+\if{latex}{\out{\hypertarget{method-Surrogate-format}{}}}
+\subsection{Method \code{format()}}{
+Helper for print outputs.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Surrogate$format()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Surrogate-print"></a>}}
+\if{latex}{\out{\hypertarget{method-Surrogate-print}{}}}
+\subsection{Method \code{print()}}{
+Print method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Surrogate$print()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character()}).
 }
 }
 \if{html}{\out{<hr>}}

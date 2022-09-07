@@ -47,15 +47,40 @@ Surrogate = R6Class("Surrogate",
     #' Predict mean response and standard error.
     #'
     #' @param xdt ([data.table::data.table()])\cr
-    #'   New data.
+    #' New data.
     #'
     #' @return Arbitrary prediction object.
     predict = function(xdt) {
       stop("Abstract")
+    },
+
+    #' @description
+    #' Helper for print outputs.
+    format = function() {
+      sprintf("<%s>", class(self)[1L])
+    },
+
+    #' @description
+    #' Print method.
+    #'
+    #' @return (`character()`).
+    print = function() {
+      catn(format(self), paste0(": ", self$print_id))
+      catn(str_indent("* Parameters:", as_short_string(self$param_set$values)))
     }
   ),
 
   active = list(
+
+    #' @field print_id (`character`)\cr
+    #' Id used when printing.
+    print_id = function(rhs) {
+      if (missing(rhs)) {
+        stop("Abstract.")
+      } else {
+        stop("'print_id' field is read-only.")
+      }
+    },
 
     #' @field archive ([bbotk::Archive]).
     archive = function(rhs) {
@@ -68,7 +93,7 @@ Surrogate = R6Class("Surrogate",
     },
 
     #' @field n_learner (`integer(1)`)\cr
-    #'   Returns the number of [mlr3::Learner]s.
+    #' Returns the number of [mlr3::Learner]s.
     n_learner = function() {
       stop("Abstract.")
     },

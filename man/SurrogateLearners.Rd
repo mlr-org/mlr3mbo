@@ -14,6 +14,9 @@ Note that redundant \link[mlr3:Learner]{mlr3::Learner}s must be deep clones.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{print_id}}{(\code{character})\cr
+Id used when printing.}
+
 \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of \link[mlr3:Learner]{mlr3::Learner}s.}
 
@@ -40,6 +43,8 @@ A complete list of candidate feature types, grouped by task type, is stored in \
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="format"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-format'><code>mlr3mbo::Surrogate$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="print"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-print'><code>mlr3mbo::Surrogate$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-update'><code>mlr3mbo::Surrogate$update()</code></a></span></li>
 </ul>
 </details>

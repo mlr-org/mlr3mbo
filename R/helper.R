@@ -170,3 +170,7 @@ get_best_not_evaluated = function(instance, evaluated) {
   xdt[[instance$archive$cols_y]] = xdt[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
   xdt
 }
+
+catn = function(..., file = "") {
+  cat(paste0(..., collapse = "\n"), "\n", sep = "", file = file)
+}

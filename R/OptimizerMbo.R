@@ -42,6 +42,22 @@ OptimizerMbo = R6Class("OptimizerMbo",
       self$acq_optimizer = acq_optimizer
       self$args = args
       self$result_function = result_function
+    },
+
+    #' @description
+    #' Print method.
+    #'
+    #' @return (`character()`).
+    print = function() {
+      catn(format(self), if (is.na(self$label)) "" else paste0(": ", self$label))
+      catn(str_indent("* Parameters:", as_short_string(self$param_set$values)))
+      catn(str_indent("* Parameter classes:", self$param_classes))
+      catn(str_indent("* Properties:", self$properties))
+      catn(str_indent("* Packages:", self$packages))
+      catn(str_indent("* Loop function:", if (is.null(self$loop_function)) "-" else "x"))
+      catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
+      catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
+      catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
     }
   ),
 

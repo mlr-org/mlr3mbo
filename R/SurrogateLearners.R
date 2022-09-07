@@ -52,7 +52,7 @@ SurrogateLearners = R6Class("SurrogateLearners",
     #' Each contains the mean response and standard error for one `y_col`.
     #'
     #' @param xdt ([data.table::data.table()])\cr
-    #'   New data.
+    #' New data.
     #'
     #' @return list of [data.table::data.table()]s with the columns `mean` and `se`.
     predict = function(xdt) {
@@ -75,14 +75,24 @@ SurrogateLearners = R6Class("SurrogateLearners",
 
   active = list(
 
+    #' @field print_id (`character`)\cr
+    #' Id used when printing.
+    print_id = function(rhs) {
+      if (missing(rhs)) {
+        paste0("(", paste0(map_chr(self$model, function(model) class(model)[1L]), collapse = " | "), ")")
+      } else {
+        stop("'print_id' field is read-only.")
+      }
+    },
+
     #' @field n_learner (`integer(1)`)\cr
-    #'   Returns the number of [mlr3::Learner]s.
+    #' Returns the number of [mlr3::Learner]s.
     n_learner = function() {
       length(self$model)
     },
 
     #' @field assert_insample_perf (`numeric()`)\cr
-    #'   Asserts whether the current insample performance meets the performance threshold.
+    #' Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
       if (!missing(rhs)) {
         stop("assert_insample_perf is read-only.")
@@ -114,7 +124,7 @@ SurrogateLearners = R6Class("SurrogateLearners",
     },
 
     #' @field packages (`character()`)\cr
-    #'   Set of required packages.
+    #' Set of required packages.
     packages = function(rhs) {
       if (missing(rhs)) {
         unique(unlist(map(self$model, "packages")))
