@@ -14,8 +14,8 @@
 #'   If `NULL` \code{default_surrogate(instance), n_learner = 1} is used.
 #'   Points are drawn uniformly at random.
 #' @param acq_function (`NULL` | [AcqFunction]).\cr
-#'   [AcqFunction] to be used as an acquisition function.
-#'   If `NULL` an [AcqFunctionEI] is used.
+#'   [AcqFunction] to be used as acquisition function.
+#'   If `NULL` [AcqFunctionEI] is used.
 #' @param acq_optimizer ([AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
 #'   If `NULL` \code{default_acqopt(acqfun)} is used.
@@ -105,7 +105,7 @@ bayesopt_parego = function(
   domain = instance$search_space
   d = domain$length
   k = length(archive$cols_y)  # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
   if (is.null(surrogate)) surrogate = default_surrogate(instance, n_learner = 1L)
   if (is.null(acq_function)) acq_function = AcqFunctionEI$new()
   if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
@@ -118,6 +118,8 @@ bayesopt_parego = function(
   if (isTRUE(init_design_size > 0L)) {
     design = generate_design_random(domain, n = init_design_size)$data
     instance$eval_batch(design)
+  } else {
+    init_design_size = instance$archive$n_evals
   }
 
   lambdas = calculate_parego_weights(s, d = k)

@@ -81,23 +81,17 @@ test_that("default_surrogate", {
   expect_list(surrogate$model, types = "LearnerRegrFeatureless")
 })
 
-
-
 test_that("default_acqfun", {
   instance = MAKE_INST_1D()
   acq = default_acqfun(instance)
   expect_r6(acq, "AcqFunctionEI")
 })
 
-
-
 test_that("default_acqopt", {
   acqopt = default_acqopt(default_acqfun(MAKE_INST_1D()))
   expect_r6(acqopt, "AcqOptimizer")
   expect_r6(acqopt$optimizer, "OptimizerRandomSearch")
 })
-
-
 
 test_that("stability and defaults", {
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
@@ -129,6 +123,7 @@ test_that("stability and defaults", {
   acq_function = default_acqfun(instance)
   expect_r6(acq_function, "AcqFunctionEI")
   acq_optimizer = default_acqopt(acq_function)
+  acq_optimizer$param_set$values$logging_level = "info"
   expect_r6(acq_optimizer, "AcqOptimizer")
   expect_r6(acq_optimizer$optimizer, "OptimizerRandomSearch")
 

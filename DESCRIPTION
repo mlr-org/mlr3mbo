@@ -39,6 +39,7 @@ Suggests:
     lhs,
     mlr3learners,
     mlr3pipelines,
+    nloptr,
     ranger,
     rgenoud,
     rpart,

@@ -14,7 +14,7 @@
 #'   [Surrogate] to be used as a surrogate.
 #'   Typically a [SurrogateLearner].
 #'   If `NULL` \code{default_surrogate(instance)} is used.
-#' @param acq_function (`NULL` | [AcqFunction]).
+#' @param acq_function (`NULL` | [AcqFunction]).\cr
 #'   [AcqFunction] to be used as acquisition function.
 #'   If `NULL` \code{default_acqfun(instance)} is used.
 #' @param acq_optimizer ([AcqOptimizer])\cr
@@ -35,13 +35,13 @@
 #'
 #' @note
 #' * If `surrogate` is `NULL` but `acq_function` is given and contains a `$surrogate`, this
-#' [Surrogate] is used.
+#'   [Surrogate] is used.
 #' * You can pass a `surrogate` that was not given the [bbotk::Archive] of the
-#' `instance` during initialization.
-#' In this case, the [bbotk::Archive] of the given `instance` is set during execution.
+#'   `instance` during initialization.
+#'   In this case, the [bbotk::Archive] of the given `instance` is set during execution.
 #' * Similarly, you can pass an `acq_function` that was not given the `surrogate` during initialization
-#' and an `acq_optimizer` that was not given the `acq_function`, i.e., delayed initialization is
-#' handled automatically.
+#'   and an `acq_optimizer` that was not given the `acq_function`, i.e., delayed initialization is
+#'   handled automatically.
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.
@@ -95,7 +95,7 @@ bayesopt_mpcl = function(
   archive = instance$archive
   domain = instance$search_space
   d = domain$length
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
   if (is.null(surrogate)) surrogate = default_surrogate(instance)
   if (is.null(acq_function)) acq_function = default_acqfun(instance)
   if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
@@ -107,6 +107,8 @@ bayesopt_mpcl = function(
   if (isTRUE(init_design_size > 0L)) {
     design = generate_design_random(domain, n = init_design_size)$data
     instance$eval_batch(design)
+  } else {
+    init_design_size = instance$archive$n_evals
   }
 
   lie = data.table()

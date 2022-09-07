@@ -44,20 +44,20 @@ This may improve the model fit and will less frequently produce a constant surro
 For mixed numeric-categorical parameter spaces, or spaces with conditional parameters:
 \itemize{
 \item{A ranger regression forest \dQuote{"regr.ranger"} with 500 trees is created.}
-\item{The standard error of a prediction (if required by the infill criterion) is estimated
-by computing the infinitesimal jackknife.
-This is the \code{se.method = "infjack"} option of the \dQuote{"regr.ranger"} learner (default).
+\item{The standard error of a prediction (if required by the infill criterion) is estimated via jackknife.
+This is the \code{se.method = "jack"} option of the \dQuote{"regr.ranger"} learner (default).
 }
 }
 In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
 in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
-\code{lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)}.
+\code{lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE, se.method = "jack")}.
 
 If additionally dependencies are present in the parameter space, inactive conditional parameters
 are represented by missing \code{NA} values in the training design data.
 We simply handle those with an imputation method, added to the ranger random forest, more
-concretely we use \code{po("imputesample")} and \code{po("imputeoor")} from package \CRANpkg{mlr3pipelines}.
-Both of these techniques make sense for tree-based methods and are usually hard to beat, see Ding et al. (2010).
+concretely we use \code{po("imputesample")} (for logicals) and \code{po("imputeoor")} (for anything else) from
+package \CRANpkg{mlr3pipelines}.
+Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
 In the case of dependencies, the following learner is used as a fallback:
 \code{lrn("regr.featureless")}.
 

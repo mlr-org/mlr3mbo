@@ -90,7 +90,7 @@ bayesopt_smsego = function(
   domain = instance$search_space
   d = domain$length
   k = length(archive$cols_y)  # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
   if (is.null(surrogate)) surrogate = default_surrogate(instance)
   if (is.null(acq_function)) acq_function = AcqFunctionSmsEgo$new()
   if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
@@ -102,6 +102,8 @@ bayesopt_smsego = function(
   if (isTRUE(init_design_size > 0L)) {
     design = generate_design_random(domain, n = init_design_size)$data
     instance$eval_batch(design)
+  } else {
+    init_design_size = instance$archive$n_evals
   }
 
   # loop

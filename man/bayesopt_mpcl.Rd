@@ -29,7 +29,7 @@ Points are drawn uniformly at random.}
 Typically a \link{SurrogateLearner}.
 If \code{NULL} \code{default_surrogate(instance)} is used.}
 
-\item{acq_function}{(\code{NULL} | \link{AcqFunction}).
+\item{acq_function}{(\code{NULL} | \link{AcqFunction}).\cr
 \link{AcqFunction} to be used as acquisition function.
 If \code{NULL} \code{default_acqfun(instance)} is used.}
 

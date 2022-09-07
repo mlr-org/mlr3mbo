@@ -30,8 +30,8 @@ If \code{NULL} \code{default_surrogate(instance), n_learner = 1} is used.
 Points are drawn uniformly at random.}
 
 \item{acq_function}{(\code{NULL} | \link{AcqFunction}).\cr
-\link{AcqFunction} to be used as an acquisition function.
-If \code{NULL} an \link{AcqFunctionEI} is used.}
+\link{AcqFunction} to be used as acquisition function.
+If \code{NULL} \link{AcqFunctionEI} is used.}
 
 \item{acq_optimizer}{(\link{AcqOptimizer})\cr
 \link{AcqOptimizer} to be used as acquisition function optimizer.

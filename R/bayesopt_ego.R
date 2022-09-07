@@ -109,7 +109,7 @@ bayesopt_ego = function(
   archive = instance$archive
   domain = instance$search_space
   d = domain$length
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
   if (is.null(surrogate)) surrogate = default_surrogate(instance)
   if (is.null(acq_function)) acq_function = default_acqfun(instance)
   if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
@@ -121,6 +121,8 @@ bayesopt_ego = function(
   if (isTRUE(init_design_size > 0L)) {
     design = generate_design_random(domain, n = init_design_size)$data
     instance$eval_batch(design)
+  } else {
+    init_design_size = instance$archive$n_evals
   }
 
   # loop

@@ -23,9 +23,19 @@ archive_xy = function(archive) {
 char_to_fct = function(xydt) {
   # Convert character params to factors
   chr_cols = names(xydt)[map_chr(xydt, class) == "character"]
-  if (length(chr_cols))
+  if (length(chr_cols)) {
     xydt[, (chr_cols) := map(.SD, as.factor), .SDcols = chr_cols]
-  return(xydt)
+  }
+  xydt
+}
+
+fct_to_char = function(xydt) {
+  # Convert factor params to character
+  fct_cols = names(xydt)[map_chr(xydt, class) %in% c("factor", "ordered")]
+  if (length(fct_cols)) {
+    xydt[, (fct_cols) := map(.SD, as.character), .SDcols = fct_cols]
+  }
+  xydt
 }
 
 archive_x = function(archive) {
@@ -141,4 +151,22 @@ surrogate_mult_max_to_min = function(codomain, y_cols) {
 # FIXME: bbotk dropped this and codomains now have a maximization_to_minimization method
 mult_max_to_min = function(codomain) {
   ifelse(map_lgl(codomain$tags, has_element, "minimize"), 1, -1)
+}
+
+# FIXME: document
+# used in AcqOptimizer
+get_best_not_evaluated = function(instance, evaluated) {
+  assert_r6(instance, classes = "OptimInstanceSingleCrit")
+  data = copy(instance$archive$data[, c(instance$archive$cols_x, "x_domain", instance$archive$cols_y), with = FALSE])
+  evaluated = copy(evaluated)
+  already_evaluated_id = ".already_evaluated"
+  while (already_evaluated_id %in% c(instance$archive$cols_x, "x_domain", instance$archive$cols_y)) {
+    already_evaluated_id = paste0(".", already_evaluated_id)
+  }
+  data[, eval(already_evaluated_id) := FALSE][evaluated, eval(already_evaluated_id) := TRUE, on = instance$archive$cols_x]
+  candidates = data[get(already_evaluated_id) == FALSE]
+  candidates[[instance$archive$cols_y]] = candidates[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
+  xdt = setorderv(candidates, cols = instance$archive$cols_y)[1L, ]
+  xdt[[instance$archive$cols_y]] = xdt[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
+  xdt
 }

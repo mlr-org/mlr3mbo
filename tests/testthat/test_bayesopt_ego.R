@@ -36,6 +36,8 @@ test_that("stable bayesopt_ego", {
   acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
   acq_function$surrogate$param_set$values$calc_insample_perf = TRUE
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
+  acq_optimizer$param_set$values$logging_level = "info"
+  acq_optimizer$param_set$values$skip_already_evaluated = FALSE
   acq_optimizer$param_set$values$fix_distance = TRUE
   acq_optimizer$param_set$values$dist_threshold = 0
   bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
@@ -60,6 +62,9 @@ test_that("stable bayesopt_ego", {
   acq_function$surrogate$model = REGR_KM_DETERM
   acq_function$surrogate$param_set$values$perf_threshold = 0
   acq_optimizer = AcqOptimizer$new(OptimizerError$new(), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
+  acq_optimizer$param_set$values$skip_already_evaluated = TRUE
+  acq_optimizer$param_set$values$logging_level = "info"
+  acq_optimizer$param_set$values$skip_already_evaluated = TRUE
   acq_optimizer$param_set$values$fix_distance = TRUE
   acq_optimizer$param_set$values$dist_threshold = 0
   bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
