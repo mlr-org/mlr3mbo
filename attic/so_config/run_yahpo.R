@@ -291,13 +291,13 @@ mlr3mbo_wrapper_xxx_ls = function(job, data, instance, ...) {
 
   d = optim_instance$search_space$length
   init_design_size = 4L * d
-  init_design = generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
+  init_design = generate_design_sobol(optim_instance$search_space, n = init_design_size)$data
   optim_instance$eval_batch(init_design)
   
   random_interleave_iter = 4L
-  
-  learner = lrn("regr.ranger", splitrule = "extratrees", num.random.splits = 1, min.node.size = 1, num.trees = 10, mtry.ratio = 1, replace = TRUE, sample.fraction = 1, se.method = "jack")
-  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
+ 
+  learner = lrn("regr.ranger_custom")
+  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor", multiplier = 2) %>>% learner))
 
   acq_function = AcqFunctionEI$new()
  
