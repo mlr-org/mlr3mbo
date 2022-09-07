@@ -133,15 +133,3 @@ AcqOptimizer = R6Class("AcqOptimizer",
   )
 )
 
-# FIXME: document
-get_best_not_evaluated = function(instance, evaluated) {
-  assert_r6(instance, classes = "OptimInstanceSingleCrit")
-  data = copy(instance$archive$data[, c(instance$archive$cols_x, instance$archive$cols_y), with = FALSE])
-  evaluated = copy(evaluated)
-  data[, .overlap := FALSE][evaluated, .overlap := TRUE, on = instance$archive$cols_x]
-  candidates = data[.overlap == FALSE]
-  candidates[[instance$archive$cols_y]] = candidates[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
-  xdt = setorderv(candidates, cols = instance$archive$cols_y)[1L, ]
-  xdt[[instance$archive$cols_y]] = xdt[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
-  xdt
-}

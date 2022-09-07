@@ -182,3 +182,17 @@ surrogate_mult_max_to_min = function(codomain, y_cols) {
 mult_max_to_min = function(codomain) {
   ifelse(map_lgl(codomain$tags, has_element, "minimize"), 1, -1)
 }
+
+# FIXME: document
+# used in AcqOptimizer
+get_best_not_evaluated = function(instance, evaluated) {
+  assert_r6(instance, classes = "OptimInstanceSingleCrit")
+  data = copy(instance$archive$data[, c(instance$archive$cols_x, instance$archive$cols_y), with = FALSE])
+  evaluated = copy(evaluated)
+  data[, .overlap := FALSE][evaluated, .overlap := TRUE, on = instance$archive$cols_x]
+  candidates = data[.overlap == FALSE]
+  candidates[[instance$archive$cols_y]] = candidates[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
+  xdt = setorderv(candidates, cols = instance$archive$cols_y)[1L, ]
+  xdt[[instance$archive$cols_y]] = xdt[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
+  xdt
+}
