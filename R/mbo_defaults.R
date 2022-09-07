@@ -62,9 +62,8 @@ default_loopfun = function(instance) {
 #' For mixed numeric-categorical parameter spaces, or spaces with conditional parameters:
 #' \itemize{
 #' \item{A ranger regression forest \dQuote{"regr.ranger"} with 500 trees is created.}
-#' \item{The standard error of a prediction (if required by the infill criterion) is estimated
-#'   by computing the infinitesimal jackknife.
-#'   This is the \code{se.method = "infjack"} option of the \dQuote{"regr.ranger"} learner (default).
+#' \item{The standard error of a prediction (if required by the infill criterion) is estimated via jackknife.
+#'   This is the \code{se.method = "jack"} option of the \dQuote{"regr.ranger"} learner (default).
 #'   }
 #' }
 #' In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
@@ -74,8 +73,9 @@ default_loopfun = function(instance) {
 #' If additionally dependencies are present in the parameter space, inactive conditional parameters
 #' are represented by missing \code{NA} values in the training design data.
 #' We simply handle those with an imputation method, added to the ranger random forest, more
-#' concretely we use \code{po("imputesample")} and \code{po("imputeoor")} from package \CRANpkg{mlr3pipelines}.
-#' Both of these techniques make sense for tree-based methods and are usually hard to beat, see Ding et al. (2010).
+#' concretely we use \code{po("imputesample")} (for logicals) and \code{po("imputeoor")} (for anything else) from
+#' package \CRANpkg{mlr3pipelines}.
+#' Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
 #' In the case of dependencies, the following learner is used as a fallback:
 #' \code{lrn("regr.featureless")}.
 #'
@@ -121,7 +121,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
       learner = mlr3learners::LearnerRegrRanger$new()
       learner$param_set$values = insert_named(
         learner$param_set$values,
-        list(num.trees = 500L, keep.inbag = TRUE)
+        list(num.trees = 500L, keep.inbag = TRUE, se.method = "jack")
       )
     }
     # Stability: evaluate and add a fallback
@@ -130,13 +130,13 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
     fallback = mlr3learners::LearnerRegrRanger$new()
     fallback$param_set$values = insert_named(
       fallback$param_set$values,
-      list(num.trees = 500L, keep.inbag = TRUE)
+      list(num.trees = 500L, keep.inbag = TRUE, se.method = "jack")
     )
     learner$fallback = fallback
 
     if (has_deps) {
       require_namespaces("mlr3pipelines")
-      learner = mlr3pipelines::GraphLearner$new(mlr3pipelines::'%>>%'(mlr3pipelines::'%>>%'(mlr3pipelines::po("imputesample", affect_columns = mlr3pipelines::selector_type("logical")), mlr3pipelines::po("imputeoor")), learner))
+      learner = mlr3pipelines::GraphLearner$new(mlr3pipelines::"%>>%"(mlr3pipelines::"%>>%"(mlr3pipelines::po("imputesample", affect_columns = mlr3pipelines::selector_type("logical")), mlr3pipelines::po("imputeoor", multiplier = 2)), learner))
       learner$encapsulate[c("train", "predict")] = "evaluate"
       learner$fallback = lrn("regr.featureless")
     }
