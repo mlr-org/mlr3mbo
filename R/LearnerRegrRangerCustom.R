@@ -12,6 +12,7 @@
 #' No bootstrap or subsampling is used but rather all training data (`replace = FALSE` and `sample.fraction = 1`).
 #' This may seem counter-intuitive at first but ensures that training data is almost perfectly interpolated (given `min.node.size = 1`).
 #' Per default, `1000` trees are used.
+#' # FIXME:
 #' Classical standard error estimation is no longer possible, but the `"extratrees"` splitting rule allows for estimating the variance based on the variance of the trees (simply taking the variance over the predictions of the trees).
 #' This results in low variance close to training data points.
 #' If `se.simple.spatial = TRUE` this point-wise variance is upwardly biased by adding the pointwise variance again scaled by the minimum Gower distance of the point to the training data (recall that a Gower distance of 0 means an identical point is present in the training data, whereas a distance of 1 means total dissimilarity to the training data).
@@ -55,22 +56,22 @@ LearnerRegrRangerCustom = R6Class("LearnerRegrRangerCustom",
       ps = ps(
         always.split.variables       = p_uty(tags = "train"),
         holdout                      = p_lgl(default = FALSE, tags = "train"),
-        importance                   = p_fct(c("none", "impurity", "impurity_corrected", "permutation"), tags = "train"),
+        importance                   = p_fct(levels = c("none", "impurity", "impurity_corrected", "permutation"), tags = "train"),
         keep.inbag                   = p_lgl(default = FALSE, tags = "train"),
         local.importance             = p_lgl(default = FALSE, tags = "train"),
         max.depth                    = p_int(default = NULL, lower = 0L, special_vals = list(NULL), tags = "train"),
         mtry                         = p_int(lower = 1L, special_vals = list(NULL), tags = "train"),
         mtry.ratio                   = p_dbl(lower = 0, upper = 1, tags = "train"),
-        num.threads                  = p_int(1L, default = 1L, tags = c("train", "predict", "threads")),  # changed
-        num.trees                    = p_int(1L, default = 1000L, tags = c("train", "predict", "hotstart")),  # changed
+        num.threads                  = p_int(lower = 1L, default = 1L, tags = c("train", "predict", "threads")),  # changed
+        num.trees                    = p_int(lower = 1L, default = 1000L, tags = c("train", "predict", "hotstart")),  # changed
         oob.error                    = p_lgl(default = FALSE, tags = "train"),  # changed
         regularization.factor        = p_uty(default = 1, tags = "train"),
         regularization.usedepth      = p_lgl(default = FALSE, tags = "train"),
-        respect.unordered.factors    = p_fct(c("ignore", "order", "partition"), default = "ignore", tags = "train"),
+        respect.unordered.factors    = p_fct(levels = c("ignore", "order", "partition"), default = "ignore", tags = "train"),
         save.memory                  = p_lgl(default = FALSE, tags = "train"),
         scale.permutation.importance = p_lgl(default = FALSE, tags = "train"),
         se.simple.spatial            = p_lgl(default = TRUE, tags = "predict"),
-        se.simple.spatial.nugget     = p_dbl(0, default = 0, tags = "predict"),
+        se.simple.spatial.nugget     = p_dbl(lower = 0, default = 0, tags = "predict"),
         seed                         = p_int(default = NULL, special_vals = list(NULL), tags = c("train", "predict")),
         split.select.weights         = p_uty(default = NULL, tags = "train"),
         verbose                      = p_lgl(default = TRUE, tags = c("train", "predict")),
@@ -136,21 +137,27 @@ LearnerRegrRangerCustom = R6Class("LearnerRegrRangerCustom",
       pv = self$param_set$get_values(tags = "predict")
       pv = insert_named(list(se.simple.spatial = TRUE, se.simple.spatial.nugget = 0), pv)
       newdata = ordered_features(task, self)
+      traindata = ordered_features(private$.train_task, self)
+      data = rbind(traindata, newdata)
+      n_traindata = nrow(traindata)
+      n_newdata = nrow(newdata)
+      traindata_ids = seq_len(n_traindata)
+      newdata_ids = (n_traindata + 1L):nrow(data)
 
-      prediction = invoke(predict, self$model, data = newdata, type = "response", predict.all = TRUE, .args = pv)
+      prediction = invoke(predict, self$model, data = data, type = "response", predict.all = TRUE, .args = pv)
       response = apply(prediction$predictions, MARGIN = 1L, FUN = mean)
-      variance = apply(prediction$predictions, MARGIN = 1L, FUN = var)
+
+      variance = numeric(n_newdata)
+      for (i in newdata_ids) {
+        variance[i - n_traindata] = var(prediction$predictions[i, ]) + var(response[c(traindata_ids, i)])
+      }
       if (pv$se.simple.spatial) {
-        gw_dists = get_gower_dist(fct_to_char(newdata), fct_to_char(ordered_features(private$.train_task, self)))  # 0 if identical, 1 if maximally dissimilar
+        gw_dists = get_gower_dist(fct_to_char(newdata), fct_to_char(traindata))  # 0 if identical, 1 if maximally dissimilar
         min_gw_dists = apply(gw_dists, MARGIN = 1L, FUN = min)  # get the minium for each new point to the points used for training
-        #min_gw_dists = (min_gw_dists - min(min_gw_dists)) / (max(min_gw_dists) - min(min_gw_dists))  # scale to [0, 1]
-        #min_gw_dists[is.na(min_gw_dists)] = 0
-        # upwardly bias variance by the mean variance scaled by the gower distance (and the potential nugget, useful for noisy)
-        #variance = variance + (mean(variance) * (min_gw_dists + (pv$se.simple.spatial.nugget %??% 0)))  # 0 is default
-        variance = (variance + pv$se.simple.spatial.nugget) + (variance + pv$se.simple.spatial.nugget) * min_gw_dists
+        variance = (variance * pv$se.simple.spatial.nugget) + (variance * min_gw_dists)
       }
       se = sqrt(variance)
-      list(response = response, se = if (self$predict_type == "se") se else NULL)
+      list(response = response[newdata_ids], se = if (self$predict_type == "se") se else NULL)
     },
 
     .hotstart = function(task) {
