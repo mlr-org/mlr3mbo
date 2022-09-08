@@ -57,6 +57,9 @@ test_that("AcqOptimizer API works", {
 
     acqopt$param_set$values$skip_already_evaluated = FALSE
     expect_true(with_seed(3, {acqopt$optimize()[["acq_ei"]]}) < sqrt(.Machine$double.eps))
+
+    acqopt$param_set$values$warmstart = FALSE
+    expect_true(with_seed(4, {acqopt$optimize()[["acq_ei"]]}) > sqrt(.Machine$double.eps))
   })
 })
 
@@ -87,9 +90,17 @@ test_that("AcqOptimizer trafo", {
   acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
   acqfun$surrogate$update()
   acqfun$update()
-  with_seed(4, {
+  with_seed(5, {
     res = acqopt$optimize()
   })
   expect_equal(res$x, res$x_domain[[1L]][[1L]])
+})
+
+test_that("AcqOptimizer deep clone", {
+  acqopt1 = AcqOptimizer$new(opt("random_search", batch_size = 1L), trm("evals", n_evals = 1L))
+  acqopt2 = acqopt$clone(deep = TRUE)
+  expect_true(address(acqopt1) != address(acqopt2))
+  expect_true(address(acqopt1$optimizer) != address(acqopt2$optimizer))
+  expect_true(address(acqopt1$terminator) != address(acqopt2$terminator))
 })
 
