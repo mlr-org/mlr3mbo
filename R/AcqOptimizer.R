@@ -28,16 +28,35 @@ AcqOptimizer = R6Class("AcqOptimizer",
       self$terminator = assert_r6(terminator, "Terminator")
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       ps = ps(
-        warmstart = p_lgl(),
-        fix_distance = p_lgl(),
+        logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
+        warmstart = p_lgl(default = FALSE),
+        warmstart_size = p_int(lower = 1L, special_vals = list("all")),
+        skip_already_evaluated = p_lgl(default = TRUE),
+        fix_distance = p_lgl(default = FALSE),
         dist_threshold = p_dbl(lower = 0, upper = 1)
       )
 
       # FIXME: not having a dist_threshold may be problematic if only fix_distance is set to TRUE
       # FIXME: assert this
-      ps$values = list(warmstart = FALSE, fix_distance = FALSE)
+      ps$values = list(logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, fix_distance = FALSE)
+      ps$add_dep("warmstart_size", on = "warmstart", cond = CondEqual$new(TRUE))
       ps$add_dep("dist_threshold", on = "fix_distance", cond = CondEqual$new(TRUE))
       private$.param_set = ps
+    },
+
+    #' @description
+    #' Helper for print outputs.
+    format = function() {
+      sprintf("<%s>", class(self)[1L])
+    },
+
+    #' @description
+    #' Print method.
+    #'
+    #' @return (`character()`).
+    print = function() {
+      catn(format(self), paste0(": ", self$print_id))
+      catn(str_indent("* Parameters:", as_short_string(self$param_set$values)))
     },
 
     #' @description
@@ -53,6 +72,11 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #'
     #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
     optimize = function() {
+      logger = lgr::get_logger("bbotk")
+      old_threshold = logger$threshold
+      logger$set_threshold(self$param_set$values$logging_level)
+      on.exit(logger$set_threshold(old_threshold))
+
       instance = if (self$acq_function$codomain$length == 1L) {
         OptimInstanceSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "all")
       } else {
@@ -63,10 +87,13 @@ AcqOptimizer = R6Class("AcqOptimizer",
       }
 
       if (self$param_set$values$warmstart) {
+        warmstart_size = if (self$param_set$values$warmstart_size == "all") Inf
         # NOTE: is this save if e.g. mu < nrow(best) in miesmuschel?
-        instance$eval_batch(self$acq_function$archive$best()[, instance$search_space$ids(), with = FALSE])
+        n_select = min(nrow(self$acq_function$archive$data), warmstart_size)
+        instance$eval_batch(self$acq_function$archive$best(n_select = n_select)[, instance$search_space$ids(), with = FALSE])
       }
 
+      # FIXME: how do we handle multic-rit here
       xdt = tryCatch(self$optimizer$optimize(instance),
         error = function(error_condition) {
           lg$info(error_condition$message)
@@ -75,6 +102,18 @@ AcqOptimizer = R6Class("AcqOptimizer",
             classes = c("mbo_error", "acq_optimizer_error", "error", "condition")))
         }
       )
+      # check if candidate was already evaluated and if so get the best one not evaluated so far
+      if (self$param_set$values$skip_already_evaluated) {
+        if (nrow(self$acq_function$archive$data[xdt[, instance$archive$cols_x, with = FALSE], on = instance$archive$cols_x]) > 0L) {
+          xdt = tryCatch(get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data),
+            error = function(error_condition) {
+              lg$info(error_condition$message)
+              stop(set_class(list(message = error_condition$message, call = NULL),
+                classes = c("mbo_error", "acq_optimizer_error", "error", "condition")))
+            }
+          )
+        }
+      }
 
       if (self$param_set$values$fix_distance) {
         xdt = fix_xdt_distance(xdt, previous_xdt = archive_x(self$acq_function$archive), search_space = self$acq_function$domain, dist_threshold = self$param_set$values$dist_threshold)
@@ -85,6 +124,16 @@ AcqOptimizer = R6Class("AcqOptimizer",
   ),
 
   active = list(
+
+    #' @field print_id (`character`)\cr
+    #' Id used when printing.
+    print_id = function(rhs) {
+      if (missing(rhs)) {
+        paste0("(", class(self$optimizer)[1L], " | ", class(self$terminator)[1L], ")")
+      } else {
+        stop("'print_id' field is read-only.")
+      }
+    },
 
     #' @field param_set ([paradox::ParamSet])\cr
     #' Set of hyperparameters.

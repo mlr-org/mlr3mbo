@@ -18,7 +18,7 @@ result_by_surrogate_design = function(instance, optimizer_mbo) {
   preds = surrogate$predict(xdt)
   means = if (testR6(surrogate, classes = "SurrogateLearner")) {
     preds$mean
-  } else if (testR6(surrogate, classes = "SurrogateLearners")) {
+  } else if (testR6(surrogate, classes = "SurrogateLearnerCollection")) {
     map_dtc(preds, "mean")
   }
   archive_tmp = archive$clone(deep = TRUE)

@@ -10,8 +10,8 @@
 #'   Size of the initial design.
 #'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
 #'   Points are drawn uniformly at random.
-#' @param surrogate (`NULL` | [SurrogateLearners])\cr
-#'   [SurrogateLearners] to be used as a surrogate.
+#' @param surrogate (`NULL` | [SurrogateLearnerCollection])\cr
+#'   [SurrogateLearnerCollection] to be used as a surrogate.
 #'   If `NULL` \code{default_surrogate(instance)} is used.
 #' @param acq_function (`NULL` | [AcqFunctionSmsEgo]).\cr
 #'   [AcqFunctionSmsEgo] to be used as acquisition function.
@@ -28,7 +28,7 @@
 #'
 #' @note
 #' * If `surrogate` is `NULL` but `acq_function` is given and contains a `$surrogate`, this
-#'   [SurrogateLearners] is used.
+#'   [SurrogateLearnerCollection] is used.
 #' * You can pass a `surrogate` that was not given the [bbotk::Archive] of the
 #'   `instance` during initialization.
 #'   In this case, the [bbotk::Archive] of the given `instance` is set during execution.
@@ -79,7 +79,7 @@ bayesopt_smsego = function(
   assert_r6(instance, "OptimInstanceMultiCrit")
   assert_r6(instance$terminator, "TerminatorEvals")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
-  assert_r6(surrogate, classes = "SurrogateLearners", null.ok = TRUE)
+  assert_r6(surrogate, classes = "SurrogateLearnerCollection", null.ok = TRUE)
   assert_r6(acq_function, classes = "AcqFunctionSmsEgo", null.ok = TRUE)
   assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
   assert_int(random_interleave_iter, lower = 0L)
@@ -90,7 +90,7 @@ bayesopt_smsego = function(
   domain = instance$search_space
   d = domain$length
   k = length(archive$cols_y)  # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
   if (is.null(surrogate)) surrogate = default_surrogate(instance)
   if (is.null(acq_function)) acq_function = AcqFunctionSmsEgo$new()
   if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
@@ -102,6 +102,8 @@ bayesopt_smsego = function(
   if (isTRUE(init_design_size > 0L)) {
     design = generate_design_random(domain, n = init_design_size)$data
     instance$eval_batch(design)
+  } else {
+    init_design_size = instance$archive$n_evals
   }
 
   # loop

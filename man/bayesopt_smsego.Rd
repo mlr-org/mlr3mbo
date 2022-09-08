@@ -22,8 +22,8 @@ Size of the initial design.
 If \code{NULL} \code{4 * d} is used with \code{d} being the dimensionality of the search space.
 Points are drawn uniformly at random.}
 
-\item{surrogate}{(\code{NULL} | \link{SurrogateLearners})\cr
-\link{SurrogateLearners} to be used as a surrogate.
+\item{surrogate}{(\code{NULL} | \link{SurrogateLearnerCollection})\cr
+\link{SurrogateLearnerCollection} to be used as a surrogate.
 If \code{NULL} \code{default_surrogate(instance)} is used.}
 
 \item{acq_function}{(\code{NULL} | \link{AcqFunctionSmsEgo}).\cr
@@ -52,7 +52,7 @@ Normally used inside an \link{OptimizerMbo}.
 \note{
 \itemize{
 \item If \code{surrogate} is \code{NULL} but \code{acq_function} is given and contains a \verb{$surrogate}, this
-\link{SurrogateLearners} is used.
+\link{SurrogateLearnerCollection} is used.
 \item You can pass a \code{surrogate} that was not given the \link[bbotk:Archive]{bbotk::Archive} of the
 \code{instance} during initialization.
 In this case, the \link[bbotk:Archive]{bbotk::Archive} of the given \code{instance} is set during execution.

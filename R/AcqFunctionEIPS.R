@@ -13,7 +13,7 @@
 #' Additionally to target values of the codomain that should be minimized or maximized, the
 #' [bbotk::Objective] of the [bbotk::OptimInstanceSingleCrit] should return time values.
 #' The column names of the target variable and time variable must be passed as `y_cols` in the
-#' order `(target, time)` when constructing the [SurrogateLearners] that is being used as a
+#' order `(target, time)` when constructing the [SurrogateLearnerCollection] that is being used as a
 #' surrogate.
 #'
 #' @references
@@ -31,9 +31,9 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param surrogate (`NULL` | [SurrogateLearners]).
+    #' @param surrogate (`NULL` | [SurrogateLearnerCollection]).
     initialize = function(surrogate = NULL) {
-      assert_r6(surrogate, "SurrogateLearners", null.ok = TRUE)
+      assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       # FIXME: check that y_col, time_col is the same as surrogate$y_cols?
 
       super$initialize("acq_eips", surrogate = surrogate, direction = "maximize")

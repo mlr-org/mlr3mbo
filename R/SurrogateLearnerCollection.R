@@ -6,7 +6,7 @@
 #' Note that redundant [mlr3::Learner]s must be deep clones.
 #'
 #' @export
-SurrogateLearners = R6Class("SurrogateLearners",
+SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
   inherit = Surrogate,
   public = list(
 
@@ -52,7 +52,7 @@ SurrogateLearners = R6Class("SurrogateLearners",
     #' Each contains the mean response and standard error for one `y_col`.
     #'
     #' @param xdt ([data.table::data.table()])\cr
-    #'   New data.
+    #' New data.
     #'
     #' @return list of [data.table::data.table()]s with the columns `mean` and `se`.
     predict = function(xdt) {
@@ -75,14 +75,24 @@ SurrogateLearners = R6Class("SurrogateLearners",
 
   active = list(
 
+    #' @field print_id (`character`)\cr
+    #' Id used when printing.
+    print_id = function(rhs) {
+      if (missing(rhs)) {
+        paste0("(", paste0(map_chr(self$model, function(model) class(model)[1L]), collapse = " | "), ")")
+      } else {
+        stop("'print_id' field is read-only.")
+      }
+    },
+
     #' @field n_learner (`integer(1)`)\cr
-    #'   Returns the number of [mlr3::Learner]s.
+    #' Returns the number of [mlr3::Learner]s.
     n_learner = function() {
       length(self$model)
     },
 
     #' @field assert_insample_perf (`numeric()`)\cr
-    #'   Asserts whether the current insample performance meets the performance threshold.
+    #' Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
       if (!missing(rhs)) {
         stop("assert_insample_perf is read-only.")
@@ -111,6 +121,27 @@ SurrogateLearners = R6Class("SurrogateLearners",
         stop("Current insample performance of the Surrogate Model does not meet the performance threshold.")
       }
       invisible(self$insample_perf)
+    },
+
+    #' @field packages (`character()`)\cr
+    #' Set of required packages.
+    packages = function(rhs) {
+      if (missing(rhs)) {
+        unique(unlist(map(self$model, "packages")))
+      } else {
+        stop("$packages is read-only.")
+      }
+    },
+
+    #' @field feature_types (`character()`)\cr
+    #' Stores the feature types the learner can handle, e.g. `"logical"`, `"numeric"`, or `"factor"`.
+    #' A complete list of candidate feature types, grouped by task type, is stored in [`mlr_reflections$task_feature_types`][mlr_reflections].
+    feature_types = function(rhs) {
+      if (missing(rhs)) {
+        unique(unlist(map(self$model, "feature_types")))
+      } else {
+        stop("'feature_types' field is read-only.")
+      }
     }
   ),
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/result_by_surrogate_design.R
 \name{result_by_surrogate_design}
 \alias{result_by_surrogate_design}
-\title{Choose Final Point by Surrogate Mean}
+\title{Choose Final Point(s) by Surrogate Mean}
 \usage{
 result_by_surrogate_design(instance, optimizer_mbo)
 }
@@ -14,5 +14,5 @@ The \link[bbotk:OptimInstance]{bbotk::OptimInstance} the result should be assign
 The \link{OptimizerMbo} that generates the final result.}
 }
 \description{
-Choose final point by best surrogate mean prediction on all evaluated points.
+Choose final point(s) by best surrogate mean prediction on all evaluated points.
 }

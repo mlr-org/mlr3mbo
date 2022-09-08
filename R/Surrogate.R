@@ -22,8 +22,8 @@ Surrogate = R6Class("Surrogate",
       # most assertions are done in derived classes
       self$model = model
       private$.archive = archive
-      private$.x_cols = x_cols  # assertion is done in SurrogateLearner or SurrogateLearners
-      private$.y_cols = y_cols  # assertion is done in SurrogateLearner or SurrogateLearners
+      private$.x_cols = x_cols  # assertion is done in SurrogateLearner or SurrogateLearnerCollection
+      private$.y_cols = y_cols  # assertion is done in SurrogateLearner or SurrogateLearnerCollection
       private$.param_set = assert_r6(param_set, classes = "ParamSet")
     },
 
@@ -47,15 +47,40 @@ Surrogate = R6Class("Surrogate",
     #' Predict mean response and standard error.
     #'
     #' @param xdt ([data.table::data.table()])\cr
-    #'   New data.
+    #' New data.
     #'
     #' @return Arbitrary prediction object.
     predict = function(xdt) {
       stop("Abstract")
+    },
+
+    #' @description
+    #' Helper for print outputs.
+    format = function() {
+      sprintf("<%s>", class(self)[1L])
+    },
+
+    #' @description
+    #' Print method.
+    #'
+    #' @return (`character()`).
+    print = function() {
+      catn(format(self), paste0(": ", self$print_id))
+      catn(str_indent("* Parameters:", as_short_string(self$param_set$values)))
     }
   ),
 
   active = list(
+
+    #' @field print_id (`character`)\cr
+    #' Id used when printing.
+    print_id = function(rhs) {
+      if (missing(rhs)) {
+        stop("Abstract.")
+      } else {
+        stop("'print_id' field is read-only.")
+      }
+    },
 
     #' @field archive ([bbotk::Archive]).
     archive = function(rhs) {
@@ -68,7 +93,7 @@ Surrogate = R6Class("Surrogate",
     },
 
     #' @field n_learner (`integer(1)`)\cr
-    #'   Returns the number of [mlr3::Learner]s.
+    #' Returns the number of [mlr3::Learner]s.
     n_learner = function() {
       stop("Abstract.")
     },
@@ -114,6 +139,28 @@ Surrogate = R6Class("Surrogate",
     #' Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
       stop("Abstract.")
+    },
+
+    #' @field packages (`character`)\cr
+    #' Set of required packages. A warning is signaled by the constructor if at least one of the packages is not
+    #' installed, but loaded (not attached) later on-demand via 'requireNamespace()'.
+    packages = function(rhs) {
+      if (missing(rhs)) {
+        stop("Abstract.")
+      } else {
+        stop("'packages' field is read-only.")
+      }
+    },
+
+    #' @field feature_types (`character()`)\cr
+    #' Stores the feature types the learner can handle, e.g. `"logical"`, `"numeric"`, or `"factor"`.
+    #' A complete list of candidate feature types, grouped by task type, is stored in [`mlr_reflections$task_feature_types`][mlr_reflections].
+    feature_types = function(rhs) {
+      if (missing(rhs)) {
+        stop("Abstract.")
+      } else {
+        stop("'feature_types' field is read-only.")
+      }
     }
   ),
 

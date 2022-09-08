@@ -21,6 +21,9 @@ Wraps an \link[bbotk:Optimizer]{bbotk::Optimizer} and \link[bbotk:Terminator]{bb
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{print_id}}{(\code{character})\cr
+Id used when printing.}
+
 \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of hyperparameters.}
 }
@@ -29,14 +32,16 @@ Set of hyperparameters.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{AcqOptimizer$new()}}
-\item \href{#method-optimize}{\code{AcqOptimizer$optimize()}}
-\item \href{#method-clone}{\code{AcqOptimizer$clone()}}
+\item \href{#method-AcqOptimizer-new}{\code{AcqOptimizer$new()}}
+\item \href{#method-AcqOptimizer-format}{\code{AcqOptimizer$format()}}
+\item \href{#method-AcqOptimizer-print}{\code{AcqOptimizer$print()}}
+\item \href{#method-AcqOptimizer-optimize}{\code{AcqOptimizer$optimize()}}
+\item \href{#method-AcqOptimizer-clone}{\code{AcqOptimizer$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-AcqOptimizer-new"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
@@ -56,8 +61,31 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-optimize"></a>}}
-\if{latex}{\out{\hypertarget{method-optimize}{}}}
+\if{html}{\out{<a id="method-AcqOptimizer-format"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-format}{}}}
+\subsection{Method \code{format()}}{
+Helper for print outputs.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$format()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqOptimizer-print"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-print}{}}}
+\subsection{Method \code{print()}}{
+Print method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$print()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character()}).
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqOptimizer-optimize"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-optimize}{}}}
 \subsection{Method \code{optimize()}}{
 Optimize the acquisition function.
 
@@ -77,8 +105,8 @@ the checks but most likely will.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-AcqOptimizer-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

@@ -2,7 +2,7 @@ Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization in R
 Version: 0.0.0.9000
-Authors@R:c(
+Authors@R: c(
     person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0003-4152-5308")),
     person("Jakob", "Richter", , "jakob1richter@gmail.com", role = "aut",
@@ -39,6 +39,7 @@ Suggests:
     lhs,
     mlr3learners,
     mlr3pipelines,
+    nloptr,
     ranger,
     rgenoud,
     rpart,
@@ -49,7 +50,7 @@ ByteCompile: no
 Encoding: UTF-8
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Collate:
     'mlr_acqfunctions.R'
     'AcqFunction.R'
@@ -63,7 +64,7 @@ Collate:
     'OptimizerMbo.R'
     'Surrogate.R'
     'SurrogateLearner.R'
-    'SurrogateLearners.R'
+    'SurrogateLearnerCollection.R'
     'TunerMbo.R'
     'assertions.R'
     'bayesopt_ego.R'

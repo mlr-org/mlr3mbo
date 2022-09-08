@@ -44,11 +44,11 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param surrogate (`NULL` | [SurrogateLearners]).
+    #' @param surrogate (`NULL` | [SurrogateLearnerCollection]).
     #' @param lambda (`numeric(1)`).
     #' @param epsilon (`NULL` | `numeric(1)`).
     initialize = function(surrogate = NULL, lambda = 1, epsilon = NULL) {
-      assert_r6(surrogate, "SurrogateLearners", null.ok = TRUE)
+      assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       assert_number(lambda, lower = 1, finite = TRUE)
       assert_number(epsilon, lower = 0, finite = TRUE, null.ok = TRUE)
 

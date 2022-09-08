@@ -141,4 +141,4 @@ instance$result
 ```
 
     ##           cp learner_param_vals  x_domain classif.ce
-    ## 1: -4.885851          <list[2]> <list[1]>  0.1911911
+    ## 1: -4.885851          <list[2]> <list[1]>  0.1914062

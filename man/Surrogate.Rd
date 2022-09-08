@@ -16,6 +16,9 @@ Surrogate model.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{print_id}}{(\code{character})\cr
+Id used when printing.}
+
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
 
 \item{\code{n_learner}}{(\code{integer(1)})\cr
@@ -33,21 +36,31 @@ Set of hyperparameters.}
 
 \item{\code{assert_insample_perf}}{(\code{logical(1)})\cr
 Asserts whether the current insample performance meets the performance threshold.}
+
+\item{\code{packages}}{(\code{character})\cr
+Set of required packages. A warning is signaled by the constructor if at least one of the packages is not
+installed, but loaded (not attached) later on-demand via 'requireNamespace()'.}
+
+\item{\code{feature_types}}{(\code{character()})\cr
+Stores the feature types the learner can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
+A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
 }
 \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{Surrogate$new()}}
-\item \href{#method-update}{\code{Surrogate$update()}}
-\item \href{#method-predict}{\code{Surrogate$predict()}}
-\item \href{#method-clone}{\code{Surrogate$clone()}}
+\item \href{#method-Surrogate-new}{\code{Surrogate$new()}}
+\item \href{#method-Surrogate-update}{\code{Surrogate$update()}}
+\item \href{#method-Surrogate-predict}{\code{Surrogate$predict()}}
+\item \href{#method-Surrogate-format}{\code{Surrogate$format()}}
+\item \href{#method-Surrogate-print}{\code{Surrogate$print()}}
+\item \href{#method-Surrogate-clone}{\code{Surrogate$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-Surrogate-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Surrogate-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
@@ -71,8 +84,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update"></a>}}
-\if{latex}{\out{\hypertarget{method-update}{}}}
+\if{html}{\out{<a id="method-Surrogate-update"></a>}}
+\if{latex}{\out{\hypertarget{method-Surrogate-update}{}}}
 \subsection{Method \code{update()}}{
 Train model with new data.
 \subsection{Usage}{
@@ -84,8 +97,8 @@ Train model with new data.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-predict"></a>}}
-\if{latex}{\out{\hypertarget{method-predict}{}}}
+\if{html}{\out{<a id="method-Surrogate-predict"></a>}}
+\if{latex}{\out{\hypertarget{method-Surrogate-predict}{}}}
 \subsection{Method \code{predict()}}{
 Predict mean response and standard error.
 \subsection{Usage}{
@@ -105,8 +118,31 @@ Arbitrary prediction object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-Surrogate-format"></a>}}
+\if{latex}{\out{\hypertarget{method-Surrogate-format}{}}}
+\subsection{Method \code{format()}}{
+Helper for print outputs.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Surrogate$format()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Surrogate-print"></a>}}
+\if{latex}{\out{\hypertarget{method-Surrogate-print}{}}}
+\subsection{Method \code{print()}}{
+Print method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Surrogate$print()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character()}).
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Surrogate-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-Surrogate-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

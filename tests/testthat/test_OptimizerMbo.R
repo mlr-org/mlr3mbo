@@ -100,3 +100,47 @@ test_that("OptimizerMbo sugar", {
   expect_true("acq_cb" %in% colnames(result$instance$archive$data))
 })
 
+test_that("OptimizerMbo param_classes", {
+  optimizer = opt("mbo")
+  expect_equal(optimizer$param_classes, NULL)
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
+  optimizer$surrogate = default_surrogate(instance)
+  expect_equal(optimizer$param_classes, c("ParamLgl", "ParamInt", "ParamDbl"))
+  optimizer$acq_optimizer = AcqOptimizer$new(opt("nloptr"), terminator = trm("evals", n_evals = 10L))
+  expect_equal(optimizer$param_classes, "ParamDbl")
+})
+
+test_that("OptimizerMbo properties", {
+  optimizer = opt("mbo")
+  expect_equal(optimizer$properties, c("dependencies", "multi-crit", "single-crit"))
+  expect_error({optimizer$properties = "test"}, "Must be a subset of \\{'dependencies','single-crit','multi-crit'\\}")
+  optimizer$properties = c("dependencies", "single-crit")
+  expect_equal(optimizer$properties, c("dependencies", "single-crit"))
+})
+
+test_that("OptimizerMbo packages", {
+  optimizer = opt("mbo")
+  expect_equal(optimizer$packages, "mlr3mbo")
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
+  optimizer$surrogate = default_surrogate(instance)
+  expect_equal(optimizer$packages, c("mlr3mbo", "mlr3", "mlr3learners", "DiceKriging"))
+  optimizer$acq_optimizer = AcqOptimizer$new(opt("nloptr"), terminator = trm("evals", n_evals = 10L))
+  expect_equal(optimizer$packages, c("mlr3mbo", "mlr3", "mlr3learners", "DiceKriging", "bbotk", "nloptr"))
+  optimizer$surrogate = SurrogateLearner$new(lrn("regr.ranger"))
+  expect_equal(optimizer$packages, c("mlr3mbo", "mlr3", "mlr3learners", "ranger", "bbotk", "nloptr"))
+})
+
+test_that("OptimizerMbo args", {
+  optimizer = opt("mbo", args = list(test = 1))
+  expect_equal(optimizer$args, list(test = 1))
+  optimizer$loop_function = bayesopt_ego
+  expect_error(optimizer$args, "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}.")
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
+  expect_error(optimizer$optimize(instance), "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}.")
+  expect_equal(instance$archive$data, data.table())
+  optimizer$args = list(random_interleave_iter = 1L)
+  optimizer$optimize(instance)
+  expect_equal(nrow(instance$archive$data), 10L)
+  expect_true(optimizer$acq_function$id %nin% colnames(instance$archive$data))
+})
+

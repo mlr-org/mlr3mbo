@@ -16,14 +16,6 @@ generate_acq_codomain = function(codomain, id, direction = "same") {
   return(codomain)
 }
 
-feature_types_to_param_classes = function(feature_types) {
-  if (is.null(feature_types)) {
-    feature_types = c("logical", "integer", "numeric", "factor")
-  }
-  param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct")
-  param_classes[c("logical", "integer", "numeric", "factor") %in% feature_types]
-}
-
 archive_xy = function(archive) {
   archive$data[, c(archive$cols_x, archive$cols_y), with = FALSE]
 }
@@ -31,9 +23,19 @@ archive_xy = function(archive) {
 char_to_fct = function(xydt) {
   # Convert character params to factors
   chr_cols = names(xydt)[map_chr(xydt, class) == "character"]
-  if (length(chr_cols))
+  if (length(chr_cols)) {
     xydt[, (chr_cols) := map(.SD, as.factor), .SDcols = chr_cols]
-  return(xydt)
+  }
+  xydt
+}
+
+fct_to_char = function(xydt) {
+  # Convert factor params to character
+  fct_cols = names(xydt)[map_chr(xydt, class) %in% c("factor", "ordered")]
+  if (length(fct_cols)) {
+    xydt[, (fct_cols) := map(.SD, as.character), .SDcols = fct_cols]
+  }
+  xydt
 }
 
 archive_x = function(archive) {
@@ -122,28 +124,6 @@ fix_xdt_distance = function(xdt, previous_xdt, search_space, dist_threshold) {
   xdt
 }
 
-# FIXME: in instance? do we want an Mbo Instance?
-#eval_initial_design = function(instance, method = "lhs") {
-#  if (instance$archive$n_evals == 0L) {
-#    if (instance$search_space$has_deps) {
-#      method = "random"
-#    }
-#    assert_choice(method, choices = c("grid", "lhs", "random"))
-#    d = instance$objective$ydim
-#    design = switch(method,
-#      grid = {
-#        resolution = max(1, floor(((4L * d) ^ (1 / d))))
-#        generate_design_grid(instance$search_space, resolution = resolution)$data
-#      },
-#      lhs = generate_design_lhs(instance$search_space, n = 4L * d)$data,
-#      random = generate_design_random(instance$search_space, n = 4L * d)$data
-#    )
-#    instance$eval_batch(design)
-#  } else {
-#    instance
-#  }
-#}
-
 # FIXME: document properly
 # calculate all possible weights (lambdas) for given s parameter and dimensionality d taken von mlrMBO
 calculate_parego_weights = function(s, d) {
@@ -171,4 +151,26 @@ surrogate_mult_max_to_min = function(codomain, y_cols) {
 # FIXME: bbotk dropped this and codomains now have a maximization_to_minimization method
 mult_max_to_min = function(codomain) {
   ifelse(map_lgl(codomain$tags, has_element, "minimize"), 1, -1)
+}
+
+# FIXME: document
+# used in AcqOptimizer
+get_best_not_evaluated = function(instance, evaluated) {
+  assert_r6(instance, classes = "OptimInstanceSingleCrit")
+  data = copy(instance$archive$data[, c(instance$archive$cols_x, "x_domain", instance$archive$cols_y), with = FALSE])
+  evaluated = copy(evaluated)
+  already_evaluated_id = ".already_evaluated"
+  while (already_evaluated_id %in% c(instance$archive$cols_x, "x_domain", instance$archive$cols_y)) {
+    already_evaluated_id = paste0(".", already_evaluated_id)
+  }
+  data[, eval(already_evaluated_id) := FALSE][evaluated, eval(already_evaluated_id) := TRUE, on = instance$archive$cols_x]
+  candidates = data[get(already_evaluated_id) == FALSE]
+  candidates[[instance$archive$cols_y]] = candidates[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
+  xdt = setorderv(candidates, cols = instance$archive$cols_y)[1L, ]
+  xdt[[instance$archive$cols_y]] = xdt[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
+  xdt
+}
+
+catn = function(..., file = "") {
+  cat(paste0(..., collapse = "\n"), "\n", sep = "", file = file)
 }

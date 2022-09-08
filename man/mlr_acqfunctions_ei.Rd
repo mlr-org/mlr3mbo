@@ -10,9 +10,11 @@ Expected Improvement.
 \section{Dictionary}{
 
 This \link{AcqFunction} can be instantiated via the \link[mlr3misc:Dictionary]{dictionary}
-\link{mlr_acqfunctions} or with the associated sugar function \code{\link[=acqf]{acqf()}}:\preformatted{mlr_acqfunctions$get("ei")
+\link{mlr_acqfunctions} or with the associated sugar function \code{\link[=acqf]{acqf()}}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{mlr_acqfunctions$get("ei")
 acqf("ei")
-}
+}\if{html}{\out{</div>}}
 }
 
 \references{
@@ -43,25 +45,25 @@ Other Acquisition Function:
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{AcqFunctionEI$new()}}
-\item \href{#method-update}{\code{AcqFunctionEI$update()}}
-\item \href{#method-clone}{\code{AcqFunctionEI$clone()}}
+\item \href{#method-AcqFunctionEI-new}{\code{AcqFunctionEI$new()}}
+\item \href{#method-AcqFunctionEI-update}{\code{AcqFunctionEI$update()}}
+\item \href{#method-AcqFunctionEI-clone}{\code{AcqFunctionEI$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval">}\href{../../bbotk/html/Objective.html#method-eval}{\code{bbotk::Objective$eval()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format">}\href{../../bbotk/html/Objective.html#method-format}{\code{bbotk::Objective$format()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print">}\href{../../bbotk/html/Objective.html#method-print}{\code{bbotk::Objective$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt">}\href{../../mlr3mbo/html/AcqFunction.html#method-eval_dt}{\code{mlr3mbo::AcqFunction$eval_dt()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many">}\href{../../mlr3mbo/html/AcqFunction.html#method-eval_many}{\code{mlr3mbo::AcqFunction$eval_many()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-AcqFunctionEI-new"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionEI-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
@@ -77,8 +79,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update"></a>}}
-\if{latex}{\out{\hypertarget{method-update}{}}}
+\if{html}{\out{<a id="method-AcqFunctionEI-update"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionEI-update}{}}}
 \subsection{Method \code{update()}}{
 Updates acquisition function and sets \code{y_best}.
 \subsection{Usage}{
@@ -87,8 +89,8 @@ Updates acquisition function and sets \code{y_best}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-AcqFunctionEI-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionEI-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

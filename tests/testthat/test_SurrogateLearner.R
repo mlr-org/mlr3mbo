@@ -79,3 +79,13 @@ test_that("deep clone", {
   expect_true(address(surrogate1$model) != address(surrogate2$model))
 })
 
+test_that("packages", {
+  surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
+  expect_equal(surrogate$packages, surrogate$model$packages)
+})
+
+test_that("feature types", {
+  surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
+  expect_equal(surrogate$feature_types, surrogate$model$feature_types)
+})
+

@@ -5,7 +5,7 @@
 \alias{TunerMbo}
 \title{Tuner using Bayesian Optimization}
 \description{
-Tune hyperparameters using Bayesian Optimization.
+Tune hyperparameters using model based optimization.
 This is a minimal interface internally passing on to \link{OptimizerMbo}.
 For additional information and documentation see \link{OptimizerMbo}.
 }
@@ -17,41 +17,59 @@ For additional information and documentation see \link{OptimizerMbo}.
 \describe{
 \item{\code{loop_function}}{(\code{function} | NULL).}
 
-\item{\code{surrogate}}{(\link{Surrogate} | NULL)}
+\item{\code{surrogate}}{(\link{Surrogate} | NULL).}
 
 \item{\code{acq_function}}{(\link{AcqFunction} | NULL).}
 
 \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | NULL).}
 
-\item{\code{args}}{(named \code{list()} | NULL).}
+\item{\code{args}}{(named \code{list()})\cr
+Further arguments passed to the \code{loop_function}.
+For example, \code{random_interleave_iter}.}
 
 \item{\code{result_function}}{(\code{function} | NULL).}
+
+\item{\code{param_classes}}{(\code{character()})\cr
+Supported parameter classes that the optimizer can optimize.
+Determined based on the \code{surrogate} and the \code{acq_optimizer}.
+Subclasses of \link[paradox:Param]{paradox::Param}.}
+
+\item{\code{properties}}{(\code{character()})\cr
+Set of properties of the optimizer.
+Must be a subset of \code{\link[=bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
+MBO in principle is very flexible and by default we assume that the optimizer has all properties.
+Still, properties can be changed here manually, depending on the \code{loop_function}, \code{surrogate}, acq_function\code{and}acq_optimizer` at hand.}
+
+\item{\code{packages}}{(\code{character()})\cr
+Set of required packages.
+A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.
+Required packages are determined based on the \code{surrogate} and the \code{acq_optimizer}.}
 }
 \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{TunerMbo$new()}}
-\item \href{#method-clone}{\code{TunerMbo$clone()}}
+\item \href{#method-TunerMbo-new}{\code{TunerMbo$new()}}
+\item \href{#method-TunerMbo-print}{\code{TunerMbo$print()}}
+\item \href{#method-TunerMbo-clone}{\code{TunerMbo$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format">}\href{../../mlr3tuning/html/Tuner.html#method-format}{\code{mlr3tuning::Tuner$format()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help">}\href{../../mlr3tuning/html/Tuner.html#method-help}{\code{mlr3tuning::Tuner$help()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="print">}\href{../../mlr3tuning/html/Tuner.html#method-print}{\code{mlr3tuning::Tuner$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerFromOptimizer" data-id="optimize">}\href{../../mlr3tuning/html/TunerFromOptimizer.html#method-optimize}{\code{mlr3tuning::TunerFromOptimizer$optimize()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-format'><code>mlr3tuning::Tuner$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-help'><code>mlr3tuning::Tuner$help()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerFromOptimizer" data-id="optimize"><a href='../../mlr3tuning/html/TunerFromOptimizer.html#method-TunerFromOptimizer-optimize'><code>mlr3tuning::TunerFromOptimizer$optimize()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-TunerMbo-new"></a>}}
+\if{latex}{\out{\hypertarget{method-TunerMbo-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
-For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{mbo_defaults}.
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
 
 Note that all the parameters below are simply passed to the \link{OptimizerMbo} and
 the respective fields are simply (settable) active bindings to the fields of the \link{OptimizerMbo}.
@@ -97,8 +115,21 @@ See for example \link{result_by_surrogate_design} which is used by default if th
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-TunerMbo-print"></a>}}
+\if{latex}{\out{\hypertarget{method-TunerMbo-print}{}}}
+\subsection{Method \code{print()}}{
+Print method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TunerMbo$print()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character()}).
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TunerMbo-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-TunerMbo-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

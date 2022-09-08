@@ -3,7 +3,7 @@
 #' @name mlr_tuners_mbo
 #'
 #' @description
-#' Tune hyperparameters using Bayesian Optimization.
+#' Tune hyperparameters using model based optimization.
 #' This is a minimal interface internally passing on to [OptimizerMbo].
 #' For additional information and documentation see [OptimizerMbo].
 #'
@@ -14,7 +14,7 @@ TunerMbo = R6Class("TunerMbo",
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `mbo_defaults`.
+    #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
     #'
     #' Note that all the parameters below are simply passed to the [OptimizerMbo] and
     #' the respective fields are simply (settable) active bindings to the fields of the [OptimizerMbo].
@@ -27,6 +27,22 @@ TunerMbo = R6Class("TunerMbo",
     #' @template param_result_function
     initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
       super$initialize(optimizer = OptimizerMbo$new(loop_function = loop_function, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, args = args, result_function = result_function), man = "mlr3mbo::TunerMbo")
+    },
+
+    #' @description
+    #' Print method.
+    #'
+    #' @return (`character()`).
+    print = function() {
+      catn(format(self), if (is.na(self$label)) "" else paste0(": ", self$label))
+      catn(str_indent("* Parameters:", as_short_string(self$param_set$values)))
+      catn(str_indent("* Parameter classes:", self$param_classes))
+      catn(str_indent("* Properties:", self$properties))
+      catn(str_indent("* Packages:", self$packages))
+      catn(str_indent("* Loop function:", if (is.null(self$loop_function)) "-" else "x"))
+      catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
+      catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
+      catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
     }
   ),
 
@@ -46,7 +62,7 @@ TunerMbo = R6Class("TunerMbo",
      if (missing(rhs)) {
         private$.optimizer$surrogate
       } else {
-        private$.optimizer$surrogate = assert_r6(rhs, "Surrogate", null.ok = TRUE)
+        private$.optimizer$surrogate = assert_r6(rhs, classes = "Surrogate", null.ok = TRUE)
       }
     },
 
@@ -55,7 +71,7 @@ TunerMbo = R6Class("TunerMbo",
       if (missing(rhs)) {
         private$.optimizer$acq_function
       } else {
-        private$.optimizer$acq_function = assert_r6(rhs, "AcqFunction", null.ok = TRUE)
+        private$.optimizer$acq_function = assert_r6(rhs, classes = "AcqFunction", null.ok = TRUE)
       }
     },
 
@@ -64,16 +80,23 @@ TunerMbo = R6Class("TunerMbo",
       if (missing(rhs)) {
         private$.optimizer$acq_optimizer
       } else {
-        private$.optimizer$acq_optimizer = assert_r6(rhs, "AcqOptimizer", null.ok = TRUE)
+        private$.optimizer$acq_optimizer = assert_r6(rhs, classes = "AcqOptimizer", null.ok = TRUE)
       }
     },
 
     #' @template field_args
     args = function(rhs) {
       if (missing(rhs)) {
+       if (!is.null(private$.optimizer$loop_function)) {
+          assert_subset(names(private$.args), choices = setdiff(names(formals(private$.optimizer$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)  # args could have been set prior to a loop_function
+        }
         private$.optimizer$args
       } else {
-        private$.optimizer$args = assert_list(rhs, names = "named", null.ok = TRUE)
+        assert_list(rhs, names = "named", null.ok = TRUE)
+        if (!is.null(private$.optimizer$loop_function)) {
+          assert_subset(names(rhs), choices = setdiff(names(formals(private$.optimizer$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)
+        }
+        private$.optimizer$args = rhs
       }
     },
 
@@ -83,6 +106,33 @@ TunerMbo = R6Class("TunerMbo",
         private$.optimizer$result_function
       } else {
         private$.optimizer$result_function = assert_function(rhs, null.ok = TRUE)
+      }
+    },
+
+    #' @template field_param_classes
+    param_classes = function(rhs) {
+      if (missing(rhs)) {
+        private$.optimizer$param_classes
+      } else {
+        stop("param_classes is read-only.")
+      }
+    },
+
+    #' @template field_properties
+    properties = function(rhs) {
+      if (missing(rhs)) {
+        private$.optimizer$properties
+      } else {
+        private$.optimizer$properties = rhs
+      }
+    },
+
+    #' @template field_packages
+    packages = function(rhs) {
+      if (missing(rhs)) {
+        private$.optimizer$packages
+      } else {
+        stop("$packages is read-only.")
       }
     }
   )
