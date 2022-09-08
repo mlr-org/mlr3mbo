@@ -172,7 +172,7 @@ default_acqfun = function(instance) {
 #'
 #' @description
 #' Chooses a default acquisition function optimizer.
-#' Defaults to wrapping [bbotk::OptimizerRandomSearch] allowing 1000 function evaludations.
+#' Defaults to wrapping [bbotk::OptimizerRandomSearch] allowing 1000 function evaluations.
 #'
 #' @param acq_function ([AcqFunction]).
 #' @return [AcqOptimizer]
