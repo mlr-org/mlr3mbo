@@ -163,11 +163,23 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' A complete list of candidate feature types, grouped by task type, is stored in [`mlr_reflections$task_feature_types`][mlr_reflections].
     feature_types = function(rhs) {
       if (missing(rhs)) {
-        unique(unlist(map(self$model, "feature_types")))
+        Reduce(intersect, map(self$model, "feature_types"))
       } else {
         stop("'feature_types' field is read-only.")
       }
+    },
+
+    #' @field properties (`character()`)\cr
+    #' Stores a set of properties/capabilities the learner has.
+    #' A complete list of candidate properties, grouped by task type, is stored in [`mlr_reflections$learner_properties`][mlr_reflections].
+    properties = function(rhs) {
+      if (missing(rhs)) {
+        Reduce(intersect, map(self$model, "properties"))
+      } else {
+        stop("'properties' field is read-only.")
+      }
     }
+
   ),
 
   private = list(

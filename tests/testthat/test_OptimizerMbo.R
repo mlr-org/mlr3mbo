@@ -102,7 +102,7 @@ test_that("OptimizerMbo sugar", {
 
 test_that("OptimizerMbo param_classes", {
   optimizer = opt("mbo")
-  expect_equal(optimizer$param_classes, NULL)
+  expect_equal(optimizer$param_classes, c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"))
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
   optimizer$surrogate = default_surrogate(instance)
   expect_equal(optimizer$param_classes, c("ParamLgl", "ParamInt", "ParamDbl"))
@@ -111,11 +111,7 @@ test_that("OptimizerMbo param_classes", {
 })
 
 test_that("OptimizerMbo properties", {
-  optimizer = opt("mbo")
-  expect_equal(optimizer$properties, c("dependencies", "multi-crit", "single-crit"))
-  expect_error({optimizer$properties = "test"}, "Must be a subset of \\{'dependencies','single-crit','multi-crit'\\}")
-  optimizer$properties = c("dependencies", "single-crit")
-  expect_equal(optimizer$properties, c("dependencies", "single-crit"))
+  # FIXME:
 })
 
 test_that("OptimizerMbo packages", {

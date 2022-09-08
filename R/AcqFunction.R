@@ -34,7 +34,11 @@ AcqFunction = R6Class("AcqFunction",
     #' @param constants ([paradox::ParamSet]).
     #' @param surrogate (`NULL` | [Surrogate]).
     #' @param direction (`character(1)`).
-    initialize = function(id, constants = ParamSet$new(), surrogate, direction) {
+    #' @param label (`character(1)`)\cr
+    #'   Label for this object.
+    #' @param man (`character(1)`)\cr
+    #'   String in the format `[pkg]::[topic]` pointing to a manual page for this object.
+    initialize = function(id, constants = ParamSet$new(), surrogate, direction, label = NA_character_, man = NA_character_) {
       # FIXME: Should we allow alternative search_space as additional argument?
       # If we do, we need to trafo values before updating the surrogate and predicting?
       assert_string(id)
@@ -51,6 +55,8 @@ AcqFunction = R6Class("AcqFunction",
         domain = surrogate$archive$search_space$clone(deep = TRUE)
         domain$trafo = NULL
       }
+      private$.label = assert_string(label, na.ok = TRUE)
+      private$.man = assert_string(man, na.ok = TRUE)
       super$initialize(
         id = id,
         domain = domain,
@@ -103,6 +109,24 @@ AcqFunction = R6Class("AcqFunction",
   ),
 
   active = list(
+    #' @field label (`character(1)`)\cr
+    #'   Label for this object.
+    label = function(rhs) {
+      if (!missing(rhs) && !identical(rhs, private$.label)) {
+        stop("$label is read-only.")
+      }
+      private$.label
+    },
+
+    #' @field man (`character(1)`)\cr
+    #'   String in the format `[pkg]::[topic]` pointing to a manual page for this object.
+    man = function(rhs) {
+      if (!missing(rhs) && !identical(rhs, private$.man)) {
+        stop("$man is read-only.")
+      }
+      private$.man
+    },
+
     #' @field archive ([bbotk::Archive])\cr
     #'   Points to the [bbotk::Archive] of the [Surrogate].
     archive = function(rhs) {
@@ -136,6 +160,10 @@ AcqFunction = R6Class("AcqFunction",
   ),
 
   private = list(
+    .label = NULL,
+
+    .man = NULL,
+
     .archive = NULL,
 
     .fun = function(xdt) {

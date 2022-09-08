@@ -44,6 +44,10 @@ installed, but loaded (not attached) later on-demand via 'requireNamespace()'.}
 \item{\code{feature_types}}{(\code{character()})\cr
 Stores the feature types the learner can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
 A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
+
+\item{\code{properties}}{(\code{character()})\cr
+Stores a set of properties/capabilities the learner has.
+A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
 }
 \if{html}{\out{</div>}}
 }

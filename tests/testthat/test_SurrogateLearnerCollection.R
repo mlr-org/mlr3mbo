@@ -102,6 +102,6 @@ test_that("packages", {
 
 test_that("feature types", {
   surrogate = SurrogateLearnerCollection$new(learners = list(REGR_KM_DETERM, REGR_FEATURELESS))
-  expect_equal(surrogate$feature_types, unique(unlist(map(surrogate$model, "feature_types"))))
+  expect_equal(surrogate$feature_types, Reduce(intersect, map(surrogate$model, "feature_types")))
 })
 

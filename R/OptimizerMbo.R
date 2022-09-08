@@ -25,13 +25,12 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template param_acq_optimizer
     #' @template param_args
     #' @template param_result_function
-    #' @template param_properties
-    initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL, properties = c("dependencies", "multi-crit", "single-crit")) {
+    initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
       param_set = ParamSet$new()
       super$initialize("mbo",
                        param_set = param_set,
                        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),  # is replaced with dynamic AB after construction
-                       properties = assert_subset(properties, choices = bbotk_reflections$optimizer_properties, empty.ok = FALSE),  # is replaced with rw AB after construction
+                       properties = c("dependencies", "multi-crit", "single-crit"),  # is replaced with dynamic AB after construction
                        packages = "mlr3mbo",  # is replaced with dynamic AB after construction
                        label = "Model Based Optimization",
                        man = "mlr3mbo::OptimizerMbo")
@@ -54,7 +53,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
       catn(str_indent("* Parameter classes:", self$param_classes))
       catn(str_indent("* Properties:", self$properties))
       catn(str_indent("* Packages:", self$packages))
-      catn(str_indent("* Loop function:", if (is.null(self$loop_function)) "-" else "x"))
+      catn(str_indent("* Loop function:", if (is.null(self$loop_function)) "-" else attr(self$loop_function, "id")))
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
       catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
@@ -127,15 +126,15 @@ OptimizerMbo = R6Class("OptimizerMbo",
     param_classes = function(rhs) {
       if (missing(rhs)) {
         param_classes_surrogate = c("logical" = "ParamLgl", "integer" = "ParamInt", "numeric" = "ParamDbl", "factor" = "ParamFct")
-        param_classes_surrogate = if (!is.null(self$surrogate$feature_types)) {
-          param_classes_surrogate[c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types] # surrogate has prio before acq_function$surrogate
+        if (!is.null(self$surrogate)) {
+          param_classes_surrogate = param_classes_surrogate[c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types] # surrogate has prio before acq_function$surrogate
         }
         param_classes_acq_opt = if (!is.null(self$acq_optimizer)) {
           self$acq_optimizer$optimizer$param_classes
         } else {
           c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct")
         }
-        intersect(param_classes_surrogate, param_classes_acq_opt)
+        unname(intersect(param_classes_surrogate, param_classes_acq_opt))
       } else {
         stop("param_classes is read-only.")
       }
@@ -144,9 +143,19 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template field_properties
     properties = function(rhs) {
       if (missing(rhs)) {
-        private$.properties
+        properties_loop_function = c("OptimInstanceSingleCrit" = "single-crit", "OptimInstanceSingleCrit" = "multi-crit")
+        if (!is.null(self$loop_function)) {
+          properties_loop_function = properties_loop_function[attr(self$loop_function, "instance")]
+        }
+        properties_surrogate = "dependencies"
+        if (!is.null(self$surrogate)) {
+          if ("missings" %nin% self$surrogate$properties) {
+            properties_surrogate = character()
+          }
+        }
+        unname(c(properties_surrogate, properties_loop_function))
       } else {
-        private$.properties = assert_subset(rhs, bbotk_reflections$optimizer_properties, empty.ok = FALSE)
+        stop("properties is read-only.")
       }
     },
 
