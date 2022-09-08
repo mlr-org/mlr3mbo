@@ -34,15 +34,15 @@ AcqFunction = R6Class("AcqFunction",
     #' @param constants ([paradox::ParamSet]).
     #' @param surrogate (`NULL` | [Surrogate]).
     #' @param direction (`character(1)`).
-    initialize = function(id, constants = ps(), surrogate, direction) {
+    initialize = function(id, constants = ParamSet$new(), surrogate, direction) {
       # FIXME: Should we allow alternative search_space as additional argument?
       # If we do, we need to trafo values before updating the surrogate and predicting?
       assert_string(id)
       assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
       self$direction = assert_choice(direction, choices = c("same", "minimize", "maximize"))
       if (is.null(surrogate)) {
-        domain = ps()
-        codomain = ps()
+        domain = ParamSet$new()
+        codomain = ParamSet$new()
       } else {
         private$.surrogate = surrogate
         private$.archive = assert_r6(surrogate$archive, classes = "Archive")

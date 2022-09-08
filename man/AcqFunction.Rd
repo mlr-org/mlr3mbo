@@ -74,7 +74,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 Note that the surrogate can be initialized lazy and can later be set via the active binding.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(id, constants = ps(), surrogate, direction)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(id, constants = ParamSet$new(), surrogate, direction)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
