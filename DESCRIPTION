@@ -28,7 +28,6 @@ Imports:
     bbotk (>= 0.5.3),
     checkmate (>= 2.0.0),
     data.table,
-    gower,
     lgr,
     mlr3 (>= 0.13.0),
     mlr3misc (>= 0.7.0),

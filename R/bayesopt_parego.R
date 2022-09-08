@@ -122,7 +122,7 @@ bayesopt_parego = function(
     init_design_size = instance$archive$n_evals
   }
 
-  lambdas = calculate_parego_weights(s, d = k)
+  lambdas = calculate_parego_weights(s, k = k)
   qs = seq_len(q)
 
   # loop

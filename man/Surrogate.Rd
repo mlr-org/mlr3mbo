@@ -22,7 +22,7 @@ Id used when printing.}
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
 
 \item{\code{n_learner}}{(\code{integer(1)})\cr
-Returns the number of \link[mlr3:Learner]{mlr3::Learner}s.}
+Returns the number of learners.}
 
 \item{\code{x_cols}}{(\code{character()}).}
 

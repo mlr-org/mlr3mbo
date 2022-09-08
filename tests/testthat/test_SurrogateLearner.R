@@ -14,8 +14,12 @@ test_that("SurrogateLearner API works", {
   expect_data_table(pred, col.names = "named", nrows = 5, ncols = 2, any.missing = FALSE)
   expect_named(pred, c("mean", "se"))
 
-  ### upgrading error class works
-  # FIXME:
+  # upgrading error class works
+  surrogate = SurrogateLearner$new(LearnerRegrError$new(), archive = inst$archive)
+  expect_error(surrogate$update(), class = c("mbo_error", "surrogate_update_error"))
+  
+  surrogate$param_set$values$catch_errors = FALSE
+  expect_error(surrogate$optimize(), class = c("simpleError", "condition"))
 })
 
 test_that("predict_types are recognized", {
@@ -37,15 +41,15 @@ test_that("param_set", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM, archive = inst$archive)
   expect_r6(surrogate$param_set, "ParamSet")
-  expect_setequal(surrogate$param_set$ids(), c("calc_insample_perf", "perf_measure", "perf_threshold"))
+  expect_setequal(surrogate$param_set$ids(), c("calc_insample_perf", "perf_measure", "perf_threshold", "catch_errors"))
   expect_r6(surrogate$param_set$params$calc_insample_perf, "ParamLgl")
   expect_r6(surrogate$param_set$params$perf_measure, "ParamUty")
   expect_r6(surrogate$param_set$params$perf_threshold, "ParamDbl")
+  expect_r6(surrogate$param_set$params$catch_errors, "ParamLgl")
   expect_error({surrogate$param_set = list()}, regexp = "param_set is read-only.")
 })
 
 test_that("insample_perf", {
-  withr::local_seed(1)
   inst = MAKE_INST_1D()
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)
@@ -58,6 +62,8 @@ test_that("insample_perf", {
   expect_equal(surrogate$insample_perf, NaN)
 
   surrogate$param_set$values$calc_insample_perf = TRUE
+  surrogate$param_set$values$perf_threshold = 0
+  surrogate$param_set$values$perf_measure = mlr_measures$get("regr.rsq")
   surrogate$update()
   expect_number(surrogate$insample_perf, lower = -Inf, upper = 1)
   expect_equal(names(surrogate$insample_perf), surrogate$param_set$values$perf_measure$id)
@@ -65,10 +71,11 @@ test_that("insample_perf", {
   surrogate_constant = SurrogateLearner$new(learner = lrn("regr.featureless"), archive = inst$archive)
   surrogate_constant$param_set$values$calc_insample_perf = TRUE
   surrogate_constant$param_set$values$perf_threshold = 0.5
+  surrogate$param_set$values$perf_measure = mlr_measures$get("regr.rsq")
   expect_error(surrogate_constant$update(), regexp = "Current insample performance of the Surrogate Model does not meet the performance threshold")
   expect_number(surrogate_constant$insample_perf, lower = -Inf, upper = 1)
   expect_true(surrogate_constant$insample_perf <= 1e-3)
-  expect_equal(names(surrogate$insample_perf), surrogate$param_set$values$perf_measure$id)
+  expect_equal(names(surrogate_constant$insample_perf), surrogate$param_set$values$perf_measure$id)
 })
 
 test_that("deep clone", {

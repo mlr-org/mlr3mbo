@@ -1,9 +1,34 @@
 #' @title Surrogate Model Containing Multiple Learners
 #'
 #' @description
-#' Surrogate model containing multiple regression [mlr3::Learner]s.
-#' The [mlr3::Learner]s are fit on the target variables as indicated via `y_cols`.
-#' Note that redundant [mlr3::Learner]s must be deep clones.
+#' Surrogate model containing multiple [mlr3::LearnerRegr].
+#' The [mlr3::LearnerRegr] are fit on the target variables as indicated via `y_cols`.
+#' Note that redundant [mlr3::LearnerRegr] must be deep clones.
+#'
+#' @section Parameters:
+#' \describe{
+#' \item{`calc_insample_perf`}{`logical(1)`\cr
+#'   Should the insample performance of the [mlr3::LearnerRegr] be asserted after updating the surrogate?
+#'   If the assertion fails (i.e., the insample performance based on the `perf_measure` does not meet the
+#'   `perf_threshold`), an error is thrown.
+#'   Default is `FALSE`.
+#' }
+#' \item{`perf_measure`}{List of [mlr3::MeasureRegr]\cr
+#'   Performance measures which should be use to assert the insample performance of the [mlr3::LearnerRegr].
+#'   Only relevant if `calc_insample_perf = TRUE`.
+#'   Default is [mlr3::mlr_measures_regr.rsq] for each learner.
+#' }
+#' \item{`perf_threshold`}{List of `numeric(1)`\cr
+#'   Thresholds the insample performance of the [mlr3::LearnerRegr] should be asserted against.
+#'   Only relevant if `calc_insample_perf = TRUE`.
+#'   Default is `0` for each learner.
+#' }
+#' \item{`catch_errors`}{`logical(1)`\cr
+#'   Should errors during updating the surrogate be caught and propagated to the `loop_function` which can then handle
+#'   the failed infill optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   Default is `TRUE`.
+#' }
+#' }
 #'
 #' @export
 SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
@@ -18,7 +43,6 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @param x_cols (`NULL` | `character()`).
     #' @param y_cols (`NULL` | `character()`).
     initialize = function(learners, archive = NULL, x_cols = NULL, y_cols = NULL) {
-      # FIXME: deep clone learners?
       addresses = map(learners, address)
       if (length(unique(addresses)) != length(addresses)) {
         stop("Redundant Learners must be unique in memory, i.e., deep clones.")
@@ -38,9 +62,10 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       ps = ParamSet$new(list(
         ParamLgl$new("calc_insample_perf"),
         ParamUty$new("perf_measures", custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(learners))),  # FIXME: actually want check_measures
-        ParamUty$new("perf_thresholds", custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(learners))))
+        ParamUty$new("perf_thresholds", custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(learners))),
+        ParamLgl$new("catch_errors"))
       )
-      ps$values = list(calc_insample_perf = FALSE, perf_measures = replicate(length(learners), msr("regr.rsq"), simplify = FALSE), perf_thresholds = rep(0, length(learners)))  # NOTE: deep clone?
+      ps$values = list(calc_insample_perf = FALSE, catch_errors = TRUE)
       ps$add_dep("perf_measures", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_thresholds", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
 
@@ -105,8 +130,8 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       check = all(pmap_lgl(
         list(
           insample_perf = self$insample_perf,
-          perf_threshold = self$param_set$values$perf_thresholds,
-          perf_measure = self$param_set$values$perf_measures
+          perf_threshold = self$param_set$values$perf_thresholds %??% rep(0, self$n_learner),
+          perf_measure = self$param_set$values$perf_measures %??% replicate(length(learners), mlr_measures$get("regr.rsq"), simplify = FALSE)
         ),
         .f = function(insample_perf, perf_threshold, perf_measure) {
           if (perf_measure$minimize) {
@@ -171,7 +196,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       names(self$model) = self$y_cols
 
       if (self$param_set$values$calc_insample_perf) {
-        private$.insample_perf = setNames(pmap_dbl(list(model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures),
+        private$.insample_perf = setNames(pmap_dbl(list(model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(length(learners), mlr_measures$get("regr.rsq"), simplify = FALSE)),
           .f = function(model, task, perf_measure) {
             assert_measure(perf_measure, task = task, learner = model)
             model$predict(task)$score(perf_measure, task = task, learner = model)
