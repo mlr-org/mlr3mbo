@@ -99,7 +99,12 @@ Wraps an <a href="https://bbotk.mlr-org.com/reference/Optimizer.html" class="ext
     </div>
     <div id="active-bindings">
     <h2>Active bindings</h2>
-    <p></p><div class="r6-active-bindings"><dl><dt><code>param_set</code></dt>
+    <p></p><div class="r6-active-bindings"><dl><dt><code>print_id</code></dt>
+<dd><p>(<code>character</code>)<br>
+Id used when printing.</p></dd>
+
+
+<dt><code>param_set</code></dt>
 <dd><p>(<a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">paradox::ParamSet</a>)<br>
 Set of hyperparameters.</p></dd>
 
@@ -112,10 +117,12 @@ Set of hyperparameters.</p></dd>
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-new"><code>AcqOptimizer$new()</code></a></p></li>
-<li><p><a href="#method-optimize"><code>AcqOptimizer$optimize()</code></a></p></li>
-<li><p><a href="#method-clone"><code>AcqOptimizer$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-new"></a><div class="section">
+<ul><li><p><a href="#method-AcqOptimizer-new"><code>AcqOptimizer$new()</code></a></p></li>
+<li><p><a href="#method-AcqOptimizer-format"><code>AcqOptimizer$format()</code></a></p></li>
+<li><p><a href="#method-AcqOptimizer-print"><code>AcqOptimizer$print()</code></a></p></li>
+<li><p><a href="#method-AcqOptimizer-optimize"><code>AcqOptimizer$optimize()</code></a></p></li>
+<li><p><a href="#method-AcqOptimizer-clone"><code>AcqOptimizer$clone()</code></a></p></li>
+</ul></div><p></p><hr><a id="method-AcqOptimizer-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -139,7 +146,27 @@ Set of hyperparameters.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-optimize"></a><div class="section">
+</div><p></p><hr><a id="method-AcqOptimizer-format"></a><div class="section">
+<h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
+<p>Helper for print outputs.</p><div class="section">
+<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizer</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
+</div><p></p><hr><a id="method-AcqOptimizer-print"></a><div class="section">
+<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
+<p>Print method.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizer</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>).</p>
+</div>
+
+</div><p></p><hr><a id="method-AcqOptimizer-optimize"></a><div class="section">
 <h3 id="method-optimize-">Method <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code><a class="anchor" aria-label="anchor" href="#method-optimize-"></a></h3>
 <p>Optimize the acquisition function.</p>
 <p>If the <code>fix_distance</code> parameter is set to <code>TRUE</code>, proposed points are
@@ -149,19 +176,19 @@ to other proposed points or previously evaluated points falls below the
 single time (and not after a potential replacement of points), i.e., the
 returned <code><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code> of optima must not necessarily pass
 the checks but most likely will.</p><div class="section">
-<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p><code><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code> with 1 row per optimum and x as columns.</p>
 </div>
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
+</div><p></p><hr><a id="method-AcqOptimizer-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizer</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 

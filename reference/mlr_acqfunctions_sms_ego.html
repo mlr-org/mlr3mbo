@@ -143,15 +143,15 @@ In <em>International Conference on Evolutionary Multi-Criterion Optimization</em
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-new"><code>AcqFunctionSmsEgo$new()</code></a></p></li>
-<li><p><a href="#method-update"><code>AcqFunctionSmsEgo$update()</code></a></p></li>
-<li><p><a href="#method-clone"><code>AcqFunctionSmsEgo$clone()</code></a></p></li>
-</ul></div><p><details open><summary>Inherited methods</summary><ul><li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-eval"><code>bbotk::Objective$eval()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-print"><code>bbotk::Objective$print()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href="AcqFunction.html#method-eval_dt"><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href="AcqFunction.html#method-eval_many"><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></p></li>
-</ul></details></p><hr><a id="method-new"></a><div class="section">
+<ul><li><p><a href="#method-AcqFunctionSmsEgo-new"><code>AcqFunctionSmsEgo$new()</code></a></p></li>
+<li><p><a href="#method-AcqFunctionSmsEgo-update"><code>AcqFunctionSmsEgo$update()</code></a></p></li>
+<li><p><a href="#method-AcqFunctionSmsEgo-clone"><code>AcqFunctionSmsEgo$clone()</code></a></p></li>
+</ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-eval"><code>bbotk::Objective$eval()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-print"><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href="AcqFunction.html#method-eval_dt"><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href="AcqFunction.html#method-eval_many"><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
+</ul></details></p><hr><a id="method-AcqFunctionSmsEgo-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -161,7 +161,7 @@ In <em>International Conference on Evolutionary Multi-Criterion Optimization</em
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>surrogate</code></dt>
-<dd><p>(<code>NULL</code> | <a href="SurrogateLearners.html">SurrogateLearners</a>).</p></dd>
+<dd><p>(<code>NULL</code> | <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>).</p></dd>
 
 
 <dt><code>lambda</code></dt>
@@ -175,7 +175,7 @@ In <em>International Conference on Evolutionary Multi-Criterion Optimization</em
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-update"></a><div class="section">
+</div><p></p><hr><a id="method-AcqFunctionSmsEgo-update"></a><div class="section">
 <h3 id="method-update-">Method <code><a href="https://rdrr.io/r/stats/update.html" class="external-link">update()</a></code><a class="anchor" aria-label="anchor" href="#method-update-"></a></h3>
 <p>Updates acquisition function and sets <code>ys_front</code>, <code>ref_point</code>, <code>epsilon</code>.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
@@ -183,7 +183,7 @@ In <em>International Conference on Evolutionary Multi-Criterion Optimization</em
 </div>
 
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
+</div><p></p><hr><a id="method-AcqFunctionSmsEgo-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>

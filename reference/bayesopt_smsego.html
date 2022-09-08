@@ -106,7 +106,7 @@ Points are drawn uniformly at random.</p></dd>
 
 
 <dt>surrogate</dt>
-<dd><p>(<code>NULL</code> | <a href="SurrogateLearners.html">SurrogateLearners</a>)<br><a href="SurrogateLearners.html">SurrogateLearners</a> to be used as a surrogate.
+<dd><p>(<code>NULL</code> | <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>)<br><a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a> to be used as a surrogate.
 If <code>NULL</code> <code>default_surrogate(instance)</code> is used.</p></dd>
 
 
@@ -142,7 +142,7 @@ Default is <code>0</code>, i.e., no random interleaving is performed at all.</p>
     <h2>Note</h2>
     
 <ul><li><p>If <code>surrogate</code> is <code>NULL</code> but <code>acq_function</code> is given and contains a <code>$surrogate</code>, this
-<a href="SurrogateLearners.html">SurrogateLearners</a> is used.</p></li>
+<a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a> is used.</p></li>
 <li><p>You can pass a <code>surrogate</code> that was not given the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the
 <code>instance</code> during initialization.
 In this case, the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the given <code>instance</code> is set during execution.</p></li>

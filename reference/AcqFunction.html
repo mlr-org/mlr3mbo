@@ -136,15 +136,15 @@ Objective function.</p></dd>
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-new"><code>AcqFunction$new()</code></a></p></li>
-<li><p><a href="#method-update"><code>AcqFunction$update()</code></a></p></li>
-<li><p><a href="#method-eval_many"><code>AcqFunction$eval_many()</code></a></p></li>
-<li><p><a href="#method-eval_dt"><code>AcqFunction$eval_dt()</code></a></p></li>
-<li><p><a href="#method-clone"><code>AcqFunction$clone()</code></a></p></li>
-</ul></div><p><details open><summary>Inherited methods</summary><ul><li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-eval"><code>bbotk::Objective$eval()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-print"><code>bbotk::Objective$print()</code></a></span></p></li>
-</ul></details></p><hr><a id="method-new"></a><div class="section">
+<ul><li><p><a href="#method-AcqFunction-new"><code>AcqFunction$new()</code></a></p></li>
+<li><p><a href="#method-AcqFunction-update"><code>AcqFunction$update()</code></a></p></li>
+<li><p><a href="#method-AcqFunction-eval_many"><code>AcqFunction$eval_many()</code></a></p></li>
+<li><p><a href="#method-AcqFunction-eval_dt"><code>AcqFunction$eval_dt()</code></a></p></li>
+<li><p><a href="#method-AcqFunction-clone"><code>AcqFunction$clone()</code></a></p></li>
+</ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-eval"><code>bbotk::Objective$eval()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-print"><code>bbotk::Objective$print()</code></a></span></li>
+</ul></details></p><hr><a id="method-AcqFunction-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p>
 <p>Note that the surrogate can be initialized lazy and can later be set via the active binding.</p><div class="section">
@@ -173,7 +173,7 @@ Objective function.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-update"></a><div class="section">
+</div><p></p><hr><a id="method-AcqFunction-update"></a><div class="section">
 <h3 id="method-update-">Method <code><a href="https://rdrr.io/r/stats/update.html" class="external-link">update()</a></code><a class="anchor" aria-label="anchor" href="#method-update-"></a></h3>
 <p>Update the acquisition function.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
@@ -181,7 +181,7 @@ Objective function.</p></dd>
 </div>
 
 
-</div><p></p><hr><a id="method-eval_many"></a><div class="section">
+</div><p></p><hr><a id="method-AcqFunction-eval_many"></a><div class="section">
 <h3 id="method-eval-many-">Method <code>eval_many()</code><a class="anchor" aria-label="anchor" href="#method-eval-many-"></a></h3>
 <p>Evaluates multiple input values received as a list, converted to a <code>data.table()</code> on the
 objective function. Missing columns in xss are filled with <code>NA</code>s in <code>xdt</code>.</p><div class="section">
@@ -206,7 +206,7 @@ and multiple y-columns for multi-criteria functions, e.g.
 <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-eval_dt"></a><div class="section">
+</div><p></p><hr><a id="method-AcqFunction-eval_dt"></a><div class="section">
 <h3 id="method-eval-dt-">Method <code>eval_dt()</code><a class="anchor" aria-label="anchor" href="#method-eval-dt-"></a></h3>
 <p>Evaluates multiple input values on the objective function supplied by the user.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
@@ -232,7 +232,7 @@ and multiple y-columns for multi-criteria functions, e.g.
 <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
+</div><p></p><hr><a id="method-AcqFunction-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>

@@ -22,23 +22,23 @@ This may improve the model fit and will less frequently produce a constant surro
 
 For mixed numeric-categorical parameter spaces, or spaces with conditional parameters:
 A ranger regression forest &amp;#8220;&quot;regr.ranger&quot;&amp;#8221; with 500 trees is created.
-The standard error of a prediction (if required by the infill criterion) is estimated
-by computing the infinitesimal jackknife.
-This is the se.method = &quot;infjack&quot; option of the &amp;#8220;&quot;regr.ranger&quot;&amp;#8221; learner (default).
+The standard error of a prediction (if required by the infill criterion) is estimated via jackknife.
+This is the se.method = &quot;jack&quot; option of the &amp;#8220;&quot;regr.ranger&quot;&amp;#8221; learner (default).
 In any case, learners are encapsulated using &amp;#8220;&quot;evaluate&quot;&amp;#8221;, and a fallback learner is set,
 in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
-lrn(&quot;regr.ranger&quot;, num.trees = 20L, keep.inbag = TRUE).
+lrn(&quot;regr.ranger&quot;, num.trees = 20L, keep.inbag = TRUE, se.method = &quot;jack&quot;).
 If additionally dependencies are present in the parameter space, inactive conditional parameters
 are represented by missing NA values in the training design data.
 We simply handle those with an imputation method, added to the ranger random forest, more
-concretely we use po(&quot;imputesample&quot;) and po(&quot;imputeoor&quot;) from package mlr3pipelines.
-Both of these techniques make sense for tree-based methods and are usually hard to beat, see Ding et al. (2010).
+concretely we use po(&quot;imputesample&quot;) (for logicals) and po(&quot;imputeoor&quot;) (for anything else) from
+package mlr3pipelines.
+Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
 In the case of dependencies, the following learner is used as a fallback:
 lrn(&quot;regr.featureless&quot;).
 If the instance is of class bbotk::OptimInstanceSingleCrit the learner is wrapped as a
 SurrogateLearner.
 If the instance is of class bbotk::OptimInstanceMultiCrit deep clones of the learner are
-wrapped as a SurrogateLearners."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
+wrapped as a SurrogateLearnerCollection."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
@@ -133,23 +133,23 @@ which is a hybrid algorithm, to combine global search based on genetic algorithm
 based on gradients.
 This may improve the model fit and will less frequently produce a constant surrogate model.</p></li>
 </ul><p>For mixed numeric-categorical parameter spaces, or spaces with conditional parameters:</p><ul><li><p>A ranger regression forest “"regr.ranger"” with 500 trees is created.</p></li>
-<li><p>The standard error of a prediction (if required by the infill criterion) is estimated
-by computing the infinitesimal jackknife.
-This is the <code>se.method = "infjack"</code> option of the “"regr.ranger"” learner (default).</p></li>
+<li><p>The standard error of a prediction (if required by the infill criterion) is estimated via jackknife.
+This is the <code>se.method = "jack"</code> option of the “"regr.ranger"” learner (default).</p></li>
 </ul><p>In any case, learners are encapsulated using “"evaluate"”, and a fallback learner is set,
 in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
-<code>lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)</code>.</p>
+<code>lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE, se.method = "jack")</code>.</p>
 <p>If additionally dependencies are present in the parameter space, inactive conditional parameters
 are represented by missing <code>NA</code> values in the training design data.
 We simply handle those with an imputation method, added to the ranger random forest, more
-concretely we use <code>po("imputesample")</code> and <code>po("imputeoor")</code> from package <a href="https://CRAN.R-project.org/package=mlr3pipelines" class="external-link"><span class="pkg">mlr3pipelines</span></a>.
-Both of these techniques make sense for tree-based methods and are usually hard to beat, see Ding et al. (2010).
+concretely we use <code>po("imputesample")</code> (for logicals) and <code>po("imputeoor")</code> (for anything else) from
+package <a href="https://CRAN.R-project.org/package=mlr3pipelines" class="external-link"><span class="pkg">mlr3pipelines</span></a>.
+Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
 In the case of dependencies, the following learner is used as a fallback:
 <code>lrn("regr.featureless")</code>.</p>
 <p>If the instance is of class <a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html" class="external-link">bbotk::OptimInstanceSingleCrit</a> the learner is wrapped as a
 <a href="SurrogateLearner.html">SurrogateLearner</a>.</p>
 <p>If the instance is of class <a href="https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html" class="external-link">bbotk::OptimInstanceMultiCrit</a> deep clones of the learner are
-wrapped as a <a href="SurrogateLearners.html">SurrogateLearners</a>.</p>
+wrapped as a <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>.</p>
     </div>
 
     <div id="ref-usage">
