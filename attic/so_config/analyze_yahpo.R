@@ -4,7 +4,7 @@ library(pammtools)
 library(mlr3misc)
 
 #dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method != "mlrintermbo"]
-dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method %in% c("mlr3mbo", "mlrintermbo", "mlr3mbo_new_rf", "mlr3mbo_new_rf_ls", "mlr3mbo_xxx_ls", "smac4hpo", "random")]
+dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method %in% c("mlr3mbo", "mlrintermbo", "mlr3mbo_new_rf", "mlr3mbo_new_rf_ls", "smac4hpo", "random")]
 dat = dat[scenario %nin% c("nb301", "rbv2_super")]
 dat[, cumbudget := cumsum(budget), by = .(method, scenario, instance, repl)]
 dat[, cumbudget_scaled := cumbudget / max(cumbudget), by = .(method, scenario, instance, repl)]
@@ -33,16 +33,17 @@ g = ggplot(aes(x = cumbudget_scaled, y = mean, colour = method, fill = method), 
   geom_step() +
   geom_stepribbon(aes(min = mean - se, max = mean + se), colour = NA, alpha = 0.3) +
   labs(x = "Fraction of Budget Used", y = "Mean Normalized Regret", colour = "Optimizer", fill = "Optimizer") +
-  facet_wrap(~ scenario + instance, scales = "free", ncol = 4) +
+  facet_wrap(~ scenario + instance, scales = "free", ncol = 5) +
   theme_minimal() +
   theme(legend.position = "bottom", legend.title = element_text(size = rel(0.75)), legend.text = element_text(size = rel(0.5)))
-ggsave("anytime.pdf", plot = g, device = "pdf", width = 12, height = 15)
+ggsave("anytime.pdf", plot = g, device = "pdf", width = 15, height = 10)
 
 overall_budget = agg_budget[, .(mean = mean(mean), se = sd(mean) / sqrt(.N)), by = .(method, cumbudget_scaled)]
 
 g = ggplot(aes(x = cumbudget_scaled, y = mean, colour = method, fill = method), data = overall_budget[cumbudget_scaled > 0.10]) +
   scale_y_log10() +
   geom_step() +
+  geom_stepribbon(aes(min = mean - se, max = mean + se), colour = NA, alpha = 0.1) +
   labs(x = "Fraction of Budget Used", y = "Mean Normalized Regret", colour = "Optimizer", fill = "Optimizer") +
   theme_minimal() +
   theme(legend.position = "bottom", legend.title = element_text(size = rel(0.75)), legend.text = element_text(size = rel(0.75)))
@@ -77,7 +78,7 @@ best_agg = agg_budget[cumbudget_scaled == 0.25]
 best_agg[, problem := paste0(scenario, "_", instance)]
 tmp = - as.matrix(dcast(best_agg, problem ~ method, value.var = "mean")[, -1])
 friedmanTest(tmp)
-pdf("plots/cd_025_mf.pdf", width = 6, height = 4, pointsize = 10)
+pdf("cd_025_mf.pdf", width = 6, height = 4, pointsize = 10)
 plotCD(tmp, cex = 1)
 dev.off()
 
@@ -85,7 +86,7 @@ best_agg = agg_budget[cumbudget_scaled == 1]
 best_agg[, problem := paste0(scenario, "_", instance)]
 tmp = - as.matrix(dcast(best_agg, problem ~ method, value.var = "mean")[, -1])
 friedmanTest(tmp)
-pdf("plots/cd_1_mf.pdf", width = 6, height = 4, pointsize = 10)
+pdf("cd_1_mf.pdf", width = 6, height = 4, pointsize = 10)
 plotCD(tmp, cex = 1)
 dev.off()
 

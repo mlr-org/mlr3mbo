@@ -311,6 +311,40 @@ mlr3mbo_wrapper_xxx_ls = function(job, data, instance, ...) {
   optim_instance
 }
 
+mlr3mbo_wrapper_kknn_ls = function(job, data, instance, ...) {
+  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
+  library(yahpogym)
+  logger = lgr::get_logger("bbotk")
+  logger$set_threshold("warn")
+  future::plan("sequential")
+
+  optim_instance = make_optim_instance(instance)
+
+  d = optim_instance$search_space$length
+  init_design_size = 4L * d
+  init_design = generate_design_sobol(optim_instance$search_space, n = init_design_size)$data
+  optim_instance$eval_batch(init_design)
+  
+  random_interleave_iter = 4L
+ 
+  learner = lrn("regr.kknn")
+  learner = as_learner(po("imputeoor", multiplier = 2) %>>% po("fixfactors") %>>% po("imputesample") %>>% learner)
+  learner$predict_types = "response"
+  surrogate = SurrogateLearner$new(learner)
+
+  acq_function = AcqFunctionMean$new()
+ 
+  optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
+  acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20010L))
+
+  acq_optimizer$param_set$values$logging_level = "info"
+  acq_optimizer$param_set$values$warmstart = TRUE
+  acq_optimizer$param_set$values$warmstart_size = "all"
+  
+  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
+  optim_instance
+}
+
 # add algorithms
 addAlgorithm("mlr3mbo", fun = mlr3mbo_wrapper)
 addAlgorithm("mlrintermbo", fun = mlrintermbo_wrapper)
@@ -319,6 +353,7 @@ addAlgorithm("mlr3mbo_custom", fun = mlr3mbo_wrapper_custom)
 addAlgorithm("mlr3mbo_new_rf", fun = mlr3mbo_wrapper_new_rf)
 addAlgorithm("mlr3mbo_new_rf_ls", fun = mlr3mbo_wrapper_new_rf_ls)
 addAlgorithm("mlr3mbo_xxx_ls", fun = mlr3mbo_wrapper_xxx_ls)
+addAlgorithm("mlr3mbo_kknn_ls", fun = mlr3mbo_wrapper_kknn_ls)
 
 # setup scenarios and instances
 get_nb301_setup = function(budget_factor = 40L) {
