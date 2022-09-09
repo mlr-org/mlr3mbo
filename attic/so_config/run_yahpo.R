@@ -337,7 +337,6 @@ mlr3mbo_wrapper_kknn_ls = function(job, data, instance, ...) {
   optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
   acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20010L))
 
-  acq_optimizer$param_set$values$logging_level = "info"
   acq_optimizer$param_set$values$warmstart = TRUE
   acq_optimizer$param_set$values$warmstart_size = "all"
   
@@ -425,7 +424,7 @@ prob_designs = unlist(prob_designs, recursive = FALSE, use.names = FALSE)
 names(prob_designs) = nn
 
 # add jobs for optimizers
-optimizers = data.table(algorithm = c("mlr3mbo", "mlrintermbo", "mlr3mbo_default", "mlr3mbo_custom", "mlr3mbo_new_rf", "mlr3mbo_new_rf_ls", "mlr3mbo_xxx_ls"))
+optimizers = data.table(algorithm = c("mlr3mbo", "mlrintermbo", "mlr3mbo_default", "mlr3mbo_custom", "mlr3mbo_new_rf", "mlr3mbo_new_rf_ls", "mlr3mbo_xxx_ls", "mlr3mbo_kknn_ls"))
 
 for (i in seq_len(nrow(optimizers))) {
   algo_designs = setNames(list(optimizers[i, ]), nm = optimizers[i, ]$algorithm)
