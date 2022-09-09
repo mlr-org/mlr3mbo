@@ -7,6 +7,7 @@ test_that("AcqFunctionEIPS works", {
   inst = MAKE_INST(objective = objective, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
   surrogate = SurrogateLearnerCollection$new(list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)), archive = inst$archive, y_cols = c("y", "time"))
   acqf = AcqFunctionEIPS$new(surrogate = surrogate)
+  expect_acqfunction(acqf)
 
   expect_r6(acqf$codomain, "ParamSet")
   expect_equal(acqf$codomain$ids(), "acq_eips")

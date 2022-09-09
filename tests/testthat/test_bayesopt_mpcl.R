@@ -1,3 +1,7 @@
+test_that("bayesopt_mpcl class", {
+  expect_loop_function(bayesopt_mpcl)
+})
+
 test_that("default bayesopt_mpcl", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   bayesopt_mpcl(instance)

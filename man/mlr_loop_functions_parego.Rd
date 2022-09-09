@@ -111,6 +111,7 @@ Knowles, Joshua (2006).
 Other Loop Function: 
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_mpcl}},
-\code{\link{mlr_loop_functions_smsego}}
+\code{\link{mlr_loop_functions_smsego}},
+\code{\link{mlr_loop_functions}}
 }
 \concept{Loop Function}

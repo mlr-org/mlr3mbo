@@ -88,7 +88,13 @@ test_that("TunerMbo param_classes", {
 })
 
 test_that("TunerMbo properties", {
-  # FIXME:
+  tuner = tnr("mbo")
+  expect_equal(tuner$properties, c("dependencies", "single-crit", "multi-crit"))
+  instance = TuningInstanceSingleCrit$new(tsk("pima"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  tuner$surrogate = default_surrogate(instance)
+  expect_equal(tuner$properties, c("single-crit", "multi-crit"))
+  tuner$loop_function = bayesopt_ego
+  expect_equal(tuner$properties, "single-crit")
 })
 
 test_that("TunerMbo packages", {

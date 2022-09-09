@@ -102,6 +102,7 @@ Wang, Jialei, Clark, C. S, Liu, Eric, Frazier, I. P (2020).
 Other Loop Function: 
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_parego}},
-\code{\link{mlr_loop_functions_smsego}}
+\code{\link{mlr_loop_functions_smsego}},
+\code{\link{mlr_loop_functions}}
 }
 \concept{Loop Function}

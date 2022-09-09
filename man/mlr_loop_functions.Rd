@@ -7,9 +7,21 @@
 \format{
 \link[R6:R6Class]{R6::R6Class} object inheriting from \link[mlr3misc:Dictionary]{mlr3misc::Dictionary}.
 }
+\arguments{
+\item{key}{(\code{character(1)}).}
+
+\item{...}{(\code{any})\cr
+Passed down to constructor.}
+}
+\value{
+Object with corresponding key.
+}
 \description{
 A simple \link[mlr3misc:Dictionary]{mlr3misc::Dictionary} storing objects of class \code{loop_function}.
 Each loop function has an associated help page, see \code{mlr_loop_functions_[id]}.
+
+Retrieves object with key \code{key} from the dictionary.
+Additional arguments must be named and are passed to the constructor of the stored object.
 }
 \section{Methods}{
 
@@ -19,5 +31,12 @@ See \link[mlr3misc:Dictionary]{mlr3misc::Dictionary}.
 \examples{
 as.data.table(mlr_loop_functions)
 }
-\concept{loop_function}
+\seealso{
+Other Loop Function: 
+\code{\link{mlr_loop_functions_ego}},
+\code{\link{mlr_loop_functions_mpcl}},
+\code{\link{mlr_loop_functions_parego}},
+\code{\link{mlr_loop_functions_smsego}}
+}
+\concept{Loop Function}
 \keyword{datasets}

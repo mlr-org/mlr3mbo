@@ -150,6 +150,7 @@ bayesopt_ego = function(
   return(invisible(instance))
 }
 
+#' @export
 print.loop_function = function(x, ...) {
   catn("Loop function: ", attr(x, "id"))
   catn(str_indent("* Description:", attr(x, "label")))

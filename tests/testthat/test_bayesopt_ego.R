@@ -1,3 +1,7 @@
+test_that("bayesopt_ego class", {
+  expect_loop_function(bayesopt_ego)
+})
+
 test_that("default bayesopt_ego", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   bayesopt_ego(instance)

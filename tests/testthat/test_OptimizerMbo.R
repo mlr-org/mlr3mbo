@@ -111,7 +111,13 @@ test_that("OptimizerMbo param_classes", {
 })
 
 test_that("OptimizerMbo properties", {
-  # FIXME:
+  optimizer = opt("mbo")
+  expect_equal(optimizer$properties, c("dependencies", "single-crit", "multi-crit"))
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
+  optimizer$surrogate = default_surrogate(instance)
+  expect_equal(optimizer$properties, c("single-crit", "multi-crit"))
+  optimizer$loop_function = bayesopt_ego
+  expect_equal(optimizer$properties, "single-crit")
 })
 
 test_that("OptimizerMbo packages", {
