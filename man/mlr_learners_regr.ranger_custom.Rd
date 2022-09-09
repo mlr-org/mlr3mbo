@@ -14,6 +14,8 @@ This results in a rather smooth prediction function.
 No bootstrap or subsampling is used but rather all training data (\code{replace = FALSE} and \code{sample.fraction = 1}).
 This may seem counter-intuitive at first but ensures that training data is almost perfectly interpolated (given \code{min.node.size = 1}).
 Per default, \code{1000} trees are used.
+}
+\section{FIXME:}{
 Classical standard error estimation is no longer possible, but the \code{"extratrees"} splitting rule allows for estimating the variance based on the variance of the trees (simply taking the variance over the predictions of the trees).
 This results in low variance close to training data points.
 If \code{se.simple.spatial = TRUE} this point-wise variance is upwardly biased by adding the pointwise variance again scaled by the minimum Gower distance of the point to the training data (recall that a Gower distance of 0 means an identical point is present in the training data, whereas a distance of 1 means total dissimilarity to the training data).
@@ -22,6 +24,7 @@ Summarizing, the standard error for a point is calculated as follows:
 \deqn{\hat{\mathrm{SE}}(x_{i}) = \sqrt{(\hat{\mathrm{VAR}}(x_{i}) + \epsilon) + (\hat{\mathrm{VAR}}(x_{i}) + \epsilon) * \mathrm{GD}_{i})}}
 Here, \eqn{\epsilon} is given by \code{se.simple.spatial.nugget} which can be set larger than 0 in the case of noisy function observations.
 }
+
 \section{Dictionary}{
 
 This \link{Learner} can be instantiated via the \link[mlr3misc:Dictionary]{dictionary} \link{mlr_learners} or with the associated sugar function \code{\link[=lrn]{lrn()}}:

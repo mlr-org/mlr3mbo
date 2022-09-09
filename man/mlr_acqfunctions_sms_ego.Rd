@@ -38,6 +38,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}}
 }
 \concept{Acquisition Function}

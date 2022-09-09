@@ -58,6 +58,7 @@ Collate:
     'AcqFunctionCB.R'
     'AcqFunctionEI.R'
     'AcqFunctionEIPS.R'
+    'AcqFunctionMean.R'
     'AcqFunctionPI.R'
     'AcqFunctionSmsEgo.R'
     'AcqOptimizer.R'
