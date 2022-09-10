@@ -14,7 +14,7 @@ default_acqopt(acq_function)
 }
 \description{
 Chooses a default acquisition function optimizer.
-Defaults to wrapping \link[bbotk:mlr_optimizers_random_search]{bbotk::OptimizerRandomSearch} allowing 1000 function evaludations.
+Defaults to wrapping \link[bbotk:mlr_optimizers_random_search]{bbotk::OptimizerRandomSearch} allowing 1000 function evaluations.
 }
 \seealso{
 Other mbo_defaults: 

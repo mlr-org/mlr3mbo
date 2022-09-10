@@ -39,7 +39,7 @@ TunerMbo = R6Class("TunerMbo",
       catn(str_indent("* Parameter classes:", self$param_classes))
       catn(str_indent("* Properties:", self$properties))
       catn(str_indent("* Packages:", self$packages))
-      catn(str_indent("* Loop function:", if (is.null(self$loop_function)) "-" else "x"))
+      catn(str_indent("* Loop function:", if (is.null(self$loop_function)) "-" else attr(self$loop_function, "id")))
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
       catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
@@ -59,7 +59,7 @@ TunerMbo = R6Class("TunerMbo",
 
     #' @template field_surrogate
     surrogate = function(rhs) {
-     if (missing(rhs)) {
+      if (missing(rhs)) {
         private$.optimizer$surrogate
       } else {
         private$.optimizer$surrogate = assert_r6(rhs, classes = "Surrogate", null.ok = TRUE)
@@ -102,7 +102,7 @@ TunerMbo = R6Class("TunerMbo",
 
     #' @template field_result_function
     result_function = function(rhs) {
-     if (missing(rhs)) {
+      if (missing(rhs)) {
         private$.optimizer$result_function
       } else {
         private$.optimizer$result_function = assert_function(rhs, null.ok = TRUE)
@@ -123,7 +123,7 @@ TunerMbo = R6Class("TunerMbo",
       if (missing(rhs)) {
         private$.optimizer$properties
       } else {
-        private$.optimizer$properties = rhs
+        stop("properties is read-only.")
       }
     },
 

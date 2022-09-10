@@ -24,7 +24,9 @@ Surrogate = R6Class("Surrogate",
       private$.archive = archive
       private$.x_cols = x_cols  # assertion is done in SurrogateLearner or SurrogateLearnerCollection
       private$.y_cols = y_cols  # assertion is done in SurrogateLearner or SurrogateLearnerCollection
-      private$.param_set = assert_r6(param_set, classes = "ParamSet")
+      assert_r6(param_set, classes = "ParamSet")
+      assert_r6(param_set$params$catch_errors, classes = "ParamLgl")
+      private$.param_set = param_set
     },
 
     #' @description
@@ -33,13 +35,17 @@ Surrogate = R6Class("Surrogate",
     #' @return `NULL`.
     update = function() {
       if (is.null(self$archive)) stop("archive must be set during construction or manually prior before calling $update().")
-      tryCatch(private$.update(),
-        error = function(error_condition) {
-          lg$info(error_condition$message)
-          stop(set_class(list(message = error_condition$message, call = NULL),
-            classes = c("mbo_error", "surrogate_update_error", "error", "condition")))
-        }
-      )
+      if (self$param_set$values$catch_errors) {
+        tryCatch(private$.update(),
+          error = function(error_condition) {
+            lg$info(error_condition$message)
+            stop(set_class(list(message = error_condition$message, call = NULL),
+              classes = c("mbo_error", "surrogate_update_error", "error", "condition")))
+          }
+        )
+      } else {
+        private$.update()
+      }
       invisible(NULL)
     },
 
@@ -93,7 +99,7 @@ Surrogate = R6Class("Surrogate",
     },
 
     #' @field n_learner (`integer(1)`)\cr
-    #' Returns the number of [mlr3::Learner]s.
+    #' Returns the number of learners.
     n_learner = function() {
       stop("Abstract.")
     },
@@ -160,6 +166,17 @@ Surrogate = R6Class("Surrogate",
         stop("Abstract.")
       } else {
         stop("'feature_types' field is read-only.")
+      }
+    },
+
+    #' @field properties (`character()`)\cr
+    #' Stores a set of properties/capabilities the learner has.
+    #' A complete list of candidate properties, grouped by task type, is stored in [`mlr_reflections$learner_properties`][mlr_reflections].
+    properties = function(rhs) {
+      if (missing(rhs)) {
+        stop("Abstract.")
+      } else {
+        stop("'properties' field is read-only.")
       }
     }
   ),

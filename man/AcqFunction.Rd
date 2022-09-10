@@ -37,6 +37,12 @@ function.}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{label}}{(\code{character(1)})\cr
+Label for this object.}
+
+\item{\code{man}}{(\code{character(1)})\cr
+String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.}
+
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive})\cr
 Points to the \link[bbotk:Archive]{bbotk::Archive} of the \link{Surrogate}.}
 
@@ -74,7 +80,14 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 Note that the surrogate can be initialized lazy and can later be set via the active binding.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(id, constants = ps(), surrogate, direction)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(
+  id,
+  constants = ParamSet$new(),
+  surrogate,
+  direction,
+  label = NA_character_,
+  man = NA_character_
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -87,6 +100,12 @@ Note that the surrogate can be initialized lazy and can later be set via the act
 \item{\code{surrogate}}{(\code{NULL} | \link{Surrogate}).}
 
 \item{\code{direction}}{(\code{character(1)}).}
+
+\item{\code{label}}{(\code{character(1)})\cr
+Label for this object.}
+
+\item{\code{man}}{(\code{character(1)})\cr
+String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.}
 }
 \if{html}{\out{</div>}}
 }

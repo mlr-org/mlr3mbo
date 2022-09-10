@@ -1,5 +1,8 @@
 #' @title Sequential Multicriteria Bayesian Optimization Via SmsEGO.
 #'
+#' @include mlr_loop_functions.R
+#' @name mlr_loop_functions_smsego
+#'
 #' @description
 #' MBO loop function for sequential multicriteria Bayesian optimization via SmsEGO.
 #' Normally used inside an [OptimizerMbo].
@@ -129,3 +132,10 @@ bayesopt_smsego = function(
   return(invisible(instance))
 }
 
+class(bayesopt_smsego) = "loop_function"
+attr(bayesopt_smsego, "id") = "bayesopt_smsego"
+attr(bayesopt_smsego, "label") = "SmsEGO"
+attr(bayesopt_smsego, "instance") = "OptimInstanceMultiCrit"
+attr(bayesopt_smsego, "man") = "mlr3mbo::mlr_loop_functions_smsego"
+
+mlr_loop_functions$add("bayesopt_smsego", bayesopt_smsego)

@@ -1,5 +1,8 @@
 #' @title Sequential Singlecriteria Bayesian Optimization
 #'
+#' @include mlr_loop_functions.R
+#' @name mlr_loop_functions_ego
+#'
 #' @description
 #' MBO loop function for sequential singlecriteria Bayesian optimization.
 #' Normally used inside an [OptimizerMbo].
@@ -147,3 +150,17 @@ bayesopt_ego = function(
   return(invisible(instance))
 }
 
+#' @export
+print.loop_function = function(x, ...) {
+  catn("Loop function: ", attr(x, "id"))
+  catn(str_indent("* Description:", attr(x, "label")))
+  catn(str_indent("* Supported Instance:", attr(x, "instance")))
+}
+
+class(bayesopt_ego) = "loop_function"
+attr(bayesopt_ego, "id") = "bayesopt_ego"
+attr(bayesopt_ego, "label") = "Efficient Global Optimization"
+attr(bayesopt_ego, "instance") = "OptimInstanceSingleCrit"
+attr(bayesopt_ego, "man") = "mlr3mbo::mlr_loop_functions_ego"
+
+mlr_loop_functions$add("bayesopt_ego", bayesopt_ego)

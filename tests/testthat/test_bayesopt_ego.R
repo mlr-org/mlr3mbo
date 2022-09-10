@@ -1,3 +1,7 @@
+test_that("bayesopt_ego class", {
+  expect_loop_function(bayesopt_ego)
+})
+
 test_that("default bayesopt_ego", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   bayesopt_ego(instance)
@@ -15,7 +19,6 @@ test_that("bayesopt_ego", {
 
 test_that("stable bayesopt_ego", {
   # logger stuff
-  # see mlr-org/mlr3#566
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
   f = tempfile("bbotklog_", fileext = "log")
   th1 = lg$threshold
@@ -37,9 +40,6 @@ test_that("stable bayesopt_ego", {
   acq_function$surrogate$param_set$values$calc_insample_perf = TRUE
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
   acq_optimizer$param_set$values$logging_level = "info"
-  acq_optimizer$param_set$values$skip_already_evaluated = FALSE
-  acq_optimizer$param_set$values$fix_distance = TRUE
-  acq_optimizer$param_set$values$dist_threshold = 0
   bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_number(acq_function$surrogate$assert_insample_perf, upper = 1)
@@ -62,11 +62,7 @@ test_that("stable bayesopt_ego", {
   acq_function$surrogate$model = REGR_KM_DETERM
   acq_function$surrogate$param_set$values$perf_threshold = 0
   acq_optimizer = AcqOptimizer$new(OptimizerError$new(), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
-  acq_optimizer$param_set$values$skip_already_evaluated = TRUE
   acq_optimizer$param_set$values$logging_level = "info"
-  acq_optimizer$param_set$values$skip_already_evaluated = TRUE
-  acq_optimizer$param_set$values$fix_distance = TRUE
-  acq_optimizer$param_set$values$dist_threshold = 0
   bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_number(acq_function$surrogate$assert_insample_perf, upper = 1)

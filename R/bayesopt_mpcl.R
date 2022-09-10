@@ -1,5 +1,8 @@
 #' @title Sequential Singlecriteria Bayesian Optimization Via Multipoint Constant Liar
 #'
+#' @include mlr_loop_functions.R
+#' @name mlr_loop_functions_mpcl
+#'
 #' @description
 #' MBO loop function for sequential singlecriteria Bayesian optimization via multipoint constant liar.
 #' Normally used inside an [OptimizerMbo].
@@ -162,3 +165,10 @@ bayesopt_mpcl = function(
   return(invisible(instance))
 }
 
+class(bayesopt_mpcl) = "loop_function"
+attr(bayesopt_mpcl, "id") = "bayesopt_mpcl"
+attr(bayesopt_mpcl, "label") = "Multipoint Constant Liar"
+attr(bayesopt_mpcl, "instance") = "OptimInstanceSingleCrit"
+attr(bayesopt_mpcl, "man") = "mlr3mbo::mlr_loop_functions_mpcl"
+
+mlr_loop_functions$add("bayesopt_mpcl", bayesopt_mpcl)

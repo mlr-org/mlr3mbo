@@ -4,10 +4,37 @@
 \alias{SurrogateLearnerCollection}
 \title{Surrogate Model Containing Multiple Learners}
 \description{
-Surrogate model containing multiple regression \link[mlr3:Learner]{mlr3::Learner}s.
-The \link[mlr3:Learner]{mlr3::Learner}s are fit on the target variables as indicated via \code{y_cols}.
-Note that redundant \link[mlr3:Learner]{mlr3::Learner}s must be deep clones.
+Surrogate model containing multiple \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
+The \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} are fit on the target variables as indicated via \code{y_cols}.
+Note that redundant \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} must be deep clones.
 }
+\section{Parameters}{
+
+\describe{
+\item{\code{calc_insample_perf}}{\code{logical(1)}\cr
+Should the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} be asserted after updating the surrogate?
+If the assertion fails (i.e., the insample performance based on the \code{perf_measure} does not meet the
+\code{perf_threshold}), an error is thrown.
+Default is \code{FALSE}.
+}
+\item{\code{perf_measure}}{List of \link[mlr3:MeasureRegr]{mlr3::MeasureRegr}\cr
+Performance measures which should be use to assert the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
+Only relevant if \code{calc_insample_perf = TRUE}.
+Default is \link[mlr3:mlr_measures_regr.rsq]{mlr3::mlr_measures_regr.rsq} for each learner.
+}
+\item{\code{perf_threshold}}{List of \code{numeric(1)}\cr
+Thresholds the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} should be asserted against.
+Only relevant if \code{calc_insample_perf = TRUE}.
+Default is \code{0} for each learner.
+}
+\item{\code{catch_errors}}{\code{logical(1)}\cr
+Should errors during updating the surrogate be caught and propagated to the \code{loop_function} which can then handle
+the failed infill optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+Default is \code{TRUE}.
+}
+}
+}
+
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateLearnerCollection}
 }
@@ -29,6 +56,10 @@ Set of required packages.}
 \item{\code{feature_types}}{(\code{character()})\cr
 Stores the feature types the learner can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
 A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
+
+\item{\code{properties}}{(\code{character()})\cr
+Stores a set of properties/capabilities the learner has.
+A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
 }
 \if{html}{\out{</div>}}
 }

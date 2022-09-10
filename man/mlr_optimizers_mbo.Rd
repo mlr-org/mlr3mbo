@@ -80,8 +80,7 @@ For more information on default values for \code{loop_function}, \code{surrogate
   acq_function = NULL,
   acq_optimizer = NULL,
   args = NULL,
-  result_function = NULL,
-  properties = c("dependencies", "multi-crit", "single-crit")
+  result_function = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -111,13 +110,6 @@ Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInsta
 See for example \link{result_by_surrogate_design} which is used by default if the
 \link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
 \link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
-
-\item{\code{properties}}{(\code{character()})\cr
-Set of properties of the optimizer.
-Must be a subset of \code{\link[=bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
-MBO in principle is very flexible and by default we assume that the optimizer has all properties.
-The user must then take care that the choice of the \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer} match their use case.
-Nevertheless, properties can also be changed manually after construction by using the \code{properties} active binding.}
 }
 \if{html}{\out{</div>}}
 }

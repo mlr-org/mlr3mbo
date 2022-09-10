@@ -1,5 +1,8 @@
 #' @title Sequential Multicriteria Bayesian Optimization Via ParEGO
 #'
+#' @include mlr_loop_functions.R
+#' @name mlr_loop_functions_parego
+#'
 #' @description
 #' MBO loop function for sequential multicriteria Bayesian optimization via ParEGO.
 #' Normally used inside an [OptimizerMbo].
@@ -122,7 +125,7 @@ bayesopt_parego = function(
     init_design_size = instance$archive$n_evals
   }
 
-  lambdas = calculate_parego_weights(s, d = k)
+  lambdas = calculate_parego_weights(s, k = k)
   qs = seq_len(q)
 
   # loop
@@ -162,3 +165,10 @@ bayesopt_parego = function(
   return(invisible(instance))
 }
 
+class(bayesopt_parego) = "loop_function"
+attr(bayesopt_parego, "id") = "bayesopt_parego"
+attr(bayesopt_parego, "label") = "ParEGO"
+attr(bayesopt_parego, "instance") = "OptimInstanceMultiCrit"
+attr(bayesopt_parego, "man") = "mlr3mbo::mlr_loop_functions_parego"
+
+mlr_loop_functions$add("bayesopt_parego", bayesopt_parego)

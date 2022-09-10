@@ -3,6 +3,18 @@ library(mlr3learners)
 lapply(list.files(system.file("testthat", package = "mlr3"),
   pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
+with_seed = function(seed, expr) {
+  old_seed = get0(".Random.seed", globalenv(), mode = "integer", inherits = FALSE)
+  if (is.null(old_seed)) {
+    runif(1L)
+    old_seed = get0(".Random.seed", globalenv(), mode = "integer", inherits = FALSE)
+  }
+
+  on.exit(assign(".Random.seed", old_seed, globalenv()), add = TRUE)
+  set.seed(seed)
+  force(expr)
+}
+
 # Simple 1D Functions
 PS_1D = ParamSet$new(list(
   ParamDbl$new("x", lower = -1, upper = 1)
@@ -167,3 +179,32 @@ LearnerRegrError = R6Class("LearnerRegrError",
   )
 )
 
+expect_dictionary_loop_function = function(d, contains = NA_character_, min_items = 0L) {
+  expect_r6(d, "Dictionary")
+  testthat::expect_output(print(d), "Dictionary")
+  keys = d$keys()
+
+  expect_environment(d$items)
+  expect_character(keys, any.missing = FALSE, min.len = min_items, min.chars = 1L)
+  if (!is.na(contains)) {
+    expect_list(d$mget(keys), types = contains, names = "unique")
+  }
+  expect_data_table(data.table::as.data.table(d), key = "key", nrows = length(keys))
+}
+
+expect_loop_function = function(lpf) {
+  expect_class(lpf, "loop_function")
+  expect_subset(c("instance", "surrogate", "acq_function", "acq_optimizer", "init_design_size", "random_interleave_iter"), names(formals(lpf)),)
+  expect_subset(c("id", "label", "instance", "man"), names(attributes(lpf)))
+  expect_string(attr(lpf, "id"), pattern = "bayesopt")
+  expect_string(attr(lpf, "label"))
+  expect_choice(attr(lpf, "instance"), c("OptimInstanceSingleCrit", "OptimInstanceMultiCrit"))
+  expect_man_exists(attr(lpf, "man"))
+}
+
+expect_acqfunction = function(acqf) {
+  expect_r6(acqf, classes = c("AcqFunction", "Objective"))
+  expect_string(acqf$id, pattern = "acq")
+  expect_string(acqf$label)
+  expect_man_exists(acqf$man)
+}

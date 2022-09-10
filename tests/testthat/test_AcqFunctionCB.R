@@ -2,6 +2,7 @@ test_that("AcqFunctionCB works", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = inst$archive)
   acqf = AcqFunctionCB$new(surrogate = surrogate)
+  expect_acqfunction(acqf)
 
   expect_r6(acqf$codomain, "ParamSet")
   expect_equal(acqf$codomain$ids(), "acq_cb")
