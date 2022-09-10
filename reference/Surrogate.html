@@ -100,7 +100,7 @@ Id used when printing.</p></dd>
 
 <dt><code>n_learner</code></dt>
 <dd><p>(<code>integer(1)</code>)<br>
-Returns the number of <a href="https://mlr3.mlr-org.com/reference/Learner.html" class="external-link">mlr3::Learner</a>s.</p></dd>
+Returns the number of learners.</p></dd>
 
 
 <dt><code>x_cols</code></dt>
@@ -136,6 +136,12 @@ installed, but loaded (not attached) later on-demand via 'requireNamespace()'.</
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Stores the feature types the learner can handle, e.g. <code>"logical"</code>, <code>"numeric"</code>, or <code>"factor"</code>.
 A complete list of candidate feature types, grouped by task type, is stored in <code><a href="https://mlr3.mlr-org.com/reference/mlr_reflections.html" class="external-link">mlr_reflections$task_feature_types</a></code>.</p></dd>
+
+
+<dt><code>properties</code></dt>
+<dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
+Stores a set of properties/capabilities the learner has.
+A complete list of candidate properties, grouped by task type, is stored in <code><a href="https://mlr3.mlr-org.com/reference/mlr_reflections.html" class="external-link">mlr_reflections$learner_properties</a></code>.</p></dd>
 
 
 </dl><p></p></div>

@@ -81,7 +81,7 @@ For more information on default values for loop_function, surrogate, acq_functio
     <div class="ref-description">
     <p><code>OptimizerMbo</code> class that implements model based optimization.
 The implementation follows a modular layout relying on a loop function determining the MBO flavor
-to be used, e.g., <a href="bayesopt_ego.html">bayesopt_ego</a> for sequential single objective MBO, a <a href="Surrogate.html">Surrogate</a>, an
+to be used, e.g., <a href="mlr_loop_functions_ego.html">bayesopt_ego</a> for sequential single objective MBO, a <a href="Surrogate.html">Surrogate</a>, an
 <a href="AcqFunction.html">AcqFunction</a>, e.g., <a href="mlr_acqfunctions_ei.html">AcqFunctionEI</a> for expected improvement and an <a href="AcqOptimizer.html">AcqOptimizer</a>.</p>
 <p>For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code> and <code>acq_optimizer</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p>
     </div>
@@ -166,8 +166,7 @@ For more information on default values for <code>loop_function</code>, <code>sur
 <span>  acq_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  acq_optimizer <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  args <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  result_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  properties <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dependencies"</span>, <span class="st">"multi-crit"</span>, <span class="st">"single-crit"</span><span class="op">)</span></span>
+<span>  result_function <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -207,15 +206,6 @@ Requires arguments <code>inst</code> (the <a href="https://bbotk.mlr-org.com/ref
 See for example <a href="result_by_surrogate_design.html">result_by_surrogate_design</a> which is used by default if the
 <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> has the property <code>"noisy"</code> (which is the case for a
 <a href="https://mlr3tuning.mlr-org.com/reference/TuningInstanceSingleCrit.html" class="external-link">mlr3tuning::TuningInstanceSingleCrit</a> or <a href="https://mlr3tuning.mlr-org.com/reference/TuningInstanceMultiCrit.html" class="external-link">mlr3tuning::TuningInstanceMultiCrit</a>).</p></dd>
-
-
-<dt><code>properties</code></dt>
-<dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
-Set of properties of the optimizer.
-Must be a subset of <code><a href="https://bbotk.mlr-org.com/reference/bbotk_reflections.html" class="external-link">bbotk_reflections$optimizer_properties</a></code>.
-MBO in principle is very flexible and by default we assume that the optimizer has all properties.
-The user must then take care that the choice of the <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code> and <code>acq_optimizer</code> match their use case.
-Nevertheless, properties can also be changed manually after construction by using the <code>properties</code> active binding.</p></dd>
 
 
 </dl><p></p></div>

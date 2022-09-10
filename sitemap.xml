@@ -28,16 +28,7 @@
     <loc>https://mlr3mbo.mlr-org.com/reference/acqf.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_ego.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_mpcl.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_parego.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/reference/bayesopt_smsego.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/reference/acqo.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/default_acqfun.html</loc>
@@ -82,6 +73,21 @@
     <loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_sms_ego.html</loc>
   </url>
   <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions_ego.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions_mpcl.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions_parego.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions_smsego.html</loc>
+  </url>
+  <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_mbo.html</loc>
   </url>
   <url>
@@ -89,5 +95,11 @@
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/reference/result_by_surrogate_design.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/srlrn.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/reference/srlrnc.html</loc>
   </url>
 </urlset>
