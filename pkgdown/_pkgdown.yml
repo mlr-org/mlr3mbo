@@ -1,13 +1,11 @@
 url: https://mlr3mbo.mlr-org.com
 
 template:
+  bootstrap: 5
   package: mlr3pkgdowntemplate
-  params:
-    bootswatch: journal
-  default_assets: false
 
 development:
-  mode: release
+  mode: auto
   version_label: default
   version_tooltip: "Version"
 
@@ -16,17 +14,17 @@ toc:
 
 navbar:
   structure:
-    left:  [reference, news, book]
-    right: [github, slack, stackoverflow, rss]
+    left: [reference, news, book]
+    right: [github, mattermost, stackoverflow, rss]
   components:
     home: ~
     reference:
       icon: fa fa-file-alt
       text: Reference
       href: reference/index.html
-    slack:
-      icon: fab fa-slack
-      href: https://mlr-org.slack.com
+    mattermost:
+      icon: fa fa-comments
+      href: https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/
     book:
       text: mlr3book
       icon: fa fa-link
