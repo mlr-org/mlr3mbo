@@ -92,7 +92,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     optimize = function() {
       # FIXME: currently only supports singlecrit acqfunctions
       if (self$acq_function$codomain$length > 1L) {
-        stop("Multi-objective acquisition functions are currently not supported")
+        stop("Multi-objective acquisition functions are currently not supported.")
       }
 
       logger = lgr::get_logger("bbotk")

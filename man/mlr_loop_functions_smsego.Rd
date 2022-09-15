@@ -3,7 +3,7 @@
 \name{mlr_loop_functions_smsego}
 \alias{mlr_loop_functions_smsego}
 \alias{bayesopt_smsego}
-\title{Sequential Multicriteria Bayesian Optimization Via SmsEGO.}
+\title{Sequential Multicriteria Bayesian Optimization via SmsEGO}
 \usage{
 bayesopt_smsego(
   instance,
@@ -31,7 +31,7 @@ If \code{NULL} \code{default_surrogate(instance)} is used.}
 \link{AcqFunctionSmsEgo} to be used as acquisition function.
 If \code{NULL} an \link{AcqFunctionSmsEgo} is used.}
 
-\item{acq_optimizer}{(\link{AcqOptimizer})\cr
+\item{acq_optimizer}{(\code{NULL} | \link{AcqOptimizer})\cr
 \link{AcqOptimizer} to be used as acquisition function optimizer.
 If \code{NULL} \code{default_acqopt(acqfun)} is used.}
 
@@ -97,6 +97,7 @@ In \emph{Proceedings of the 10th International Conference on Parallel Problem So
 }
 \seealso{
 Other Loop Function: 
+\code{\link{loop_function}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_mpcl}},
 \code{\link{mlr_loop_functions_parego}},

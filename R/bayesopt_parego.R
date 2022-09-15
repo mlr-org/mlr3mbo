@@ -1,4 +1,4 @@
-#' @title Sequential Multicriteria Bayesian Optimization Via ParEGO
+#' @title Sequential Multicriteria Bayesian Optimization via ParEGO
 #'
 #' @include mlr_loop_functions.R
 #' @name mlr_loop_functions_parego
@@ -19,7 +19,7 @@
 #' @param acq_function (`NULL` | [AcqFunction]).\cr
 #'   [AcqFunction] to be used as acquisition function.
 #'   If `NULL` [AcqFunctionEI] is used.
-#' @param acq_optimizer ([AcqOptimizer])\cr
+#' @param acq_optimizer (`NULL` | [AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
 #'   If `NULL` \code{default_acqopt(acqfun)} is used.
 #' @param q (`integer(1)`)\cr
@@ -153,6 +153,7 @@ bayesopt_parego = function(
         acq_function$update()
         acq_optimizer$optimize()
       }, mbo_error = function(mbo_error_condition) {
+        lg$info(paste0(class(mbo_error_condition), collapse = " / "))
         lg$info("Proposing a randomly sampled point")
         SamplerUnif$new(domain)$sample(1L)$data
       })
@@ -168,7 +169,7 @@ bayesopt_parego = function(
 class(bayesopt_parego) = "loop_function"
 attr(bayesopt_parego, "id") = "bayesopt_parego"
 attr(bayesopt_parego, "label") = "ParEGO"
-attr(bayesopt_parego, "instance") = "OptimInstanceMultiCrit"
+attr(bayesopt_parego, "instance") = "multi-crit"
 attr(bayesopt_parego, "man") = "mlr3mbo::mlr_loop_functions_parego"
 
 mlr_loop_functions$add("bayesopt_parego", bayesopt_parego)

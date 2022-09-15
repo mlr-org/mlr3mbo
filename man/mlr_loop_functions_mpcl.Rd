@@ -3,7 +3,7 @@
 \name{mlr_loop_functions_mpcl}
 \alias{mlr_loop_functions_mpcl}
 \alias{bayesopt_mpcl}
-\title{Sequential Singlecriteria Bayesian Optimization Via Multipoint Constant Liar}
+\title{Sequential Singlecriteria Bayesian Optimization via Multipoint Constant Liar}
 \usage{
 bayesopt_mpcl(
   instance,
@@ -34,7 +34,7 @@ If \code{NULL} \code{default_surrogate(instance)} is used.}
 \link{AcqFunction} to be used as acquisition function.
 If \code{NULL} \code{default_acqfun(instance)} is used.}
 
-\item{acq_optimizer}{(\link{AcqOptimizer})\cr
+\item{acq_optimizer}{(\code{NULL} | \link{AcqOptimizer})\cr
 \link{AcqOptimizer} to be used as acquisition function optimizer.
 If \code{NULL} \code{default_acqopt(acqfun)} is used.}
 
@@ -100,6 +100,7 @@ Wang, Jialei, Clark, C. S, Liu, Eric, Frazier, I. P (2020).
 }
 \seealso{
 Other Loop Function: 
+\code{\link{loop_function}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_parego}},
 \code{\link{mlr_loop_functions_smsego}},

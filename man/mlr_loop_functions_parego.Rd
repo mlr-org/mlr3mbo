@@ -3,7 +3,7 @@
 \name{mlr_loop_functions_parego}
 \alias{mlr_loop_functions_parego}
 \alias{bayesopt_parego}
-\title{Sequential Multicriteria Bayesian Optimization Via ParEGO}
+\title{Sequential Multicriteria Bayesian Optimization via ParEGO}
 \usage{
 bayesopt_parego(
   instance,
@@ -34,7 +34,7 @@ Points are drawn uniformly at random.}
 \link{AcqFunction} to be used as acquisition function.
 If \code{NULL} \link{AcqFunctionEI} is used.}
 
-\item{acq_optimizer}{(\link{AcqOptimizer})\cr
+\item{acq_optimizer}{(\code{NULL} | \link{AcqOptimizer})\cr
 \link{AcqOptimizer} to be used as acquisition function optimizer.
 If \code{NULL} \code{default_acqopt(acqfun)} is used.}
 
@@ -109,6 +109,7 @@ Knowles, Joshua (2006).
 }
 \seealso{
 Other Loop Function: 
+\code{\link{loop_function}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_mpcl}},
 \code{\link{mlr_loop_functions_smsego}},

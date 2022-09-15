@@ -5,7 +5,7 @@
 #'
 #' @section Parameters:
 #' \describe{
-#' \item{`calc_insample_perf`}{`logical(1)`\cr
+#' \item{`assert_insample_perf`}{`logical(1)`\cr
 #'   Should the insample performance of the [mlr3::LearnerRegr] be asserted after updating the surrogate?
 #'   If the assertion fails (i.e., the insample performance based on the `perf_measure` does not meet the
 #'   `perf_threshold`), an error is thrown.
@@ -13,12 +13,12 @@
 #' }
 #' \item{`perf_measure`}{[mlr3::MeasureRegr]\cr
 #'   Performance measure which should be use to assert the insample performance of the [mlr3::LearnerRegr].
-#'   Only relevant if `calc_insample_perf = TRUE`.
+#'   Only relevant if `assert_insample_perf = TRUE`.
 #'   Default is [mlr3::mlr_measures_regr.rsq].
 #' }
 #' \item{`perf_threshold`}{`numeric(1)`\cr
 #'   Threshold the insample performance of the [mlr3::LearnerRegr] should be asserted against.
-#'   Only relevant if `calc_insample_perf = TRUE`.
+#'   Only relevant if `assert_insample_perf = TRUE`.
 #'   Default is `0`.
 #' }
 #' \item{`catch_errors`}{`logical(1)`\cr
@@ -52,14 +52,14 @@ SurrogateLearner = R6Class("SurrogateLearner",
       assert_string(y_col, null.ok = TRUE)
 
       ps = ParamSet$new(list(
-        ParamLgl$new("calc_insample_perf"),
+        ParamLgl$new("assert_insample_perf"),
         ParamUty$new("perf_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
         ParamDbl$new("perf_threshold", lower = -Inf, upper = Inf),
         ParamLgl$new("catch_errors"))
       )
-      ps$values = list(calc_insample_perf = FALSE, catch_errors = TRUE)
-      ps$add_dep("perf_measure", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
-      ps$add_dep("perf_threshold", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
+      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE)
+      ps$add_dep("perf_measure", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
+      ps$add_dep("perf_threshold", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
       super$initialize(model = learner, archive = archive, x_cols = x_cols, y_cols = y_col, param_set = ps)
     },
@@ -110,7 +110,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
         stop("assert_insample_perf is read-only.")
       }
 
-      if (!self$param_set$values$calc_insample_perf) {
+      if (!self$param_set$values$assert_insample_perf) {
         return(invisible(self$insample_perf))
       }
 
@@ -164,14 +164,14 @@ SurrogateLearner = R6Class("SurrogateLearner",
 
   private = list(
     # Train model with new data.
-    # Also calculates the insample performance based on the `perf_measure` hyperparameter if `calc_insample_perf = TRUE`.
+    # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
       xydt = self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE]
       task = TaskRegr$new(id = "surrogate_task", backend = char_to_fct(xydt), target = self$y_cols)
       assert_learnable(task, learner = self$model)
       self$model$train(task)
 
-      if (self$param_set$values$calc_insample_perf) {
+      if (self$param_set$values$assert_insample_perf) {
         measure = assert_measure(self$param_set$values$perf_measure %??% mlr_measures$get("regr.rsq"), task = task, learner = self$model)
         private$.insample_perf = self$model$predict(task)$score(measure, task = task, learner = self$model)
         self$assert_insample_perf

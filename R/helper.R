@@ -2,7 +2,7 @@ generate_acq_codomain = function(codomain, id, direction = "same") {
   assert_choice(direction, c("same", "minimize", "maximize"))
   if (direction == "same") {
     if (codomain$length > 1L) {
-      stop("not supported yet")  # FIXME: But should be?
+      stop("Not supported yet.")  # FIXME: But should be?
     }
     tags = codomain$params[[1L]]$tags
     tags = tags[tags %in% c("minimize", "maximize")]  # only filter out the relevant one
