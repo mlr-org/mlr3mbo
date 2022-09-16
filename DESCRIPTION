@@ -38,6 +38,7 @@ Suggests:
     knitr,
     lhs,
     mlr3learners,
+    mlr3extralearners,
     mlr3pipelines,
     nloptr,
     ranger,

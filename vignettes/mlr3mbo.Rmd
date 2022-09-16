@@ -189,6 +189,7 @@ The acquisition function relies only on the prediction of the surrogate model an
 After having evaluated the next candidate, the process repeats itself until a given termination criteria is met.
 
 Most BO flavors therefore follow a simple loop:
+
   1. Fit the surrogate on all observations made so far.
   2. Optimize the acquisition function to find the next candidate that should be evaluated.
   3. Evaluate the next candidate.
@@ -212,8 +213,7 @@ single-objective and `OptimInstanceMultiCrit` for multi-objective optimization) 
 
 Technically, all `loop_function`s are members of the `S3` class `r ref( "mlr3mbo::loop_function", "loop_function")`, which are simply decorated `r ref("base::function", "functions")` (because using an `r ref("R6::R6Class", "R6Class")` class would be over the top here - but this may change in the future).
 
-To write an own `loop_function`, users can get inspiration from the readily available ones, i.e.,
-`r ref("mlr3mbo::bayesopt_ego", "bayesopt_ego")` which performs sequential single-objective optimization:
+To write an own `loop_function`, users can get inspiration from the readily available ones, i.e., `r ref("mlr3mbo::bayesopt_ego", "bayesopt_ego")` which performs sequential single-objective optimization:
 
 After having made some assertions and safety checks, and having evaluated the initial design `bayesopt_ego` essentially only performs the following steps:
 
@@ -274,6 +274,18 @@ Important methods are `$update()` and `$predict()` with the former one typically
 Depending on the choice of the `loop_function`, multiple targets must be modelled by (currently independent) surrogates, in which case a `SurrogateLearnerCollection` should be used.
 Construction and hyperparameters are analogous to the single target scenario described above.
 
+To get an overview of all available regression learners within the `r ref_pkg("mlr3")` ecosystem, use:
+
+```{r, eval=FALSE}
+library(mlr3)
+library(mlr3learners)
+library(mlr3extralearners)
+learners = as.data.table(mlr_learners)
+learners[task_type == "regr"]
+```
+
+To use a custom learner not included in `r ref_pkg("mlr3")`, `r ref_pkg("mlr3learners")`, or `r ref_pkg("mlr3extralearners")`, you can write a custom `r ref("mlr3::LearnerRegr", "LearnerRegr")` and use this learner within the surrogate.
+
 ## Acquisition Function
 
 Based on a surrogate, an acquisition function quantifies the attractiveness of each point in the search space if it was to be evaluated in the next iteration.
@@ -317,6 +329,8 @@ In the case of the acquisition function itself being parameterized, hyperparamet
 ```{r}
 acqf("cb")  # lower / upper confidence bound with lambda hyperparameter
 ```
+
+To use a custom acquisition function you should implement a new `R6` class inheriting from `r ref("mlr3mbo::AcqFunction", "AcqFunction")`.
 
 ## Acquisition Function Optimizer
 
@@ -363,6 +377,20 @@ For debugging purposes, this should be set to `"info"`.
 `warmstart = TRUE` results in the best `warmstart_size` points present in the `Archive` of the `OptimInstance` to also be evaluated on the acquisition function `OptimInstance` prior to running the actual optimization.
 This is especially useful in the case of using evolutionary algorithms or variants of local search as the acquisition function optimizer (as the current best points should usually be part of the initial population to further optimize local optima).
 
+To get an overview of all `Optimizer`s implemented in `r ref_pkg("bbotk")` you can use:
+
+```{r, eval=FALSE}
+as.data.table(mlr_optimizers)
+```
+
+An similarly for `Terminator`s:
+
+```{r, eval=FALSE}
+as.data.table(mlr_terminators)
+```
+
+As always you can also use custom `Optimizer`s or `Terminator`s by implementing new `R6` classes inheriting from `r ref("bbotk::Optimizer", "Optimizer")` and respectively `r ref("bbotk::Terminator", "Terminator")`.
+
 # Putting it Together
 
 Having introduced all building blocks we are now ready to put everything together in the form of an `r ref( "mlr3mbo::OptimizerMbo", "OptimizerMbo")` and `r ref("mlr3mbo::TunerMbo", "TunerMbo")`.
@@ -406,6 +434,13 @@ mlr3misc::get_private(tuner)[[".optimizer"]]
 1. One can simply evaluate points on the `OptimInstance` that is to be optimized prior to using an `OptimizerMbo`. In this case, the `loop_function` should skip the construction and evaluation of an initial design.
 2. If no points were already evaluated on the `OptimInstance`, the `loop_function` should construct an initial design and evaluate it, e.g., `bayesopt_ego` constructs an initial design of size $4D$ where $D$ is the dimensionality of the search space sampling points uniformly at random.
 
+Functions for creating different initial designs are part of the `r ref_pkg("paradox")` package, e.g.:
+
+1. `r ref("paradox::generate_design_random", "generate_design_random")`: uniformly at random
+1. `r ref("paradox::generate_design_grid", "generate_design_grid")`: uniform sized grid
+1. `r ref("paradox::generate_design_lhs", "generate_design_lhs")`: Latin hypercube sampling
+1. `r ref("paradox::generate_design_sobol", "generate_design_sobol")`: Sobol sequence
+
 # Defaults
 
 `r ref_pkg("mlr3mbo")` tries to use intelligent defaults for the `loop_function`, `surrogate`, `acq_function`, and `acq_optimizer` within `OptimizerMbo` and `TunerMbo`.
@@ -445,9 +480,10 @@ These errors are then caught and a fallback is triggered: Evaluating the next ca
 Note that the same mechanism is actually also used to handle random interleaving.
 
 To illustrate this, consider the following scenario:
-We try to optimize a function, however, our Gaussian process fails due to data points being too close to each other.
+We try to minimize $f(x) = x^2$, however, our Gaussian process fails due to data points being too close to each other.
 
 ```{r}
+set.seed(2906)
 domain = ps(x = p_dbl(lower = -1, upper = 1))
 
 codomain = ps(y = p_dbl(tags = "minimize"))
@@ -465,7 +501,7 @@ instance = OptimInstanceSingleCrit$new(
  objective = objective,
  terminator = trm("evals", n_evals = 10))
 
-initial_design = data.table(x = rep(0, 4))
+initial_design = data.table(x = rep(1, 4))
 instance$eval_batch(initial_design)
 
 surrogate = srlrn(lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8, control = list(trace = FALSE)))
