@@ -20,7 +20,7 @@
 #' @param acq_function (`NULL` | [AcqFunction]).\cr
 #'   [AcqFunction] to be used as acquisition function.
 #'   If `NULL` \code{default_acqfun(instance)} is used.
-#' @param acq_optimizer ([AcqOptimizer])\cr
+#' @param acq_optimizer (`NULL` | [AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
 #'   If `NULL` \code{default_acqopt(acqfun)} is used.
 #' @param random_interleave_iter (`integer(1)`)\cr
@@ -139,6 +139,7 @@ bayesopt_ego = function(
       acq_function$update()
       acq_optimizer$optimize()
     }, mbo_error = function(mbo_error_condition) {
+      lg$info(paste0(class(mbo_error_condition), collapse = " / "))
       lg$info("Proposing a randomly sampled point")
       SamplerUnif$new(domain)$sample(1L)$data
     })
@@ -150,17 +151,10 @@ bayesopt_ego = function(
   return(invisible(instance))
 }
 
-#' @export
-print.loop_function = function(x, ...) {
-  catn("Loop function: ", attr(x, "id"))
-  catn(str_indent("* Description:", attr(x, "label")))
-  catn(str_indent("* Supported Instance:", attr(x, "instance")))
-}
-
 class(bayesopt_ego) = "loop_function"
 attr(bayesopt_ego, "id") = "bayesopt_ego"
 attr(bayesopt_ego, "label") = "Efficient Global Optimization"
-attr(bayesopt_ego, "instance") = "OptimInstanceSingleCrit"
+attr(bayesopt_ego, "instance") = "single-crit"
 attr(bayesopt_ego, "man") = "mlr3mbo::mlr_loop_functions_ego"
 
 mlr_loop_functions$add("bayesopt_ego", bayesopt_ego)

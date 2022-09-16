@@ -1,4 +1,4 @@
-#' @title Sequential Multicriteria Bayesian Optimization Via SmsEGO.
+#' @title Sequential Multicriteria Bayesian Optimization via SmsEGO
 #'
 #' @include mlr_loop_functions.R
 #' @name mlr_loop_functions_smsego
@@ -19,7 +19,7 @@
 #' @param acq_function (`NULL` | [AcqFunctionSmsEgo]).\cr
 #'   [AcqFunctionSmsEgo] to be used as acquisition function.
 #'   If `NULL` an [AcqFunctionSmsEgo] is used.
-#' @param acq_optimizer ([AcqOptimizer])\cr
+#' @param acq_optimizer (`NULL` | [AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
 #'   If `NULL` \code{default_acqopt(acqfun)} is used.
 #' @param random_interleave_iter (`integer(1)`)\cr
@@ -121,6 +121,7 @@ bayesopt_smsego = function(
       acq_function$update()
       acq_optimizer$optimize()
     }, mbo_error = function(mbo_error_condition) {
+      lg$info(paste0(class(mbo_error_condition), collapse = " / "))
       lg$info("Proposing a randomly sampled point")
       SamplerUnif$new(domain)$sample(1L)$data
     })
@@ -135,7 +136,7 @@ bayesopt_smsego = function(
 class(bayesopt_smsego) = "loop_function"
 attr(bayesopt_smsego, "id") = "bayesopt_smsego"
 attr(bayesopt_smsego, "label") = "SmsEGO"
-attr(bayesopt_smsego, "instance") = "OptimInstanceMultiCrit"
+attr(bayesopt_smsego, "instance") = "multi-crit"
 attr(bayesopt_smsego, "man") = "mlr3mbo::mlr_loop_functions_smsego"
 
 mlr_loop_functions$add("bayesopt_smsego", bayesopt_smsego)

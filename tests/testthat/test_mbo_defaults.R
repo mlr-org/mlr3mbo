@@ -110,7 +110,7 @@ test_that("stability and defaults", {
   })
 
   # Surrogate using LearnerRegrError as Learner that will fail during train
-  # this should trigger a leads_to_exploration_error
+  # this should trigger a mbo_error
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   learner = LearnerRegrError$new()
   learner$encapsulate[c("train", "predict")] = "evaluate"

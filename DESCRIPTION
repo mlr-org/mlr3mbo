@@ -35,16 +35,18 @@ Imports:
     R6
 Suggests:
     DiceKriging,
+    knitr,
     lhs,
     mlr3learners,
     mlr3pipelines,
     nloptr,
     ranger,
     rgenoud,
+    rmarkdown,
     rpart,
+    stringi,
     testthat (>= 3.0.0),
     withr
-Remotes: mlr-org/paradox
 ByteCompile: no
 Encoding: UTF-8
 NeedsCompilation: yes
@@ -73,7 +75,10 @@ Collate:
     'bayesopt_smsego.R'
     'bibentries.R'
     'helper.R'
+    'loop_function.R'
     'mbo_defaults.R'
+    'result_by_default.R'
     'result_by_surrogate_design.R'
     'sugar.R'
     'zzz.R'
+VignetteBuilder: knitr

@@ -44,8 +44,8 @@ test_that("param_set", {
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
   surrogate = SurrogateLearnerCollection$new(learner = list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)), archive = inst$archive)
   expect_r6(surrogate$param_set, "ParamSet")
-  expect_setequal(surrogate$param_set$ids(), c("calc_insample_perf", "perf_measures", "perf_thresholds", "catch_errors"))
-  expect_r6(surrogate$param_set$params$calc_insample_perf, "ParamLgl")
+  expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measures", "perf_thresholds", "catch_errors"))
+  expect_r6(surrogate$param_set$params$assert_insample_perf, "ParamLgl")
   expect_r6(surrogate$param_set$params$perf_measure, "ParamUty")
   expect_r6(surrogate$param_set$params$perf_threshold, "ParamUty")
   expect_r6(surrogate$param_set$params$catch_errors, "ParamLgl")
@@ -64,7 +64,7 @@ test_that("insample_perf", {
   surrogate$update()
   expect_equal(surrogate$insample_perf, NaN)
 
-  surrogate$param_set$values$calc_insample_perf = TRUE
+  surrogate$param_set$values$assert_insample_perf = TRUE
   surrogate$param_set$values$perf_thresholds = c(0.5, 0.5)
   surrogate$param_set$values$perf_measures = list(mlr_measures$get("regr.rsq"), mlr_measures$get("regr.rsq"))
   surrogate$update()
@@ -72,7 +72,7 @@ test_that("insample_perf", {
   expect_equal(names(surrogate$insample_perf), map_chr(surrogate$param_set$values$perf_measures, "id"))
 
   surrogate_constant = SurrogateLearnerCollection$new(learner = list(lrn("regr.featureless"), lrn("regr.featureless")), archive = inst$archive)
-  surrogate_constant$param_set$values$calc_insample_perf = TRUE
+  surrogate_constant$param_set$values$assert_insample_perf = TRUE
   surrogate_constant$param_set$values$perf_thresholds = c(0.5, 0.5)
   surrogate_constant$param_set$values$perf_measures = list(mlr_measures$get("regr.rsq"), mlr_measures$get("regr.rsq"))
   expect_error(surrogate_constant$update(), regexp = "Current insample performance of the Surrogate Model does not meet the performance threshold")

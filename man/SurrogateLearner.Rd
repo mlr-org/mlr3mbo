@@ -9,7 +9,7 @@ Surrogate model containing a single \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
 \section{Parameters}{
 
 \describe{
-\item{\code{calc_insample_perf}}{\code{logical(1)}\cr
+\item{\code{assert_insample_perf}}{\code{logical(1)}\cr
 Should the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} be asserted after updating the surrogate?
 If the assertion fails (i.e., the insample performance based on the \code{perf_measure} does not meet the
 \code{perf_threshold}), an error is thrown.
@@ -17,12 +17,12 @@ Default is \code{FALSE}.
 }
 \item{\code{perf_measure}}{\link[mlr3:MeasureRegr]{mlr3::MeasureRegr}\cr
 Performance measure which should be use to assert the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
-Only relevant if \code{calc_insample_perf = TRUE}.
+Only relevant if \code{assert_insample_perf = TRUE}.
 Default is \link[mlr3:mlr_measures_regr.rsq]{mlr3::mlr_measures_regr.rsq}.
 }
 \item{\code{perf_threshold}}{\code{numeric(1)}\cr
 Threshold the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} should be asserted against.
-Only relevant if \code{calc_insample_perf = TRUE}.
+Only relevant if \code{assert_insample_perf = TRUE}.
 Default is \code{0}.
 }
 \item{\code{catch_errors}}{\code{logical(1)}\cr

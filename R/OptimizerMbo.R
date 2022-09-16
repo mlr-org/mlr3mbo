@@ -143,9 +143,9 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template field_properties
     properties = function(rhs) {
       if (missing(rhs)) {
-        properties_loop_function = c("OptimInstanceSingleCrit" = "single-crit", "OptimInstanceSingleCrit" = "multi-crit")
+        properties_loop_function = c("single-crit", "multi-crit")
         if (!is.null(self$loop_function)) {
-          properties_loop_function = properties_loop_function[attr(self$loop_function, "instance")]
+          properties_loop_function = intersect(properties_loop_function, attr(self$loop_function, "instance"))
         }
         properties_surrogate = "dependencies"
         if (!is.null(self$surrogate)) {

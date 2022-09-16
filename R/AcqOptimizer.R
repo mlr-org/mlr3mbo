@@ -92,7 +92,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     optimize = function() {
       # FIXME: currently only supports singlecrit acqfunctions
       if (self$acq_function$codomain$length > 1L) {
-        stop("Multi-objective acquisition functions are currently not supported")
+        stop("Multi-objective acquisition functions are currently not supported.")
       }
 
       logger = lgr::get_logger("bbotk")
@@ -113,7 +113,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
       xdt = if (self$param_set$values$catch_errors) {
         tryCatch(self$optimizer$optimize(instance),
           error = function(error_condition) {
-            lg$info(error_condition$message)
+            lg$warn(error_condition$message)
             stop(set_class(list(message = error_condition$message, call = NULL),
               classes = c("mbo_error", "acq_optimizer_error", "error", "condition")))
           }
@@ -128,7 +128,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
           xdt = if (self$param_set$values$catch_errors) {
             tryCatch(get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data),
               error = function(error_condition) {
-                lg$info(error_condition$message)
+                lg$warn(error_condition$message)
                 stop(set_class(list(message = error_condition$message, call = NULL),
                   classes = c("mbo_error", "acq_optimizer_error", "error", "condition")))
               }

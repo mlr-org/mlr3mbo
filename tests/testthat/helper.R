@@ -169,7 +169,7 @@ LearnerRegrError = R6Class("LearnerRegrError",
         stop("Surrogate Predict Error")
       } else {
         n = task$nrow
-        if (l$predict_type == "se") {
+        if (self$predict_type == "se") {
           list(response = rep(self$model$mu, n), se = rep(self$model$sigma, n))
         } else {
           list(response = rep(self$model$mu, n), se = rep(self$model$sigma, n))
@@ -198,7 +198,7 @@ expect_loop_function = function(lpf) {
   expect_subset(c("id", "label", "instance", "man"), names(attributes(lpf)))
   expect_string(attr(lpf, "id"), pattern = "bayesopt")
   expect_string(attr(lpf, "label"))
-  expect_choice(attr(lpf, "instance"), c("OptimInstanceSingleCrit", "OptimInstanceMultiCrit"))
+  expect_choice(attr(lpf, "instance"), c("single-crit", "multi-crit"))
   expect_man_exists(attr(lpf, "man"))
 }
 

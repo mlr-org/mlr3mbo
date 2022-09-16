@@ -1,4 +1,4 @@
-#' @title Sequential Singlecriteria Bayesian Optimization Via Multipoint Constant Liar
+#' @title Sequential Singlecriteria Bayesian Optimization via Multipoint Constant Liar
 #'
 #' @include mlr_loop_functions.R
 #' @name mlr_loop_functions_mpcl
@@ -20,7 +20,7 @@
 #' @param acq_function (`NULL` | [AcqFunction]).\cr
 #'   [AcqFunction] to be used as acquisition function.
 #'   If `NULL` \code{default_acqfun(instance)} is used.
-#' @param acq_optimizer ([AcqOptimizer])\cr
+#' @param acq_optimizer (`NULL` | [AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
 #'   If `NULL` \code{default_acqopt(acqfun)} is used.
 #' @param q (`integer(1)`)\cr
@@ -150,6 +150,7 @@ bayesopt_mpcl = function(
         acq_function$update()
         acq_optimizer$optimize()
       }, mbo_error = function(mbo_error_condition) {
+        lg$info(paste0(class(mbo_error_condition), collapse = " / "))
         lg$info("Proposing a randomly sampled point")
         SamplerUnif$new(domain)$sample(1L)$data
       })
@@ -168,7 +169,7 @@ bayesopt_mpcl = function(
 class(bayesopt_mpcl) = "loop_function"
 attr(bayesopt_mpcl, "id") = "bayesopt_mpcl"
 attr(bayesopt_mpcl, "label") = "Multipoint Constant Liar"
-attr(bayesopt_mpcl, "instance") = "OptimInstanceSingleCrit"
+attr(bayesopt_mpcl, "instance") = "single-crit"
 attr(bayesopt_mpcl, "man") = "mlr3mbo::mlr_loop_functions_mpcl"
 
 mlr_loop_functions$add("bayesopt_mpcl", bayesopt_mpcl)

@@ -41,8 +41,8 @@ test_that("param_set", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM, archive = inst$archive)
   expect_r6(surrogate$param_set, "ParamSet")
-  expect_setequal(surrogate$param_set$ids(), c("calc_insample_perf", "perf_measure", "perf_threshold", "catch_errors"))
-  expect_r6(surrogate$param_set$params$calc_insample_perf, "ParamLgl")
+  expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measure", "perf_threshold", "catch_errors"))
+  expect_r6(surrogate$param_set$params$assert_insample_perf, "ParamLgl")
   expect_r6(surrogate$param_set$params$perf_measure, "ParamUty")
   expect_r6(surrogate$param_set$params$perf_threshold, "ParamDbl")
   expect_r6(surrogate$param_set$params$catch_errors, "ParamLgl")
@@ -61,7 +61,7 @@ test_that("insample_perf", {
   surrogate$update()
   expect_equal(surrogate$insample_perf, NaN)
 
-  surrogate$param_set$values$calc_insample_perf = TRUE
+  surrogate$param_set$values$assert_insample_perf = TRUE
   surrogate$param_set$values$perf_threshold = 0
   surrogate$param_set$values$perf_measure = mlr_measures$get("regr.rsq")
   surrogate$update()
@@ -69,7 +69,7 @@ test_that("insample_perf", {
   expect_equal(names(surrogate$insample_perf), surrogate$param_set$values$perf_measure$id)
 
   surrogate_constant = SurrogateLearner$new(learner = lrn("regr.featureless"), archive = inst$archive)
-  surrogate_constant$param_set$values$calc_insample_perf = TRUE
+  surrogate_constant$param_set$values$assert_insample_perf = TRUE
   surrogate_constant$param_set$values$perf_threshold = 0.5
   surrogate$param_set$values$perf_measure = mlr_measures$get("regr.rsq")
   expect_error(surrogate_constant$update(), regexp = "Current insample performance of the Surrogate Model does not meet the performance threshold")
