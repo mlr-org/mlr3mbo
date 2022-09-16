@@ -86,7 +86,7 @@ Note that redundant <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html
     <h2 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a></h2>
     
 
-<dl><dt><code>calc_insample_perf</code></dt>
+<dl><dt><code>assert_insample_perf</code></dt>
 <dd><p><code>logical(1)</code><br>
 Should the insample performance of the <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a> be asserted after updating the surrogate?
 If the assertion fails (i.e., the insample performance based on the <code>perf_measure</code> does not meet the
@@ -96,13 +96,13 @@ Default is <code>FALSE</code>.</p></dd>
 <dt><code>perf_measure</code></dt>
 <dd><p>List of <a href="https://mlr3.mlr-org.com/reference/MeasureRegr.html" class="external-link">mlr3::MeasureRegr</a><br>
 Performance measures which should be use to assert the insample performance of the <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a>.
-Only relevant if <code>calc_insample_perf = TRUE</code>.
+Only relevant if <code>assert_insample_perf = TRUE</code>.
 Default is <a href="https://mlr3.mlr-org.com/reference/mlr_measures_regr.rsq.html" class="external-link">mlr3::mlr_measures_regr.rsq</a> for each learner.</p></dd>
 
 <dt><code>perf_threshold</code></dt>
 <dd><p>List of <code>numeric(1)</code><br>
 Thresholds the insample performance of the <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a> should be asserted against.
-Only relevant if <code>calc_insample_perf = TRUE</code>.
+Only relevant if <code>assert_insample_perf = TRUE</code>.
 Default is <code>0</code> for each learner.</p></dd>
 
 <dt><code>catch_errors</code></dt>
