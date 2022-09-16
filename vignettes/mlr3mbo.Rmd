@@ -280,7 +280,8 @@ To get an overview of all available regression learners within the `r ref_pkg("m
 ```{r, eval=FALSE}
 library(mlr3)
 library(mlr3learners)
-library(mlr3extralearners)
+# there are plenty of more in mlr3extralearners
+# library(mlr3extralearners)
 learners = as.data.table(mlr_learners)
 learners[task_type == "regr"]
 ```
