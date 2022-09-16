@@ -34,22 +34,16 @@ package.
 `AcqOptimizer`, and even the loop function. See `?mbo_defaults` for more
 details.
 
-## API
-
-## Robustness
-
 ## Simple Optimization Example
 
 Minimize `y = x^2` via sequential singlecriteria BO using a GP as
 surrogate and EI optimized via random search as aquisition function:
 
 ``` r
-set.seed(1)
 library(bbotk)
-library(mlr3)
 library(mlr3mbo)
-library(paradox)
 library(mlr3learners)
+set.seed(1)
 
 obfun = ObjectiveRFun$new(
   fun = function(xs) list(y1 = xs$x ^ 2),
@@ -89,6 +83,9 @@ optimizer$optimize(instance)
 Note that you can also use `bb_optimize` as a shorthand:
 
 ``` r
+library(bbotk)
+library(mlr3mbo)
+library(mlr3learners)
 set.seed(1)
 
 fun = function(xs) list(y1 = xs$x ^ 2)
@@ -118,11 +115,11 @@ result = bb_optimize(
 ## Simple Tuning Example Using Defaults
 
 ``` r
-set.seed(1)
 library(mlr3)
 library(mlr3learners)
 library(mlr3tuning)
 library(mlr3mbo)
+set.seed(1)
 
 task = tsk("pima")
 

@@ -38,7 +38,7 @@ Surrogate = R6Class("Surrogate",
       if (self$param_set$values$catch_errors) {
         tryCatch(private$.update(),
           error = function(error_condition) {
-            lg$info(error_condition$message)
+            lg$warn(error_condition$message)
             stop(set_class(list(message = error_condition$message, call = NULL),
               classes = c("mbo_error", "surrogate_update_error", "error", "condition")))
           }

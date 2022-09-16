@@ -10,7 +10,9 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
+
+library(knitr)
+opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
@@ -208,17 +210,16 @@ library(data.table)
 as.data.table(mlr_loop_functions)
 ```
 
-The dictionary shows the `key`, i.e., ID of the `loop_function`, a brief description, for which optimization instance the resulting BO flavor can be used (i..e, `OptimInstanceSingleCrit` for
-single-objective and `OptimInstanceMultiCrit` for multi-objective optimization) as well as how documentation can be accessed.
+The dictionary shows the `key`, i.e., ID of the `loop_function`, a brief description, for which optimization instance the resulting BO flavor can be used, as well as how documentation can be accessed.
 
-Technically, all `loop_function`s are members of the `S3` class `r ref( "mlr3mbo::loop_function", "loop_function")`, which are simply decorated `r ref("base::function", "functions")` (because using an `r ref("R6::R6Class", "R6Class")` class would be over the top here - but this may change in the future).
+Technically, all `loop_function`s are members of the `S3` class `r ref( "mlr3mbo::loop_function", "loop_function")`, and are simply decorated `r ref("base::function", "functions")` (because using an `r ref("R6::R6Class", "R6Class")` class would be over the top here - but this may change in the future).
 
-To write an own `loop_function`, users can get inspiration from the readily available ones, i.e., `r ref("mlr3mbo::bayesopt_ego", "bayesopt_ego")` which performs sequential single-objective optimization:
+To write an own `loop_function`, users can get inspiration from the readily available ones, e.g., `r ref("mlr3mbo::bayesopt_ego", "bayesopt_ego")` which performs sequential single-objective optimization:
 
-After having made some assertions and safety checks, and having evaluated the initial design `bayesopt_ego` essentially only performs the following steps:
+After having made some assertions and safety checks, and having evaluated the initial design, `bayesopt_ego` essentially only performs the following steps:
 
 1. `acq_function$surrogate$update()`  # update the surrogate model
-2. `acq_function$update()`  # update the acquisition function (i.e., update the best point observed so far)
+2. `acq_function$update()`  # update the acquisition function (e.g., update the best value observed so far)
 3. `acq_optimizer$optimize()`  # optimize the acquisition function to yield a new candidate
 
 ## Surrogate
@@ -230,16 +231,16 @@ As a learner, any `r ref("mlr3::LearnerRegr", "LearnerRegr")` from `r ref_pkg("m
 Typical choices include:
 
 * A `r ref("mlr3learners::LearnerRegrKM", "Gaussian process")` for low dimensional numeric search spaces
-* A `r ref("mlr3learners::LearnerRegrRanger", "Random forest")` for higher dimensional mixed (or hierarchical) search spaces
+* A `r ref("mlr3learners::LearnerRegrRanger", "Random forest")` for higher dimensional mixed (and / or hierarchical) search spaces
 
-A `SurrogateLearner` can be constructed via
+A `SurrogateLearner` can be constructed via:
 
 ```{r}
 library(mlr3learners)
 surrogate = SurrogateLearner$new(lrn("regr.km"))
 ```
 
-or
+or using syntactic sugar:
 
 ```{r}
 surrogate = srlrn(lrn("regr.km"))
@@ -288,14 +289,14 @@ To use a custom learner not included in `r ref_pkg("mlr3")`, `r ref_pkg("mlr3lea
 
 ## Acquisition Function
 
-Based on a surrogate, an acquisition function quantifies the attractiveness of each point in the search space if it was to be evaluated in the next iteration.
+Based on a surrogate, an acquisition function quantifies the attractiveness of each point of the search space if it were to be evaluated in the next iteration.
 
 A popular example is given by the Expected Improvement [@jones_1998]:
 
 $$
-\mathbb{E}_{y} \left[ \max \left( f_{\mathrm{min}} - y, 0 \right) \right],
+\mathbb{E}_{y} \left[ \max \left( f_{\mathrm{min}} - y, 0 \right) \right]
 $$
-here $y$ is the surrogate prediction for a given point $x$ (which when using a Gaussian process as surrogate
+Here, $y$ is the surrogate prediction for a given point $x$ (which when using a Gaussian process
 follows a normal distribution) and $f_{\mathrm{min}}$ is the currently best function value observed so far.
 
 To get an overview of available acquisition functions, the following dictionary can be inspected:
@@ -308,26 +309,26 @@ The dictionary shows the `key`, i.e., ID of the acquisition function, a brief de
 
 Technically, all acquisition functions inherit from the `R6` class `r ref( "mlr3mbo::AcqFunction", "AcqFunction")` which itself simply inherits from the base `r ref("bbotk::Objective", "Objective")` class.
 
-Construction is straightforward via 
+Construction is straightforward via:
 
 ```{r}
 acq_function = AcqFunctionEI$new()
 ```
 
-or using syntactic sugar
+or using syntactic sugar:
 
 ```{r}
 acq_function = acqf("ei")
 ```
 
-Internally, the `r ref("paradox::Domain", "Domain")` and `r ref("paradox::Codomain", "Codomain")` are constructed based on the `r ref("bbotk::Archive", "Archive")` referenced by the `r ref("mlr3mbo::Surrogate", "Surrogate")` and therefore the surrogate should be passed as an argument already during construction.
+Internally, the `r ref("paradox::Domain", "Domain")` and `r ref("paradox::Codomain", "Codomain")` are constructed based on the `r ref("bbotk::Archive", "Archive")` referenced by the `r ref("mlr3mbo::Surrogate", "Surrogate")` and therefore the `surrogate` should be passed as an argument already during construction.
 
 However, lazy initialization is also possible.
 
 In the case of the acquisition function itself being parameterized, hyperparameters should be passed as constants, e.g.:
 
 ```{r}
-acqf("cb")  # lower / upper confidence bound with lambda hyperparameter
+acqf("cb") # lower / upper confidence bound with lambda hyperparameter
 ```
 
 To use a custom acquisition function you should implement a new `R6` class inheriting from `r ref("mlr3mbo::AcqFunction", "AcqFunction")`.
@@ -335,7 +336,7 @@ To use a custom acquisition function you should implement a new `R6` class inher
 ## Acquisition Function Optimizer
 
 To find the most promising candidate for evaluation, the acquisition function itself must be optimized.
-Internally, an `r ref("bbotk::OptimInstance", "OptimInstance")` is constructed using the acquisition function as an `r ref("bbotk::Objective", "Objective")` and the domain and codomain of the acquisition function are used.
+Internally, an `r ref("bbotk::OptimInstance", "OptimInstance")` is constructed using the acquisition function as an `r ref("bbotk::Objective", "Objective")`.
 
 An acquisition function optimizer is then used to solve this optimization problem.
 Technically, this optimizer is a member of the `r ref("mlr3mbo::AcqOptimizer", "AcqOptimizer")` `R6` class.
@@ -347,6 +348,7 @@ library(bbotk)
 acq_optimizer = AcqOptimizer$new(opt("random_search"), terminator = trm("evals"))
 ```
 
+Syntactic sugar:
 ```{r}
 acq_optimizer = acqo(opt("random_search"), terminator = trm("evals"))
 ```
@@ -355,6 +357,9 @@ The optimizer and terminator can be accessed via the `$optimizer` and `$terminat
 
 ```{r}
 acq_optimizer$optimizer
+```
+
+```{r}
 acq_optimizer$terminator
 ```
 
@@ -362,7 +367,7 @@ Internally, the acquisition function optimizer also requires the acquisition fun
 
 However, lazy initialization is also possible.
 
-Any `r ref("mlr3mbo::AcqOptimizer", "AcqOptimizer")` has the following hyperparameters
+Any `r ref("mlr3mbo::AcqOptimizer", "AcqOptimizer")` has the following hyperparameters:
 
 ```{r}
 acq_optimizer$param_set
@@ -383,13 +388,13 @@ To get an overview of all `Optimizer`s implemented in `r ref_pkg("bbotk")` you c
 as.data.table(mlr_optimizers)
 ```
 
-An similarly for `Terminator`s:
+And similarly for `Terminator`s:
 
 ```{r, eval=FALSE}
 as.data.table(mlr_terminators)
 ```
 
-As always you can also use custom `Optimizer`s or `Terminator`s by implementing new `R6` classes inheriting from `r ref("bbotk::Optimizer", "Optimizer")` and respectively `r ref("bbotk::Terminator", "Terminator")`.
+Again, you can also use custom `Optimizer`s or `Terminator`s by implementing new `R6` classes inheriting from `r ref("bbotk::Optimizer", "Optimizer")` and respectively `r ref("bbotk::Terminator", "Terminator")`.
 
 # Putting it Together
 
@@ -401,30 +406,43 @@ Besides, additional arguments, i.e., arguments of the `loop_function` can be pas
 Finally, the mechanism how the final result is obtained after the optimization progress (i.e., the best point in the case of single-objective and the Pareto set in the case of multi-objective optimization) can be changed via the `result_function` active binding.
 As an example, `r ref("mlr3mbo::result_by_surrogate_design", "result_by_surrogate_design")` will choose the final solution based on the prediction of the surrogate instead of the evaluations logged in the `Archive` which is sensible in the case of noisy objective functions.
 
-Construction is performed via
+Construction is performed via:
 
 ```{r}
-optimizer = OptimizerMbo$new(bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+optimizer = OptimizerMbo$new(bayesopt_ego,
+  surrogate = surrogate,
+  acq_function = acq_function,
+  acq_optimizer = acq_optimizer)
 ```
 
-or using syntactic sugar
+or using syntactic sugar:
 
 ```{r}
-optimizer = opt("mbo", bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+optimizer = opt("mbo",
+  loop_function = bayesopt_ego,
+  surrogate = surrogate,
+  acq_function = acq_function,
+  acq_optimizer = acq_optimizer)
+```
+
+```{r}
+optimizer
 ```
 
 Note that important fields such as `$param_classes`, `$packages`, `$properties` are automatically determined based on the choice of the `loop_function`, `surrogate`, `acq_function`, and `acq_optimizer`.
 
-If arguments such as the `surrogate`, `acq_function`, and `acq_optimizer` where not fully specified during construction, i.e., the `surrogate` missing the `archive`, or the `acq_function` missing the `surrogate`, lazy initialization is completed prior to the optimizer being used for optimization.
+If arguments such as the `surrogate`, `acq_function`, and `acq_optimizer` where not fully specified during construction, e.g., the `surrogate` missing the `archive`, or the `acq_function` missing the `surrogate`, lazy initialization is completed prior to the optimizer being used for optimization.
 
 An object of class `OptimizerMbo` can be used to optimize an object of class `r ref("bbotk::OptimInstanceSingleCrit", "OptimInstanceSingleCrit")` or `r ref( "bbotk::OptimInstanceMulticrit", "OptimInstanceMultiCrit")`.
 
 For hyperparameter optimization, `r ref("mlr3mbo::TunerMbo", "TunerMbo")` should be used (which simply relies on an `OptimizerMbo` that is constructed internally):
 
 ```{r}
-tuner = TunerMbo$new(bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+tuner = TunerMbo$new(bayesopt_ego,
+  surrogate = surrogate,
+  acq_function = acq_function,
+  acq_optimizer = acq_optimizer)
 mlr3misc::get_private(tuner)[[".optimizer"]]
-# tuner = tnr("mbo", bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
 ```
 
 ## The Initial Design
@@ -432,7 +450,7 @@ mlr3misc::get_private(tuner)[[".optimizer"]]
 `r ref_pkg("mlr3mbo")` offers two different ways for specifying an initial design:
 
 1. One can simply evaluate points on the `OptimInstance` that is to be optimized prior to using an `OptimizerMbo`. In this case, the `loop_function` should skip the construction and evaluation of an initial design.
-2. If no points were already evaluated on the `OptimInstance`, the `loop_function` should construct an initial design and evaluate it, e.g., `bayesopt_ego` constructs an initial design of size $4D$ where $D$ is the dimensionality of the search space sampling points uniformly at random.
+2. If no points were already evaluated on the `OptimInstance`, the `loop_function` should construct an initial design itself and evaluate it, e.g., `bayesopt_ego` constructs an initial design of size $4D$ where $D$ is the dimensionality of the search space by sampling points uniformly at random.
 
 Functions for creating different initial designs are part of the `r ref_pkg("paradox")` package, e.g.:
 
@@ -454,24 +472,23 @@ For details, see `r ref("mlr3mbo::mbo_defaults", "mbo_defaults")`.
 As an example, let's have a look at the inner workings of `r ref("mlr3mbo::bayesopt_ego", "bayesopt_ego")`:
 
 ```{r, eval = FALSE}
-  repeat {
-    xdt = tryCatch({
-      # random interleaving is handled here
-      if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-        stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("mbo_error", "random_interleave", "error", "condition")))
-      }
-      acq_function$surrogate$update()
-      acq_function$update()
-      acq_optimizer$optimize()
-    }, mbo_error = function(mbo_error_condition) {
-      lg$info(paste0(class(mbo_error_condition), collapse = " / "))
-      lg$info("Proposing a randomly sampled point")
-      SamplerUnif$new(domain)$sample(1L)$data
-    })
-
-    instance$eval_batch(xdt)
-    if (instance$is_terminated) break
-  }
+repeat {
+  xdt = tryCatch({
+    .
+    .
+    .
+    acq_function$surrogate$update()
+    acq_function$update()
+    acq_optimizer$optimize()
+  }, mbo_error = function(mbo_error_condition) {
+    lg$info(paste0(class(mbo_error_condition), collapse = " / "))
+    lg$info("Proposing a randomly sampled point")
+    SamplerUnif$new(domain)$sample(1L)$data
+  })
+  .
+  .
+  .
+}
 ```
 
 In each iteration, a new candidate is chosen based on updating the surrogate, and optimizing the acquisition function.
@@ -480,7 +497,7 @@ These errors are then caught and a fallback is triggered: Evaluating the next ca
 Note that the same mechanism is actually also used to handle random interleaving.
 
 To illustrate this, consider the following scenario:
-We try to minimize $f(x) = x^2$, however, our Gaussian process fails due to data points being too close to each other.
+We try to minimize $f(x) = x^2$ for $x \in [-1, 1]$, however, our Gaussian process fails due to data points being too close to each other:
 
 ```{r}
 set.seed(2906)
@@ -493,21 +510,30 @@ objective_function = function(xs) {
 }
 
 objective = ObjectiveRFun$new(
- fun = objective_function,
- domain = domain,
- codomain = codomain)
+  fun = objective_function,
+  domain = domain,
+  codomain = codomain)
 
 instance = OptimInstanceSingleCrit$new(
- objective = objective,
- terminator = trm("evals", n_evals = 10))
+  objective = objective,
+  terminator = trm("evals", n_evals = 10))
 
 initial_design = data.table(x = rep(1, 4))
 instance$eval_batch(initial_design)
 
-surrogate = srlrn(lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8, control = list(trace = FALSE)))
+surrogate = srlrn(lrn("regr.km",
+  covtype = "matern3_2",
+  optim.method = "gen",
+  nugget.stability = 10^-8,
+  control = list(trace = FALSE)))
 acq_function = acqf("ei")
-acq_optimizer = acqo(opt("random_search", batch_size = 1000), terminator = trm("evals", n_evals = 1000))
-optimizer = opt("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+acq_optimizer = acqo(opt("random_search", batch_size = 1000),
+  terminator = trm("evals", n_evals = 1000))
+optimizer = opt("mbo",
+  loop_function = bayesopt_ego,
+  surrogate = surrogate,
+  acq_function = acq_function,
+  acq_optimizer = acq_optimizer)
 
 optimizer$optimize(instance)
 ```
@@ -530,8 +556,7 @@ optimizer$surrogate$param_set$values$catch_errors = FALSE
 optimizer$optimize(instance)
 ```
 
-In case of the error belonging to the `acq_optimizer_error` class, it is helpful to increase the logging level of the acquisition function optimizer (`acq_optimizer$param_set$params$logging_level`) and also set `catch_errors = FALSE`.
-
+In case of the error belonging to the `acq_optimizer_error` class, it is helpful to increase the logging level of the acquisition function optimizer (e.g., `acq_optimizer$param_set$values$logging_level = "info"`) and also set `acq_optimizer$param_set$values$catch_errors = FALSE`.
 This allows for straightforward debugging.
 
 To make sure that your BO loop behaved as expected, always inspect the log of the optimization process and inspect the `Archive` and check whether the acquisition function column is populated as expected.
@@ -546,24 +571,33 @@ In this final section, some standard examples are provided.
 objective_function = function(xs) {
   list(y = 418.9829 * 2 - (sum(unlist(xs) * sin(sqrt(abs(unlist(xs)))))))
 }
-domain = ps(x1 = p_dbl(lower = - 500, upper = 500), x2 = p_dbl(lower = -500, upper = 500))
+domain = ps(x1 = p_dbl(lower = -500, upper = 500),
+  x2 = p_dbl(lower = -500, upper = 500))
 codomain = ps(y = p_dbl(tags = "minimize"))
 
 objective = ObjectiveRFun$new(
- fun = objective_function,
- domain = domain,
- codomain = codomain)
+  fun = objective_function,
+  domain = domain,
+  codomain = codomain)
 
 instance = OptimInstanceSingleCrit$new(
- objective = objective,
- search_space = domain,
- terminator = trm("evals", n_evals = 60))
+  objective = objective,
+  search_space = domain,
+  terminator = trm("evals", n_evals = 60))
 
 # Gaussian process, EI, DIRECT
-surrogate = srlrn(lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8, control = list(trace = FALSE)))
+surrogate = srlrn(lrn("regr.km",
+  covtype = "matern3_2",
+  optim.method = "gen",
+  nugget.stability = 10^-8, control = list(trace = FALSE)))
 acq_function = acqf("ei")
-acq_optimizer = acqo(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"), terminator = trm("stagnation", threshold = 1e-8))
-optimizer = opt("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+acq_optimizer = acqo(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"),
+  terminator = trm("stagnation", threshold = 1e-8))
+optimizer = opt("mbo",
+  loop_function = bayesopt_ego,
+  surrogate = surrogate,
+  acq_function = acq_function,
+  acq_optimizer = acq_optimizer)
 
 set.seed(2906)
 optimizer$optimize(instance)
@@ -584,7 +618,7 @@ xdt = generate_design_grid(instance$search_space, resolution = 101)$data
 ydt = objective$eval_dt(xdt)
 ggplot(aes(x = x1, y = x2, z = y), data = cbind(xdt, ydt)) +
   geom_contour_filled() +
-  geom_point(aes(x = x1, y = x2, color = batch_nr), size = 2, data = instance$archive$data) +
+  geom_point(aes(color = batch_nr), size = 2, data = instance$archive$data) +
   scale_color_gradient(low = "lightgrey", high = "red") +
   theme_minimal()
 ```
@@ -595,26 +629,35 @@ ggplot(aes(x = x1, y = x2, z = y), data = cbind(xdt, ydt)) +
 
 ```{r, eval=FALSE}
 objective_function = function(xs) {
-  list(y1 = xs$x ^ 2, y2 = (xs$x - 2) ^ 2)
+  list(y1 = xs$x^2, y2 = (xs$x - 2)^2)
 }
 domain = ps(x = p_dbl(lower = -10, upper = 10))
 codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 
 objective = ObjectiveRFun$new(
- fun = objective_function,
- domain = domain,
- codomain = codomain)
+  fun = objective_function,
+  domain = domain,
+  codomain = codomain)
 
 instance = OptimInstanceMultiCrit$new(
- objective = objective,
- search_space = domain,
- terminator = trm("evals", n_evals = 30))
+  objective = objective,
+  search_space = domain,
+  terminator = trm("evals", n_evals = 30))
 
 # Gaussian process, EI, DIRECT
-surrogate = srlrn(lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8, control = list(trace = FALSE)))
+surrogate = srlrn(lrn("regr.km",
+  covtype = "matern3_2",
+  optim.method = "gen",
+  nugget.stability = 10^-8,
+  control = list(trace = FALSE)))
 acq_function = acqf("ei")
-acq_optimizer = acqo(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"), terminator = trm("stagnation", threshold = 1e-8))
-optimizer = opt("mbo", loop_function = bayesopt_parego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+acq_optimizer = acqo(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"),
+  terminator = trm("stagnation", threshold = 1e-8))
+optimizer = opt("mbo",
+  loop_function = bayesopt_parego,
+  surrogate = surrogate,
+  acq_function = acq_function,
+  acq_optimizer = acq_optimizer)
 
 set.seed(2906)
 optimizer$optimize(instance)
@@ -627,8 +670,10 @@ ggplot(aes(x = y1, y = y2), data = instance$archive$best()) +
 ```
 
 ```{r, eval=FALSE}
+library(emoa)
 anytime_hypervolume = map_dtr(unique(instance$archive$data$batch_nr), function(bnr) {
-  dhv = emoa::dominated_hypervolume(t(instance$archive$best(batch = 1:bnr)[, instance$archive$cols_y, with = FALSE]), ref = t(t(c(100, 144))) )
+  pareto = instance$archive$best(batch = 1:bnr)[, instance$archive$cols_y, with = FALSE]
+  dhv = dominated_hypervolume(t(pareto), ref = t(t(c(100, 144))))
   data.table(batch_nr = bnr, dhv = dhv)
 })
 
@@ -643,28 +688,37 @@ ggplot(aes(x = batch_nr, y = dhv), data = anytime_hypervolume[batch_nr > 1]) +
 
 ```{r, eval=FALSE}
 objective_function = function(xs) {
-  list(y1 = xs$x ^ 2, y2 = (xs$x - 2) ^ 2)
+  list(y1 = xs$x^2, y2 = (xs$x - 2)^2)
 }
 domain = ps(x = p_dbl(lower = -10, upper = 10))
 codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 
 objective = ObjectiveRFun$new(
- fun = objective_function,
- domain = domain,
- codomain = codomain)
+  fun = objective_function,
+  domain = domain,
+  codomain = codomain)
 
 instance = OptimInstanceMultiCrit$new(
- objective = objective,
- search_space = domain,
- terminator = trm("evals", n_evals = 30))
+  objective = objective,
+  search_space = domain,
+  terminator = trm("evals", n_evals = 30))
 
 # Gaussian processes, SmsEGO, DIRECT
-learner_y1 = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8, control = list(trace = FALSE))
+learner_y1 = lrn("regr.km",
+  covtype = "matern3_2",
+  optim.method = "gen",
+  nugget.stability = 10^-8,
+  control = list(trace = FALSE))
 learner_y2 = learner_y1$clone(deep = TRUE)
 surrogate = srlrnc(list(learner_y1, learner_y2))
 acq_function = acqf("sms_ego")
-acq_optimizer = acqo(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"), terminator = trm("stagnation", threshold = 1e-8))
-optimizer = opt("mbo", loop_function = bayesopt_smsego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+acq_optimizer = acqo(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"),
+  terminator = trm("stagnation", threshold = 1e-8))
+optimizer = opt("mbo",
+  loop_function = bayesopt_smsego,
+  surrogate = surrogate,
+  acq_function = acq_function,
+  acq_optimizer = acq_optimizer)
 
 set.seed(2906)
 optimizer$optimize(instance)
@@ -678,7 +732,8 @@ ggplot(aes(x = y1, y = y2), data = instance$archive$best()) +
 
 ```{r, eval=FALSE}
 anytime_hypervolume = map_dtr(unique(instance$archive$data$batch_nr), function(bnr) {
-  dhv = emoa::dominated_hypervolume(t(instance$archive$best(batch = 1:bnr)[, instance$archive$cols_y, with = FALSE]), ref = t(t(c(100, 144))) )
+  pareto = instance$archive$best(batch = 1:bnr)[, instance$archive$cols_y, with = FALSE]
+  dhv = dominated_hypervolume(t(pareto), ref = t(t(c(100, 144))))
   data.table(batch_nr = bnr, dhv = dhv)
 })
 
@@ -694,7 +749,11 @@ ggplot(aes(x = batch_nr, y = dhv), data = anytime_hypervolume[batch_nr > 1]) +
 ```{r, eval=FALSE}
 library(mlr3)
 task = tsk("wine")
-learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE), maxdepth = to_tune(lower = 1, upper = 30), minbucket = to_tune(lower = 1, upper = 100), minsplit = to_tune(lower = 1, upper = 100))
+learner = lrn("classif.rpart",
+  cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE),
+  maxdepth = to_tune(lower = 1, upper = 30),
+  minbucket = to_tune(lower = 1, upper = 100),
+  minsplit = to_tune(lower = 1, upper = 100))
 resampling = rsmp("cv", folds = 3)
 measure = msr("classif.acc")
 
@@ -704,24 +763,38 @@ instance = TuningInstanceSingleCrit$new(
   resampling = resampling,
   measure = measure,
   terminator = trm("evals", n_evals = 30))
-  
+
 # Gaussian process, EI, FocusSearch
-surrogate = srlrn(lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12, control = list(trace = FALSE)))
+surrogate = srlrn(lrn("regr.km",
+  covtype = "matern3_2",
+  optim.method = "gen",
+  nugget.estim = TRUE,
+  jitter = 1e-12,
+  control = list(trace = FALSE)))
 acq_function = acqf("ei")
-acq_optimizer = acqo(opt("focus_search", n_points = 100L, maxit = 9), terminator = trm("evals", n_evals = 3000))
-tuner = tnr("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+acq_optimizer = acqo(opt("focus_search", n_points = 100L, maxit = 9),
+  terminator = trm("evals", n_evals = 3000))
+tuner = tnr("mbo",
+  loop_function = bayesopt_ego,
+  surrogate = surrogate,
+  acq_function = acq_function,
+  acq_optimizer = acq_optimizer)
 
 set.seed(2906)
 tuner$optimize(instance)
 instance$result
-instance$archive$best()  # result_function is result_by_surrogate_design
+instance$archive$best() # result_function is result_by_surrogate_design
 ```
 
 ## Multi-Objective HPO
 
 ```{r, eval=FALSE}
 task = tsk("wine")
-learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE), maxdepth = to_tune(lower = 1, upper = 30), minbucket = to_tune(lower = 1, upper = 100), minsplit = to_tune(lower = 1, upper = 100))
+learner = lrn("classif.rpart",
+  cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE),
+  maxdepth = to_tune(lower = 1, upper = 30),
+  minbucket = to_tune(lower = 1, upper = 100),
+  minsplit = to_tune(lower = 1, upper = 100))
 resampling = rsmp("cv", folds = 3)
 measures = msrs(c("classif.acc", "selected_features"))
 
@@ -731,14 +804,25 @@ instance = TuningInstanceMultiCrit$new(
   resampling = resampling,
   measures = measures,
   terminator = trm("evals", n_evals = 30),
-  store_models = TRUE)  # required due to selected features
-  
+  store_models = TRUE) # required due to selected features
+
 # Gaussian process, EI, FocusSearch
-surrogate = srlrn(lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12, control = list(trace = FALSE)))
+surrogate = srlrn(lrn("regr.km",
+  covtype = "matern3_2",
+  optim.method = "gen",
+  nugget.estim = TRUE,
+  jitter = 1e-12,
+  control = list(trace = FALSE)))
 acq_function = acqf("ei")
-acq_optimizer = acqo(opt("focus_search", n_points = 100L, maxit = 9), terminator = trm("evals", n_evals = 3000))
+acq_optimizer = acqo(opt("focus_search", n_points = 100L, maxit = 9),
+  terminator = trm("evals", n_evals = 3000))
 # result_by_surrogate_design is by default not sensible for ParEGO
-tuner = tnr("mbo", loop_function = bayesopt_parego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_function = result_by_default)
+tuner = tnr("mbo",
+  loop_function = bayesopt_parego,
+  surrogate = surrogate,
+  acq_function = acq_function,
+  acq_optimizer = acq_optimizer,
+  result_function = result_by_default)
 
 set.seed(2906)
 tuner$optimize(instance)
