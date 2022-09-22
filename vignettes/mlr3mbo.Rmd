@@ -214,7 +214,7 @@ The dictionary shows the `key`, i.e., ID of the `loop_function`, a brief descrip
 
 Technically, all `loop_function`s are members of the `S3` class `r ref( "mlr3mbo::loop_function", "loop_function")`, and are simply decorated `r ref("base::function", "functions")` (because using an `r ref("R6::R6Class", "R6Class")` class would be over the top here - but this may change in the future).
 
-To write an own `loop_function`, users can get inspiration from the readily available ones, e.g., `r ref("mlr3mbo::bayesopt_ego", "bayesopt_ego")` which performs sequential single-objective optimization:
+To write an own `loop_function`, users can get inspiration from the readily available ones, e.g., `r ref("mlr3mbo::mlr_loop_functions_ego", "bayesopt_ego")` which performs sequential single-objective optimization:
 
 After having made some assertions and safety checks, and having evaluated the initial design, `bayesopt_ego` essentially only performs the following steps:
 
@@ -230,8 +230,8 @@ In `r ref_pkg("mlr3mbo")`, `r ref("mlr3mbo::SurrogateLearner", "SurrogateLearner
 As a learner, any `r ref("mlr3::LearnerRegr", "LearnerRegr")` from `r ref_pkg("mlr3")` can be used, however, most acquisition functions require both a mean and a variance prediction (therefore not all learners are suitable for all scenarios).
 Typical choices include:
 
-* A `r ref("mlr3learners::LearnerRegrKM", "Gaussian process")` for low dimensional numeric search spaces
-* A `r ref("mlr3learners::LearnerRegrRanger", "Random forest")` for higher dimensional mixed (and / or hierarchical) search spaces
+* A `r ref("mlr3learners::mlr_learners_regr.km", "Gaussian process")` for low dimensional numeric search spaces
+* A `r ref("mlr3learners::mlr_learners_regr.ranger", "Random forest")` for higher dimensional mixed (and / or hierarchical) search spaces
 
 A `SurrogateLearner` can be constructed via:
 
@@ -322,7 +322,7 @@ or using syntactic sugar:
 acq_function = acqf("ei")
 ```
 
-Internally, the `r ref("paradox::Domain", "Domain")` and `r ref("paradox::Codomain", "Codomain")` are constructed based on the `r ref("bbotk::Archive", "Archive")` referenced by the `r ref("mlr3mbo::Surrogate", "Surrogate")` and therefore the `surrogate` should be passed as an argument already during construction.
+Internally, the `domain` and `codomain` are constructed based on the `r ref("bbotk::Archive", "Archive")` referenced by the `r ref("mlr3mbo::Surrogate", "Surrogate")` and therefore the `surrogate` should be passed as an argument already during construction.
 
 However, lazy initialization is also possible.
 
@@ -399,7 +399,7 @@ Again, you can also use custom `Optimizer`s or `Terminator`s by implementing new
 
 # Putting it Together
 
-Having introduced all building blocks we are now ready to put everything together in the form of an `r ref( "mlr3mbo::OptimizerMbo", "OptimizerMbo")` and `r ref("mlr3mbo::TunerMbo", "TunerMbo")`.
+Having introduced all building blocks we are now ready to put everything together in the form of an `r ref( "mlr3mbo::mlr_optimizers_mbo", "OptimizerMbo")` and `r ref("mlr3mbo::mlr_tuners_mbo", "TunerMbo")`.
 
 `OptimizerMbo` inherits from `r ref("bbotk::Optimizer", "Optimizer")` and requires a `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`.
 
@@ -434,9 +434,9 @@ Note that important fields such as `$param_classes`, `$packages`, `$properties` 
 
 If arguments such as the `surrogate`, `acq_function`, and `acq_optimizer` where not fully specified during construction, e.g., the `surrogate` missing the `archive`, or the `acq_function` missing the `surrogate`, lazy initialization is completed prior to the optimizer being used for optimization.
 
-An object of class `OptimizerMbo` can be used to optimize an object of class `r ref("bbotk::OptimInstanceSingleCrit", "OptimInstanceSingleCrit")` or `r ref( "bbotk::OptimInstanceMulticrit", "OptimInstanceMultiCrit")`.
+An object of class `OptimizerMbo` can be used to optimize an object of class `r ref("bbotk::OptimInstanceSingleCrit", "OptimInstanceSingleCrit")` or `r ref("bbotk::OptimInstanceMultiCrit", "OptimInstanceMultiCrit")`.
 
-For hyperparameter optimization, `r ref("mlr3mbo::TunerMbo", "TunerMbo")` should be used (which simply relies on an `OptimizerMbo` that is constructed internally):
+For hyperparameter optimization, `r ref("mlr3mbo::mlr_tuners_mbo", "TunerMbo")` should be used (which simply relies on an `OptimizerMbo` that is constructed internally):
 
 ```{r}
 tuner = TunerMbo$new(bayesopt_ego,
@@ -470,7 +470,7 @@ For details, see `r ref("mlr3mbo::mbo_defaults", "mbo_defaults")`.
 
 `r ref_pkg("mlr3mbo")` is quite stable in the sense that - if desired - all kinds of errors can be caught and handled appropriately within the `r ref("mlr3mbo::loop_function", "loop_function")`.
 
-As an example, let's have a look at the inner workings of `r ref("mlr3mbo::bayesopt_ego", "bayesopt_ego")`:
+As an example, let's have a look at the inner workings of `r ref("mlr3mbo::mlr_loop_functions_ego", "bayesopt_ego")`:
 
 ```{r, eval = FALSE}
 repeat {
