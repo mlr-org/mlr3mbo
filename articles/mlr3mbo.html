@@ -151,7 +151,7 @@
 <span><span class="co">#&gt; 4: mlr3mbo::mlr_loop_functions_smsego</span></span></code></pre></div>
 <p>The dictionary shows the <code>key</code>, i.e., ID of the <code>loop_function</code>, a brief description, for which optimization instance the resulting BO flavor can be used, as well as how documentation can be accessed.</p>
 <p>Technically, all <code>loop_function</code>s are members of the <code>S3</code> class <a href="https://mlr3mbo.mlr-org.com/reference/loop_function.html"><code>loop_function</code></a>, and are simply decorated <a href="https://www.rdocumentation.org/packages/base/topics/function" class="external-link"><code>functions</code></a> (because using an <a href="https://www.rdocumentation.org/packages/R6/topics/R6Class" class="external-link"><code>R6Class</code></a> class would be over the top here - but this may change in the future).</p>
-<p>To write an own <code>loop_function</code>, users can get inspiration from the readily available ones, e.g., <a href="https://mlr3mbo.mlr-org.com/reference/bayesopt_ego.html"><code>bayesopt_ego</code></a> which performs sequential single-objective optimization:</p>
+<p>To write an own <code>loop_function</code>, users can get inspiration from the readily available ones, e.g., <a href="https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions_ego.html"><code>bayesopt_ego</code></a> which performs sequential single-objective optimization:</p>
 <p>After having made some assertions and safety checks, and having evaluated the initial design, <code>bayesopt_ego</code> essentially only performs the following steps:</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -168,8 +168,8 @@
 <p>A surrogate encapsulates a regression learner that models the unknown black box function based on observed data. In <a href="https://mlr3mbo.mlr-org.com">mlr3mbo</a>, <a href="https://mlr3mbo.mlr-org.com/reference/SurrogateLearner.html"><code>SurrogateLearner</code></a> and <a href="https://mlr3mbo.mlr-org.com/reference/SurrogateLearnerCollection.html"><code>SurrogateLearnerCollection</code></a> are the higher-level <code>R6</code> classes which should be used to construct a surrogate, inheriting from the base <a href="https://mlr3mbo.mlr-org.com/reference/Surrogate.html"><code>Surrogate</code></a> class.</p>
 <p>As a learner, any <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link"><code>LearnerRegr</code></a> from <a href="https://mlr3.mlr-org.com" class="external-link">mlr3</a> can be used, however, most acquisition functions require both a mean and a variance prediction (therefore not all learners are suitable for all scenarios). Typical choices include:</p>
 <ul>
-<li>A <a href="https://mlr3learners.mlr-org.com/reference/LearnerRegrKM.html" class="external-link"><code>Gaussian process</code></a> for low dimensional numeric search spaces</li>
-<li>A <a href="https://mlr3learners.mlr-org.com/reference/LearnerRegrRanger.html" class="external-link"><code>Random forest</code></a> for higher dimensional mixed (and / or hierarchical) search spaces</li>
+<li>A <a href="https://mlr3learners.mlr-org.com/reference/mlr_learners_regr.km.html" class="external-link"><code>Gaussian process</code></a> for low dimensional numeric search spaces</li>
+<li>A <a href="https://mlr3learners.mlr-org.com/reference/mlr_learners_regr.ranger.html" class="external-link"><code>Random forest</code></a> for higher dimensional mixed (and / or hierarchical) search spaces</li>
 </ul>
 <p>A <code>SurrogateLearner</code> can be constructed via:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -243,7 +243,7 @@
 <p>or using syntactic sugar:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">acq_function</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqf.html">acqf</a></span><span class="op">(</span><span class="st">"ei"</span><span class="op">)</span></span></code></pre></div>
-<p>Internally, the <a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link"><code>Domain</code></a> and <a href="https://paradox.mlr-org.com/reference/Codomain.html" class="external-link"><code>Codomain</code></a> are constructed based on the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link"><code>Archive</code></a> referenced by the <a href="https://mlr3mbo.mlr-org.com/reference/Surrogate.html"><code>Surrogate</code></a> and therefore the <code>surrogate</code> should be passed as an argument already during construction.</p>
+<p>Internally, the <code>domain</code> and <code>codomain</code> are constructed based on the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link"><code>Archive</code></a> referenced by the <a href="https://mlr3mbo.mlr-org.com/reference/Surrogate.html"><code>Surrogate</code></a> and therefore the <code>surrogate</code> should be passed as an argument already during construction.</p>
 <p>However, lazy initialization is also possible.</p>
 <p>In the case of the acquisition function itself being parameterized, hyperparameters should be passed as constants, e.g.:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -316,7 +316,7 @@
 <div class="section level2">
 <h2 id="putting-it-together">Putting it Together<a class="anchor" aria-label="anchor" href="#putting-it-together"></a>
 </h2>
-<p>Having introduced all building blocks we are now ready to put everything together in the form of an <a href="https://mlr3mbo.mlr-org.com/reference/OptimizerMbo.html"><code>OptimizerMbo</code></a> and <a href="https://mlr3mbo.mlr-org.com/reference/TunerMbo.html"><code>TunerMbo</code></a>.</p>
+<p>Having introduced all building blocks we are now ready to put everything together in the form of an <a href="https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_mbo.html"><code>OptimizerMbo</code></a> and <a href="https://mlr3mbo.mlr-org.com/reference/mlr_tuners_mbo.html"><code>TunerMbo</code></a>.</p>
 <p><code>OptimizerMbo</code> inherits from <a href="https://bbotk.mlr-org.com/reference/Optimizer.html" class="external-link"><code>Optimizer</code></a> and requires a <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code> and <code>acq_optimizer</code>.</p>
 <p>Besides, additional arguments, i.e., arguments of the <code>loop_function</code> can be passed via the <code>args</code> active binding. Finally, the mechanism how the final result is obtained after the optimization progress (i.e., the best point in the case of single-objective and the Pareto set in the case of multi-objective optimization) can be changed via the <code>result_function</code> active binding. As an example, <a href="https://mlr3mbo.mlr-org.com/reference/result_by_surrogate_design.html"><code>result_by_surrogate_design</code></a> will choose the final solution based on the prediction of the surrogate instead of the evaluations logged in the <code>Archive</code> which is sensible in the case of noisy objective functions.</p>
 <p>Construction is performed via:</p>
@@ -345,8 +345,8 @@
 <span><span class="co">#&gt;   TerminatorEvals)</span></span></code></pre></div>
 <p>Note that important fields such as <code>$param_classes</code>, <code>$packages</code>, <code>$properties</code> are automatically determined based on the choice of the <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, and <code>acq_optimizer</code>.</p>
 <p>If arguments such as the <code>surrogate</code>, <code>acq_function</code>, and <code>acq_optimizer</code> where not fully specified during construction, e.g., the <code>surrogate</code> missing the <code>archive</code>, or the <code>acq_function</code> missing the <code>surrogate</code>, lazy initialization is completed prior to the optimizer being used for optimization.</p>
-<p>An object of class <code>OptimizerMbo</code> can be used to optimize an object of class <a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html" class="external-link"><code>OptimInstanceSingleCrit</code></a> or <a href="https://bbotk.mlr-org.com/reference/OptimInstanceMulticrit.html" class="external-link"><code>OptimInstanceMultiCrit</code></a>.</p>
-<p>For hyperparameter optimization, <a href="https://mlr3mbo.mlr-org.com/reference/TunerMbo.html"><code>TunerMbo</code></a> should be used (which simply relies on an <code>OptimizerMbo</code> that is constructed internally):</p>
+<p>An object of class <code>OptimizerMbo</code> can be used to optimize an object of class <a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html" class="external-link"><code>OptimInstanceSingleCrit</code></a> or <a href="https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html" class="external-link"><code>OptimInstanceMultiCrit</code></a>.</p>
+<p>For hyperparameter optimization, <a href="https://mlr3mbo.mlr-org.com/reference/mlr_tuners_mbo.html"><code>TunerMbo</code></a> should be used (which simply relies on an <code>OptimizerMbo</code> that is constructed internally):</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tuner</span> <span class="op">=</span> <span class="va"><a href="../reference/mlr_tuners_mbo.html">TunerMbo</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">bayesopt_ego</span>,</span>
 <span>  surrogate <span class="op">=</span> <span class="va">surrogate</span>,</span>
@@ -393,7 +393,7 @@
 <h2 id="safety-nets">Safety Nets<a class="anchor" aria-label="anchor" href="#safety-nets"></a>
 </h2>
 <p><a href="https://mlr3mbo.mlr-org.com">mlr3mbo</a> is quite stable in the sense that - if desired - all kinds of errors can be caught and handled appropriately within the <a href="https://mlr3mbo.mlr-org.com/reference/loop_function.html"><code>loop_function</code></a>.</p>
-<p>As an example, let’s have a look at the inner workings of <a href="https://mlr3mbo.mlr-org.com/reference/bayesopt_ego.html"><code>bayesopt_ego</code></a>:</p>
+<p>As an example, let’s have a look at the inner workings of <a href="https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions_ego.html"><code>bayesopt_ego</code></a>:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">repeat</span> <span class="op">{</span></span>
 <span>  <span class="va">xdt</span> <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span></span>
@@ -451,23 +451,23 @@
 <span>  acq_optimizer <span class="op">=</span> <span class="va">acq_optimizer</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [04:42:19.856] [bbotk] missing value where TRUE/FALSE needed</span></span>
+<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [08:02:10.218] [bbotk] missing value where TRUE/FALSE needed</span></span>
 <span><span class="co">#&gt;             x  x_domain            y</span></span>
 <span><span class="co">#&gt; 1: 0.01617037 &lt;list[1]&gt; 0.0002614808</span></span></code></pre></div>
 <p>The log tells us that an error happened and was caught: <code>"mbo_error / surrogate_update_error / error / condition"</code>. We also see in the <code>Archive</code> that the first candidate after the initial design (the fifth point) was not proposed based on optimizing the acquisition function:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="co">#&gt;               x            y  x_domain           timestamp batch_nr     acq_ei</span></span>
-<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-09-22 04:42:19        1         NA</span></span>
-<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-09-22 04:42:19        1         NA</span></span>
-<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-09-22 04:42:19        1         NA</span></span>
-<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-09-22 04:42:19        1         NA</span></span>
-<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2022-09-22 04:42:19        2         NA</span></span>
-<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2022-09-22 04:42:20        3 0.04353973</span></span>
-<span><span class="co">#&gt;  7:  0.45532567 0.2073214654 &lt;list[1]&gt; 2022-09-22 04:42:20        4 0.08484722</span></span>
-<span><span class="co">#&gt;  8: -0.24229299 0.0587058937 &lt;list[1]&gt; 2022-09-22 04:42:21        5 0.18996974</span></span>
-<span><span class="co">#&gt;  9: -0.99835097 0.9967046528 &lt;list[1]&gt; 2022-09-22 04:42:21        6 0.09128581</span></span>
-<span><span class="co">#&gt; 10:  0.01617037 0.0002614808 &lt;list[1]&gt; 2022-09-22 04:42:21        7 0.09341134</span></span>
+<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-09-22 08:02:10        1         NA</span></span>
+<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-09-22 08:02:10        1         NA</span></span>
+<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-09-22 08:02:10        1         NA</span></span>
+<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-09-22 08:02:10        1         NA</span></span>
+<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2022-09-22 08:02:10        2         NA</span></span>
+<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2022-09-22 08:02:10        3 0.04353973</span></span>
+<span><span class="co">#&gt;  7:  0.45532567 0.2073214654 &lt;list[1]&gt; 2022-09-22 08:02:10        4 0.08484722</span></span>
+<span><span class="co">#&gt;  8: -0.24229299 0.0587058937 &lt;list[1]&gt; 2022-09-22 08:02:11        5 0.18996974</span></span>
+<span><span class="co">#&gt;  9: -0.99835097 0.9967046528 &lt;list[1]&gt; 2022-09-22 08:02:11        6 0.09128581</span></span>
+<span><span class="co">#&gt; 10:  0.01617037 0.0002614808 &lt;list[1]&gt; 2022-09-22 08:02:11        7 0.09341134</span></span>
 <span><span class="co">#&gt;     .already_evaluated</span></span>
 <span><span class="co">#&gt;  1:                 NA</span></span>
 <span><span class="co">#&gt;  2:                 NA</span></span>
@@ -752,7 +752,7 @@
 Becker, Marc, Martin Binder, Bernd Bischl, Natalie Foss, Lars Kotthoff, Michel Lang, Florian Pfisterer, et al. 2022. <span>“<span class="nocase">mlr3book</span>.”</span> <a href="https://mlr3book.mlr-org.com" class="external-link">https://mlr3book.mlr-org.com</a>.
 </div>
 <div id="ref-bischl_2021" class="csl-entry">
-Bischl, Bernd, Martin Binder, Michel Lang, Tobias Pielok, Jakob Richter, Stefan Coors, Janek Thomas, et al. 2021. <span>“Hyperparameter Optimization: Foundations, Algorithms, Best Practices and Open Challenges.”</span> <em>arXiv:2107.05847 [Cs, Stat]</em>. <a href="http://arxiv.org/abs/2107.05847" class="external-link">http://arxiv.org/abs/2107.05847</a>.
+Bischl, Bernd, Martin Binder, Michel Lang, Tobias Pielok, Jakob Richter, Stefan Coors, Janek Thomas, et al. 2021. <span>“Hyperparameter Optimization: Foundations, Algorithms, Best Practices and Open Challenges.”</span> <em>arXiv:2107.05847 [Cs, Stat]</em>. <a href="https://arxiv.org/abs/2107.05847" class="external-link">https://arxiv.org/abs/2107.05847</a>.
 </div>
 <div id="ref-garnett_2022" class="csl-entry">
 Garnett, Roman. 2022. <em><span>Bayesian Optimization</span></em>. Cambridge University Press. <a href="https://bayesoptbook.com/" class="external-link">https://bayesoptbook.com/</a>.
