@@ -3,7 +3,7 @@
 \name{mlr_tuners_mbo}
 \alias{mlr_tuners_mbo}
 \alias{TunerMbo}
-\title{Tuner using Bayesian Optimization}
+\title{Tuner using Model Based Optimization}
 \description{
 Tune hyperparameters using model based optimization.
 This is a minimal interface internally passing on to \link{OptimizerMbo}.

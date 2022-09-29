@@ -1,4 +1,4 @@
-#' @title Tuner using Bayesian Optimization
+#' @title Tuner using Model Based Optimization
 #'
 #' @name mlr_tuners_mbo
 #'
