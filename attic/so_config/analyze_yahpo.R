@@ -4,7 +4,7 @@ library(pammtools)
 library(mlr3misc)
 
 #dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method != "mlrintermbo"]
-dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method %in% c("mlr3mbo", "mlrintermbo", "mlr3mbo_new_rf", "mlr3mbo_new_rf_ls", "smac4hpo", "random")]
+dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method %in% c("mlr3mbo", "mlrintermbo", "mlr3mbo_new_rf", "mlr3mbo_new_rf_ls", "mlr3mbo_kknn_ls", "smac4hpo", "random")]
 dat = dat[scenario %nin% c("nb301", "rbv2_super")]
 dat[, cumbudget := cumsum(budget), by = .(method, scenario, instance, repl)]
 dat[, cumbudget_scaled := cumbudget / max(cumbudget), by = .(method, scenario, instance, repl)]
@@ -26,7 +26,7 @@ get_incumbent_cumbudget = function(incumbent, cumbudget_scaled) {
 dat_budget = dat[, .(incumbent_budget = get_incumbent_cumbudget(incumbent, cumbudget_scaled), cumbudget_scaled = seq(0, 1, length.out = 101)), by = .(method, scenario, instance, repl)]
 
 agg_budget = dat_budget[, .(mean = mean(incumbent_budget), se = sd(incumbent_budget) / sqrt(.N)), by = .(cumbudget_scaled, method, scenario, instance)]
-agg_budget[, method := factor(method, levels = c("random", "smac4hpo", "hb", "bohb", "dehb", "smac4mf", "optuna", "mlr3mbo", "mlr3mbo_default"), labels = c("Random", "SMAC", "HB", "BOHB", "DEHB", "SMAC-HB", "optuna", "mlr3mbo", "mlr3mbo_default"))]
+#agg_budget[, method := factor(method, levels = c("random", "smac4hpo", "hb", "bohb", "dehb", "smac4mf", "optuna", "mlr3mbo", "mlr3mbo_default"), labels = c("Random", "SMAC", "HB", "BOHB", "DEHB", "SMAC-HB", "optuna", "mlr3mbo", "mlr3mbo_default"))]
 
 g = ggplot(aes(x = cumbudget_scaled, y = mean, colour = method, fill = method), data = agg_budget[cumbudget_scaled > 0.10]) +
   scale_y_log10() +
