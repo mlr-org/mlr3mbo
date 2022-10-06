@@ -66,13 +66,11 @@ test_that("AcqOptimizer API works", {
 
   acqopt$param_set$values$skip_already_evaluated = FALSE
   xdt = acqopt$optimize()
-  expect_true(xdt[["acq_ei"]] < sqrt(.Machine$double.eps))
   expect_true(is.null(xdt[[".already_evaluated"]]))
 
   acqopt$param_set$values$warmstart_size = NULL
   acqopt$param_set$values$warmstart = FALSE
   xdt = acqopt$optimize()
-  expect_true(xdt[["acq_ei"]] < sqrt(.Machine$double.eps))
   expect_true(is.null(xdt[[".already_evaluated"]]))
 })
 
