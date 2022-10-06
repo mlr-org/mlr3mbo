@@ -5,7 +5,7 @@ test_that("SurrogateLearner sugar", {
 })
 
 test_that("SurrogateLearnerCollection sugar", {
-  surrogate = srlrnc(list(REGR_FEATURELESS, REGR_KM_DETERM), catch_errors = FALSE)
+  surrogate = srlrnc(list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), catch_errors = FALSE)
   expect_r6(surrogate, classes = "SurrogateLearnerCollection")
   expect_equal(surrogate$param_set$values$catch_errors, FALSE)
 })

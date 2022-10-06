@@ -1,6 +1,6 @@
 test_that("AcqFunctionPI works", {
   inst = MAKE_INST_1D()
-  surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = inst$archive)
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
   acqf = AcqFunctionPI$new(surrogate = surrogate)
   expect_acqfunction(acqf)
 

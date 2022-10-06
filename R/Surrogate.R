@@ -40,7 +40,7 @@ Surrogate = R6Class("Surrogate",
           error = function(error_condition) {
             lg$warn(error_condition$message)
             stop(set_class(list(message = error_condition$message, call = NULL),
-              classes = c("mbo_error", "surrogate_update_error", "error", "condition")))
+              classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
           }
         )
       } else {

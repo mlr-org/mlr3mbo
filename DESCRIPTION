@@ -21,36 +21,39 @@ License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
-    mlr3tuning (>= 0.12.2),
+    mlr3tuning (>= 0.14.0),
     R (>= 3.1.0)
 Imports:
     backports,
-    bbotk (>= 0.5.3),
+    bbotk (>= 0.5.4),
     checkmate (>= 2.0.0),
     data.table,
-    lgr,
-    mlr3 (>= 0.13.0),
-    mlr3misc (>= 0.7.0),
-    paradox (>= 0.9.0.9000),
-    R6
+    lgr (>= 0.3.4),
+    mlr3 (>= 0.14.0),
+    mlr3misc (>= 0.11.0),
+    paradox (>= 0.10.0),
+    R6 (>= 2.4.1)
 Suggests:
     DiceKriging,
     knitr,
     lhs,
-    mlr3learners,
-    mlr3pipelines,
+    mlr3learners (>= 0.5.4),
+    mlr3pipelines (>= 0.4.2),
     nloptr,
     ranger,
     rgenoud,
     rmarkdown,
     rpart,
+    spacefillr,
     stringi,
     testthat (>= 3.0.0),
     withr
 ByteCompile: no
 Encoding: UTF-8
+Config/testthat/edition: 3
+Config/testthat/parallel: false
 NeedsCompilation: yes
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = TRUE, r6 = TRUE)
 RoxygenNote: 7.2.1
 Collate:
     'mlr_acqfunctions.R'

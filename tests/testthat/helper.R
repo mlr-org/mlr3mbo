@@ -1,5 +1,3 @@
-library(mlr3learners)
-
 lapply(list.files(system.file("testthat", package = "mlr3"),
   pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
@@ -22,13 +20,13 @@ PS_1D = ParamSet$new(list(
 FUN_1D = function(xs) {
   list(y = as.numeric(xs)^2)
 }
-FUN_1D_CODOMAIN = ParamSet$new(list(ParamDbl$new("y", tags = c("minimize", "random_tag"))))
+FUN_1D_CODOMAIN = ParamSet$new(list(ParamDbl$new("y", tags = "minimize")))
 OBJ_1D = ObjectiveRFun$new(fun = FUN_1D, domain = PS_1D, codomain = FUN_1D_CODOMAIN, properties = "single-crit")
 
 FUN_1D_2 = function(xs) {
   list(y1 = as.numeric(xs)^2, y2 = - sqrt(abs(as.numeric(xs))))
 }
-FUN_1D_2_CODOMAIN = ParamSet$new(list(ParamDbl$new("y1", tags = c("minimize", "random_tag")), ParamDbl$new("y2", tags = c("minimize", "random_tag"))))
+FUN_1D_2_CODOMAIN = ParamSet$new(list(ParamDbl$new("y1", tags = "minimize"), ParamDbl$new("y2", tags = "minimize")))
 OBJ_1D_2 = ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
 
 # Simple 1D Functions with noise
@@ -105,15 +103,19 @@ MAKE_INST_1D_NOISY = function(terminator = trm("evals", n_evals = 5L)) {
 }
 
 MAKE_DESIGN = function(instance, n = 4L) {
-  generate_design_lhs(instance$search_space, n)$data
+  generate_design_random(instance$search_space, n)$data
 }
 
-REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12)
-REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
-REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8)
-REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
+if (requireNamespace("mlr3learners") && requireNamespace("DiceKriging") && requireNamespace("rgenoud")) {
+  library(mlr3learners)
+  REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12)
+  REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
+  REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8)
+  REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
+}
 REGR_FEATURELESS = lrn("regr.featureless")
 REGR_FEATURELESS$encapsulate = c(train = "callr", predict = "callr")
+
 
 # FIXME: ACQ_OPT_DEF = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 

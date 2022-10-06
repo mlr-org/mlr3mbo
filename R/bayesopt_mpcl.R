@@ -54,24 +54,29 @@
 #' @family Loop Function
 #' @export
 #' @examples
-#' library(bbotk)
-#' library(paradox)
-#' library(mlr3learners)
+#' if (requireNamespace("mlr3learners") &
+#'     requireNamespace("DiceKriging") &
+#'     requireNamespace("rgenoud")) {
 #'
-#' objective = ObjectiveRFun$new(
-#'   fun = function(xs) list(y = xs$x ^ 2),
-#'   domain = ps(x = p_dbl(lower = -5, upper = 5)),
-#'   codomain = ps(y = p_dbl(tags = "minimize"))
-#' )
+#'   library(bbotk)
+#'   library(paradox)
+#'   library(mlr3learners)
 #'
-#' terminator = trm("evals", n_evals = 5)
+#'   objective = ObjectiveRFun$new(
+#'     fun = function(xs) list(y = xs$x ^ 2),
+#'     domain = ps(x = p_dbl(lower = -5, upper = 5)),
+#'     codomain = ps(y = p_dbl(tags = "minimize"))
+#'   )
 #'
-#' instance = OptimInstanceSingleCrit$new(
-#'   objective = objective,
-#'   terminator = terminator
-#' )
+#'   terminator = trm("evals", n_evals = 5)
 #'
-#' bayesopt_mpcl(instance)
+#'   instance = OptimInstanceSingleCrit$new(
+#'     objective = objective,
+#'     terminator = terminator
+#'   )
+#'
+#'   bayesopt_mpcl(instance)
+#' }
 bayesopt_mpcl = function(
     instance,
     init_design_size = NULL,
@@ -142,7 +147,7 @@ bayesopt_mpcl = function(
 
         # random interleaving is handled here
         if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-          stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("mbo_error", "random_interleave", "error", "condition")))
+          stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
         }
 
         # update all objects with lie

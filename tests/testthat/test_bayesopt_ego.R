@@ -3,6 +3,10 @@ test_that("bayesopt_ego class", {
 })
 
 test_that("default bayesopt_ego", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   bayesopt_ego(instance)
   expect_true(nrow(instance$archive$data) == 5L)
@@ -10,7 +14,7 @@ test_that("default bayesopt_ego", {
 
 test_that("bayesopt_ego", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
+  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = instance$archive))
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
   bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
@@ -18,6 +22,10 @@ test_that("bayesopt_ego", {
 })
 
 test_that("stable bayesopt_ego", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   # logger stuff
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
   f = tempfile("bbotklog_", fileext = "log")
@@ -105,7 +113,7 @@ test_that("bayesopt_ego with trafo", {
   )
   instance = MAKE_INST(objective = objective, search_space = domain, terminator = trm("evals", n_evals = 5L))
 
-  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
+  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = instance$archive))
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
   bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
@@ -127,7 +135,7 @@ test_that("bayesopt_ego eips", {
     terminator = terminator
   )
 
-  surrogate = default_surrogate(instance, n_learner = 2L)
+  surrogate = default_surrogate(instance, learner = REGR_FEATURELESS, n_learner = 2L)
   surrogate$y_cols = c("y", "time")
 
   acq_function = AcqFunctionEIPS$new()
@@ -140,7 +148,7 @@ test_that("bayesopt_ego eips", {
 
 test_that("bayesopt_ego random interleave", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
-  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
+  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = instance$archive))
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
   bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = 2L)
   expect_true(nrow(instance$archive$data) == 10L)

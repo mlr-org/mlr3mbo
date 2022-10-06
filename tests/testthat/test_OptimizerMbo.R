@@ -1,5 +1,8 @@
 test_that("OptimizerMbo works", {
-
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+  
   optimizer = OptimizerMbo$new()
   expect_r6(optimizer, classes = "OptimizerMbo")
 
@@ -20,6 +23,10 @@ test_that("OptimizerMbo works", {
 })
 
 test_that("OptimizerMbo works with different settings - singlecrit", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   # ego,mpcl x cb,ei,pi x rs x default_surrogate
 
   # define combinations
@@ -62,6 +69,9 @@ test_that("OptimizerMbo works with different settings - singlecrit", {
 })
 
 test_that("OptimizerMbo works for noisy problems", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
 
   instance = OptimInstanceSingleCrit$new(
     objective = OBJ_2D_NOISY,
@@ -90,6 +100,10 @@ test_that("OptimizerMbo works for noisy problems", {
 })
 
 test_that("OptimizerMbo sugar", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   result = bb_optimize(
     OBJ_1D,
     method = opt("mbo", acq_function = acqf("cb")),
@@ -101,6 +115,10 @@ test_that("OptimizerMbo sugar", {
 })
 
 test_that("OptimizerMbo param_classes", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   optimizer = opt("mbo")
   expect_equal(optimizer$param_classes, c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"))
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
@@ -111,6 +129,10 @@ test_that("OptimizerMbo param_classes", {
 })
 
 test_that("OptimizerMbo properties", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   optimizer = opt("mbo")
   expect_equal(optimizer$properties, c("dependencies", "single-crit", "multi-crit"))
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
@@ -121,6 +143,12 @@ test_that("OptimizerMbo properties", {
 })
 
 test_that("OptimizerMbo packages", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+  skip_if_not_installed("nloptr")
+  skip_if_not_installed("ranger")
+
   optimizer = opt("mbo")
   expect_equal(optimizer$packages, "mlr3mbo")
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
@@ -133,6 +161,9 @@ test_that("OptimizerMbo packages", {
 })
 
 test_that("OptimizerMbo args", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+
   optimizer = opt("mbo", args = list(test = 1))
   expect_equal(optimizer$args, list(test = 1))
   optimizer$loop_function = bayesopt_ego

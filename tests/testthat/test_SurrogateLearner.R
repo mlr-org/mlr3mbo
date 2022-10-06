@@ -2,7 +2,7 @@ test_that("SurrogateLearner API works", {
   inst = MAKE_INST_1D()
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)
-  surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM, archive = inst$archive)
+  surrogate = SurrogateLearner$new(learner = REGR_FEATURELESS, archive = inst$archive)
   expect_r6(surrogate$archive, "Archive")
   expect_equal(surrogate$x_cols, "x")
   expect_equal(surrogate$y_cols, "y")
@@ -16,22 +16,25 @@ test_that("SurrogateLearner API works", {
 
   # upgrading error class works
   surrogate = SurrogateLearner$new(LearnerRegrError$new(), archive = inst$archive)
-  expect_error(surrogate$update(), class = c("mbo_error", "surrogate_update_error"))
+  expect_error(surrogate$update(), class = "surrogate_update_error")
   
   surrogate$param_set$values$catch_errors = FALSE
-  expect_error(surrogate$optimize(), class = c("simpleError", "condition"))
+  expect_error(surrogate$optimize(), class = "simpleError")
 })
 
 test_that("predict_types are recognized", {
+  skip_if_not_installed("rpart")
   inst = MAKE_INST_1D()
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)
 
-  surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM, archive = inst$archive)
+  surrogate = SurrogateLearner$new(learner = REGR_FEATURELESS, archive = inst$archive)
   surrogate$update()
   xdt = data.table(x = seq(-1, 1, length.out = 5L))
   expect_named(surrogate$predict(xdt), c("mean", "se"))
 
+  learner = lrn("regr.rpart")
+  learner$predict_type = "response"
   surrogate = SurrogateLearner$new(learner = lrn("regr.rpart"), archive = inst$archive)
   surrogate$update()
   expect_named(surrogate$predict(xdt), "mean")
@@ -39,7 +42,7 @@ test_that("predict_types are recognized", {
 
 test_that("param_set", {
   inst = MAKE_INST_1D()
-  surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM, archive = inst$archive)
+  surrogate = SurrogateLearner$new(learner = REGR_FEATURELESS, archive = inst$archive)
   expect_r6(surrogate$param_set, "ParamSet")
   expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measure", "perf_threshold", "catch_errors"))
   expect_r6(surrogate$param_set$params$assert_insample_perf, "ParamLgl")
@@ -50,6 +53,9 @@ test_that("param_set", {
 })
 
 test_that("insample_perf", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
   inst = MAKE_INST_1D()
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)
@@ -80,18 +86,22 @@ test_that("insample_perf", {
 
 test_that("deep clone", {
   inst = MAKE_INST_1D()
-  surrogate1 = SurrogateLearner$new(learner = REGR_KM_DETERM, archive = inst$archive)
+  surrogate1 = SurrogateLearner$new(learner = REGR_FEATURELESS, archive = inst$archive)
   surrogate2 = surrogate1$clone(deep = TRUE)
   expect_true(address(surrogate1) != address(surrogate2))
   expect_true(address(surrogate1$model) != address(surrogate2$model))
 })
 
 test_that("packages", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
   expect_equal(surrogate$packages, surrogate$model$packages)
 })
 
 test_that("feature types", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
   expect_equal(surrogate$feature_types, surrogate$model$feature_types)
 })

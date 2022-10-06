@@ -65,25 +65,30 @@ the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be a \
 }
 }
 \examples{
-library(bbotk)
-library(paradox)
-library(mlr3learners)
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
 
-fun = function(xs) {
-  list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+
+  fun = function(xs) {
+    list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  terminator = trm("evals", n_evals = 5)
+
+  instance = OptimInstanceMultiCrit$new(
+    objective = objective,
+    terminator = terminator
+  )
+
+  bayesopt_smsego(instance)
 }
-domain = ps(x = p_dbl(lower = -10, upper = 10))
-codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
-objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
-
-terminator = trm("evals", n_evals = 5)
-
-instance = OptimInstanceMultiCrit$new(
-  objective = objective,
-  terminator = terminator
-)
-
-bayesopt_smsego(instance)
 }
 \references{
 \itemize{

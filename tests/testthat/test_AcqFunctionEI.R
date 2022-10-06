@@ -1,6 +1,6 @@
 test_that("AcqFunctionEI works", {
   inst = MAKE_INST_1D()
-  surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = inst$archive)
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
   acqf = AcqFunctionEI$new(surrogate = surrogate)
   expect_acqfunction(acqf)
   expect_acqfunction(acqf)
@@ -25,7 +25,6 @@ test_that("AcqFunctionEI works", {
 })
 
 test_that("AcqFunctionEI trafo", {
-  withr::local_seed(1)
   domain = ps(x = p_dbl(lower = 10, upper = 20, trafo = function(x) x - 15))
   obj = ObjectiveRFunDt$new(
     fun = function(xdt) data.table(y = xdt$x ^ 2),
@@ -34,7 +33,7 @@ test_that("AcqFunctionEI trafo", {
     check_values = FALSE
   )
   inst = MAKE_INST(objective = obj, search_space = domain, terminator = trm("evals", n_evals = 5L))
-  surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = inst$archive)
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
   acqf = AcqFunctionEI$new(surrogate = surrogate)
 
   expect_r6(acqf$codomain, "ParamSet")

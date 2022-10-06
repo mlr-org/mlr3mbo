@@ -1,7 +1,11 @@
 test_that("AcqOptimizer API works", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   # EI, random search
   instance = OptimInstanceSingleCrit$new(OBJ_1D, terminator = trm("evals", n_evals = 5L))
-  with_seed(29, {design = MAKE_DESIGN(instance)})
+  design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
   acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
   acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
@@ -11,10 +15,10 @@ test_that("AcqOptimizer API works", {
 
   # upgrading error class works - catch_errors
   acqopt = AcqOptimizer$new(OptimizerError$new(), trm("evals", n_evals = 2L), acq_function = acqfun)
-  expect_error(acqopt$optimize(), class = c("mbo_error", "optimize_error"))
+  expect_error(acqopt$optimize(), class = "acq_optimizer_error")
 
   acqopt$param_set$values$catch_errors = FALSE
-  expect_error(acqopt$optimize(), class = c("simpleError", "condition"))
+  expect_error(acqopt$optimize(), class = "simpleError")
 
   # logging_level
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
@@ -44,22 +48,32 @@ test_that("AcqOptimizer API works", {
   expect_character(lines, min.len = 1L)
 
   # warmstart | warmstart_size | skip_already_evaluated
-  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 1L), trm("evals", n_evals = 4L), acq_function = acqfun)
+  acqopt = AcqOptimizer$new(opt("design_points", batch_size = 1L, design = data.table(x = 0)), trm("evals", n_evals = 5L), acq_function = acqfun)
   acqopt$param_set$values$warmstart = TRUE
-  expect_true(with_seed(1, {acqopt$optimize()[["acq_ei"]]}) > sqrt(.Machine$double.eps))
+  xdt = acqopt$optimize()
+  expect_true(xdt[["x"]] == 0)
+  expect_true(xdt[[".already_evaluated"]] == FALSE)
 
   acqopt$param_set$values$warmstart_size = 1L
-  expect_true(with_seed(2, {acqopt$optimize()[["acq_ei"]]}) > sqrt(.Machine$double.eps))
+  xdt = acqopt$optimize()
+  expect_true(xdt[["x"]] == 0)
+  expect_true(xdt[[".already_evaluated"]] == FALSE)
 
+  acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
+  acqopt$param_set$values$warmstart = TRUE
   acqopt$param_set$values$warmstart_size = "all"
   expect_error(acqopt$optimize(), "All candidates were already evaluated.")
 
   acqopt$param_set$values$skip_already_evaluated = FALSE
-  expect_true(with_seed(3, {acqopt$optimize()[["acq_ei"]]}) < sqrt(.Machine$double.eps))
+  xdt = acqopt$optimize()
+  expect_true(xdt[["acq_ei"]] < sqrt(.Machine$double.eps))
+  expect_true(is.null(xdt[[".already_evaluated"]]))
 
   acqopt$param_set$values$warmstart_size = NULL
   acqopt$param_set$values$warmstart = FALSE
-  expect_true(with_seed(4, {acqopt$optimize()[["acq_ei"]]}) > sqrt(.Machine$double.eps))
+  xdt = acqopt$optimize()
+  expect_true(xdt[["acq_ei"]] < sqrt(.Machine$double.eps))
+  expect_true(is.null(xdt[[".already_evaluated"]]))
 })
 
 test_that("AcqOptimizer param_set", {
@@ -85,13 +99,11 @@ test_that("AcqOptimizer trafo", {
   instance = MAKE_INST(objective = objective, search_space = domain, terminator = trm("evals", n_evals = 5L))
   design = MAKE_DESIGN(instance)
   instance$eval_batch(design)
-  acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
+  acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_FEATURELESS, archive = instance$archive))
   acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
   acqfun$surrogate$update()
   acqfun$update()
-  with_seed(5, {
-    res = acqopt$optimize()
-  })
+  res = acqopt$optimize()
   expect_equal(res$x, res$x_domain[[1L]][[1L]])
 })
 

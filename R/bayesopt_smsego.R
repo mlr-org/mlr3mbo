@@ -50,25 +50,30 @@
 #' @family Loop Function
 #' @export
 #' @examples
-#' library(bbotk)
-#' library(paradox)
-#' library(mlr3learners)
+#' if (requireNamespace("mlr3learners") &
+#'     requireNamespace("DiceKriging") &
+#'     requireNamespace("rgenoud")) {
 #'
-#' fun = function(xs) {
-#'   list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+#'   library(bbotk)
+#'   library(paradox)
+#'   library(mlr3learners)
+#'
+#'   fun = function(xs) {
+#'     list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+#'   }
+#'   domain = ps(x = p_dbl(lower = -10, upper = 10))
+#'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
+#'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+#'
+#'   terminator = trm("evals", n_evals = 5)
+#'
+#'   instance = OptimInstanceMultiCrit$new(
+#'     objective = objective,
+#'     terminator = terminator
+#'   )
+#'
+#'   bayesopt_smsego(instance)
 #' }
-#' domain = ps(x = p_dbl(lower = -10, upper = 10))
-#' codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
-#' objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
-#'
-#' terminator = trm("evals", n_evals = 5)
-#'
-#' instance = OptimInstanceMultiCrit$new(
-#'   objective = objective,
-#'   terminator = terminator
-#' )
-#'
-#' bayesopt_smsego(instance)
 bayesopt_smsego = function(
     instance,
     init_design_size = NULL,
@@ -114,7 +119,7 @@ bayesopt_smsego = function(
     xdt = tryCatch({
       # random interleaving is handled here
       if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-        stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("mbo_error", "random_interleave", "error", "condition")))
+        stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
       }
       acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
       acq_function$surrogate$update()

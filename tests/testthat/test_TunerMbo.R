@@ -1,5 +1,8 @@
 test_that("TunerMbo works", {
-  withr::local_seed(1)
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   tuner = TunerMbo$new()
   expect_r6(tuner, classes = "TunerMbo")
   expect_r6(tuner$.__enclos_env__$private$.optimizer, classes = "OptimizerMbo")
@@ -22,7 +25,10 @@ test_that("TunerMbo works", {
 })
 
 test_that("Constructing TunerMbo and ABs", {
-  withr::local_seed(1)
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   tuner = tnr("mbo")
   expect_r6(tuner, classes = "TunerMbo")
   expect_r6(tuner$.__enclos_env__$private$.optimizer, classes = "OptimizerMbo")
@@ -60,7 +66,10 @@ test_that("Constructing TunerMbo and ABs", {
 })
 
 test_that("TunerMbo sugar", {
-  withr::local_seed(1)
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   learner = lrn("classif.debug", x = to_tune())
 
   instance = tune(
@@ -78,6 +87,10 @@ test_that("TunerMbo sugar", {
 })
 
 test_that("TunerMbo param_classes", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   tuner = tnr("mbo")
   expect_equal(tuner$param_classes, c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"))
   instance = TuningInstanceSingleCrit$new(tsk("pima"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
@@ -88,6 +101,10 @@ test_that("TunerMbo param_classes", {
 })
 
 test_that("TunerMbo properties", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   tuner = tnr("mbo")
   expect_equal(tuner$properties, c("dependencies", "single-crit", "multi-crit"))
   instance = TuningInstanceSingleCrit$new(tsk("pima"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
@@ -98,6 +115,12 @@ test_that("TunerMbo properties", {
 })
 
 test_that("TunerMbo packages", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+  skip_if_not_installed("nloptr")
+  skip_if_not_installed("ranger")
+
   tuner = opt("mbo")
   expect_equal(tuner$packages, "mlr3mbo")
   instance = TuningInstanceSingleCrit$new(tsk("pima"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
@@ -110,6 +133,9 @@ test_that("TunerMbo packages", {
 })
 
 test_that("TunerMbo args", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+
   tuner = tnr("mbo", args = list(test = 1))
   expect_equal(tuner$args, list(test = 1))
   tuner$loop_function = bayesopt_ego

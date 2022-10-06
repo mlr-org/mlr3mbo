@@ -74,24 +74,29 @@ handled automatically.
 }
 }
 \examples{
-library(bbotk)
-library(paradox)
-library(mlr3learners)
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
 
-objective = ObjectiveRFun$new(
-  fun = function(xs) list(y = xs$x ^ 2),
-  domain = ps(x = p_dbl(lower = -5, upper = 5)),
-  codomain = ps(y = p_dbl(tags = "minimize"))
-)
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
 
-terminator = trm("evals", n_evals = 5)
+  objective = ObjectiveRFun$new(
+    fun = function(xs) list(y = xs$x ^ 2),
+    domain = ps(x = p_dbl(lower = -5, upper = 5)),
+    codomain = ps(y = p_dbl(tags = "minimize"))
+  )
 
-instance = OptimInstanceSingleCrit$new(
-  objective = objective,
-  terminator = terminator
-)
+  terminator = trm("evals", n_evals = 5)
 
-bayesopt_mpcl(instance)
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = terminator
+  )
+
+  bayesopt_mpcl(instance)
+}
 }
 \references{
 Wang, Jialei, Clark, C. S, Liu, Eric, Frazier, I. P (2020).

@@ -115,7 +115,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
           error = function(error_condition) {
             lg$warn(error_condition$message)
             stop(set_class(list(message = error_condition$message, call = NULL),
-              classes = c("mbo_error", "acq_optimizer_error", "error", "condition")))
+              classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
           }
         )
       } else {
@@ -130,7 +130,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
               error = function(error_condition) {
                 lg$warn(error_condition$message)
                 stop(set_class(list(message = error_condition$message, call = NULL),
-                  classes = c("mbo_error", "acq_optimizer_error", "error", "condition")))
+                  classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
               }
             )
           } else {

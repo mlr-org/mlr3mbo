@@ -1,4 +1,7 @@
 test_that("default_surrogate", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("ranger")
+
   # singlecrit all numeric, deterministic
   surrogate = default_surrogate(MAKE_INST_1D())
   expect_r6(surrogate, "SurrogateLearner")
@@ -94,6 +97,12 @@ test_that("default_acqopt", {
 })
 
 test_that("stability and defaults", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("mlr3pipelines")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+  skip_if_not_installed("ranger")
+
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
   f = tempfile("bbotklog_", fileext = "log")
   th1 = lg$threshold

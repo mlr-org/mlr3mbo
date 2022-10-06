@@ -64,47 +64,52 @@ handled automatically.
 }
 }
 \examples{
-library(bbotk)
-library(paradox)
-library(mlr3learners)
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
 
-# expected improvement
-objective = ObjectiveRFun$new(
-  fun = function(xs) list(y = xs$x ^ 2),
-  domain = ps(x = p_dbl(lower = -5, upper = 5)),
-  codomain = ps(y = p_dbl(tags = "minimize"))
-)
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
 
-terminator = trm("evals", n_evals = 5)
+  # expected improvement
+  objective = ObjectiveRFun$new(
+    fun = function(xs) list(y = xs$x ^ 2),
+    domain = ps(x = p_dbl(lower = -5, upper = 5)),
+    codomain = ps(y = p_dbl(tags = "minimize"))
+  )
 
-instance = OptimInstanceSingleCrit$new(
-  objective = objective,
-  terminator = terminator
-)
+  terminator = trm("evals", n_evals = 5)
 
-bayesopt_ego(instance)
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = terminator
+  )
 
-# expected improvement per second
-objective = ObjectiveRFun$new(
-  fun = function(xs) list(y = xs$x ^ 2, time = abs(xs$x)),
-  domain = ps(x = p_dbl(lower = -5, upper = 5)),
-  codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time")),
-  id = "xsq"
-)
+  bayesopt_ego(instance)
 
-terminator = trm("evals", n_evals = 5)
+  # expected improvement per second
+  objective = ObjectiveRFun$new(
+    fun = function(xs) list(y = xs$x ^ 2, time = abs(xs$x)),
+    domain = ps(x = p_dbl(lower = -5, upper = 5)),
+    codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time")),
+    id = "xsq"
+  )
 
-instance = OptimInstanceSingleCrit$new(
-  objective = objective,
-  terminator = terminator
-)
+  terminator = trm("evals", n_evals = 5)
 
-surrogate = default_surrogate(instance, n_learner = 2L)
-surrogate$y_cols = c("y", "time")
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = terminator
+  )
 
-acq_function = AcqFunctionEIPS$new()
+  surrogate = default_surrogate(instance, n_learner = 2L)
+  surrogate$y_cols = c("y", "time")
 
-bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function)
+  acq_function = AcqFunctionEIPS$new()
+
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function)
+}
 }
 \references{
 \itemize{

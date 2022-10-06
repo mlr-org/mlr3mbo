@@ -1,6 +1,10 @@
+skip_if_not_installed("mlr3learners")
+skip_if_not_installed("DiceKriging")
+skip_if_not_installed("rgenoud")
+
 test_that("AcqFunctionAEI works", {
-  inst = MAKE_INST_1D()
-  surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = inst$archive)
+  inst = MAKE_INST_1D_NOISY()
+  surrogate = SurrogateLearner$new(REGR_KM_NOISY, archive = inst$archive)
   acqf = AcqFunctionAEI$new(surrogate = surrogate)
   expect_acqfunction(acqf)
 

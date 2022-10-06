@@ -3,6 +3,10 @@ test_that("bayesopt_parego class", {
 })
 
 test_that("default bayesopt_parego", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
   bayesopt_parego(instance)
   expect_true(nrow(instance$archive$data) == 5L)

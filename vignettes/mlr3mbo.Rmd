@@ -539,7 +539,7 @@ optimizer = opt("mbo",
 optimizer$optimize(instance)
 ```
 
-The log tells us that an error happened and was caught: `"mbo_error / surrogate_update_error / error / condition"`.
+The log tells us that an error happened and was caught: `"surrogate_update_error / mbo_error / error / condition"`.
 We also see in the `Archive` that the first candidate after the initial design (the fifth point) was not proposed based on optimizing the acquisition function:
 
 ```{r}
