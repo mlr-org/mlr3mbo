@@ -379,7 +379,7 @@ For more details on this mechanism, see the [Safety Nets](#safety-nets) section.
 `logging_level` specifies the logging level during acquisition function optimization.
 Often it is useful to only log the progress of the BO loop and therefore `logging_level` is set to `"warn"` by default.
 For debugging purposes, this should be set to `"info"`.
-`skip_already = TRUE` will result in not proposing candidates for evaluation that were already evaluated in previous iterations.
+`skip_already_evaluated = TRUE` will result in not proposing candidates for evaluation that were already evaluated in previous iterations.
 `warmstart = TRUE` results in the best `warmstart_size` points present in the `Archive` of the `OptimInstance` to also be evaluated on the acquisition function `OptimInstance` prior to running the actual optimization.
 This is especially useful in the case of using evolutionary algorithms or variants of local search as the acquisition function optimizer (as the current best points should usually be part of the initial population to further optimize local optima).
 
