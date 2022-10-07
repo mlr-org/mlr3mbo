@@ -8,8 +8,10 @@
 #' For an overview of readily available loop functions, see `as.data.table(mlr_loop_functions)`.
 #'
 #' In general, a loop function is simply a decorated member of the S3 class `loop_function`.
-#' Attributes should include: `id` (id of the loop function), `label` (brief description), `instance` ("single-crit" and
+#' Attributes must include: `id` (id of the loop function), `label` (brief description), `instance` ("single-crit" and
 #' or "multi_crit"), and `man` (link to the manual page).
+#'
+#' As an example, see, e.g., [bayesopt_ego].
 #'
 #' @param instance ([bbotk::OptimInstance])\cr
 #'   The [bbotk::OptimInstance] to be optimized.

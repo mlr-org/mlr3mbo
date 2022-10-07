@@ -35,7 +35,7 @@ TunerMbo = R6Class("TunerMbo",
     #' @return (`character()`).
     print = function() {
       catn(format(self), if (is.na(self$label)) "" else paste0(": ", self$label))
-      catn(str_indent("* Parameters:", as_short_string(self$param_set$values)))
+      #catn(str_indent("* Parameters:", as_short_string(self$param_set$values)))
       catn(str_indent("* Parameter classes:", self$param_classes))
       catn(str_indent("* Properties:", self$properties))
       catn(str_indent("* Packages:", self$packages))
@@ -53,7 +53,7 @@ TunerMbo = R6Class("TunerMbo",
       if (missing(rhs)) {
         private$.optimizer$loop_function
       } else {
-        private$.optimizer$loop_function = assert_function(rhs, null.ok = TRUE)
+        private$.optimizer$loop_function = assert_loop_function(rhs)
       }
     },
 
@@ -105,7 +105,7 @@ TunerMbo = R6Class("TunerMbo",
       if (missing(rhs)) {
         private$.optimizer$result_function
       } else {
-        private$.optimizer$result_function = assert_function(rhs, null.ok = TRUE)
+        private$.optimizer$result_function = assert_function(rhs, args = c("instance", "optimizer_mbo"), null.ok = TRUE)
       }
     },
 

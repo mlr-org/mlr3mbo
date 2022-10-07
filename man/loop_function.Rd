@@ -28,8 +28,10 @@ Loop functions determine the behavior of the BO algorithm on a global level.
 For an overview of readily available loop functions, see \code{as.data.table(mlr_loop_functions)}.
 
 In general, a loop function is simply a decorated member of the S3 class \code{loop_function}.
-Attributes should include: \code{id} (id of the loop function), \code{label} (brief description), \code{instance} ("single-crit" and
+Attributes must include: \code{id} (id of the loop function), \code{label} (brief description), \code{instance} ("single-crit" and
 or "multi_crit"), and \code{man} (link to the manual page).
+
+As an example, see, e.g., \link{bayesopt_ego}.
 }
 \seealso{
 Other Loop Function: 

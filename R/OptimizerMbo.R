@@ -34,13 +34,16 @@ OptimizerMbo = R6Class("OptimizerMbo",
                        packages = "mlr3mbo",  # is replaced with dynamic AB after construction
                        label = "Model Based Optimization",
                        man = "mlr3mbo::OptimizerMbo")
-      # the following are all asserted in the AB
-      self$loop_function = loop_function
-      self$surrogate = surrogate
-      self$acq_function = acq_function
-      self$acq_optimizer = acq_optimizer
+      self$loop_function = assert_loop_function(loop_function)
+      self$surrogate = assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
+      self$acq_function = assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
+      self$acq_optimizer = assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
+      assert_list(args, names = "named", null.ok = TRUE)
+      if (!is.null(self$loop_function)) {
+        assert_subset(names(args), choices = setdiff(names(formals(self$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)
+      }
       self$args = args
-      self$result_function = result_function
+      self$result_function = assert_function(result_function, args = c("instance", "optimizer_mbo"), null.ok = TRUE)
     },
 
     #' @description
@@ -66,7 +69,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
       if (missing(rhs)) {
         private$.loop_function
       } else {
-        private$.loop_function = assert_function(rhs, null.ok = TRUE)
+        private$.loop_function = assert_loop_function(rhs)
       }
     },
 

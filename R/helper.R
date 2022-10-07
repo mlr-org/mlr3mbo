@@ -102,3 +102,34 @@ get_best_not_evaluated = function(instance, evaluated) {
 catn = function(..., file = "") {
   cat(paste0(..., collapse = "\n"), "\n", sep = "", file = file)
 }
+
+set_collapse = function(x) {
+  if (length(x) == 0L) return("{}")
+  sprintf("{'%s'}", paste0(unique(x), collapse = "','"))
+}
+
+check_attributes = function(x, attribute_names) {
+  qassert(attribute_names, rules = "a")
+  if (any(attribute_names %nin% names(attributes(x)))) {
+    return(sprintf("Attributes must include '%s' but is '%s'", set_collapse(attribute_names), set_collapse(names(attributes(x)))))
+  }
+  return(TRUE)
+}
+
+check_instance_attribute = function(x) {
+  if (length(intersect(c("single-crit", "multi-crit"), attr(x, "instance"))) == 0L) {
+    return(sprintf("'instance' attribute must be a subset of '%s' but is '%s'", set_collapse(c("single-crit", "multi-crit")), set_collapse(attr(x, "instance"))))
+  }
+  return(TRUE)
+}
+
+assert_loop_function = function(x, .var.name = vname(x)) {
+  if (is.null(x)) return(x)
+  # NOTE: this is buggy in checkmate; assert should always return x invisible not a TRUE as is the case here
+  assert(check_class(x, classes = "loop_function"),
+         check_function(x, args = c("instance", "surrogate", "acq_function", "acq_optimizer")),
+         check_attributes(x, attribute_names = c("id", "label", "instance", "man")),
+         check_instance_attribute(x),
+         combine = "and", .var.name = .var.name)
+  x
+}
