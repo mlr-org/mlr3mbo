@@ -182,6 +182,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
       switch(name,
         model = value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
+        .archive = value$clone(deep = TRUE),
         value
       )
     }

@@ -90,6 +90,9 @@ test_that("deep clone", {
   surrogate2 = surrogate1$clone(deep = TRUE)
   expect_true(address(surrogate1) != address(surrogate2))
   expect_true(address(surrogate1$model) != address(surrogate2$model))
+  expect_true(address(surrogate1$archive) != address(surrogate2$archive))
+  inst$eval_batch(MAKE_DESIGN(inst))
+  expect_true(address(surrogate1$archive$data) != address(surrogate2$archive$data))
 })
 
 test_that("packages", {

@@ -222,6 +222,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       switch(name,
         model = map(value, function(x) x$clone(deep = TRUE)),
         .param_set = value$clone(deep = TRUE),
+        .archive = value$clone(deep = TRUE),
         value
       )
     }

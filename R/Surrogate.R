@@ -200,6 +200,7 @@ Surrogate = R6Class("Surrogate",
     deep_clone = function(name, value) {
       switch(name,
         .param_set = value$clone(deep = TRUE),
+        .archive = value$clone(deep = TRUE),
         value
       )
     }
