@@ -172,7 +172,7 @@ default_acqfun = function(instance) {
 #'
 #' @description
 #' Chooses a default acquisition function optimizer.
-#' Defaults to wrapping [bbotk::OptimizerRandomSearch] allowing 1000 function evaluations.
+#' Defaults to wrapping [bbotk::OptimizerRandomSearch] allowing 10000 function evaluations.
 #'
 #' @param acq_function ([AcqFunction]).
 #' @return [AcqOptimizer]
@@ -180,6 +180,6 @@ default_acqfun = function(instance) {
 #' @export
 default_acqopt = function(acq_function) {
   assert_r6(acq_function, classes = "AcqFunction")
-  AcqOptimizer$new(optimizer = opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 1000L))  # FIXME: what do we use
+  AcqOptimizer$new(optimizer = opt("random_search", batch_size = 10000L), terminator = trm("evals", n_evals = 10000L))  # FIXME: what do we use
 }
 
