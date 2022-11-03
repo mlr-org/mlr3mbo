@@ -28,6 +28,9 @@ point for evaluation."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
   </a>
 </li>
 <li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
+<li class="nav-item">
   <a class="external-link nav-link" href="https://mlr3book.mlr-org.com">
     <span class="fa fa fa fa-link"></span>
      
@@ -94,8 +97,8 @@ point for evaluation.</p>
     <p><code><a href="https://bbotk.mlr-org.com/reference/Objective.html" class="external-link">bbotk::Objective</a></code> -&gt; <code>AcqFunction</code></p>
     </div>
     <div class="section level2">
-    <h2 id="public-fields">Public fields<a class="anchor" aria-label="anchor" href="#public-fields"></a></h2>
-    <p></p><div class="r6-fields"><dl><dt><code>direction</code></dt>
+    <h2 id="active-bindings">Active bindings<a class="anchor" aria-label="anchor" href="#active-bindings"></a></h2>
+    <p></p><div class="r6-active-bindings"><dl><dt><code>direction</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 Optimization direction of the acquisition function relative to the direction of the
 objective function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.
@@ -103,16 +106,12 @@ Must be <code>"same"</code>, <code>"minimize"</code>, or <code>"maximize"</code>
 
 
 <dt><code>surrogate_max_to_min</code></dt>
-<dd><p>(<code>-1</code> | <code>1</code>).
+<dd><p>(<code>-1</code> | <code>1</code>)<br>
 Multiplicative factor to correct for minimization or maximization of the acquisition
 function.</p></dd>
 
 
-</dl><p></p></div>
-    </div>
-    <div class="section level2">
-    <h2 id="active-bindings">Active bindings<a class="anchor" aria-label="anchor" href="#active-bindings"></a></h2>
-    <p></p><div class="r6-active-bindings"><dl><dt><code>label</code></dt>
+<dt><code>label</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 Label for this object.</p></dd>
 
@@ -124,16 +123,17 @@ String in the format <code>[pkg]::[topic]</code> pointing to a manual page for t
 
 <dt><code>archive</code></dt>
 <dd><p>(<a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a>)<br>
-Points to the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the <a href="Surrogate.html">Surrogate</a>.</p></dd>
+Points to the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the surrogate.</p></dd>
 
 
 <dt><code>fun</code></dt>
 <dd><p>(<code>function</code>)<br>
-Objective function.</p></dd>
+Pointing to the private acquistion function to be implemented by subclasses.</p></dd>
 
 
 <dt><code>surrogate</code></dt>
-<dd><p><a href="Surrogate.html">Surrogate</a>.</p></dd>
+<dd><p>(<a href="Surrogate.html">Surrogate</a>)<br>
+Surrogate.</p></dd>
 
 
 </dl><p></p></div>
@@ -208,8 +208,7 @@ String in the format <code>[pkg]::[topic]</code> pointing to a manual page for t
 
 </div><p></p><hr><a id="method-AcqFunction-eval_many"></a><div class="section">
 <h3 id="method-eval-many-">Method <code>eval_many()</code><a class="anchor" aria-label="anchor" href="#method-eval-many-"></a></h3>
-<p>Evaluates multiple input values received as a list, converted to a <code>data.table()</code> on the
-objective function. Missing columns in xss are filled with <code>NA</code>s in <code>xdt</code>.</p><div class="section">
+<p>Evaluates multiple input values on the objective function.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunction</span><span class="op">$</span><span class="fu">eval_many</span><span class="op">(</span><span class="va">xss</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -226,14 +225,14 @@ A list of lists that contains multiple x values, e.g.
 </div>
 <div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
-<p><code><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code> that contains one y-column for single-criteria functions
-and multiple y-columns for multi-criteria functions, e.g.
-<code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
+<p>data.table::data.table() that contains one y-column for
+single-criteria functions and multiple y-columns for multi-criteria functions,
+e.g. <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-AcqFunction-eval_dt"></a><div class="section">
 <h3 id="method-eval-dt-">Method <code>eval_dt()</code><a class="anchor" aria-label="anchor" href="#method-eval-dt-"></a></h3>
-<p>Evaluates multiple input values on the objective function supplied by the user.</p><div class="section">
+<p>Evaluates multiple input values on the objective function</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunction</span><span class="op">$</span><span class="fu">eval_dt</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -242,19 +241,16 @@ and multiple y-columns for multi-criteria functions, e.g.
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>xdt</code></dt>
 <dd><p>(<code><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
-Set of untransformed points / points from the <em>search space</em>.
-One point per row, e.g. <code>data.table(x1 = c(1, 3), x2 = c(2, 4))</code>.
-Column names have to match ids of the <code>search_space</code>.
-However, <code>xdt</code> can contain additional columns.</p></dd>
+One point per row, e.g. <code>data.table(x1 = c(1, 3), x2 = c(2, 4))</code>.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p>data.table::data.table()] that contains one y-column for single-criteria functions
-and multiple y-columns for multi-criteria functions, e.g.
-<code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
+<p>data.table::data.table() that contains one y-column for
+single-criteria functions and multiple y-columns for multi-criteria
+functions, e.g. <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-AcqFunction-clone"></a><div class="section">

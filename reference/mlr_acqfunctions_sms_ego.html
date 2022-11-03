@@ -26,6 +26,9 @@
   </a>
 </li>
 <li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
+<li class="nav-item">
   <a class="external-link nav-link" href="https://mlr3book.mlr-org.com">
     <span class="fa fa fa fa-link"></span>
      
@@ -84,12 +87,12 @@
 \(\lambda\) value used for the confidence bound.
 Defaults to <code>1</code>.
 Based on <code>confidence = (1 - 2 * dnorm(lambda)) ^ m</code> you can calculate a
-lambda for a given confidence level, see Ponweiser et al. 2008.</p></li>
+lambda for a given confidence level, see Ponweiser et al. (2008).</p></li>
 <li><p><code>"epsilon"</code> (<code>numeric(1)</code>)<br>
 \(\epsilon\) used for the additive epsilon dominance.
-Can either be a single numeric value &gt; 0 or <code>NULL</code>.
+Can either be a single numeric value &gt; 0 or <code>NULL</code> (default).
 In the case of being <code>NULL</code>, an epsilon vector is maintained dynamically as
-described in Horn et al. 2015.</p></li>
+described in Horn et al. (2015).</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -117,19 +120,24 @@ In <em>International Conference on Evolutionary Multi-Criterion Optimization</em
     <div class="section level2">
     <h2 id="public-fields">Public fields<a class="anchor" aria-label="anchor" href="#public-fields"></a></h2>
     <p></p><div class="r6-fields"><dl><dt><code>ys_front</code></dt>
-<dd><p>(<code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix()</a></code>).</p></dd>
+<dd><p>(<code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix()</a></code>)<br>
+Approximated Pareto front.</p></dd>
 
 
 <dt><code>ref_point</code></dt>
-<dd><p>(<code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric()</a></code>).</p></dd>
+<dd><p>(<code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric()</a></code>)<br>
+Reference point.</p></dd>
 
 
 <dt><code>epsilon</code></dt>
-<dd><p>(<code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric()</a></code>).</p></dd>
+<dd><p>(<code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric()</a></code>)<br>
+Epsilon used for the additive epsilon dominance.</p></dd>
 
 
 <dt><code>progress</code></dt>
-<dd><p>(<code>numeric(1)</code>).</p></dd>
+<dd><p>(<code>numeric(1)</code>)<br>
+Optimization progress (typically, the number of function evaluations left).
+Note that this requires the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> to be terminated via a <a href="https://bbotk.mlr-org.com/reference/mlr_terminators_evals.html" class="external-link">bbotk::TerminatorEvals</a>.</p></dd>
 
 
 </dl><p></p></div>
