@@ -12,6 +12,11 @@ multicriteria Bayesian optimization.
 [![Mattermost](https://img.shields.io/badge/chat-mattermost-orange.svg)](https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/)
 <!-- badges: end -->
 
+## Get Started
+
+An overview and gentle introduction is given in [this
+vignette](https://mlr3mbo.mlr-org.com/articles/mlr3mbo.html).
+
 ## Design
 
 `mlr3mbo` is built modular relying on the following
@@ -37,7 +42,7 @@ details.
 ## Simple Optimization Example
 
 Minimize `y = x^2` via sequential singlecriteria BO using a GP as
-surrogate and EI optimized via random search as aquisition function:
+surrogate and EI optimized via random search as acquisition function:
 
 ``` r
 library(bbotk)
@@ -58,13 +63,9 @@ instance = OptimInstanceSingleCrit$new(
   terminator = terminator
 )
 
-design = generate_design_lhs(obfun$domain, 4)$data
-instance$eval_batch(design)
-
-surrogate = SurrogateLearner$new(lrn("regr.km", control = list(trace = FALSE)))
-acqfun = AcqFunctionEI$new()
-acqopt = AcqOptimizer$new(
-  opt("random_search", batch_size = 100),
+surrogate = srlrn(lrn("regr.km", control = list(trace = FALSE)))
+acqfun = acqf("ei")
+acqopt = acqo(opt("random_search", batch_size = 100),
   terminator = trm("evals", n_evals = 100)
 )
 
@@ -90,12 +91,12 @@ set.seed(1)
 
 fun = function(xs) list(y1 = xs$x ^ 2)
 
-surrogate = SurrogateLearner$new(lrn("regr.km", control = list(trace = FALSE)))
-acqfun = AcqFunctionEI$new()
-acqopt = AcqOptimizer$new(
-  opt("random_search", batch_size = 100),
+surrogate = srlrn(lrn("regr.km", control = list(trace = FALSE)))
+acqfun = acqf("ei")
+acqopt = acqo(opt("random_search", batch_size = 100),
   terminator = trm("evals", n_evals = 100)
 )
+
 optimizer = opt("mbo",
   loop_function = bayesopt_ego,
   surrogate = surrogate,
@@ -112,7 +113,7 @@ result = bb_optimize(
 )
 ```
 
-## Simple Tuning Example Using Defaults
+## Simple Tuning Example
 
 ``` r
 library(mlr3)
@@ -138,4 +139,4 @@ instance$result
 ```
 
     ##           cp learner_param_vals  x_domain classif.ce
-    ## 1: -4.885851          <list[2]> <list[1]>  0.1914062
+    ## 1: -4.969357          <list[2]> <list[1]>  0.1914062

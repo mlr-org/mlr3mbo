@@ -14,7 +14,7 @@
 #'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
 #' @param surrogate (`NULL` | [SurrogateLearner])\cr
 #'   [SurrogateLearner] to be used as a surrogate.
-#'   If `NULL` \code{default_surrogate(instance), n_learner = 1} is used.
+#'   If `NULL` \code{default_surrogate(instance, n_learner = 1)} is used.
 #'   Points are drawn uniformly at random.
 #' @param acq_function (`NULL` | [AcqFunction]).\cr
 #'   [AcqFunction] to be used as acquisition function.
