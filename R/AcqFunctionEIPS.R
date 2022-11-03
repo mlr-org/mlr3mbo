@@ -25,7 +25,8 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
   inherit = AcqFunction,
   public = list(
 
-    #' @field y_best (`numeric(1)`).
+    #' @field y_best (`numeric(1)`)\cr
+    #'   Best objective function value observed so far.
     y_best = NULL,
 
     #' @description
@@ -51,7 +52,7 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #' @field y_col (`character(1)`).
     y_col = function(rhs) {
       if (!missing(rhs)) {
-        stop("y_col is read-only.")
+        stop("$y_col is read-only.")
       }
       self$archive$cols_y
     },
@@ -59,7 +60,7 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #' @field time_col (`character(1)`).
     time_col = function(rhs) {
       if (!missing(rhs)) {
-        stop("time_col is read-only.")
+        stop("$time_col is read-only.")
       }
       time_col = self$archive$codomain$ids(tags = "time")
       if (length(time_col) != 1L) {

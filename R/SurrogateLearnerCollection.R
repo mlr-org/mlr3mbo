@@ -39,9 +39,9 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param learners (list of [mlr3::LearnerRegr]).
-    #' @param archive (`NULL` | [bbotk::Archive]).
-    #' @param x_cols (`NULL` | `character()`).
-    #' @param y_cols (`NULL` | `character()`).
+    #' @template param_archive_surrogate
+    #' @template param_x_cols_surrogate
+    #' @template param_y_cols_surrogate
     initialize = function(learners, archive = NULL, x_cols = NULL, y_cols = NULL) {
       addresses = map(learners, address)
       if (length(unique(addresses)) != length(addresses)) {
@@ -77,7 +77,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' Each contains the mean response and standard error for one `y_col`.
     #'
     #' @param xdt ([data.table::data.table()])\cr
-    #' New data.
+    #'   New data. One row per observation.
     #'
     #' @return list of [data.table::data.table()]s with the columns `mean` and `se`.
     predict = function(xdt) {
@@ -100,27 +100,24 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
   active = list(
 
-    #' @field print_id (`character`)\cr
-    #' Id used when printing.
+    #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
         paste0("(", paste0(map_chr(self$model, function(model) class(model)[1L]), collapse = " | "), ")")
       } else {
-        stop("'print_id' field is read-only.")
+        stop("$print_id is read-only.")
       }
     },
 
-    #' @field n_learner (`integer(1)`)\cr
-    #' Returns the number of [mlr3::Learner]s.
+    #' @template field_n_learner_surrogate
     n_learner = function() {
       length(self$model)
     },
 
-    #' @field assert_insample_perf (`numeric()`)\cr
-    #' Asserts whether the current insample performance meets the performance threshold.
+    #' @template field_assert_insample_perf_surrogate
     assert_insample_perf = function(rhs) {
       if (!missing(rhs)) {
-        stop("assert_insample_perf is read-only.")
+        stop("$assert_insample_perf is read-only.")
       }
 
       if (!self$param_set$values$assert_insample_perf) {
@@ -148,8 +145,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       invisible(self$insample_perf)
     },
 
-    #' @field packages (`character()`)\cr
-    #' Set of required packages.
+    #' @template field_packages_surrogate
     packages = function(rhs) {
       if (missing(rhs)) {
         unique(unlist(map(self$model, "packages")))
@@ -158,25 +154,21 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       }
     },
 
-    #' @field feature_types (`character()`)\cr
-    #' Stores the feature types the learner can handle, e.g. `"logical"`, `"numeric"`, or `"factor"`.
-    #' A complete list of candidate feature types, grouped by task type, is stored in [`mlr_reflections$task_feature_types`][mlr_reflections].
+    #' @template field_feature_types_surrogate
     feature_types = function(rhs) {
       if (missing(rhs)) {
         Reduce(intersect, map(self$model, "feature_types"))
       } else {
-        stop("'feature_types' field is read-only.")
+        stop("$feature_types is read-only.")
       }
     },
 
-    #' @field properties (`character()`)\cr
-    #' Stores a set of properties/capabilities the learner has.
-    #' A complete list of candidate properties, grouped by task type, is stored in [`mlr_reflections$learner_properties`][mlr_reflections].
+    #' @template field_properties_surrogate
     properties = function(rhs) {
       if (missing(rhs)) {
         Reduce(intersect, map(self$model, "properties"))
       } else {
-        stop("'properties' field is read-only.")
+        stop("$properties is read-only.")
       }
     }
 

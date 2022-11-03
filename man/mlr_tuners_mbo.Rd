@@ -15,7 +15,7 @@ For additional information and documentation see \link{OptimizerMbo}.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{loop_function}}{(\code{function} | NULL).}
+\item{\code{loop_function}}{(\link{loop_function} | NULL).}
 
 \item{\code{surrogate}}{(\link{Surrogate} | NULL).}
 

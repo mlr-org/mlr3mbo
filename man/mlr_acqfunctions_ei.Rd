@@ -38,7 +38,8 @@ Other Acquisition Function:
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{y_best}}{(\code{numeric(1)}).}
+\item{\code{y_best}}{(\code{numeric(1)})\cr
+Best objective function value observed so far.}
 }
 \if{html}{\out{</div>}}
 }

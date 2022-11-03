@@ -1,25 +1,28 @@
 #' @title Surrogate Model
 #'
 #' @description
-#' Surrogate model.
+#' Abstract surrogate model class.
 #'
 #' @export
 Surrogate = R6Class("Surrogate",
   public = list(
 
-    #' @field model Surrogate model.
+    #' @field model (model)\cr
+    #'   Arbitrary model object depending on the subclass.
     model = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param model (Model).
-    #' @param archive (`NULL` | [bbotk::Archive]).
-    #' @param x_cols (`NULL` | `character()`).
-    #' @param y_cols (`NULL` | `character()`).
-    #' @param param_set ([paradox::ParamSet]).
+    #' @param model (model)\cr
+    #'   Arbitrary model object depending on the subclass.
+    #' @template param_archive_surrogate
+    #' @template param_x_cols_surrogate
+    #' @template param_y_cols_surrogate
+    #' @param param_set ([paradox::ParamSet])\cr
+    #'   Parameter space description depending on the subclass.
     initialize = function(model, archive, x_cols, y_cols, param_set) {
-      # most assertions are done in derived classes
+      # most assertions are done in subclasses
       self$model = model
       private$.archive = archive
       private$.x_cols = x_cols  # assertion is done in SurrogateLearner or SurrogateLearnerCollection
@@ -31,6 +34,7 @@ Surrogate = R6Class("Surrogate",
 
     #' @description
     #' Train model with new data.
+    #' Subclasses must implement `$private.update()`.
     #'
     #' @return `NULL`.
     update = function() {
@@ -51,9 +55,10 @@ Surrogate = R6Class("Surrogate",
 
     #' @description
     #' Predict mean response and standard error.
+    #' Must be implemented by subclasses.
     #'
     #' @param xdt ([data.table::data.table()])\cr
-    #' New data.
+    #'   New data. One row per observation.
     #'
     #' @return Arbitrary prediction object.
     predict = function(xdt) {
@@ -78,17 +83,16 @@ Surrogate = R6Class("Surrogate",
 
   active = list(
 
-    #' @field print_id (`character`)\cr
-    #' Id used when printing.
+    #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
         stop("Abstract.")
       } else {
-        stop("'print_id' field is read-only.")
+        stop("$print_id is read-only.")
       }
     },
 
-    #' @field archive ([bbotk::Archive]).
+    #' @template field_archive_surrogate
     archive = function(rhs) {
       if (missing(rhs)) {
         private$.archive
@@ -98,13 +102,12 @@ Surrogate = R6Class("Surrogate",
       }
     },
 
-    #' @field n_learner (`integer(1)`)\cr
-    #' Returns the number of learners.
+    #' @template field_n_learner_surrogate
     n_learner = function() {
       stop("Abstract.")
     },
 
-    #' @field x_cols (`character()`).
+    #' @template field_x_cols_surrogate
     x_cols = function(rhs) {
       if (missing(rhs)) {
         if (is.null(private$.x_cols)) self$archive$cols_x else private$.x_cols
@@ -113,8 +116,7 @@ Surrogate = R6Class("Surrogate",
       }
     },
 
-
-    #' @field y_cols (`character()`).
+    #' @template field_y_cols_surrogate
     y_cols = function(rhs) {
       if (missing(rhs)) {
         if (is.null(private$.y_cols)) self$archive$cols_y else private$.y_cols
@@ -124,59 +126,52 @@ Surrogate = R6Class("Surrogate",
     },
 
     #' @field insample_perf (`numeric()`)\cr
-    #' Surrogate model's current insample performance.
+    #'   Surrogate model's current insample performance.
     insample_perf = function(rhs) {
       if (!missing(rhs)) {
-        stop("insample_perf is read-only.")
+        stop("$insample_perf is read-only.")
       }
       private$.insample_perf %??% NaN
     },
 
     #' @field param_set ([paradox::ParamSet])\cr
-    #' Set of hyperparameters.
+    #'   Set of hyperparameters.
     param_set = function(rhs) {
       if (!missing(rhs) && !identical(rhs, private$.param_set)) {
-        stop("param_set is read-only.")
+        stop("$param_set is read-only.")
       }
       private$.param_set
     },
 
-    #' @field assert_insample_perf (`logical(1)`)\cr
-    #' Asserts whether the current insample performance meets the performance threshold.
+    #' @template field_assert_insample_perf_surrogate
     assert_insample_perf = function(rhs) {
       stop("Abstract.")
     },
 
-    #' @field packages (`character`)\cr
-    #' Set of required packages. A warning is signaled by the constructor if at least one of the packages is not
-    #' installed, but loaded (not attached) later on-demand via 'requireNamespace()'.
+    #' @template field_packages_surrogate
     packages = function(rhs) {
       if (missing(rhs)) {
         stop("Abstract.")
       } else {
-        stop("'packages' field is read-only.")
+        stop("$packages is read-only.")
       }
     },
 
-    #' @field feature_types (`character()`)\cr
-    #' Stores the feature types the learner can handle, e.g. `"logical"`, `"numeric"`, or `"factor"`.
-    #' A complete list of candidate feature types, grouped by task type, is stored in [`mlr_reflections$task_feature_types`][mlr_reflections].
+    #' @template field_feature_types_surrogate
     feature_types = function(rhs) {
       if (missing(rhs)) {
         stop("Abstract.")
       } else {
-        stop("'feature_types' field is read-only.")
+        stop("$feature_types is read-only.")
       }
     },
 
-    #' @field properties (`character()`)\cr
-    #' Stores a set of properties/capabilities the learner has.
-    #' A complete list of candidate properties, grouped by task type, is stored in [`mlr_reflections$learner_properties`][mlr_reflections].
+    #' @template field_properties_surrogate
     properties = function(rhs) {
       if (missing(rhs)) {
         stop("Abstract.")
       } else {
-        stop("'properties' field is read-only.")
+        stop("$properties is read-only.")
       }
     }
   ),

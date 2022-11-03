@@ -3,26 +3,6 @@
 \name{loop_function}
 \alias{loop_function}
 \title{Loop Functions for Bayesian Optimization}
-\arguments{
-\item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance})\cr
-The \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.}
-
-\item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
-Size of the initial design.}
-
-\item{surrogate}{(\code{NULL} | \link{Surrogate})\cr
-\link{Surrogate} to be used as a surrogate.}
-
-\item{acq_function}{(\code{NULL} | \link{AcqFunction}).\cr
-\link{AcqFunction} to be used as acquisition function.}
-
-\item{acq_optimizer}{(\code{NULL} | \link{AcqOptimizer})\cr
-\link{AcqOptimizer} to be used as acquisition function optimizer.}
-}
-\value{
-invisible(instance)\cr
-The original instance is modified in-place and returned invisible.
-}
 \description{
 Loop functions determine the behavior of the BO algorithm on a global level.
 For an overview of readily available loop functions, see \code{as.data.table(mlr_loop_functions)}.

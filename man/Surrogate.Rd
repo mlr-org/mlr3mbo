@@ -4,12 +4,13 @@
 \alias{Surrogate}
 \title{Surrogate Model}
 \description{
-Surrogate model.
+Abstract surrogate model class.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{model}}{Surrogate model.}
+\item{\code{model}}{(model)\cr
+Arbitrary model object depending on the subclass.}
 }
 \if{html}{\out{</div>}}
 }
@@ -19,14 +20,18 @@ Surrogate model.
 \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 
-\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive}).}
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive})\cr
+\link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
 \item{\code{n_learner}}{(\code{integer(1)})\cr
-Returns the number of learners.}
+Returns the number of surrogate models.}
 
-\item{\code{x_cols}}{(\code{character()}).}
+\item{\code{x_cols}}{(\code{character()})\cr
+Column Id's of variables that should be used as features.}
 
-\item{\code{y_cols}}{(\code{character()}).}
+\item{\code{y_cols}}{(\code{character()})\cr
+Column Id's of variables that should be used as targets.
+By default, automatically inferred based on the archive.}
 
 \item{\code{insample_perf}}{(\code{numeric()})\cr
 Surrogate model's current insample performance.}
@@ -34,19 +39,19 @@ Surrogate model's current insample performance.}
 \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of hyperparameters.}
 
-\item{\code{assert_insample_perf}}{(\code{logical(1)})\cr
+\item{\code{assert_insample_perf}}{(\code{numeric()})\cr
 Asserts whether the current insample performance meets the performance threshold.}
 
-\item{\code{packages}}{(\code{character})\cr
-Set of required packages. A warning is signaled by the constructor if at least one of the packages is not
-installed, but loaded (not attached) later on-demand via 'requireNamespace()'.}
+\item{\code{packages}}{(\code{character()})\cr
+Set of required packages.
+A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 
 \item{\code{feature_types}}{(\code{character()})\cr
-Stores the feature types the learner can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
+Stores the feature types the surrogate can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
 A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
 
 \item{\code{properties}}{(\code{character()})\cr
-Stores a set of properties/capabilities the learner has.
+Stores a set of properties/capabilities the surrogate has.
 A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
 }
 \if{html}{\out{</div>}}
@@ -74,15 +79,22 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{model}}{(Model).}
+\item{\code{model}}{(model)\cr
+Arbitrary model object depending on the subclass.}
 
-\item{\code{archive}}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive}).}
+\item{\code{archive}}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive})\cr
+\link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{\code{x_cols}}{(\code{NULL} | \code{character()}).}
+\item{\code{x_cols}}{(\code{NULL} | \code{character()})\cr
+Column Id's of variables that should be used as features.
+By default, automatically inferred based on the archive.}
 
-\item{\code{y_cols}}{(\code{NULL} | \code{character()}).}
+\item{\code{y_cols}}{(\code{NULL} | \code{character()})\cr
+Column Id's of variables that should be used as targets.
+By default, automatically inferred based on the archive.}
 
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
+\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+Parameter space description depending on the subclass.}
 }
 \if{html}{\out{</div>}}
 }
@@ -92,6 +104,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{latex}{\out{\hypertarget{method-Surrogate-update}{}}}
 \subsection{Method \code{update()}}{
 Train model with new data.
+Subclasses must implement \verb{$private.update()}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$update()}\if{html}{\out{</div>}}
 }
@@ -105,6 +118,7 @@ Train model with new data.
 \if{latex}{\out{\hypertarget{method-Surrogate-predict}{}}}
 \subsection{Method \code{predict()}}{
 Predict mean response and standard error.
+Must be implemented by subclasses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$predict(xdt)}\if{html}{\out{</div>}}
 }
@@ -113,7 +127,7 @@ Predict mean response and standard error.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-New data.}
+New data. One row per observation.}
 }
 \if{html}{\out{</div>}}
 }

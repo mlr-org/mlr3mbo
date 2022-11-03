@@ -139,7 +139,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
         }
         unname(intersect(param_classes_surrogate, param_classes_acq_opt))
       } else {
-        stop("param_classes is read-only.")
+        stop("$param_classes is read-only.")
       }
     },
 
@@ -158,7 +158,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
         }
         unname(c(properties_surrogate, properties_loop_function))
       } else {
-        stop("properties is read-only.")
+        stop("$properties is read-only.")
       }
     },
 

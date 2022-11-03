@@ -41,7 +41,7 @@ fct_to_char = function(xydt) {
   xydt
 }
 
-# during surrogate prediction it may have happened that whole columns where dropped (e.g., during focussearch if the search space was shrinked)
+# during surrogate prediction it may have happened that whole columns where dropped (e.g., during focussearch if the search space was shrunk)
 fix_xdt_missing = function(xdt, x_cols, archive) {
   missing = x_cols[x_cols %nin% colnames(xdt)]
   types = map_chr(missing, function(x) typeof(archive$data[[x]]))
@@ -133,3 +133,8 @@ assert_loop_function = function(x, .var.name = vname(x)) {
          combine = "and", .var.name = .var.name)
   x
 }
+
+assert_xdt = function(xdt) {
+  assert_data_table(xdt)
+}
+

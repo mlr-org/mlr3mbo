@@ -12,20 +12,6 @@
 #' or "multi_crit"), and `man` (link to the manual page).
 #'
 #' As an example, see, e.g., [bayesopt_ego].
-#'
-#' @param instance ([bbotk::OptimInstance])\cr
-#'   The [bbotk::OptimInstance] to be optimized.
-#' @param init_design_size (`NULL` | `integer(1)`)\cr
-#'   Size of the initial design.
-#' @param surrogate (`NULL` | [Surrogate])\cr
-#'   [Surrogate] to be used as a surrogate.
-#' @param acq_function (`NULL` | [AcqFunction]).\cr
-#'   [AcqFunction] to be used as acquisition function.
-#' @param acq_optimizer (`NULL` | [AcqOptimizer])\cr
-#'   [AcqOptimizer] to be used as acquisition function optimizer.
-#'
-#' @return invisible(instance)\cr
-#'   The original instance is modified in-place and returned invisible.
 #' @family Loop Function
 NULL
 

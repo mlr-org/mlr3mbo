@@ -11,12 +11,12 @@
 #'   \eqn{\lambda} value used for the confidence bound.
 #'   Defaults to `1`.
 #'   Based on \code{confidence = (1 - 2 * dnorm(lambda)) ^ m} you can calculate a
-#'   lambda for a given confidence level, see Ponweiser et al. 2008.
+#'   lambda for a given confidence level, see Ponweiser et al. (2008).
 #' * `"epsilon"` (`numeric(1)`)\cr
 #'   \eqn{\epsilon} used for the additive epsilon dominance.
-#'   Can either be a single numeric value > 0 or `NULL`.
+#'   Can either be a single numeric value > 0 or `NULL` (default).
 #'   In the case of being `NULL`, an epsilon vector is maintained dynamically as
-#'   described in Horn et al. 2015.
+#'   described in Horn et al. (2015).
 #'
 #' @references
 #' `r format_bib("ponweiser_2008")`
@@ -29,16 +29,21 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
 
   public = list(
 
-    #' @field ys_front (`matrix()`).
+    #' @field ys_front (`matrix()`)\cr
+    #'   Approximated Pareto front.
     ys_front = NULL,
 
-    #' @field ref_point (`numeric()`).
+    #' @field ref_point (`numeric()`)\cr
+    #'   Reference point.
     ref_point = NULL,
 
-    #' @field epsilon (`numeric()`).
+    #' @field epsilon (`numeric()`)\cr
+    #'  Epsilon used for the additive epsilon dominance.
     epsilon = NULL,
 
-    #' @field progress (`numeric(1)`).
+    #' @field progress (`numeric(1)`)\cr
+    #'   Optimization progress (typically, the number of function evaluations left).
+    #'   Note that this requires the [bbotk::OptimInstance] to be terminated via a [bbotk::TerminatorEvals].
     progress = NULL,
 
     #' @description

@@ -17,7 +17,8 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
   inherit = AcqFunction,
   public = list(
 
-    #' @field y_best (`numeric(1)`).
+    #' @field y_best (`numeric(1)`)\cr
+    #'   Best objective function value observed so far.
     y_best = NULL,
 
     #' @description

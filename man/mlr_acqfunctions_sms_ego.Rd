@@ -14,12 +14,12 @@ S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
 \eqn{\lambda} value used for the confidence bound.
 Defaults to \code{1}.
 Based on \code{confidence = (1 - 2 * dnorm(lambda)) ^ m} you can calculate a
-lambda for a given confidence level, see Ponweiser et al. 2008.
+lambda for a given confidence level, see Ponweiser et al. (2008).
 \item \code{"epsilon"} (\code{numeric(1)})\cr
 \eqn{\epsilon} used for the additive epsilon dominance.
-Can either be a single numeric value > 0 or \code{NULL}.
+Can either be a single numeric value > 0 or \code{NULL} (default).
 In the case of being \code{NULL}, an epsilon vector is maintained dynamically as
-described in Horn et al. 2015.
+described in Horn et al. (2015).
 }
 }
 
@@ -47,13 +47,18 @@ Other Acquisition Function:
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{ys_front}}{(\code{matrix()}).}
+\item{\code{ys_front}}{(\code{matrix()})\cr
+Approximated Pareto front.}
 
-\item{\code{ref_point}}{(\code{numeric()}).}
+\item{\code{ref_point}}{(\code{numeric()})\cr
+Reference point.}
 
-\item{\code{epsilon}}{(\code{numeric()}).}
+\item{\code{epsilon}}{(\code{numeric()})\cr
+Epsilon used for the additive epsilon dominance.}
 
-\item{\code{progress}}{(\code{numeric(1)}).}
+\item{\code{progress}}{(\code{numeric(1)})\cr
+Optimization progress (typically, the number of function evaluations left).
+Note that this requires the \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be terminated via a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.}
 }
 \if{html}{\out{</div>}}
 }

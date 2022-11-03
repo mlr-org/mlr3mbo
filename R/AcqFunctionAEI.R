@@ -11,7 +11,7 @@
 #'
 #' @section Parameters:
 #' * `"c"` (`numeric(1)`)\cr
-#'   Constant \eqn{c} as used in formula (14) of Huang 2012 to reflect the degree of risk aversion. Defaults to `1`.
+#'   Constant \eqn{c} as used in formula (14) of Huang (2012) to reflect the degree of risk aversion. Defaults to `1`.
 #'
 #' @references
 #' `r format_bib("huang_2012")`
@@ -59,7 +59,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       if (!is.null(self$surrogate$model$model) && length(self$surrogate$model$model@covariance@nugget) == 1L) {
         self$noise_var = self$surrogate$model$model@covariance@nugget  # FIXME: check that this value really exists (otherwise calculate residual variance?)
       } else {
-        lgr$warn("AEI currently only works correctly with regr.km and nugget estim = TRUE or given!")
+        lgr$warn('AEI currently only works correctly with `"regr.km"` as surrogate and `nugget.estim = TRUE` or given!')
         self$noise_var = 0
       }
 

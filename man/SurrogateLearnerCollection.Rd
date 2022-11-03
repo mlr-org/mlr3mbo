@@ -45,20 +45,21 @@ Default is \code{TRUE}.
 Id used when printing.}
 
 \item{\code{n_learner}}{(\code{integer(1)})\cr
-Returns the number of \link[mlr3:Learner]{mlr3::Learner}s.}
+Returns the number of surrogate models.}
 
 \item{\code{assert_insample_perf}}{(\code{numeric()})\cr
 Asserts whether the current insample performance meets the performance threshold.}
 
 \item{\code{packages}}{(\code{character()})\cr
-Set of required packages.}
+Set of required packages.
+A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 
 \item{\code{feature_types}}{(\code{character()})\cr
-Stores the feature types the learner can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
+Stores the feature types the surrogate can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
 A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
 
 \item{\code{properties}}{(\code{character()})\cr
-Stores a set of properties/capabilities the learner has.
+Stores a set of properties/capabilities the surrogate has.
 A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
 }
 \if{html}{\out{</div>}}
@@ -99,11 +100,16 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \describe{
 \item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
 
-\item{\code{archive}}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive}).}
+\item{\code{archive}}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive})\cr
+\link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{\code{x_cols}}{(\code{NULL} | \code{character()}).}
+\item{\code{x_cols}}{(\code{NULL} | \code{character()})\cr
+Column Id's of variables that should be used as features.
+By default, automatically inferred based on the archive.}
 
-\item{\code{y_cols}}{(\code{NULL} | \code{character()}).}
+\item{\code{y_cols}}{(\code{NULL} | \code{character()})\cr
+Column Id's of variables that should be used as targets.
+By default, automatically inferred based on the archive.}
 }
 \if{html}{\out{</div>}}
 }
@@ -122,7 +128,7 @@ Each contains the mean response and standard error for one \code{y_col}.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-New data.}
+New data. One row per observation.}
 }
 \if{html}{\out{</div>}}
 }

@@ -70,7 +70,6 @@ Collate:
     'SurrogateLearner.R'
     'SurrogateLearnerCollection.R'
     'TunerMbo.R'
-    'assertions.R'
     'mlr_loop_functions.R'
     'bayesopt_ego.R'
     'bayesopt_mpcl.R'

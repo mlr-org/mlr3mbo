@@ -145,21 +145,20 @@ AcqOptimizer = R6Class("AcqOptimizer",
 
   active = list(
 
-    #' @field print_id (`character`)\cr
-    #' Id used when printing.
+    #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
         paste0("(", class(self$optimizer)[1L], " | ", class(self$terminator)[1L], ")")
       } else {
-        stop("'print_id' field is read-only.")
+        stop("$print_id is read-only.")
       }
     },
 
     #' @field param_set ([paradox::ParamSet])\cr
-    #' Set of hyperparameters.
+    #'   Set of hyperparameters.
     param_set = function(rhs) {
       if (!missing(rhs) && !identical(rhs, private$.param_set)) {
-        stop("param_set is read-only.")
+        stop("$param_set is read-only.")
       }
       private$.param_set
     }

@@ -12,19 +12,6 @@ AcqFunction = R6Class("AcqFunction",
   inherit = bbotk::Objective,
   public = list(
 
-    # FIXME: make this read only
-    #' @field direction (`character(1)`)\cr
-    #'   Optimization direction of the acquisition function relative to the direction of the
-    #'   objective function of the [bbotk::OptimInstance].
-    #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
-    direction = NULL,
-
-    # FIXME: make this read only
-    #' @field surrogate_max_to_min (`-1` | `1`).
-    #'   Multiplicative factor to correct for minimization or maximization of the acquisition
-    #'   function.
-    surrogate_max_to_min = NULL,
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -43,7 +30,7 @@ AcqFunction = R6Class("AcqFunction",
       # If we do, we need to trafo values before updating the surrogate and predicting?
       assert_string(id)
       assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
-      self$direction = assert_choice(direction, choices = c("same", "minimize", "maximize"))
+      self$direction = direction
       if (is.null(surrogate)) {
         domain = ParamSet$new()
         codomain = ParamSet$new()
@@ -71,16 +58,15 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @description
-    #' Evaluates multiple input values received as a list, converted to a `data.table()` on the
-    #' objective function. Missing columns in xss are filled with `NA`s in `xdt`.
+    #' Evaluates multiple input values on the objective function.
     #'
     #' @param xss (`list()`)\cr
     #'   A list of lists that contains multiple x values, e.g.
     #'   `list(list(x1 = 1, x2 = 2), list(x1 = 3, x2 = 4))`.
     #'
-    #' @return [data.table::data.table()] that contains one y-column for single-criteria functions
-    #' and multiple y-columns for multi-criteria functions, e.g.
-    #' `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
+    #' @return data.table::data.table() that contains one y-column for
+    #' single-criteria functions and multiple y-columns for multi-criteria functions,
+    #' e.g. `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
     eval_many = function(xss) {
       if (self$check_values) lapply(xss, self$domain$assert)
       res = invoke(private$.fun, rbindlist(xss, use.names = TRUE, fill = TRUE), .args = self$constants$values)
@@ -89,17 +75,14 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @description
-    #' Evaluates multiple input values on the objective function supplied by the user.
+    #' Evaluates multiple input values on the objective function
     #'
     #' @param xdt ([data.table::data.table()])\cr
-    #'   Set of untransformed points / points from the *search space*.
     #'   One point per row, e.g. `data.table(x1 = c(1, 3), x2 = c(2, 4))`.
-    #'   Column names have to match ids of the `search_space`.
-    #'   However, `xdt` can contain additional columns.
     #'
-    #' @return data.table::data.table()] that contains one y-column for single-criteria functions
-    #' and multiple y-columns for multi-criteria functions, e.g.
-    #' `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
+    #' @return data.table::data.table() that contains one y-column for
+    #' single-criteria functions and multiple y-columns for multi-criteria
+    #' functions, e.g. `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
     eval_dt = function(xdt) {
       if (self$check_values) self$domain$assert_dt(xdt)
       res = invoke(private$.fun, xdt, .args = self$constants$values)
@@ -109,6 +92,29 @@ AcqFunction = R6Class("AcqFunction",
   ),
 
   active = list(
+    #' @field direction (`character(1)`)\cr
+    #'   Optimization direction of the acquisition function relative to the direction of the
+    #'   objective function of the [bbotk::OptimInstance].
+    #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
+    direction = function(rhs) {
+      if (missing(rhs)) {
+        private$.direction
+      } else {
+        private$.direction = assert_choice(rhs, choices = c("same", "minimize", "maximize"))
+      }
+    },
+
+    #' @field surrogate_max_to_min (`-1` | `1`)\cr
+    #'   Multiplicative factor to correct for minimization or maximization of the acquisition
+    #'   function.
+    surrogate_max_to_min = function(rhs) {
+     if (missing(rhs)) {
+        private$.surrogate_max_to_min
+      } else {
+        private$.surrogate_max_to_min = assert_subset(rhs, choices = c(-1L, 1L))
+      }
+    },
+
     #' @field label (`character(1)`)\cr
     #'   Label for this object.
     label = function(rhs) {
@@ -128,20 +134,21 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @field archive ([bbotk::Archive])\cr
-    #'   Points to the [bbotk::Archive] of the [Surrogate].
+    #'   Points to the [bbotk::Archive] of the surrogate.
     archive = function(rhs) {
-      if (!missing(rhs) && !identical(rhs, private$.archive)) stop("archive is read-only.")
+      if (!missing(rhs) && !identical(rhs, private$.archive)) stop("$archive is read-only.")
       private$.archive
     },
 
     #' @field fun (`function`)\cr
-    #' Objective function.
+    #'   Pointing to the private acquistion function to be implemented by subclasses.
     fun = function(lhs) {
-      if (!missing(lhs) && !identical(lhs, private$.fun)) stop("fun is read-only.")
+      if (!missing(lhs) && !identical(lhs, private$.fun)) stop("$fun is read-only.")
       private$.fun
     },
 
-    #' @field surrogate [Surrogate].
+    #' @field surrogate ([Surrogate])\cr
+    #'  Surrogate.
     surrogate = function(rhs) {
       if (missing(rhs)) {
         private$.surrogate
@@ -160,6 +167,10 @@ AcqFunction = R6Class("AcqFunction",
   ),
 
   private = list(
+    .direction = NULL,
+
+    .surrogate_max_to_min = NULL,
+
     .label = NULL,
 
     .man = NULL,

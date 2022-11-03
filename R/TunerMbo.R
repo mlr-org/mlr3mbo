@@ -114,7 +114,7 @@ TunerMbo = R6Class("TunerMbo",
       if (missing(rhs)) {
         private$.optimizer$param_classes
       } else {
-        stop("param_classes is read-only.")
+        stop("$param_classes is read-only.")
       }
     },
 
@@ -123,7 +123,7 @@ TunerMbo = R6Class("TunerMbo",
       if (missing(rhs)) {
         private$.optimizer$properties
       } else {
-        stop("properties is read-only.")
+        stop("$properties is read-only.")
       }
     },
 

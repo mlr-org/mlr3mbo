@@ -1,1 +1,1 @@
-#' @field loop_function (`function` | NULL).
+#' @field loop_function ([loop_function] | NULL).
