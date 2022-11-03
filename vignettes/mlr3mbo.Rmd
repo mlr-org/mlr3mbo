@@ -562,6 +562,38 @@ This allows for straightforward debugging.
 
 To make sure that your BO loop behaved as expected, always inspect the log of the optimization process and inspect the `Archive` and check whether the acquisition function column is populated as expected.
 
+# Writing Your Own Loop Function
+
+Writing a custom `loop_function` is straightforward.
+
+Any `loop_function` must be a decorated member of the S3 class `r ref("mlr3mbo::loop_function", "loop_function")`.
+Arguments must include `instance`, `surrogate`, `acq_function`, and `acq_optimizer` and attributes must include `id` (id of the loop function), `label` (brief description), `instance` ("single-crit" and or "multi_crit"), and `man` (link to the manual page).
+
+Technically, any `loop_function` therefore looks like the following:
+
+```{r}
+bayesopt_custom = function(instance, surrogate, acq_function, acq_optimizer) {
+  # typically some assertions
+
+  # initial design handling
+
+  # actual loop function
+}
+
+class(bayesopt_custom) = "loop_function"
+attr(bayesopt_custom, "id") = "bayesopt_custom"
+attr(bayesopt_custom, "label") = "Test"
+attr(bayesopt_custom, "instance") = "single-crit"
+attr(bayesopt_custom, "man") = ""  # no man page
+# if you want to add it to the dictionary: mlr_loop_functions$add("bayesopt_ego", bayesopt_ego)
+```
+
+```{r}
+bayesopt_custom
+```
+
+For some inspiration on how to write actual meaningful `loop_function`s, see, e.g., `r ref("mlr3mbo::mlr_loop_functions_ego", "bayesopt_ego")`.
+
 # Examples
 
 In this final section, some standard examples are provided.

@@ -14,7 +14,7 @@ toc:
 
 navbar:
   structure:
-    left: [reference, news, book]
+    left:  [reference, intro, news, book]
     right: [github, mattermost, stackoverflow, rss]
   components:
     home: ~
