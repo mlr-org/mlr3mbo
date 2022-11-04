@@ -27,7 +27,7 @@ If \code{NULL} \code{4 * d} is used with \code{d} being the dimensionality of th
 
 \item{surrogate}{(\code{NULL} | \link{SurrogateLearner})\cr
 \link{SurrogateLearner} to be used as a surrogate.
-If \code{NULL} \code{default_surrogate(instance), n_learner = 1} is used.
+If \code{NULL} \code{default_surrogate(instance, n_learner = 1)} is used.
 Points are drawn uniformly at random.}
 
 \item{acq_function}{(\code{NULL} | \link{AcqFunction}).\cr
