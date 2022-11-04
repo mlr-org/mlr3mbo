@@ -8,6 +8,45 @@
 #' For additional information and documentation see [OptimizerMbo].
 #'
 #' @export
+#' @examples
+#'if (requireNamespace("mlr3learners") &
+#'    requireNamespace("DiceKriging") &
+#'    requireNamespace("rgenoud")) {
+#'
+#'  library(mlr3)
+#'  library(mlr3tuning)
+#'
+#'  # singlecriteria
+#'  task = tsk("wine")
+#'  learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
+#'  resampling = rsmp("cv", folds = 3)
+#'  measure = msr("classif.acc")
+#'
+#'  instance = TuningInstanceSingleCrit$new(
+#'    task = task,
+#'    learner = learner,
+#'    resampling = resampling,
+#'    measure = measure,
+#'    terminator = trm("evals", n_evals = 5))
+#'
+#'  tnr("mbo")$optimize(instance)
+#'
+#'  # multicriteria
+#'  task = tsk("wine")
+#'  learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
+#'  resampling = rsmp("cv", folds = 3)
+#'  measures = msrs(c("classif.acc", "selected_features"))
+#'
+#'  instance = TuningInstanceMultiCrit$new(
+#'    task = task,
+#'    learner = learner,
+#'    resampling = resampling,
+#'    measures = measures,
+#'    terminator = trm("evals", n_evals = 5),
+#'    store_models = TRUE) # required due to selected features
+#'
+#'  tnr("mbo")$optimize(instance)
+#'}
 TunerMbo = R6Class("TunerMbo",
   inherit = TunerFromOptimizer,
   public = list(

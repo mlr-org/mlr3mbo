@@ -11,6 +11,43 @@
 #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
 #'
 #' @export
+#' @examples
+#'if (requireNamespace("mlr3learners") &
+#'    requireNamespace("DiceKriging") &
+#'    requireNamespace("rgenoud")) {
+#'
+#'  library(bbotk)
+#'  library(paradox)
+#'  library(mlr3learners)
+#'
+#'  # singlecriteria
+#'  fun = function(xs) {
+#'    list(y = xs$x ^ 2)
+#'  }
+#'  domain = ps(x = p_dbl(lower = -5, upper = 5))
+#'  codomain = ps(y = p_dbl(tags = "minimize"))
+#'  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+#'
+#'  instance = OptimInstanceSingleCrit$new(
+#'    objective = objective,
+#'    terminator = trm("evals", n_evals = 5))
+#'
+#'  opt("mbo")$optimize(instance)
+#'
+#'  # multicriteria
+#'  fun = function(xs) {
+#'    list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+#'  }
+#'  domain = ps(x = p_dbl(lower = -10, upper = 10))
+#'  codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
+#'  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+#'
+#'  instance = OptimInstanceMultiCrit$new(
+#'    objective = objective,
+#'    terminator = trm("evals", n_evals = 5))
+#'
+#'  opt("mbo")$optimize(instance)
+#'}
 OptimizerMbo = R6Class("OptimizerMbo",
   inherit = bbotk::Optimizer,
 
@@ -182,6 +219,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
     .optimize = function(inst) {
       # FIXME: this needs some more checks for edge cases like eips
+      #        or loop_function bayesopt_parego then default_surrogate should use one learner
       if (is.null(self$loop_function)) {
         self$loop_function = default_loopfun(inst)
       }

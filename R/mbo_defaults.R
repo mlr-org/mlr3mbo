@@ -18,7 +18,7 @@ NULL
 #' @description
 #' Chooses a default [loop_function], i.e. the MBO flavor to be used for optimization.
 #' For single-criteria optimization, defaults to [bayesopt_ego].
-#' For multi-criteria optimization, defaults to [bayesopt_parego].
+#' For multi-criteria optimization, defaults to [bayesopt_smsego].
 #'
 #' @param instance ([bbotk::OptimInstance])\cr
 #'   An object that inherits from [bbotk::OptimInstance].
@@ -29,7 +29,7 @@ default_loopfun = function(instance) {
   if (test_r6(instance, classes = "OptimInstanceSingleCrit")) {
     bayesopt_ego
   } else if (test_r6(instance, classes = "OptimInstanceMultiCrit")) {
-    bayesopt_parego
+    bayesopt_smsego
   }
 }
 

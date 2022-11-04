@@ -12,6 +12,44 @@ to be used, e.g., \link{bayesopt_ego} for sequential single objective MBO, a \li
 
 For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
 }
+\examples{
+if (requireNamespace("mlr3learners") &
+   requireNamespace("DiceKriging") &
+   requireNamespace("rgenoud")) {
+
+ library(bbotk)
+ library(paradox)
+ library(mlr3learners)
+
+ # singlecriteria
+ fun = function(xs) {
+   list(y = xs$x ^ 2)
+ }
+ domain = ps(x = p_dbl(lower = -5, upper = 5))
+ codomain = ps(y = p_dbl(tags = "minimize"))
+ objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+ instance = OptimInstanceSingleCrit$new(
+   objective = objective,
+   terminator = trm("evals", n_evals = 5))
+
+ opt("mbo")$optimize(instance)
+
+ # multicriteria
+ fun = function(xs) {
+   list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+ }
+ domain = ps(x = p_dbl(lower = -10, upper = 10))
+ codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
+ objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+ instance = OptimInstanceMultiCrit$new(
+   objective = objective,
+   terminator = trm("evals", n_evals = 5))
+
+ opt("mbo")$optimize(instance)
+}
+}
 \section{Super class}{
 \code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{OptimizerMbo}
 }

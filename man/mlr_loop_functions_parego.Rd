@@ -97,14 +97,14 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  terminator = trm("evals", n_evals = 5)
-
   instance = OptimInstanceMultiCrit$new(
     objective = objective,
-    terminator = terminator
-  )
+    terminator = trm("evals", n_evals = 5))
 
-  bayesopt_parego(instance)
+  opt("mbo",
+      loop_function = bayesopt_parego,
+      acq_function = acqf("ei"),
+      surrogate = default_surrogate(instance, n_learner = 1))$optimize(instance)
 }
 }
 \references{

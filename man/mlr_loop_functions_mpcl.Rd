@@ -82,20 +82,20 @@ if (requireNamespace("mlr3learners") &
   library(paradox)
   library(mlr3learners)
 
-  objective = ObjectiveRFun$new(
-    fun = function(xs) list(y = xs$x ^ 2),
-    domain = ps(x = p_dbl(lower = -5, upper = 5)),
-    codomain = ps(y = p_dbl(tags = "minimize"))
-  )
-
-  terminator = trm("evals", n_evals = 5)
+  fun = function(xs) {
+    list(y = xs$x ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -5, upper = 5))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
   instance = OptimInstanceSingleCrit$new(
     objective = objective,
-    terminator = terminator
-  )
+    terminator = trm("evals", n_evals = 6))
 
-  bayesopt_mpcl(instance)
+  opt("mbo",
+      loop_function = bayesopt_mpcl,
+      acq_function = acqf("ei"))$optimize(instance)
 }
 }
 \references{
