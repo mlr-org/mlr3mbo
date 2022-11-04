@@ -14,8 +14,9 @@ Authors@R: c(
     person("Bernd", "Bischl", , "bernd_bischl@gmx.net", role = "aut",
            comment = c(ORCID = "0000-0001-6002-6980")),
     person("Martin", "Binder", , "mlr.developer@mb706.com", role = "aut"),
-    person("Julia", "Moosbauer", , "ju.moosbauer@gmail.com", role = "aut")
-  )
+    person("Julia", "Moosbauer", , "ju.moosbauer@gmail.com", role = "aut"),
+    person("Sebastian", "Fischer", , "sebf.fischer@gmail.com", role = "aut",
+           comment = c(ORCID = "0000-0002-9609-3197")))
 Description: A modern and flexible approach to Bayesian Optimization in R.
 License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
