@@ -93,6 +93,7 @@ Required packages are determined based on the \code{surrogate} and the \code{acq
 \itemize{
 \item \href{#method-OptimizerMbo-new}{\code{OptimizerMbo$new()}}
 \item \href{#method-OptimizerMbo-print}{\code{OptimizerMbo$print()}}
+\item \href{#method-OptimizerMbo-reset}{\code{OptimizerMbo$reset()}}
 \item \href{#method-OptimizerMbo-clone}{\code{OptimizerMbo$clone()}}
 }
 }
@@ -164,6 +165,18 @@ Print method.
 \subsection{Returns}{
 (\code{character()}).
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-OptimizerMbo-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-OptimizerMbo-reset}{}}}
+\subsection{Method \code{reset()}}{
+Reset the optimizer.
+Sets the following fields to \code{NULL}:
+\code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{args}, \code{result_function}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$reset()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerMbo-clone"></a>}}
