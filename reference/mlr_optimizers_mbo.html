@@ -158,6 +158,7 @@ Required packages are determined based on the <code>surrogate</code> and the <co
 
 <ul><li><p><a href="#method-OptimizerMbo-new"><code>OptimizerMbo$new()</code></a></p></li>
 <li><p><a href="#method-OptimizerMbo-print"><code>OptimizerMbo$print()</code></a></p></li>
+<li><p><a href="#method-OptimizerMbo-reset"><code>OptimizerMbo$reset()</code></a></p></li>
 <li><p><a href="#method-OptimizerMbo-clone"><code>OptimizerMbo$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Optimizer.html#method-format"><code>bbotk::Optimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href="https://bbotk.mlr-org.com/reference/Optimizer.html#method-help"><code>bbotk::Optimizer$help()</code></a></span></li>
@@ -230,10 +231,20 @@ See for example <a href="result_by_surrogate_design.html">result_by_surrogate_de
 <p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>).</p>
 </div>
 
+</div><p></p><hr><a id="method-OptimizerMbo-reset"></a><div class="section">
+<h3 id="method-reset-">Method <code>reset()</code><a class="anchor" aria-label="anchor" href="#method-reset-"></a></h3>
+<p>Reset the optimizer.
+Sets the following fields to <code>NULL</code>:
+<code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>, <code>args</code>, <code>result_function</code></p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">OptimizerMbo</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-OptimizerMbo-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">OptimizerMbo</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -288,9 +299,9 @@ See for example <a href="result_by_surrogate_design.html">result_by_surrogate_de
 <span class="r-in"><span></span></span>
 <span class="r-in"><span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"mbo"</span><span class="op">)</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            x  x_domain        y1        y2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:  3.500510 &lt;list[1]&gt; 12.253567  2.251529</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -1.375052 &lt;list[1]&gt;  1.890768 11.390977</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             x  x_domain         y1       y2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -0.4843843 &lt;list[1]&gt;  0.2346282 6.172165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  3.9800266 &lt;list[1]&gt; 15.8406117 3.920505</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
