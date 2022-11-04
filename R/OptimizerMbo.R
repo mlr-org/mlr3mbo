@@ -97,6 +97,19 @@ OptimizerMbo = R6Class("OptimizerMbo",
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
       catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
+    },
+
+    #' @description
+    #' Reset the optimizer.
+    #' Sets the following fields to `NULL`:
+    #' `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, `args`, `result_function`
+    reset = function() {
+      private$.loop_function = NULL
+      private$.surrogate = NULL
+      private$.acq_function = NULL
+      private$.acq_optimizer = NULL
+      private$.args = NULL
+      private$.result_function = NULL
     }
   ),
 
@@ -214,8 +227,8 @@ OptimizerMbo = R6Class("OptimizerMbo",
     .surrogate = NULL,
     .acq_function = NULL,
     .acq_optimizer = NULL,
-    .result_function = NULL,
     .args = NULL,
+    .result_function = NULL,
 
     .optimize = function(inst) {
       # FIXME: this needs some more checks for edge cases like eips
@@ -248,6 +261,8 @@ OptimizerMbo = R6Class("OptimizerMbo",
     .assign_result = function(inst) {
       if (is.null(self$result_function)) {
         if ("noisy" %in% inst$objective$properties) {
+          # FIXME: this needs more checks
+          #        bayesopt_parego will fail here (multicrit) but single surrogate
           result_by_surrogate_design(inst, self)
         } else {
           super$.assign_result(inst)

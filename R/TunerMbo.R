@@ -50,7 +50,6 @@
 TunerMbo = R6Class("TunerMbo",
   inherit = TunerFromOptimizer,
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
@@ -86,7 +85,6 @@ TunerMbo = R6Class("TunerMbo",
   ),
 
   active = list(
-
     #' @template field_loop_function
     loop_function = function(rhs) {
       if (missing(rhs)) {

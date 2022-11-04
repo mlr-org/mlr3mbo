@@ -177,3 +177,32 @@ test_that("OptimizerMbo args", {
   expect_true(optimizer$acq_function$id %nin% colnames(instance$archive$data))
 })
 
+test_that("OptimizerMbo reset", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+
+  optimizer = opt("mbo")
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
+  optimizer$optimize(instance)
+
+  instance_mult = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
+
+  expect_error(optimizer$optimize(instance_mult), "does not support multi-crit objectives")
+  expect_loop_function(optimizer$loop_function)
+  expect_r6(optimizer$surrogate, "Surrogate")
+  expect_r6(optimizer$acq_function, "AcqFunction")
+  expect_r6(optimizer$acq_optimizer, "AcqOptimizer")
+
+  optimizer$reset()
+  expect_null(optimizer$loop_function)
+  expect_null(optimizer$surrogate)
+  expect_null(optimizer$acq_function)
+  expect_null(optimizer$acq_optimizer)
+
+  optimizer$optimize(instance_mult)
+  expect_loop_function(optimizer$loop_function)
+  expect_r6(optimizer$surrogate, "Surrogate")
+  expect_r6(optimizer$acq_function, "AcqFunction")
+  expect_r6(optimizer$acq_optimizer, "AcqOptimizer")
+})
+
