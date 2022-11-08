@@ -644,7 +644,7 @@ process fails due to data points being too close to each other:</p>
 <span>  acq_optimizer <span class="op">=</span> <span class="va">acq_optimizer</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [04:25:31.697] [bbotk] missing value where TRUE/FALSE needed</span></span>
+<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [16:29:43.484] [bbotk] missing value where TRUE/FALSE needed</span></span>
 <span><span class="co">#&gt;             x  x_domain            y</span></span>
 <span><span class="co">#&gt; 1: 0.01617037 &lt;list[1]&gt; 0.0002614808</span></span></code></pre></div>
 <p>The log tells us that an error happened and was caught:
@@ -655,16 +655,16 @@ optimizing the acquisition function:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="co">#&gt;               x            y  x_domain           timestamp batch_nr     acq_ei</span></span>
-<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-08 04:25:31        1         NA</span></span>
-<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-08 04:25:31        1         NA</span></span>
-<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-08 04:25:31        1         NA</span></span>
-<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-08 04:25:31        1         NA</span></span>
-<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2022-11-08 04:25:31        2         NA</span></span>
-<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2022-11-08 04:25:31        3 0.04353973</span></span>
-<span><span class="co">#&gt;  7:  0.45532567 0.2073214654 &lt;list[1]&gt; 2022-11-08 04:25:32        4 0.08484722</span></span>
-<span><span class="co">#&gt;  8: -0.24229299 0.0587058937 &lt;list[1]&gt; 2022-11-08 04:25:32        5 0.18996974</span></span>
-<span><span class="co">#&gt;  9: -0.99835097 0.9967046528 &lt;list[1]&gt; 2022-11-08 04:25:32        6 0.09128581</span></span>
-<span><span class="co">#&gt; 10:  0.01617037 0.0002614808 &lt;list[1]&gt; 2022-11-08 04:25:33        7 0.09341134</span></span>
+<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-08 16:29:43        1         NA</span></span>
+<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-08 16:29:43        1         NA</span></span>
+<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-08 16:29:43        1         NA</span></span>
+<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-08 16:29:43        1         NA</span></span>
+<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2022-11-08 16:29:43        2         NA</span></span>
+<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2022-11-08 16:29:43        3 0.04353973</span></span>
+<span><span class="co">#&gt;  7:  0.45532567 0.2073214654 &lt;list[1]&gt; 2022-11-08 16:29:44        4 0.08484722</span></span>
+<span><span class="co">#&gt;  8: -0.24229299 0.0587058937 &lt;list[1]&gt; 2022-11-08 16:29:44        5 0.18996974</span></span>
+<span><span class="co">#&gt;  9: -0.99835097 0.9967046528 &lt;list[1]&gt; 2022-11-08 16:29:44        6 0.09128581</span></span>
+<span><span class="co">#&gt; 10:  0.01617037 0.0002614808 &lt;list[1]&gt; 2022-11-08 16:29:45        7 0.09341134</span></span>
 <span><span class="co">#&gt;     .already_evaluated</span></span>
 <span><span class="co">#&gt;  1:                 NA</span></span>
 <span><span class="co">#&gt;  2:                 NA</span></span>
@@ -726,7 +726,7 @@ following:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">bayesopt_custom</span>, <span class="st">"label"</span><span class="op">)</span> <span class="op">=</span> <span class="st">"Test"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">bayesopt_custom</span>, <span class="st">"instance"</span><span class="op">)</span> <span class="op">=</span> <span class="st">"single-crit"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">bayesopt_custom</span>, <span class="st">"man"</span><span class="op">)</span> <span class="op">=</span> <span class="st">""</span>  <span class="co"># no man page</span></span>
-<span><span class="co"># if you want to add it to the dictionary: mlr_loop_functions$add("bayesopt_ego", bayesopt_ego)</span></span></code></pre></div>
+<span><span class="co"># if you want to add it to the dictionary: mlr_loop_functions$add("bayesopt_custom", bayesopt_custom)</span></span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bayesopt_custom</span></span>
 <span><span class="co">#&gt; Loop function: bayesopt_custom</span></span>
