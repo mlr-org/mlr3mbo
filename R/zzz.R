@@ -33,3 +33,5 @@
 
 # static code checks should not complain about commonly used data.table columns
 utils::globalVariables("y_scal")
+
+leanify_package()

@@ -128,7 +128,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
         list(
           insample_perf = self$insample_perf,
           perf_threshold = self$param_set$values$perf_thresholds %??% rep(0, self$n_learner),
-          perf_measure = self$param_set$values$perf_measures %??% replicate(length(learners), mlr_measures$get("regr.rsq"), simplify = FALSE)
+          perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)
         ),
         .f = function(insample_perf, perf_threshold, perf_measure) {
           if (perf_measure$minimize) {
@@ -200,7 +200,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       names(self$model) = self$y_cols
 
       if (self$param_set$values$assert_insample_perf) {
-        private$.insample_perf = setNames(pmap_dbl(list(model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(length(learners), mlr_measures$get("regr.rsq"), simplify = FALSE)),
+        private$.insample_perf = setNames(pmap_dbl(list(model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),
           .f = function(model, task, perf_measure) {
             assert_measure(perf_measure, task = task, learner = model)
             model$predict(task)$score(perf_measure, task = task, learner = model)
