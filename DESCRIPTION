@@ -13,11 +13,20 @@ Authors@R: c(
            comment = c(ORCID = "0000-0001-9754-0393")),
     person("Bernd", "Bischl", , "bernd_bischl@gmx.net", role = "aut",
            comment = c(ORCID = "0000-0001-6002-6980")),
+    person("Florian", "Pfisterer", , "pfistererf@googlemail.com", role = "aut",
+           comment = c(ORCID = "0000-0001-8867-762X")),
     person("Martin", "Binder", , "mlr.developer@mb706.com", role = "aut"),
     person("Julia", "Moosbauer", , "ju.moosbauer@gmail.com", role = "aut"),
     person("Sebastian", "Fischer", , "sebf.fischer@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0002-9609-3197")))
-Description: A modern and flexible approach to Bayesian Optimization in R.
+Description: A modern and flexible approach to Bayesian Optimization /
+    Model Based Optimization in R building on the 'bbotk' package. 'mlr3mbo' is
+    a toolbox providing both ready-to-use optimization algorithms as well
+    as their fundamental building blocks. Both single- and multi-objective
+    optimization is supported as well as mixed continuous, categorical and
+    conditional search spaces. Moreover, using 'mlr3mbo' for hyperparameter
+    optimization of machine learning models within the 'mlr3' ecosystem is
+    straightforward via 'mlr3tuning'.
 License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
@@ -25,7 +34,6 @@ Depends:
     mlr3tuning (>= 0.14.0),
     R (>= 3.1.0)
 Imports:
-    backports,
     bbotk (>= 0.5.4),
     checkmate (>= 2.0.0),
     data.table,
@@ -48,7 +56,6 @@ Suggests:
     spacefillr,
     stringi,
     testthat (>= 3.0.0),
-    withr
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
