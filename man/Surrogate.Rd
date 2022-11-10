@@ -5,6 +5,8 @@
 \title{Surrogate Model}
 \description{
 Abstract surrogate model class.
+
+A surrogate model is used to model the unkown objective function(s) based on all points evaluated so far.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

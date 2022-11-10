@@ -2,7 +2,7 @@
 # mlr3mbo
 
 A new R6 and much more modular implementation for single- and
-multicriteria Bayesian optimization.
+multi-objective Bayesian optimization.
 
 <!-- badges: start -->
 
@@ -22,9 +22,9 @@ vignette](https://mlr3mbo.mlr-org.com/articles/mlr3mbo.html).
 `mlr3mbo` is built modular relying on the following
 [R6](https://cran.r-project.org/package=R6) classes:
 
--   `Surrogate`: Surrogate Model
--   `AcqFunction`: Acquisition Function
--   `AcqOptimizer`: Acquisition Function Optimizer
+- `Surrogate`: Surrogate Model
+- `AcqFunction`: Acquisition Function
+- `AcqOptimizer`: Acquisition Function Optimizer
 
 Based on these, Bayesian optimization loops can be written, see, e.g.,
 `bayesopt_ego` for sequential single objective BO.
@@ -41,7 +41,7 @@ more details.
 
 ## Simple Optimization Example
 
-Minimize `y = x^2` via sequential singlecriteria BO using a GP as
+Minimize `y = x^2` via sequential single-objective BO using a GP as
 surrogate and EI optimized via random search as acquisition function:
 
 ``` r

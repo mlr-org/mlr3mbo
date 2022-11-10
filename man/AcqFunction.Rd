@@ -4,8 +4,9 @@
 \alias{AcqFunction}
 \title{Acquisition Function Base Class}
 \description{
-Based on a surrogate model, the acquisition function encodes the preference to evaluate a new
-point for evaluation.
+Abstract acquisition function class.
+
+Based on a \link{Surrogate}, the acquisition function encodes the preference to evaluate a new point for evaluation.
 }
 \seealso{
 Other Acquisition Function: 
@@ -136,7 +137,7 @@ A list of lists that contains multiple x values, e.g.
 }
 \subsection{Returns}{
 data.table::data.table() that contains one y-column for
-single-criteria functions and multiple y-columns for multi-criteria functions,
+single-objective functions and multiple y-columns for multi-objective functions,
 e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 1:2, y2 = 3:4)}.
 }
 }
@@ -159,7 +160,7 @@ One point per row, e.g. \code{data.table(x1 = c(1, 3), x2 = c(2, 4))}.}
 }
 \subsection{Returns}{
 data.table::data.table() that contains one y-column for
-single-criteria functions and multiple y-columns for multi-criteria
+single-objective functions and multiple y-columns for multi-objective
 functions, e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 1:2, y2 = 3:4)}.
 }
 }

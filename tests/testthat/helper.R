@@ -108,16 +108,13 @@ MAKE_DESIGN = function(instance, n = 4L) {
 
 if (requireNamespace("mlr3learners") && requireNamespace("DiceKriging") && requireNamespace("rgenoud")) {
   library(mlr3learners)
-  REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12)
+  REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.estim = TRUE, jitter = 1e-12)
   REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
-  REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8)
+  REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 10^-8)
   REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
 }
 REGR_FEATURELESS = lrn("regr.featureless")
 REGR_FEATURELESS$encapsulate = c(train = "callr", predict = "callr")
-
-
-# FIXME: ACQ_OPT_DEF = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
 OptimizerError = R6Class("OptimizerError",
   inherit = Optimizer,

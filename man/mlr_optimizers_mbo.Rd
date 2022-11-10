@@ -5,10 +5,19 @@
 \alias{OptimizerMbo}
 \title{Model Based Optimization}
 \description{
-\code{OptimizerMbo} class that implements model based optimization.
-The implementation follows a modular layout relying on a loop function determining the MBO flavor
-to be used, e.g., \link{bayesopt_ego} for sequential single objective MBO, a \link{Surrogate}, an
-\link{AcqFunction}, e.g., \link{AcqFunctionEI} for expected improvement and an \link{AcqOptimizer}.
+\code{OptimizerMbo} class that implements Model Based Optimization (MBO).
+The implementation follows a modular layout relying on a \link{loop_function} determining the MBO flavor to be used, e.g.,
+\link{bayesopt_ego} for sequential single-objective Bayesian Optimization, a \link{Surrogate}, an \link{AcqFunction}, e.g., \link{AcqFunctionEI} for
+Expected Improvement and an \link{AcqOptimizer}.
+
+MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built
+for the objective function.
+By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction, the next
+candidate is chosen for evaluation.
+
+Detailed descriptions of different MBO flavors are provided in the documentation of the respective \link{loop_function}.
+
+Termination is handled via a \link[bbotk:Terminator]{bbotk::Terminator} part of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
 
 For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
 }
@@ -21,7 +30,7 @@ if (requireNamespace("mlr3learners") &
  library(paradox)
  library(mlr3learners)
 
- # singlecriteria
+ # single-objective EGO
  fun = function(xs) {
    list(y = xs$x ^ 2)
  }
@@ -33,9 +42,29 @@ if (requireNamespace("mlr3learners") &
    objective = objective,
    terminator = trm("evals", n_evals = 5))
 
- opt("mbo")$optimize(instance)
+ learner = lrn("regr.km",
+   covtype = "matern3_2",
+   optim.method = "gen",
+   nugget.stability = 10^-8,
+   control = list(trace = FALSE))
 
- # multicriteria
+ surrogate = srlrn(learner)
+
+ acq_function = acqf("ei")
+
+ acq_optimizer = acqo(
+   optimizer = opt("random_search"),
+   terminator = trm("evals", n_evals = 100))
+
+ optimizer = opt("mbo",
+   loop_function = bayesopt_ego,
+   surrogate = surrogate,
+   acq_function = acq_function,
+   acq_optimizer = acq_optimizer)
+
+ optimizer$optimize(instance)
+
+ # multi-objective ParEGO
  fun = function(xs) {
    list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
  }
@@ -47,7 +76,13 @@ if (requireNamespace("mlr3learners") &
    objective = objective,
    terminator = trm("evals", n_evals = 5))
 
- opt("mbo")$optimize(instance)
+ optimizer = opt("mbo",
+   loop_function = bayesopt_parego,
+   surrogate = surrogate,
+   acq_function = acq_function,
+   acq_optimizer = acq_optimizer)
+
+ optimizer$optimize(instance)
 }
 }
 \section{Super class}{

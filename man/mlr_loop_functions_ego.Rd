@@ -3,14 +3,14 @@
 \name{mlr_loop_functions_ego}
 \alias{mlr_loop_functions_ego}
 \alias{bayesopt_ego}
-\title{Sequential Singlecriteria Bayesian Optimization}
+\title{Sequential Single-Objective Bayesian Optimization}
 \usage{
 bayesopt_ego(
   instance,
   init_design_size = NULL,
-  surrogate = NULL,
-  acq_function = NULL,
-  acq_optimizer = NULL,
+  surrogate,
+  acq_function,
+  acq_optimizer,
   random_interleave_iter = 0L
 )
 }
@@ -23,21 +23,18 @@ Size of the initial design.
 If \code{NULL} \code{4 * d} is used with \code{d} being the dimensionality of the search space.
 Points are drawn uniformly at random.}
 
-\item{surrogate}{(\code{NULL} | \link{Surrogate})\cr
+\item{surrogate}{(\link{Surrogate})\cr
 \link{Surrogate} to be used as a surrogate.
-Typically a \link{SurrogateLearner}.
-If \code{NULL} \code{default_surrogate(instance)} is used.}
+Typically a \link{SurrogateLearner}.}
 
-\item{acq_function}{(\code{NULL} | \link{AcqFunction}).\cr
-\link{AcqFunction} to be used as acquisition function.
-If \code{NULL} \code{default_acqfun(instance)} is used.}
+\item{acq_function}{(\link{AcqFunction}).\cr
+\link{AcqFunction} to be used as acquisition function.}
 
-\item{acq_optimizer}{(\code{NULL} | \link{AcqOptimizer})\cr
-\link{AcqOptimizer} to be used as acquisition function optimizer.
-If \code{NULL} \code{default_acqopt(acqfun)} is used.}
+\item{acq_optimizer}{(\link{AcqOptimizer})\cr
+\link{AcqOptimizer} to be used as acquisition function optimizer.}
 
 \item{random_interleave_iter}{(\code{integer(1)})\cr
-Every "random_interleave_iter" iteration (starting after the initial design), a point is
+Every \code{random_interleave_iter} iteration (starting after the initial design), a point is
 sampled uniformly at random and evaluated (instead of a model based proposal).
 For example, if \code{random_interleave_iter = 2}, random interleaving is performed in the second,
 fourth, sixth, ... iteration.
@@ -48,19 +45,20 @@ invisible(instance)\cr
 The original instance is modified in-place and returned invisible.
 }
 \description{
-MBO loop function for sequential singlecriteria Bayesian optimization.
+MBO loop function for sequential single-objective Bayesian Optimization.
 Normally used inside an \link{OptimizerMbo}.
+
+In each iteration after the initial design, the surrogate is updated and the next candidate is chosen based on
+optimizing the acquisition function.
 }
 \note{
 \itemize{
-\item If \code{surrogate} is \code{NULL} but \code{acq_function} is given and contains a \verb{$surrogate}, this
-\link{Surrogate} is used.
-\item You can pass a \code{surrogate} that was not given the \link[bbotk:Archive]{bbotk::Archive} of the
-\code{instance} during initialization.
+\item You can pass a \code{surrogate} that was not given the \link[bbotk:Archive]{bbotk::Archive} of the \code{instance} during initialization.
 In this case, the \link[bbotk:Archive]{bbotk::Archive} of the given \code{instance} is set during execution.
 \item Similarly, you can pass an \code{acq_function} that was not given the \code{surrogate} during initialization
 and an \code{acq_optimizer} that was not given the \code{acq_function}, i.e., delayed initialization is
 handled automatically.
+\item If the \code{acq_function} already contains a \verb{$surrogate}, it is overwritten by the provided \code{surrogate}.
 }
 }
 \examples{
@@ -83,9 +81,27 @@ if (requireNamespace("mlr3learners") &
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
-  opt("mbo",
-      loop_function = bayesopt_ego,
-      acq_function = acqf("ei"))$optimize(instance)
+  learner = lrn("regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    nugget.stability = 10^-8,
+    control = list(trace = FALSE))
+
+  surrogate = srlrn(learner)
+
+  acq_function = acqf("ei")
+
+  acq_optimizer = acqo(
+    optimizer = opt("random_search"),
+    terminator = trm("evals", n_evals = 100))
+
+  optimizer = opt("mbo",
+    loop_function = bayesopt_ego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer)
+
+  optimizer$optimize(instance)
 
   # expected improvement per second example
   fun = function(xs) {
@@ -102,10 +118,13 @@ if (requireNamespace("mlr3learners") &
   surrogate = default_surrogate(instance, n_learner = 2)
   surrogate$y_cols = c("y", "time")
 
-  opt("mbo",
-      loop_function = bayesopt_ego,
-      surrogate = surrogate,
-      acq_function = acqf("eips"))$optimize(instance)
+  optimizer = opt("mbo",
+    loop_function = bayesopt_ego,
+    surrogate = surrogate,
+    acq_function = acqf("eips"),
+    acq_optimizer = acq_optimizer)
+
+  optimizer$optimize(instance)
 }
 }
 \references{

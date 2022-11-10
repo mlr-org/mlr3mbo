@@ -5,7 +5,7 @@
 \alias{TunerMbo}
 \title{Tuner using Model Based Optimization}
 \description{
-Tune hyperparameters using model based optimization.
+Tune hyperparameters using Model Based Optimization.
 This is a minimal interface internally passing on to \link{OptimizerMbo}.
 For additional information and documentation see \link{OptimizerMbo}.
 }
@@ -17,7 +17,7 @@ if (requireNamespace("mlr3learners") &
  library(mlr3)
  library(mlr3tuning)
 
- # singlecriteria
+ # single-objective
  task = tsk("wine")
  learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
  resampling = rsmp("cv", folds = 3)
@@ -32,7 +32,7 @@ if (requireNamespace("mlr3learners") &
 
  tnr("mbo")$optimize(instance)
 
- # multicriteria
+ # multi-objective
  task = tsk("wine")
  learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
  resampling = rsmp("cv", folds = 3)

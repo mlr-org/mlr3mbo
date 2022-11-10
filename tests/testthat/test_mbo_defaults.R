@@ -1,5 +1,6 @@
 test_that("default_surrogate", {
   skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
   skip_if_not_installed("ranger")
 
   # singlecrit all numeric, deterministic
@@ -7,7 +8,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$model, "LearnerRegrKM")
   expect_equal(surrogate$model$param_set$values,
-    list(covtype = "matern3_2", optim.method = "gen", nugget.stability = 1e-08))
+    list(covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 1e-08))
   expect_equal(surrogate$model$encapsulate, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$model$fallback, "LearnerRegrRanger")
 
@@ -16,7 +17,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$model, "LearnerRegrKM")
   expect_equal(surrogate$model$param_set$values,
-    list(covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12))
+    list(covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.estim = TRUE, jitter = 1e-12))
   expect_equal(surrogate$model$encapsulate, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$model$fallback, "LearnerRegrRanger")
 
@@ -25,7 +26,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$model, types = "LearnerRegrKM")
   expect_equal(surrogate$model[[1L]]$param_set$values,
-    list(covtype = "matern3_2", optim.method = "gen", nugget.stability = 1e-08))
+    list(covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 1e-08))
   expect_equal(surrogate$model[[1L]]$encapsulate, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$model[[1L]]$fallback, "LearnerRegrRanger")
   expect_equal(surrogate$model[[1L]]$param_set$values, surrogate$model[[2L]]$param_set$values)
@@ -37,7 +38,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$model, types = "LearnerRegrKM")
   expect_equal(surrogate$model[[1L]]$param_set$values,
-    list(covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12))
+    list(covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.estim = TRUE, jitter = 1e-12))
   expect_equal(surrogate$model[[1L]]$encapsulate, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$model[[1L]]$fallback, "LearnerRegrRanger")
   expect_equal(surrogate$model[[1L]]$param_set$values, surrogate$model[[2L]]$param_set$values)
@@ -71,7 +72,14 @@ test_that("default_surrogate", {
   expect_r6(surrogate$model, "GraphLearner")
   expect_equal(surrogate$model$graph$ids(), c("imputesample", "imputeoor", "regr.ranger"))
   expect_equal(surrogate$model$param_set$values,
-    list(imputesample.affect_columns = mlr3pipelines::selector_type("logical"), imputeoor.min = TRUE, imputeoor.offset = 1, imputeoor.multiplier = 2, regr.ranger.num.threads = 1L, regr.ranger.num.trees = 500L, regr.ranger.keep.inbag = TRUE, regr.ranger.se.method = "jack"))
+    list(imputesample.affect_columns = mlr3pipelines::selector_type("logical"),
+         imputeoor.min = TRUE,
+         imputeoor.offset = 1,
+         imputeoor.multiplier = 2,
+         regr.ranger.num.threads = 1L,
+         regr.ranger.num.trees = 500L,
+         regr.ranger.keep.inbag = TRUE,
+         regr.ranger.se.method = "jack"))
   expect_r6(surrogate$model$fallback, "LearnerRegrFeatureless")
 
   # specify own learner, specify n_objectives, twocrit all numeric, deterministic

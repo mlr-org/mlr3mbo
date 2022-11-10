@@ -10,7 +10,7 @@ lgr::get_logger("bbotk")$set_threshold("warn")
 
 # mlr3mbo
 
-A new R6 and much more modular implementation for single- and multicriteria Bayesian optimization.
+A new R6 and much more modular implementation for single- and multi-objective Bayesian optimization.
 
 <!-- badges: start -->
 [![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=main)](https://github.com/mlr-org/mlr3mbo/actions)
@@ -41,7 +41,7 @@ See `?mbo_defaults` for more details.
 
 ## Simple Optimization Example
 
-Minimize `y = x^2` via sequential singlecriteria BO using a GP as surrogate and EI optimized via random search as acquisition function:
+Minimize `y = x^2` via sequential single-objective BO using a GP as surrogate and EI optimized via random search as acquisition function:
 
 ```{r, message = FALSE}
 library(bbotk)
