@@ -13,8 +13,6 @@
 
 .onLoad = function(libname, pkgname) { # nolint
   # nocov start
-  backports::import(pkgname)
-
   # add mbo to tuner dictionary
   x = utils::getFromNamespace("mlr_tuners", ns = "mlr3tuning")
   x$add("mbo", TunerMbo)
@@ -34,4 +32,6 @@
 # static code checks should not complain about commonly used data.table columns
 utils::globalVariables("y_scal")
 
-leanify_package()
+if (!Sys.getenv("DEVTOOLS_LOAD") == "true") {
+  leanify_package()
+}
