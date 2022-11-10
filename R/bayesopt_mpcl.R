@@ -140,8 +140,8 @@ bayesopt_mpcl = function(
     xdt_new = xdt
 
     # obtain proposals using fake archive with lie, also with error catching
-    xdt = map_dtr(seq_len(q)[-1L], function(i) {  # this is save because q is asserted >= 2)
-      tryCatch({
+    for (i in seq_len(q)[-1L]) { # this is save because q is asserted >= 2
+      xdt_new = tryCatch({
         # add lie instead of true eval
         tmp_archive$add_evals(xdt = xdt_new, xss_trafoed = transform_xdt_to_xss(xdt_new, tmp_archive$search_space), ydt = lie)
 
@@ -159,7 +159,8 @@ bayesopt_mpcl = function(
         lg$info("Proposing a randomly sampled point")
         SamplerUnif$new(domain)$sample(1L)$data
       })
-    })
+      xdt = rbind(xdt, xdt_new)
+    }
 
     acq_function$surrogate$archive = archive
 
