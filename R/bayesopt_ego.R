@@ -1,11 +1,14 @@
-#' @title Sequential Singlecriteria Bayesian Optimization
+#' @title Sequential Single-Objective Bayesian Optimization
 #'
 #' @include mlr_loop_functions.R
 #' @name mlr_loop_functions_ego
 #'
 #' @description
-#' MBO loop function for sequential singlecriteria Bayesian optimization.
+#' MBO loop function for sequential single-objective Bayesian Optimization.
 #' Normally used inside an [OptimizerMbo].
+#'
+#' In each iteration after the initial design, the surrogate is updated and the next candidate is chosen based on
+#' optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceSingleCrit])\cr
 #'   The [bbotk::OptimInstanceSingleCrit] to be optimized.
@@ -13,32 +16,27 @@
 #'   Size of the initial design.
 #'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
 #'   Points are drawn uniformly at random.
-#' @param surrogate (`NULL` | [Surrogate])\cr
+#' @param surrogate ([Surrogate])\cr
 #'   [Surrogate] to be used as a surrogate.
 #'   Typically a [SurrogateLearner].
-#'   If `NULL` \code{default_surrogate(instance)} is used.
-#' @param acq_function (`NULL` | [AcqFunction]).\cr
+#' @param acq_function ([AcqFunction]).\cr
 #'   [AcqFunction] to be used as acquisition function.
-#'   If `NULL` \code{default_acqfun(instance)} is used.
-#' @param acq_optimizer (`NULL` | [AcqOptimizer])\cr
+#' @param acq_optimizer ([AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
-#'   If `NULL` \code{default_acqopt(acqfun)} is used.
 #' @param random_interleave_iter (`integer(1)`)\cr
-#'   Every "random_interleave_iter" iteration (starting after the initial design), a point is
+#'   Every `random_interleave_iter` iteration (starting after the initial design), a point is
 #'   sampled uniformly at random and evaluated (instead of a model based proposal).
 #'   For example, if `random_interleave_iter = 2`, random interleaving is performed in the second,
 #'   fourth, sixth, ... iteration.
 #'   Default is `0`, i.e., no random interleaving is performed at all.
 #'
 #' @note
-#' * If `surrogate` is `NULL` but `acq_function` is given and contains a `$surrogate`, this
-#'   [Surrogate] is used.
-#' * You can pass a `surrogate` that was not given the [bbotk::Archive] of the
-#'   `instance` during initialization.
+#' * You can pass a `surrogate` that was not given the [bbotk::Archive] of the `instance` during initialization.
 #'   In this case, the [bbotk::Archive] of the given `instance` is set during execution.
 #' * Similarly, you can pass an `acq_function` that was not given the `surrogate` during initialization
 #'   and an `acq_optimizer` that was not given the `acq_function`, i.e., delayed initialization is
 #'   handled automatically.
+#' * If the `acq_function` already contains a `$surrogate`, it is overwritten by the provided `surrogate`.
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.
@@ -68,9 +66,27 @@
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
-#'   opt("mbo",
-#'       loop_function = bayesopt_ego,
-#'       acq_function = acqf("ei"))$optimize(instance)
+#'   learner = lrn("regr.km",
+#'     covtype = "matern3_2",
+#'     optim.method = "gen",
+#'     nugget.stability = 10^-8,
+#'     control = list(trace = FALSE))
+#'
+#'   surrogate = srlrn(learner)
+#'
+#'   acq_function = acqf("ei")
+#'
+#'   acq_optimizer = acqo(
+#'     optimizer = opt("random_search"),
+#'     terminator = trm("evals", n_evals = 100))
+#'
+#'   optimizer = opt("mbo",
+#'     loop_function = bayesopt_ego,
+#'     surrogate = surrogate,
+#'     acq_function = acq_function,
+#'     acq_optimizer = acq_optimizer)
+#'
+#'   optimizer$optimize(instance)
 #'
 #'   # expected improvement per second example
 #'   fun = function(xs) {
@@ -87,37 +103,35 @@
 #'   surrogate = default_surrogate(instance, n_learner = 2)
 #'   surrogate$y_cols = c("y", "time")
 #'
-#'   opt("mbo",
-#'       loop_function = bayesopt_ego,
-#'       surrogate = surrogate,
-#'       acq_function = acqf("eips"))$optimize(instance)
+#'   optimizer = opt("mbo",
+#'     loop_function = bayesopt_ego,
+#'     surrogate = surrogate,
+#'     acq_function = acqf("eips"),
+#'     acq_optimizer = acq_optimizer)
+#'
+#'   optimizer$optimize(instance)
 #' }
 bayesopt_ego = function(
     instance,
     init_design_size = NULL,
-    surrogate = NULL,
-    acq_function = NULL,
-    acq_optimizer = NULL,
+    surrogate,
+    acq_function,
+    acq_optimizer,
     random_interleave_iter = 0L
   ) {
 
   # assertions and defaults
   assert_r6(instance, "OptimInstanceSingleCrit")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
-  assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)  # cannot be SurrogateLearner due to EIPS
-  assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
-  assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
+  assert_r6(surrogate, classes = "Surrogate")  # cannot be SurrogateLearner due to EIPS
+  assert_r6(acq_function, classes = "AcqFunction")
+  assert_r6(acq_optimizer, classes = "AcqOptimizer")
   assert_int(random_interleave_iter, lower = 0L)
-
-  surrogate = surrogate %??% acq_function$surrogate
 
   archive = instance$archive
   domain = instance$search_space
   d = domain$length
   if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
-  if (is.null(surrogate)) surrogate = default_surrogate(instance)
-  if (is.null(acq_function)) acq_function = default_acqfun(instance)
-  if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
   surrogate$archive = archive
   acq_function$surrogate = surrogate
   acq_optimizer$acq_function = acq_function
