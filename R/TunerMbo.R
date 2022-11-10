@@ -3,7 +3,7 @@
 #' @name mlr_tuners_mbo
 #'
 #' @description
-#' Tune hyperparameters using model based optimization.
+#' Tune hyperparameters using Model Based Optimization.
 #' This is a minimal interface internally passing on to [OptimizerMbo].
 #' For additional information and documentation see [OptimizerMbo].
 #'
@@ -16,7 +16,7 @@
 #'  library(mlr3)
 #'  library(mlr3tuning)
 #'
-#'  # singlecriteria
+#'  # single-objective
 #'  task = tsk("wine")
 #'  learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
 #'  resampling = rsmp("cv", folds = 3)
@@ -31,7 +31,7 @@
 #'
 #'  tnr("mbo")$optimize(instance)
 #'
-#'  # multicriteria
+#'  # multi-objective
 #'  task = tsk("wine")
 #'  learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
 #'  resampling = rsmp("cv", folds = 3)
@@ -48,7 +48,7 @@
 #'  tnr("mbo")$optimize(instance)
 #'}
 TunerMbo = R6Class("TunerMbo",
-  inherit = TunerFromOptimizer,
+  inherit = mlr3tuning::TunerFromOptimizer,
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.

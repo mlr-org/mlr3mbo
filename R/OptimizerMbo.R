@@ -3,10 +3,19 @@
 #' @name mlr_optimizers_mbo
 #'
 #' @description
-#' `OptimizerMbo` class that implements model based optimization.
-#' The implementation follows a modular layout relying on a loop function determining the MBO flavor
-#' to be used, e.g., [bayesopt_ego] for sequential single objective MBO, a [Surrogate], an
-#' [AcqFunction], e.g., [AcqFunctionEI] for expected improvement and an [AcqOptimizer].
+#' `OptimizerMbo` class that implements Model Based Optimization (MBO).
+#' The implementation follows a modular layout relying on a [loop_function] determining the MBO flavor to be used, e.g.,
+#' [bayesopt_ego] for sequential single-objective Bayesian Optimization, a [Surrogate], an [AcqFunction], e.g., [AcqFunctionEI] for
+#' Expected Improvement and an [AcqOptimizer].
+#'
+#' MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built
+#' for the objective function.
+#' By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction, the next
+#' candidate is chosen for evaluation.
+#'
+#' Detailed descriptions of different MBO flavors are provided in the documentation of the respective [loop_function].
+#'
+#' Termination is handled via a [bbotk::Terminator] part of the [bbotk::OptimInstance] to be optimized.
 #'
 #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
 #'
@@ -20,7 +29,7 @@
 #'  library(paradox)
 #'  library(mlr3learners)
 #'
-#'  # singlecriteria
+#'  # single-objective EGO
 #'  fun = function(xs) {
 #'    list(y = xs$x ^ 2)
 #'  }
@@ -32,9 +41,29 @@
 #'    objective = objective,
 #'    terminator = trm("evals", n_evals = 5))
 #'
-#'  opt("mbo")$optimize(instance)
+#'  learner = lrn("regr.km",
+#'    covtype = "matern3_2",
+#'    optim.method = "gen",
+#'    nugget.stability = 10^-8,
+#'    control = list(trace = FALSE))
 #'
-#'  # multicriteria
+#'  surrogate = srlrn(learner)
+#'
+#'  acq_function = acqf("ei")
+#'
+#'  acq_optimizer = acqo(
+#'    optimizer = opt("random_search"),
+#'    terminator = trm("evals", n_evals = 100))
+#'
+#'  optimizer = opt("mbo",
+#'    loop_function = bayesopt_ego,
+#'    surrogate = surrogate,
+#'    acq_function = acq_function,
+#'    acq_optimizer = acq_optimizer)
+#'
+#'  optimizer$optimize(instance)
+#'
+#'  # multi-objective ParEGO
 #'  fun = function(xs) {
 #'    list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
 #'  }
@@ -46,7 +75,13 @@
 #'    objective = objective,
 #'    terminator = trm("evals", n_evals = 5))
 #'
-#'  opt("mbo")$optimize(instance)
+#'  optimizer = opt("mbo",
+#'    loop_function = bayesopt_parego,
+#'    surrogate = surrogate,
+#'    acq_function = acq_function,
+#'    acq_optimizer = acq_optimizer)
+#'
+#'  optimizer$optimize(instance)
 #'}
 OptimizerMbo = R6Class("OptimizerMbo",
   inherit = bbotk::Optimizer,

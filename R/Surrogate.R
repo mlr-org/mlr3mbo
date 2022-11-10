@@ -3,6 +3,8 @@
 #' @description
 #' Abstract surrogate model class.
 #'
+#' A surrogate model is used to model the unkown objective function(s) based on all points evaluated so far.
+#'
 #' @export
 Surrogate = R6Class("Surrogate",
   public = list(
