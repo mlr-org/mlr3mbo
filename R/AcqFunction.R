@@ -3,8 +3,9 @@
 #' @include mlr_acqfunctions.R
 #'
 #' @description
-#' Based on a surrogate model, the acquisition function encodes the preference to evaluate a new
-#' point for evaluation.
+#' Abstract acquisition function class.
+#'
+#' Based on a [Surrogate], the acquisition function encodes the preference to evaluate a new point for evaluation.
 #'
 #' @family Acquisition Function
 #' @export
@@ -65,7 +66,7 @@ AcqFunction = R6Class("AcqFunction",
     #'   `list(list(x1 = 1, x2 = 2), list(x1 = 3, x2 = 4))`.
     #'
     #' @return data.table::data.table() that contains one y-column for
-    #' single-criteria functions and multiple y-columns for multi-criteria functions,
+    #' single-objective functions and multiple y-columns for multi-objective functions,
     #' e.g. `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
     eval_many = function(xss) {
       if (self$check_values) lapply(xss, self$domain$assert)
@@ -81,7 +82,7 @@ AcqFunction = R6Class("AcqFunction",
     #'   One point per row, e.g. `data.table(x1 = c(1, 3), x2 = c(2, 4))`.
     #'
     #' @return data.table::data.table() that contains one y-column for
-    #' single-criteria functions and multiple y-columns for multi-criteria
+    #' single-objective functions and multiple y-columns for multi-objective
     #' functions, e.g. `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
     eval_dt = function(xdt) {
       if (self$check_values) self$domain$assert_dt(xdt)

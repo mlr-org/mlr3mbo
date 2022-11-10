@@ -17,8 +17,8 @@ NULL
 #'
 #' @description
 #' Chooses a default [loop_function], i.e. the MBO flavor to be used for optimization.
-#' For single-criteria optimization, defaults to [bayesopt_ego].
-#' For multi-criteria optimization, defaults to [bayesopt_smsego].
+#' For single-objective optimization, defaults to [bayesopt_ego].
+#' For multi-objective optimization, defaults to [bayesopt_smsego].
 #'
 #' @param instance ([bbotk::OptimInstance])\cr
 #'   An object that inherits from [bbotk::OptimInstance].
@@ -109,7 +109,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
       learner = mlr3learners::LearnerRegrKM$new()
       learner$param_set$values = insert_named(
         learner$param_set$values,
-        list(covtype = "matern3_2", optim.method = "gen")
+        list(covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE))
       )
       if ("noisy" %in% instance$objective$properties) {
         learner$param_set$values = insert_named(learner$param_set$values, list(nugget.estim = TRUE, jitter = 1e-12))

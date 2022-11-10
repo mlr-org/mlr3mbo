@@ -1,10 +1,10 @@
-#' @title Sequential Singlecriteria Bayesian Optimization via Multipoint Constant Liar
+#' @title Single-Objective Bayesian Optimization via Multipoint Constant Liar
 #'
 #' @include mlr_loop_functions.R
 #' @name mlr_loop_functions_mpcl
 #'
 #' @description
-#' MBO loop function for sequential singlecriteria Bayesian optimization via multipoint constant liar.
+#' MBO loop function for single-objective Bayesian Optimization via multipoint constant liar.
 #' Normally used inside an [OptimizerMbo].
 #'
 #' @param instance ([bbotk::OptimInstanceSingleCrit])\cr
