@@ -29,7 +29,8 @@ Id used when printing.}
 Returns the number of surrogate models.}
 
 \item{\code{x_cols}}{(\code{character()})\cr
-Column Id's of variables that should be used as features.}
+Column Id's of variables that should be used as features.
+By default, automatically inferred based on the archive.}
 
 \item{\code{y_cols}}{(\code{character()})\cr
 Column Id's of variables that should be used as targets.

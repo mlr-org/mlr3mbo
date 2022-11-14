@@ -20,14 +20,15 @@ The \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} to be o
 
 \item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
 Size of the initial design.
-If \code{NULL} \code{4 * d} is used with \code{d} being the dimensionality of the search space.
+If \code{NULL} and the \link[bbotk:Archive]{bbotk::Archive} contains no evaluations, \code{4 * d} is used with \code{d} being the
+dimensionality of the search space.
 Points are drawn uniformly at random.}
 
 \item{surrogate}{(\link{Surrogate})\cr
 \link{Surrogate} to be used as a surrogate.
 Typically a \link{SurrogateLearner}.}
 
-\item{acq_function}{(\link{AcqFunction}).\cr
+\item{acq_function}{(\link{AcqFunction})\cr
 \link{AcqFunction} to be used as acquisition function.}
 
 \item{acq_optimizer}{(\link{AcqOptimizer})\cr
@@ -48,20 +49,18 @@ The original instance is modified in-place and returned invisible.
 MBO loop function for sequential single-objective Bayesian Optimization.
 Normally used inside an \link{OptimizerMbo}.
 
-In each iteration after the initial design, the surrogate is updated and the next candidate is chosen based on
-optimizing the acquisition function.
+In each iteration after the initial design, the surrogate and acquisition function are updated and the next candidate
+is chosen based on optimizing the acquisition function.
 }
 \note{
 \itemize{
-\item You can pass a \code{surrogate} that was not given the \link[bbotk:Archive]{bbotk::Archive} of the \code{instance} during initialization.
-In this case, the \link[bbotk:Archive]{bbotk::Archive} of the given \code{instance} is set during execution.
-\item Similarly, you can pass an \code{acq_function} that was not given the \code{surrogate} during initialization
-and an \code{acq_optimizer} that was not given the \code{acq_function}, i.e., delayed initialization is
-handled automatically.
-\item If the \code{acq_function} already contains a \verb{$surrogate}, it is overwritten by the provided \code{surrogate}.
+\item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
+\item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
+\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit}.
 }
 }
 \examples{
+\dontrun{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {
@@ -73,7 +72,7 @@ if (requireNamespace("mlr3learners") &
   fun = function(xs) {
     list(y = xs$x ^ 2)
   }
-  domain = ps(x = p_dbl(lower = -5, upper = 5))
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
   codomain = ps(y = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
@@ -81,13 +80,7 @@ if (requireNamespace("mlr3learners") &
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
-  learner = lrn("regr.km",
-    covtype = "matern3_2",
-    optim.method = "gen",
-    nugget.stability = 10^-8,
-    control = list(trace = FALSE))
-
-  surrogate = srlrn(learner)
+  surrogate = default_surrogate(instance)
 
   acq_function = acqf("ei")
 
@@ -107,7 +100,7 @@ if (requireNamespace("mlr3learners") &
   fun = function(xs) {
     list(y = xs$x ^ 2, time = abs(xs$x))
   }
-  domain = ps(x = p_dbl(lower = -5, upper = 5))
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
   codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
@@ -125,6 +118,7 @@ if (requireNamespace("mlr3learners") &
     acq_optimizer = acq_optimizer)
 
   optimizer$optimize(instance)
+}
 }
 }
 \references{

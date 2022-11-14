@@ -161,6 +161,7 @@ By default, automatically inferred based on the archive.}
 \if{html}{\out{<a id="method-SurrogateLearnerCollection-predict"></a>}}
 \if{latex}{\out{\hypertarget{method-SurrogateLearnerCollection-predict}{}}}
 \subsection{Method \code{predict()}}{
+Predict mean response and standard error.
 Returns a named list of data.tables.
 Each contains the mean response and standard error for one \code{y_col}.
 \subsection{Usage}{

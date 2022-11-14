@@ -1,1 +1,2 @@
-#' @field acq_optimizer ([AcqOptimizer] | NULL).
+#' @field acq_optimizer ([AcqOptimizer] | `NULL`)\cr
+#'   The acquisition function optimizer.

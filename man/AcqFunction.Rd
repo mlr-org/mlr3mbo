@@ -6,7 +6,7 @@
 \description{
 Abstract acquisition function class.
 
-Based on a \link{Surrogate}, the acquisition function encodes the preference to evaluate a new point for evaluation.
+Based on the predictions of a \link{Surrogate}, the acquisition function encodes the preference to evaluate a new point.
 }
 \seealso{
 Other Acquisition Function: 
@@ -24,7 +24,7 @@ Other Acquisition Function:
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{direction}}{(\code{character(1)})\cr
+\item{\code{direction}}{(\code{"same"} | \code{"minimize"} | \code{"maximize"})\cr
 Optimization direction of the acquisition function relative to the direction of the
 objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
@@ -75,7 +75,7 @@ Surrogate.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 
-Note that the surrogate can be initialized lazy and can later be set via the active binding.
+Note that the surrogate can be initialized lazy and can later be set via the active binding \verb{$surrogate}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(
   id,
@@ -92,11 +92,16 @@ Note that the surrogate can be initialized lazy and can later be set via the act
 \describe{
 \item{\code{id}}{(\code{character(1)}).}
 
-\item{\code{constants}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
+\item{\code{constants}}{(\link[paradox:ParamSet]{paradox::ParamSet}).
+Changeable constants or parameters.}
 
-\item{\code{surrogate}}{(\code{NULL} | \link{Surrogate}).}
+\item{\code{surrogate}}{(\code{NULL} | \link{Surrogate}).
+Surrogate whose predictions are used in the acquisition function.}
 
-\item{\code{direction}}{(\code{character(1)}).}
+\item{\code{direction}}{(\code{"same"} | \code{"minimize"} | \code{"maximize"}).
+Optimization direction of the acquisition function relative to the direction of the
+objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 
 \item{\code{label}}{(\code{character(1)})\cr
 Label for this object.}
@@ -112,6 +117,8 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
 \if{latex}{\out{\hypertarget{method-AcqFunction-update}{}}}
 \subsection{Method \code{update()}}{
 Update the acquisition function.
+
+Can be implemented by subclasses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$update()}\if{html}{\out{</div>}}
 }

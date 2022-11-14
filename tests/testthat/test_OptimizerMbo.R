@@ -27,12 +27,11 @@ test_that("OptimizerMbo works with different settings - singlecrit", {
   skip_if_not_installed("DiceKriging")
   skip_if_not_installed("rgenoud")
 
-  # ego,mpcl x cb,ei,pi x rs x default_surrogate
+  # ego x cb,ei,pi x rs x default_surrogate
 
   # define combinations
   loop_functions = list(
-    ego = list(fun = bayesopt_ego),
-    mpcl = list(fun = bayesopt_mpcl)
+    ego = list(fun = bayesopt_ego)
   )
 
   acq_functions = list(

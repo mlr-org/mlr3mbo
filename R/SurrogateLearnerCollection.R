@@ -116,6 +116,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     },
 
     #' @description
+    #' Predict mean response and standard error.
     #' Returns a named list of data.tables.
     #' Each contains the mean response and standard error for one `y_col`.
     #'

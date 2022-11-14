@@ -147,7 +147,7 @@ By default, automatically inferred based on the archive.}
 \if{html}{\out{<a id="method-SurrogateLearner-predict"></a>}}
 \if{latex}{\out{\hypertarget{method-SurrogateLearner-predict}{}}}
 \subsection{Method \code{predict()}}{
-Returns mean response and standard error.
+Predict mean response and standard error.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateLearner$predict(xdt)}\if{html}{\out{</div>}}
 }

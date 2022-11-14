@@ -100,7 +100,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
     },
 
     #' @description
-    #' Returns mean response and standard error.
+    #' Predict mean response and standard error.
     #'
     #' @param xdt ([data.table::data.table()])\cr
     #'   New data. One row per observation.

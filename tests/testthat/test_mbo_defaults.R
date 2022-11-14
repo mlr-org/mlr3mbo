@@ -146,7 +146,7 @@ test_that("stability and defaults", {
 
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
-  expect_equal(acq_function$surrogate$model$errors, "Surrogate Train Error")
+  expect_equal(acq_function$surrogate$model$errors, "Surrogate Train Error.")
   lines = readLines(f)
   # Nothing should happen here due to the fallback learner
   expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)
@@ -158,7 +158,7 @@ test_that("stability and defaults", {
   expect_true(nrow(instance$archive$data) == 5L)
   lines = readLines(f)
   # Training fails but this error is not logged due to the "evaluate" encapsulate
-  expect_equal(acq_function$surrogate$model$errors, "Surrogate Train Error")
+  expect_equal(acq_function$surrogate$model$errors, "Surrogate Train Error.")
   expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)
   expect_true(sum(grepl("Cannot predict", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
   expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)

@@ -3,14 +3,14 @@
 \name{mlr_loop_functions_parego}
 \alias{mlr_loop_functions_parego}
 \alias{bayesopt_parego}
-\title{Sequential Multicriteria Bayesian Optimization via ParEGO}
+\title{Multi-Objective Bayesian Optimization via ParEGO}
 \usage{
 bayesopt_parego(
   instance,
   init_design_size = NULL,
-  surrogate = NULL,
-  acq_function = NULL,
-  acq_optimizer = NULL,
+  surrogate,
+  acq_function,
+  acq_optimizer,
   q = 1L,
   s = 100L,
   rho = 0.05,
@@ -23,23 +23,21 @@ The \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be opt
 
 \item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
 Size of the initial design.
-If \code{NULL} \code{4 * d} is used with \code{d} being the dimensionality of the search space.}
-
-\item{surrogate}{(\code{NULL} | \link{SurrogateLearner})\cr
-\link{SurrogateLearner} to be used as a surrogate.
-If \code{NULL} \code{default_surrogate(instance, n_learner = 1)} is used.
+If \code{NULL} and the \link[bbotk:Archive]{bbotk::Archive} contains no evaluations, \code{4 * d} is used with \code{d} being the
+dimensionality of the search space.
 Points are drawn uniformly at random.}
 
-\item{acq_function}{(\code{NULL} | \link{AcqFunction}).\cr
-\link{AcqFunction} to be used as acquisition function.
-If \code{NULL} \link{AcqFunctionEI} is used.}
+\item{surrogate}{(\link{SurrogateLearner})\cr
+\link{SurrogateLearner} to be used as a surrogate.}
 
-\item{acq_optimizer}{(\code{NULL} | \link{AcqOptimizer})\cr
-\link{AcqOptimizer} to be used as acquisition function optimizer.
-If \code{NULL} \code{default_acqopt(acqfun)} is used.}
+\item{acq_function}{(\link{AcqFunction})\cr
+\link{AcqFunction} to be used as acquisition function.}
+
+\item{acq_optimizer}{(\link{AcqOptimizer})\cr
+\link{AcqOptimizer} to be used as acquisition function optimizer.}
 
 \item{q}{(\code{integer(1)})\cr
-Batch size.
+Batch size, i.e., the number of candidates to be obtained for a single batch.
 Default is \code{1}.}
 
 \item{s}{(\code{integer(1)})\cr
@@ -48,12 +46,11 @@ Determines the total number of possible random weight vectors.
 Default is \code{100}.}
 
 \item{rho}{(\code{numeric(1)})\cr
-\eqn{\rho} in Equation 2 in Knowles (2006) scaling the linear part of the augmented Tchebycheff
-function.
+\eqn{\rho} in Equation 2 in Knowles (2006) scaling the linear part of the augmented Tchebycheff function.
 Default is \code{0.05}}
 
 \item{random_interleave_iter}{(\code{integer(1)})\cr
-Every "random_interleave_iter" iteration (starting after the initial design), a point is
+Every \code{random_interleave_iter} iteration (starting after the initial design), a point is
 sampled uniformly at random and evaluated (instead of a model based proposal).
 For example, if \code{random_interleave_iter = 2}, random interleaving is performed in the second,
 fourth, sixth, ... iteration.
@@ -64,24 +61,26 @@ invisible(instance)\cr
 The original instance is modified in-place and returned invisible.
 }
 \description{
-MBO loop function for sequential multicriteria Bayesian optimization via ParEGO.
+MBO loop function for multi-objective Bayesian Optimization via ParEGO.
 Normally used inside an \link{OptimizerMbo}.
+
+In each iteration after the initial design, the observed objective function values are normalized and \code{q} candidates are
+obtained by scalarizing these values via the augmented Tchebycheff function, updating the surrogate with respect to
+these scalarized values and optimizing the acquisition function.
 }
 \note{
 \itemize{
-\item If \code{surrogate} is \code{NULL} but \code{acq_function} is given and contains a \verb{$surrogate}, this
-\link{SurrogateLearner} is used.
-\item You can pass a \code{surrogate} that was not given the \link[bbotk:Archive]{bbotk::Archive} of the
-\code{instance} during initialization.
-In this case, the \link[bbotk:Archive]{bbotk::Archive} of the given \code{instance} is set during execution.
-\item Similarly, you can pass an \code{acq_function} that was not given the \code{surrogate} during initialization
-and an \code{acq_optimizer} that was not given the \code{acq_function}, i.e., delayed initialization is
-handled automatically.
-\item The scalarizations of the target variables are stored as the \code{y_scal} column in the
+\item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
+\item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
+\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit}.
+\item The scalarizations of the objective function values are stored as the \code{y_scal} column in the
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit}.
+\item To make use of parallel evaluations in the case of `q > 1, the objective
+function of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} must be implemented accordingly.
 }
 }
 \examples{
+\dontrun{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {
@@ -101,10 +100,22 @@ if (requireNamespace("mlr3learners") &
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
-  opt("mbo",
-      loop_function = bayesopt_parego,
-      acq_function = acqf("ei"),
-      surrogate = default_surrogate(instance, n_learner = 1))$optimize(instance)
+  surrogate = default_surrogate(instance, n_learner = 1)
+
+  acq_function = acqf("ei")
+
+  acq_optimizer = acqo(
+    optimizer = opt("random_search"),
+    terminator = trm("evals", n_evals = 100))
+
+  optimizer = opt("mbo",
+    loop_function = bayesopt_parego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer)
+
+  optimizer$optimize(instance)
+}
 }
 }
 \references{

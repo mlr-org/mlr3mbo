@@ -7,19 +7,20 @@
 #' MBO loop function for sequential single-objective Bayesian Optimization.
 #' Normally used inside an [OptimizerMbo].
 #'
-#' In each iteration after the initial design, the surrogate is updated and the next candidate is chosen based on
-#' optimizing the acquisition function.
+#' In each iteration after the initial design, the surrogate and acquisition function are updated and the next candidate
+#' is chosen based on optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceSingleCrit])\cr
 #'   The [bbotk::OptimInstanceSingleCrit] to be optimized.
 #' @param init_design_size (`NULL` | `integer(1)`)\cr
 #'   Size of the initial design.
-#'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
+#'   If `NULL` and the [bbotk::Archive] contains no evaluations, \code{4 * d} is used with \code{d} being the
+#'   dimensionality of the search space.
 #'   Points are drawn uniformly at random.
 #' @param surrogate ([Surrogate])\cr
 #'   [Surrogate] to be used as a surrogate.
 #'   Typically a [SurrogateLearner].
-#' @param acq_function ([AcqFunction]).\cr
+#' @param acq_function ([AcqFunction])\cr
 #'   [AcqFunction] to be used as acquisition function.
 #' @param acq_optimizer ([AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
@@ -31,12 +32,9 @@
 #'   Default is `0`, i.e., no random interleaving is performed at all.
 #'
 #' @note
-#' * You can pass a `surrogate` that was not given the [bbotk::Archive] of the `instance` during initialization.
-#'   In this case, the [bbotk::Archive] of the given `instance` is set during execution.
-#' * Similarly, you can pass an `acq_function` that was not given the `surrogate` during initialization
-#'   and an `acq_optimizer` that was not given the `acq_function`, i.e., delayed initialization is
-#'   handled automatically.
-#' * If the `acq_function` already contains a `$surrogate`, it is overwritten by the provided `surrogate`.
+#' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
+#' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
+#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::Archive] of the [bbotk::OptimInstanceSingleCrit].
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.
@@ -47,6 +45,7 @@
 #' @family Loop Function
 #' @export
 #' @examples
+#' \dontrun{
 #' if (requireNamespace("mlr3learners") &
 #'     requireNamespace("DiceKriging") &
 #'     requireNamespace("rgenoud")) {
@@ -58,7 +57,7 @@
 #'   fun = function(xs) {
 #'     list(y = xs$x ^ 2)
 #'   }
-#'   domain = ps(x = p_dbl(lower = -5, upper = 5))
+#'   domain = ps(x = p_dbl(lower = -10, upper = 10))
 #'   codomain = ps(y = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
@@ -66,13 +65,7 @@
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
-#'   learner = lrn("regr.km",
-#'     covtype = "matern3_2",
-#'     optim.method = "gen",
-#'     nugget.stability = 10^-8,
-#'     control = list(trace = FALSE))
-#'
-#'   surrogate = srlrn(learner)
+#'   surrogate = default_surrogate(instance)
 #'
 #'   acq_function = acqf("ei")
 #'
@@ -92,7 +85,7 @@
 #'   fun = function(xs) {
 #'     list(y = xs$x ^ 2, time = abs(xs$x))
 #'   }
-#'   domain = ps(x = p_dbl(lower = -5, upper = 5))
+#'   domain = ps(x = p_dbl(lower = -10, upper = 10))
 #'   codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
@@ -110,6 +103,7 @@
 #'     acq_optimizer = acq_optimizer)
 #'
 #'   optimizer$optimize(instance)
+#' }
 #' }
 bayesopt_ego = function(
     instance,
@@ -132,6 +126,7 @@ bayesopt_ego = function(
   domain = instance$search_space
   d = domain$length
   if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
+
   surrogate$archive = archive
   acq_function$surrogate = surrogate
   acq_optimizer$acq_function = acq_function

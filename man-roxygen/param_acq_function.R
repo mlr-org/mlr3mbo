@@ -1,2 +1,2 @@
-#' @param acq_function [AcqFunction]\cr
-#'   The acquistion function object. For defaults see [mbo_defaults].
+#' @param acq_function ([AcqFunction] | `NULL`)\cr
+#'   The acquisition function.

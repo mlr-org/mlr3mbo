@@ -8,9 +8,9 @@
 bayesopt_mpcl(
   instance,
   init_design_size = NULL,
-  surrogate = NULL,
-  acq_function = NULL,
-  acq_optimizer = NULL,
+  surrogate,
+  acq_function,
+  acq_optimizer,
   q = 2L,
   liar = mean,
   random_interleave_iter = 0L
@@ -22,21 +22,19 @@ The \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} to be o
 
 \item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
 Size of the initial design.
-If \code{NULL} \code{4 * d} is used with \code{d} being the dimensionality of the search space.
+If \code{NULL} and the \link[bbotk:Archive]{bbotk::Archive} contains no evaluations, \code{4 * d} is used with \code{d} being the
+dimensionality of the search space.
 Points are drawn uniformly at random.}
 
-\item{surrogate}{(\code{NULL} | \link{Surrogate})\cr
+\item{surrogate}{(\link{Surrogate})\cr
 \link{Surrogate} to be used as a surrogate.
-Typically a \link{SurrogateLearner}.
-If \code{NULL} \code{default_surrogate(instance)} is used.}
+Typically a \link{SurrogateLearner}.}
 
-\item{acq_function}{(\code{NULL} | \link{AcqFunction}).\cr
-\link{AcqFunction} to be used as acquisition function.
-If \code{NULL} \code{default_acqfun(instance)} is used.}
+\item{acq_function}{(\link{AcqFunction})\cr
+\link{AcqFunction} to be used as acquisition function.}
 
-\item{acq_optimizer}{(\code{NULL} | \link{AcqOptimizer})\cr
-\link{AcqOptimizer} to be used as acquisition function optimizer.
-If \code{NULL} \code{default_acqopt(acqfun)} is used.}
+\item{acq_optimizer}{(\link{AcqOptimizer})\cr
+\link{AcqOptimizer} to be used as acquisition function optimizer.}
 
 \item{q}{(\code{integer(1)})\cr
 Batch size > \code{1}.
@@ -44,10 +42,10 @@ Default is \code{2}.}
 
 \item{liar}{(\code{function})\cr
 Any function accepting a numeric vector as input and returning a single numeric output.
-Default is \code{mean}.}
+Default is \code{mean}. Other sensible functions include \code{min} (or \code{max}, depending on the optimization direction).}
 
 \item{random_interleave_iter}{(\code{integer(1)})\cr
-Every "random_interleave_iter" iteration (starting after the initial design), a point is
+Every \code{random_interleave_iter} iteration (starting after the initial design), a point is
 sampled uniformly at random and evaluated (instead of a model based proposal).
 For example, if \code{random_interleave_iter = 2}, random interleaving is performed in the second,
 fourth, sixth, ... iteration.
@@ -60,20 +58,23 @@ The original instance is modified in-place and returned invisible.
 \description{
 MBO loop function for single-objective Bayesian Optimization via multipoint constant liar.
 Normally used inside an \link{OptimizerMbo}.
+
+In each iteration after the initial design, the surrogate and acquisition function are updated.
+The acquisition function is then optimized, to find a candidate but instead of evaluating this candidate, the
+objective function value is obtained by applying the \code{liar} function to all previously obtained objective function values.
+This is repeated \code{q - 1} times to obtain a total of \code{q} candidates that are then evaluated in a single batch.
 }
 \note{
 \itemize{
-\item If \code{surrogate} is \code{NULL} but \code{acq_function} is given and contains a \verb{$surrogate}, this
-\link{Surrogate} is used.
-\item You can pass a \code{surrogate} that was not given the \link[bbotk:Archive]{bbotk::Archive} of the
-\code{instance} during initialization.
-In this case, the \link[bbotk:Archive]{bbotk::Archive} of the given \code{instance} is set during execution.
-\item Similarly, you can pass an \code{acq_function} that was not given the \code{surrogate} during initialization
-and an \code{acq_optimizer} that was not given the \code{acq_function}, i.e., delayed initialization is
-handled automatically.
+\item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
+\item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
+\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit}.
+\item To make use of parallel evaluations in the case of `q > 1, the objective
+function of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} must be implemented accordingly.
 }
 }
 \examples{
+\dontrun{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {
@@ -85,17 +86,31 @@ if (requireNamespace("mlr3learners") &
   fun = function(xs) {
     list(y = xs$x ^ 2)
   }
-  domain = ps(x = p_dbl(lower = -5, upper = 5))
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
   codomain = ps(y = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
   instance = OptimInstanceSingleCrit$new(
     objective = objective,
-    terminator = trm("evals", n_evals = 6))
+    terminator = trm("evals", n_evals = 7))
 
-  opt("mbo",
-      loop_function = bayesopt_mpcl,
-      acq_function = acqf("ei"))$optimize(instance)
+  surrogate = default_surrogate(instance)
+
+  acq_function = acqf("ei")
+
+  acq_optimizer = acqo(
+    optimizer = opt("random_search"),
+    terminator = trm("evals", n_evals = 100))
+
+  optimizer = opt("mbo",
+    loop_function = bayesopt_mpcl,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer,
+    args = list(q = 3))
+
+  optimizer$optimize(instance)
+}
 }
 }
 \references{

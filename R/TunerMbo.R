@@ -3,52 +3,55 @@
 #' @name mlr_tuners_mbo
 #'
 #' @description
-#' Tune hyperparameters using Model Based Optimization.
+#' `TunerMbo` class that implements Model Based Optimization (MBO).
 #' This is a minimal interface internally passing on to [OptimizerMbo].
 #' For additional information and documentation see [OptimizerMbo].
 #'
 #' @export
 #' @examples
-#'if (requireNamespace("mlr3learners") &
-#'    requireNamespace("DiceKriging") &
-#'    requireNamespace("rgenoud")) {
+#' \dontrun{
+#' if (requireNamespace("mlr3learners") &
+#'     requireNamespace("DiceKriging") &
+#'     requireNamespace("rgenoud")) {
 #'
-#'  library(mlr3)
-#'  library(mlr3tuning)
+#'   library(mlr3)
+#'   library(mlr3tuning)
 #'
-#'  # single-objective
-#'  task = tsk("wine")
-#'  learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
-#'  resampling = rsmp("cv", folds = 3)
-#'  measure = msr("classif.acc")
+#'   # single-objective
+#'   task = tsk("wine")
+#'   learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
+#'   resampling = rsmp("cv", folds = 3)
+#'   measure = msr("classif.acc")
 #'
-#'  instance = TuningInstanceSingleCrit$new(
-#'    task = task,
-#'    learner = learner,
-#'    resampling = resampling,
-#'    measure = measure,
-#'    terminator = trm("evals", n_evals = 5))
+#'   instance = TuningInstanceSingleCrit$new(
+#'     task = task,
+#'     learner = learner,
+#'     resampling = resampling,
+#'     measure = measure,
+#'     terminator = trm("evals", n_evals = 5))
 #'
-#'  tnr("mbo")$optimize(instance)
+#'   tnr("mbo")$optimize(instance)
 #'
-#'  # multi-objective
-#'  task = tsk("wine")
-#'  learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
-#'  resampling = rsmp("cv", folds = 3)
-#'  measures = msrs(c("classif.acc", "selected_features"))
+#'   # multi-objective
+#'   task = tsk("wine")
+#'   learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
+#'   resampling = rsmp("cv", folds = 3)
+#'   measures = msrs(c("classif.acc", "selected_features"))
 #'
-#'  instance = TuningInstanceMultiCrit$new(
-#'    task = task,
-#'    learner = learner,
-#'    resampling = resampling,
-#'    measures = measures,
-#'    terminator = trm("evals", n_evals = 5),
-#'    store_models = TRUE) # required due to selected features
+#'   instance = TuningInstanceMultiCrit$new(
+#'     task = task,
+#'     learner = learner,
+#'     resampling = resampling,
+#'     measures = measures,
+#'     terminator = trm("evals", n_evals = 5),
+#'     store_models = TRUE) # required due to selected features
 #'
-#'  tnr("mbo")$optimize(instance)
-#'}
+#'   tnr("mbo")$optimize(instance)
+#' }
+#' }
 TunerMbo = R6Class("TunerMbo",
   inherit = mlr3tuning::TunerFromOptimizer,
+
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -81,6 +84,14 @@ TunerMbo = R6Class("TunerMbo",
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
       catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
+    },
+
+    #' @description
+    #' Reset the tuner.
+    #' Sets the following fields to `NULL`:
+    #' `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, `args`, `result_function`
+    reset = function() {
+      private$.optimizer$reset()
     }
   ),
 

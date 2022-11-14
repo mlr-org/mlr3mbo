@@ -8,87 +8,100 @@
 #' [bayesopt_ego] for sequential single-objective Bayesian Optimization, a [Surrogate], an [AcqFunction], e.g., [AcqFunctionEI] for
 #' Expected Improvement and an [AcqOptimizer].
 #'
-#' MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built
-#' for the objective function.
-#' By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction, the next
-#' candidate is chosen for evaluation.
+#' MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built for the objective function.
+#' By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction, the next candidate is chosen for evaluation.
 #'
 #' Detailed descriptions of different MBO flavors are provided in the documentation of the respective [loop_function].
 #'
 #' Termination is handled via a [bbotk::Terminator] part of the [bbotk::OptimInstance] to be optimized.
 #'
-#' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
-#'
+#' @section Archive:
+#' The [bbotk::Archive] holds the following additional columns that are specific to MBO algorithms:
+#'   * `[acq_function$id]` (`numeric(1)`)\cr
+#'     The value of the acquisition function.
+#'   * `.already_evaluated` (`logical(1))`\cr
+#'     Whether this point was already evaluated. Depends on the `skip_already_evaluated` parameter of the [AcqOptimizer].
 #' @export
 #' @examples
-#'if (requireNamespace("mlr3learners") &
-#'    requireNamespace("DiceKriging") &
-#'    requireNamespace("rgenoud")) {
+#' \dontrun{
+#' if (requireNamespace("mlr3learners") &
+#'     requireNamespace("DiceKriging") &
+#'     requireNamespace("rgenoud")) {
 #'
-#'  library(bbotk)
-#'  library(paradox)
-#'  library(mlr3learners)
+#'   library(bbotk)
+#'   library(paradox)
+#'   library(mlr3learners)
 #'
-#'  # single-objective EGO
-#'  fun = function(xs) {
-#'    list(y = xs$x ^ 2)
-#'  }
-#'  domain = ps(x = p_dbl(lower = -5, upper = 5))
-#'  codomain = ps(y = p_dbl(tags = "minimize"))
-#'  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+#'   # single-objective EGO
+#'   fun = function(xs) {
+#'     list(y = xs$x ^ 2)
+#'   }
+#'   domain = ps(x = p_dbl(lower = -10, upper = 10))
+#'   codomain = ps(y = p_dbl(tags = "minimize"))
+#'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'  instance = OptimInstanceSingleCrit$new(
-#'    objective = objective,
-#'    terminator = trm("evals", n_evals = 5))
+#'   instance = OptimInstanceSingleCrit$new(
+#'     objective = objective,
+#'     terminator = trm("evals", n_evals = 5))
 #'
-#'  learner = lrn("regr.km",
-#'    covtype = "matern3_2",
-#'    optim.method = "gen",
-#'    nugget.stability = 10^-8,
-#'    control = list(trace = FALSE))
+#'   learner = lrn("regr.km",
+#'     covtype = "matern3_2",
+#'     optim.method = "gen",
+#'     nugget.stability = 10^-8,
+#'     control = list(trace = FALSE))
+#' 
+#'   surrogate = srlrn(learner)
+#' 
+#'   acq_function = acqf("ei")
 #'
-#'  surrogate = srlrn(learner)
+#'   acq_optimizer = acqo(
+#'     optimizer = opt("random_search"),
+#'     terminator = trm("evals", n_evals = 100))
 #'
-#'  acq_function = acqf("ei")
+#'   optimizer = opt("mbo",
+#'     loop_function = bayesopt_ego,
+#'     surrogate = surrogate,
+#'     acq_function = acq_function,
+#'     acq_optimizer = acq_optimizer)
 #'
-#'  acq_optimizer = acqo(
-#'    optimizer = opt("random_search"),
-#'    terminator = trm("evals", n_evals = 100))
+#'   optimizer$optimize(instance)
 #'
-#'  optimizer = opt("mbo",
-#'    loop_function = bayesopt_ego,
-#'    surrogate = surrogate,
-#'    acq_function = acq_function,
-#'    acq_optimizer = acq_optimizer)
+#'   # multi-objective ParEGO
+#'   fun = function(xs) {
+#'     list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+#'   }
+#'   domain = ps(x = p_dbl(lower = -10, upper = 10))
+#'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
+#'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'  optimizer$optimize(instance)
+#'   instance = OptimInstanceMultiCrit$new(
+#'     objective = objective,
+#'     terminator = trm("evals", n_evals = 5))
 #'
-#'  # multi-objective ParEGO
-#'  fun = function(xs) {
-#'    list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
-#'  }
-#'  domain = ps(x = p_dbl(lower = -10, upper = 10))
-#'  codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
-#'  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+#'   optimizer = opt("mbo",
+#'     loop_function = bayesopt_parego,
+#'     surrogate = surrogate,
+#'     acq_function = acq_function,
+#'     acq_optimizer = acq_optimizer)
 #'
-#'  instance = OptimInstanceMultiCrit$new(
-#'    objective = objective,
-#'    terminator = trm("evals", n_evals = 5))
-#'
-#'  optimizer = opt("mbo",
-#'    loop_function = bayesopt_parego,
-#'    surrogate = surrogate,
-#'    acq_function = acq_function,
-#'    acq_optimizer = acq_optimizer)
-#'
-#'  optimizer$optimize(instance)
-#'}
+#'   optimizer$optimize(instance)
+#' }
+#' }
 OptimizerMbo = R6Class("OptimizerMbo",
   inherit = bbotk::Optimizer,
 
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
+    #'
+    #' If `surrogate` is `NULL` and the `acq_function$surrogate` field is populated, this [Surrogate] is used.
+    #' Otherwise, `default_surrogate(instance)` is used.
+    #' If `acq_function` is NULL and the `acq_optimizer$acq_function` field is populated, this [AcqFunction] is used (and therefore its `$surrogate` if  populated; see above).
+    #' Otherwise `default_acqfun(instance)` is used.
+    #' If `acq_optimizer` is NULL, `default_acqopt(instance)` is used.
+    #'
+    #' Even if already initialized, the `$surrogate$archive` field will always be overwritten by the [bbotk::Archive] of the current [bbotk::OptimInstance] to be optimized.
+    #'
     #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
     #'
     #' @template param_loop_function
@@ -215,7 +228,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
       if (missing(rhs)) {
         param_classes_surrogate = c("logical" = "ParamLgl", "integer" = "ParamInt", "numeric" = "ParamDbl", "factor" = "ParamFct")
         if (!is.null(self$surrogate)) {
-          param_classes_surrogate = param_classes_surrogate[c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types] # surrogate has prio before acq_function$surrogate
+          param_classes_surrogate = param_classes_surrogate[c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types] # surrogate has precedence over acq_function$surrogate
         }
         param_classes_acq_opt = if (!is.null(self$acq_optimizer)) {
           self$acq_optimizer$optimizer$param_classes
@@ -266,18 +279,17 @@ OptimizerMbo = R6Class("OptimizerMbo",
     .result_function = NULL,
 
     .optimize = function(inst) {
-      # FIXME: this needs some more checks for edge cases like eips
-      #        or loop_function bayesopt_parego then default_surrogate should use one learner
+      # FIXME: this needs more checks for edge cases like eips or loop_function bayesopt_parego then default_surrogate should use one learner
       if (is.null(self$loop_function)) {
         self$loop_function = default_loopfun(inst)
       }
 
-      if (is.null(self$surrogate)) {
-        self$surrogate = self$acq_function$surrogate %??% default_surrogate(inst)
+      if (is.null(self$acq_function)) {  # acq_optimizer$acq_function has precedence
+        self$acq_function = self$acq_optimizer$acq_function %??% default_acqfun(inst)
       }
 
-      if (is.null(self$acq_function)) {
-        self$acq_function = default_acqfun(inst)
+      if (is.null(self$surrogate)) {  # acq_function$surrogate has precedence
+        self$surrogate = self$acq_function$surrogate %??% default_surrogate(inst)
       }
 
       if (is.null(self$acq_optimizer)) {
@@ -296,8 +308,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
     .assign_result = function(inst) {
       if (is.null(self$result_function)) {
         if ("noisy" %in% inst$objective$properties) {
-          # FIXME: this needs more checks
-          #        bayesopt_parego will fail here (multicrit) but single surrogate
+          # FIXME: this needs more checks bayesopt_parego will fail here (multicrit) but single surrogate
           result_by_surrogate_design(inst, self)
         } else {
           super$.assign_result(inst)

@@ -149,3 +149,36 @@ test_that("TunerMbo args", {
   expect_true(tuner$acq_function$id %nin% colnames(instance$archive$data))
 })
 
+test_that("TunerMbo reset", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+
+  tuner = tnr("mbo")
+
+  learner = lrn("classif.debug", x = to_tune())
+  learner$predict_type = "prob"
+ 
+  instance = TuningInstanceSingleCrit$new(tsk("pima"), learner = learner, resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  tuner$optimize(instance)
+
+  instance_mult = TuningInstanceMultiCrit$new(tsk("pima"), learner = learner, resampling = rsmp("holdout"), measure = msrs(c("classif.ce", "classif.logloss")), terminator = trm("evals", n_evals = 5L))
+ 
+  expect_error(tuner$optimize(instance_mult), "does not support multi-crit objectives")
+  expect_loop_function(tuner$loop_function)
+  expect_r6(tuner$surrogate, "Surrogate")
+  expect_r6(tuner$acq_function, "AcqFunction")
+  expect_r6(tuner$acq_optimizer, "AcqOptimizer")
+
+  tuner$reset()
+  expect_null(tuner$loop_function)
+  expect_null(tuner$surrogate)
+  expect_null(tuner$acq_function)
+  expect_null(tuner$acq_optimizer)
+
+  tuner$optimize(instance_mult)
+  expect_loop_function(tuner$loop_function)
+  expect_r6(tuner$surrogate, "Surrogate")
+  expect_r6(tuner$acq_function, "AcqFunction")
+  expect_r6(tuner$acq_optimizer, "AcqOptimizer")
+})
+

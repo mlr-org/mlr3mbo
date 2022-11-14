@@ -1,2 +1,2 @@
-#' @param surrogate [Surrogate]\cr
-#'   The surrogate object. For defaults see [mbo_defaults].
+#' @param surrogate ([Surrogate] | `NULL`)\cr
+#'   The surrogate.

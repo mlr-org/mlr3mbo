@@ -1,56 +1,54 @@
-#' @title Sequential Multicriteria Bayesian Optimization via ParEGO
+#' @title Multi-Objective Bayesian Optimization via ParEGO
 #'
 #' @include mlr_loop_functions.R
 #' @name mlr_loop_functions_parego
 #'
 #' @description
-#' MBO loop function for sequential multicriteria Bayesian optimization via ParEGO.
+#' MBO loop function for multi-objective Bayesian Optimization via ParEGO.
 #' Normally used inside an [OptimizerMbo].
+#'
+#' In each iteration after the initial design, the observed objective function values are normalized and `q` candidates are
+#' obtained by scalarizing these values via the augmented Tchebycheff function, updating the surrogate with respect to
+#' these scalarized values and optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceMultiCrit])\cr
 #'   The [bbotk::OptimInstanceMultiCrit] to be optimized.
 #' @param init_design_size (`NULL` | `integer(1)`)\cr
 #'   Size of the initial design.
-#'   If `NULL` \code{4 * d} is used with \code{d} being the dimensionality of the search space.
-#' @param surrogate (`NULL` | [SurrogateLearner])\cr
-#'   [SurrogateLearner] to be used as a surrogate.
-#'   If `NULL` \code{default_surrogate(instance, n_learner = 1)} is used.
+#'   If `NULL` and the [bbotk::Archive] contains no evaluations, \code{4 * d} is used with \code{d} being the
+#'   dimensionality of the search space.
 #'   Points are drawn uniformly at random.
-#' @param acq_function (`NULL` | [AcqFunction]).\cr
+#' @param surrogate ([SurrogateLearner])\cr
+#'   [SurrogateLearner] to be used as a surrogate.
+#' @param acq_function ([AcqFunction])\cr
 #'   [AcqFunction] to be used as acquisition function.
-#'   If `NULL` [AcqFunctionEI] is used.
-#' @param acq_optimizer (`NULL` | [AcqOptimizer])\cr
+#' @param acq_optimizer ([AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
-#'   If `NULL` \code{default_acqopt(acqfun)} is used.
 #' @param q (`integer(1)`)\cr
-#'   Batch size.
+#'   Batch size, i.e., the number of candidates to be obtained for a single batch.
 #'   Default is `1`.
 #' @param s (`integer(1)`)\cr
 #'   \eqn{s} in Equation 1 in Knowles (2006).
 #'   Determines the total number of possible random weight vectors.
 #'   Default is `100`.
 #' @param rho (`numeric(1)`)\cr
-#'   \eqn{\rho} in Equation 2 in Knowles (2006) scaling the linear part of the augmented Tchebycheff
-#'   function.
+#'   \eqn{\rho} in Equation 2 in Knowles (2006) scaling the linear part of the augmented Tchebycheff function.
 #'   Default is `0.05`
 #' @param random_interleave_iter (`integer(1)`)\cr
-#'   Every "random_interleave_iter" iteration (starting after the initial design), a point is
+#'   Every `random_interleave_iter` iteration (starting after the initial design), a point is
 #'   sampled uniformly at random and evaluated (instead of a model based proposal).
 #'   For example, if `random_interleave_iter = 2`, random interleaving is performed in the second,
 #'   fourth, sixth, ... iteration.
 #'   Default is `0`, i.e., no random interleaving is performed at all.
 #'
 #' @note
-#' * If `surrogate` is `NULL` but `acq_function` is given and contains a `$surrogate`, this
-#'   [SurrogateLearner] is used.
-#' * You can pass a `surrogate` that was not given the [bbotk::Archive] of the
-#'   `instance` during initialization.
-#'   In this case, the [bbotk::Archive] of the given `instance` is set during execution.
-#' * Similarly, you can pass an `acq_function` that was not given the `surrogate` during initialization
-#'   and an `acq_optimizer` that was not given the `acq_function`, i.e., delayed initialization is
-#'   handled automatically.
-#' * The scalarizations of the target variables are stored as the `y_scal` column in the
+#' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
+#' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
+#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::Archive] of the [bbotk::OptimInstanceMultiCrit].
+#' * The scalarizations of the objective function values are stored as the `y_scal` column in the
 #'   [bbotk::Archive] of the [bbotk::OptimInstanceMultiCrit].
+#' * To make use of parallel evaluations in the case of `q > 1, the objective
+#'   function of the [bbotk::OptimInstanceMultiCrit] must be implemented accordingly.
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.
@@ -60,6 +58,7 @@
 #' @family Loop Function
 #' @export
 #' @examples
+#' \dontrun{
 #' if (requireNamespace("mlr3learners") &
 #'     requireNamespace("DiceKriging") &
 #'     requireNamespace("rgenoud")) {
@@ -79,17 +78,29 @@
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
-#'   opt("mbo",
-#'       loop_function = bayesopt_parego,
-#'       acq_function = acqf("ei"),
-#'       surrogate = default_surrogate(instance, n_learner = 1))$optimize(instance)
+#'   surrogate = default_surrogate(instance, n_learner = 1)
+#'
+#'   acq_function = acqf("ei")
+#'
+#'   acq_optimizer = acqo(
+#'     optimizer = opt("random_search"),
+#'     terminator = trm("evals", n_evals = 100))
+#'
+#'   optimizer = opt("mbo",
+#'     loop_function = bayesopt_parego,
+#'     surrogate = surrogate,
+#'     acq_function = acq_function,
+#'     acq_optimizer = acq_optimizer)
+#'
+#'   optimizer$optimize(instance)
+#' }
 #' }
 bayesopt_parego = function(
     instance,
     init_design_size = NULL,
-    surrogate = NULL,
-    acq_function = NULL,
-    acq_optimizer = NULL,
+    surrogate,
+    acq_function,
+    acq_optimizer,
     q = 1L,
     s = 100L,
     rho = 0.05,
@@ -99,24 +110,20 @@ bayesopt_parego = function(
   # assertions and defaults
   assert_r6(instance, "OptimInstanceMultiCrit")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
-  assert_r6(surrogate, classes = "SurrogateLearner", null.ok = TRUE)
-  assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
-  assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
+  assert_r6(surrogate, classes = "SurrogateLearner")
+  assert_r6(acq_function, classes = "AcqFunction")
+  assert_r6(acq_optimizer, classes = "AcqOptimizer")
   assert_int(q, lower = 1L)
   assert_int(s, lower = 1L)
   assert_number(rho, lower = 0, upper = 1)
   assert_int(random_interleave_iter, lower = 0L)
-
-  surrogate = surrogate %??% acq_function$surrogate
 
   archive = instance$archive
   domain = instance$search_space
   d = domain$length
   k = length(archive$cols_y)  # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
   if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
-  if (is.null(surrogate)) surrogate = default_surrogate(instance, n_learner = 1L)
-  if (is.null(acq_function)) acq_function = AcqFunctionEI$new()
-  if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
+
   surrogate$archive = archive
   surrogate$y_cols = "y_scal"
   acq_function$surrogate = surrogate

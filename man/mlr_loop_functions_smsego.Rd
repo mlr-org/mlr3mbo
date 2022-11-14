@@ -3,14 +3,14 @@
 \name{mlr_loop_functions_smsego}
 \alias{mlr_loop_functions_smsego}
 \alias{bayesopt_smsego}
-\title{Sequential Multicriteria Bayesian Optimization via SmsEGO}
+\title{Sequential Multi-Objective Bayesian Optimization via SmsEGO}
 \usage{
 bayesopt_smsego(
   instance,
   init_design_size = NULL,
-  surrogate = NULL,
-  acq_function = NULL,
-  acq_optimizer = NULL,
+  surrogate,
+  acq_function,
+  acq_optimizer,
   random_interleave_iter = 0L
 )
 }
@@ -20,23 +20,21 @@ The \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be opt
 
 \item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
 Size of the initial design.
-If \code{NULL} \code{4 * d} is used with \code{d} being the dimensionality of the search space.
+If \code{NULL} and the \link[bbotk:Archive]{bbotk::Archive} contains no evaluations, \code{4 * d} is used with \code{d} being the
+dimensionality of the search space.
 Points are drawn uniformly at random.}
 
-\item{surrogate}{(\code{NULL} | \link{SurrogateLearnerCollection})\cr
-\link{SurrogateLearnerCollection} to be used as a surrogate.
-If \code{NULL} \code{default_surrogate(instance)} is used.}
+\item{surrogate}{(\link{SurrogateLearnerCollection})\cr
+\link{SurrogateLearnerCollection} to be used as a surrogate.}
 
-\item{acq_function}{(\code{NULL} | \link{AcqFunctionSmsEgo}).\cr
-\link{AcqFunctionSmsEgo} to be used as acquisition function.
-If \code{NULL} an \link{AcqFunctionSmsEgo} is used.}
+\item{acq_function}{(\link{AcqFunctionSmsEgo})\cr
+\link{AcqFunctionSmsEgo} to be used as acquisition function.}
 
-\item{acq_optimizer}{(\code{NULL} | \link{AcqOptimizer})\cr
-\link{AcqOptimizer} to be used as acquisition function optimizer.
-If \code{NULL} \code{default_acqopt(acqfun)} is used.}
+\item{acq_optimizer}{(\link{AcqOptimizer})\cr
+\link{AcqOptimizer} to be used as acquisition function optimizer.}
 
 \item{random_interleave_iter}{(\code{integer(1)})\cr
-Every "random_interleave_iter" iteration (starting after the initial design), a point is
+Every \code{random_interleave_iter} iteration (starting after the initial design), a point is
 sampled uniformly at random and evaluated (instead of a model based proposal).
 For example, if \code{random_interleave_iter = 2}, random interleaving is performed in the second,
 fourth, sixth, ... iteration.
@@ -47,24 +45,23 @@ invisible(instance)\cr
 The original instance is modified in-place and returned invisible.
 }
 \description{
-MBO loop function for sequential multicriteria Bayesian optimization via SmsEGO.
+MBO loop function for sequential multi-objective Bayesian Optimization via SmsEGO.
 Normally used inside an \link{OptimizerMbo}.
+
+In each iteration after the initial design, the surrogate and acquisition function (\link{AcqFunctionSmsEgo}) are updated and the next candidate
+is chosen based on optimizing the acquisition function.
 }
 \note{
 \itemize{
-\item If \code{surrogate} is \code{NULL} but \code{acq_function} is given and contains a \verb{$surrogate}, this
-\link{SurrogateLearnerCollection} is used.
-\item You can pass a \code{surrogate} that was not given the \link[bbotk:Archive]{bbotk::Archive} of the
-\code{instance} during initialization.
-In this case, the \link[bbotk:Archive]{bbotk::Archive} of the given \code{instance} is set during execution.
-\item Similarly, you can pass an \code{acq_function} that was not given the \code{surrogate} during initialization
-and an \code{acq_optimizer} that was not given the \code{acq_function}, i.e., delayed initialization is
-handled automatically.
+\item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
+\item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
+\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit}.
 \item Due to the iterative computation of the epsilon within the \link{AcqFunctionSmsEgo}, requires the \link[bbotk:Terminator]{bbotk::Terminator} of
 the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
 }
 }
 \examples{
+\dontrun{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {
@@ -84,8 +81,22 @@ if (requireNamespace("mlr3learners") &
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
-  opt("mbo",
-      loop_function = bayesopt_smsego)$optimize(instance)
+  surrogate = default_surrogate(instance)
+
+  acq_function = acqf("sms_ego")
+
+  acq_optimizer = acqo(
+    optimizer = opt("random_search"),
+    terminator = trm("evals", n_evals = 100))
+
+  optimizer = opt("mbo",
+    loop_function = bayesopt_smsego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer)
+
+  optimizer$optimize(instance)
+}
 }
 }
 \references{

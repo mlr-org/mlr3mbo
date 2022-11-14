@@ -5,7 +5,7 @@
 #' @description
 #' Abstract acquisition function class.
 #'
-#' Based on a [Surrogate], the acquisition function encodes the preference to evaluate a new point for evaluation.
+#' Based on the predictions of a [Surrogate], the acquisition function encodes the preference to evaluate a new point.
 #'
 #' @family Acquisition Function
 #' @export
@@ -16,12 +16,17 @@ AcqFunction = R6Class("AcqFunction",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' Note that the surrogate can be initialized lazy and can later be set via the active binding.
+    #' Note that the surrogate can be initialized lazy and can later be set via the active binding `$surrogate`.
     #'
     #' @param id (`character(1)`).
     #' @param constants ([paradox::ParamSet]).
+    #'   Changeable constants or parameters.
     #' @param surrogate (`NULL` | [Surrogate]).
-    #' @param direction (`character(1)`).
+    #'   Surrogate whose predictions are used in the acquisition function.
+    #' @param direction (`"same"` | `"minimize"` | `"maximize"`).
+    #'   Optimization direction of the acquisition function relative to the direction of the
+    #'   objective function of the [bbotk::OptimInstance].
+    #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
     #' @param label (`character(1)`)\cr
     #'   Label for this object.
     #' @param man (`character(1)`)\cr
@@ -31,7 +36,7 @@ AcqFunction = R6Class("AcqFunction",
       # If we do, we need to trafo values before updating the surrogate and predicting?
       assert_string(id)
       assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
-      self$direction = direction
+      self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
       if (is.null(surrogate)) {
         domain = ParamSet$new()
         codomain = ParamSet$new()
@@ -45,17 +50,15 @@ AcqFunction = R6Class("AcqFunction",
       }
       private$.label = assert_string(label, na.ok = TRUE)
       private$.man = assert_string(man, na.ok = TRUE)
-      super$initialize(
-        id = id,
-        domain = domain,
-        codomain = codomain,
-        constants = constants
-      )
+      super$initialize(id = id, domain = domain, codomain = codomain, constants = constants)
     },
 
     #' @description
     #' Update the acquisition function.
+    #'
+    #' Can be implemented by subclasses.
     update = function() {
+      # FIXME: at some point we may want to make this an AB to a private$.update
     },
 
     #' @description
@@ -93,7 +96,7 @@ AcqFunction = R6Class("AcqFunction",
   ),
 
   active = list(
-    #' @field direction (`character(1)`)\cr
+    #' @field direction (`"same"` | `"minimize"` | `"maximize"`)\cr
     #'   Optimization direction of the acquisition function relative to the direction of the
     #'   objective function of the [bbotk::OptimInstance].
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
@@ -162,7 +165,6 @@ AcqFunction = R6Class("AcqFunction",
         domain$trafo = NULL
         self$codomain = Codomain$new(codomain$params)  # lazy initialization requires this
         self$domain = domain
-        invisible(private$.surrogate)
       }
     }
   ),
