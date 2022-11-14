@@ -7,7 +7,7 @@
 #' @template section_dictionary_acqfunctions
 #'
 #' @description
-#' Expected improvement per second.
+#' Expected Improvement per Second.
 #'
 #' It is assumed that calculations are performed on an [bbotk::OptimInstanceSingleCrit].
 #' Additionally to target values of the codomain that should be minimized or maximized, the
@@ -81,7 +81,7 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
       mu_t = p[[self$time_col]]$mean
       d = self$y_best - self$surrogate_max_to_min[[self$y_col]] * mu
       d_norm = d / se
-      ei = d * pnorm(d_norm) + se + dnorm(d_norm)
+      ei = d * pnorm(d_norm) + se * dnorm(d_norm)
       eips = ei / mu_t
       eips = ifelse(se < 1e-20 | mu_t < 1e-20, 0, ei)
       data.table(acq_eips = eips)
