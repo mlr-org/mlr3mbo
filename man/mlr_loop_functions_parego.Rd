@@ -119,9 +119,11 @@ if (requireNamespace("mlr3learners") &
 }
 }
 \references{
-Knowles, Joshua (2006).
+\itemize{
+\item Knowles, Joshua (2006).
 \dQuote{ParEGO: A Hybrid Algorithm With On-Line Landscape Approximation for Expensive Multiobjective Optimization Problems.}
 \emph{IEEE Transactions on Evolutionary Computation}, \bold{10}(1), 50--66.
+}
 }
 \seealso{
 Other Loop Function: 

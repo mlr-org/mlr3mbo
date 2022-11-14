@@ -3,9 +3,9 @@
 \name{mlr_acqfunctions_sms_ego}
 \alias{mlr_acqfunctions_sms_ego}
 \alias{AcqFunctionSmsEgo}
-\title{Acquisition Function SMS EGO}
+\title{Acquisition Function SMS-EGO}
 \description{
-S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
+S-Metric Selection Evolutionary Multi-Objective Optimization Algorithm Acquisition Function.
 }
 \section{Parameters}{
 
@@ -24,12 +24,14 @@ described in Horn et al. (2015).
 }
 
 \references{
-Ponweiser, Wolfgang, Wagner, Tobias, Biermann, Dirk, Vincze, Markus (2008).
+\itemize{
+\item Ponweiser, Wolfgang, Wagner, Tobias, Biermann, Dirk, Vincze, Markus (2008).
 \dQuote{Multiobjective Optimization on a Limited Budget of Evaluations Using Model-Assisted S-Metric Selection.}
 In \emph{Proceedings of the 10th International Conference on Parallel Problem Solving from Nature}, 784--794.
-Horn, Daniel, Wagner, Tobias, Biermann, Dirk, Weihs, Claus, Bischl, Bernd (2015).
+\item Horn, Daniel, Wagner, Tobias, Biermann, Dirk, Weihs, Claus, Bischl, Bernd (2015).
 \dQuote{Model-Based Multi-objective Optimization: Taxonomy, Multi-Point Proposal, Toolbox and Benchmark.}
 In \emph{International Conference on Evolutionary Multi-Criterion Optimization}, 64--78.
+}
 }
 \seealso{
 Other Acquisition Function: 
@@ -38,6 +40,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}}
 }
 \concept{Acquisition Function}

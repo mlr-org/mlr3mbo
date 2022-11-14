@@ -143,14 +143,14 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \describe{
 \item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
 
-\item{\code{archive}}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive})\cr
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{\code{x_cols}}{(\code{NULL} | \code{character()})\cr
+\item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
 Column Id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
-\item{\code{y_cols}}{(\code{NULL} | \code{character()})\cr
+\item{\code{y_cols}}{(\code{character()} | \code{NULL})\cr
 Column Id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 }

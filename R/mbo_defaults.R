@@ -86,7 +86,7 @@ default_loopfun = function(instance) {
 #' wrapped as a [SurrogateLearnerCollection].
 #'
 #' @references
-#' `r format_bib("ding_2010")`
+#' * `r format_bib("ding_2010")`
 #'
 #' @param instance ([bbotk::OptimInstance])\cr
 #'   An object that inherits from [bbotk::OptimInstance].

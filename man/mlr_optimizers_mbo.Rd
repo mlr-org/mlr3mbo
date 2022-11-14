@@ -133,7 +133,7 @@ Subclasses of \link[paradox:Param]{paradox::Param}.}
 Set of properties of the optimizer.
 Must be a subset of \code{\link[=bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
 MBO in principle is very flexible and by default we assume that the optimizer has all properties.
-Still, properties can be changed here manually, depending on the \code{loop_function}, \code{surrogate}, acq_function\code{and}acq_optimizer` at hand.}
+When fully initialized, properties are determined based on the \code{loop_function} and \code{surrogate}.}
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.

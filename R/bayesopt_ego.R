@@ -42,6 +42,7 @@
 #' @references
 #' * `r format_bib("jones_1998")`
 #' * `r format_bib("snoek_2012")`
+#'
 #' @family Loop Function
 #' @export
 #' @examples

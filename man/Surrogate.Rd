@@ -22,17 +22,17 @@ Arbitrary model object depending on the subclass.}
 \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 
-\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive})\cr
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
 \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of surrogate models.}
 
-\item{\code{x_cols}}{(\code{character()})\cr
+\item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
 Column Id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
-\item{\code{y_cols}}{(\code{character()})\cr
+\item{\code{y_cols}}{(\code{character()} | \code{NULL})\cr
 Column Id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 
@@ -85,14 +85,14 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{model}}{(model)\cr
 Arbitrary model object depending on the subclass.}
 
-\item{\code{archive}}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive})\cr
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{\code{x_cols}}{(\code{NULL} | \code{character()})\cr
+\item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
 Column Id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
-\item{\code{y_cols}}{(\code{NULL} | \code{character()})\cr
+\item{\code{y_cols}}{(\code{character()} | \code{NULL})\cr
 Column Id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 

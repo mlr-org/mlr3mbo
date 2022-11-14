@@ -7,7 +7,7 @@
 #' @template section_dictionary_acqfunctions
 #'
 #' @description
-#' Confidence Bound.
+#' Lower / Upper Confidence Bound.
 #'
 #' @section Parameters:
 #' * `"lambda"` (`numeric(1)`)\cr
@@ -15,7 +15,7 @@
 #'   Defaults to `2`.
 #'
 #' @references
-#' `r format_bib("snoek_2012")`
+#' * `r format_bib("snoek_2012")`
 #'
 #' @family Acquisition Function
 #' @export

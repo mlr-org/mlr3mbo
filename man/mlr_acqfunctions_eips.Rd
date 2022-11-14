@@ -25,9 +25,11 @@ acqf("eips")
 }
 
 \references{
-Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).
+\itemize{
+\item Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).
 \dQuote{Practical Bayesian Optimization of Machine Learning Algorithms.}
 In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neural Information Processing Systems}, volume 25, 2951--2959.
+}
 }
 \seealso{
 Other Acquisition Function: 
@@ -35,6 +37,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_sms_ego}}
 }

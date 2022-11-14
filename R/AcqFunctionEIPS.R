@@ -17,7 +17,7 @@
 #' surrogate.
 #'
 #' @references
-#' `r format_bib("snoek_2012")`
+#' * `r format_bib("snoek_2012")`
 #'
 #' @family Acquisition Function
 #' @export
@@ -73,7 +73,7 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
   private = list(
     .fun = function(xdt) {
       if (is.null(self$y_best)) {
-        stop("y_best is not set. Missed to call $update()?")
+        stop("$y_best is not set. Missed to call $update()?")
       }
       p = self$surrogate$predict(xdt)
       mu = p[[self$y_col]]$mean

@@ -68,9 +68,11 @@ If the instance is of class \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInst
 wrapped as a \link{SurrogateLearnerCollection}.
 }
 \references{
-Ding, Yufeng, Simonoff, S J (2010).
+\itemize{
+\item Ding, Yufeng, Simonoff, S J (2010).
 \dQuote{An investigation of missing data methods for classification trees applied to binary response data.}
 \emph{Journal of Machine Learning Research}, \bold{11}(1), 131--170.
+}
 }
 \seealso{
 Other mbo_defaults: 

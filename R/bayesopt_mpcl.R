@@ -50,7 +50,9 @@
 #'   The original instance is modified in-place and returned invisible.
 #'
 #' @references
-#' `r format_bib("wang_2020")`
+#' * `r format_bib("ginsbourger_2008")`
+#' * `r format_bib("wang_2020")`
+#'
 #' @family Loop Function
 #' @export
 #' @examples

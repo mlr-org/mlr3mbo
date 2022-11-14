@@ -40,7 +40,7 @@
 #'  fun = function(xs) {
 #'    list(y = xs$x ^ 2)
 #'  }
-#'  domain = ps(x = p_dbl(lower = -5, upper = 5))
+#'  domain = ps(x = p_dbl(lower = -10, upper = 10))
 #'  codomain = ps(y = p_dbl(tags = "minimize"))
 #'  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'

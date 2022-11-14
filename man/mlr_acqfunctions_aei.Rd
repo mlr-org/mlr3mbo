@@ -6,6 +6,7 @@
 \title{Acquisition Function Augmented Expected Improvement}
 \description{
 Augmented Expected Improvement.
+Currently only works correctly with \code{"regr.km"} as surrogate model and \code{nugget.estim = TRUE} or given.
 }
 \section{Dictionary}{
 
@@ -26,9 +27,11 @@ Constant \eqn{c} as used in formula (14) of Huang (2012) to reflect the degree o
 }
 
 \references{
-Huang D, Allen TT, Notz WI, Zheng N (2012).
+\itemize{
+\item Huang D, Allen TT, Notz WI, Zheng N (2012).
 \dQuote{Erratum to: Global optimization of stochastic black-box systems via sequential kriging meta-models.}
 \emph{Journal of Global Optimization}, \bold{54}(2), 431--431.
+}
 }
 \seealso{
 Other Acquisition Function: 
@@ -36,6 +39,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_sms_ego}}
 }

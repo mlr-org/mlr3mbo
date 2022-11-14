@@ -3,7 +3,7 @@
 \name{mlr_loop_functions_smsego}
 \alias{mlr_loop_functions_smsego}
 \alias{bayesopt_smsego}
-\title{Sequential Multi-Objective Bayesian Optimization via SmsEGO}
+\title{Sequential Multi-Objective Bayesian Optimization via SMS-EGO}
 \usage{
 bayesopt_smsego(
   instance,

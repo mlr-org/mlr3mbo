@@ -54,7 +54,8 @@
 #'   The original instance is modified in-place and returned invisible.
 #'
 #' @references
-#' `r format_bib("knowles_2006")`
+#' * `r format_bib("knowles_2006")`
+#'
 #' @family Loop Function
 #' @export
 #' @examples

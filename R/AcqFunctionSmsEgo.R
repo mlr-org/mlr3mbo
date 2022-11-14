@@ -1,10 +1,10 @@
-#' @title Acquisition Function SMS EGO
+#' @title Acquisition Function SMS-EGO
 #'
 #' @include AcqFunction.R
 #' @name mlr_acqfunctions_sms_ego
 #'
 #' @description
-#' S-Metric Selection Evolutionary Multiobjective Optimization Algorithm.
+#' S-Metric Selection Evolutionary Multi-Objective Optimization Algorithm Acquisition Function.
 #'
 #' @section Parameters:
 #' * `"lambda"` (`numeric(1)`)\cr
@@ -19,8 +19,8 @@
 #'   described in Horn et al. (2015).
 #'
 #' @references
-#' `r format_bib("ponweiser_2008")`
-#' `r format_bib("horn_2015")`
+#' * `r format_bib("ponweiser_2008")`
+#' * `r format_bib("horn_2015")`
 #'
 #' @family Acquisition Function
 #' @export
@@ -64,14 +64,14 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       constants$values$lambda = lambda
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_sms_ego", constants = constants, surrogate = surrogate, direction = "minimize", label = "SMS EGO", man = "mlr3mbo::mlr_acqfunctions_sms_ego")  # indeed, we minimize, see comments below about C code
+      super$initialize("acq_sms_ego", constants = constants, surrogate = surrogate, direction = "minimize", label = "SMS-EGO", man = "mlr3mbo::mlr_acqfunctions_sms_ego")  # indeed, we minimize, see comments below about C code
     },
 
     #' @description
     #' Updates acquisition function and sets `ys_front`, `ref_point`, `epsilon`.
     update = function() {
       if (is.null(self$progress)) {
-        stop("progress is not set.")  # needs self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
+        stop("$progress is not set.")  # needs self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
       }
 
       n_obj = length(self$archive$cols_y)
@@ -103,13 +103,13 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       constants = list(...)
       lambda = constants$lambda
       if (is.null(self$ys_front)) {
-        stop("ys_front is not set. Missed to call $update()?")
+        stop("$ys_front is not set. Missed to call $update()?")
       }
       if (is.null(self$epsilon)) {
-        stop("epsilon is not set. Missed to call $update()?")
+        stop("$epsilon is not set. Missed to call $update()?")
       }
       if (is.null(self$ref_point)) {
-        stop("ref_point is not set. Missed to call $update()?")
+        stop("$ref_point is not set. Missed to call $update()?")
       }
       ps = self$surrogate$predict(xdt)
       means = map_dtc(ps, "mean")

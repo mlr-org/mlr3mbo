@@ -10,7 +10,8 @@
 #' Expected Improvement.
 #'
 #' @references
-#' `r format_bib("jones_1998")`
+#' * `r format_bib("jones_1998")`
+#'
 #' @family Acquisition Function
 #' @export
 AcqFunctionEI = R6Class("AcqFunctionEI",
@@ -40,7 +41,7 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
   private = list(
     .fun = function(xdt) {
       if (is.null(self$y_best)) {
-        stop("y_best is not set. Missed to call $update()?")
+        stop("$y_best is not set. Missed to call $update()?")
       }
       p = self$surrogate$predict(xdt)
       mu = p$mean

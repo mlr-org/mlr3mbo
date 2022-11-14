@@ -1,4 +1,4 @@
-#' @title Sequential Multi-Objective Bayesian Optimization via SmsEGO
+#' @title Sequential Multi-Objective Bayesian Optimization via SMS-EGO
 #'
 #' @include mlr_loop_functions.R
 #' @name mlr_loop_functions_smsego
@@ -43,6 +43,7 @@
 #' @references
 #' * `r format_bib("beume_2007")`
 #' * `r format_bib("ponweiser_2008")`
+#'
 #' @family Loop Function
 #' @export
 #' @examples

@@ -18,9 +18,11 @@ acqf("pi")
 }
 
 \references{
-Kushner, J. H (1964).
+\itemize{
+\item Kushner, J. H (1964).
 \dQuote{A New Method of Locating the Maximum Point of an Arbitrary Multipeak Curve in the Presence of Noise.}
 \emph{Journal of Basic Engineering}, \bold{86}(1), 97--106.
+}
 }
 \seealso{
 Other Acquisition Function: 
@@ -29,6 +31,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_sms_ego}}
 }
 \concept{Acquisition Function}
