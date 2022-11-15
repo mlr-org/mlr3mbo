@@ -180,17 +180,17 @@ A complete list of candidate properties, grouped by task type, is stored in <cod
 
 
 <dt><code>archive</code></dt>
-<dd><p>(<code>NULL</code> | <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a>)<br><a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.</p></dd>
+<dd><p>(<a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> | <code>NULL</code>)<br><a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.</p></dd>
 
 
 <dt><code>x_cols</code></dt>
-<dd><p>(<code>NULL</code> | <code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
+<dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code> | <code>NULL</code>)<br>
 Column Id's of variables that should be used as features.
 By default, automatically inferred based on the archive.</p></dd>
 
 
 <dt><code>y_col</code></dt>
-<dd><p>(<code>NULL</code> | <code>character(1)</code>)<br>
+<dd><p>(<code>character(1)</code> | <code>NULL</code>)<br>
 Column Id of variable that should be used as a target.
 By default, automatically inferred based on the archive.</p></dd>
 
@@ -200,7 +200,7 @@ By default, automatically inferred based on the archive.</p></dd>
 
 </div><p></p><hr><a id="method-SurrogateLearner-predict"></a><div class="section">
 <h3 id="method-predict-">Method <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code><a class="anchor" aria-label="anchor" href="#method-predict-"></a></h3>
-<p>Returns mean response and standard error.</p><div class="section">
+<p>Predict mean response and standard error.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SurrogateLearner</span><span class="op">$</span><span class="fu">predict</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -239,12 +239,70 @@ New data. One row per observation.</p></dd>
 
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"mlr3learners"</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"DiceKriging"</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"rgenoud"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bbotk.mlr-org.com" class="external-link">bbotk</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://paradox.mlr-org.com" class="external-link">paradox</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3learners.mlr-org.com" class="external-link">mlr3learners</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">fun</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">xs</span><span class="op">$</span><span class="va">x</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span>  <span class="va">domain</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html" class="external-link">ps</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="op">-</span><span class="fl">10</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">codomain</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html" class="external-link">ps</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>tags <span class="op">=</span> <span class="st">"minimize"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">objective</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/ObjectiveRFun.html" class="external-link">ObjectiveRFun</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>fun <span class="op">=</span> <span class="va">fun</span>, domain <span class="op">=</span> <span class="va">domain</span>, codomain <span class="op">=</span> <span class="va">codomain</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">instance</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html" class="external-link">OptimInstanceSingleCrit</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    objective <span class="op">=</span> <span class="va">objective</span>,</span></span>
+<span class="r-in"><span>    terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">xdt</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/generate_design_random.html" class="external-link">generate_design_random</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">search_space</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span>,</span></span>
+<span class="r-in"><span>    covtype <span class="op">=</span> <span class="st">"matern3_2"</span>,</span></span>
+<span class="r-in"><span>    optim.method <span class="op">=</span> <span class="st">"gen"</span>,</span></span>
+<span class="r-in"><span>    nugget.stability <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="op">-</span><span class="fl">8</span>,</span></span>
+<span class="r-in"><span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="srlrn.html">srlrn</a></span><span class="op">(</span><span class="va">learner</span>, archive <span class="op">=</span> <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">surrogate</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">surrogate</span><span class="op">$</span><span class="va">model</span><span class="op">$</span><span class="va">model</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: DiceKriging</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: rgenoud</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DiceKriging::km(design = data, response = task$truth(), covtype = "matern3_2", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 2.22432096087585e-06, optim.method = "gen", control = pv$control)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Trend  coeff.:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)    16.1053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Covar. type  : matern3_2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Covar. coeff.:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     4.0184</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 241.8953</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 2.224321e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Lennart Schneider, Jakob Richter, Marc Becker, Michel Lang, Bernd Bischl, Martin Binder, Julia Moosbauer, Sebastian Fischer.</p>
+  <p></p><p>Developed by Lennart Schneider, Jakob Richter, Marc Becker, Michel Lang, Bernd Bischl, Florian Pfisterer, Martin Binder, Julia Moosbauer, Sebastian Fischer.</p>
 </div>
 
 <div class="pkgdown-footer-right">
