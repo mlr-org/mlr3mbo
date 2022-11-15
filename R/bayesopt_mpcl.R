@@ -192,3 +192,4 @@ attr(bayesopt_mpcl, "instance") = "single-crit"
 attr(bayesopt_mpcl, "man") = "mlr3mbo::mlr_loop_functions_mpcl"
 
 mlr_loop_functions$add("bayesopt_mpcl", bayesopt_mpcl)
+

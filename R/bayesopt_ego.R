@@ -170,3 +170,4 @@ attr(bayesopt_ego, "instance") = "single-crit"
 attr(bayesopt_ego, "man") = "mlr3mbo::mlr_loop_functions_ego"
 
 mlr_loop_functions$add("bayesopt_ego", bayesopt_ego)
+

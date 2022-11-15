@@ -49,9 +49,9 @@
 #'     optim.method = "gen",
 #'     nugget.stability = 10^-8,
 #'     control = list(trace = FALSE))
-#' 
+#'
 #'   surrogate = srlrn(learner)
-#' 
+#'
 #'   acq_function = acqf("ei")
 #'
 #'   acq_optimizer = acqo(

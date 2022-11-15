@@ -58,3 +58,4 @@ as.data.table.DictionaryLoopFunction = function(x, ..., objects = FALSE) {
     )
   }, .fill = TRUE), "key")[]
 }
+

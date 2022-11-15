@@ -186,3 +186,4 @@ attr(bayesopt_parego, "instance") = "multi-crit"
 attr(bayesopt_parego, "man") = "mlr3mbo::mlr_loop_functions_parego"
 
 mlr_loop_functions$add("bayesopt_parego", bayesopt_parego)
+

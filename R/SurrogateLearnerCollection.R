@@ -32,49 +32,50 @@
 #'
 #' @export
 #' @examples
-#'if (requireNamespace("mlr3learners") &
-#'    requireNamespace("DiceKriging") &
-#'    requireNamespace("rgenoud") &
-#'    requireNamespace("ranger")) {
-#'  library(bbotk)
-#'  library(paradox)
-#'  library(mlr3learners)
+#' if (requireNamespace("mlr3learners") &
+#'     requireNamespace("DiceKriging") &
+#'     requireNamespace("rgenoud") &
+#'     requireNamespace("ranger")) {
+#'   library(bbotk)
+#'   library(paradox)
+#'   library(mlr3learners)
 #'
-#'  fun = function(xs) {
-#'    list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
-#'  }
-#'  domain = ps(x = p_dbl(lower = -10, upper = 10))
-#'  codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
-#'  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+#'   fun = function(xs) {
+#'     list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+#'   }
+#'   domain = ps(x = p_dbl(lower = -10, upper = 10))
+#'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
+#'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'  instance = OptimInstanceMultiCrit$new(
-#'    objective = objective,
-#'    terminator = trm("evals", n_evals = 5))
-#'  xdt = generate_design_random(instance$search_space, n = 4)$data
+#'   instance = OptimInstanceMultiCrit$new(
+#'     objective = objective,
+#'     terminator = trm("evals", n_evals = 5))
+#'   xdt = generate_design_random(instance$search_space, n = 4)$data
 #'
-#'  instance$eval_batch(xdt)
+#'   instance$eval_batch(xdt)
 #'
-#'  learner1 = lrn("regr.km",
-#'    covtype = "matern3_2",
-#'    optim.method = "gen",
-#'    nugget.stability = 10^-8,
-#'    control = list(trace = FALSE))
+#'   learner1 = lrn("regr.km",
+#'     covtype = "matern3_2",
+#'     optim.method = "gen",
+#'     nugget.stability = 10^-8,
+#'     control = list(trace = FALSE))
 #'
-#'  learner2 = lrn("regr.ranger",
-#'    num.trees = 500,
-#'    keep.inbag = TRUE,
-#'    se.method = "jack")
-#' 
-#'  surrogate = srlrnc(list(learner1, learner2), archive = instance$archive)
+#'   learner2 = lrn("regr.ranger",
+#'     num.trees = 500,
+#'     keep.inbag = TRUE,
+#'     se.method = "jack")
 #'
-#'  surrogate$update()
+#'   surrogate = srlrnc(list(learner1, learner2), archive = instance$archive)
 #'
-#'  surrogate$model
+#'   surrogate$update()
 #'
-#'  surrogate$model[["y2"]]$model
-#'}
+#'   surrogate$model
+#'
+#'   surrogate$model[["y2"]]$model
+#' }
 SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
   inherit = Surrogate,
+
   public = list(
 
     #' @description
@@ -264,3 +265,4 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     }
   )
 )
+

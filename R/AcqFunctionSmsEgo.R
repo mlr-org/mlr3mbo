@@ -24,6 +24,43 @@
 #'
 #' @family Acquisition Function
 #' @export
+#' @examples
+#' if (requireNamespace("mlr3learners") &
+#'     requireNamespace("DiceKriging") &
+#'     requireNamespace("rgenoud")) {
+#'   library(bbotk)
+#'   library(paradox)
+#'   library(mlr3learners)
+#'   library(data.table)
+#'
+#'   fun = function(xs) {
+#'     list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+#'   }
+#'   domain = ps(x = p_dbl(lower = -10, upper = 10))
+#'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
+#'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+#'
+#'   instance = OptimInstanceMultiCrit$new(
+#'     objective = objective,
+#'     terminator = trm("evals", n_evals = 5))
+#'
+#'   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+#'
+#'   learner = lrn("regr.km",
+#'     covtype = "matern3_2",
+#'     optim.method = "gen",
+#'     nugget.stability = 10^-8,
+#'     control = list(trace = FALSE))
+#'
+#'   surrogate = srlrnc(list(learner, learner$clone(deep = TRUE)), archive = instance$archive)
+#'
+#'   acq_function = acqf("sms_ego", surrogate = surrogate)
+#'
+#'   acq_function$surrogate$update()
+#'   acq_function$progress = 5 - 4 # n_evals = 5 and 4 points already evaluated
+#'   acq_function$update()
+#'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
+#' }
 AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
   inherit = AcqFunction,
 
@@ -124,3 +161,4 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
 )
 
 mlr_acqfunctions$add("sms_ego", AcqFunctionSmsEgo)
+

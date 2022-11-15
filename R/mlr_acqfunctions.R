@@ -33,3 +33,4 @@ as.data.table.DictionaryAcqFunction = function(x, ..., objects = FALSE) {
     )
   }, .fill = TRUE), "key")[]
 }
+

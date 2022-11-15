@@ -35,3 +35,4 @@ utils::globalVariables("y_scal")
 if (!Sys.getenv("DEVTOOLS_LOAD") == "true") {
   leanify_package()
 }
+

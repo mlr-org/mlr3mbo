@@ -26,6 +26,47 @@ Constant \eqn{c} as used in formula (14) of Huang (2012) to reflect the degree o
 }
 }
 
+\examples{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+  library(data.table)
+
+  fun = function(xs) {
+    list(y = xs$x ^ 2 + rnorm(length(xs$x), mean = 0, sd = 0.1))
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun,
+    domain = domain,
+    codomain = codomain,
+    properties = "noisy")
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+
+  learner = lrn("regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    nugget.estim = TRUE,
+    jitter = 1e-12,
+    control = list(trace = FALSE))
+
+  surrogate = srlrn(learner, archive = instance$archive)
+
+  acq_function = acqf("aei", surrogate = surrogate)
+
+  acq_function$surrogate$update()
+  acq_function$update()
+  acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
+}
+}
 \references{
 \itemize{
 \item Huang D, Allen TT, Notz WI, Zheng N (2012).

@@ -35,38 +35,38 @@ Default is \code{TRUE}.
 
 \examples{
 if (requireNamespace("mlr3learners") &
-   requireNamespace("DiceKriging") &
-   requireNamespace("rgenoud")) {
- library(bbotk)
- library(paradox)
- library(mlr3learners)
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
 
- fun = function(xs) {
-   list(y = xs$x ^ 2)
- }
- domain = ps(x = p_dbl(lower = -5, upper = 5))
- codomain = ps(y = p_dbl(tags = "minimize"))
- objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+  fun = function(xs) {
+    list(y = xs$x ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
- instance = OptimInstanceSingleCrit$new(
-   objective = objective,
-   terminator = trm("evals", n_evals = 5))
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
 
- xdt = generate_design_random(instance$search_space, n = 4)$data
+  xdt = generate_design_random(instance$search_space, n = 4)$data
 
- instance$eval_batch(xdt)
+  instance$eval_batch(xdt)
 
- learner = lrn("regr.km",
-   covtype = "matern3_2",
-   optim.method = "gen",
-   nugget.stability = 10^-8,
-   control = list(trace = FALSE))
+  learner = lrn("regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    nugget.stability = 10^-8,
+    control = list(trace = FALSE))
 
- surrogate = srlrn(learner, archive = instance$archive)
+  surrogate = srlrn(learner, archive = instance$archive)
 
- surrogate$update()
+  surrogate$update()
 
- surrogate$model$model
+  surrogate$model$model
 }
 }
 \section{Super class}{

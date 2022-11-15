@@ -151,3 +151,4 @@ attr(bayesopt_smsego, "instance") = "multi-crit"
 attr(bayesopt_smsego, "man") = "mlr3mbo::mlr_loop_functions_smsego"
 
 mlr_loop_functions$add("bayesopt_smsego", bayesopt_smsego)
+

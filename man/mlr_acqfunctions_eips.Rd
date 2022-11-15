@@ -5,7 +5,7 @@
 \alias{AcqFunctionEIPS}
 \title{Acquisition Function Expected Improvement Per Second}
 \description{
-Expected improvement per second.
+Expected Improvement per Second.
 
 It is assumed that calculations are performed on an \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit}.
 Additionally to target values of the codomain that should be minimized or maximized, the
@@ -24,6 +24,44 @@ acqf("eips")
 }\if{html}{\out{</div>}}
 }
 
+\examples{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+  library(data.table)
+
+  fun = function(xs) {
+    list(y = xs$x ^ 2, time = abs(xs$x))
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+
+  learner = lrn("regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    nugget.stability = 10^-8,
+    control = list(trace = FALSE))
+
+  surrogate = srlrnc(list(learner, learner$clone(deep = TRUE)), archive = instance$archive)
+  surrogate$y_cols = c("y", "time")
+
+  acq_function = acqf("eips", surrogate = surrogate)
+
+  acq_function$surrogate$update()
+  acq_function$update()
+  acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
+}
+}
 \references{
 \itemize{
 \item Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).

@@ -11,6 +11,7 @@
 #' @export
 AcqFunction = R6Class("AcqFunction",
   inherit = bbotk::Objective,
+
   public = list(
 
     #' @description
@@ -187,3 +188,4 @@ AcqFunction = R6Class("AcqFunction",
     .surrogate = NULL
   )
 )
+
