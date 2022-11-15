@@ -16,13 +16,12 @@ Authors@R: c(
     person("Florian", "Pfisterer", , "pfistererf@googlemail.com", role = "aut",
            comment = c(ORCID = "0000-0001-8867-762X")),
     person("Martin", "Binder", , "mlr.developer@mb706.com", role = "aut"),
-    person("Julia", "Moosbauer", , "ju.moosbauer@gmail.com", role = "aut"),
     person("Sebastian", "Fischer", , "sebf.fischer@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0002-9609-3197")))
 Description: A modern and flexible approach to Bayesian Optimization /
     Model Based Optimization in R building on the 'bbotk' package. 'mlr3mbo' is
     a toolbox providing both ready-to-use optimization algorithms as well
-    as their fundamental building blocks. Both single- and multi-objective
+    as their fundamental building blocks. Single- and multi-objective
     optimization is supported as well as mixed continuous, categorical and
     conditional search spaces. Moreover, using 'mlr3mbo' for hyperparameter
     optimization of machine learning models within the 'mlr3' ecosystem is
@@ -66,7 +65,6 @@ RoxygenNote: 7.2.1
 Collate:
     'mlr_acqfunctions.R'
     'AcqFunction.R'
-    'AcqFunctionAEI.R'
     'AcqFunctionCB.R'
     'AcqFunctionEI.R'
     'AcqFunctionEIPS.R'

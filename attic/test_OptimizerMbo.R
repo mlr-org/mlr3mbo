@@ -81,7 +81,7 @@ test_that("OptimizerMbo works for noisy problems", {
   optimizer = OptimizerMbo$new(
     loop_function = bayesopt_ego,
     surrogate = SurrogateLearner$new(REGR_KM_NOISY),
-    acq_function = AcqFunctionEI$new(),
+    acq_function = AcqFunctionAEI$new(),
     acq_optimizer = NULL,
     result_function = result_by_surrogate_design,
   )
