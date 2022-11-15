@@ -27,7 +27,7 @@ vignette](https://mlr3mbo.mlr-org.com/articles/mlr3mbo.html).
 - `AcqOptimizer`: Acquisition Function Optimizer
 
 Based on these, Bayesian optimization loops can be written, see, e.g.,
-`bayesopt_ego` for sequential single objective BO.
+`bayesopt_ego` for sequential single-objective BO.
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other
 `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk)
@@ -41,7 +41,7 @@ more details.
 
 ## Simple Optimization Example
 
-Minimize `y = x^2` via sequential single-objective BO using a GP as
+Minimize `f(x) = x^2` via sequential single-objective BO using a GP as
 surrogate and EI optimized via random search as acquisition function:
 
 ``` r
@@ -52,7 +52,7 @@ set.seed(1)
 
 obfun = ObjectiveRFun$new(
   fun = function(xs) list(y1 = xs$x ^ 2),
-  domain = ps(x = p_dbl(lower = -5, upper = 5)),
+  domain = ps(x = p_dbl(lower = -10, upper = 10)),
   codomain = ps(y1 = p_dbl(tags = "minimize")))
 
 instance = OptimInstanceSingleCrit$new(
@@ -74,7 +74,7 @@ optimizer$optimize(instance)
 ```
 
     ##             x  x_domain          y1
-    ## 1: 0.01948605 <list[1]> 0.000379706
+    ## 1: 0.03897209 <list[1]> 0.001518824
 
 Note that you can also use `bb_optimize` as a shorthand:
 
@@ -100,8 +100,8 @@ optimizer = opt("mbo",
 result = bb_optimize(
   fun,
   method = optimizer,
-  lower = c(x = -5),
-  upper = c(x = 5),
+  lower = c(x = -10),
+  upper = c(x = 10),
   max_evals = 10)
 ```
 

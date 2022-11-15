@@ -6,7 +6,7 @@
 \alias{mlr3mbo-package}
 \title{mlr3mbo: Flexible Bayesian Optimization in R}
 \description{
-A modern and flexible approach to Bayesian Optimization / Model Based Optimization in R building on the 'bbotk' package. 'mlr3mbo' is a toolbox providing both ready-to-use optimization algorithms as well as their fundamental building blocks. Both single- and multi-objective optimization is supported as well as mixed continuous, categorical and conditional search spaces. Moreover, using 'mlr3mbo' for hyperparameter optimization of machine learning models within the 'mlr3' ecosystem is straightforward via 'mlr3tuning'.
+A modern and flexible approach to Bayesian Optimization / Model Based Optimization in R building on the 'bbotk' package. 'mlr3mbo' is a toolbox providing both ready-to-use optimization algorithms as well as their fundamental building blocks. Single- and multi-objective optimization is supported as well as mixed continuous, categorical and conditional search spaces. Moreover, using 'mlr3mbo' for hyperparameter optimization of machine learning models within the 'mlr3' ecosystem is straightforward via 'mlr3tuning'.
 }
 \seealso{
 Useful links:
@@ -28,7 +28,6 @@ Authors:
   \item Bernd Bischl \email{bernd_bischl@gmx.net} (\href{https://orcid.org/0000-0001-6002-6980}{ORCID})
   \item Florian Pfisterer \email{pfistererf@googlemail.com} (\href{https://orcid.org/0000-0001-8867-762X}{ORCID})
   \item Martin Binder \email{mlr.developer@mb706.com}
-  \item Julia Moosbauer \email{ju.moosbauer@gmail.com}
   \item Sebastian Fischer \email{sebf.fischer@gmail.com} (\href{https://orcid.org/0000-0002-9609-3197}{ORCID})
 }
 
