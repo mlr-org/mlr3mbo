@@ -176,7 +176,7 @@ lgr = NULL
 
 # Intro
 
-`r ref_pkg("mlr3mbo")` makes model Bayesian optimization (BO) available within the `r ref_pkg("mlr3")` ecosystem.
+`r ref_pkg("mlr3mbo")` makes Bayesian Optimization (BO) available within the `r ref_pkg("mlr3")` ecosystem.
 BO can be used for optimizing any black box function, and is very suitable for hyperparameter optimization of machine learning models.
 `r ref_pkg("mlr3mbo")` allows for building custom BO algorithms relying on building blocks in a modular fashion, but also provides a variety of standard single- and multi-objective BO algorithms that can be used in a straightforward manner.
 

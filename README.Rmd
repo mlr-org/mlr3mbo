@@ -10,7 +10,7 @@ lgr::get_logger("bbotk")$set_threshold("warn")
 
 # mlr3mbo
 
-A new R6 and much more modular implementation for single- and multi-objective Bayesian optimization.
+A new R6 and much more modular implementation for single- and multi-objective Bayesian Optimization.
 
 <!-- badges: start -->
 [![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=main)](https://github.com/mlr-org/mlr3mbo/actions)
@@ -31,7 +31,7 @@ An overview and gentle introduction is given in [this vignette](https://mlr3mbo.
 * `AcqFunction`: Acquisition Function
 * `AcqOptimizer`: Acquisition Function Optimizer
 
-Based on these, Bayesian optimization loops can be written, see, e.g., `bayesopt_ego` for sequential single-objective BO.
+Based on these, Bayesian Optimization loops can be written, see, e.g., `bayesopt_ego` for sequential single-objective BO.
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk) package as well as
 a `TunerMbo` class behaving like any other `Tuner` from the [mlr3tuning](https://cran.r-project.org/package=mlr3tuning) package.

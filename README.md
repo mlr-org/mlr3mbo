@@ -2,7 +2,7 @@
 # mlr3mbo
 
 A new R6 and much more modular implementation for single- and
-multi-objective Bayesian optimization.
+multi-objective Bayesian Optimization.
 
 <!-- badges: start -->
 
@@ -26,7 +26,7 @@ vignette](https://mlr3mbo.mlr-org.com/articles/mlr3mbo.html).
 - `AcqFunction`: Acquisition Function
 - `AcqOptimizer`: Acquisition Function Optimizer
 
-Based on these, Bayesian optimization loops can be written, see, e.g.,
+Based on these, Bayesian Optimization loops can be written, see, e.g.,
 `bayesopt_ego` for sequential single-objective BO.
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other
