@@ -32,6 +32,9 @@ See \link[mlr3misc:Dictionary]{mlr3misc::Dictionary}.
 as.data.table(mlr_loop_functions)
 }
 \seealso{
+Other Dictionary: 
+\code{\link{mlr_acqfunctions}}
+
 Other Loop Function: 
 \code{\link{loop_function}},
 \code{\link{mlr_loop_functions_ego}},
@@ -39,5 +42,6 @@ Other Loop Function:
 \code{\link{mlr_loop_functions_parego}},
 \code{\link{mlr_loop_functions_smsego}}
 }
+\concept{Dictionary}
 \concept{Loop Function}
 \keyword{datasets}

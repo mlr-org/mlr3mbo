@@ -10,6 +10,7 @@
 #' @section Methods:
 #' See [mlr3misc::Dictionary].
 #'
+#' @family Dictionary
 #' @family Loop Function
 #' @export
 #' @examples

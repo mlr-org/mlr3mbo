@@ -4,7 +4,7 @@
 #' @name mlr_loop_functions_ego
 #'
 #' @description
-#' MBO loop function for sequential single-objective Bayesian Optimization.
+#' Loop function for sequential single-objective Bayesian Optimization.
 #' Normally used inside an [OptimizerMbo].
 #'
 #' In each iteration after the initial design, the surrogate and acquisition function are updated and the next candidate
@@ -46,7 +46,7 @@
 #' @family Loop Function
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' if (requireNamespace("mlr3learners") &
 #'     requireNamespace("DiceKriging") &
 #'     requireNamespace("rgenoud")) {

@@ -56,7 +56,7 @@ invisible(instance)\cr
 The original instance is modified in-place and returned invisible.
 }
 \description{
-MBO loop function for single-objective Bayesian Optimization via multipoint constant liar.
+Loop function for single-objective Bayesian Optimization via multipoint constant liar.
 Normally used inside an \link{OptimizerMbo}.
 
 In each iteration after the initial design, the surrogate and acquisition function are updated.
@@ -74,7 +74,7 @@ function of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleC
 }
 }
 \examples{
-\dontrun{
+\donttest{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {

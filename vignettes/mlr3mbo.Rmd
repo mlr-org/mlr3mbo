@@ -429,10 +429,6 @@ Additional arguments, i.e., arguments of the `loop_function` can be passed via t
 Finally, the mechanism how the final result is obtained after the optimization process (i.e., the best point in the case of single-objective and the Pareto set in the case of multi-objective optimization) can be changed via the `result_function` active binding.
 As an example, `r ref("mlr3mbo::result_by_surrogate_design", "result_by_surrogate_design")` will choose the final solution based on the prediction of the surrogate instead of the evaluations logged in the `archive` which is sensible in the case of noisy objective functions.
 
-```{r}
-optimizer$args = list(random_interleave_iter = 2)
-```
-
 Note that important fields such as `$param_classes`, `$packages`, `$properties` are automatically determined based on the choice of the `loop_function`, `surrogate`, `acq_function`, and `acq_optimizer`.
 
 If arguments such as the `surrogate`, `acq_function`, and `acq_optimizer` were not fully specified during construction, e.g., the `surrogate` missing the `archive`, or the `acq_function` missing the `surrogate`, lazy initialization is completed prior to the optimizer being used for optimization.
@@ -748,7 +744,7 @@ learner_y1 = lrn("regr.km",
   control = list(trace = FALSE))
 learner_y2 = learner_y1$clone(deep = TRUE)
 surrogate = srlrnc(list(learner_y1, learner_y2))
-acq_function = acqf("sms_ego")
+acq_function = acqf("smsego")
 acq_optimizer = acqo(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"),
   terminator = trm("stagnation", threshold = 1e-8))
 optimizer = opt("mbo",

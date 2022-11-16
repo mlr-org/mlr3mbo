@@ -4,7 +4,7 @@
 #' @name loop_function
 #'
 #' @description
-#' Loop functions determine the behavior of the BO algorithm on a global level.
+#' Loop functions determine the behavior of the Bayesian Optimization algorithm on a global level.
 #' For an overview of readily available loop functions, see `as.data.table(mlr_loop_functions)`.
 #'
 #' In general, a loop function is simply a decorated member of the S3 class `loop_function`.

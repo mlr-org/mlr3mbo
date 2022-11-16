@@ -61,7 +61,7 @@ invisible(instance)\cr
 The original instance is modified in-place and returned invisible.
 }
 \description{
-MBO loop function for multi-objective Bayesian Optimization via ParEGO.
+Loop function for multi-objective Bayesian Optimization via ParEGO.
 Normally used inside an \link{OptimizerMbo}.
 
 In each iteration after the initial design, the observed objective function values are normalized and \code{q} candidates are
@@ -80,7 +80,7 @@ function of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCri
 }
 }
 \examples{
-\dontrun{
+\donttest{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {

@@ -5,7 +5,7 @@
 #' @description
 #' `OptimizerMbo` class that implements Model Based Optimization (MBO).
 #' The implementation follows a modular layout relying on a [loop_function] determining the MBO flavor to be used, e.g.,
-#' [bayesopt_ego] for sequential single-objective Bayesian Optimization, a [Surrogate], an [AcqFunction], e.g., [AcqFunctionEI] for
+#' [bayesopt_ego] for sequential single-objective Bayesian Optimization, a [Surrogate], an [AcqFunction], e.g., [mlr_acqfunctions_ei] for
 #' Expected Improvement and an [AcqOptimizer].
 #'
 #' MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built for the objective function.
@@ -23,7 +23,7 @@
 #'     Whether this point was already evaluated. Depends on the `skip_already_evaluated` parameter of the [AcqOptimizer].
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' if (requireNamespace("mlr3learners") &
 #'     requireNamespace("DiceKriging") &
 #'     requireNamespace("rgenoud")) {

@@ -1,6 +1,6 @@
 Type: Package
 Package: mlr3mbo
-Title: Flexible Bayesian Optimization in R
+Title: Flexible Bayesian Optimization
 Version: 0.1.1
 Authors@R: c(
     person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
@@ -17,15 +17,24 @@ Authors@R: c(
            comment = c(ORCID = "0000-0001-8867-762X")),
     person("Martin", "Binder", , "mlr.developer@mb706.com", role = "aut"),
     person("Sebastian", "Fischer", , "sebf.fischer@gmail.com", role = "aut",
-           comment = c(ORCID = "0000-0002-9609-3197")))
-Description: A modern and flexible approach to Bayesian Optimization /
-    Model Based Optimization in R building on the 'bbotk' package. 'mlr3mbo' is
-    a toolbox providing both ready-to-use optimization algorithms as well
-    as their fundamental building blocks. Single- and multi-objective
-    optimization is supported as well as mixed continuous, categorical and
-    conditional search spaces. Moreover, using 'mlr3mbo' for hyperparameter
-    optimization of machine learning models within the 'mlr3' ecosystem is
-    straightforward via 'mlr3tuning'.
+           comment = c(ORCID = "0000-0002-9609-3197")),
+    person("Michael H.", "Buselli", role = "cph"),
+    person("Wessel", "Dankers", role = "cph"),
+    person("Carlos", "Fonseca", role = "cph"),
+    person("Manuel", "Lopez-Ibanez", role = "cph"),
+    person("Luis", "Paquete", role = "cph"))
+Description: A modern and flexible approach to Bayesian Optimization / Model
+    Based Optimization building on the 'bbotk' package. 'mlr3mbo' is a toolbox
+    providing both ready-to-use optimization algorithms as well as their fundamental
+    building blocks allowing for straightforward implementation of custom
+    algorithms. Single- and multi-objective optimization is supported as well as
+    mixed continuous, categorical and conditional search spaces. Moreover, using
+    'mlr3mbo' for hyperparameter optimization of machine learning models within the
+    'mlr3' ecosystem is straightforward via 'mlr3tuning'. Examples of ready-to-use
+    optimization algorithms include Efficient Global Optimization by Jones et al.
+    (1998) <doi:10.1023/A:1008306431147>, ParEGO by Knowles (2006)
+    <doi:10.1109/TEVC.2005.851274> and SMS-EGO by Ponweiser et al. (2008)
+    <doi:10.1007/978-3-540-87700-4_78>.
 License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues

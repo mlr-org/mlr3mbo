@@ -1,7 +1,7 @@
 #' @title Acquisition Function SMS-EGO
 #'
 #' @include AcqFunction.R
-#' @name mlr_acqfunctions_sms_ego
+#' @name mlr_acqfunctions_smsego
 #'
 #' @description
 #' S-Metric Selection Evolutionary Multi-Objective Optimization Algorithm Acquisition Function.
@@ -54,7 +54,7 @@
 #'
 #'   surrogate = srlrnc(list(learner, learner$clone(deep = TRUE)), archive = instance$archive)
 #'
-#'   acq_function = acqf("sms_ego", surrogate = surrogate)
+#'   acq_function = acqf("smsego", surrogate = surrogate)
 #'
 #'   acq_function$surrogate$update()
 #'   acq_function$progress = 5 - 4 # n_evals = 5 and 4 points already evaluated
@@ -101,7 +101,7 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       constants$values$lambda = lambda
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_sms_ego", constants = constants, surrogate = surrogate, direction = "minimize", label = "SMS-EGO", man = "mlr3mbo::mlr_acqfunctions_sms_ego")  # indeed, we minimize, see comments below about C code
+      super$initialize("acq_smsego", constants = constants, surrogate = surrogate, direction = "minimize", label = "SMS-EGO", man = "mlr3mbo::mlr_acqfunctions_smsego")  # indeed, we minimize, see comments below about C code
     },
 
     #' @description
@@ -155,10 +155,10 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       # allocate memory for adding points to front for HV calculation in C
       front2 = t(rbind(self$ys_front, 0))
       sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$epsilon, self$ref_point)  # note that the negative indicator is returned from C
-      data.table(acq_sms_ego = sms)
+      data.table(acq_smsego = sms)
     }
   )
 )
 
-mlr_acqfunctions$add("sms_ego", AcqFunctionSmsEgo)
+mlr_acqfunctions$add("smsego", AcqFunctionSmsEgo)
 

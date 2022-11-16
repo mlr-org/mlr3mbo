@@ -4,11 +4,11 @@
 #' @name mlr_loop_functions_smsego
 #'
 #' @description
-#' MBO loop function for sequential multi-objective Bayesian Optimization via SmsEGO.
+#' Loop function for sequential multi-objective Bayesian Optimization via SMS-EGO.
 #' Normally used inside an [OptimizerMbo].
 #'
-#' In each iteration after the initial design, the surrogate and acquisition function ([AcqFunctionSmsEgo]) are updated and the next candidate
-#' is chosen based on optimizing the acquisition function.
+#' In each iteration after the initial design, the surrogate and acquisition function ([mlr_acqfunctions_smsego]) are
+#' updated and the next candidate is chosen based on optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceMultiCrit])\cr
 #'   The [bbotk::OptimInstanceMultiCrit] to be optimized.
@@ -19,8 +19,8 @@
 #'   Points are drawn uniformly at random.
 #' @param surrogate ([SurrogateLearnerCollection])\cr
 #'   [SurrogateLearnerCollection] to be used as a surrogate.
-#' @param acq_function ([AcqFunctionSmsEgo])\cr
-#'   [AcqFunctionSmsEgo] to be used as acquisition function.
+#' @param acq_function ([mlr_acqfunctions_smsego])\cr
+#'   [mlr_acqfunctions_smsego] to be used as acquisition function.
 #' @param acq_optimizer ([AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
 #' @param random_interleave_iter (`integer(1)`)\cr
@@ -34,7 +34,7 @@
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
 #' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::Archive] of the [bbotk::OptimInstanceMultiCrit].
-#' * Due to the iterative computation of the epsilon within the [AcqFunctionSmsEgo], requires the [bbotk::Terminator] of
+#' * Due to the iterative computation of the epsilon within the [mlr_acqfunctions_smsego], requires the [bbotk::Terminator] of
 #'   the [bbotk::OptimInstanceMultiCrit] to be a [bbotk::TerminatorEvals].
 #'
 #' @return invisible(instance)\cr
@@ -47,7 +47,7 @@
 #' @family Loop Function
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' if (requireNamespace("mlr3learners") &
 #'     requireNamespace("DiceKriging") &
 #'     requireNamespace("rgenoud")) {
@@ -69,7 +69,7 @@
 #'
 #'   surrogate = default_surrogate(instance)
 #'
-#'   acq_function = acqf("sms_ego")
+#'   acq_function = acqf("smsego")
 #'
 #'   acq_optimizer = acqo(
 #'     optimizer = opt("random_search"),
@@ -146,7 +146,7 @@ bayesopt_smsego = function(
 
 class(bayesopt_smsego) = "loop_function"
 attr(bayesopt_smsego, "id") = "bayesopt_smsego"
-attr(bayesopt_smsego, "label") = "SmsEGO"
+attr(bayesopt_smsego, "label") = "SMS-EGO"
 attr(bayesopt_smsego, "instance") = "multi-crit"
 attr(bayesopt_smsego, "man") = "mlr3mbo::mlr_loop_functions_smsego"
 

@@ -4,9 +4,9 @@
 \name{mlr3mbo-package}
 \alias{mlr3mbo}
 \alias{mlr3mbo-package}
-\title{mlr3mbo: Flexible Bayesian Optimization in R}
+\title{mlr3mbo: Flexible Bayesian Optimization}
 \description{
-A modern and flexible approach to Bayesian Optimization / Model Based Optimization in R building on the 'bbotk' package. 'mlr3mbo' is a toolbox providing both ready-to-use optimization algorithms as well as their fundamental building blocks. Single- and multi-objective optimization is supported as well as mixed continuous, categorical and conditional search spaces. Moreover, using 'mlr3mbo' for hyperparameter optimization of machine learning models within the 'mlr3' ecosystem is straightforward via 'mlr3tuning'.
+A modern and flexible approach to Bayesian Optimization / Model Based Optimization building on the 'bbotk' package. 'mlr3mbo' is a toolbox providing both ready-to-use optimization algorithms as well as their fundamental building blocks allowing for straightforward implementation of custom algorithms. Single- and multi-objective optimization is supported as well as mixed continuous, categorical and conditional search spaces. Moreover, using 'mlr3mbo' for hyperparameter optimization of machine learning models within the 'mlr3' ecosystem is straightforward via 'mlr3tuning'. Examples of ready-to-use optimization algorithms include Efficient Global Optimization by Jones et al. (1998) \doi{10.1023/A:1008306431147}, ParEGO by Knowles (2006) \doi{10.1109/TEVC.2005.851274} and SMS-EGO by Ponweiser et al. (2008) \doi{10.1007/978-3-540-87700-4_78}.
 }
 \seealso{
 Useful links:
@@ -29,6 +29,15 @@ Authors:
   \item Florian Pfisterer \email{pfistererf@googlemail.com} (\href{https://orcid.org/0000-0001-8867-762X}{ORCID})
   \item Martin Binder \email{mlr.developer@mb706.com}
   \item Sebastian Fischer \email{sebf.fischer@gmail.com} (\href{https://orcid.org/0000-0002-9609-3197}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Michael H. Buselli [copyright holder]
+  \item Wessel Dankers [copyright holder]
+  \item Carlos Fonseca [copyright holder]
+  \item Manuel Lopez-Ibanez [copyright holder]
+  \item Luis Paquete [copyright holder]
 }
 
 }
