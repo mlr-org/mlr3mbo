@@ -176,7 +176,7 @@ the following dictionary can be inspected:</p>
 <span><span class="co">#&gt; 1:    bayesopt_ego Efficient Global Optimization single-crit</span></span>
 <span><span class="co">#&gt; 2:   bayesopt_mpcl      Multipoint Constant Liar single-crit</span></span>
 <span><span class="co">#&gt; 3: bayesopt_parego                        ParEGO  multi-crit</span></span>
-<span><span class="co">#&gt; 4: bayesopt_smsego                        SmsEGO  multi-crit</span></span>
+<span><span class="co">#&gt; 4: bayesopt_smsego                       SMS-EGO  multi-crit</span></span>
 <span><span class="co">#&gt;                                   man</span></span>
 <span><span class="co">#&gt; 1:    mlr3mbo::mlr_loop_functions_ego</span></span>
 <span><span class="co">#&gt; 2:   mlr3mbo::mlr_loop_functions_mpcl</span></span>
@@ -325,13 +325,13 @@ best function value observed so far (when assuming minimization).</p>
 dictionary can be inspected:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_acqfunctions</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        key                           label                               man</span></span>
-<span><span class="co">#&gt; 1:      cb  Lower / Upper Confidence Bound      mlr3mbo::mlr_acqfunctions_cb</span></span>
-<span><span class="co">#&gt; 2:      ei            Expected Improvement      mlr3mbo::mlr_acqfunctions_ei</span></span>
-<span><span class="co">#&gt; 3:    eips Expected Improvement Per Second    mlr3mbo::mlr_acqfunctions_eips</span></span>
-<span><span class="co">#&gt; 4:    mean                  Posterior Mean    mlr3mbo::mlr_acqfunctions_mean</span></span>
-<span><span class="co">#&gt; 5:      pi      Probability Of Improvement      mlr3mbo::mlr_acqfunctions_pi</span></span>
-<span><span class="co">#&gt; 6: sms_ego                         SMS-EGO mlr3mbo::mlr_acqfunctions_sms_ego</span></span></code></pre></div>
+<span><span class="co">#&gt;       key                           label                              man</span></span>
+<span><span class="co">#&gt; 1:     cb  Lower / Upper Confidence Bound     mlr3mbo::mlr_acqfunctions_cb</span></span>
+<span><span class="co">#&gt; 2:     ei            Expected Improvement     mlr3mbo::mlr_acqfunctions_ei</span></span>
+<span><span class="co">#&gt; 3:   eips Expected Improvement Per Second   mlr3mbo::mlr_acqfunctions_eips</span></span>
+<span><span class="co">#&gt; 4:   mean                  Posterior Mean   mlr3mbo::mlr_acqfunctions_mean</span></span>
+<span><span class="co">#&gt; 5:     pi      Probability Of Improvement     mlr3mbo::mlr_acqfunctions_pi</span></span>
+<span><span class="co">#&gt; 6: smsego                         SMS-EGO mlr3mbo::mlr_acqfunctions_smsego</span></span></code></pre></div>
 <p>The dictionary shows the <code>key</code>, i.e., ID of the
 acquisition function, a brief description, and how the documentation can
 be accessed.</p>
@@ -497,8 +497,6 @@ binding. As an example, <a href="https://mlr3mbo.mlr-org.com/reference/result_by
 will choose the final solution based on the prediction of the surrogate
 instead of the evaluations logged in the <code>archive</code> which is
 sensible in the case of noisy objective functions.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">optimizer</span><span class="op">$</span><span class="va">args</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>random_interleave_iter <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p>Note that important fields such as <code>$param_classes</code>,
 <code>$packages</code>, <code>$properties</code> are automatically
 determined based on the choice of the <code>loop_function</code>,
@@ -516,7 +514,7 @@ or <a href="https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html" cla
 <p>For hyperparameter optimization, <a href="https://mlr3mbo.mlr-org.com/reference/mlr_tuners_mbo.html"><code>TunerMbo</code></a>
 should be used (which simply relies on an <code>OptimizerMbo</code> that
 is constructed internally):</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tuner</span> <span class="op">=</span> <span class="va"><a href="../reference/mlr_tuners_mbo.html">TunerMbo</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">bayesopt_ego</span>,</span>
 <span>  surrogate <span class="op">=</span> <span class="va">surrogate</span>,</span>
 <span>  acq_function <span class="op">=</span> <span class="va">acq_function</span>,</span>
@@ -583,7 +581,7 @@ intelligent defaults for the <code>loop_function</code>,
 the sense that - if desired - all kinds of errors can be caught and
 handled appropriately within the <a href="https://mlr3mbo.mlr-org.com/reference/loop_function.html"><code>loop_function</code></a>.</p>
 <p>As an example, let’s have a look at the inner workings of <a href="https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions_ego.html"><code>bayesopt_ego</code></a>:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">repeat</span> <span class="op">{</span></span>
 <span>  <span class="va">xdt</span> <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="va">.</span></span>
@@ -616,7 +614,7 @@ scenario: We try to minimize <span class="math inline">\(f(x) =
 x^2\)</span> for <span class="math inline">\(x \in [-1, 1]\)</span>,
 however, our Gaussian Process fails due to data points being too close
 to each other:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2906</span><span class="op">)</span></span>
 <span><span class="va">domain</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html" class="external-link">ps</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -653,7 +651,7 @@ to each other:</p>
 <span>  acq_optimizer <span class="op">=</span> <span class="va">acq_optimizer</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [04:18:14.160] [bbotk] missing value where TRUE/FALSE needed</span></span>
+<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [17:57:41.238] [bbotk] missing value where TRUE/FALSE needed</span></span>
 <span><span class="co">#&gt;             x  x_domain            y</span></span>
 <span><span class="co">#&gt; 1: 0.01617037 &lt;list[1]&gt; 0.0002614808</span></span></code></pre></div>
 <p>The log tells us that an error happened and was caught:
@@ -662,19 +660,19 @@ We also see in the <code>archive</code> that the first candidate after
 the initial design (the fifth point) was not proposed based on
 optimizing the acquisition function (because the <code>"acq_ei"</code>
 column is NA here):</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="co">#&gt;               x            y  x_domain           timestamp batch_nr     acq_ei</span></span>
-<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-16 04:18:13        1         NA</span></span>
-<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-16 04:18:13        1         NA</span></span>
-<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-16 04:18:13        1         NA</span></span>
-<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-16 04:18:13        1         NA</span></span>
-<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2022-11-16 04:18:14        2         NA</span></span>
-<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2022-11-16 04:18:14        3 0.04353973</span></span>
-<span><span class="co">#&gt;  7:  0.45532567 0.2073214654 &lt;list[1]&gt; 2022-11-16 04:18:14        4 0.08484722</span></span>
-<span><span class="co">#&gt;  8: -0.24229299 0.0587058937 &lt;list[1]&gt; 2022-11-16 04:18:15        5 0.18996974</span></span>
-<span><span class="co">#&gt;  9: -0.99835097 0.9967046528 &lt;list[1]&gt; 2022-11-16 04:18:15        6 0.09128581</span></span>
-<span><span class="co">#&gt; 10:  0.01617037 0.0002614808 &lt;list[1]&gt; 2022-11-16 04:18:15        7 0.09341134</span></span>
+<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-16 17:57:40        1         NA</span></span>
+<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-16 17:57:40        1         NA</span></span>
+<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-16 17:57:40        1         NA</span></span>
+<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2022-11-16 17:57:40        1         NA</span></span>
+<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2022-11-16 17:57:41        2         NA</span></span>
+<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2022-11-16 17:57:41        3 0.04353973</span></span>
+<span><span class="co">#&gt;  7:  0.45532567 0.2073214654 &lt;list[1]&gt; 2022-11-16 17:57:42        4 0.08484722</span></span>
+<span><span class="co">#&gt;  8: -0.24229299 0.0587058937 &lt;list[1]&gt; 2022-11-16 17:57:42        5 0.18996974</span></span>
+<span><span class="co">#&gt;  9: -0.99835097 0.9967046528 &lt;list[1]&gt; 2022-11-16 17:57:42        6 0.09128581</span></span>
+<span><span class="co">#&gt; 10:  0.01617037 0.0002614808 &lt;list[1]&gt; 2022-11-16 17:57:43        7 0.09341134</span></span>
 <span><span class="co">#&gt;     .already_evaluated</span></span>
 <span><span class="co">#&gt;  1:                 NA</span></span>
 <span><span class="co">#&gt;  2:                 NA</span></span>
@@ -690,7 +688,7 @@ column is NA here):</p>
 just fine and did not simply throw an error.</p>
 <p>If we set <code>catch_errors = FALSE</code> within the surrogate, we
 see that the error was indeed caused by the surrogate:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">clear</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="va">initial_design</span><span class="op">)</span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="va">surrogate</span><span class="op">$</span><span class="va">param_set</span><span class="op">$</span><span class="va">values</span><span class="op">$</span><span class="va">catch_errors</span> <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -722,7 +720,7 @@ must include <code>id</code> (id of the loop function),
 manual page).</p>
 <p>Technically, any <code>loop_function</code> therefore looks like the
 following:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bayesopt_custom</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">instance</span>, <span class="va">surrogate</span>, <span class="va">acq_function</span>, <span class="va">acq_optimizer</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># typically some assertions</span></span>
 <span></span>
@@ -737,7 +735,7 @@ following:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">bayesopt_custom</span>, <span class="st">"instance"</span><span class="op">)</span> <span class="op">=</span> <span class="st">"single-crit"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">bayesopt_custom</span>, <span class="st">"man"</span><span class="op">)</span> <span class="op">=</span> <span class="st">""</span>  <span class="co"># no man page</span></span>
 <span><span class="co"># if you want to add it to the dictionary: mlr_loop_functions$add("bayesopt_custom", bayesopt_custom)</span></span></code></pre></div>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bayesopt_custom</span></span>
 <span><span class="co">#&gt; Loop function: bayesopt_custom</span></span>
 <span><span class="co">#&gt; * Description: My custom BO loop</span></span>
@@ -752,7 +750,7 @@ following:</p>
 <div class="section level3">
 <h3 id="single-objective-2d-schwefel-function">Single-Objective: 2D Schwefel Function<a class="anchor" aria-label="anchor" href="#single-objective-2d-schwefel-function"></a>
 </h3>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">objective_function</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">418.9829</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">xs</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -786,7 +784,7 @@ following:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2906</span><span class="op">)</span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">batch_nr</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cummin</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span><span class="op">)</span> <span class="op">+</span></span>
@@ -794,7 +792,7 @@ following:</p>
 <span>  <span class="fu">geom_step</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Batch Nr."</span>, y <span class="op">=</span> <span class="st">"Best y"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xdt</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/generate_design_grid.html" class="external-link">generate_design_grid</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">search_space</span>, resolution <span class="op">=</span> <span class="fl">101</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="va">ydt</span> <span class="op">=</span> <span class="va">objective</span><span class="op">$</span><span class="fu">eval_dt</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x1</span>, y <span class="op">=</span> <span class="va">x2</span>, z <span class="op">=</span> <span class="va">y</span><span class="op">)</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">xdt</span>, <span class="va">ydt</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -809,7 +807,7 @@ following:</p>
 <div class="section level4">
 <h4 id="parego">ParEGO<a class="anchor" aria-label="anchor" href="#parego"></a>
 </h4>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">objective_function</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y1 <span class="op">=</span> <span class="va">xs</span><span class="op">$</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span>, y2 <span class="op">=</span> <span class="op">(</span><span class="va">xs</span><span class="op">$</span><span class="va">x</span> <span class="op">-</span> <span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -843,11 +841,11 @@ following:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2906</span><span class="op">)</span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">y1</span>, y <span class="op">=</span> <span class="va">y2</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">best</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.statistik.tu-dortmund.de/~olafm/software/emoa/" class="external-link">emoa</a></span><span class="op">)</span></span>
 <span><span class="va">anytime_hypervolume</span> <span class="op">=</span> <span class="fu">map_dtr</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">batch_nr</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">bnr</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">pareto</span> <span class="op">=</span> <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">best</span><span class="op">(</span>batch <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">bnr</span><span class="op">)</span><span class="op">[</span>, <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">cols_y</span>, with <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
@@ -864,7 +862,7 @@ following:</p>
 <div class="section level4">
 <h4 id="sms-ego">SMS-EGO<a class="anchor" aria-label="anchor" href="#sms-ego"></a>
 </h4>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">objective_function</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y1 <span class="op">=</span> <span class="va">xs</span><span class="op">$</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span>, y2 <span class="op">=</span> <span class="op">(</span><span class="va">xs</span><span class="op">$</span><span class="va">x</span> <span class="op">-</span> <span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -889,7 +887,7 @@ following:</p>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">learner_y2</span> <span class="op">=</span> <span class="va">learner_y1</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrnc.html">srlrnc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">learner_y1</span>, <span class="va">learner_y2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">acq_function</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqf.html">acqf</a></span><span class="op">(</span><span class="st">"sms_ego"</span><span class="op">)</span></span>
+<span><span class="va">acq_function</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqf.html">acqf</a></span><span class="op">(</span><span class="st">"smsego"</span><span class="op">)</span></span>
 <span><span class="va">acq_optimizer</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqo.html">acqo</a></span><span class="op">(</span><span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"nloptr"</span>, algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_DIRECT_L"</span><span class="op">)</span>,</span>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"stagnation"</span>, threshold <span class="op">=</span> <span class="fl">1e-8</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">optimizer</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"mbo"</span>,</span>
@@ -900,11 +898,11 @@ following:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2906</span><span class="op">)</span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">y1</span>, y <span class="op">=</span> <span class="va">y2</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">best</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">anytime_hypervolume</span> <span class="op">=</span> <span class="fu">map_dtr</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">batch_nr</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">bnr</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">pareto</span> <span class="op">=</span> <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">best</span><span class="op">(</span>batch <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">bnr</span><span class="op">)</span><span class="op">[</span>, <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">cols_y</span>, with <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span>  <span class="va">dhv</span> <span class="op">=</span> <span class="fu">dominated_hypervolume</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">pareto</span><span class="op">)</span>, ref <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">144</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -921,7 +919,7 @@ following:</p>
 <div class="section level3">
 <h3 id="single-objective-hpo">Single-Objective HPO<a class="anchor" aria-label="anchor" href="#single-objective-hpo"></a>
 </h3>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3.mlr-org.com" class="external-link">mlr3</a></span><span class="op">)</span></span>
 <span><span class="va">task</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">tsk</a></span><span class="op">(</span><span class="st">"wine"</span><span class="op">)</span></span>
 <span><span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"classif.rpart"</span>,</span>
@@ -963,7 +961,7 @@ following:</p>
 <div class="section level3">
 <h3 id="multi-objective-hpo">Multi-Objective HPO<a class="anchor" aria-label="anchor" href="#multi-objective-hpo"></a>
 </h3>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">task</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">tsk</a></span><span class="op">(</span><span class="st">"wine"</span><span class="op">)</span></span>
 <span><span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"classif.rpart"</span>,</span>
 <span>  cp <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1e-4</span>, upper <span class="op">=</span> <span class="fl">1</span>, logscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>

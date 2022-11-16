@@ -100,19 +100,29 @@ Each acquisition function has an associated help page, see <code>mlr_acqfunction
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p>Sugar function: <code><a href="acqf.html">acqf()</a></code></p></div>
+    <div class="dont-index"><p>Sugar function: <code><a href="acqf.html">acqf()</a></code></p>
+<p>Other Dictionary: 
+<code><a href="mlr_loop_functions.html">mlr_loop_functions</a></code></p>
+<p>Other Acquisition Function: 
+<code><a href="AcqFunction.html">AcqFunction</a></code>,
+<code><a href="mlr_acqfunctions_cb.html">mlr_acqfunctions_cb</a></code>,
+<code><a href="mlr_acqfunctions_eips.html">mlr_acqfunctions_eips</a></code>,
+<code><a href="mlr_acqfunctions_ei.html">mlr_acqfunctions_ei</a></code>,
+<code><a href="mlr_acqfunctions_mean.html">mlr_acqfunctions_mean</a></code>,
+<code><a href="mlr_acqfunctions_pi.html">mlr_acqfunctions_pi</a></code>,
+<code><a href="mlr_acqfunctions_smsego.html">mlr_acqfunctions_smsego</a></code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_acqfunctions</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        key                           label                               man</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:      cb  Lower / Upper Confidence Bound      mlr3mbo::mlr_acqfunctions_cb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:      ei            Expected Improvement      mlr3mbo::mlr_acqfunctions_ei</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:    eips Expected Improvement Per Second    mlr3mbo::mlr_acqfunctions_eips</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:    mean                  Posterior Mean    mlr3mbo::mlr_acqfunctions_mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5:      pi      Probability Of Improvement      mlr3mbo::mlr_acqfunctions_pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6: sms_ego                         SMS-EGO mlr3mbo::mlr_acqfunctions_sms_ego</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       key                           label                              man</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:     cb  Lower / Upper Confidence Bound     mlr3mbo::mlr_acqfunctions_cb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:     ei            Expected Improvement     mlr3mbo::mlr_acqfunctions_ei</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:   eips Expected Improvement Per Second   mlr3mbo::mlr_acqfunctions_eips</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:   mean                  Posterior Mean   mlr3mbo::mlr_acqfunctions_mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5:     pi      Probability Of Improvement     mlr3mbo::mlr_acqfunctions_pi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6: smsego                         SMS-EGO mlr3mbo::mlr_acqfunctions_smsego</span>
 <span class="r-in"><span><span class="fu"><a href="acqf.html">acqf</a></span><span class="op">(</span><span class="st">"ei"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;AcqFunctionEI:acq_ei&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Domain:</span>
