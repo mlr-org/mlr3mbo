@@ -139,7 +139,7 @@ test_that("stability and defaults", {
   expect_r6(surrogate$model$fallback, "LearnerRegrRanger")
   acq_function = default_acqfun(instance)
   expect_r6(acq_function, "AcqFunctionEI")
-  acq_optimizer = default_acqopt(acq_function)
+  acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   acq_optimizer$param_set$values$logging_level = "info"
   expect_r6(acq_optimizer, "AcqOptimizer")
   expect_r6(acq_optimizer$optimizer, "OptimizerRandomSearch")

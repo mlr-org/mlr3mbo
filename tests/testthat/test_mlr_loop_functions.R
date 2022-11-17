@@ -46,10 +46,10 @@ test_that("custom loop_function", {
   expect_error(opt("mbo", loop_function = loop_function), "'instance' attribute must be a subset of '\\{'single-crit','multi-crit'\\}' but is '\\{'test'\\}")
 
   attr(loop_function, "instance") = "single-crit"
-  optimizer = opt("mbo", loop_function = loop_function)
+  optimizer = opt("mbo", loop_function = loop_function, acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L)))
   expect_r6(optimizer, classes = "OptimizerMbo")
 
-  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   optimizer$surrogate = default_surrogate(instance, learner = REGR_FEATURELESS)
 
   design = MAKE_DESIGN(instance)

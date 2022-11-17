@@ -9,7 +9,7 @@ test_that("AcqOptimizer API works", {
   instance$eval_batch(design)
   acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
   acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
-  with_seed(24, {acqfun$surrogate$update()})
+  acqfun$surrogate$update()
   acqfun$update()
   expect_data_table(acqopt$optimize(), nrows = 1L)
 

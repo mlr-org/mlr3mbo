@@ -3,7 +3,7 @@ test_that("result_by_surrogate_design works - single-crit", {
   skip_if_not_installed("DiceKriging")
   skip_if_not_installed("rgenoud")
 
-  instance = MAKE_INST(OBJ_1D_NOISY, PS_1D, trm("evals", n_evals = 10))
+  instance = MAKE_INST(OBJ_1D_NOISY, PS_1D, trm("evals", n_evals = 5L))
   optimizer = OptimizerMbo$new(loop_function = default_loopfun(instance),
                                surrogate = default_surrogate(instance),
                                acq_function = default_acqfun(instance),
@@ -25,7 +25,7 @@ test_that("result_by_surrogate_design works - multi-crit", {
   skip_if_not_installed("DiceKriging")
   skip_if_not_installed("rgenoud")
 
-  instance = MAKE_INST(OBJ_1D_2_NOISY, PS_1D, trm("evals", n_evals = 10))
+  instance = MAKE_INST(OBJ_1D_2_NOISY, PS_1D, trm("evals", n_evals = 5L))
   optimizer = OptimizerMbo$new(loop_function = default_loopfun(instance),
                                surrogate = default_surrogate(instance),
                                acq_function = default_acqfun(instance),

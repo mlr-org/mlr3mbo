@@ -1,18 +1,6 @@
 lapply(list.files(system.file("testthat", package = "mlr3"),
   pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
-with_seed = function(seed, expr) {
-  old_seed = get0(".Random.seed", globalenv(), mode = "integer", inherits = FALSE)
-  if (is.null(old_seed)) {
-    runif(1L)
-    old_seed = get0(".Random.seed", globalenv(), mode = "integer", inherits = FALSE)
-  }
-
-  on.exit(assign(".Random.seed", old_seed, globalenv()), add = TRUE)
-  set.seed(seed)
-  force(expr)
-}
-
 # Simple 1D Functions
 PS_1D = ParamSet$new(list(
   ParamDbl$new("x", lower = -1, upper = 1)
@@ -108,9 +96,9 @@ MAKE_DESIGN = function(instance, n = 4L) {
 
 if (requireNamespace("mlr3learners") && requireNamespace("DiceKriging") && requireNamespace("rgenoud")) {
   library(mlr3learners)
-  REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.estim = TRUE, jitter = 1e-12)
+  REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE, max.generations = 2), nugget.estim = TRUE, jitter = 1e-12)
   REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
-  REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 10^-8)
+  REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE, max.generations = 2), nugget.stability = 10^-8)
   REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
 }
 REGR_FEATURELESS = lrn("regr.featureless")
@@ -207,3 +195,4 @@ expect_acqfunction = function(acqf) {
   expect_string(acqf$label)
   expect_man_exists(acqf$man)
 }
+

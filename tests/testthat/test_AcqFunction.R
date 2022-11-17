@@ -10,3 +10,4 @@ test_that("AcqFunction API works", {
   expect_equal(acqf$direction, "same")
   expect_equal(acqf$domain, inst$search_space)
 })
+

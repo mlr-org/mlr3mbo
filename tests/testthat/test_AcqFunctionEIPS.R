@@ -10,7 +10,7 @@ test_that("AcqFunctionEIPS works", {
   expect_acqfunction(acqf)
 
   expect_r6(acqf$codomain, "ParamSet")
-  expect_equal(acqf$codomain$ids(), "acq_eips")
+  expect_equal(acqf$codomain$ids(), acqf$id)
   expect_equal(acqf$surrogate_max_to_min, c(y = 1, time = 1))  # FIXME: check this
   expect_equal(acqf$direction, "maximize")
   expect_equal(acqf$domain, inst$search_space)
@@ -25,6 +25,6 @@ test_that("AcqFunctionEIPS works", {
   acqf$update()
   res = acqf$eval_dt(xdt)
   expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
-  expect_named(res, "acq_eips")
+  expect_named(res, acqf$id)
 })
 
