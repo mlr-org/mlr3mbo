@@ -92,7 +92,7 @@ AcqFunctionTTEI = R6Class("AcqFunctionTTEI",
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       assert_number(beta, lower = 0, upper = 1)
       assert_r6(toplvl_acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
-      if (is.null(toplvl_acq_optimizer)) toplvl_acq_optimizer = acqo(opt("random_search", batch_size = 1000), terminator = trm("evals",  n_evals = 10000))
+      if (is.null(toplvl_acq_optimizer)) toplvl_acq_optimizer = acqo(opt("random_search", batch_size = 1000L), terminator = trm("evals",  n_evals = 10000L))
       constants = ps(beta = p_dbl(lower = 0, upper = 1, default = 0.5))
       constants$values$beta = beta
       private$.toplvl_acq_function_ei = AcqFunctionEI$new(surrogate = surrogate)  # FIXME: AB and read-only?
