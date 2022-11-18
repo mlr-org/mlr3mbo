@@ -1,0 +1,10 @@
+pandoc: 2.19.2
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  mlr3mbo: mlr3mbo.html
+last_built: 2022-11-18T13:03Z
+urls:
+  reference: https://mlr3mbo.mlr-org.com/reference
+  article: https://mlr3mbo.mlr-org.com/articles
+
