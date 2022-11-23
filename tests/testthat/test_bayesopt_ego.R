@@ -1,21 +1,27 @@
-test_that("default bayesopt_ego", {
-  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  bayesopt_ego(instance)
-  expect_true(nrow(instance$archive$data) == 5L)
+test_that("bayesopt_ego class", {
+  expect_loop_function(bayesopt_ego)
 })
 
 test_that("bayesopt_ego", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
-  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_true(!is.na(instance$archive$data$acq_ei[5L]))
 })
 
 test_that("stable bayesopt_ego", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
   # logger stuff
-  # see mlr-org/mlr3#566
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
   f = tempfile("bbotklog_", fileext = "log")
   th1 = lg$threshold
@@ -33,21 +39,22 @@ test_that("stable bayesopt_ego", {
 
   # KM surrogate
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
-  acq_function$surrogate$param_set$values$calc_insample_perf = TRUE
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
-  acq_optimizer$param_set$values$fix_distance = TRUE
-  acq_optimizer$param_set$values$dist_threshold = 0
-  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM)
+  surrogate$param_set$values$assert_insample_perf = TRUE
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  acq_optimizer$param_set$values$logging_level = "info"
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_number(acq_function$surrogate$assert_insample_perf, upper = 1)
 
   # featureless surrogate with a high perf_threshold of 1
   # this should trigger a mbo_error and log the appropriate error message
   instance$archive$clear()
-  acq_function$surrogate$model = REGR_FEATURELESS
-  acq_function$surrogate$param_set$values$perf_threshold = 1
-  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS)
+  surrogate$param_set$values$assert_insample_perf = TRUE
+  surrogate$param_set$values$perf_threshold = 1
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_error(acq_function$surrogate$assert_insample_perf, regexp = "Current insample performance of the Surrogate Model does not meet the performance threshold")
   lines = readLines(f)
@@ -55,14 +62,14 @@ test_that("stable bayesopt_ego", {
   expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
 
   # KM surrogate but OptimizerError as Optimizer that will fail
-  # this again should trigger a leads_to_exploration_error and log the appropriate error message
+  # this again should trigger a mbo_error and log the appropriate error message
   instance$archive$clear()
-  acq_function$surrogate$model = REGR_KM_DETERM
-  acq_function$surrogate$param_set$values$perf_threshold = 0
-  acq_optimizer = AcqOptimizer$new(OptimizerError$new(), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
-  acq_optimizer$param_set$values$fix_distance = TRUE
-  acq_optimizer$param_set$values$dist_threshold = 0
-  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM)
+  surrogate$param_set$values$assert_insample_perf = TRUE
+  surrogate$param_set$values$perf_threshold = 0
+  acq_optimizer = AcqOptimizer$new(OptimizerError$new(), terminator = trm("evals", n_evals = 2L))
+  acq_optimizer$param_set$values$logging_level = "info"
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_number(acq_function$surrogate$assert_insample_perf, upper = 1)
   lines = readLines(f)
@@ -70,21 +77,23 @@ test_that("stable bayesopt_ego", {
   expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 2L)
 
   # Surrogate using LearnerRegrError as Learner that will fail during train
-  # this again should trigger a leads_to_exploration_error and log the appropriate error message
+  # this again should trigger a mbo_error and log the appropriate error message
   instance$archive$clear()
-  acq_function$surrogate$model = LearnerRegrError$new()
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
-  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  surrogate = SurrogateLearner$new(LearnerRegrError$new())
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   lines = readLines(f)
   expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
   expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 3L)
 
   # Surrogate using LearnerRegrError as Learner that will fail during predict
-  # this again should trigger a leads_to_exploration_error and log the appropriate error message
+  # this again should trigger a mbo_error and log the appropriate error message
   instance$archive$clear()
-  acq_function$surrogate$model$param_set$values$error_train = FALSE
-  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  surrogate = SurrogateLearner$new(LearnerRegrError$new())
+  surrogate$model$param_set$values$error_train = FALSE
+  acq_optimizer$param_set$values$logging_level = "info"
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   lines = readLines(f)
   expect_true(sum(grepl("Surrogate Predict Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
@@ -101,9 +110,10 @@ test_that("bayesopt_ego with trafo", {
   )
   instance = MAKE_INST(objective = objective, search_space = domain, terminator = trm("evals", n_evals = 5L))
 
-  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
-  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_true(!is.na(instance$archive$data$acq_ei[5L]))
 })
@@ -123,12 +133,14 @@ test_that("bayesopt_ego eips", {
     terminator = terminator
   )
 
-  surrogate = default_surrogate(instance, n_learner = 2L)
+  surrogate = default_surrogate(instance, learner = REGR_FEATURELESS, n_learner = 2L)
   surrogate$y_cols = c("y", "time")
 
   acq_function = AcqFunctionEIPS$new()
 
-  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function)
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_true("acq_eips" %in% names(instance$archive$data))
   expect_equal(names(surrogate$model), c("y", "time"))
@@ -136,9 +148,10 @@ test_that("bayesopt_ego eips", {
 
 test_that("bayesopt_ego random interleave", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
-  acq_function = AcqFunctionEI$new(surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
-  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acq_function)
-  bayesopt_ego(instance, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = 2L)
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = 2L)
   expect_true(nrow(instance$archive$data) == 10L)
   expect_identical(is.na(instance$archive$data$acq_ei), c(rep(TRUE, 4L), FALSE, TRUE, FALSE, TRUE, FALSE, TRUE))
 })

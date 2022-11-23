@@ -4,9 +4,42 @@
 \alias{AcqOptimizer}
 \title{Acquisition Function Optimizer}
 \description{
-Optimizer for \link{AcqFunction}s.
+Optimizer for \link{AcqFunction}s which performs the infill optimization.
 Wraps an \link[bbotk:Optimizer]{bbotk::Optimizer} and \link[bbotk:Terminator]{bbotk::Terminator}.
 }
+\section{Parameters}{
+
+\describe{
+\item{\code{logging_level}}{\code{character(1)}\cr
+Logging level during the infill optimization.
+Can be \code{"fatal"}, \code{"error"}, \code{"warn"}, \code{"info"}, \code{"debug"} or \code{"trace"}.
+Default is \code{"warn"}, i.e., only warnings are logged.
+}
+\item{\code{warmstart}}{\code{logical(1)}\cr
+Should the infill optimization be warm-started by evaluating the best point(s) present in the \link[bbotk:Archive]{bbotk::Archive} of
+the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}?
+This is sensible when using a population based infill optimizer, e.g., local search or mutation.
+Default is \code{FALSE}.
+}
+\item{\code{warmstart_size}}{\code{integer(1) | "all"}\cr
+Number of best points selected from the \link[bbotk:Archive]{bbotk::Archive} that are to be used for warm starting.
+Can also be "all" to use all available points.
+Only relevant if \code{warmstart = TRUE}.
+Default is \code{1}.
+}
+\item{\code{skip_already_evaluated}}{\code{logical(1)}\cr
+It can happen that the candidate resulting of the infill optimization was already evaluated in a previous
+iteration. Should this candidate proposal be ignored and the next best point be selected as a candidate?
+Default is \code{TRUE}.
+}
+\item{\code{catch_errors}}{\code{logical(1)}\cr
+Should errors during the infill optimization be caught and propagated to the \code{loop_function} which can then handle
+the failed infill optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
+Default is \code{TRUE}.
+}
+}
+}
+
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -21,6 +54,9 @@ Wraps an \link[bbotk:Optimizer]{bbotk::Optimizer} and \link[bbotk:Terminator]{bb
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{print_id}}{(\code{character})\cr
+Id used when printing.}
+
 \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of hyperparameters.}
 }
@@ -30,6 +66,8 @@ Set of hyperparameters.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-AcqOptimizer-new}{\code{AcqOptimizer$new()}}
+\item \href{#method-AcqOptimizer-format}{\code{AcqOptimizer$format()}}
+\item \href{#method-AcqOptimizer-print}{\code{AcqOptimizer$print()}}
 \item \href{#method-AcqOptimizer-optimize}{\code{AcqOptimizer$optimize()}}
 \item \href{#method-AcqOptimizer-clone}{\code{AcqOptimizer$clone()}}
 }
@@ -56,18 +94,33 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqOptimizer-format"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-format}{}}}
+\subsection{Method \code{format()}}{
+Helper for print outputs.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$format()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqOptimizer-print"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-print}{}}}
+\subsection{Method \code{print()}}{
+Print method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$print()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character()}).
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizer-optimize"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqOptimizer-optimize}{}}}
 \subsection{Method \code{optimize()}}{
 Optimize the acquisition function.
-
-If the \code{fix_distance} parameter is set to \code{TRUE}, proposed points are
-replaced by randomly sampled ones if their Gower distance with respect
-to other proposed points or previously evaluated points falls below the
-\code{dist_threshold} parameter. Note that these checks are only performed a
-single time (and not after a potential replacement of points), i.e., the
-returned \code{\link[data.table:data.table]{data.table::data.table()}} of optima must not necessarily pass
-the checks but most likely will.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$optimize()}\if{html}{\out{</div>}}
 }

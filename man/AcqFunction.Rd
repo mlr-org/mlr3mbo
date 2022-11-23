@@ -4,47 +4,50 @@
 \alias{AcqFunction}
 \title{Acquisition Function Base Class}
 \description{
-Based on a surrogate model, the acquisition function encodes the preference to evaluate a new
-point for evaluation.
+Abstract acquisition function class.
+
+Based on the predictions of a \link{Surrogate}, the acquisition function encodes the preference to evaluate a new point.
 }
 \seealso{
 Other Acquisition Function: 
-\code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
-\code{\link{mlr_acqfunctions_sms_ego}}
+\code{\link{mlr_acqfunctions_smsego}},
+\code{\link{mlr_acqfunctions}}
 }
 \concept{Acquisition Function}
 \section{Super class}{
 \code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{AcqFunction}
 }
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{direction}}{(\code{character(1)})\cr
+\item{\code{direction}}{(\code{"same"} | \code{"minimize"} | \code{"maximize"})\cr
 Optimization direction of the acquisition function relative to the direction of the
 objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 
-\item{\code{surrogate_max_to_min}}{(\code{-1} | \code{1}).
+\item{\code{surrogate_max_to_min}}{(\code{-1} | \code{1})\cr
 Multiplicative factor to correct for minimization or maximization of the acquisition
 function.}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
+
+\item{\code{label}}{(\code{character(1)})\cr
+Label for this object.}
+
+\item{\code{man}}{(\code{character(1)})\cr
+String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.}
+
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive})\cr
-Points to the \link[bbotk:Archive]{bbotk::Archive} of the \link{Surrogate}.}
+Points to the \link[bbotk:Archive]{bbotk::Archive} of the surrogate.}
 
 \item{\code{fun}}{(\code{function})\cr
-Objective function.}
+Pointing to the private acquistion function to be implemented by subclasses.}
 
-\item{\code{surrogate}}{\link{Surrogate}.}
+\item{\code{surrogate}}{(\link{Surrogate})\cr
+Surrogate.}
 }
 \if{html}{\out{</div>}}
 }
@@ -73,9 +76,16 @@ Objective function.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 
-Note that the surrogate can be initialized lazy and can later be set via the active binding.
+Note that the surrogate can be initialized lazy and can later be set via the active binding \verb{$surrogate}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(id, constants = ps(), surrogate, direction)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$new(
+  id,
+  constants = ParamSet$new(),
+  surrogate,
+  direction,
+  label = NA_character_,
+  man = NA_character_
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -83,11 +93,22 @@ Note that the surrogate can be initialized lazy and can later be set via the act
 \describe{
 \item{\code{id}}{(\code{character(1)}).}
 
-\item{\code{constants}}{(\link[paradox:ParamSet]{paradox::ParamSet}).}
+\item{\code{constants}}{(\link[paradox:ParamSet]{paradox::ParamSet}).
+Changeable constants or parameters.}
 
-\item{\code{surrogate}}{(\code{NULL} | \link{Surrogate}).}
+\item{\code{surrogate}}{(\code{NULL} | \link{Surrogate}).
+Surrogate whose predictions are used in the acquisition function.}
 
-\item{\code{direction}}{(\code{character(1)}).}
+\item{\code{direction}}{(\code{"same"} | \code{"minimize"} | \code{"maximize"}).
+Optimization direction of the acquisition function relative to the direction of the
+objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
+
+\item{\code{label}}{(\code{character(1)})\cr
+Label for this object.}
+
+\item{\code{man}}{(\code{character(1)})\cr
+String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.}
 }
 \if{html}{\out{</div>}}
 }
@@ -97,6 +118,8 @@ Note that the surrogate can be initialized lazy and can later be set via the act
 \if{latex}{\out{\hypertarget{method-AcqFunction-update}{}}}
 \subsection{Method \code{update()}}{
 Update the acquisition function.
+
+Can be implemented by subclasses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$update()}\if{html}{\out{</div>}}
 }
@@ -106,8 +129,7 @@ Update the acquisition function.
 \if{html}{\out{<a id="method-AcqFunction-eval_many"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunction-eval_many}{}}}
 \subsection{Method \code{eval_many()}}{
-Evaluates multiple input values received as a list, converted to a \code{data.table()} on the
-objective function. Missing columns in xss are filled with \code{NA}s in \code{xdt}.
+Evaluates multiple input values on the objective function.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$eval_many(xss)}\if{html}{\out{</div>}}
 }
@@ -122,16 +144,16 @@ A list of lists that contains multiple x values, e.g.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} that contains one y-column for single-criteria functions
-and multiple y-columns for multi-criteria functions, e.g.
-\code{data.table(y = 1:2)} or \code{data.table(y1 = 1:2, y2 = 3:4)}.
+data.table::data.table() that contains one y-column for
+single-objective functions and multiple y-columns for multi-objective functions,
+e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 1:2, y2 = 3:4)}.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunction-eval_dt"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunction-eval_dt}{}}}
 \subsection{Method \code{eval_dt()}}{
-Evaluates multiple input values on the objective function supplied by the user.
+Evaluates multiple input values on the objective function
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$eval_dt(xdt)}\if{html}{\out{</div>}}
 }
@@ -140,17 +162,14 @@ Evaluates multiple input values on the objective function supplied by the user.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-Set of untransformed points / points from the \emph{search space}.
-One point per row, e.g. \code{data.table(x1 = c(1, 3), x2 = c(2, 4))}.
-Column names have to match ids of the \code{search_space}.
-However, \code{xdt} can contain additional columns.}
+One point per row, e.g. \code{data.table(x1 = c(1, 3), x2 = c(2, 4))}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-data.table::data.table()] that contains one y-column for single-criteria functions
-and multiple y-columns for multi-criteria functions, e.g.
-\code{data.table(y = 1:2)} or \code{data.table(y1 = 1:2, y2 = 3:4)}.
+data.table::data.table() that contains one y-column for
+single-objective functions and multiple y-columns for multi-objective
+functions, e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 1:2, y2 = 3:4)}.
 }
 }
 \if{html}{\out{<hr>}}

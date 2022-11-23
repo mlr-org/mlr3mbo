@@ -5,7 +5,7 @@
 \alias{AcqFunctionMean}
 \title{Acquisition Function Mean}
 \description{
-Mean.
+Posterior Mean.
 }
 \section{Dictionary}{
 
@@ -17,43 +17,73 @@ acqf("mean")
 }\if{html}{\out{</div>}}
 }
 
+\examples{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+  library(data.table)
+
+  fun = function(xs) {
+    list(y = xs$x ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+
+  learner = lrn("regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    nugget.stability = 10^-8,
+    control = list(trace = FALSE))
+
+  surrogate = srlrn(learner, archive = instance$archive)
+
+  acq_function = acqf("mean", surrogate = surrogate)
+
+  acq_function$surrogate$update()
+  acq_function$update()
+  acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
+}
+}
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
-\code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_pi}},
-\code{\link{mlr_acqfunctions_sms_ego}}
+\code{\link{mlr_acqfunctions_smsego}},
+\code{\link{mlr_acqfunctions}}
 }
 \concept{Acquisition Function}
 \section{Super classes}{
 \code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionMean}
 }
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{y_best}}{(\code{numeric(1)}).}
-}
-\if{html}{\out{</div>}}
-}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-AcqFunctionMean-new}{\code{AcqFunctionMean$new()}}
-\item \href{#method-AcqFunctionMean-update}{\code{AcqFunctionMean$update()}}
 \item \href{#method-AcqFunctionMean-clone}{\code{AcqFunctionMean$clone()}}
 }
 }
 \if{html}{\out{
-<details open><summary>Inherited methods</summary>
+<details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="update"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-update'><code>mlr3mbo::AcqFunction$update()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -73,16 +103,6 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 }
 \if{html}{\out{</div>}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionMean-update"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionMean-update}{}}}
-\subsection{Method \code{update()}}{
-Updates acquisition function and sets \code{y_best}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionMean$update()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionMean-clone"></a>}}

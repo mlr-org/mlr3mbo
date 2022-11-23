@@ -9,10 +9,9 @@
 }
 \description{
 A simple \link[mlr3misc:Dictionary]{mlr3misc::Dictionary} storing objects of class \link{AcqFunction}.
-Each acquisition function has an associated help page, see \code{mlr_acqfunction_[id]}.
+Each acquisition function has an associated help page, see \code{mlr_acqfunctions_[id]}.
 
-For a more convenient way to retrieve and construct an acquisition function, see
-\code{\link[=acqf]{acqf()}}/\code{\link[=acqfs]{acqfs()}}.
+For a more convenient way to retrieve and construct an acquisition function, see \code{\link[=acqf]{acqf()}}.
 }
 \section{Methods}{
 
@@ -20,10 +19,24 @@ See \link[mlr3misc:Dictionary]{mlr3misc::Dictionary}.
 }
 
 \examples{
+as.data.table(mlr_acqfunctions)
 acqf("ei")
 }
 \seealso{
-Sugar functions: \code{\link[=acqf]{acqf()}}, \code{\link[=acqfs]{acqfs()}}
+Sugar function: \code{\link[=acqf]{acqf()}}
+
+Other Dictionary: 
+\code{\link{mlr_loop_functions}}
+
+Other Acquisition Function: 
+\code{\link{AcqFunction}},
+\code{\link{mlr_acqfunctions_cb}},
+\code{\link{mlr_acqfunctions_eips}},
+\code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_mean}},
+\code{\link{mlr_acqfunctions_pi}},
+\code{\link{mlr_acqfunctions_smsego}}
 }
-\concept{Optimizer}
+\concept{Acquisition Function}
+\concept{Dictionary}
 \keyword{datasets}

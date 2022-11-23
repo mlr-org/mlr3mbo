@@ -16,13 +16,13 @@ NULL
 #' @title Default Loop Function
 #'
 #' @description
-#' Chooses a default "loopfun", i.e. the MBO flavor to be used for optimization.
-#' For single-criteria optimization, defaults to [bayesopt_ego].
-#' For multi-criteria optimization, defaults to [bayesopt_smsego].
+#' Chooses a default [loop_function], i.e. the Bayesian Optimization flavor to be used for optimization.
+#' For single-objective optimization, defaults to [bayesopt_ego].
+#' For multi-objective optimization, defaults to [bayesopt_smsego].
 #'
 #' @param instance ([bbotk::OptimInstance])\cr
 #'   An object that inherits from [bbotk::OptimInstance].
-#' @return loop `function`
+#' @return [loop_function]
 #' @family mbo_defaults
 #' @export
 default_loopfun = function(instance) {
@@ -62,20 +62,20 @@ default_loopfun = function(instance) {
 #' For mixed numeric-categorical parameter spaces, or spaces with conditional parameters:
 #' \itemize{
 #' \item{A ranger regression forest \dQuote{"regr.ranger"} with 500 trees is created.}
-#' \item{The standard error of a prediction (if required by the infill criterion) is estimated
-#'   by computing the infinitesimal jackknife.
-#'   This is the \code{se.method = "infjack"} option of the \dQuote{"regr.ranger"} learner (default).
+#' \item{The standard error of a prediction (if required by the infill criterion) is estimated via jackknife.
+#'   This is the \code{se.method = "jack"} option of the \dQuote{"regr.ranger"} learner (default).
 #'   }
 #' }
 #' In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
 #' in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
-#' \code{lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)}.
+#' \code{lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE, se.method = "jack")}.
 #'
 #' If additionally dependencies are present in the parameter space, inactive conditional parameters
 #' are represented by missing \code{NA} values in the training design data.
 #' We simply handle those with an imputation method, added to the ranger random forest, more
-#' concretely we use \code{po("imputesample")} and \code{po("imputeoor")} from package \CRANpkg{mlr3pipelines}.
-#' Both of these techniques make sense for tree-based methods and are usually hard to beat, see Ding et al. (2010).
+#' concretely we use \code{po("imputesample")} (for logicals) and \code{po("imputeoor")} (for anything else) from
+#' package \CRANpkg{mlr3pipelines}.
+#' Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
 #' In the case of dependencies, the following learner is used as a fallback:
 #' \code{lrn("regr.featureless")}.
 #'
@@ -83,10 +83,10 @@ default_loopfun = function(instance) {
 #' [SurrogateLearner].
 #'
 #' If the instance is of class [bbotk::OptimInstanceMultiCrit] deep clones of the learner are
-#' wrapped as a [SurrogateLearners].
+#' wrapped as a [SurrogateLearnerCollection].
 #'
 #' @references
-#' `r format_bib("ding_2010")`
+#' * `r format_bib("ding_2010")`
 #'
 #' @param instance ([bbotk::OptimInstance])\cr
 #'   An object that inherits from [bbotk::OptimInstance].
@@ -103,23 +103,40 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
   if (is.null(learner)) {
     is_mixed_space = !all(instance$search_space$class %in% c("ParamDbl", "ParamInt"))
     has_deps = nrow(instance$search_space$deps) > 0L
+    require_namespaces("mlr3learners")
     if (!is_mixed_space) {
-      learner = lrn("regr.km", covtype = "matern3_2", optim.method = "gen")
+      require_namespaces("DiceKriging")
+      learner = mlr3learners::LearnerRegrKM$new()
+      learner$param_set$values = insert_named(
+        learner$param_set$values,
+        list(covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE))
+      )
       if ("noisy" %in% instance$objective$properties) {
         learner$param_set$values = insert_named(learner$param_set$values, list(nugget.estim = TRUE, jitter = 1e-12))
       } else {
         learner$param_set$values = insert_named(learner$param_set$values, list(nugget.stability = 10^-8))
       }
     } else {
-      learner = lrn("regr.ranger", num.trees = 500L, keep.inbag = TRUE)
+      require_namespaces("ranger")
+      learner = mlr3learners::LearnerRegrRanger$new()
+      learner$param_set$values = insert_named(
+        learner$param_set$values,
+        list(num.trees = 500L, keep.inbag = TRUE, se.method = "jack")
+      )
     }
     # Stability: evaluate and add a fallback
     learner$encapsulate[c("train", "predict")] = "evaluate"
-    learner$fallback = lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE)
+    require_namespaces("ranger")
+    fallback = mlr3learners::LearnerRegrRanger$new()
+    fallback$param_set$values = insert_named(
+      fallback$param_set$values,
+      list(num.trees = 20L, keep.inbag = TRUE, se.method = "jack")
+    )
+    learner$fallback = fallback
 
     if (has_deps) {
       require_namespaces("mlr3pipelines")
-      learner = mlr3pipelines::GraphLearner$new(mlr3pipelines::'%>>%'(mlr3pipelines::'%>>%'(mlr3pipelines::po("imputesample", affect_columns = mlr3pipelines::selector_type("logical")), mlr3pipelines::po("imputeoor")), learner))
+      learner = mlr3pipelines::GraphLearner$new(mlr3pipelines::"%>>%"(mlr3pipelines::"%>>%"(mlr3pipelines::po("imputesample", affect_columns = mlr3pipelines::selector_type("logical")), mlr3pipelines::po("imputeoor", multiplier = 2)), learner))
       learner$encapsulate[c("train", "predict")] = "evaluate"
       learner$fallback = lrn("regr.featureless")
     }
@@ -130,7 +147,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
     SurrogateLearner$new(learner)
   } else  {
     learners = replicate(n_learner, learner$clone(deep = TRUE), simplify = FALSE)
-    SurrogateLearners$new(learners)
+    SurrogateLearnerCollection$new(learners)
   }
 }
 
@@ -138,6 +155,9 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
 #'
 #' @description
 #' Chooses a default acquisition function, i.e. the criterion used to propose future points.
+#' For single-objective optimization, defaults to [mlr_acqfunctions_ei].
+#' For multi-objective optimization, defaults to [mlr_acqfunctions_smsego].
+#'
 #' @param instance ([bbotk::OptimInstance]).
 #' @return [AcqFunction]
 #' @family mbo_defaults
@@ -155,7 +175,7 @@ default_acqfun = function(instance) {
 #'
 #' @description
 #' Chooses a default acquisition function optimizer.
-#' Defaults to wrapping [bbotk::OptimizerRandomSearch] allowing 1000 function evaludations.
+#' Defaults to wrapping [bbotk::OptimizerRandomSearch] allowing 10000 function evaluations (with a batch size of 1000) via a [bbotk::TerminatorEvals].
 #'
 #' @param acq_function ([AcqFunction]).
 #' @return [AcqOptimizer]
@@ -163,6 +183,6 @@ default_acqfun = function(instance) {
 #' @export
 default_acqopt = function(acq_function) {
   assert_r6(acq_function, classes = "AcqFunction")
-  AcqOptimizer$new(optimizer = opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 1000L))  # FIXME: what do we use
+  AcqOptimizer$new(optimizer = opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))  # FIXME: what do we use
 }
 

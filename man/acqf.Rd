@@ -2,12 +2,9 @@
 % Please edit documentation in R/sugar.R
 \name{acqf}
 \alias{acqf}
-\alias{acqfs}
 \title{Syntactic Sugar Acquisition Function Construction}
 \usage{
 acqf(.key, ...)
-
-acqfs(.keys, ...)
 }
 \arguments{
 \item{.key}{(\code{character(1)})\cr
@@ -18,16 +15,9 @@ the object.}
 Named arguments passed to the constructor, to be set as parameters in the
 \link[paradox:ParamSet]{paradox::ParamSet}, or to be set as public field. See
 \code{\link[mlr3misc:dictionary_sugar_get]{mlr3misc::dictionary_sugar_get()}} for more details.}
-
-\item{.keys}{(\code{character()})\cr
-Keys passed to the respective \link[mlr3misc:Dictionary]{dictionary} to retrieve
-multiple objects.}
 }
 \value{
-\itemize{
-\item \link{AcqFunction} for \code{acqf()}.
-\item list of \link{AcqFunction}s for \code{acqfs()}.
-}
+\link{AcqFunction}
 }
 \description{
 This function complements \link{mlr_acqfunctions} with functions in the spirit

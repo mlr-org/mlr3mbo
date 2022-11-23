@@ -8,18 +8,60 @@
 #'
 #' @description
 #' Augmented Expected Improvement.
+#' Currently only works correctly with `"regr.km"` as surrogate model and `nugget.estim = TRUE` or given.
 #'
 #' @section Parameters:
 #' * `"c"` (`numeric(1)`)\cr
-#'   Constant \eqn{c} as used in formula (14) of Huang 2012 to reflect the degree of risk aversion. Defaults to `1`.
+#'   Constant \eqn{c} as used in formula (14) of Huang (2012) to reflect the degree of risk aversion. Defaults to `1`.
 #'
 #' @references
-#' `r format_bib("huang_2012")`
+#' * `r format_bib("huang_2012")`
 #'
 #' @family Acquisition Function
 #' @export
+#' @examples
+#' if (requireNamespace("mlr3learners") &
+#'     requireNamespace("DiceKriging") &
+#'     requireNamespace("rgenoud")) {
+#'   library(bbotk)
+#'   library(paradox)
+#'   library(mlr3learners)
+#'   library(data.table)
+#'
+#'   fun = function(xs) {
+#'     list(y = xs$x ^ 2 + rnorm(length(xs$x), mean = 0, sd = 0.1))
+#'   }
+#'   domain = ps(x = p_dbl(lower = -10, upper = 10))
+#'   codomain = ps(y = p_dbl(tags = "minimize"))
+#'   objective = ObjectiveRFun$new(fun = fun,
+#'     domain = domain,
+#'     codomain = codomain,
+#'     properties = "noisy")
+#'
+#'   instance = OptimInstanceSingleCrit$new(
+#'     objective = objective,
+#'     terminator = trm("evals", n_evals = 5))
+#'
+#'   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+#'
+#'   learner = lrn("regr.km",
+#'     covtype = "matern3_2",
+#'     optim.method = "gen",
+#'     nugget.estim = TRUE,
+#'     jitter = 1e-12,
+#'     control = list(trace = FALSE))
+#'
+#'   surrogate = srlrn(learner, archive = instance$archive)
+#'
+#'   acq_function = acqf("aei", surrogate = surrogate)
+#'
+#'   acq_function$surrogate$update()
+#'   acq_function$update()
+#'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
+#' }
 AcqFunctionAEI = R6Class("AcqFunctionAEI",
   inherit = AcqFunction,
+
   public = list(
 
     #' @field y_effective_best (`numeric(1)`).
@@ -40,7 +82,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       constants = ps(c = p_dbl(lower = 0, default = 1))
       constants$values$c = c
 
-      super$initialize("acq_aei", constants = constants, surrogate = surrogate, direction = "maximize")
+      super$initialize("acq_aei", constants = constants, surrogate = surrogate, direction = "maximize", label = "Augmented Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_aei")
     },
 
     #' @description
@@ -59,7 +101,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       if (!is.null(self$surrogate$model$model) && length(self$surrogate$model$model@covariance@nugget) == 1L) {
         self$noise_var = self$surrogate$model$model@covariance@nugget  # FIXME: check that this value really exists (otherwise calculate residual variance?)
       } else {
-        lgr$warn("AEI currently only works correctly with regr.km and nugget estim = TRUE or given!")
+        lgr$warn('AEI currently only works correctly with `"regr.km"` as surrogate model and `nugget.estim = TRUE` or given!')
         self$noise_var = 0
       }
 
@@ -69,10 +111,10 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
   private = list(
     .fun = function(xdt, ...) {
       if (is.null(self$y_effective_best)) {
-        stop("y_effective_best is not set. Missed to call $update()?")
+        stop("$y_effective_best is not set. Missed to call $update()?")
       }
       if (is.null(self$noise_var)) {
-        stop("noise_var is not set. Missed to call $update()?")
+        stop("$noise_var is not set. Missed to call $update()?")
       }
       p = self$surrogate$predict(xdt)
       mu = p$mean
@@ -87,3 +129,4 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
 )
 
 mlr_acqfunctions$add("aei", AcqFunctionAEI)
+

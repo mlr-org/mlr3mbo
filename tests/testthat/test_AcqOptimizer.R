@@ -1,7 +1,11 @@
 test_that("AcqOptimizer API works", {
-  ### EI, random search
-  instance = OptimInstanceSingleCrit$new(OBJ_1D, terminator = trm("evals", n_evals = 1L))
-  design = MAKE_DESIGN(instance)
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
+  # EI, random search
+  instance = OptimInstanceSingleCrit$new(OBJ_1D, terminator = trm("evals", n_evals = 5L))
+  design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
   acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
   acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
@@ -9,67 +13,77 @@ test_that("AcqOptimizer API works", {
   acqfun$update()
   expect_data_table(acqopt$optimize(), nrows = 1L)
 
-  ### upgrading error class works
+  # upgrading error class works - catch_errors
   acqopt = AcqOptimizer$new(OptimizerError$new(), trm("evals", n_evals = 2L), acq_function = acqfun)
-  expect_error(acqopt$optimize(), class = c("mbo_error", "optimize_error"))
+  expect_error(acqopt$optimize(), class = "acq_optimizer_error")
+
+  acqopt$param_set$values$catch_errors = FALSE
+  expect_error(acqopt$optimize(), class = "simpleError")
+
+  # logging_level
+  console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
+  f = tempfile("bbotklog_", fileext = "log")
+  th1 = lg$threshold
+  th2 = console_appender$threshold
+
+  lg$set_threshold("debug")
+  lg$add_appender(lgr::AppenderFile$new(f, threshold = "debug"), name = "testappender")
+  console_appender$set_threshold("warn")
+
+  on.exit({
+    lg$remove_appender("testappender")
+    lg$set_threshold(th1)
+    console_appender$set_threshold(th2)
+  })
+
+  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
+  acqopt$param_set$values$logging_level = "warn"
+  acqopt$optimize()
+  lines = readLines(f)
+  expect_equal(lines, character(0))
+
+  acqopt$param_set$values$logging_level = "info"
+  acqopt$optimize()
+  lines = readLines(f)
+  expect_character(lines, min.len = 1L)
+
+  # warmstart | warmstart_size | skip_already_evaluated
+  acqopt = AcqOptimizer$new(opt("design_points", batch_size = 1L, design = data.table(x = 0)), trm("evals", n_evals = 5L), acq_function = acqfun)
+  acqopt$param_set$values$warmstart = TRUE
+  xdt = acqopt$optimize()
+  expect_true(xdt[["x"]] == 0)
+  expect_true(xdt[[".already_evaluated"]] == FALSE)
+
+  acqopt$param_set$values$warmstart_size = 1L
+  xdt = acqopt$optimize()
+  expect_true(xdt[["x"]] == 0)
+  expect_true(xdt[[".already_evaluated"]] == FALSE)
+
+  acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
+  acqopt$param_set$values$warmstart = TRUE
+  acqopt$param_set$values$warmstart_size = "all"
+  expect_error(acqopt$optimize(), "All candidates were already evaluated.")
+
+  acqopt$param_set$values$skip_already_evaluated = FALSE
+  xdt = acqopt$optimize()
+  expect_true(is.null(xdt[[".already_evaluated"]]))
+
+  acqopt$param_set$values$warmstart_size = NULL
+  acqopt$param_set$values$warmstart = FALSE
+  xdt = acqopt$optimize()
+  expect_true(is.null(xdt[[".already_evaluated"]]))
 })
 
 test_that("AcqOptimizer param_set", {
-  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L))
+  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 1L), trm("evals", n_evals = 1L))
   expect_r6(acqopt$param_set, "ParamSet")
-  expect_true(all(c("fix_distance", "dist_threshold") %in% acqopt$param_set$ids()))
-  expect_r6(acqopt$param_set$params$fix_distance, "ParamLgl")
-  expect_r6(acqopt$param_set$params$dist_threshold, "ParamDbl")
+  expect_setequal(acqopt$param_set$ids(), c("logging_level", "warmstart", "warmstart_size", "skip_already_evaluated", "catch_errors"))
+  expect_r6(acqopt$param_set$params$logging_level, "ParamFct")
+  expect_r6(acqopt$param_set$params$warmstart, "ParamLgl")
+  expect_r6(acqopt$param_set$params$warmstart_size, "ParamInt")
+  expect_r6(acqopt$param_set$params$skip_already_evaluated, "ParamLgl")
+  expect_r6(acqopt$param_set$params$catch_errors, "ParamLgl")
   expect_error({acqopt$param_set = list()}, regexp = "param_set is read-only.")
-})
-
-test_that("AcqOptimizer fix_xdt_distance", {
-  domain = ParamSet$new(list(
-    ParamDbl$new("x1", -5, 5),
-    ParamFct$new("x2", levels = c("a", "b", "c")),
-    ParamInt$new("x3", 1L, 2L),
-    ParamLgl$new("x4"))
-  )
-
-  dist_threshold = 0
-
-  ### single point proposal to multiple previous points
-  previous_xdt = data.table(x1 = c(0.1, 0.2, 0.3, 0.4), x2 = c("a", "b", "c", "a"), x3 = c(1L, 2L, 1L, 2L), x4 = c(TRUE, TRUE, FALSE, FALSE))
-  xdt_ok = data.table(x1 = 0.5, x2 = "b", x3 = 1L, x4 = TRUE)
-  expect_equal(address(fix_xdt_distance(xdt_ok, previous_xdt = previous_xdt, search_space = domain, dist_threshold = dist_threshold)), address(xdt_ok))  # no change at all, not even a copy
-  xdt_redundant = previous_xdt[1L, ]
-  xdt_fixed = fix_xdt_distance(xdt_redundant, previous_xdt = previous_xdt, search_space = domain, dist_threshold = dist_threshold)
-  expect_data_table(xdt_fixed, any.missing = FALSE, nrows = 1L)
-  expect_true(check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt), dist_threshold))
-
-  ### single point proposal to single previous point
-  expect_equal(address(fix_xdt_distance(xdt_ok, previous_xdt = previous_xdt[4L, ], search_space = domain, dist_threshold = dist_threshold)), address(xdt_ok))  # no change at all, not even a copy
-  xdt_redundant = previous_xdt[4L, ]
-  xdt_fixed = fix_xdt_distance(xdt_redundant, previous_xdt = previous_xdt[4L, ], search_space = domain, dist_threshold = dist_threshold)
-  expect_data_table(xdt_fixed, any.missing = FALSE, nrows = 1L)
-  expect_true(check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt[4L, ]), dist_threshold))
-
-  # multiple point proposal to multiple previous points
-  xdt_ok = rbind(xdt_ok, data.table(x1 = 0.6, x2 = "c", x3 = 2L, x4 = FALSE))
-  expect_equal(address(fix_xdt_distance(xdt_ok, previous_xdt = previous_xdt, search_space = domain, dist_threshold = dist_threshold)), address(xdt_ok))  # no change at all, not even a copy
-  xdt_redundant = rbind(xdt_ok, previous_xdt[3:4, ])
-  xdt_fixed = fix_xdt_distance(xdt_redundant, previous_xdt = previous_xdt, search_space = domain, dist_threshold = dist_threshold)
-  expect_data_table(xdt_fixed, any.missing = FALSE, nrows = 4L)
-  expect_true(identical(xdt_fixed[1:2, ], xdt_redundant[1:2, ]))
-  expect_true(all(check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt), dist_threshold)))
-
-  # multiple point proposal to single previous point
-  expect_equal(address(fix_xdt_distance(xdt_ok, previous_xdt = previous_xdt[4L, ], search_space = domain, dist_threshold = dist_threshold)), address(xdt_ok))  # no change at all, not even a copy
-  xdt_fixed = fix_xdt_distance(xdt_redundant, previous_xdt = previous_xdt[4L, ], search_space = domain, dist_threshold = dist_threshold)
-  expect_data_table(xdt_fixed, any.missing = FALSE, nrows = 4L)
-  expect_true(identical(xdt_fixed[1:3, ], xdt_redundant[1:3, ]))
-  expect_true(all(check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt[4L, ]), dist_threshold)))
-
-  # multiple point proposal to multiple previous points, threshold higher to allow for second loop testing
-  withr::local_seed(1)
-  dist_threshold = 1
-  xdt_fixed = fix_xdt_distance(xdt_redundant, previous_xdt = previous_xdt, search_space = domain, dist_threshold = dist_threshold)
-  check_gower_dist(get_gower_dist(xdt_fixed, previous_xdt), dist_threshold = dist_threshold)
 })
 
 test_that("AcqOptimizer trafo", {
@@ -83,11 +97,19 @@ test_that("AcqOptimizer trafo", {
   instance = MAKE_INST(objective = objective, search_space = domain, terminator = trm("evals", n_evals = 5L))
   design = MAKE_DESIGN(instance)
   instance$eval_batch(design)
-  acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))
+  acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_FEATURELESS, archive = instance$archive))
   acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
   acqfun$surrogate$update()
   acqfun$update()
   res = acqopt$optimize()
   expect_equal(res$x, res$x_domain[[1L]][[1L]])
+})
+
+test_that("AcqOptimizer deep clone", {
+  acqopt1 = AcqOptimizer$new(opt("random_search", batch_size = 1L), trm("evals", n_evals = 1L))
+  acqopt2 = acqopt1$clone(deep = TRUE)
+  expect_true(address(acqopt1) != address(acqopt2))
+  expect_true(address(acqopt1$optimizer) != address(acqopt2$optimizer))
+  expect_true(address(acqopt1$terminator) != address(acqopt2$terminator))
 })
 

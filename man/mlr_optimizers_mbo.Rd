@@ -5,28 +5,140 @@
 \alias{OptimizerMbo}
 \title{Model Based Optimization}
 \description{
-\code{OptimizerMbo} class that implements model based optimization.
-The implementation follows a modular layout relying on a loop function determining the MBO flavor
-to be used, e.g., \link{bayesopt_ego} for sequential single objective MBO, a \link{Surrogate}, an
-\link{AcqFunction}, e.g., \link{AcqFunctionEI} for expected improvement and an \link{AcqOptimizer}.
+\code{OptimizerMbo} class that implements Model Based Optimization (MBO).
+The implementation follows a modular layout relying on a \link{loop_function} determining the MBO flavor to be used, e.g.,
+\link{bayesopt_ego} for sequential single-objective Bayesian Optimization, a \link{Surrogate}, an \link{AcqFunction}, e.g., \link{mlr_acqfunctions_ei} for
+Expected Improvement and an \link{AcqOptimizer}.
+
+MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built for the objective function.
+By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction, the next candidate is chosen for evaluation.
+
+Detailed descriptions of different MBO flavors are provided in the documentation of the respective \link{loop_function}.
+
+Termination is handled via a \link[bbotk:Terminator]{bbotk::Terminator} part of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
+}
+\section{Archive}{
+
+The \link[bbotk:Archive]{bbotk::Archive} holds the following additional columns that are specific to MBO algorithms:
+\itemize{
+\item \verb{[acq_function$id]} (\code{numeric(1)})\cr
+The value of the acquisition function.
+\item \code{.already_evaluated} (\verb{logical(1))}\cr
+Whether this point was already evaluated. Depends on the \code{skip_already_evaluated} parameter of the \link{AcqOptimizer}.
+}
+}
+
+\examples{
+\donttest{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+
+  # single-objective EGO
+  fun = function(xs) {
+    list(y = xs$x ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  learner = lrn("regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    nugget.stability = 10^-8,
+    control = list(trace = FALSE))
+
+  surrogate = srlrn(learner)
+
+  acq_function = acqf("ei")
+
+  acq_optimizer = acqo(
+    optimizer = opt("random_search"),
+    terminator = trm("evals", n_evals = 100))
+
+  optimizer = opt("mbo",
+    loop_function = bayesopt_ego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer)
+
+  optimizer$optimize(instance)
+
+  # multi-objective ParEGO
+  fun = function(xs) {
+    list(y1 = xs$x^2, y2 = (xs$x - 2) ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceMultiCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  optimizer = opt("mbo",
+    loop_function = bayesopt_parego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer)
+
+  optimizer$optimize(instance)
+}
+}
 }
 \section{Super class}{
 \code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{OptimizerMbo}
 }
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{loop_function}}{(\code{function} | NULL).}
+\item{\code{loop_function}}{(\link{loop_function} | \code{NULL})\cr
+Loop function determining the MBO flavor.}
 
-\item{\code{surrogate}}{(\link{Surrogate} | NULL)}
+\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+The surrogate.}
 
-\item{\code{acq_function}}{(\link{AcqFunction} | NULL).}
+\item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+The acquisition function.}
 
-\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | NULL).}
+\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+The acquisition function optimizer.}
 
-\item{\code{args}}{(named \code{list()} | NULL).}
+\item{\code{args}}{(named \code{list()})\cr
+Further arguments passed to the \code{loop_function}.
+For example, \code{random_interleave_iter}.}
 
-\item{\code{result_function}}{(\code{function} | NULL).}
+\item{\code{result_function}}{(\code{function} | \code{NULL})\cr
+Optional function called after the optimization terminates.
+Determines how the final result of the optimization is calculated.
+Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
+See for example \link{result_by_surrogate_design} which is used by default if the
+\link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
+\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
+
+\item{\code{param_classes}}{(\code{character()})\cr
+Supported parameter classes that the optimizer can optimize.
+Determined based on the \code{surrogate} and the \code{acq_optimizer}.
+Subclasses of \link[paradox:Param]{paradox::Param}.}
+
+\item{\code{properties}}{(\code{character()})\cr
+Set of properties of the optimizer.
+Must be a subset of \code{\link[=bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
+MBO in principle is very flexible and by default we assume that the optimizer has all properties.
+When fully initialized, properties are determined based on the \code{loop_function} and \code{surrogate}.}
+
+\item{\code{packages}}{(\code{character()})\cr
+Set of required packages.
+A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.
+Required packages are determined based on the \code{surrogate} and the \code{acq_optimizer}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -34,6 +146,8 @@ to be used, e.g., \link{bayesopt_ego} for sequential single objective MBO, a \li
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-OptimizerMbo-new}{\code{OptimizerMbo$new()}}
+\item \href{#method-OptimizerMbo-print}{\code{OptimizerMbo$print()}}
+\item \href{#method-OptimizerMbo-reset}{\code{OptimizerMbo$reset()}}
 \item \href{#method-OptimizerMbo-clone}{\code{OptimizerMbo$clone()}}
 }
 }
@@ -43,7 +157,6 @@ to be used, e.g., \link{bayesopt_ego} for sequential single objective MBO, a \li
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="optimize"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-optimize'><code>bbotk::Optimizer$optimize()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="print"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-print'><code>bbotk::Optimizer$print()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -52,7 +165,16 @@ to be used, e.g., \link{bayesopt_ego} for sequential single objective MBO, a \li
 \if{latex}{\out{\hypertarget{method-OptimizerMbo-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
-For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{mbo_defaults}.
+
+If \code{surrogate} is \code{NULL} and the \code{acq_function$surrogate} field is populated, this \link{Surrogate} is used.
+Otherwise, \code{default_surrogate(instance)} is used.
+If \code{acq_function} is NULL and the \code{acq_optimizer$acq_function} field is populated, this \link{AcqFunction} is used (and therefore its \verb{$surrogate} if  populated; see above).
+Otherwise \code{default_acqfun(instance)} is used.
+If \code{acq_optimizer} is NULL, \code{default_acqopt(instance)} is used.
+
+Even if already initialized, the \verb{$surrogate$archive} field will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the current \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
+
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
   loop_function = NULL,
@@ -67,23 +189,23 @@ For more information on default values for \code{loop_function}, \code{surrogate
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{loop_function}}{(\code{function})\cr
-Loop function to run. See \code{mbo_defaults} for defaults.}
+\item{\code{loop_function}}{(\link{loop_function} | \code{NULL})\cr
+Loop function determining the MBO flavor.}
 
-\item{\code{surrogate}}{\link{Surrogate}\cr
-The surrogate object. For defaults see \link{mbo_defaults}.}
+\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+The surrogate.}
 
-\item{\code{acq_function}}{\link{AcqFunction}\cr
-The acquistion function object. For defaults see \link{mbo_defaults}.}
+\item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+The acquisition function.}
 
-\item{\code{acq_optimizer}}{\link{AcqOptimizer}\cr
-The optimizer that optimizes the acquistion function. For defaults see \link{mbo_defaults}.}
+\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+The acquisition function optimizer.}
 
 \item{\code{args}}{(named \code{list()})\cr
 Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
 
-\item{\code{result_function}}{(\code{function})\cr
+\item{\code{result_function}}{(\code{function} | \code{NULL})\cr
 Optional function called after the optimization terminates.
 Determines how the final result of the optimization is calculated.
 Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
@@ -93,6 +215,31 @@ See for example \link{result_by_surrogate_design} which is used by default if th
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-OptimizerMbo-print"></a>}}
+\if{latex}{\out{\hypertarget{method-OptimizerMbo-print}{}}}
+\subsection{Method \code{print()}}{
+Print method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$print()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character()}).
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-OptimizerMbo-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-OptimizerMbo-reset}{}}}
+\subsection{Method \code{reset()}}{
+Reset the optimizer.
+Sets the following fields to \code{NULL}:
+\code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{args}, \code{result_function}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$reset()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerMbo-clone"></a>}}

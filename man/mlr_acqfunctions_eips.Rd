@@ -5,13 +5,13 @@
 \alias{AcqFunctionEIPS}
 \title{Acquisition Function Expected Improvement Per Second}
 \description{
-Expected improvement per second.
+Expected Improvement per Second.
 
 It is assumed that calculations are performed on an \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit}.
 Additionally to target values of the codomain that should be minimized or maximized, the
 \link[bbotk:Objective]{bbotk::Objective} of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} should return time values.
 The column names of the target variable and time variable must be passed as \code{y_cols} in the
-order \verb{(target, time)} when constructing the \link{SurrogateLearners} that is being used as a
+order \verb{(target, time)} when constructing the \link{SurrogateLearnerCollection} that is being used as a
 surrogate.
 }
 \section{Dictionary}{
@@ -24,20 +24,60 @@ acqf("eips")
 }\if{html}{\out{</div>}}
 }
 
+\examples{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+  library(data.table)
+
+  fun = function(xs) {
+    list(y = xs$x ^ 2, time = abs(xs$x))
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+
+  learner = lrn("regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    nugget.stability = 10^-8,
+    control = list(trace = FALSE))
+
+  surrogate = srlrnc(list(learner, learner$clone(deep = TRUE)), archive = instance$archive)
+  surrogate$y_cols = c("y", "time")
+
+  acq_function = acqf("eips", surrogate = surrogate)
+
+  acq_function$surrogate$update()
+  acq_function$update()
+  acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
+}
+}
 \references{
-Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).
+\itemize{
+\item Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).
 \dQuote{Practical Bayesian Optimization of Machine Learning Algorithms.}
 In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neural Information Processing Systems}, volume 25, 2951--2959.
+}
 }
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
-\code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
-\code{\link{mlr_acqfunctions_sms_ego}}
+\code{\link{mlr_acqfunctions_smsego}},
+\code{\link{mlr_acqfunctions}}
 }
 \concept{Acquisition Function}
 \section{Super classes}{
@@ -46,7 +86,8 @@ Other Acquisition Function:
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{y_best}}{(\code{numeric(1)}).}
+\item{\code{y_best}}{(\code{numeric(1)})\cr
+Best objective function value observed so far.}
 }
 \if{html}{\out{</div>}}
 }
@@ -90,7 +131,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearners}).}
+\item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearnerCollection}).}
 }
 \if{html}{\out{</div>}}
 }

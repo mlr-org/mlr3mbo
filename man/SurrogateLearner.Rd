@@ -4,7 +4,70 @@
 \alias{SurrogateLearner}
 \title{Surrogate Model Containing a Single Learner}
 \description{
-Surrogate model containing a single regression \link[mlr3:Learner]{mlr3::Learner}.
+Surrogate model containing a single \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
+}
+\section{Parameters}{
+
+\describe{
+\item{\code{assert_insample_perf}}{\code{logical(1)}\cr
+Should the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} be asserted after updating the surrogate?
+If the assertion fails (i.e., the insample performance based on the \code{perf_measure} does not meet the
+\code{perf_threshold}), an error is thrown.
+Default is \code{FALSE}.
+}
+\item{\code{perf_measure}}{\link[mlr3:MeasureRegr]{mlr3::MeasureRegr}\cr
+Performance measure which should be use to assert the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
+Only relevant if \code{assert_insample_perf = TRUE}.
+Default is \link[mlr3:mlr_measures_regr.rsq]{mlr3::mlr_measures_regr.rsq}.
+}
+\item{\code{perf_threshold}}{\code{numeric(1)}\cr
+Threshold the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} should be asserted against.
+Only relevant if \code{assert_insample_perf = TRUE}.
+Default is \code{0}.
+}
+\item{\code{catch_errors}}{\code{logical(1)}\cr
+Should errors during updating the surrogate be caught and propagated to the \code{loop_function} which can then handle
+the failed infill optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+Default is \code{TRUE}.
+}
+}
+}
+
+\examples{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+
+  fun = function(xs) {
+    list(y = xs$x ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  xdt = generate_design_random(instance$search_space, n = 4)$data
+
+  instance$eval_batch(xdt)
+
+  learner = lrn("regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    nugget.stability = 10^-8,
+    control = list(trace = FALSE))
+
+  surrogate = srlrn(learner, archive = instance$archive)
+
+  surrogate$update()
+
+  surrogate$model$model
+}
 }
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateLearner}
@@ -12,11 +75,26 @@ Surrogate model containing a single regression \link[mlr3:Learner]{mlr3::Learner
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{n_learner}}{(\code{integer(1)})\cr
-Returns the number of \link[mlr3:Learner]{mlr3::Learner}s.}
+\item{\code{print_id}}{(\code{character})\cr
+Id used when printing.}
 
-\item{\code{assert_insample_perf}}{(\code{numeric(1)})\cr
+\item{\code{n_learner}}{(\code{integer(1)})\cr
+Returns the number of surrogate models.}
+
+\item{\code{assert_insample_perf}}{(\code{numeric()})\cr
 Asserts whether the current insample performance meets the performance threshold.}
+
+\item{\code{packages}}{(\code{character()})\cr
+Set of required packages.
+A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
+
+\item{\code{feature_types}}{(\code{character()})\cr
+Stores the feature types the surrogate can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
+A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
+
+\item{\code{properties}}{(\code{character()})\cr
+Stores a set of properties/capabilities the learner has.
+A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -31,6 +109,8 @@ Asserts whether the current insample performance meets the performance threshold
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="format"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-format'><code>mlr3mbo::Surrogate$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="print"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-print'><code>mlr3mbo::Surrogate$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-update'><code>mlr3mbo::Surrogate$update()</code></a></span></li>
 </ul>
 </details>
@@ -41,7 +121,7 @@ Asserts whether the current insample performance meets the performance threshold
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearner$new(learner, archive = NULL, y_col = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearner$new(learner, archive = NULL, x_cols = NULL, y_col = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -49,9 +129,16 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \describe{
 \item{\code{learner}}{(\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
 
-\item{\code{archive}}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive}).}
+\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
+\link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{\code{y_col}}{(\code{NULL} | \code{character(1)}).}
+\item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
+Column Id's of variables that should be used as features.
+By default, automatically inferred based on the archive.}
+
+\item{\code{y_col}}{(\code{character(1)} | \code{NULL})\cr
+Column Id of variable that should be used as a target.
+By default, automatically inferred based on the archive.}
 }
 \if{html}{\out{</div>}}
 }
@@ -60,7 +147,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<a id="method-SurrogateLearner-predict"></a>}}
 \if{latex}{\out{\hypertarget{method-SurrogateLearner-predict}{}}}
 \subsection{Method \code{predict()}}{
-Returns mean response and standard error.
+Predict mean response and standard error.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateLearner$predict(xdt)}\if{html}{\out{</div>}}
 }
@@ -69,7 +156,7 @@ Returns mean response and standard error.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-New data.}
+New data. One row per observation.}
 }
 \if{html}{\out{</div>}}
 }

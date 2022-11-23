@@ -1,2 +1,2 @@
-#' @param loop_function (`function`)\cr
-#'   Loop function to run. See `mbo_defaults` for defaults.
+#' @param loop_function ([loop_function] | `NULL`)\cr
+#'   Loop function determining the MBO flavor.

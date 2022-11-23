@@ -17,20 +17,59 @@ acqf("ei")
 }\if{html}{\out{</div>}}
 }
 
+\examples{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+  library(data.table)
+
+  fun = function(xs) {
+    list(y = xs$x ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+
+  learner = lrn("regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    nugget.stability = 10^-8,
+    control = list(trace = FALSE))
+
+  surrogate = srlrn(learner, archive = instance$archive)
+
+  acq_function = acqf("ei", surrogate = surrogate)
+
+  acq_function$surrogate$update()
+  acq_function$update()
+  acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
+}
+}
 \references{
-Jones, R. D, Schonlau, Matthias, Welch, J. W (1998).
+\itemize{
+\item Jones, R. D, Schonlau, Matthias, Welch, J. W (1998).
 \dQuote{Efficient Global Optimization of Expensive Black-Box Functions.}
 \emph{Journal of Global optimization}, \bold{13}(4), 455--492.
+}
 }
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
-\code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
-\code{\link{mlr_acqfunctions_sms_ego}}
+\code{\link{mlr_acqfunctions_smsego}},
+\code{\link{mlr_acqfunctions}}
 }
 \concept{Acquisition Function}
 \section{Super classes}{
@@ -39,7 +78,8 @@ Other Acquisition Function:
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{y_best}}{(\code{numeric(1)}).}
+\item{\code{y_best}}{(\code{numeric(1)})\cr
+Best objective function value observed so far.}
 }
 \if{html}{\out{</div>}}
 }

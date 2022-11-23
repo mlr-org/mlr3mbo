@@ -1,5 +1,3 @@
-library(mlr3learners)
-
 lapply(list.files(system.file("testthat", package = "mlr3"),
   pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
@@ -10,13 +8,13 @@ PS_1D = ParamSet$new(list(
 FUN_1D = function(xs) {
   list(y = as.numeric(xs)^2)
 }
-FUN_1D_CODOMAIN = ParamSet$new(list(ParamDbl$new("y", tags = c("minimize", "random_tag"))))
+FUN_1D_CODOMAIN = ParamSet$new(list(ParamDbl$new("y", tags = "minimize")))
 OBJ_1D = ObjectiveRFun$new(fun = FUN_1D, domain = PS_1D, codomain = FUN_1D_CODOMAIN, properties = "single-crit")
 
 FUN_1D_2 = function(xs) {
   list(y1 = as.numeric(xs)^2, y2 = - sqrt(abs(as.numeric(xs))))
 }
-FUN_1D_2_CODOMAIN = ParamSet$new(list(ParamDbl$new("y1", tags = c("minimize", "random_tag")), ParamDbl$new("y2", tags = c("minimize", "random_tag"))))
+FUN_1D_2_CODOMAIN = ParamSet$new(list(ParamDbl$new("y1", tags = "minimize"), ParamDbl$new("y2", tags = "minimize")))
 OBJ_1D_2 = ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
 
 # Simple 1D Functions with noise
@@ -93,17 +91,18 @@ MAKE_INST_1D_NOISY = function(terminator = trm("evals", n_evals = 5L)) {
 }
 
 MAKE_DESIGN = function(instance, n = 4L) {
-  generate_design_lhs(instance$search_space, n)$data
+  generate_design_random(instance$search_space, n)$data
 }
 
-REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.estim = TRUE, jitter = 1e-12)
-REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
-REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", nugget.stability = 10^-8)
-REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
+if (requireNamespace("mlr3learners") && requireNamespace("DiceKriging") && requireNamespace("rgenoud")) {
+  library(mlr3learners)
+  REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE, max.generations = 2), nugget.estim = TRUE, jitter = 1e-12)
+  REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
+  REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE, max.generations = 2), nugget.stability = 10^-8)
+  REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
+}
 REGR_FEATURELESS = lrn("regr.featureless")
 REGR_FEATURELESS$encapsulate = c(train = "callr", predict = "callr")
-
-# FIXME: ACQ_OPT_DEF = AcqOptimizer$new(opt("random_search", batch_size = 1000), trm("evals", n_evals = 1000))
 
 OptimizerError = R6Class("OptimizerError",
   inherit = Optimizer,
@@ -120,7 +119,7 @@ OptimizerError = R6Class("OptimizerError",
 
   private = list(
     .optimize = function(inst) {
-      stop("Optimizer Error")
+      stop("Optimizer Error.")
     }
   )
 )
@@ -144,7 +143,7 @@ LearnerRegrError = R6Class("LearnerRegrError",
   private = list(
     .train = function(task) {
       if (self$param_set$values$error_train) {
-        stop("Surrogate Train Error")
+        stop("Surrogate Train Error.")
       } else {
         mu = mean(task$data(cols = task$target_names)[[1L]])
         sigma = sd(task$data(cols = task$target_names)[[1L]])
@@ -154,10 +153,10 @@ LearnerRegrError = R6Class("LearnerRegrError",
 
     .predict = function(task) {
       if (self$param_set$values$error_predict) {
-        stop("Surrogate Predict Error")
+        stop("Surrogate Predict Error.")
       } else {
         n = task$nrow
-        if (l$predict_type == "se") {
+        if (self$predict_type == "se") {
           list(response = rep(self$model$mu, n), se = rep(self$model$sigma, n))
         } else {
           list(response = rep(self$model$mu, n), se = rep(self$model$sigma, n))
@@ -166,4 +165,34 @@ LearnerRegrError = R6Class("LearnerRegrError",
     }
   )
 )
+
+expect_dictionary_loop_function = function(d, contains = NA_character_, min_items = 0L) {
+  expect_r6(d, "Dictionary")
+  testthat::expect_output(print(d), "Dictionary")
+  keys = d$keys()
+
+  expect_environment(d$items)
+  expect_character(keys, any.missing = FALSE, min.len = min_items, min.chars = 1L)
+  if (!is.na(contains)) {
+    expect_list(d$mget(keys), types = contains, names = "unique")
+  }
+  expect_data_table(data.table::as.data.table(d), key = "key", nrows = length(keys))
+}
+
+expect_loop_function = function(lpf) {
+  expect_class(lpf, "loop_function")
+  expect_subset(c("instance", "surrogate", "acq_function", "acq_optimizer", "init_design_size", "random_interleave_iter"), names(formals(lpf)),)
+  expect_subset(c("id", "label", "instance", "man"), names(attributes(lpf)))
+  expect_string(attr(lpf, "id"), pattern = "bayesopt")
+  expect_string(attr(lpf, "label"))
+  expect_choice(attr(lpf, "instance"), c("single-crit", "multi-crit"))
+  expect_man_exists(attr(lpf, "man"))
+}
+
+expect_acqfunction = function(acqf) {
+  expect_r6(acqf, classes = c("AcqFunction", "Objective"))
+  expect_string(acqf$id, pattern = "acq")
+  expect_string(acqf$label)
+  expect_man_exists(acqf$man)
+}
 

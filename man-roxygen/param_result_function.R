@@ -1,4 +1,4 @@
-#' @param result_function (`function`)\cr
+#' @param result_function (`function` | `NULL`)\cr
 #'   Optional function called after the optimization terminates.
 #'   Determines how the final result of the optimization is calculated.
 #'   Requires arguments `inst` (the [bbotk::OptimInstance]) and `self` (the [OptimizerMbo]).

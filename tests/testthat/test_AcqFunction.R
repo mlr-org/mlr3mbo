@@ -1,8 +1,8 @@
 test_that("AcqFunction API works", {
   inst = MAKE_INST_1D()
-  surrogate = SurrogateLearner$new(REGR_KM_DETERM, archive = inst$archive)
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
 
-  acqf = AcqFunction$new(id = "acqf", constants = ps(), surrogate = surrogate, direction = "same")
+  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, direction = "same")
 
   expect_r6(acqf$codomain, "ParamSet")
   expect_equal(acqf$codomain$ids(), "acqf")
@@ -10,3 +10,4 @@ test_that("AcqFunction API works", {
   expect_equal(acqf$direction, "same")
   expect_equal(acqf$domain, inst$search_space)
 })
+

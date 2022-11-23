@@ -13,12 +13,6 @@
 
 .onLoad = function(libname, pkgname) { # nolint
   # nocov start
-  backports::import(pkgname)
-
-  # add rregr.ranger_custom to learner dictionary
-  x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
-  x$add("regr.ranger_custom", LearnerRegrRangerCustom)
-
   # add mbo to tuner dictionary
   x = utils::getFromNamespace("mlr_tuners", ns = "mlr3tuning")
   x$add("mbo", TunerMbo)
@@ -36,4 +30,9 @@
 } # nocov end
 
 # static code checks should not complain about commonly used data.table columns
-utils::globalVariables("y_scal")
+utils::globalVariables(c("y_scal", "y_trafo"))
+
+if (!Sys.getenv("DEVTOOLS_LOAD") == "true") {
+  leanify_package()
+}
+

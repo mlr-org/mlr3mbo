@@ -1,2 +1,2 @@
-#' @param acq_optimizer [AcqOptimizer]\cr
-#'   The optimizer that optimizes the acquistion function. For defaults see [mbo_defaults].
+#' @param acq_optimizer ([AcqOptimizer] | `NULL`)\cr
+#'   The acquisition function optimizer.

@@ -99,5 +99,12 @@ bibentries = c(
     year       = "2015",
     booktitle  = "International Conference on Evolutionary Multi-Criterion Optimization",
     pages      = "64--78"
+  ),
+
+  ginsbourger_2008 = bibentry("misc",
+    title  = "A Multi-Points Criterion for Deterministic Parallel Global Optimization Based on Gaussian processes",
+    author = "Ginsbourger, David and Le Riche, Rodolphe and Carraro, Laurent",
+    year   = "2008"
   )
 )
+

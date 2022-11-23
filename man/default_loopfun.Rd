@@ -11,12 +11,12 @@ default_loopfun(instance)
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 }
 \value{
-loop \code{function}
+\link{loop_function}
 }
 \description{
-Chooses a default "loopfun", i.e. the MBO flavor to be used for optimization.
-For single-criteria optimization, defaults to \link{bayesopt_ego}.
-For multi-criteria optimization, defaults to \link{bayesopt_smsego}.
+Chooses a default \link{loop_function}, i.e. the Bayesian Optimization flavor to be used for optimization.
+For single-objective optimization, defaults to \link{bayesopt_ego}.
+For multi-objective optimization, defaults to \link{bayesopt_smsego}.
 }
 \seealso{
 Other mbo_defaults: 

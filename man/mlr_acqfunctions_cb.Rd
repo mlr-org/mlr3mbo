@@ -5,7 +5,7 @@
 \alias{AcqFunctionCB}
 \title{Acquisition Function Confidence Bound}
 \description{
-Confidence Bound.
+Lower / Upper Confidence Bound.
 }
 \section{Dictionary}{
 
@@ -26,20 +26,58 @@ Defaults to \code{2}.
 }
 }
 
+\examples{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+  library(data.table)
+
+  fun = function(xs) {
+    list(y = xs$x ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+
+  learner = lrn("regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    nugget.stability = 10^-8,
+    control = list(trace = FALSE))
+
+  surrogate = srlrn(learner, archive = instance$archive)
+
+  acq_function = acqf("cb", surrogate = surrogate, lambda = 3)
+
+  acq_function$surrogate$update()
+  acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
+}
+}
 \references{
-Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).
+\itemize{
+\item Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).
 \dQuote{Practical Bayesian Optimization of Machine Learning Algorithms.}
 In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neural Information Processing Systems}, volume 25, 2951--2959.
+}
 }
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
-\code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
-\code{\link{mlr_acqfunctions_sms_ego}}
+\code{\link{mlr_acqfunctions_smsego}},
+\code{\link{mlr_acqfunctions}}
 }
 \concept{Acquisition Function}
 \section{Super classes}{
