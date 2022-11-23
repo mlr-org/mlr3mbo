@@ -6,16 +6,16 @@ reticulate::use_virtualenv("/home/lps/.local/share/virtualenvs/yahpo_gym-4ygV7gg
 library(reticulate)
 library(yahpogym)
 
-instances = data.table(scenario = rep(paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost")), each = 5L),
-                       instance = c("40499", "1476", "6", "12", "41150",
-                                    "40979", "1501", "40966", "1478", "40984",
-                                    "12", "458", "1510", "1515", "307",
-                                    "1478", "40979", "12", "28", "1501",
-                                    "41164", "37", "1515", "1510", "42",
-                                    "1478", "1501", "40499", "40979", "300",
-                                    "40984", "40979", "40966", "28", "22"),
+instances = data.table(scenario = rep(paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost")), each = 4L),
+                       instance = c("40499", "1476", "6", "12",
+                                    "40979", "1501", "40966", "1478",
+                                    "12", "458", "1510", "1515",
+                                    "1478", "40979", "12", "28",
+                                    "41164", "37", "1515", "1510",
+                                    "1478", "1501", "40499", "40979",
+                                    "40984", "40979", "40966", "28"),
                        target = "acc",
-                       budget = rep(c(118, 90, 134, 110, 267, 118, 170), each = 5L))
+                       budget = rep(c(118, 90, 134, 110, 267, 118, 170), each = 4L))
 
 make_optim_instance = function(instance) {
   benchmark = BenchmarkSet$new(instance$scenario, instance = instance$instance)

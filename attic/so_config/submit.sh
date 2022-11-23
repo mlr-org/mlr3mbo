@@ -4,7 +4,7 @@ sbatch <<EOT
 #!/bin/sh
 #SBATCH --time=7-00:00:0
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=35
+#SBATCH --cpus-per-task=32
 #SBATCH --mem-per-cpu=2000
 #SBATCH -A mallet
 #SBATCH --exclude=tknl[01-12]
