@@ -80,6 +80,7 @@ Collate:
     'AcqFunctionMean.R'
     'AcqFunctionPI.R'
     'AcqFunctionSmsEgo.R'
+    'AcqFunctionTTEI.R'
     'AcqOptimizer.R'
     'OptimizerMbo.R'
     'Surrogate.R'

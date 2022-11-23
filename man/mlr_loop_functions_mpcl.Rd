@@ -116,7 +116,7 @@ if (requireNamespace("mlr3learners") &
 \references{
 \itemize{
 \item Ginsbourger, David, Le Riche, Rodolphe, Carraro, Laurent (2008).
-\dQuote{A Multi-Points Criterion for Deterministic Parallel Global Optimization Based on Gaussian processes.}
+\dQuote{A Multi-Points Criterion for Deterministic Parallel Global Optimization Based on Gaussian Processes.}
 \item Wang, Jialei, Clark, C. S, Liu, Eric, Frazier, I. P (2020).
 \dQuote{Parallel Bayesian Global Optimization of Expensive Functions.}
 \emph{Operations Research}, \bold{68}(6), 1850--1865.

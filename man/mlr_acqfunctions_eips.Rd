@@ -77,6 +77,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_smsego}},
+\code{\link{mlr_acqfunctions_ttei}},
 \code{\link{mlr_acqfunctions}}
 }
 \concept{Acquisition Function}

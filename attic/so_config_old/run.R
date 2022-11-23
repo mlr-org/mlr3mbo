@@ -6,7 +6,7 @@ library(mlr3)
 library(mlr3misc)
 library(mlr3learners)
 library(mlr3pipelines)
-library(bbotk)  # @localsearch
+library(bbotk)
 library(paradox)
 library(R6)
 library(checkmate)
@@ -18,7 +18,6 @@ library("future")
 library("future.apply")
 
 source("OptimizerChain.R")
-source("LearnerRegrRangerCustom.R")
 
 parser = ArgumentParser()
 parser$add_argument("-r", "--run", type = "integer", default = 1, help = "Id of run, should be within 1-5")
@@ -32,18 +31,36 @@ seeds = c(2409, 2906, 0905, 2412, 3112)
 set.seed(seeds[run_id])
 
 search_space = ps(
-  loop_function = p_fct(c("ego", "ego_log")),
   init = p_fct(c("random", "lhs", "sobol")),
   init_size_factor = p_int(lower = 1L, upper = 4L),
   random_interleave = p_lgl(),
-  random_interleave_iter = p_fct(c("2", "4", "10"), depends = random_interleave == TRUE),
+  random_interleave_iter = p_fct(c("2", "3", "5", "10"), depends = random_interleave == TRUE),
 
-  rf_type = p_fct(c("standard", "smaclike_boot", "smaclike_no_boot", "smaclike_variance_boot")),
+  surrogate = p_fct(c("ranger", "ranger_custom")),
+  mtry.ratio = p_fct(c("default", "1")),
+  num.trees = p_fct(c("10", "100", "1000")),
+  replace = p_lgl(depends = surrogate == "ranger"),
+  sample.fraction = p_fct(c("0.6", "0.8", "1"), depends = surrogate == "ranger"),
+  splitrule = p_fct(c("variance", "extratrees"), depends = surrogate == "ranger"),
+  num.random.splits = p_fct(c("1", "2", "10"), depends = surrogate == "ranger" && splitrule == "extratrees"),
+  min.node.size = p_fct(c("1", "5"), depends = surrogate == "ranger"),
+  se.method = p_fct(c("jack", "infjack"), depends = surrogate == "ranger"),
+  se.simple.spatial = p_lgl(depends = surrogate == "ranger_custom"),
 
-  acqf = p_fct(c("EI", "TTEI", "CB", "PI", "Mean")),
-  lambda = p_int(lower = 1, upper = 3, depends = acqf == "CB"),
+  acqf = p_fct(c("EI", "CB")),
+  lambda = p_fct(c("1", "2", "3"), depends = acqf == "CB"),
   acqopt = p_fct(c("RS_1000", "RS", "FS", "LS"))
 )
+search_space$trafo = function(x, param_set) {
+  x[["random_interleave_iter"]] = as.integer(x[["random_interleave_iter"]])
+  x[["num.trees"]] = as.integer(x[["num.trees"]])
+  x[["sample.fraction"]] = as.numeric(x[["sample.fraction"]])
+  x[["num.random.splits"]] = as.integer(x[["num.random.splits"]])
+  x[["min.node.size"]] = as.integer(x[["min.node.size"]])
+  x[["lambda"]] = as.numeric(x[["lambda"]])
+  x[map_lgl(x, function(y) length(y) == 0L)] = NA
+  x
+}
 
 instances = readRDS("instances.rds")
 #instances = data.table(scenario = rep(paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost")), each = 5L),
@@ -86,45 +103,28 @@ evaluate = function(xdt, instance) {
 
   optim_instance$eval_batch(init_design)
   
-  random_interleave_iter = if(xdt$random_interleave) as.numeric(xdt$random_interleave_iter) else 0L
+  random_interleave_iter = if(xdt$random_interleave) xdt$random_interleave_iter else 0L
   
-  learner = LearnerRegrRangerCustom$new()
-  learner$predict_type = "se"
-  learner$param_set$values$keep.inbag = TRUE
-
-  if (xdt$rf_type == "standard") {
-    learner$param_set$values$se.method = "jack"
-    learner$param_set$values$splitrule = "variance"
-    learner$param_set$values$num.trees = 1000L
-  } else if (xdt$rf_type == "smaclike_boot") {
-    learner$param_set$values$se.method = "simple"
-    learner$param_set$values$splitrule = "extratrees"
-    learner$param_set$values$num.random.splits = 1L
-    learner$param_set$values$num.trees = 10
-    learner$param_set$values$replace = TRUE
-    learner$param_set$values$sample.fraction = 1
-    learner$param_set$values$min.node.size = 1
-    learner$param_set$values$mtry.ratio = 1
-  } else if (xdt$rf_type == "smaclike_no_boot") {
-    learner$param_set$values$se.method = "simple"
-    learner$param_set$values$splitrule = "extratrees"
-    learner$param_set$values$num.random.splits = 1L
-    learner$param_set$values$num.trees = 10
-    learner$param_set$values$replace = FALSE
-    learner$param_set$values$sample.fraction = 1
-    learner$param_set$values$min.node.size = 1
-    learner$param_set$values$mtry.ratio = 1
-  } else if (xdt$rf_type == "smaclike_variance_boot") {
-    learner$param_set$values$se.method = "simple"
-    learner$param_set$values$splitrule = "variance"
-    learner$param_set$values$num.trees = 10
-    learner$param_set$values$replace = TRUE
-    learner$param_set$values$sample.fraction = 1
-    learner$param_set$values$min.node.size = 1
-    learner$param_set$values$mtry.ratio = 1
+  if (xdt$surrogate == "ranger") {
+    learner = lrn("regr.ranger", keep.inbag = TRUE)
+    values = as.list(xdt[, c("num.trees", "replace", "sample.fraction", "splitrule", "num.random.splits", "min.node.size", "se.method")])
+    values = values[!map_lgl(values, function(x) is.na(x))]
+  } else if (xdt$surrogate == "ranger_custom") {
+    learner = lrn("regr.ranger_custom")
+    values = as.list(xdt[, c("num.trees", "se.simple.spatial")])
+    values = values[!map_lgl(values, function(x) is.na(x))]
   }
+  if (xdt$mtry.ratio == "1") {
+    values$mtry.ratio = 1
+  }
+  learner$param_set$values = insert_named(learner$param_set$values %??% list(), values)
+  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
 
-  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor", multiplier = 3) %>>% learner))
+  acq_function = if (xdt$acqf == "EI") {
+    AcqFunctionEI$new()
+  } else if (xdt$acqf == "CB") {
+    AcqFunctionCB$new(lambda = xdt$lambda)
+  }
 
   acq_optimizer = if (xdt$acqopt == "RS_1000") {
     AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 1000L))
@@ -139,27 +139,11 @@ evaluate = function(xdt, instance) {
       optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
       acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20020L))
       acq_optimizer$param_set$values$warmstart = TRUE
-      acq_optimizer$param_set$values$warmstart_size = 10L
+      acq_optimizer$param_set$values$warmstart_size = "all"
       acq_optimizer
   }
-
-  acq_function = if (xdt$acqf == "EI") {
-    AcqFunctionEI$new()
-  } else if (xdt$acqf == "TTEI") {
-    AcqFunctionTTEI$new(toplvl_acq_optimizer = acq_optimizer$clone(deep = TRUE))
-  } else if (xdt$acqf == "CB") {
-    AcqFunctionCB$new(lambda = xdt$lambda)
-  } else if (xdt$acqf == "PI") {
-    AcqFunctionPI$new()
-  } else if (xdt$acqf == "Mean") {
-    AcqFunctionMean$new()
-  }
- 
-  if (xdt$loop_function == "ego") { 
-    bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
-  } else if (xdt$loop_function == "ego_log") {
-    bayesopt_ego_log(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
-  }
+  
+  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
   
   best = optim_instance$archive$best()[[instance$target]]
   ecdf_best = instance$ecdf(best)  # evaluate the precomputed ecdf for the best value found; our target is effectively P(X <= best)
@@ -189,16 +173,14 @@ ac_instance = OptimInstanceSingleCrit$new(
   terminator = trm("evals", n_evals = 200L)  # 100 init design + 100
 )
 
-surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% lrn("regr.ranger", keep.inbag = TRUE, se.method = "jack", num.trees = 1000L)))
-acq_function = AcqFunctionEI$new()
+surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% lrn("regr.ranger", num.trees = 1000L, se.method = "jack", keep.inbag = TRUE)))
+acq_function = AcqFunctionCB$new(lambda = 3)
 optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
 acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20020L))
 acq_optimizer$param_set$values$warmstart = TRUE
-acq_optimizer$param_set$values$warmstart_size = 10L
+acq_optimizer$param_set$values$warmstart_size = "all"
 design = generate_design_sobol(ac_instance$search_space, n = 100L)$data
-for (i in seq_len(nrow(design))) {
-  ac_instance$eval_batch(design[i, ])
-}
+ac_instance$eval_batch(design)
 saveRDS(ac_instance, paste0("ac_instance_", run_id, ".rds"))
 bayesopt_ego(ac_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = 5L)
 saveRDS(ac_instance, paste0("ac_instance_", run_id, ".rds"))

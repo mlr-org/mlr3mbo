@@ -67,7 +67,7 @@
 #'     list(y = xs$x ^ 2)
 #'   }
 #'   domain = ps(x = p_dbl(lower = -10, upper = 10))
-#'   codomain = ps(y = p_dbl(tags = "minimize"))
+#'   codomain = ps(y = p_dbl(tags = "maximize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
 #'   instance = OptimInstanceSingleCrit$new(
@@ -105,7 +105,7 @@ bayesopt_ego_log = function(
   assert_r6(instance, "OptimInstanceSingleCrit")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
   assert_r6(surrogate, classes = "Surrogate")  # cannot be SurrogateLearner due to EIPS
-  assert_r6(acq_function, classes = "AcqFunction")
+  assert_r6(acq_function, classes = "AcqFunction")  # FIXME: should explicityly assert acqfs and make sure that codomain tag is handled
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
   assert_int(random_interleave_iter, lower = 0L)
   assert_number(epsilon, lower = 0, upper = 1)
@@ -121,6 +121,10 @@ bayesopt_ego_log = function(
 
   surrogate$y_cols = "y_trafo"
   acq_function$surrogate_max_to_min = 1
+
+  if (test_r6(acq_function, classes = "AcqFunctionCB") | test_r6(acq_function, classes = "AcqFunctionMean")) {
+    acq_function$codomain$params[[acq_function$id]]$tags = "minimize"
+  }
 
   # initial design
   if (isTRUE(init_design_size > 0L)) {
