@@ -1,0 +1,90 @@
+OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbotk::Optimizer,
+  public = list(
+
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    initialize = function() {
+      param_set = ps(
+        n_coordinate_tryouts = p_int(lower = 1L, default = 10L, tags = "required"),
+        max_gen = p_int(lower = 1L, default = 10L, tags = "required"),
+        rds_name = p_uty(default = "cd_instance.rds", tags = "required")
+      )
+      param_set$values = list(n_coordinate_tryouts = 10L, max_gen = 10L, rds_name = "cd_instance.rds")
+
+      super$initialize(
+        id = "coordinate_descent",
+        param_set = param_set,
+        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
+        properties = c("single-crit", "dependencies"),
+        label = "Coordinate Descent",
+        man = ""
+      )
+    }
+  ),
+
+  private = list(
+    .optimize = function(inst) {
+      n_coordinate_tryouts = self$param_set$values$n_coordinate_tryouts
+      if (inst$archive$n_evals == 0L) {
+        xdt = generate_design_random(inst$search_space, n = 1L)$data
+        inst$eval_batch(xdt)
+      }
+      incumbent = inst$archive$best()[, inst$archive$cols_x, with = FALSE]
+      gen = 0L
+      repeat {
+        gen = gen + 1L
+        for (param_id in shuffle(inst$search_space$ids())) {
+          xdt = get_xdt_coordinate(copy(incumbent), param = inst$search_space$params[[param_id]], n_coordinate_tryouts = n_coordinate_tryouts)
+          # previously inactive parameters can now be active and need a value
+          if (inst$search_space$has_deps & param_id %in% inst$search_space$deps$on) {
+            deps = inst$search_space$deps[on == param_id, ]
+            for (i in seq_len(nrow(deps))) {
+              to_replace = which(map_lgl(xdt[[param_id]], function(x) deps$cond[[i]]$test(x)))
+              set(xdt, i = to_replace, j = deps$id[[i]], value = sample_random(inst$search_space$params[[deps$id[[i]]]], n = length(to_replace)))
+            }
+          }
+          xdt = Design$new(inst$search_space, data = xdt, remove_dupl = TRUE)$data  # fixes potentially broken dependencies
+          set(xdt, j = ".gen", value = gen)
+          set(xdt, j = ".param", value = param_id)
+          inst$eval_batch(xdt)
+          #for (i in seq_len(nrow(xdt))) {  # could also do this according to a batch_size parameter
+          #  inst$eval_batch(xdt[i, ])
+          #}
+          incumbent = inst$archive$best()[, inst$archive$cols_x, with = FALSE]
+          saveRDS(inst, file = self$param_set$values$rds_name)
+        }
+        if (gen >= self$param_set$values$max_gen) {
+          break
+        }
+      }
+    }
+  )
+)
+
+get_xdt_coordinate = function(incumbent, param, n_coordinate_tryouts) {
+  if (param$class %in% c("ParamDbl", "ParamInt")) {
+    x = runif(n = n_coordinate_tryouts, min = param$lower, max = param$upper)
+    if (param$class == "ParamInt") {
+      x = as.integer(round(x, 0L))
+    }
+  } else {
+    n_coordinate_tryouts = min(n_coordinate_tryouts, param$nlevels - 1L)
+    x = sample(x = setdiff(param$levels, incumbent[[param$id]]), size = n_coordinate_tryouts, replace = FALSE)
+  }
+  xdt = incumbent[rep(1, n_coordinate_tryouts), ]
+  set(xdt, j = param$id, value = x)
+  xdt
+}
+
+sample_random = function(param, n) {
+  if (param$class %in% c("ParamDbl", "ParamInt")) {
+    x = runif(n = n, min = param$lower, max = param$upper)
+    if (param$class == "ParamInt") {
+      x = as.integer(round(x, 0L))
+    }
+  } else {
+    x = sample(x = param$levels, size = n, replace = TRUE)
+  }
+  x
+}
+

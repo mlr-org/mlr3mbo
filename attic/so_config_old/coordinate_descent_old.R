@@ -1,12 +1,11 @@
 #!/usr/bin/env Rscript
 # chmod ug+x
-library(argparse)
 library(data.table)
 library(mlr3)
 library(mlr3misc)
 library(mlr3learners)
 library(mlr3pipelines)
-library(bbotk)  # @localsearch
+library(bbotk)
 library(paradox)
 library(R6)
 library(checkmate)
@@ -15,21 +14,11 @@ reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", requi
 library(reticulate)
 library(yahpogym)
 library("future")
+library("future.batchtools")
 library("future.apply")
 
+source("OptimizerCoordinateDescent.R")
 source("LearnerRegrRangerCustom.R")
-source("OptimizerChain.R")
-
-parser = ArgumentParser()
-parser$add_argument("-r", "--run", type = "integer", default = 1, help = "Id of run, should be within 1-5")
-args = parser$parse_args()
-run_id = args$run
-stopifnot(run_id %in% 1:5)
-cat("run_id:", run_id, "\n")
-
-seeds = c(2409, 2906, 0905, 2412, 3112)
-
-set.seed(seeds[run_id])
 
 search_space = ps(
   loop_function = p_fct(c("ego", "ego_log")),
@@ -46,31 +35,37 @@ search_space = ps(
 )
 
 instances = readRDS("instances.rds")
-#instances = data.table(scenario = rep(paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost")), each = 5L),
-#                       instance = c("40499", "1476", "6", "12", "41150",
-#                                    "40979", "1501", "40966", "1478", "40984",
-#                                    "12", "458", "1510", "1515", "307",
-#                                    "1478", "40979", "12", "28", "1501",
-#                                    "41164", "37", "1515", "1510", "42",
-#                                    "1478", "1501", "40499", "40979", "300",
-#                                    "40984", "40979", "40966", "28", "22"),
-#                       target = "acc",
-#                       budget = rep(c(118, 90, 134, 110, 267, 118, 170), each = 5L))
-
-make_optim_instance = function(instance) {
-  benchmark = BenchmarkSet$new(instance$scenario, instance = instance$instance)
-  benchmark$subset_codomain(instance$target)
-  objective = benchmark$get_objective(instance$instance, multifidelity = FALSE, check_values = FALSE)
-  budget = instance$budget
-  optim_instance = OptimInstanceSingleCrit$new(objective, search_space = benchmark$get_search_space(drop_fidelity_params = TRUE), terminator = trm("evals", n_evals = budget), check_values = FALSE)
-  optim_instance
-}
 
 evaluate = function(xdt, instance) {
+  library(data.table)
+  library(mlr3)
+  library(mlr3misc)
+  library(mlr3learners)
+  library(mlr3pipelines)
+  library(bbotk)
+  library(paradox)
+  library(R6)
+  library(checkmate)
+  library(mlr3mbo)  # @so_config
+  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
+  library(reticulate)
+  library(yahpogym)
+
+  source("LearnerRegrRangerCustom.R")
+
   logger = lgr::get_logger("mlr3")
   logger$set_threshold("warn")
   logger = lgr::get_logger("bbotk")
   logger$set_threshold("warn")
+
+  make_optim_instance = function(instance) {
+    benchmark = BenchmarkSet$new(instance$scenario, instance = instance$instance)
+    benchmark$subset_codomain(instance$target)
+    objective = benchmark$get_objective(instance$instance, multifidelity = FALSE, check_values = FALSE)
+    budget = instance$budget
+    optim_instance = OptimInstanceSingleCrit$new(objective, search_space = benchmark$get_search_space(drop_fidelity_params = TRUE), terminator = trm("evals", n_evals = budget), check_values = FALSE)
+    optim_instance
+  }
 
   optim_instance = make_optim_instance(instance)
 
@@ -100,7 +95,7 @@ evaluate = function(xdt, instance) {
     learner$param_set$values$se.method = "simple"
     learner$param_set$values$splitrule = "extratrees"
     learner$param_set$values$num.random.splits = 1L
-    learner$param_set$values$num.trees = 10L
+    learner$param_set$values$num.trees = 10
     learner$param_set$values$replace = TRUE
     learner$param_set$values$sample.fraction = 1
     learner$param_set$values$min.node.size = 1
@@ -109,7 +104,7 @@ evaluate = function(xdt, instance) {
     learner$param_set$values$se.method = "simple"
     learner$param_set$values$splitrule = "extratrees"
     learner$param_set$values$num.random.splits = 1L
-    learner$param_set$values$num.trees = 10L
+    learner$param_set$values$num.trees = 10
     learner$param_set$values$replace = FALSE
     learner$param_set$values$sample.fraction = 1
     learner$param_set$values$min.node.size = 1
@@ -117,7 +112,7 @@ evaluate = function(xdt, instance) {
   } else if (xdt$rf_type == "smaclike_variance_boot") {
     learner$param_set$values$se.method = "simple"
     learner$param_set$values$splitrule = "variance"
-    learner$param_set$values$num.trees = 10L
+    learner$param_set$values$num.trees = 10
     learner$param_set$values$replace = TRUE
     learner$param_set$values$sample.fraction = 1
     learner$param_set$values$min.node.size = 1
@@ -167,39 +162,44 @@ evaluate = function(xdt, instance) {
   ecdf_best
 }
 
+evaluate_all = function(xs, instances) {
+  # evaluate_all will be carried out after future.batchtools scheduled a job to evaluate xs on all instances
+  library(future)
+  library(future.apply)
+  library(future.batchtools)
+  plan("batchtools_slurm", resources = list(walltime = 3600L * 7L, ncpus = 28L, memory = 1000L), template = "slurm_wyoming.tmpl")
+  tmp = future_lapply(transpose_list(instances), function(instance) {
+    res_instance = evaluate(xs, instance)
+    #res_instance = tryCatch(evaluate(xs, instance), error = function(error_condition) 0)
+  }, future.seed = TRUE)
+  data.table(mean_perf = mean(unlist(tmp), na.rm = TRUE), raw_perfs = list(tmp), n_na = sum(is.na(unlist(tmp))))
+}
+
 objective = ObjectiveRFunDt$new(
   fun = function(xdt) {
-    saveRDS(ac_instance, paste0("ac_instance_", run_id, ".rds"))
-    map_dtr(seq_len(nrow(xdt)), function(i) {
-      plan("multicore")
-      tmp = future_lapply(transpose_list(instances), function(instance) {
-        res_instance = tryCatch(evaluate(xdt[i, ], instance), error = function(error_condition) 0)
-      }, future.seed = TRUE)
-      data.table(mean_perf = mean(unlist(tmp), na.rm = TRUE), raw_perfs = list(tmp), n_na = sum(is.na(unlist(tmp))))
-    })
+    library(future)
+    library(future.apply)
+    library(future.batchtools)
+    # FIXME: walltime can be set adaptively based on xdt
+    # FIXME: we could continuously model the walltime with a surrogate and set this for each xs in xdt
+    plan("batchtools_slurm", resources = list(walltime = 3600L * 7L, ncpus = 1L, memory = 1000L), template = "slurm_wyoming.tmpl")
+    res = future_lapply(transpose_list(xdt), function(xs) {
+      evaluate_all(xs, instances = instances)
+    }, future.seed = TRUE)
+    rbindlist(res)
   },
   domain = search_space,
   codomain = ps(mean_perf = p_dbl(tags = "maximize")),
   check_values = FALSE
 )
 
-ac_instance = OptimInstanceSingleCrit$new(
+cd_instance = OptimInstanceSingleCrit$new(
   objective = objective,
   search_space = search_space,
-  terminator = trm("evals", n_evals = 200L)  # 100 init design + 100
+  terminator = trm("none")  # OptimizerChain currently terminates on its own
 )
 
-surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% lrn("regr.ranger", keep.inbag = TRUE, se.method = "jack", num.trees = 1000L)))
-acq_function = AcqFunctionEI$new()
-optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
-acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20020L))
-acq_optimizer$param_set$values$warmstart = TRUE
-acq_optimizer$param_set$values$warmstart_size = 10L
-design = generate_design_sobol(ac_instance$search_space, n = 100L)$data
-for (i in seq_len(nrow(design))) {
-  ac_instance$eval_batch(design[i, ])
-}
-saveRDS(ac_instance, paste0("ac_instance_", run_id, ".rds"))
-bayesopt_ego(ac_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = 5L)
-saveRDS(ac_instance, paste0("ac_instance_", run_id, ".rds"))
+optimizer = OptimizerCoordinateDescent$new()
+optimizer$param_set$values$max_gen = 1L
 
+optimizer$optimize(cd_instance)

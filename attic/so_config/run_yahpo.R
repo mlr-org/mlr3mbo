@@ -5,7 +5,7 @@ library(mlr3learners)
 library(mlr3pipelines)
 library(mlr3misc)
 library(mlr3mbo)  # @so_config
-library(bbotk)
+library(bbotk)  # @localsearch
 library(paradox)
 library(R6)
 library(checkmate)
@@ -16,22 +16,21 @@ yahpo_gym = import("yahpo_gym")
 
 packages = c("data.table", "mlr3", "mlr3learners", "mlr3pipelines", "mlr3misc", "mlr3mbo", "bbotk", "paradox", "mlrintermbo", "R6", "checkmate")
 
-RhpcBLASctl::blas_set_num_threads(1L)
-RhpcBLASctl::omp_set_num_threads(1L)
+#RhpcBLASctl::blas_set_num_threads(1L)
+#RhpcBLASctl::omp_set_num_threads(1L)
 
 root = here::here()
 experiments_dir = file.path(root)
 
-source_files = map_chr(c("helpers.R", "OptimizerChain.R"), function(x) file.path(experiments_dir, x))
+source_files = map_chr(c("helpers.R", "LearnerRegrRangerCustom.R", "OptimizerChain.R"), function(x) file.path(experiments_dir, x))
 for (sf in source_files) {
   source(sf)
 }
 
-reg = makeExperimentRegistry(file.dir = "/gscratch/lschnei8/registry_mlr3mbo_so_config", packages = packages, source = source_files)
+reg = makeExperimentRegistry(file.dir = "/gscratch/lschnei8/registry_mlr3mbo_so_config_new", packages = packages, source = source_files)
 #reg = makeExperimentRegistry(file.dir = NA, conf.file = NA, packages = packages, source = source_files)  # interactive session
 saveRegistry(reg)
 
-# FIXME: also compare jack vs. infjack?
 mlr3mbo_wrapper = function(job, data, instance, ...) {
   reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
   library(yahpogym)
@@ -41,48 +40,95 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
 
   optim_instance = make_optim_instance(instance)
 
-  xdt = list(init = "lhs", init_size_factor = 4L, random_interleave = FALSE, num.trees = 250L, splitrule = "extratrees", num.random.splits = 8, acqf = "CB", lambda = 2.8, acqopt_iter_factor = 6L, acqopt = "FS", fs_behavior = "global")
+  xdt = data.table(loop_function = "ego_log", init = "random", init_size_factor = 4L, random_interleave = FALSE, random_interleave_iter = NA_integer_, rf_type = "smaclike_boot", acqf = "EI", lambda = NA_real_, acqopt = "FS")
 
   d = optim_instance$search_space$length
   init_design_size = d * xdt$init_size_factor
-  init_design = if (xdt$init == "random") generate_design_random(optim_instance$search_space, n = init_design_size)$data else if (xdt$init == "lhs") generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
-  optim_instance$eval_batch(init_design)
-  
-  random_interleave_iter = if(xdt$random_interleave) xdt$random_interleave_iter else 0L
-  
-  learner = if (xdt$splitrule == "extratrees") {
-    lrn("regr.ranger", num.trees = xdt$num.trees, keep.inbag = TRUE, splitrule = xdt$splitrule, num.random.splits = xdt$num.random.splits)
-  } else if (xdt$splitrule == "variance") {
-    lrn("regr.ranger", num.trees = xdt$num.trees, keep.inbag = TRUE, splitrule = xdt$splitrule)
+  init_design = if (xdt$init == "random") {
+    generate_design_random(optim_instance$search_space, n = init_design_size)$data
+  } else if (xdt$init == "lhs") {
+    generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
+  } else if (xdt$init == "sobol") {
+    generate_design_sobol(optim_instance$search_space, n = init_design_size)$data
   }
-  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
+
+  optim_instance$eval_batch(init_design)
+
+  random_interleave_iter = if(xdt$random_interleave) as.numeric(xdt$random_interleave_iter) else 0L
+
+  learner = LearnerRegrRangerCustom$new()
+  learner$predict_type = "se"
+  learner$param_set$values$keep.inbag = TRUE
+
+  if (xdt$rf_type == "standard") {
+    learner$param_set$values$se.method = "jack"
+    learner$param_set$values$splitrule = "variance"
+    learner$param_set$values$num.trees = 1000L
+  } else if (xdt$rf_type == "smaclike_boot") {
+    learner$param_set$values$se.method = "simple"
+    learner$param_set$values$splitrule = "extratrees"
+    learner$param_set$values$num.random.splits = 1L
+    learner$param_set$values$num.trees = 10L
+    learner$param_set$values$replace = TRUE
+    learner$param_set$values$sample.fraction = 1
+    learner$param_set$values$min.node.size = 1
+    learner$param_set$values$mtry.ratio = 1
+  } else if (xdt$rf_type == "smaclike_no_boot") {
+    learner$param_set$values$se.method = "simple"
+    learner$param_set$values$splitrule = "extratrees"
+    learner$param_set$values$num.random.splits = 1L
+    learner$param_set$values$num.trees = 10L
+    learner$param_set$values$replace = FALSE
+    learner$param_set$values$sample.fraction = 1
+    learner$param_set$values$min.node.size = 1
+    learner$param_set$values$mtry.ratio = 1
+  } else if (xdt$rf_type == "smaclike_variance_boot") {
+    learner$param_set$values$se.method = "simple"
+    learner$param_set$values$splitrule = "variance"
+    learner$param_set$values$num.trees = 10L
+    learner$param_set$values$replace = TRUE
+    learner$param_set$values$sample.fraction = 1
+    learner$param_set$values$min.node.size = 1
+    learner$param_set$values$mtry.ratio = 1
+  }
+
+  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor", multiplier = 3) %>>% learner))
+
+  acq_optimizer = if (xdt$acqopt == "RS_1000") {
+    AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 1000L))
+  } else if (xdt$acqopt == "RS") {
+    AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 20000L))
+  } else if (xdt$acqopt == "FS") {
+      n_repeats = 2L
+      maxit = 9L
+      batch_size = ceiling((20000L / n_repeats) / (1 + maxit))  # 1000L
+      AcqOptimizer$new(opt("focus_search", n_points = batch_size, maxit = maxit), terminator = trm("evals", n_evals = 20000L))
+  } else if (xdt$acqopt == "LS") {
+      optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
+      acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20020L))
+      acq_optimizer$param_set$values$warmstart = TRUE
+      acq_optimizer$param_set$values$warmstart_size = 10L
+      acq_optimizer
+  }
 
   acq_function = if (xdt$acqf == "EI") {
     AcqFunctionEI$new()
+  } else if (xdt$acqf == "TTEI") {
+    AcqFunctionTTEI$new(toplvl_acq_optimizer = acq_optimizer$clone(deep = TRUE))
   } else if (xdt$acqf == "CB") {
     AcqFunctionCB$new(lambda = xdt$lambda)
   } else if (xdt$acqf == "PI") {
     AcqFunctionPI$new()
+  } else if (xdt$acqf == "Mean") {
+    AcqFunctionMean$new()
   }
-  
-  acq_budget = 1000 * xdt$acqopt_iter_factor
-  
-  acq_optimizer = if (xdt$acqopt == "RS") {
-    AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = acq_budget))
-  } else if (xdt$acqopt == "FS") {
-    if (xdt$fs_behavior == "global") {
-      n_repeats = 10L
-      maxit = 2L
-      batch_size = ceiling((acq_budget / n_repeats) / (1 + maxit))
-    } else if (xdt$fs_behavior == "local") {
-      n_repeats = 2L
-      maxit = 10L
-      batch_size = ceiling((acq_budget / n_repeats) / (1 + maxit))
-    }
-    AcqOptimizer$new(opt("focus_search", n_points = batch_size, maxit = maxit), terminator = trm("evals", n_evals = acq_budget))
+
+  if (xdt$loop_function == "ego") {
+    bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
+  } else if (xdt$loop_function == "ego_log") {
+    bayesopt_ego_log(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
   }
-  
-  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
+
   optim_instance
 }
 
@@ -107,252 +153,10 @@ mlrintermbo_wrapper = function(job, data, instance, ...) {
   optim_instance
 }
 
-mlr3mbo_default_wrapper = function(job, data, instance, ...) {
-  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
-  library(yahpogym)
-  logger = lgr::get_logger("bbotk")
-  logger$set_threshold("warn")
-  future::plan("sequential")
-
-  optim_instance = make_optim_instance(instance)
-
-  xdt = list(init = "random", init_size_factor = 4L, random_interleave = FALSE, num.trees = 500L, splitrule = "variance", num.random.splits = NA_integer_, acqf = "EI", lambda = NA_real_, acqopt_iter_factor = 10L, acqopt = "RS", fs_behavior = NA_character_)
-
-  d = optim_instance$search_space$length
-  init_design_size = d * xdt$init_size_factor
-  init_design = if (xdt$init == "random") generate_design_random(optim_instance$search_space, n = init_design_size)$data else if (xdt$init == "lhs") generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
-  optim_instance$eval_batch(init_design)
-  
-  random_interleave_iter = if(xdt$random_interleave) xdt$random_interleave_iter else 0L
-  
-  learner = if (xdt$splitrule == "extratrees") {
-    lrn("regr.ranger", num.trees = xdt$num.trees, keep.inbag = TRUE, splitrule = xdt$splitrule, num.random.splits = xdt$num.random.splits)
-  } else if (xdt$splitrule == "variance") {
-    lrn("regr.ranger", num.trees = xdt$num.trees, keep.inbag = TRUE, splitrule = xdt$splitrule)
-  }
-  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
-
-  acq_function = if (xdt$acqf == "EI") {
-    AcqFunctionEI$new()
-  } else if (xdt$acqf == "CB") {
-    AcqFunctionCB$new(lambda = xdt$lambda)
-  } else if (xdt$acqf == "PI") {
-    AcqFunctionPI$new()
-  }
-  
-  acq_budget = 1000 * xdt$acqopt_iter_factor
-  
-  acq_optimizer = if (xdt$acqopt == "RS") {
-    AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = acq_budget))
-  } else if (xdt$acqopt == "FS") {
-    if (xdt$fs_behavior == "global") {
-      n_repeats = 10L
-      maxit = 2L
-      batch_size = ceiling((acq_budget / n_repeats) / (1 + maxit))
-    } else if (xdt$fs_behavior == "local") {
-      n_repeats = 2L
-      maxit = 10L
-      batch_size = ceiling((acq_budget / n_repeats) / (1 + maxit))
-    }
-    AcqOptimizer$new(opt("focus_search", n_points = batch_size, maxit = maxit), terminator = trm("evals", n_evals = acq_budget))
-  }
-  
-  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
-  optim_instance
-}
-
-mlr3mbo_wrapper_custom = function(job, data, instance, ...) {
-  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
-  library(yahpogym)
-  logger = lgr::get_logger("bbotk")
-  logger$set_threshold("warn")
-  future::plan("sequential")
-
-  optim_instance = make_optim_instance(instance)
-
-  xdt = list(init = "lhs", init_size_factor = 1L, random_interleave = FALSE, num.trees = 250L, splitrule = "extratrees", num.random.splits = 10, acqf = "CB", lambda = 3, acqopt_iter_factor = 30L, acqopt = "FS", fs_behavior = "global")
-
-  d = optim_instance$search_space$length
-  init_design_size = d * xdt$init_size_factor
-  init_design = if (xdt$init == "random") generate_design_random(optim_instance$search_space, n = init_design_size)$data else if (xdt$init == "lhs") generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
-  optim_instance$eval_batch(init_design)
-  
-  random_interleave_iter = if(xdt$random_interleave) xdt$random_interleave_iter else 0L
-  
-  learner = if (xdt$splitrule == "extratrees") {
-    lrn("regr.ranger", num.trees = xdt$num.trees, keep.inbag = TRUE, splitrule = xdt$splitrule, num.random.splits = xdt$num.random.splits)
-  } else if (xdt$splitrule == "variance") {
-    lrn("regr.ranger", num.trees = xdt$num.trees, keep.inbag = TRUE, splitrule = xdt$splitrule)
-  }
-  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
-
-  acq_function = if (xdt$acqf == "EI") {
-    AcqFunctionEI$new()
-  } else if (xdt$acqf == "CB") {
-    AcqFunctionCB$new(lambda = xdt$lambda)
-  } else if (xdt$acqf == "PI") {
-    AcqFunctionPI$new()
-  }
-  
-  acq_budget = 1000 * xdt$acqopt_iter_factor
-  
-  acq_optimizer = if (xdt$acqopt == "RS") {
-    AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = acq_budget))
-  } else if (xdt$acqopt == "FS") {
-    if (xdt$fs_behavior == "global") {
-      n_repeats = 5L
-      maxit = 5L
-      batch_size = ceiling((acq_budget / n_repeats) / (1 + maxit))
-    } else if (xdt$fs_behavior == "local") {
-      n_repeats = 2L
-      maxit = 10L
-      batch_size = ceiling((acq_budget / n_repeats) / (1 + maxit))
-    }
-    AcqOptimizer$new(opt("focus_search", n_points = batch_size, maxit = maxit), terminator = trm("evals", n_evals = acq_budget))
-  }
-  
-  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
-  optim_instance
-}
-
-mlr3mbo_wrapper_new_rf = function(job, data, instance, ...) {
-  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
-  library(yahpogym)
-  logger = lgr::get_logger("bbotk")
-  logger$set_threshold("warn")
-  future::plan("sequential")
-
-  optim_instance = make_optim_instance(instance)
-
-  d = optim_instance$search_space$length
-  init_design_size = 4L * d
-  init_design = generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
-  optim_instance$eval_batch(init_design)
-  
-  random_interleave_iter = 0L
-  
-  learner = lrn("regr.ranger_custom")
-  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
-
-  acq_function = AcqFunctionEI$new()
-  
-  acq_budget = 20000L
-  
-  acq_optimizer = {
-    n_repeats = 2L
-    maxit = 9L
-    batch_size = ceiling((acq_budget / n_repeats) / (1 + maxit))
-    AcqOptimizer$new(opt("focus_search", n_points = batch_size, maxit = maxit), terminator = trm("evals", n_evals = acq_budget))
-  }
-  
-  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
-  optim_instance
-}
-
-mlr3mbo_wrapper_new_rf_ls = function(job, data, instance, ...) {
-  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
-  library(yahpogym)
-  logger = lgr::get_logger("bbotk")
-  logger$set_threshold("warn")
-  future::plan("sequential")
-
-  optim_instance = make_optim_instance(instance)
-
-  d = optim_instance$search_space$length
-  init_design_size = 4L * d
-  init_design = generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
-  optim_instance$eval_batch(init_design)
-  
-  random_interleave_iter = 0L
-  
-  learner = lrn("regr.ranger_custom")
-  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor") %>>% learner))
-
-  acq_function = AcqFunctionEI$new()
- 
-  optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
-  acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20010L))
-
-  acq_optimizer$param_set$values$warmstart = TRUE
-  acq_optimizer$param_set$values$warmstart_size = "all"
-  
-  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
-  optim_instance
-}
-
-mlr3mbo_wrapper_xxx_ls = function(job, data, instance, ...) {
-  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
-  library(yahpogym)
-  logger = lgr::get_logger("bbotk")
-  logger$set_threshold("warn")
-  future::plan("sequential")
-
-  optim_instance = make_optim_instance(instance)
-
-  d = optim_instance$search_space$length
-  init_design_size = 4L * d
-  init_design = generate_design_sobol(optim_instance$search_space, n = init_design_size)$data
-  optim_instance$eval_batch(init_design)
-  
-  random_interleave_iter = 4L
- 
-  learner = lrn("regr.ranger_custom")
-  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor", multiplier = 2) %>>% learner))
-
-  acq_function = AcqFunctionEI$new()
- 
-  optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
-  acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20010L))
-
-  acq_optimizer$param_set$values$warmstart = TRUE
-  acq_optimizer$param_set$values$warmstart_size = "all"
-  
-  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
-  optim_instance
-}
-
-mlr3mbo_wrapper_kknn_ls = function(job, data, instance, ...) {
-  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
-  library(yahpogym)
-  logger = lgr::get_logger("bbotk")
-  logger$set_threshold("warn")
-  future::plan("sequential")
-
-  optim_instance = make_optim_instance(instance)
-
-  d = optim_instance$search_space$length
-  init_design_size = 4L * d
-  init_design = generate_design_sobol(optim_instance$search_space, n = init_design_size)$data
-  optim_instance$eval_batch(init_design)
-  
-  random_interleave_iter = 4L
- 
-  learner = lrn("regr.kknn")
-  learner = as_learner(po("imputeoor", multiplier = 2) %>>% po("fixfactors") %>>% po("imputesample") %>>% learner)
-  learner$predict_types = "response"
-  surrogate = SurrogateLearner$new(learner)
-
-  acq_function = AcqFunctionMean$new()
- 
-  optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
-  acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20010L))
-
-  acq_optimizer$param_set$values$warmstart = TRUE
-  acq_optimizer$param_set$values$warmstart_size = "all"
-  
-  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
-  optim_instance
-}
 
 # add algorithms
 addAlgorithm("mlr3mbo", fun = mlr3mbo_wrapper)
 addAlgorithm("mlrintermbo", fun = mlrintermbo_wrapper)
-addAlgorithm("mlr3mbo_default", fun = mlr3mbo_default_wrapper)
-addAlgorithm("mlr3mbo_custom", fun = mlr3mbo_wrapper_custom)
-addAlgorithm("mlr3mbo_new_rf", fun = mlr3mbo_wrapper_new_rf)
-addAlgorithm("mlr3mbo_new_rf_ls", fun = mlr3mbo_wrapper_new_rf_ls)
-addAlgorithm("mlr3mbo_xxx_ls", fun = mlr3mbo_wrapper_xxx_ls)
-addAlgorithm("mlr3mbo_kknn_ls", fun = mlr3mbo_wrapper_kknn_ls)
 
 # setup scenarios and instances
 get_nb301_setup = function(budget_factor = 40L) {
@@ -424,7 +228,7 @@ prob_designs = unlist(prob_designs, recursive = FALSE, use.names = FALSE)
 names(prob_designs) = nn
 
 # add jobs for optimizers
-optimizers = data.table(algorithm = c("mlr3mbo", "mlrintermbo", "mlr3mbo_default", "mlr3mbo_custom", "mlr3mbo_new_rf", "mlr3mbo_new_rf_ls", "mlr3mbo_xxx_ls", "mlr3mbo_kknn_ls"))
+optimizers = data.table(algorithm = c("mlr3mbo", "mlrintermbo"))
 
 for (i in seq_len(nrow(optimizers))) {
   algo_designs = setNames(list(optimizers[i, ]), nm = optimizers[i, ]$algorithm)
@@ -437,8 +241,8 @@ for (i in seq_len(nrow(optimizers))) {
   addJobTags(ids, as.character(optimizers[i, ]$algorithm))
 }
 
-jobs = findJobs()
-resources.default = list(walltime = 3600 * 12L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
+jobs = getJobTable()
+resources.default = list(walltime = 3600 * 5L, memory = 1024L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()
