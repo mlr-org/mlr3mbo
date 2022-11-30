@@ -24,13 +24,13 @@ source("OptimizerChain.R")
 search_space = ps(
   loop_function = p_fct(c("ego", "ego_log")),
   init = p_fct(c("random", "lhs", "sobol")),
-  init_size_factor = p_int(lower = 1L, upper = 4L),
+  init_size_fraction = p_fct(c("0.0625", "0.125", "0.25")),
   random_interleave = p_lgl(),
   random_interleave_iter = p_fct(c("2", "4", "10"), depends = random_interleave == TRUE),
 
   rf_type = p_fct(c("standard", "smaclike_boot", "smaclike_no_boot", "smaclike_variance_boot")),
 
-  acqf = p_fct(c("EI", "TTEI", "CB", "PI", "Mean")),
+  acqf = p_fct(c("EI", "CB", "PI", "Mean")),
   lambda = p_int(lower = 1, upper = 3, depends = acqf == "CB"),
   acqopt = p_fct(c("RS_1000", "RS", "FS", "LS"))
 )
@@ -75,7 +75,7 @@ evaluate = function(xdt, instance) {
   optim_instance = make_optim_instance(instance)
 
   d = optim_instance$search_space$length
-  init_design_size = d * xdt$init_size_factor
+  init_design_size = ceiling(as.numeric(xdt$init_size_fraction) * optim_instance$terminator$param_set$values$n_evals)
   init_design = if (xdt$init == "random") {
     generate_design_random(optim_instance$search_space, n = init_design_size)$data
   } else if (xdt$init == "lhs") {
@@ -145,8 +145,6 @@ evaluate = function(xdt, instance) {
 
   acq_function = if (xdt$acqf == "EI") {
     AcqFunctionEI$new()
-  } else if (xdt$acqf == "TTEI") {
-    AcqFunctionTTEI$new(toplvl_acq_optimizer = acq_optimizer$clone(deep = TRUE))
   } else if (xdt$acqf == "CB") {
     AcqFunctionCB$new(lambda = xdt$lambda)
   } else if (xdt$acqf == "PI") {
@@ -171,9 +169,10 @@ objective = ObjectiveRFunDt$new(
     xdt[, id := seq_len(.N)]
     # FIXME: walltime can be set adaptively based on xdt
     # FIXME: we could continuously model the walltime with a surrogate and set this for each xs in xdt
-    plan("batchtools_slurm", resources = list(walltime = 3600L * 7L, ncpus = 1L, memory = 1000L), template = "slurm_wyoming.tmpl")
+    plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 1000L), template = "slurm_wyoming.tmpl")
     res = future_mapply(FUN = evaluate, transpose_list(xdt), transpose_list(instances), SIMPLIFY = FALSE, future.seed = TRUE)  # FIXME: tryCatch
     res = rbindlist(res)
+    stopifnot(nrow(res) = nrow(xdt) * nrow(instances))
     agg = res[, .(mean_perf = mean(ecdf_best), raw_perfs = list(ecdf_best), n_na = sum(is.na(ecdf_best))), by = .(id)]
     setorderv(agg, cols = "id")
     agg
@@ -192,7 +191,7 @@ cd_instance = OptimInstanceSingleCrit$new(
 optimizer = OptimizerCoordinateDescent$new()
 optimizer$param_set$values$max_gen = 1L
 
-init = data.table(loop_function = "ego", init = "random", init_size_factor = 4L, random_interleave = FALSE, random_interleave_iter = NA_character_, rf_type = "standard", acqf = "EI", lambda = NA_integer_, acqopt = "RS")
+init = data.table(loop_function = "ego", init = "random", init_size_fraction = "0.25", random_interleave = FALSE, random_interleave_iter = NA_character_, rf_type = "standard", acqf = "EI", lambda = NA_integer_, acqopt = "RS")
 set.seed(2906)
 cd_instance$eval_batch(init)
 optimizer$optimize(cd_instance)

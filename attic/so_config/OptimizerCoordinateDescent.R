@@ -34,24 +34,29 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
       repeat {
         gen = gen + 1L
         for (param_id in shuffle(inst$search_space$ids())) {
-          xdt = get_xdt_coordinate(copy(incumbent), param = inst$search_space$params[[param_id]], n_coordinate_tryouts = n_coordinate_tryouts)
-          # previously inactive parameters can now be active and need a value
-          if (inst$search_space$has_deps & param_id %in% inst$search_space$deps$on) {
-            deps = inst$search_space$deps[on == param_id, ]
-            for (i in seq_len(nrow(deps))) {
-              to_replace = which(map_lgl(xdt[[param_id]], function(x) deps$cond[[i]]$test(x)))
-              set(xdt, i = to_replace, j = deps$id[[i]], value = sample_random(inst$search_space$params[[deps$id[[i]]]], n = length(to_replace)))
+          if (!is.na(incumbent[[param_id]])) {
+            # we first also reevaluate the incumbent to see how noisy the evaluations are
+            inst$eval_batch(incumbent)
+
+            xdt = get_xdt_coordinate(copy(incumbent), param = inst$search_space$params[[param_id]], n_coordinate_tryouts = n_coordinate_tryouts)
+            # previously inactive parameters can now be active and need a value
+            if (inst$search_space$has_deps & param_id %in% inst$search_space$deps$on) {
+              deps = inst$search_space$deps[on == param_id, ]
+              for (i in seq_len(nrow(deps))) {
+                to_replace = which(map_lgl(xdt[[param_id]], function(x) deps$cond[[i]]$test(x)))
+                set(xdt, i = to_replace, j = deps$id[[i]], value = sample_random(inst$search_space$params[[deps$id[[i]]]], n = length(to_replace)))
+              }
             }
+            xdt = Design$new(inst$search_space, data = xdt, remove_dupl = TRUE)$data  # fixes potentially broken dependencies
+            set(xdt, j = ".gen", value = gen)
+            set(xdt, j = ".param", value = param_id)
+            inst$eval_batch(xdt)
+            #for (i in seq_len(nrow(xdt))) {  # could also do this according to a batch_size parameter
+            #  inst$eval_batch(xdt[i, ])
+            #}
+            incumbent = inst$archive$best()[, inst$archive$cols_x, with = FALSE]
+            saveRDS(inst, file = self$param_set$values$rds_name)
           }
-          xdt = Design$new(inst$search_space, data = xdt, remove_dupl = TRUE)$data  # fixes potentially broken dependencies
-          set(xdt, j = ".gen", value = gen)
-          set(xdt, j = ".param", value = param_id)
-          inst$eval_batch(xdt)
-          #for (i in seq_len(nrow(xdt))) {  # could also do this according to a batch_size parameter
-          #  inst$eval_batch(xdt[i, ])
-          #}
-          incumbent = inst$archive$best()[, inst$archive$cols_x, with = FALSE]
-          saveRDS(inst, file = self$param_set$values$rds_name)
         }
         if (gen >= self$param_set$values$max_gen) {
           break

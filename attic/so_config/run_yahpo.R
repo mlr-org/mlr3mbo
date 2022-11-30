@@ -40,10 +40,10 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
 
   optim_instance = make_optim_instance(instance)
 
-  xdt = data.table(loop_function = "ego_log", init = "random", init_size_factor = 4L, random_interleave = FALSE, random_interleave_iter = NA_integer_, rf_type = "smaclike_boot", acqf = "EI", lambda = NA_real_, acqopt = "FS")
+  xdt = data.table(loop_function = "ego_log", init = "random", init_size_fraction = "0.25", random_interleave = TRUE, random_interleave_iter = "4", rf_type = "smaclike_boot", acqf = "EI", lambda = NA_real_, acqopt = "LS")
 
   d = optim_instance$search_space$length
-  init_design_size = d * xdt$init_size_factor
+  init_design_size = ceiling(as.numeric(xdt$init_size_fraction) * optim_instance$terminator$param_set$values$n_evals)
   init_design = if (xdt$init == "random") {
     generate_design_random(optim_instance$search_space, n = init_design_size)$data
   } else if (xdt$init == "lhs") {
@@ -113,8 +113,6 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
 
   acq_function = if (xdt$acqf == "EI") {
     AcqFunctionEI$new()
-  } else if (xdt$acqf == "TTEI") {
-    AcqFunctionTTEI$new(toplvl_acq_optimizer = acq_optimizer$clone(deep = TRUE))
   } else if (xdt$acqf == "CB") {
     AcqFunctionCB$new(lambda = xdt$lambda)
   } else if (xdt$acqf == "PI") {
@@ -228,7 +226,7 @@ prob_designs = unlist(prob_designs, recursive = FALSE, use.names = FALSE)
 names(prob_designs) = nn
 
 # add jobs for optimizers
-optimizers = data.table(algorithm = c("mlr3mbo", "mlrintermbo"))
+optimizers = data.table(algorithm = c("mlr3mbo"))
 
 for (i in seq_len(nrow(optimizers))) {
   algo_designs = setNames(list(optimizers[i, ]), nm = optimizers[i, ]$algorithm)
@@ -242,7 +240,7 @@ for (i in seq_len(nrow(optimizers))) {
 }
 
 jobs = getJobTable()
-resources.default = list(walltime = 3600 * 5L, memory = 1024L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
+resources.default = list(walltime = 3600 * 12L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()

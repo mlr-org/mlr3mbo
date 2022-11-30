@@ -1,9 +1,9 @@
 library(bbotk)
 library(paradox)
+library(data.table)
 library(R6)
 library(checkmate)
 library(mlr3misc)
-
 
 source("OptimizerCoordinateDescent.R")
 

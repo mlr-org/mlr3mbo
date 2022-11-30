@@ -34,13 +34,13 @@ set.seed(seeds[run_id])
 search_space = ps(
   loop_function = p_fct(c("ego", "ego_log")),
   init = p_fct(c("random", "lhs", "sobol")),
-  init_size_factor = p_int(lower = 1L, upper = 4L),
+  init_size_fraction = p_fct(c("0.0625", "0.125", "0.25")),
   random_interleave = p_lgl(),
   random_interleave_iter = p_fct(c("2", "4", "10"), depends = random_interleave == TRUE),
 
   rf_type = p_fct(c("standard", "smaclike_boot", "smaclike_no_boot", "smaclike_variance_boot")),
 
-  acqf = p_fct(c("EI", "TTEI", "CB", "PI", "Mean")),
+  acqf = p_fct(c("EI", "CB", "PI", "Mean")),
   lambda = p_int(lower = 1, upper = 3, depends = acqf == "CB"),
   acqopt = p_fct(c("RS_1000", "RS", "FS", "LS"))
 )
@@ -75,7 +75,7 @@ evaluate = function(xdt, instance) {
   optim_instance = make_optim_instance(instance)
 
   d = optim_instance$search_space$length
-  init_design_size = d * xdt$init_size_factor
+  init_design_size = ceiling(as.numeric(xdt$init_size_fraction) * optim_instance$terminator$param_set$values$n_evals)
   init_design = if (xdt$init == "random") {
     generate_design_random(optim_instance$search_space, n = init_design_size)$data
   } else if (xdt$init == "lhs") {
@@ -145,8 +145,6 @@ evaluate = function(xdt, instance) {
 
   acq_function = if (xdt$acqf == "EI") {
     AcqFunctionEI$new()
-  } else if (xdt$acqf == "TTEI") {
-    AcqFunctionTTEI$new(toplvl_acq_optimizer = acq_optimizer$clone(deep = TRUE))
   } else if (xdt$acqf == "CB") {
     AcqFunctionCB$new(lambda = xdt$lambda)
   } else if (xdt$acqf == "PI") {
