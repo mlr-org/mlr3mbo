@@ -1,0 +1,129 @@
+library(batchtools)
+library(data.table)
+library(mlr3)
+library(mlr3misc)
+library(bbotk)  # @localsearch
+library(paradox)
+library(miesmuschel) # @mlr3mbo_config
+library(R6)
+library(checkmate)
+
+reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
+library(reticulate)
+yahpo_gym = import("yahpo_gym")
+
+packages = c("data.table", "mlr3", "mlr3misc", "bbotk", "paradox", "miesmuschel", "R6", "checkmate")
+
+#RhpcBLASctl::blas_set_num_threads(1L)
+#RhpcBLASctl::omp_set_num_threads(1L)
+
+reg = makeExperimentRegistry(file.dir = "/gscratch/lschnei8/registry_mies_yahpo", packages = packages)
+#reg = makeExperimentRegistry(file.dir = NA, conf.file = NA, packages = packages)  # interactive session
+saveRegistry(reg)
+
+mies_wrapper = function(job, data, instance, ...) {
+  # mies is our baseline with 1000 x more budget
+  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
+  library(yahpogym)
+  logger = lgr::get_logger("bbotk")
+  logger$set_threshold("warn")
+  future::plan("sequential")
+
+  make_optim_instance = function(instance) {
+    benchmark = BenchmarkSet$new(instance$scenario, instance = instance$instance)
+    benchmark$subset_codomain(instance$target)
+    objective = benchmark$get_objective(instance$instance, multifidelity = FALSE, check_values = FALSE)
+    budget = instance$budget
+    optim_instance = OptimInstanceSingleCrit$new(objective, search_space = benchmark$get_search_space(drop_fidelity_params = TRUE), terminator = trm("evals", n_evals = budget), check_values = FALSE)
+    optim_instance
+  }
+
+  recombine = rec("maybe", recombinator = rec("cmpmaybe", recombinator = rec("swap"), p = 0.5), p = 0.7)
+
+  mutate_gauss = mut("cmpmaybe", mutator = mut("gauss", sdev = 0.1, sdev_is_relative = TRUE), p = 0.2)
+  mutate_uniform = mut("cmpmaybe", mutator = mut("unif", can_mutate_to_same = FALSE), p = 0.2)
+
+  mutate = mut("maybe",
+               mutator = mut("combine", operators = list(ParamDbl = mutate_gauss$clone(deep = TRUE),
+                                                         ParamInt = mutate_gauss$clone(deep = TRUE),
+                                                         ParamFct = mutate_uniform$clone(deep = TRUE),
+                                                         ParamLgl = mutate_uniform$clone(deep = TRUE))),
+               p = 0.3)
+
+  select = sel("random", sample_unique = "no")
+
+  survive = sel("best")
+
+  optimizer = opt("mies", recombinator = recombine, mutator = mutate, parent_selector = select, survival_selector = survive,
+                  mu = 100, lambda = 100, survival_strategy = "plus")
+
+  optim_instance = make_optim_instance(instance)
+  optimizer$optimize(optim_instance)
+  optim_instance
+}
+
+
+# add algorithms
+addAlgorithm("mies", fun = mies_wrapper)
+
+setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost"))), each = 4L),
+                   instance = c("167185", "167152", "168910", "189908",
+                                "40499", "1476", "6", "12",
+                                "40979", "1501", "40966", "1478",
+                                "12", "458", "1510", "1515",
+                                "1478", "40979", "12", "28",
+                                "41164", "37", "1515", "1510",
+                                "1478", "1501", "40499", "40979",
+                                "40984", "40979", "40966", "28"),
+                   target = rep(c("val_accuracy", "acc"), c(4L, 28L)),
+                   budget = rep(c(126L, 118L, 90L, 134L, 110L, 267L, 118L, 170L), each = 4L))
+setup[, budget := budget * 1000L]
+
+setup[, id := seq_len(.N)]
+
+# add problems
+prob_designs = map(seq_len(nrow(setup)), function(i) {
+  prob_id = paste0(setup[i, ]$scenario, "_", setup[i, ]$instance, "_", setup[i, ]$target)
+  addProblem(prob_id, data = list(scenario = setup[i, ]$scenario, instance = setup[i, ]$instance, target = setup[i, ]$target, budget = setup[i, ]$budget, on_integer_scale = setup[i, ]$on_integer_scale))
+  setNames(list(setup[i, ]), nm = prob_id)
+})
+nn = sapply(prob_designs, names)
+prob_designs = unlist(prob_designs, recursive = FALSE, use.names = FALSE)
+names(prob_designs) = nn
+
+# add jobs for optimizers
+optimizers = data.table(algorithm = c("mies"))
+
+for (i in seq_len(nrow(optimizers))) {
+  algo_designs = setNames(list(optimizers[i, ]), nm = optimizers[i, ]$algorithm)
+
+  ids = addExperiments(
+    prob.designs = prob_designs,
+    algo.designs = algo_designs,
+    repls = 30L
+  )
+  addJobTags(ids, as.character(optimizers[i, ]$algorithm))
+}
+
+# rbv2_super 267000 budget needs ~ 20 minutes so 30 repls results in roughly 10 hours
+jobs = findJobs()
+jobs[, chunk := batchtools::chunk(job.id, chunk.size = 30L)]
+resources.default = list(walltime = 3600 * 12L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
+submitJobs(jobs, resources = resources.default)
+
+done = findDone()
+results = reduceResultsList(done, function(x, job) {
+  x = x$archive$data
+  pars = job$pars
+  target_var = pars$prob.pars$target
+  tmp = x[, eval(target_var), with = FALSE]
+  tmp[, method := pars$algo.pars$algorithm]
+  tmp[, scenario := pars$prob.pars$scenario]
+  tmp[, instance := pars$prob.pars$instance]
+  tmp[, repl := job$repl]
+  tmp[, iter := seq_len(.N)]
+  tmp
+})
+results = rbindlist(results, fill = TRUE)
+saveRDS(results, "results_yahpo_mies.rds")
+

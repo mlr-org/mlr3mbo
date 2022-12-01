@@ -7,6 +7,7 @@ library(mlr3misc)
 library(mlr3mbo)  # @so_config
 library(bbotk)  # @localsearch
 library(paradox)
+library(miesmuschel)
 library(R6)
 library(checkmate)
 
@@ -150,7 +151,6 @@ mlrintermbo_wrapper = function(job, data, instance, ...) {
   optimizer$optimize(optim_instance)
   optim_instance
 }
-
 
 # add algorithms
 addAlgorithm("mlr3mbo", fun = mlr3mbo_wrapper)
