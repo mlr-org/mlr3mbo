@@ -6,7 +6,7 @@ multi-objective Bayesian Optimization.
 
 <!-- badges: start -->
 
-[![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=main)](https://github.com/mlr-org/mlr3mbo/actions)
+[![r-cmd-check](https://github.com/mlr-org/mlr3mbo/actions/workflows/r-cmd-check.yml/badge.svg)](https://github.com/mlr-org/mlr3mbo/actions/workflows/r-cmd-check.yml)
 [![CRANstatus](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
 [![StackOverflow](https://img.shields.io/badge/stackoverflow-mlr3-orange.svg)](https://stackoverflow.com/questions/tagged/mlr3)
 [![Mattermost](https://img.shields.io/badge/chat-mattermost-orange.svg)](https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/)
@@ -22,9 +22,9 @@ vignette](https://mlr3mbo.mlr-org.com/articles/mlr3mbo.html).
 `mlr3mbo` is built modular relying on the following
 [R6](https://cran.r-project.org/package=R6) classes:
 
-- `Surrogate`: Surrogate Model
-- `AcqFunction`: Acquisition Function
-- `AcqOptimizer`: Acquisition Function Optimizer
+  - `Surrogate`: Surrogate Model
+  - `AcqFunction`: Acquisition Function
+  - `AcqOptimizer`: Acquisition Function Optimizer
 
 Based on these, Bayesian Optimization loops can be written, see, e.g.,
 `bayesopt_ego` for sequential single-objective BO.
