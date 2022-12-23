@@ -35,7 +35,19 @@ search_space = ps(
   acqopt = p_fct(c("RS_1000", "RS", "FS", "LS"))
 )
 
-instances = readRDS("instances.rds")
+instances = setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost"))), each = 4L),
+                               instance = c("167185", "167152", "168910", "189908",
+                                            "40499", "1476", "6", "12",
+                                            "40979", "1501", "40966", "1478",
+                                            "12", "458", "1510", "1515",
+                                            "1478", "40979", "12", "28",
+                                            "41164", "37", "1515", "1510",
+                                            "1478", "1501", "40499", "40979",
+                                            "40984", "40979", "40966", "28"),
+                               target = rep(c("val_accuracy", "acc"), c(4L, 28L)),
+                               budget = rep(c(126L, 118L, 90L, 134L, 110L, 267L, 118L, 170L), each = 4L))
+
+mies_average = readRDS("results_yahpo_mies_average.rds")
 
 evaluate = function(xdt, instance) {
   id = xdt$id
@@ -74,7 +86,6 @@ evaluate = function(xdt, instance) {
 
   optim_instance = make_optim_instance(instance)
 
-  d = optim_instance$search_space$length
   init_design_size = ceiling(as.numeric(xdt$init_size_fraction) * optim_instance$terminator$param_set$values$n_evals)
   init_design = if (xdt$init == "random") {
     generate_design_random(optim_instance$search_space, n = init_design_size)$data
@@ -129,14 +140,14 @@ evaluate = function(xdt, instance) {
   acq_optimizer = if (xdt$acqopt == "RS_1000") {
     AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 1000L))
   } else if (xdt$acqopt == "RS") {
-    AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 20000L))
+    AcqOptimizer$new(opt("random_search", batch_size = 10000L), terminator = trm("evals", n_evals = 20000L))
   } else if (xdt$acqopt == "FS") {
       n_repeats = 2L
       maxit = 9L
       batch_size = ceiling((20000L / n_repeats) / (1 + maxit))  # 1000L
       AcqOptimizer$new(opt("focus_search", n_points = batch_size, maxit = maxit), terminator = trm("evals", n_evals = 20000L))
   } else if (xdt$acqopt == "LS") {
-      optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
+      optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 10000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
       acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20020L))
       acq_optimizer$param_set$values$warmstart = TRUE
       acq_optimizer$param_set$values$warmstart_size = 10L
@@ -160,8 +171,14 @@ evaluate = function(xdt, instance) {
   }
 
   best = optim_instance$archive$best()[[instance$target]]
-  ecdf_best = instance$ecdf(best)  # evaluate the precomputed ecdf for the best value found; our target is effectively P(X <= best)
-  data.table(ecdf_best = ecdf_best, id = id, instance = paste0(instance$scenario, "_", instance$instance))
+  scenario_ = instance$scenario
+  instance_ = instance$instance
+  target_ = paste0("mean_", instance$target)
+
+  k = min(mies_average[scenario == scenario_ & instance == instance_ & get(target_) >= best]$iter)  # minimum k so that best_mies[k] >= best_mbo[final]
+  k = k / instance$budget  # sample efficiency compared to mies
+
+  data.table(k = k, id = id, instance = paste0(instance$scenario, "_", instance$instance))
 }
 
 objective = ObjectiveRFunDt$new(
@@ -169,16 +186,16 @@ objective = ObjectiveRFunDt$new(
     xdt[, id := seq_len(.N)]
     # FIXME: walltime can be set adaptively based on xdt
     # FIXME: we could continuously model the walltime with a surrogate and set this for each xs in xdt
-    plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 1000L), template = "slurm_wyoming.tmpl")
-    res = future_mapply(FUN = evaluate, transpose_list(xdt), transpose_list(instances), SIMPLIFY = FALSE, future.seed = TRUE)  # FIXME: tryCatch
+    #plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 2000L), template = "slurm_wyoming.tmpl")
+    res = future_mapply(FUN = evaluate, transpose_list(xdt), transpose_list(instances), SIMPLIFY = FALSE, future.seed = TRUE)
     res = rbindlist(res)
-    stopifnot(nrow(res) = nrow(xdt) * nrow(instances))
-    agg = res[, .(mean_perf = mean(ecdf_best), raw_perfs = list(ecdf_best), n_na = sum(is.na(ecdf_best))), by = .(id)]
+    stopifnot(nrow(res) == nrow(xdt) * nrow(instances))
+    agg = res[, .(mean_k = exp(mean(log(k))), raw_k = list(k), n_na = sum(is.na(k))), by = .(id)]
     setorderv(agg, cols = "id")
     agg
   },
   domain = search_space,
-  codomain = ps(mean_perf = p_dbl(tags = "maximize")),
+  codomain = ps(mean_k = p_dbl(tags = "maximize")),
   check_values = FALSE
 )
 

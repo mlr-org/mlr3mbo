@@ -17,7 +17,7 @@ packages = c("data.table", "mlr3", "mlr3misc", "bbotk", "paradox", "miesmuschel"
 #RhpcBLASctl::blas_set_num_threads(1L)
 #RhpcBLASctl::omp_set_num_threads(1L)
 
-reg = makeExperimentRegistry(file.dir = "/gscratch/lschnei8/registry_mies_yahpo", packages = packages)
+reg = makeExperimentRegistry(file.dir = "/gscratch/lschnei8/registry_yahpo_mies", packages = packages)
 #reg = makeExperimentRegistry(file.dir = NA, conf.file = NA, packages = packages)  # interactive session
 saveRegistry(reg)
 
@@ -107,8 +107,8 @@ for (i in seq_len(nrow(optimizers))) {
 
 # rbv2_super 267000 budget needs ~ 20 minutes so 30 repls results in roughly 10 hours
 jobs = findJobs()
-jobs[, chunk := batchtools::chunk(job.id, chunk.size = 30L)]
-resources.default = list(walltime = 3600 * 12L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
+jobs[, chunk := batchtools::chunk(job.id, chunk.size = 10L)]
+resources.default = list(walltime = 3600 * 12L, memory = 8192, ntasks = 1L, ncpus = 2L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()
@@ -126,4 +126,9 @@ results = reduceResultsList(done, function(x, job) {
 })
 results = rbindlist(results, fill = TRUE)
 saveRDS(results, "results_yahpo_mies.rds")
+
+mean_results_lcbench = results[grepl("lcbench", x = scenario), .(mean_val_accuracy = mean(val_accuracy), se_val_accuracy = sd(val_accuracy) / sqrt(.N)), by = .(scenario, instance, iter)]
+mean_results_rbv2 = results[grepl("rbv2", x = scenario), .(mean_acc = mean(acc), se_acc = sd(acc) / sqrt(.N)), by = .(scenario, instance, iter)]
+mean_results = rbind(mean_results_lcbench, mean_results_rbv2, fill = TRUE)
+saveRDS(mean_results, "results_yahpo_mies_average.rds")
 
