@@ -186,7 +186,7 @@ objective = ObjectiveRFunDt$new(
     xdt[, id := seq_len(.N)]
     # FIXME: walltime can be set adaptively based on xdt
     # FIXME: we could continuously model the walltime with a surrogate and set this for each xs in xdt
-    #plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 2000L), template = "slurm_wyoming.tmpl")
+    plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 2000L), template = "slurm_wyoming.tmpl")
     res = future_mapply(FUN = evaluate, transpose_list(xdt), transpose_list(instances), SIMPLIFY = FALSE, future.seed = TRUE)
     res = rbindlist(res)
     stopifnot(nrow(res) == nrow(xdt) * nrow(instances))
