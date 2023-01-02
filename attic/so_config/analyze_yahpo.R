@@ -3,8 +3,10 @@ library(ggplot2)
 library(pammtools)
 library(mlr3misc)
 
-dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_own.rds"))[method != c("mlrintermbo")]
-#dat = dat[scenario %nin% c("nb301", "rbv2_super")]
+dat = rbind(readRDS("results_yahpo.rds"), readRDS("results_yahpo_trafbo.rds"))
+dat[method == "trafbo", method := "trafbo_new"]
+dat = dat[scenario %in% "lcbench"]
+dat = dat[method %in% c("random", "smac4hpo", "mlr3mbo", "mlr3mbo_gp", "trafbo", "trafbo_new")]
 dat[, cumbudget := cumsum(budget), by = .(method, scenario, instance, repl)]
 dat[, cumbudget_scaled := cumbudget / max(cumbudget), by = .(method, scenario, instance, repl)]
 dat[, normalized_regret := (target - min(target)) / (max(target) - min(target)), by = .(scenario, instance)]

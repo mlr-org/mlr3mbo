@@ -35,17 +35,29 @@ search_space = ps(
   acqopt = p_fct(c("RS_1000", "RS", "FS", "LS"))
 )
 
-instances = setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost"))), each = 4L),
-                               instance = c("167185", "167152", "168910", "189908",
-                                            "40499", "1476", "6", "12",
-                                            "40979", "1501", "40966", "1478",
-                                            "12", "458", "1510", "1515",
-                                            "1478", "40979", "12", "28",
-                                            "41164", "37", "1515", "1510",
-                                            "1478", "1501", "40499", "40979",
-                                            "40984", "40979", "40966", "28"),
-                               target = rep(c("val_accuracy", "acc"), c(4L, 28L)),
-                               budget = rep(c(126L, 118L, 90L, 134L, 110L, 267L, 118L, 170L), each = 4L))
+#instances = setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost"))), each = 4L),
+#                               instance = c("167185", "167152", "168910", "189908",
+#                                            "40499", "1476", "6", "12",
+#                                            "40979", "1501", "40966", "1478",
+#                                            "12", "458", "1510", "1515",
+#                                            "1478", "40979", "12", "28",
+#                                            "41164", "37", "1515", "1510",
+#                                            "1478", "1501", "40499", "40979",
+#                                            "40984", "40979", "40966", "28"),
+#                               target = rep(c("val_accuracy", "acc"), c(4L, 28L)),
+#                               budget = rep(c(126L, 118L, 90L, 134L, 110L, 267L, 118L, 170L), each = 4L))
+
+instances = setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost"))), each = 3L),
+                               instance = c("167185", "167152", "168910", #"189908",
+                                            "40499", "1476", "6", #"12",
+                                            "40979", "1501", "40966", #"1478",
+                                            "12", "458", "1510", #"1515",
+                                            "1478", "40979", "12", #"28",
+                                            "41164", "37", "1515", #"1510",
+                                            "1478", "1501", "40499", #"40979",
+                                            "40984", "40979", "40966"), #"28"),
+                               target = rep(c("val_accuracy", "acc"), c(3L, 21L)),
+                               budget = rep(c(126L, 118L, 90L, 134L, 110L, 267L, 118L, 170L), each = 3L))
 
 mies_average = readRDS("results_yahpo_mies_average.rds")
 
@@ -186,7 +198,6 @@ objective = ObjectiveRFunDt$new(
     xdt[, id := seq_len(.N)]
     # FIXME: walltime can be set adaptively based on xdt
     # FIXME: we could continuously model the walltime with a surrogate and set this for each xs in xdt
-    plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 2000L), template = "slurm_wyoming.tmpl")
     res = future_mapply(FUN = evaluate, transpose_list(xdt), transpose_list(instances), SIMPLIFY = FALSE, future.seed = TRUE)
     res = rbindlist(res)
     stopifnot(nrow(res) == nrow(xdt) * nrow(instances))
@@ -210,6 +221,8 @@ optimizer$param_set$values$max_gen = 1L
 
 init = data.table(loop_function = "ego", init = "random", init_size_fraction = "0.25", random_interleave = FALSE, random_interleave_iter = NA_character_, rf_type = "standard", acqf = "EI", lambda = NA_integer_, acqopt = "RS")
 set.seed(2906)
+plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 4000L), template = "slurm_wyoming.tmpl")
 cd_instance$eval_batch(init)
 optimizer$optimize(cd_instance)
+
 
