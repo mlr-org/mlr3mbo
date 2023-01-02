@@ -70,7 +70,7 @@ wrapped as a \link{SurrogateLearnerCollection}.
 \references{
 \itemize{
 \item Ding, Yufeng, Simonoff, S J (2010).
-\dQuote{An investigation of missing data methods for classification trees applied to binary response data.}
+\dQuote{An Investigation of Missing Data Methods for Classification Trees Applied to Binary Response Data.}
 \emph{Journal of Machine Learning Research}, \bold{11}(1), 131--170.
 }
 }

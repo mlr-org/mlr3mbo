@@ -6,7 +6,8 @@
 \title{Acquisition Function Augmented Expected Improvement}
 \description{
 Augmented Expected Improvement.
-Currently only works correctly with \code{"regr.km"} as surrogate model and \code{nugget.estim = TRUE} or given.
+Useful when working with noisy objectives.
+Currently only works correctly with \code{mlr3learners::mlr_learners_regr.km} as surrogate model and \code{nugget.estim = TRUE} or given.
 }
 \section{Dictionary}{
 
@@ -22,7 +23,7 @@ acqf("aei")
 
 \itemize{
 \item \code{"c"} (\code{numeric(1)})\cr
-Constant \eqn{c} as used in formula (14) of Huang (2012) to reflect the degree of risk aversion. Defaults to \code{1}.
+Constant \eqn{c} as used in Formula (14) of Huang (2012) to reflect the degree of risk aversion. Defaults to \code{1}.
 }
 }
 
@@ -35,8 +36,9 @@ if (requireNamespace("mlr3learners") &
   library(mlr3learners)
   library(data.table)
 
+  set.seed(2906)
   fun = function(xs) {
-    list(y = xs$x ^ 2 + rnorm(length(xs$x), mean = 0, sd = 0.1))
+    list(y = xs$x ^ 2 + rnorm(length(xs$x), mean = 0, sd = 1))
   }
   domain = ps(x = p_dbl(lower = -10, upper = 10))
   codomain = ps(y = p_dbl(tags = "minimize"))
@@ -70,7 +72,7 @@ if (requireNamespace("mlr3learners") &
 \references{
 \itemize{
 \item Huang D, Allen TT, Notz WI, Zheng N (2012).
-\dQuote{Erratum to: Global optimization of stochastic black-box systems via sequential kriging meta-models.}
+\dQuote{Erratum To: Global Optimization of Stochastic Black-box Systems via Sequential Kriging Meta-Models.}
 \emph{Journal of Global Optimization}, \bold{54}(2), 431--431.
 }
 }
@@ -91,9 +93,13 @@ Other Acquisition Function:
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{y_effective_best}}{(\code{numeric(1)}).}
+\item{\code{y_effective_best}}{(\code{numeric(1)})\cr
+Best effective objective value observed so far.
+In the case of maximization, this already includes the necessary change of sign.}
 
-\item{\code{noise_var}}{(\code{numeric(1)}).}
+\item{\code{noise_var}}{(\code{numeric(1)})\cr
+Estimate of the variance of the noise.
+This corresponds to the \code{nugget} estimate when using a \link[mlr3learners:mlr_learners_regr.km]{mlr3learners} as surrogate model.}
 }
 \if{html}{\out{</div>}}
 }
@@ -139,7 +145,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<a id="method-AcqFunctionAEI-update"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionAEI-update}{}}}
 \subsection{Method \code{update()}}{
-Updates acquisition function and sets \code{y_effective_best}.
+Updates acquisition function and sets \code{y_effective_best} and \code{noise_var}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionAEI$update()}\if{html}{\out{</div>}}
 }
