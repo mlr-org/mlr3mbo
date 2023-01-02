@@ -4,7 +4,7 @@
 #' @name mlr_loop_functions_parego
 #'
 #' @description
-#' MBO loop function for multi-objective Bayesian Optimization via ParEGO.
+#' Loop function for multi-objective Bayesian Optimization via ParEGO.
 #' Normally used inside an [OptimizerMbo].
 #'
 #' In each iteration after the initial design, the observed objective function values are normalized and `q` candidates are
@@ -59,7 +59,7 @@
 #' @family Loop Function
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' if (requireNamespace("mlr3learners") &
 #'     requireNamespace("DiceKriging") &
 #'     requireNamespace("rgenoud")) {

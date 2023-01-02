@@ -24,6 +24,19 @@ acqf("ei")
 }
 \seealso{
 Sugar function: \code{\link[=acqf]{acqf()}}
+
+Other Dictionary: 
+\code{\link{mlr_loop_functions}}
+
+Other Acquisition Function: 
+\code{\link{AcqFunction}},
+\code{\link{mlr_acqfunctions_cb}},
+\code{\link{mlr_acqfunctions_eips}},
+\code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_mean}},
+\code{\link{mlr_acqfunctions_pi}},
+\code{\link{mlr_acqfunctions_smsego}}
 }
-\concept{AcqFunction}
+\concept{Acquisition Function}
+\concept{Dictionary}
 \keyword{datasets}

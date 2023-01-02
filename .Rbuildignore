@@ -1,7 +1,6 @@
 ^mlr3mbo\.Rproj$
 ^\.Rproj\.user$
 ^\.travis\.yml$
-^tic\.R$
 ^\.ccache$
 ^\.github$
 ^clang-.*
@@ -11,6 +10,7 @@
 ^attic$
 ^notes\.txt$
 ^README\.Rmd$
+^README\.html$
 ^README_files$
 ^pkgdown$
 ^doc$

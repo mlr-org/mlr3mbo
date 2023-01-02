@@ -21,3 +21,4 @@ test_that("as.data.table(..., objects = TRUE)", {
   expect_data_table(tab)
   expect_list(tab$object, "AcqFunction", any.missing = FALSE)
 })
+

@@ -14,6 +14,8 @@ default_acqfun(instance)
 }
 \description{
 Chooses a default acquisition function, i.e. the criterion used to propose future points.
+For single-objective optimization, defaults to \link{mlr_acqfunctions_ei}.
+For multi-objective optimization, defaults to \link{mlr_acqfunctions_smsego}.
 }
 \seealso{
 Other mbo_defaults: 

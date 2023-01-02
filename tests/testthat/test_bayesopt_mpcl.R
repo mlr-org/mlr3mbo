@@ -14,3 +14,4 @@ test_that("default bayesopt_mpcl", {
   bayesopt_mpcl(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 6L)  # q = 2
 })
+

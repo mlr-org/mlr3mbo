@@ -27,8 +27,8 @@ Points are drawn uniformly at random.}
 \item{surrogate}{(\link{SurrogateLearnerCollection})\cr
 \link{SurrogateLearnerCollection} to be used as a surrogate.}
 
-\item{acq_function}{(\link{AcqFunctionSmsEgo})\cr
-\link{AcqFunctionSmsEgo} to be used as acquisition function.}
+\item{acq_function}{(\link{mlr_acqfunctions_smsego})\cr
+\link{mlr_acqfunctions_smsego} to be used as acquisition function.}
 
 \item{acq_optimizer}{(\link{AcqOptimizer})\cr
 \link{AcqOptimizer} to be used as acquisition function optimizer.}
@@ -45,23 +45,23 @@ invisible(instance)\cr
 The original instance is modified in-place and returned invisible.
 }
 \description{
-MBO loop function for sequential multi-objective Bayesian Optimization via SmsEGO.
+Loop function for sequential multi-objective Bayesian Optimization via SMS-EGO.
 Normally used inside an \link{OptimizerMbo}.
 
-In each iteration after the initial design, the surrogate and acquisition function (\link{AcqFunctionSmsEgo}) are updated and the next candidate
-is chosen based on optimizing the acquisition function.
+In each iteration after the initial design, the surrogate and acquisition function (\link{mlr_acqfunctions_smsego}) are
+updated and the next candidate is chosen based on optimizing the acquisition function.
 }
 \note{
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
 \item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit}.
-\item Due to the iterative computation of the epsilon within the \link{AcqFunctionSmsEgo}, requires the \link[bbotk:Terminator]{bbotk::Terminator} of
+\item Due to the iterative computation of the epsilon within the \link{mlr_acqfunctions_smsego}, requires the \link[bbotk:Terminator]{bbotk::Terminator} of
 the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
 }
 }
 \examples{
-\dontrun{
+\donttest{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {
@@ -83,7 +83,7 @@ if (requireNamespace("mlr3learners") &
 
   surrogate = default_surrogate(instance)
 
-  acq_function = acqf("sms_ego")
+  acq_function = acqf("smsego")
 
   acq_optimizer = acqo(
     optimizer = opt("random_search"),

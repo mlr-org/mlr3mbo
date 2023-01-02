@@ -35,7 +35,7 @@ test_that("predict_types are recognized", {
 
   learner = lrn("regr.rpart")
   learner$predict_type = "response"
-  surrogate = SurrogateLearner$new(learner = lrn("regr.rpart"), archive = inst$archive)
+  surrogate = SurrogateLearner$new(learner = learner, archive = inst$archive)
   surrogate$update()
   expect_named(surrogate$predict(xdt), "mean")
 })
@@ -74,7 +74,7 @@ test_that("insample_perf", {
   expect_number(surrogate$insample_perf, lower = -Inf, upper = 1)
   expect_equal(names(surrogate$insample_perf), surrogate$param_set$values$perf_measure$id)
 
-  surrogate_constant = SurrogateLearner$new(learner = lrn("regr.featureless"), archive = inst$archive)
+  surrogate_constant = SurrogateLearner$new(learner = REGR_FEATURELESS, archive = inst$archive)
   surrogate_constant$param_set$values$assert_insample_perf = TRUE
   surrogate_constant$param_set$values$perf_threshold = 0.5
   surrogate$param_set$values$perf_measure = mlr_measures$get("regr.rsq")

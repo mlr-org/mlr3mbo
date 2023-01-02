@@ -4,7 +4,7 @@
 #' @name mlr_loop_functions_mpcl
 #'
 #' @description
-#' MBO loop function for single-objective Bayesian Optimization via multipoint constant liar.
+#' Loop function for single-objective Bayesian Optimization via multipoint constant liar.
 #' Normally used inside an [OptimizerMbo].
 #'
 #' In each iteration after the initial design, the surrogate and acquisition function are updated.
@@ -56,7 +56,7 @@
 #' @family Loop Function
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' if (requireNamespace("mlr3learners") &
 #'     requireNamespace("DiceKriging") &
 #'     requireNamespace("rgenoud")) {

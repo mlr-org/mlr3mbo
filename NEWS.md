@@ -1,2 +1,4 @@
-# mlr3mbo 0.0.0.9000
+# mlr3mbo 0.1.1
+
+* Initial upload to CRAN.
 

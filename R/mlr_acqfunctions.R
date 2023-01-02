@@ -12,7 +12,8 @@
 #' @section Methods:
 #' See [mlr3misc::Dictionary].
 #'
-#' @family AcqFunction
+#' @family Dictionary
+#' @family Acquisition Function
 #' @seealso
 #' Sugar function: [acqf()]
 #' @export

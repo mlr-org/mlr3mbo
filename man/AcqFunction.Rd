@@ -10,13 +10,13 @@ Based on the predictions of a \link{Surrogate}, the acquisition function encodes
 }
 \seealso{
 Other Acquisition Function: 
-\code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
-\code{\link{mlr_acqfunctions_sms_ego}}
+\code{\link{mlr_acqfunctions_smsego}},
+\code{\link{mlr_acqfunctions}}
 }
 \concept{Acquisition Function}
 \section{Super class}{

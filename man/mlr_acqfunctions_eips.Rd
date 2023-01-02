@@ -72,12 +72,12 @@ In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neur
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
-\code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
-\code{\link{mlr_acqfunctions_sms_ego}}
+\code{\link{mlr_acqfunctions_smsego}},
+\code{\link{mlr_acqfunctions}}
 }
 \concept{Acquisition Function}
 \section{Super classes}{

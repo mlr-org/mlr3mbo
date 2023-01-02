@@ -9,7 +9,7 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' if (requireNamespace("mlr3learners") &
 #'     requireNamespace("DiceKriging") &
 #'     requireNamespace("rgenoud")) {

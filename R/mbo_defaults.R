@@ -16,7 +16,7 @@ NULL
 #' @title Default Loop Function
 #'
 #' @description
-#' Chooses a default [loop_function], i.e. the MBO flavor to be used for optimization.
+#' Chooses a default [loop_function], i.e. the Bayesian Optimization flavor to be used for optimization.
 #' For single-objective optimization, defaults to [bayesopt_ego].
 #' For multi-objective optimization, defaults to [bayesopt_smsego].
 #'
@@ -155,6 +155,9 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
 #'
 #' @description
 #' Chooses a default acquisition function, i.e. the criterion used to propose future points.
+#' For single-objective optimization, defaults to [mlr_acqfunctions_ei].
+#' For multi-objective optimization, defaults to [mlr_acqfunctions_smsego].
+#'
 #' @param instance ([bbotk::OptimInstance]).
 #' @return [AcqFunction]
 #' @family mbo_defaults
@@ -172,7 +175,7 @@ default_acqfun = function(instance) {
 #'
 #' @description
 #' Chooses a default acquisition function optimizer.
-#' Defaults to wrapping [bbotk::OptimizerRandomSearch] allowing 10000 function evaluations.
+#' Defaults to wrapping [bbotk::OptimizerRandomSearch] allowing 10000 function evaluations (with a batch size of 1000) via a [bbotk::TerminatorEvals].
 #'
 #' @param acq_function ([AcqFunction]).
 #' @return [AcqOptimizer]
@@ -180,6 +183,6 @@ default_acqfun = function(instance) {
 #' @export
 default_acqopt = function(acq_function) {
   assert_r6(acq_function, classes = "AcqFunction")
-  AcqOptimizer$new(optimizer = opt("random_search", batch_size = 10000L), terminator = trm("evals", n_evals = 10000L))  # FIXME: what do we use
+  AcqOptimizer$new(optimizer = opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))  # FIXME: what do we use
 }
 

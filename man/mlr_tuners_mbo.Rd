@@ -10,7 +10,7 @@ This is a minimal interface internally passing on to \link{OptimizerMbo}.
 For additional information and documentation see \link{OptimizerMbo}.
 }
 \examples{
-\dontrun{
+\donttest{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {

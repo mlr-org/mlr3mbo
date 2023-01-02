@@ -10,10 +10,10 @@ lgr::get_logger("bbotk")$set_threshold("warn")
 
 # mlr3mbo
 
-A new R6 and much more modular implementation for single- and multi-objective Bayesian optimization.
+A new R6 and much more modular implementation for single- and multi-objective Bayesian Optimization.
 
 <!-- badges: start -->
-[![tic](https://github.com/mlr-org/mlr3mbo/workflows/tic/badge.svg?branch=main)](https://github.com/mlr-org/mlr3mbo/actions)
+[![r-cmd-check](https://github.com/mlr-org/mlr3mbo/actions/workflows/r-cmd-check.yml/badge.svg)](https://github.com/mlr-org/mlr3mbo/actions/workflows/r-cmd-check.yml)
 [![CRANstatus](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
 [![StackOverflow](https://img.shields.io/badge/stackoverflow-mlr3-orange.svg)](https://stackoverflow.com/questions/tagged/mlr3)
 [![Mattermost](https://img.shields.io/badge/chat-mattermost-orange.svg)](https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/)
@@ -31,7 +31,7 @@ An overview and gentle introduction is given in [this vignette](https://mlr3mbo.
 * `AcqFunction`: Acquisition Function
 * `AcqOptimizer`: Acquisition Function Optimizer
 
-Based on these, Bayesian optimization loops can be written, see, e.g., `bayesopt_ego` for sequential single objective BO.
+Based on these, Bayesian Optimization loops can be written, see, e.g., `bayesopt_ego` for sequential single-objective BO.
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk) package as well as
 a `TunerMbo` class behaving like any other `Tuner` from the [mlr3tuning](https://cran.r-project.org/package=mlr3tuning) package.
@@ -41,7 +41,7 @@ See `?mbo_defaults` for more details.
 
 ## Simple Optimization Example
 
-Minimize `y = x^2` via sequential single-objective BO using a GP as surrogate and EI optimized via random search as acquisition function:
+Minimize `f(x) = x^2` via sequential single-objective BO using a GP as surrogate and EI optimized via random search as acquisition function:
 
 ```{r, message = FALSE}
 library(bbotk)
@@ -51,7 +51,7 @@ set.seed(1)
 
 obfun = ObjectiveRFun$new(
   fun = function(xs) list(y1 = xs$x ^ 2),
-  domain = ps(x = p_dbl(lower = -5, upper = 5)),
+  domain = ps(x = p_dbl(lower = -10, upper = 10)),
   codomain = ps(y1 = p_dbl(tags = "minimize")))
 
 instance = OptimInstanceSingleCrit$new(
@@ -96,8 +96,8 @@ optimizer = opt("mbo",
 result = bb_optimize(
   fun,
   method = optimizer,
-  lower = c(x = -5),
-  upper = c(x = 5),
+  lower = c(x = -10),
+  upper = c(x = 10),
   max_evals = 10)
 ```
 

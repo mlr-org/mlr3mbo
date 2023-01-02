@@ -46,7 +46,7 @@ invisible(instance)\cr
 The original instance is modified in-place and returned invisible.
 }
 \description{
-MBO loop function for sequential single-objective Bayesian Optimization.
+Loop function for sequential single-objective Bayesian Optimization.
 Normally used inside an \link{OptimizerMbo}.
 
 In each iteration after the initial design, the surrogate and acquisition function are updated and the next candidate
@@ -60,7 +60,7 @@ is chosen based on optimizing the acquisition function.
 }
 }
 \examples{
-\dontrun{
+\donttest{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {

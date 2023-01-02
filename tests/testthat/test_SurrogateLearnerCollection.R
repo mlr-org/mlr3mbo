@@ -79,7 +79,7 @@ test_that("insample_perf", {
   expect_double(surrogate$insample_perf, lower = -Inf, upper = 1, any.missing = FALSE, len = 2L)
   expect_equal(names(surrogate$insample_perf), map_chr(surrogate$param_set$values$perf_measures, "id"))
 
-  surrogate_constant = SurrogateLearnerCollection$new(learner = list(lrn("regr.featureless"), lrn("regr.featureless")), archive = inst$archive)
+  surrogate_constant = SurrogateLearnerCollection$new(learner = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
   surrogate_constant$param_set$values$assert_insample_perf = TRUE
   surrogate_constant$param_set$values$perf_thresholds = c(0.5, 0.5)
   surrogate_constant$param_set$values$perf_measures = list(mlr_measures$get("regr.rsq"), mlr_measures$get("regr.rsq"))
