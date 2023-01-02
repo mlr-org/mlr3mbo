@@ -74,6 +74,7 @@ In \emph{International Conference on Evolutionary Multi-Criterion Optimization},
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
+\code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},

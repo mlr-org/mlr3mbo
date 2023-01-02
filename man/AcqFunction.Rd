@@ -10,6 +10,7 @@ Based on the predictions of a \link{Surrogate}, the acquisition function encodes
 }
 \seealso{
 Other Acquisition Function: 
+\code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},

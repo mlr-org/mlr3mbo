@@ -8,11 +8,12 @@
 #'
 #' @description
 #' Augmented Expected Improvement.
+#' Useful when working with noisy objectives.
 #' Currently only works correctly with `"regr.km"` as surrogate model and `nugget.estim = TRUE` or given.
 #'
 #' @section Parameters:
 #' * `"c"` (`numeric(1)`)\cr
-#'   Constant \eqn{c} as used in formula (14) of Huang (2012) to reflect the degree of risk aversion. Defaults to `1`.
+#'   Constant \eqn{c} as used in Formula (14) of Huang (2012) to reflect the degree of risk aversion. Defaults to `1`.
 #'
 #' @references
 #' * `r format_bib("huang_2012")`
@@ -28,8 +29,9 @@
 #'   library(mlr3learners)
 #'   library(data.table)
 #'
+#'   set.seed(2906)
 #'   fun = function(xs) {
-#'     list(y = xs$x ^ 2 + rnorm(length(xs$x), mean = 0, sd = 0.1))
+#'     list(y = xs$x ^ 2 + rnorm(length(xs$x), mean = 0, sd = 1))
 #'   }
 #'   domain = ps(x = p_dbl(lower = -10, upper = 10))
 #'   codomain = ps(y = p_dbl(tags = "minimize"))
@@ -64,10 +66,14 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
 
   public = list(
 
-    #' @field y_effective_best (`numeric(1)`).
+    #' @field y_effective_best (`numeric(1)`)\cr
+    #'   Best effective objective value observed so far.
+    #'   In the case of maximization, this already includes the necessary change of sign.
     y_effective_best = NULL,
 
-    #' @field noise_var (`numeric(1)`).
+    #' @field noise_var (`numeric(1)`)\cr
+    #'   Estimate of the variance of the noise.
+    #'   This corresponds to the `nugget` estimate when using a [mlr3learners][mlr3learners::mlr_learners_regr.km] as surrogate model.
     noise_var = NULL,  # noise of the function
 
     #' @description
@@ -86,22 +92,17 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     },
 
     #' @description
-    #' Updates acquisition function and sets `y_effective_best`.
+    #' Updates acquisition function and sets `y_effective_best` and `noise_var`.
     update = function() {
       xdt = self$archive$data[, self$archive$cols_x, with = FALSE]
       p = self$surrogate$predict(xdt)
-      if (self$surrogate_max_to_min == 1) {  # minimization
-        y_effective = p$mean + self$constants$values$c * p$se  # pessimistic prediction
-        self$y_effective_best = min(y_effective)
-      } else {  # maximization
-        y_effective = p$mean - self$constants$values$c * p$se  # pessimistic prediction
-        self$y_effective_best = max(y_effective)
-      }
+      y_effective = p$mean + (self$surrogate_max_to_min * self$constants$values$c * p$se) # pessimistic prediction
+      self$y_effective_best = min(self$surrogate_max_to_min * y_effective)
 
       if (!is.null(self$surrogate$model$model) && length(self$surrogate$model$model@covariance@nugget) == 1L) {
         self$noise_var = self$surrogate$model$model@covariance@nugget  # FIXME: check that this value really exists (otherwise calculate residual variance?)
       } else {
-        lgr$warn('AEI currently only works correctly with `"regr.km"` as surrogate model and `nugget.estim = TRUE` or given!')
+        lgr$warn('AcqFunctionAEI currently only works correctly with `"regr.km"` as surrogate model and `nugget.estim = TRUE` or given.')
         self$noise_var = 0
       }
 
@@ -121,7 +122,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       se = p$se
       d = self$y_effective_best - self$surrogate_max_to_min * mu
       d_norm = d / se
-      aei = d * pnorm(d_norm) + se * dnorm(d_norm) * (1 - sqrt(self$noise_var) / sqrt(self$noise_var + se^2))
+      aei = (d * pnorm(d_norm) + se * dnorm(d_norm)) * (1 - (sqrt(self$noise_var) / sqrt(se^2L + self$noise_var)))
       aei = ifelse(se < 1e-20, 0, aei)
       data.table(acq_aei = aei)
     }

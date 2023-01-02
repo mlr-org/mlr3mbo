@@ -64,6 +64,7 @@ if (requireNamespace("mlr3learners") &
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
+\code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_mean}},
@@ -79,7 +80,8 @@ Other Acquisition Function:
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{y_best}}{(\code{numeric(1)})\cr
-Best objective function value observed so far.}
+Best objective function value observed so far.
+In the case of maximization, this already includes the necessary change of sign.}
 }
 \if{html}{\out{</div>}}
 }

@@ -57,6 +57,7 @@ AcqFunctionPI = R6Class("AcqFunctionPI",
 
     #' @field y_best (`numeric(1)`)\cr
     #'   Best objective function value observed so far.
+    #'   In the case of maximization, this already includes the necessary change of sign.
     y_best = NULL,
 
     #' @description

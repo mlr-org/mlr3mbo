@@ -6,7 +6,7 @@ format_bib = function(...) {
 #' @importFrom utils bibentry
 bibentries = c(
   huang_2012 = bibentry("article",
-    title    = "Erratum to: Global optimization of stochastic black-box systems via sequential kriging meta-models",
+    title    = "Erratum To: Global Optimization of Stochastic Black-box Systems via Sequential Kriging Meta-Models",
     author   = "D. Huang and T. T. Allen and W. I. Notz and N. Zheng",
     year     = "2012",
     volume   = "54",
@@ -26,7 +26,7 @@ bibentries = c(
   ),
 
   ding_2010 = bibentry("article",
-    title   = "An investigation of missing data methods for classification trees applied to binary response data.",
+    title   = "An Investigation of Missing Data Methods for Classification Trees Applied to Binary Response Data",
     author  = "Ding, Yufeng and Simonoff, Jeffrey S",
     year    = "2010",
     volume  = "11",
