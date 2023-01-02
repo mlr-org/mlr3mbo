@@ -7,7 +7,7 @@
 \description{
 Augmented Expected Improvement.
 Useful when working with noisy objectives.
-Currently only works correctly with \code{mlr3learners::mlr_learners_regr.km} as surrogate model and \code{nugget.estim = TRUE} or given.
+Currently only works correctly with \code{"regr.km"} as surrogate model and \code{nugget.estim = TRUE} or given.
 }
 \section{Dictionary}{
 
@@ -84,7 +84,8 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
-\code{\link{mlr_acqfunctions_sms_ego}}
+\code{\link{mlr_acqfunctions_smsego}},
+\code{\link{mlr_acqfunctions}}
 }
 \concept{Acquisition Function}
 \section{Super classes}{
