@@ -22,9 +22,9 @@ vignette](https://mlr3mbo.mlr-org.com/articles/mlr3mbo.html).
 `mlr3mbo` is built modular relying on the following
 [R6](https://cran.r-project.org/package=R6) classes:
 
-  - `Surrogate`: Surrogate Model
-  - `AcqFunction`: Acquisition Function
-  - `AcqOptimizer`: Acquisition Function Optimizer
+- `Surrogate`: Surrogate Model
+- `AcqFunction`: Acquisition Function
+- `AcqOptimizer`: Acquisition Function Optimizer
 
 Based on these, Bayesian Optimization loops can be written, see, e.g.,
 `bayesopt_ego` for sequential single-objective BO.
