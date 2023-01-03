@@ -1,8 +1,8 @@
 
 # mlr3mbo
 
-A new R6 and much more modular implementation for single- and
-multi-objective Bayesian Optimization.
+Package website: [release](https://mlr3mbo.mlr-org.com/) \|
+[dev](https://mlr3mbo.mlr-org.com/dev/)
 
 <!-- badges: start -->
 
@@ -11,6 +11,9 @@ multi-objective Bayesian Optimization.
 [![StackOverflow](https://img.shields.io/badge/stackoverflow-mlr3-orange.svg)](https://stackoverflow.com/questions/tagged/mlr3)
 [![Mattermost](https://img.shields.io/badge/chat-mattermost-orange.svg)](https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/)
 <!-- badges: end -->
+
+A new R6 and much more modular implementation for single- and
+multi-objective Bayesian Optimization.
 
 ## Get Started
 
