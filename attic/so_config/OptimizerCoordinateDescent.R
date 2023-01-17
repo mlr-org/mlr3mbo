@@ -35,9 +35,6 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
         gen = gen + 1L
         for (param_id in shuffle(inst$search_space$ids())) {
           if (!is.na(incumbent[[param_id]])) {
-            # we first also reevaluate the incumbent to see how noisy the evaluations are
-            inst$eval_batch(incumbent)
-
             xdt = get_xdt_coordinate(copy(incumbent), param = inst$search_space$params[[param_id]], n_coordinate_tryouts = n_coordinate_tryouts)
             # previously inactive parameters can now be active and need a value
             if (inst$search_space$has_deps & param_id %in% inst$search_space$deps$on) {
@@ -48,13 +45,14 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
               }
             }
             xdt = Design$new(inst$search_space, data = xdt, remove_dupl = TRUE)$data  # fixes potentially broken dependencies
-            set(xdt, j = ".gen", value = gen)
             set(xdt, j = ".param", value = param_id)
+            xdt = rbind(xdt, incumbent, fill = TRUE)  # also reevaluate the incumbent to see how noisy evaluations are
+            set(xdt, j = ".gen", value = gen)
+            set(xdt, i = nrow(xdt), j = ".param", value = "incumbent")
+            set(xdt, j = "incumbent", value = list(inst$archive$best()[, c(inst$archive$cols_x, inst$archive$cols_y), with = FALSE]))
             inst$eval_batch(xdt)
-            #for (i in seq_len(nrow(xdt))) {  # could also do this according to a batch_size parameter
-            #  inst$eval_batch(xdt[i, ])
-            #}
             incumbent = inst$archive$best()[, inst$archive$cols_x, with = FALSE]
+
             saveRDS(inst, file = self$param_set$values$rds_name)
           }
         }
@@ -67,28 +65,29 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
 )
 
 get_xdt_coordinate = function(incumbent, param, n_coordinate_tryouts) {
-  if (param$class %in% c("ParamDbl", "ParamInt")) {
+  if (param$class == "ParamDbl") {
     x = runif(n = n_coordinate_tryouts, min = param$lower, max = param$upper)
-    if (param$class == "ParamInt") {
-      x = as.integer(round(x, 0L))
-    }
+  } else if (param$class == "ParamInt") {
+    levels = setdiff(seq(param$lower, param$upper, by = 1L), incumbent[[param$id]])
+    n_coordinate_tryouts = min(n_coordinate_tryouts, length(levels))
+    x = sample(levels, size = n_coordinate_tryouts, replace = FALSE)
   } else {
     n_coordinate_tryouts = min(n_coordinate_tryouts, param$nlevels - 1L)
     x = sample(x = setdiff(param$levels, incumbent[[param$id]]), size = n_coordinate_tryouts, replace = FALSE)
   }
-  xdt = incumbent[rep(1, n_coordinate_tryouts), ]
+  xdt = incumbent[rep(1L, n_coordinate_tryouts), ]
   set(xdt, j = param$id, value = x)
   xdt
 }
 
 sample_random = function(param, n) {
-  if (param$class %in% c("ParamDbl", "ParamInt")) {
+  if (param$class == "ParamDbl") {
     x = runif(n = n, min = param$lower, max = param$upper)
-    if (param$class == "ParamInt") {
-      x = as.integer(round(x, 0L))
-    }
+  } else if (param$class == "ParamInt") {
+    levels = seq(param$lower, param$upper, by = 1L)
+    x = sample(levels, size = n, replace = TRUE)
   } else {
-    x = sample(x = param$levels, size = n, replace = TRUE)
+    x = sample(param$levels, size = n, replace = TRUE)
   }
   x
 }

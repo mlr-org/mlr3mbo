@@ -41,7 +41,7 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
 
   optim_instance = make_optim_instance(instance)
 
-  xdt = data.table(loop_function = "ego_log", init = "sobol", init_size_fraction = "0.25", random_interleave = TRUE, random_interleave_iter = "5", rf_type = "smaclike_boot", acqf = "LogEI", lambda = NA_real_, acqopt = "LS")
+  xdt = data.table(loop_function = "ego_log", init = "sobol", init_size_fraction = "0.25", random_interleave = TRUE, random_interleave_iter = "5", rf_type = "smaclike_boot", acqf = "EI", acqf_ei_log = TRUE, lambda = NA_character_, acqopt = "LS")
 
   d = optim_instance$search_space$length
   init_design_size = ceiling(as.numeric(xdt$init_size_fraction) * optim_instance$terminator$param_set$values$n_evals)
@@ -65,6 +65,11 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
     learner$param_set$values$se.method = "jack"
     learner$param_set$values$splitrule = "variance"
     learner$param_set$values$num.trees = 1000L
+  } else if (xdt$rf_type == "extratrees") {
+    learner$param_set$values$se.method = "jack"
+    learner$param_set$values$splitrule = "extratrees"
+    learner$param_set$values$num.random.splits = 1L
+    learner$param_set$values$num.trees = 1000L
   } else if (xdt$rf_type == "smaclike_boot") {
     learner$param_set$values$se.method = "simple"
     learner$param_set$values$splitrule = "extratrees"
@@ -80,14 +85,6 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
     learner$param_set$values$num.random.splits = 1L
     learner$param_set$values$num.trees = 10L
     learner$param_set$values$replace = FALSE
-    learner$param_set$values$sample.fraction = 1
-    learner$param_set$values$min.node.size = 1
-    learner$param_set$values$mtry.ratio = 1
-  } else if (xdt$rf_type == "smaclike_variance_boot") {
-    learner$param_set$values$se.method = "simple"
-    learner$param_set$values$splitrule = "variance"
-    learner$param_set$values$num.trees = 10L
-    learner$param_set$values$replace = TRUE
     learner$param_set$values$sample.fraction = 1
     learner$param_set$values$min.node.size = 1
     learner$param_set$values$mtry.ratio = 1
@@ -113,11 +110,13 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
   }
 
   acq_function = if (xdt$acqf == "EI") {
-    AcqFunctionEI$new()
-  } else if (xdt$acqf == "LogEI") {
-    AcqFunctionLogEI$new()
+    if (isTRUE(xdt$acqf_ei_log)) {
+      AcqFunctionLogEI$new()
+    } else {
+      AcqFunctionEI$new()
+    }
   } else if (xdt$acqf == "CB") {
-    AcqFunctionCB$new(lambda = xdt$lambda)
+    AcqFunctionCB$new(lambda = as.numeric(xdt$lambda))
   } else if (xdt$acqf == "PI") {
     AcqFunctionPI$new()
   } else if (xdt$acqf == "Mean") {

@@ -24,7 +24,8 @@ objective = ObjectiveRFunDt$new(
     data.table(y = y)
   },
   domain = domain,
-  codomain = ps(y = p_dbl(tags = "minimize")))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+)
 
 instance = OptimInstanceSingleCrit$new(objective = objective, terminator = trm("none"))
 optimizer = OptimizerCoordinateDescent$new()
