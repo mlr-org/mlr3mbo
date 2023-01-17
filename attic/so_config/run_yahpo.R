@@ -23,7 +23,7 @@ packages = c("data.table", "mlr3", "mlr3learners", "mlr3pipelines", "mlr3misc", 
 root = here::here()
 experiments_dir = file.path(root)
 
-source_files = map_chr(c("helpers.R", "AcqFunctionLogEI", "LearnerRegrRangerCustom.R", "OptimizerChain.R", "trafbo.R"), function(x) file.path(experiments_dir, x))
+source_files = map_chr(c("helpers.R", "AcqFunctionLogEI.R", "LearnerRegrRangerCustom.R", "OptimizerChain.R"), function(x) file.path(experiments_dir, x))
 for (sf in source_files) {
   source(sf)
 }
@@ -41,7 +41,7 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
 
   optim_instance = make_optim_instance(instance)
 
-  xdt = data.table(loop_function = "ego_log", init = "random", init_size_fraction = "0.25", random_interleave = TRUE, random_interleave_iter = "4", rf_type = "smaclike_boot", acqf = "LogEI", lambda = NA_real_, acqopt = "LS")
+  xdt = data.table(loop_function = "ego_log", init = "sobol", init_size_fraction = "0.25", random_interleave = TRUE, random_interleave_iter = "5", rf_type = "smaclike_boot", acqf = "LogEI", lambda = NA_real_, acqopt = "LS")
 
   d = optim_instance$search_space$length
   init_design_size = ceiling(as.numeric(xdt$init_size_fraction) * optim_instance$terminator$param_set$values$n_evals)
@@ -105,10 +105,10 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
       batch_size = ceiling((20000L / n_repeats) / (1 + maxit))  # 1000L
       AcqOptimizer$new(opt("focus_search", n_points = batch_size, maxit = maxit), terminator = trm("evals", n_evals = 20000L))
   } else if (xdt$acqopt == "LS") {
-      optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10010L), trm("evals", n_evals = 10000L)))
-      acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20020L))
+      optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10000L), trm("evals", n_evals = 10000L)))
+      acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20000L))
       acq_optimizer$param_set$values$warmstart = TRUE
-      acq_optimizer$param_set$values$warmstart_size = 10L
+      acq_optimizer$param_set$values$warmstart_size = "all"
       acq_optimizer
   }
 
@@ -206,7 +206,7 @@ prob_designs = unlist(prob_designs, recursive = FALSE, use.names = FALSE)
 names(prob_designs) = nn
 
 # add jobs for optimizers
-optimizers = data.table(algorithm = c("mlr3mbo", "trafbo", "mlr3mbo_gp"))
+optimizers = data.table(algorithm = "mlr3mbo")
 
 for (i in seq_len(nrow(optimizers))) {
   algo_designs = setNames(list(optimizers[i, ]), nm = optimizers[i, ]$algorithm)
@@ -220,8 +220,7 @@ for (i in seq_len(nrow(optimizers))) {
 }
 
 jobs = getJobTable()
-jobs = jobs[grepl("lcbench", x = problem) & tags == "trafbo", ]
-resources.default = list(walltime = 3600 * 3L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "teton", max.concurrent.jobs = 9999L)
+resources.default = list(walltime = 3600 * 12L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "beartooth", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()
@@ -244,5 +243,5 @@ results = reduceResultsList(done, function(x, job) {
   tmp
 })
 results = rbindlist(results, fill = TRUE)
-saveRDS(results, "results_yahpo_trafbo.rds")
+saveRDS(results, "/gscratch/lschnei8/results_yahpo_mlr3mbo.rds")
 

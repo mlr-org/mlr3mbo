@@ -131,7 +131,7 @@ LearnerRegrRangerCustom = R6Class("LearnerRegrRangerCustom",
       if (isTRUE(pv$se.method == "simple")) {
         prediction = mlr3misc::invoke(predict, self$model, data = newdata, type = "response", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
         response = rowMeans(prediction$predictions)
-        variance = apply(prediction$predictions, MARGIN = 1L, var)
+        variance = rowMeans(0.01 + prediction$predictions ^ 2) - (response ^ 2)  # law of total variance assuming sigma_b(x) is 0 due to min.node.size = 1 and always splitting; then set 0.01 as lower bound for sigma_b(x)
         list(response = response, se = sqrt(variance))
       } else {
         prediction = mlr3misc::invoke(predict, self$model, data = newdata, type = self$predict_type, .args = pv)
