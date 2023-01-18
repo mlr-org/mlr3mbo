@@ -33,8 +33,8 @@ search_space = ps(
   rf_type = p_fct(c("standard", "extratrees", "smaclike_boot", "smaclike_no_boot"), default = "standard"),
   acqf = p_fct(c("EI", "CB", "PI", "Mean"), default = "EI"),
   acqf_ei_log = p_lgl(depends = loop_function == "ego_log" && acqf == "EI", default = FALSE),
-  lambda = p_fct(c("1", "3", "5"), depends = acqf == "CB", default = "1"),
-  acqopt = p_fct(c("RS_1000", "RS", "FS", "LS"), default = "RS")
+  lambda = p_fct(c("1", "3", "10"), depends = acqf == "CB", default = "1"),
+  acqopt = p_fct(c("RS_1000", "RS", "FS", "LS"), default = "RS_1000")
 )
 
 instances = setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost"))), each = 4L),
@@ -49,7 +49,7 @@ instances = setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("ak
                                target = rep(c("val_accuracy", "acc"), c(4L, 28L)),
                                budget = rep(c(126L, 118L, 90L, 134L, 110L, 267L, 118L, 170L), each = 4L))
 
-mies_average = readRDS("results_yahpo_mies_average.rds")
+mies_average = readRDS("/gscratch/lschnei8/results_yahpo_mies_average.rds")
 
 evaluate = function(xdt, instance) {
   id = xdt$id
@@ -190,14 +190,16 @@ evaluate = function(xdt, instance) {
 objective = ObjectiveRFunDt$new(
   fun = function(xdt) {
     xdt[, id := seq_len(.N)]
-    # FIXME: walltime can be set adaptively based on xdt
-    # FIXME: we could continuously model the walltime with a surrogate and set this for each xs in xdt
-    # FIXME: tryCatch needed?
-    res = future_mapply(FUN = evaluate, transpose_list(xdt), transpose_list(instances), SIMPLIFY = FALSE, future.seed = TRUE)
+    xdt_tmp = do.call("rbind", replicate(nrow(instances), xdt, simplify = FALSE))
+    setorderv(xdt_tmp, col = "id")
+    instances_tmp = do.call("rbind", replicate(nrow(xdt), instances, simplify = FALSE))
+    # FIXME: shuffle instances_tmp or maybe make sure that expensive are sheduled first but be careful that xdt matches
+    res = future_mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE, future.seed = TRUE)
     res = rbindlist(res)
-    stopifnot(nrow(res) == nrow(xdt) * nrow(instances))
-    agg = res[, .(mean_k = exp(mean(log(k))), raw_k = list(k), n_na = sum(is.na(k))), by = .(id)]
-    setorderv(agg, cols = "id")
+    setorderv(res, col = "instance")
+    setorderv(res, col = "id")
+    agg = res[, .(mean_k = exp(mean(log(k))), raw_k = list(k), n_na = sum(is.na(k)), n = .N), by = .(id)]
+    agg[n < nrow(instances), mean_k := 0]
     agg
   },
   domain = search_space,
@@ -214,7 +216,7 @@ cd_instance = OptimInstanceSingleCrit$new(
 optimizer = OptimizerCoordinateDescent$new()
 optimizer$param_set$values$max_gen = 1L
 
-init = data.table(loop_function = "ego", init = "random", init_size_fraction = "0.25", random_interleave = FALSE, random_interleave_iter = NA_character_, rf_type = "standard", acqf = "EI", acqf_ei_log = NA, lambda = NA_character_, acqopt = "RS")
+init = data.table(loop_function = "ego", init = "random", init_size_fraction = "0.25", random_interleave = FALSE, random_interleave_iter = NA_character_, rf_type = "standard", acqf = "EI", acqf_ei_log = NA, lambda = NA_character_, acqopt = "RS_1000")
 set.seed(2906)
 plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 4000L), template = "slurm_wyoming.tmpl")
 cd_instance$eval_batch(init)

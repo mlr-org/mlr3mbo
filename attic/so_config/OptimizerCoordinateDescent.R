@@ -30,7 +30,12 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
         inst$eval_batch(xdt)
       }
       incumbent = inst$archive$best()[, inst$archive$cols_x, with = FALSE]
-      gen = 0L
+      # check if .gen is already present, if yes continue from there
+      gen = if (inst$archive$n_evals > 0L & ".gen" %in% colnames(inst$archive$data)) {
+        max(inst$archive$data[[".gen"]], na.rm = TRUE)
+      } else {
+        0L
+      }
       repeat {
         gen = gen + 1L
         for (param_id in shuffle(inst$search_space$ids())) {
