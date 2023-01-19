@@ -50,6 +50,7 @@ instances = setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("ak
                                budget = rep(c(126L, 118L, 90L, 134L, 110L, 267L, 118L, 170L), each = 4L))
 
 mies_average = readRDS("/gscratch/lschnei8/results_yahpo_mies_average.rds")
+mies_extrapolation readRDS("/gscratch/lschnei8/mies_extrapolation.rds")
 
 evaluate = function(xdt, instance) {
   id = xdt$id
@@ -181,10 +182,16 @@ evaluate = function(xdt, instance) {
   target_ = paste0("mean_", instance$target)
 
   # assumes maximization
-  k = min(mies_average[scenario == scenario_ & instance == instance_ & get(target_) >= best]$iter)  # minimum k so that best_mies[k] >= best_mbo[final]
+  if (best > max(mies_average[scenario == scenario_ & instance == instance_][["mean_best"]])) {
+    extrapolate = TRUE
+    k = mies_extrapolation[scenario == scenario_ & instance == instance_][["model"]][[1L]](best)
+  } else {
+    extrapolate = FALSE
+    k = min(mies_average[scenario == scenario_ & instance == instance_ & mean_best >= best]$iter)  # minimum k so that mean_best_mies[k] >= best_mbo[final]
+  }
   k = k / instance$budget  # sample efficiency compared to mies
 
-  data.table(k = k, id = id, instance = paste0(instance$scenario, "_", instance$instance))
+  data.table(k = k, extrapolate = extrapolate, id = id, instance = paste0(instance$scenario, "_", instance$instance))
 }
 
 objective = ObjectiveRFunDt$new(
@@ -198,7 +205,7 @@ objective = ObjectiveRFunDt$new(
     res = rbindlist(res)
     setorderv(res, col = "instance")
     setorderv(res, col = "id")
-    agg = res[, .(mean_k = exp(mean(log(k))), raw_k = list(k), n_na = sum(is.na(k)), n = .N), by = .(id)]
+    agg = res[, .(mean_k = exp(mean(log(k))), raw_k = list(k), n_na = sum(is.na(k)), raw_extrapolate = list(extrapolate) n = .N), by = .(id)]
     agg[n < nrow(instances), mean_k := 0]
     agg
   },

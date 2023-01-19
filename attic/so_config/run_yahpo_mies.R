@@ -8,7 +8,7 @@ library(miesmuschel) # @mlr3mbo_config
 library(R6)
 library(checkmate)
 
-reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
+reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
 library(reticulate)
 yahpo_gym = import("yahpo_gym")
 
@@ -23,7 +23,7 @@ saveRegistry(reg)
 
 mies_wrapper = function(job, data, instance, ...) {
   # mies is our baseline with 1000 x more budget
-  reticulate::use_virtualenv("/home/lschnei8/yahpo_gym/experiments/mf_env/", required = TRUE)
+  reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
   library(yahpogym)
   logger = lgr::get_logger("bbotk")
   logger$set_threshold("warn")
@@ -117,6 +117,8 @@ results = reduceResultsList(done, function(x, job) {
   pars = job$pars
   target_var = pars$prob.pars$target
   tmp = x[, eval(target_var), with = FALSE]
+  colnames(tmp) = "target"
+  tmp[, best := cummax(target)]
   tmp[, method := pars$algo.pars$algorithm]
   tmp[, scenario := pars$prob.pars$scenario]
   tmp[, instance := pars$prob.pars$instance]
@@ -125,10 +127,71 @@ results = reduceResultsList(done, function(x, job) {
   tmp
 })
 results = rbindlist(results, fill = TRUE)
-saveRDS(results, "results_yahpo_mies.rds")
+saveRDS(results, "/gscratch/lschnei8/results_yahpo_mies.rds")
 
-mean_results_lcbench = results[grepl("lcbench", x = scenario), .(mean_val_accuracy = mean(val_accuracy), se_val_accuracy = sd(val_accuracy) / sqrt(.N)), by = .(scenario, instance, iter)]
-mean_results_rbv2 = results[grepl("rbv2", x = scenario), .(mean_acc = mean(acc), se_acc = sd(acc) / sqrt(.N)), by = .(scenario, instance, iter)]
-mean_results = rbind(mean_results_lcbench, mean_results_rbv2, fill = TRUE)
-saveRDS(mean_results, "results_yahpo_mies_average.rds")
+mean_results = results[, .(mean_best = mean(best), se_best = sd(best) / sqrt(.N)), by = .(scenario, instance, iter)]
+saveRDS(mean_results, "/gscratch/lschnei8/results_yahpo_mies_average.rds")
+
+library(ggplot2)
+library(gridExtra)
+
+lm_data = copy(mean_results)
+lm_data[, problem := paste0(scenario, "_", instance)]
+models = map_dtr(unique(lm_data$problem), function(problem_) {
+  tmp = lm_data[problem == problem_]
+  values = tail(unique(tmp$mean_best), 2L)
+  dat = map_dtr(values, function(value) {
+    tmp[mean_best == value][.N, ]
+  })
+  model = lm(mean_best ~ iter, data = dat)
+  coefs = coef(model)
+  if (coefs[2L] < .Machine$double.eps) {
+    stop("Almost constant linear model")
+  }
+  max_mean_best = max(tmp$mean_best)
+  max_iter = max(tmp$iter)
+  estimate_iter = function(mean_best, correct = TRUE) {
+    stopifnot(mean_best >= max_mean_best)
+    iter = as.integer(ceiling((mean_best - coefs[1L]) / coefs[2L]))
+    if (correct) {
+      if (mean_best > max_mean_best && iter <= max_iter) {
+        iter = max_iter + 1L
+      }
+    }
+    iter
+  }
+  env = new.env()
+  environment(estimate_iter) = env
+  assign("max_mean_best", value = max_mean_best, envir = env)
+  assign("max_iter", value = max_iter, envir = env)
+  if (estimate_iter(1.00001 * max(tmp$mean_best), correct = FALSE) < max(tmp$iter)) {
+    # marginal improvements should require more iter than max iter
+    stop("Model does not interpolate latest iter well.")
+  }
+  tmp_p = data.table(iter = ((NROW(tmp) - 1L):ceiling(1.5 * NROW(tmp))))
+  p = predict(model, tmp_p)
+  tmp_p[, mean_best := p]
+  tmp_p[, method := "interpolation"]
+  tmp_plot = copy(tmp)[, c("iter", "mean_best")]
+  tmp_plot[, method := "real"]
+  tmp_plot = rbind(tmp_plot, tmp_p)
+  g = ggplot(aes(x = iter, y = mean_best, colour = method), data = tmp_plot[ceiling(0.9 * NROW(tmp)):.N , ]) +
+    scale_y_log10() +
+    geom_step(direction = "vh") +
+    geom_hline(yintercept = max(tmp$mean_best), linetype = 2L) +
+    labs(title = problem_) +
+    theme_minimal() +
+    theme(legend.position = "bottom")
+  info = strsplit(problem_, "_")[[1L]]
+  if (length(info) == 3L) {
+    info = c(paste0(info[1L], "_", info[2L]), info[3L])  # rbv2_
+  }
+  list(model = list(estimate_iter), plot = list(g), scenario = info[1L], instance = info[2L])
+})
+
+g = do.call("grid.arrange", c(models$plot, ncol = 8L))
+
+ggsave("mies_extrapolation.png", plot = g, width = 32, height = 12)
+
+saveRDS(models[, - "plot"], "mies_extrapolation.rds")
 
