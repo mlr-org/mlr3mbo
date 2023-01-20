@@ -108,6 +108,7 @@ Meta
 attic/so_config/fanova.py
 attic/so_config/Pipfile
 attic/so_config/*.rds
+attic/so_config/*.png
 attic/so_config_old
 /doc/
 /Meta/

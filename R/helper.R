@@ -23,24 +23,6 @@ archive_x = function(archive) {
   archive$data[, archive$cols_x, with = FALSE]
 }
 
-# convert character params to factors
-char_to_fct = function(xydt) {
-  chr_cols = names(xydt)[map_chr(xydt, class) == "character"]
-  if (length(chr_cols)) {
-    xydt[, (chr_cols) := map(.SD, as.factor), .SDcols = chr_cols]
-  }
-  xydt
-}
-
-# convert factor params to character
-fct_to_char = function(xydt) {
-  fct_cols = names(xydt)[map_chr(xydt, class) %in% c("factor", "ordered")]
-  if (length(fct_cols)) {
-    xydt[, (fct_cols) := map(.SD, as.character), .SDcols = fct_cols]
-  }
-  xydt
-}
-
 # during surrogate prediction it may have happened that whole columns where dropped (e.g., during focussearch if the search space was shrunk)
 fix_xdt_missing = function(xdt, x_cols, archive) {
   missing = x_cols[x_cols %nin% colnames(xdt)]

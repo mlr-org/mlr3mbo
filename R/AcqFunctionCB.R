@@ -80,7 +80,7 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
       constants = list(...)
       lambda  = constants$lambda
       p = self$surrogate$predict(xdt)
-      res = p$mean - self$surrogate_max_to_min * self$constants$values$lambda * p$se
+      res = p$mean - self$surrogate_max_to_min * lambda * p$se
       data.table(acq_cb = res)
     }
   )

@@ -93,7 +93,7 @@ bibentries = c(
     pages      = "50--66"
   ),
 
-  horn_2015 = bibentry("inproceedings",
+  horn_2015    = bibentry("inproceedings",
     title      = "Model-Based Multi-objective Optimization: Taxonomy, Multi-Point Proposal, Toolbox and Benchmark",
     author     = "Horn, Daniel and Wagner, Tobias and Biermann, Dirk and Weihs, Claus and Bischl, Bernd",
     year       = "2015",
@@ -102,9 +102,9 @@ bibentries = c(
   ),
 
   ginsbourger_2008 = bibentry("misc",
-    title  = "A Multi-Points Criterion for Deterministic Parallel Global Optimization Based on Gaussian processes",
-    author = "Ginsbourger, David and Le Riche, Rodolphe and Carraro, Laurent",
-    year   = "2008"
+    title          = "A Multi-Points Criterion for Deterministic Parallel Global Optimization Based on Gaussian Processes",
+    author         = "Ginsbourger, David and Le Riche, Rodolphe and Carraro, Laurent",
+    year           = "2008"
   )
 )
 
