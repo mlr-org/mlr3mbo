@@ -4,7 +4,6 @@ library(mlr3)
 library(mlr3misc)
 library(bbotk)  # @localsearch
 library(paradox)
-library(miesmuschel) # @mlr3mbo_config
 library(R6)
 library(checkmate)
 
@@ -12,17 +11,17 @@ reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
 library(reticulate)
 yahpo_gym = import("yahpo_gym")
 
-packages = c("data.table", "mlr3", "mlr3misc", "bbotk", "paradox", "miesmuschel", "R6", "checkmate")
+packages = c("data.table", "mlr3", "mlr3misc", "bbotk", "paradox", "R6", "checkmate")
 
 #RhpcBLASctl::blas_set_num_threads(1L)
 #RhpcBLASctl::omp_set_num_threads(1L)
 
-reg = makeExperimentRegistry(file.dir = "/gscratch/lschnei8/registry_yahpo_mies", packages = packages)
+reg = makeExperimentRegistry(file.dir = "/gscratch/lschnei8/registry_yahpo_fs", packages = packages)
 #reg = makeExperimentRegistry(file.dir = NA, conf.file = NA, packages = packages)  # interactive session
 saveRegistry(reg)
 
-mies_wrapper = function(job, data, instance, ...) {
-  # mies is our baseline with 1000 x more budget
+fs_wrapper = function(job, data, instance, ...) {
+  # fs is our baseline with 3000 x more budget
   reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
   library(yahpogym)
   logger = lgr::get_logger("bbotk")
@@ -38,24 +37,11 @@ mies_wrapper = function(job, data, instance, ...) {
     optim_instance
   }
 
-  recombine = rec("maybe", recombinator = rec("cmpmaybe", recombinator = rec("swap"), p = 0.5), p = 0.7)
+  n_evals = instance$budget
+  batch_size = 10000L
+  maxit = ceiling((n_evals / (batch_size)))
 
-  mutate_gauss = mut("cmpmaybe", mutator = mut("gauss", sdev = 0.1, sdev_is_relative = TRUE), p = 0.2)
-  mutate_uniform = mut("cmpmaybe", mutator = mut("unif", can_mutate_to_same = FALSE), p = 0.2)
-
-  mutate = mut("maybe",
-               mutator = mut("combine", operators = list(ParamDbl = mutate_gauss$clone(deep = TRUE),
-                                                         ParamInt = mutate_gauss$clone(deep = TRUE),
-                                                         ParamFct = mutate_uniform$clone(deep = TRUE),
-                                                         ParamLgl = mutate_uniform$clone(deep = TRUE))),
-               p = 0.3)
-
-  select = sel("random", sample_unique = "no")
-
-  survive = sel("best")
-
-  optimizer = opt("mies", recombinator = recombine, mutator = mutate, parent_selector = select, survival_selector = survive,
-                  mu = 100, lambda = 100, survival_strategy = "plus")
+  optimizer = opt("focus_search", n_points = batch_size, maxit = maxit)
 
   optim_instance = make_optim_instance(instance)
   optimizer$optimize(optim_instance)
@@ -64,7 +50,7 @@ mies_wrapper = function(job, data, instance, ...) {
 
 
 # add algorithms
-addAlgorithm("mies", fun = mies_wrapper)
+addAlgorithm("fs", fun = fs_wrapper)
 
 setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("aknn", "glmnet", "ranger", "rpart", "super", "svm", "xgboost"))), each = 4L),
                    instance = c("167185", "167152", "168910", "189908",
@@ -77,7 +63,7 @@ setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("aknn", "glmnet
                                 "40984", "40979", "40966", "28"),
                    target = rep(c("val_accuracy", "acc"), c(4L, 28L)),
                    budget = rep(c(126L, 118L, 90L, 134L, 110L, 267L, 118L, 170L), each = 4L))
-setup[, budget := budget * 1000L]
+setup[, budget := budget * 3000L]
 
 setup[, id := seq_len(.N)]
 
@@ -92,7 +78,7 @@ prob_designs = unlist(prob_designs, recursive = FALSE, use.names = FALSE)
 names(prob_designs) = nn
 
 # add jobs for optimizers
-optimizers = data.table(algorithm = c("mies"))
+optimizers = data.table(algorithm = c("fs"))
 
 for (i in seq_len(nrow(optimizers))) {
   algo_designs = setNames(list(optimizers[i, ]), nm = optimizers[i, ]$algorithm)
@@ -105,10 +91,10 @@ for (i in seq_len(nrow(optimizers))) {
   addJobTags(ids, as.character(optimizers[i, ]$algorithm))
 }
 
-# rbv2_super 267000 budget needs ~ 20 minutes so 30 repls results in roughly 10 hours
+# rbv2_super 801000 budget needs ~ 15 minutes so 20 chunks results in roughly 5 hours
 jobs = findJobs()
-jobs[, chunk := batchtools::chunk(job.id, chunk.size = 10L)]
-resources.default = list(walltime = 3600 * 12L, memory = 8192, ntasks = 1L, ncpus = 2L, nodes = 1L, clusters = "beartooth", max.concurrent.jobs = 9999L)
+jobs[, chunk := batchtools::chunk(job.id, chunk.size = 20L)]
+resources.default = list(walltime = 3600 * 6L, memory = 16000, ntasks = 1L, ncpus = 2L, nodes = 1L, clusters = "beartooth", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()
@@ -127,10 +113,10 @@ results = reduceResultsList(done, function(x, job) {
   tmp
 })
 results = rbindlist(results, fill = TRUE)
-saveRDS(results, "/gscratch/lschnei8/results_yahpo_mies.rds")
+saveRDS(results, "/gscratch/lschnei8/results_yahpo_fs.rds")
 
 mean_results = results[, .(mean_best = mean(best), se_best = sd(best) / sqrt(.N)), by = .(scenario, instance, iter)]
-saveRDS(mean_results, "/gscratch/lschnei8/results_yahpo_mies_average.rds")
+saveRDS(mean_results, "/gscratch/lschnei8/results_yahpo_fs_average.rds")
 
 library(ggplot2)
 library(gridExtra)
@@ -191,7 +177,7 @@ models = map_dtr(unique(lm_data$problem), function(problem_) {
 
 g = do.call("grid.arrange", c(models$plot, ncol = 8L))
 
-ggsave("mies_extrapolation.png", plot = g, width = 32, height = 12)
+ggsave("fs_extrapolation.png", plot = g, width = 32, height = 12)
 
-saveRDS(models[, - "plot"], "mies_extrapolation.rds")
+saveRDS(models[, - "plot"], "fs_extrapolation.rds")
 

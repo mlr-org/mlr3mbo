@@ -8,7 +8,6 @@ library(mlr3misc)
 library(mlr3mbo)  # @so_config
 library(bbotk)  # @localsearch
 library(paradox)
-library(miesmuschel) # @mlr3mbo_config
 library(R6)
 library(checkmate)
 
@@ -28,7 +27,7 @@ source("OptimizerChain.R")
 search_space = ps(
   loop_function = p_fct(c("ego", "ego_log"), default = "ego"),
   init = p_fct(c("random", "lhs", "sobol"), default = "random"),
-  init_size_fraction = p_fct(c("0.0625", "0.125", "0.25"), default = "0.25"),
+  init_size_fraction = p_fct(c("0.05", "0.10", "0.25"), default = "0.25"),
   random_interleave = p_lgl(default = FALSE),
   random_interleave_iter = p_fct(c("2", "5", "10"), depends = random_interleave == TRUE, default = "10"),
   rf_type = p_fct(c("standard", "extratrees", "smaclike_boot", "smaclike_no_boot"), default = "standard"),
@@ -85,7 +84,6 @@ evaluate = function(xdt, instance) {
   library(mlr3mbo)  # @so_config
   library(bbotk)  # @localsearch
   library(paradox)
-  library(miesmuschel) # @mlr3mbo_config
   library(R6)
   library(checkmate)
   #reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
@@ -255,7 +253,7 @@ objective = ObjectiveRFunDt$new(
 cd_instance = OptimInstanceSingleCrit$new(
   objective = objective,
   search_space = search_space,
-  terminator = trm("none")  # OptimizerChain currently terminates on its own
+  terminator = trm("none")  # OptimizerCoordinateDescent currently terminates on its own
 )
 
 optimizer = OptimizerCoordinateDescent$new()
