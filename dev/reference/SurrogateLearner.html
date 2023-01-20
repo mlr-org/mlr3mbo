@@ -251,15 +251,15 @@ New data. One row per observation.</p></dd>
 <span class="r-in"><span>  <span class="va">fun</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">xs</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">xs</span><span class="op">$</span><span class="va">x</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
-<span class="r-in"><span>  <span class="va">domain</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/paradox/man/ps.html" class="external-link">ps</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/paradox/man/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="op">-</span><span class="fl">10</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">codomain</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/paradox/man/ps.html" class="external-link">ps</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/paradox/man/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>tags <span class="op">=</span> <span class="st">"minimize"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">domain</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html" class="external-link">ps</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="op">-</span><span class="fl">10</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">codomain</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/ps.html" class="external-link">ps</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/Domain.html" class="external-link">p_dbl</a></span><span class="op">(</span>tags <span class="op">=</span> <span class="st">"minimize"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">objective</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/ObjectiveRFun.html" class="external-link">ObjectiveRFun</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>fun <span class="op">=</span> <span class="va">fun</span>, domain <span class="op">=</span> <span class="va">domain</span>, codomain <span class="op">=</span> <span class="va">codomain</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">instance</span> <span class="op">=</span> <span class="va"><a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html" class="external-link">OptimInstanceSingleCrit</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    objective <span class="op">=</span> <span class="va">objective</span>,</span></span>
 <span class="r-in"><span>    terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="va">xdt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/paradox/man/generate_design_random.html" class="external-link">generate_design_random</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">search_space</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span></span>
+<span class="r-in"><span>  <span class="va">xdt</span> <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/generate_design_random.html" class="external-link">generate_design_random</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">search_space</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -280,20 +280,20 @@ New data. One row per observation.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DiceKriging::km(design = data, response = task$truth(), covtype = "matern3_2", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 1.93706712716431e-07, optim.method = "gen", control = pv$control)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 9.65449452120655e-06, optim.method = "gen", control = pv$control)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Trend  coeff.:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)     5.2181</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)    34.0238</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Covar. type  : matern3_2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Covar. coeff.:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     1.2618</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     5.3288</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 12.2926</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 1027.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 1.937067e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 9.654495e-06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
