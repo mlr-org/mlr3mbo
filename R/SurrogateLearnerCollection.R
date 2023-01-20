@@ -128,7 +128,6 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     predict = function(xdt) {
       assert_xdt(xdt)
       xdt = fix_xdt_missing(xdt, x_cols = self$x_cols, archive = self$archive)
-      xdt = char_to_fct(xdt)
 
       preds = lapply(self$model, function(model) {
         pred = model$predict_newdata(newdata = xdt)
@@ -224,17 +223,11 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     # Train model with new data.
     # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
-      xydt = char_to_fct(self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE])
-      backend = as_data_backend(xydt)  # we do this here to save time in the lapply below
+      xydt = self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE]
       features = setdiff(names(xydt), self$y_cols)
-
       tasks = lapply(self$y_cols, function(y_col) {
-        # If this turns out to be a bottleneck, we can also operate on a single task here.
-        task = TaskRegr$new(
-          id = paste0("surrogate_task_", y_col),
-          backend = backend,
-          target = y_col)
-        task$col_roles$feature = features
+        # if this turns out to be a bottleneck, we can also operate on a single task here
+        task = TaskRegr$new(id = paste0("surrogate_task_", y_col), backend = xydt[, c(features, y_col), with = FALSE], target = y_col)
         task
       })
       pmap(list(model = self$model, task = tasks), .f = function(model, task) {

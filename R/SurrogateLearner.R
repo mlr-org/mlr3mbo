@@ -110,7 +110,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
     predict = function(xdt) {
       assert_xdt(xdt)
       xdt = fix_xdt_missing(xdt, x_cols = self$x_cols, archive = self$archive)
-      xdt = char_to_fct(xdt)
 
       pred = self$model$predict_newdata(newdata = xdt)
       if (self$model$predict_type == "se") {
@@ -197,7 +196,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
       xydt = self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE]
-      task = TaskRegr$new(id = "surrogate_task", backend = char_to_fct(xydt), target = self$y_cols)
+      task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$y_cols)
       assert_learnable(task, learner = self$model)
       self$model$train(task)
 
