@@ -1,5 +1,6 @@
 test_that("default_surrogate", {
   skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("mlr3pipelines")
   skip_if_not_installed("DiceKriging")
   skip_if_not_installed("ranger")
 
@@ -70,12 +71,15 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED_DEPS))
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$model, "GraphLearner")
-  expect_equal(surrogate$model$graph$ids(), c("imputesample", "imputeoor", "regr.ranger"))
+  expect_equal(surrogate$model$graph$ids(), c("imputesample", "imputeoor", "colapply", "regr.ranger"))
   expect_equal(surrogate$model$param_set$values,
     list(imputesample.affect_columns = mlr3pipelines::selector_type("logical"),
          imputeoor.min = TRUE,
          imputeoor.offset = 1,
-         imputeoor.multiplier = 2,
+         imputeoor.multiplier = 3,
+         imputeoor.affect_columns = mlr3pipelines::selector_type(c("integer", "numeric", "character", "factor", "ordered")),
+         colapply.applicator = as.factor,
+         colapply.affect_columns = mlr3pipelines::selector_type("character"),
          regr.ranger.num.threads = 1L,
          regr.ranger.num.trees = 500L,
          regr.ranger.keep.inbag = TRUE,

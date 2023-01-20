@@ -90,7 +90,10 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
     learner$param_set$values$mtry.ratio = 1
   }
 
-  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor", multiplier = 3) %>>% learner))
+  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>%
+                                                    po("imputeoor", multiplier = 3, affect_columns = selector_type(c("integer", "numeric", "character", "factor", "ordered"))) %>>%
+                                                    po("colapply", applicator = as.factor, affect_columns = selector_type("character")) %>>%
+                                                    learner))
 
   acq_optimizer = if (xdt$acqopt == "RS_1000") {
     AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 1000L))

@@ -12,7 +12,8 @@ library(miesmuschel) # @mlr3mbo_config
 library(R6)
 library(checkmate)
 
-reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
+#reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
+reticulate::use_virtualenv("/home/lps/.local/share/virtualenvs/yahpo_gym-4ygV7ggv/", required = TRUE)
 library(reticulate)
 library(yahpogym)
 library("future")
@@ -29,7 +30,7 @@ search_space = ps(
   init = p_fct(c("random", "lhs", "sobol"), default = "random"),
   init_size_fraction = p_fct(c("0.0625", "0.125", "0.25"), default = "0.25"),
   random_interleave = p_lgl(default = FALSE),
-  random_interleave_iter = p_fct(c("2", "5", "10"), default = "10", depends = random_interleave == TRUE),
+  random_interleave_iter = p_fct(c("2", "5", "10"), depends = random_interleave == TRUE, default = "10"),
   rf_type = p_fct(c("standard", "extratrees", "smaclike_boot", "smaclike_no_boot"), default = "standard"),
   acqf = p_fct(c("EI", "CB", "PI", "Mean"), default = "EI"),
   acqf_ei_log = p_lgl(depends = loop_function == "ego_log" && acqf == "EI", default = FALSE),
@@ -48,13 +49,33 @@ instances = setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("ak
                                             "40984", "40979", "40966", "28"),
                                target = rep(c("val_accuracy", "acc"), c(4L, 28L)),
                                budget = rep(c(126L, 118L, 90L, 134L, 110L, 267L, 118L, 170L), each = 4L))
+instances[, problem := paste0(scenario, "_", instance)]
+setorderv(instances, col = "budget", order = -1L)
 
-mies_average = readRDS("/gscratch/lschnei8/results_yahpo_mies_average.rds")
-mies_extrapolation readRDS("/gscratch/lschnei8/mies_extrapolation.rds")
+#mies_average = readRDS("/gscratch/lschnei8/results_yahpo_mies_average.rds")
+mies_average = readRDS("results_yahpo_mies_average.rds")
+#mies_extrapolation = readRDS("/gscratch/lschnei8/mies_extrapolation.rds")
+mies_extrapolation = readRDS("mies_extrapolation.rds")
+
+get_k = function(best, scenario_, instance_, budget_) {
+  # assumes maximization
+  if (best > max(mies_average[scenario == scenario_ & instance == instance_][["mean_best"]])) {
+    extrapolate = TRUE
+    k = mies_extrapolation[scenario == scenario_ & instance == instance_][["model"]][[1L]](best)
+  } else {
+    extrapolate = FALSE
+    k = min(mies_average[scenario == scenario_ & instance == instance_ & mean_best >= best]$iter)  # min k so that mean_best_mies[k] >= best_mbo[final]
+  }
+  k = k / budget_  # sample efficiency compared to mies
+  attr(k, "extrapolate") = extrapolate
+  k
+}
 
 evaluate = function(xdt, instance) {
   id = xdt$id
+  repl = xdt$repl
   xdt$id = NULL
+  xdt$repl = NULL
 
   library(data.table)
   library(mlr3)
@@ -67,7 +88,8 @@ evaluate = function(xdt, instance) {
   library(miesmuschel) # @mlr3mbo_config
   library(R6)
   library(checkmate)
-  reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
+  #reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
+  reticulate::use_virtualenv("/home/lps/.local/share/virtualenvs/yahpo_gym-4ygV7ggv/", required = TRUE)
   library(reticulate)
   library(yahpogym)
 
@@ -137,7 +159,11 @@ evaluate = function(xdt, instance) {
     learner$param_set$values$mtry.ratio = 1
   }
 
-  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>% po("imputeoor", multiplier = 3) %>>% learner))
+  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>%
+                                                    po("imputeoor", multiplier = 3, affect_columns = selector_type(c("integer", "numeric", "character", "factor", "ordered"))) %>>%
+                                                    po("colapply", applicator = as.factor, affect_columns = selector_type("character")) %>>%
+                                                    learner))
+  surrogate$param_set$values$catch_errors = FALSE
 
   acq_optimizer = if (xdt$acqopt == "RS_1000") {
     AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 1000L))
@@ -155,6 +181,7 @@ evaluate = function(xdt, instance) {
       acq_optimizer$param_set$values$warmstart_size = "all"
       acq_optimizer
   }
+  acq_optimizer$param_set$values$catch_errors = FALSE
 
   acq_function = if (xdt$acqf == "EI") {
     if (isTRUE(xdt$acqf_ei_log)) {
@@ -177,37 +204,48 @@ evaluate = function(xdt, instance) {
   }
 
   best = optim_instance$archive$best()[[instance$target]]
-  scenario_ = instance$scenario
-  instance_ = instance$instance
-  target_ = paste0("mean_", instance$target)
 
-  # assumes maximization
-  if (best > max(mies_average[scenario == scenario_ & instance == instance_][["mean_best"]])) {
-    extrapolate = TRUE
-    k = mies_extrapolation[scenario == scenario_ & instance == instance_][["model"]][[1L]](best)
-  } else {
-    extrapolate = FALSE
-    k = min(mies_average[scenario == scenario_ & instance == instance_ & mean_best >= best]$iter)  # minimum k so that mean_best_mies[k] >= best_mbo[final]
-  }
-  k = k / instance$budget  # sample efficiency compared to mies
-
-  data.table(k = k, extrapolate = extrapolate, id = id, instance = paste0(instance$scenario, "_", instance$instance))
+  data.table(best = best, scenario = instance$scenario, instance = instance$instance, target = instance$target, id = id, repl = repl)
 }
 
 objective = ObjectiveRFunDt$new(
   fun = function(xdt) {
+    n_repl = 3L
     xdt[, id := seq_len(.N)]
-    xdt_tmp = do.call("rbind", replicate(nrow(instances), xdt, simplify = FALSE))
+    xdt_tmp = map_dtr(seq_len(nrow(instances)), function(i) copy(xdt))
     setorderv(xdt_tmp, col = "id")
-    instances_tmp = do.call("rbind", replicate(nrow(xdt), instances, simplify = FALSE))
-    # FIXME: shuffle instances_tmp or maybe make sure that expensive are sheduled first but be careful that xdt matches
-    res = future_mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE, future.seed = TRUE)
+    xdt_tmp = map_dtr(seq_len(n_repl), function(i) {
+      tmp = copy(xdt_tmp)
+      tmp[, repl := i]
+      tmp
+    })
+    instances_tmp = map_dtr(seq_len(nrow(xdt) * n_repl), function(i) copy(instances))
+    #res = future_mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE, future.seed = TRUE)
+    res = mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE)
     res = rbindlist(res)
     setorderv(res, col = "instance")
     setorderv(res, col = "id")
-    agg = res[, .(mean_k = exp(mean(log(k))), raw_k = list(k), n_na = sum(is.na(k)), raw_extrapolate = list(extrapolate) n = .N), by = .(id)]
-    agg[n < nrow(instances), mean_k := 0]
-    agg
+    setorderv(res, col = "repl")
+    res[, problem := paste0(scenario, "_", instance)]
+
+    # average best over replications and determine ks
+    agg = res[, .(mean_best = mean(best), raw_best = list(best), n_na = sum(is.na(best)), n = .N), by = .(id, problem, scenario, instance)]
+    ks = map_dbl(seq_len(nrow(agg)), function(i) {
+      if (agg[i, ][["n"]] < n_repl) {
+        0
+      } else {
+        get_k(agg[i, ][["mean_best"]],
+              scenario_ = agg[i, ][["scenario"]],
+              instance_ = agg[i, ][["instance"]],
+              budget_ = instances[problem == agg[i, ][["problem"]]][["budget"]])
+      }
+    })
+    agg[, k := ks]
+
+    # average k over instances and determine mean_k
+    agg_k = agg[, .(mean_k = exp(mean(log(k))), raw_k = list(k), n_na = sum(is.na(k)), n = .N, raw_mean_best = list(mean_best)), by = .(id)]
+    agg_k[n < nrow(instances), mean_k := 0]
+    agg_k
   },
   domain = search_space,
   codomain = ps(mean_k = p_dbl(tags = "maximize")),
@@ -224,8 +262,9 @@ optimizer = OptimizerCoordinateDescent$new()
 optimizer$param_set$values$max_gen = 1L
 
 init = data.table(loop_function = "ego", init = "random", init_size_fraction = "0.25", random_interleave = FALSE, random_interleave_iter = NA_character_, rf_type = "standard", acqf = "EI", acqf_ei_log = NA, lambda = NA_character_, acqopt = "RS_1000")
-set.seed(2906)
-plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 4000L), template = "slurm_wyoming.tmpl")
+set.seed(2906, kind = "L'Ecuyer-CMRG")
+#plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 4000L), template = "slurm_wyoming.tmpl")
+plan(sequential)
 cd_instance$eval_batch(init)
-optimizer$optimize(cd_instance)
+#optimizer$optimize(cd_instance)
 

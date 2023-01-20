@@ -75,6 +75,7 @@ default_loopfun = function(instance) {
 #' We simply handle those with an imputation method, added to the ranger random forest, more
 #' concretely we use \code{po("imputesample")} (for logicals) and \code{po("imputeoor")} (for anything else) from
 #' package \CRANpkg{mlr3pipelines}.
+#' Characters are always encoded as factors via \code{po("colapply")}.
 #' Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
 #' In the case of dependencies, the following learner is used as a fallback:
 #' \code{lrn("regr.featureless")}.
@@ -136,9 +137,20 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
 
     if (has_deps) {
       require_namespaces("mlr3pipelines")
-      learner = mlr3pipelines::GraphLearner$new(mlr3pipelines::"%>>%"(mlr3pipelines::"%>>%"(mlr3pipelines::po("imputesample", affect_columns = mlr3pipelines::selector_type("logical")), mlr3pipelines::po("imputeoor", multiplier = 2)), learner))
+      learner = mlr3pipelines::GraphLearner$new(
+        mlr3pipelines::"%>>%"(
+          mlr3pipelines::"%>>%"(
+            mlr3pipelines::po("imputesample", affect_columns = mlr3pipelines::selector_type("logical")),
+              mlr3pipelines::"%>>%"(
+                mlr3pipelines::po("imputeoor", multiplier = 3, affect_columns = mlr3pipelines::selector_type(c("integer", "numeric", "character", "factor", "ordered"))),
+                mlr3pipelines::po("colapply", applicator = as.factor, affect_columns = mlr3pipelines::selector_type("character"))
+              )
+          ),
+          learner
+        )
+      )
       learner$encapsulate[c("train", "predict")] = "evaluate"
-      learner$fallback = lrn("regr.featureless")
+      learner$fallback = LearnerRegrFeatureless$new()
     }
   }
 

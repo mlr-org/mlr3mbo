@@ -85,7 +85,7 @@ if (requireNamespace("mlr3learners") &
     list(y = xs$x ^ 2)
   }
   domain = ps(x = p_dbl(lower = -10, upper = 10))
-  codomain = ps(y = p_dbl(tags = "minimize"))
+  codomain = ps(y = p_dbl(tags = "maximize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
   instance = OptimInstanceSingleCrit$new(

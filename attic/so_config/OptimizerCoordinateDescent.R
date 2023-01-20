@@ -46,7 +46,11 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
               deps = inst$search_space$deps[on == param_id, ]
               for (i in seq_len(nrow(deps))) {
                 to_replace = which(map_lgl(xdt[[param_id]], function(x) deps$cond[[i]]$test(x)))
-                set(xdt, i = to_replace, j = deps$id[[i]], value = sample_random(inst$search_space$params[[deps$id[[i]]]], n = length(to_replace)))
+                if (test_r6(inst$search_space$params[[deps$id[[i]]]]$default, classes = "NoDefault")) {
+                  set(xdt, i = to_replace, j = deps$id[[i]], value = sample_random(inst$search_space$params[[deps$id[[i]]]], n = length(to_replace)))  # random
+                } else {
+                  set(xdt, i = to_replace, j = deps$id[[i]], value = inst$search_space$params[[deps$id[[i]]]]$default)  # default
+                }
               }
             }
             xdt = Design$new(inst$search_space, data = xdt, remove_dupl = TRUE)$data  # fixes potentially broken dependencies
