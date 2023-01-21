@@ -11,8 +11,7 @@ library(paradox)
 library(R6)
 library(checkmate)
 
-#reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
-reticulate::use_virtualenv("/home/lps/.local/share/virtualenvs/yahpo_gym-4ygV7ggv/", required = TRUE)
+reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
 library(reticulate)
 library(yahpogym)
 library("future")
@@ -51,21 +50,19 @@ instances = setup = data.table(scenario = rep(c("lcbench", paste0("rbv2_", c("ak
 instances[, problem := paste0(scenario, "_", instance)]
 setorderv(instances, col = "budget", order = -1L)
 
-#mies_average = readRDS("/gscratch/lschnei8/results_yahpo_mies_average.rds")
-mies_average = readRDS("results_yahpo_mies_average.rds")
-#mies_extrapolation = readRDS("/gscratch/lschnei8/mies_extrapolation.rds")
-mies_extrapolation = readRDS("mies_extrapolation.rds")
+fs_average = readRDS("/gscratch/lschnei8/results_yahpo_fs_average.rds")
+fs_extrapolation = readRDS("/gscratch/lschnei8/fs_extrapolation.rds")
 
 get_k = function(best, scenario_, instance_, budget_) {
   # assumes maximization
-  if (best > max(mies_average[scenario == scenario_ & instance == instance_][["mean_best"]])) {
+  if (best > max(fs_average[scenario == scenario_ & instance == instance_][["mean_best"]])) {
     extrapolate = TRUE
-    k = mies_extrapolation[scenario == scenario_ & instance == instance_][["model"]][[1L]](best)
+    k = fs_extrapolation[scenario == scenario_ & instance == instance_][["model"]][[1L]](best)
   } else {
     extrapolate = FALSE
-    k = min(mies_average[scenario == scenario_ & instance == instance_ & mean_best >= best]$iter)  # min k so that mean_best_mies[k] >= best_mbo[final]
+    k = min(fs_average[scenario == scenario_ & instance == instance_ & mean_best >= best]$iter)  # min k so that mean_best_fs[k] >= best_mbo[final]
   }
-  k = k / budget_  # sample efficiency compared to mies
+  k = k / budget_  # sample efficiency compared to fs
   attr(k, "extrapolate") = extrapolate
   k
 }
@@ -86,8 +83,7 @@ evaluate = function(xdt, instance) {
   library(paradox)
   library(R6)
   library(checkmate)
-  #reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
-  reticulate::use_virtualenv("/home/lps/.local/share/virtualenvs/yahpo_gym-4ygV7ggv/", required = TRUE)
+  reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
   library(reticulate)
   library(yahpogym)
 
@@ -218,8 +214,7 @@ objective = ObjectiveRFunDt$new(
       tmp
     })
     instances_tmp = map_dtr(seq_len(nrow(xdt) * n_repl), function(i) copy(instances))
-    #res = future_mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE, future.seed = TRUE)
-    res = mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE)
+    res = future_mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE, future.seed = TRUE)
     res = rbindlist(res)
     setorderv(res, col = "instance")
     setorderv(res, col = "id")
@@ -261,8 +256,7 @@ optimizer$param_set$values$max_gen = 1L
 
 init = data.table(loop_function = "ego", init = "random", init_size_fraction = "0.25", random_interleave = FALSE, random_interleave_iter = NA_character_, rf_type = "standard", acqf = "EI", acqf_ei_log = NA, lambda = NA_character_, acqopt = "RS_1000")
 set.seed(2906, kind = "L'Ecuyer-CMRG")
-#plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 4000L), template = "slurm_wyoming.tmpl")
-plan(sequential)
+plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 4000L), template = "slurm_wyoming.tmpl")
 cd_instance$eval_batch(init)
-#optimizer$optimize(cd_instance)
+optimizer$optimize(cd_instance)
 
