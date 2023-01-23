@@ -204,6 +204,7 @@ evaluate = function(xdt, instance) {
 
 objective = ObjectiveRFunDt$new(
   fun = function(xdt) {
+    future_label = paste0("future_mapply_", if(is.null(xdt[1L, ][[".gen"]])) "" else xdt[1L, ][[".gen"]], "_", if(is.null(xdt[1L, ][[".param"]])) "" else xdt[1L, ][[".param"]], "-%d")
     n_repl = 3L
     xdt[, id := seq_len(.N)]
     xdt_tmp = map_dtr(seq_len(nrow(instances)), function(i) copy(xdt))
@@ -214,7 +215,14 @@ objective = ObjectiveRFunDt$new(
       tmp
     })
     instances_tmp = map_dtr(seq_len(nrow(xdt) * n_repl), function(i) copy(instances))
-    res = future_mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE, future.seed = TRUE)
+    current_seed = .Random.seed
+    res = tryCatch(future_mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE, future.seed = TRUE, future.scheduling = FALSE, future.label = future_label), error = function(ec) ec)
+    if (inherits(res, "error")) {
+      browser()  # last manual fallback resort to get things working again
+      # cleanup future stuff
+      # reset the current seed and continue the eval
+      # .Random.seed = current_seed
+    }
     res = rbindlist(res)
     setorderv(res, col = "instance")
     setorderv(res, col = "id")
@@ -252,11 +260,13 @@ cd_instance = OptimInstanceSingleCrit$new(
 )
 
 optimizer = OptimizerCoordinateDescent$new()
-optimizer$param_set$values$max_gen = 1L
+optimizer$param_set$values$max_gen = 3L
 
 init = data.table(loop_function = "ego", init = "random", init_size_fraction = "0.25", random_interleave = FALSE, random_interleave_iter = NA_character_, rf_type = "standard", acqf = "EI", acqf_ei_log = NA, lambda = NA_character_, acqopt = "RS_1000")
+options(future.cache.path = "/gscratch/lschnei8/coordinate_descent/future")
 set.seed(2906, kind = "L'Ecuyer-CMRG")
-plan("batchtools_slurm", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 4000L), template = "slurm_wyoming.tmpl")
+# currently we evaluate at most 4 * 32 * 3 jobs in parallel so 400 workers is enough
+plan("batchtools_slurm", template = "slurm_wyoming_cd.tmpl", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 4000L), workers = 400L)
 cd_instance$eval_batch(init)
 optimizer$optimize(cd_instance)
 
