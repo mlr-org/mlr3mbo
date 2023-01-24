@@ -11,6 +11,9 @@ library(paradox)
 library(R6)
 library(checkmate)
 
+# FIXME: error handling
+#        how to continue after one job is finished (i.e. from an intermediate gen) save seed?
+
 reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
 library(reticulate)
 library(yahpogym)
@@ -204,7 +207,6 @@ evaluate = function(xdt, instance) {
 
 objective = ObjectiveRFunDt$new(
   fun = function(xdt) {
-    future_label = paste0("future_mapply_", if(is.null(xdt[1L, ][[".gen"]])) "" else xdt[1L, ][[".gen"]], "_", if(is.null(xdt[1L, ][[".param"]])) "" else xdt[1L, ][[".param"]], "-%d")
     n_repl = 3L
     xdt[, id := seq_len(.N)]
     xdt_tmp = map_dtr(seq_len(nrow(instances)), function(i) copy(xdt))
@@ -216,12 +218,13 @@ objective = ObjectiveRFunDt$new(
     })
     instances_tmp = map_dtr(seq_len(nrow(xdt) * n_repl), function(i) copy(instances))
     current_seed = .Random.seed
-    res = tryCatch(future_mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE, future.seed = TRUE, future.scheduling = FALSE, future.label = future_label), error = function(ec) ec)
+    res = tryCatch(future_mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE, future.seed = TRUE, future.scheduling = FALSE), error = function(ec) ec)
     if (inherits(res, "error")) {
       browser()  # last manual fallback resort to get things working again
       # cleanup future stuff
       # reset the current seed and continue the eval
       # .Random.seed = current_seed
+      # res = future_mapply(FUN = evaluate, transpose_list(xdt_tmp), transpose_list(instances_tmp), SIMPLIFY = FALSE, future.seed = TRUE, future.scheduling = FALSE)
     }
     res = rbindlist(res)
     setorderv(res, col = "instance")
