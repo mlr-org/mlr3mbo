@@ -36,6 +36,7 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
       } else {
         0L
       }
+      set(inst$archive$data, j = ".gen", value = gen)  # 0 for first batch
       repeat {
         gen = gen + 1L
         for (param_id in shuffle(inst$search_space$ids())) {

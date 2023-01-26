@@ -238,10 +238,13 @@ objective = ObjectiveRFunDt$new(
       if (agg[i, ][["n"]] < n_repl) {
         0
       } else {
-        get_k(agg[i, ][["mean_best"]],
-              scenario_ = agg[i, ][["scenario"]],
-              instance_ = agg[i, ][["instance"]],
-              budget_ = instances[problem == agg[i, ][["problem"]]][["budget"]])
+        tryCatch(
+          get_k(agg[i, ][["mean_best"]],
+                scenario_ = agg[i, ][["scenario"]],
+                instance_ = agg[i, ][["instance"]],
+                budget_ = instances[problem == agg[i, ][["problem"]]][["budget"]]),
+          error = function(ec) 0
+        )
       }
     })
     agg[, k := ks]
@@ -266,10 +269,17 @@ optimizer = OptimizerCoordinateDescent$new()
 optimizer$param_set$values$max_gen = 3L
 
 init = data.table(loop_function = "ego", init = "random", init_size_fraction = "0.25", random_interleave = FALSE, random_interleave_iter = NA_character_, rf_type = "standard", acqf = "EI", acqf_ei_log = NA, lambda = NA_character_, acqopt = "RS_1000")
-options(future.cache.path = "/gscratch/lschnei8/coordinate_descent/future")
+#options(future.cache.path = "/gscratch/lschnei8/coordinate_descent/future")
+options(future.cache.path = "/home/lschnei8/mlr3mbo_config/future")
 set.seed(2906, kind = "L'Ecuyer-CMRG")
 # currently we evaluate at most 4 * 32 * 3 jobs in parallel so 400 workers is enough
-plan("batchtools_slurm", template = "slurm_wyoming_cd.tmpl", resources = list(walltime = 3600L * 12L, ncpus = 1L, memory = 4000L), workers = 400L)
+plan("batchtools_slurm", template = "slurm_wyoming_cd.tmpl", resources = list(walltime = 3600L * 9L, ncpus = 1L, memory = 4000L), workers = 400L)
 cd_instance$eval_batch(init)
 optimizer$optimize(cd_instance)
+
+# NOTE:
+# cd_instance_gen1.rds first gen through
+# then load, subset data to gen1
+# set.seed(2409, kind = "L'Ecuyer-CMRG")
+# and rerun
 

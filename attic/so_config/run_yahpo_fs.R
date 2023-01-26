@@ -134,23 +134,19 @@ models = map_dtr(unique(lm_data$problem), function(problem_) {
   if (coefs[2L] < .Machine$double.eps) {
     stop("Almost constant linear model")
   }
-  max_mean_best = max(tmp$mean_best)
   max_iter = max(tmp$iter)
-  estimate_iter = function(mean_best, correct = TRUE) {
-    stopifnot(mean_best >= max_mean_best)
-    iter = as.integer(ceiling((mean_best - coefs[1L]) / coefs[2L]))
-    if (correct) {
-      if (mean_best > max_mean_best && iter <= max_iter) {
-        iter = max_iter + 1L
-      }
+  estimate_iter = function(mean_best) {
+    iter = ceiling((mean_best - coefs[1L]) / coefs[2L])
+    if (!isTRUE(iter > max_iter)) {
+      iter = max_iter + 1
     }
     iter
   }
   env = new.env()
   environment(estimate_iter) = env
-  assign("max_mean_best", value = max_mean_best, envir = env)
   assign("max_iter", value = max_iter, envir = env)
-  if (estimate_iter(1.00001 * max(tmp$mean_best), correct = FALSE) < max(tmp$iter)) {
+  assign("coefs", value = coefs, envir = env)
+  if (estimate_iter(1.00001 * max(tmp$mean_best)) < max(tmp$iter)) {
     # marginal improvements should require more iter than max iter
     stop("Model does not interpolate latest iter well.")
   }
