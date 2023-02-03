@@ -105,6 +105,14 @@ bibentries = c(
     title          = "A Multi-Points Criterion for Deterministic Parallel Global Optimization Based on Gaussian Processes",
     author         = "Ginsbourger, David and Le Riche, Rodolphe and Carraro, Laurent",
     year           = "2008"
+  ),
+
+  song_2022 = bibentry("article",
+    title    = "A General Recipe for Likelihood-free {B}ayesian Optimization",
+    author   = "Song, Jiaming and Yu, Lantao and Neiswanger, Willie and Ermon, Stefano",
+    year     = "2022",
+    volume   = "162",
+    pages    = "20384--20404",
+    journal  = "Proceedings of Machine Learning Research"
   )
 )
-
