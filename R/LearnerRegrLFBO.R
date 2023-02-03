@@ -103,4 +103,4 @@ LearnerRegrLFBO = R6Class("LearnerRegrLFBO",
   )
 )
 
-mlr_learners$add("regr.lfbo", function() LearnerRegrLFBO$new())
+# mlr_learners$add("regr.lfbo", function() LearnerRegrLFBO$new())
