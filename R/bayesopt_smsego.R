@@ -72,7 +72,7 @@
 #'   acq_function = acqf("smsego")
 #'
 #'   acq_optimizer = acqo(
-#'     optimizer = opt("random_search"),
+#'     optimizer = opt("random_search", batch_size = 100),
 #'     terminator = trm("evals", n_evals = 100))
 #'
 #'   optimizer = opt("mbo",
