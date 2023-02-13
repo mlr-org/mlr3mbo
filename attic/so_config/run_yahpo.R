@@ -7,7 +7,6 @@ library(mlr3misc)
 library(mlr3mbo)  # @so_config
 library(bbotk)  # @localsearch
 library(paradox)
-library(miesmuschel) # @mlr3mbo_config
 library(R6)
 library(checkmate)
 
@@ -15,7 +14,7 @@ reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
 library(reticulate)
 yahpo_gym = import("yahpo_gym")
 
-packages = c("data.table", "mlr3", "mlr3learners", "mlr3pipelines", "mlr3misc", "mlr3mbo", "bbotk", "paradox", "miesmuschel", "R6", "checkmate")
+packages = c("data.table", "mlr3", "mlr3learners", "mlr3pipelines", "mlr3misc", "mlr3mbo", "bbotk", "paradox", "R6", "checkmate")
 
 #RhpcBLASctl::blas_set_num_threads(1L)
 #RhpcBLASctl::omp_set_num_threads(1L)
@@ -41,9 +40,8 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
 
   optim_instance = make_optim_instance(instance)
 
-  xdt = data.table(loop_function = "ego_log", init = "sobol", init_size_fraction = "0.25", random_interleave = TRUE, random_interleave_iter = "5", rf_type = "smaclike_boot", acqf = "EI", acqf_ei_log = TRUE, lambda = NA_character_, acqopt = "LS")
+  xdt = data.table(loop_function = "ego_log", init = "random", init_size_fraction = "0.25", random_interleave = TRUE, random_interleave_iter = "10", rf_type = "smaclike_no_boot", acqf = "CB", acqf_ei_log = NA, lambda = "1", acqopt = "LS")
 
-  d = optim_instance$search_space$length
   init_design_size = ceiling(as.numeric(xdt$init_size_fraction) * optim_instance$terminator$param_set$values$n_evals)
   init_design = if (xdt$init == "random") {
     generate_design_random(optim_instance$search_space, n = init_design_size)$data
@@ -222,7 +220,7 @@ for (i in seq_len(nrow(optimizers))) {
 }
 
 jobs = getJobTable()
-resources.default = list(walltime = 3600 * 12L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "beartooth", max.concurrent.jobs = 9999L)
+resources.default = list(walltime = 3600 * 8L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "beartooth", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()
