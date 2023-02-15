@@ -133,8 +133,45 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
   optim_instance
 }
 
+lfbo_wrapper = function(job, data, instance, ...) {
+  reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
+  library(yahpogym)
+  logger = lgr::get_logger("bbotk")
+  logger$set_threshold("warn")
+  future::plan("sequential")
+
+  optim_instance = make_optim_instance(instance)
+
+  init_design_size = ceiling(0.25 * optim_instance$terminator$param_set$values$n_evals)
+  init_design = generate_design_random(optim_instance$search_space, n = init_design_size)$data
+
+  optim_instance$eval_batch(init_design)
+
+  random_interleave_iter = 0L
+
+  learner = lrn("regr.lfbo", lrn("classif.ranger"))
+  learner$param_set$values$keep.inbag = TRUE
+
+  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>%
+                                                    po("imputeoor", multiplier = 3, affect_columns = selector_type(c("integer", "numeric", "character", "factor", "ordered"))) %>>%
+                                                    po("colapply", applicator = as.factor, affect_columns = selector_type("character")) %>>%
+                                                    learner))
+
+  optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10000L), trm("evals", n_evals = 10000L)))
+  acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20000L))
+  acq_optimizer$param_set$values$warmstart = TRUE
+  acq_optimizer$param_set$values$warmstart_size = "all"
+
+  acq_function = AcqFunctionLFBO$new()
+  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
+
+  optim_instance
+}
+
+
 # add algorithms
 addAlgorithm("mlr3mbo", fun = mlr3mbo_wrapper)
+addAlgorithm("lfbo", fun = lfbo_wrapper)
 
 # setup scenarios and instances
 get_nb301_setup = function(budget_factor = 40L) {
