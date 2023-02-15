@@ -78,9 +78,9 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #' @template param_y_col_surrogate
     initialize = function(learner, archive = NULL, x_cols = NULL, y_col = NULL) {
       assert_learner(learner)
-      if (learner$predict_type != "se" && "se" %in% learner$predict_types) {
-        learner$predict_type = "se"
-      }
+      #if (learner$predict_type != "se" && "se" %in% learner$predict_types) {
+      #  learner$predict_type = "se"
+      #}
 
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 

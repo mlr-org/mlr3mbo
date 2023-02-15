@@ -149,7 +149,7 @@ lfbo_wrapper = function(job, data, instance, ...) {
 
   random_interleave_iter = 0L
 
-  learner = lrn("regr.lfbo", lrn("classif.ranger"))
+  learner = lrn("regr.lfbo", lrn("classif.ranger"), lfbo.direction = optim_instance$objective$codomain$tags[[optim_instance$archive$cols_y]])
   learner$param_set$values$keep.inbag = TRUE
 
   surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>%
