@@ -13,9 +13,17 @@ The regression data is internally converted to a weighted classification task.
 The new objective is a weighted version of a prediction problem, where the goal is
 to predict whether a target value is smaller than a gamma quantile of the target
 distribution (assuming minimization).
+Note that the optimization direction must be specified explicitly!
+If minimization is required, set the value of the \code{lfbo.direction} parameter to \code{"minimize"}.
+If maximization is required, set the value of the \code{lfbo.direction} parameter to \code{"maximize"}.
 
 To specify the weighting type, set the value of the \code{lfbo.wt} parameter (\code{"ei"} or \code{"pi"}).
 To specify the \code{gamma} quantile of the target distribution set the value of the \code{lfbo.gamma} parameter.
+
+This learner should only be used for Bayesian Optimization in combination with an \link{AcqFunctionLFBO}.
+
+The \verb{$param_set} consists of a \link[paradox:ParamSetCollection]{paradox::ParamSetCollection} of the \link[paradox:ParamSet]{paradox::ParamSet} of the \verb{$learner_classif} and
+an \code{"lfbo"} \link[paradox:ParamSet]{paradox::ParamSet} including the parameters \code{"lfbo.direction"}, \code{"lfbo.wt"}, and \code{"lfbo.gamma"}.
 }
 \examples{
 \donttest{
@@ -37,7 +45,7 @@ if (requireNamespace("mlr3learners") &
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
-  surrogate = srlrn(lrn("regr.lfbo", lrn("classif.ranger")))
+  surrogate = srlrn(lrn("regr.lfbo", lrn("classif.ranger"), lfbo.direction = "minimize"))
 
   acq_function = acqf("lfbo")
 
@@ -70,14 +78,6 @@ In Chaudhuri K, Jegelka S, Song L, Szepesvari C, Niu G, Sabato S (eds.), \emph{P
 \describe{
 \item{\code{learner_classif}}{(\link[mlr3:LearnerClassif]{mlr3::LearnerClassif})\cr
 Classification learner to be used for LFBO.}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{surrogate_max_to_min}}{(\code{-1} | \code{1})\cr
-Multiplicative factor to correct for minimization or maximization.}
 }
 \if{html}{\out{</div>}}
 }

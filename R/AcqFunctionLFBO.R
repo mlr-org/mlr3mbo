@@ -8,8 +8,12 @@
 #'
 #' @description
 #' Likelihood-Free Bayesian Optimization.
-#' Parameters specifying the weighting type and the gamma quantile of the target distribution have to be set via
+#' Parameters specifying the weighting type and the gamma quantile of the target distribution have to be set in
 #' the [paradox::ParamSet] of the [LearnerRegrLFBO] used within the [SurrogateLearner].
+#'
+#' By default, it is assumed that the optimization problem is a minimization problem!
+#' If maximization is required, change the value of the direction parameter of the [LearnerRegrLFBO] used within the
+#' [SurrogateLearner].
 #'
 #' @references
 #' * `r format_bib("song_2022")`
@@ -37,7 +41,7 @@
 #'
 #'   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
 #'
-#'   learner = LearnerRegrLFBO$new(lrn("classif.ranger"))
+#'   learner = lrn("regr.lfbo", learner_classif = lrn("classif.ranger"), lfbo.direction = "minimize")
 #'
 #'   surrogate = srlrn(learner, archive = instance$archive)
 #'
@@ -58,55 +62,12 @@ AcqFunctionLFBO = R6Class("AcqFunctionLFBO",
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     initialize = function(surrogate = NULL) {
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
-
-      if (!is.null(surrogate)) {
-        assert_r6(surrogate$model, "LearnerRegrLFBO", null.ok = TRUE)
-        surrogate$model$surrogate_max_to_min = surrogate_mult_max_to_min(surrogate$archive$codomain, y_cols = surrogate$y_cols)
-      }
-
       super$initialize("acq_lfbo", surrogate = surrogate, direction = "maximize", label = "Likelihood-Free Bayesian Optimization", man = "mlr3mbo::mlr_acqfunctions_lfbo")
     }
   ),
 
-  active = list(
-    #' @field surrogate ([SurrogateLearner])\cr
-    #'  Surrogate learner encapsulating a [LearnerRegrLFBO].
-    surrogate = function(rhs) {
-      if (missing(rhs)) {
-        private$.surrogate
-      } else {
-        assert_r6(rhs, classes = "SurrogateLearner")
-        assert_r6(rhs$model, "LearnerRegrLFBO")
-        private$.surrogate = rhs
-        private$.archive = assert_r6(rhs$archive, classes = "Archive")
-        codomain = generate_acq_codomain(rhs$archive$codomain, id = self$id, direction = self$direction)
-        self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs$archive$codomain, y_cols = rhs$y_cols)
-        domain = rhs$archive$search_space$clone(deep = TRUE)
-        domain$trafo = NULL
-        self$codomain = Codomain$new(codomain$params)  # lazy initialization requires this
-        self$domain = domain
-
-        private$.surrogate$model$surrogate_max_to_min = self$surrogate_max_to_min
-      }
-    },
-
-    #' @field surrogate_max_to_min (`-1` | `1`)\cr
-    #'   Multiplicative factor to correct for minimization or maximization of the acquisition function.
-    #'   Changing this value will be propagated to the `$surrogate$model$surrogate_max_to_min` when possible.
-    surrogate_max_to_min = function(rhs) {
-     if (missing(rhs)) {
-        private$.surrogate_max_to_min
-      } else {
-        private$.surrogate_max_to_min = assert_subset(rhs, choices = c(-1L, 1L))
-        if (!is.null(private$.surrogate)) {
-          private$.surrogate$model$surrogate_max_to_min = private$.surrogate_max_to_min
-        }
-      }
-    }
-  ),
-
   private = list(
-    .fun = function(xdt, ...) {
+    .fun = function(xdt) {
       p = self$surrogate$predict(xdt)
       data.table(acq_lfbo = p$mean)
     }

@@ -1,6 +1,6 @@
 test_that("AcqFunctionLFBO works", {
   inst = MAKE_INST_1D()
-  surrogate = SurrogateLearner$new(lrn("regr.lfbo", learner_classif = lrn("classif.rpart")), archive = inst$archive)
+  surrogate = SurrogateLearner$new(lrn("regr.lfbo", learner_classif = lrn("classif.rpart"), lfbo.direction = "minimize"), archive = inst$archive)
   acqf = AcqFunctionLFBO$new(surrogate = surrogate)
   expect_acqfunction(acqf)
 
@@ -20,12 +20,5 @@ test_that("AcqFunctionLFBO works", {
   res = acqf$eval_dt(xdt)
   expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
   expect_named(res, acqf$id)
-
-  expect_true(acqf$surrogate_max_to_min == 1)
-  expect_true(acqf$surrogate$model$surrogate_max_to_min == 1)
-
-  acqf$surrogate_max_to_min = -1
-  expect_true(acqf$surrogate_max_to_min == -1)
-  expect_true(acqf$surrogate$model$surrogate_max_to_min == -1)
 })
 
