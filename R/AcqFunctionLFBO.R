@@ -7,8 +7,8 @@
 #' @template section_dictionary_acqfunctions
 #'
 #' @description
-#' Likelihood free Bayesian Optimization.
-#' Parameters specifying the weighting type and the gamma quantile of the target distribition have to be set via
+#' Likelihood-Free Bayesian Optimization.
+#' Parameters specifying the weighting type and the gamma quantile of the target distribution have to be set via
 #' the [paradox::ParamSet] of the [LearnerRegrLFBO] used within the [SurrogateLearner].
 #'
 #' @references
@@ -64,7 +64,7 @@ AcqFunctionLFBO = R6Class("AcqFunctionLFBO",
         surrogate$model$surrogate_max_to_min = surrogate_mult_max_to_min(surrogate$archive$codomain, y_cols = surrogate$y_cols)
       }
 
-      super$initialize("acq_lfbo", surrogate = surrogate, direction = "maximize", label = "Likelihood Free Bayesian Optimization", man = "mlr3mbo::mlr_acqfunctions_lfbo")
+      super$initialize("acq_lfbo", surrogate = surrogate, direction = "maximize", label = "Likelihood-Free Bayesian Optimization", man = "mlr3mbo::mlr_acqfunctions_lfbo")
     }
   ),
 
@@ -76,7 +76,7 @@ AcqFunctionLFBO = R6Class("AcqFunctionLFBO",
         private$.surrogate
       } else {
         assert_r6(rhs, classes = "SurrogateLearner")
-        assert_r6(surrogate$model, "LearnerRegrLFBO")
+        assert_r6(rhs$model, "LearnerRegrLFBO")
         private$.surrogate = rhs
         private$.archive = assert_r6(rhs$archive, classes = "Archive")
         codomain = generate_acq_codomain(rhs$archive$codomain, id = self$id, direction = self$direction)

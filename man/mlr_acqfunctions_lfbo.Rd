@@ -5,8 +5,8 @@
 \alias{AcqFunctionLFBO}
 \title{Acquisition Function LFBO}
 \description{
-Likelihood free Bayesian Optimization.
-Parameters specifying the weighting type and the gamma quantile of the target distribition have to be set via
+Likelihood-Free Bayesian Optimization.
+Parameters specifying the weighting type and the gamma quantile of the target distribution have to be set via
 the \link[paradox:ParamSet]{paradox::ParamSet} of the \link{LearnerRegrLFBO} used within the \link{SurrogateLearner}.
 }
 \section{Dictionary}{
@@ -54,8 +54,8 @@ if (requireNamespace("mlr3learners") &
 \references{
 \itemize{
 \item Song, Jiaming, Yu, Lantao, Neiswanger, Willie, Ermon, Stefano (2022).
-\dQuote{A General Recipe for Likelihood-free Bayesian Optimization.}
-\emph{Proceedings of Machine Learning Research}, \bold{162}, 20384--20404.
+\dQuote{A General Recipe for Likelihood-Free Bayesian Optimization.}
+In Chaudhuri K, Jegelka S, Song L, Szepesvari C, Niu G, Sabato S (eds.), \emph{Proceedings of the 39th International Conference on Machine Learning}, volume 162, 20384--20404.
 }
 }
 \seealso{

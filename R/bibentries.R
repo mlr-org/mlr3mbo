@@ -46,7 +46,7 @@ bibentries = c(
   ),
 
   snoek_2012  = bibentry("inproceedings",
-    title     = "Practical Bayesian Optimization of Machine Learning Algorithms",
+    title     = "Practical {B}ayesian Optimization of Machine Learning Algorithms",
     author    = "Snoek, Jasper and Larochelle, Hugo and Adams, Ryan P",
     year      = "2012",
     booktitle = "Advances in Neural Information Processing Systems",
@@ -74,7 +74,7 @@ bibentries = c(
   ),
 
   wang_2020 = bibentry("article",
-    title   = "Parallel Bayesian Global Optimization of Expensive Functions",
+    title   = "Parallel {B}ayesian Global Optimization of Expensive Functions",
     author  = "Wang, Jialei and Clark, Scott C. and Liu, Eric and Frazier, Peter I.",
     year    = "2020",
     journal = "Operations Research",
@@ -107,12 +107,13 @@ bibentries = c(
     year           = "2008"
   ),
 
-  song_2022 = bibentry("article",
-    title    = "A General Recipe for Likelihood-free {B}ayesian Optimization",
-    author   = "Song, Jiaming and Yu, Lantao and Neiswanger, Willie and Ermon, Stefano",
-    year     = "2022",
-    volume   = "162",
-    pages    = "20384--20404",
-    journal  = "Proceedings of Machine Learning Research"
+  song_2022   = bibentry("inproceedings",
+    title     = "A General Recipe for Likelihood-Free {B}ayesian Optimization",
+    author    = "Song, Jiaming and Yu, Lantao and Neiswanger, Willie and Ermon, Stefano",
+    year      = "2022",
+    booktitle = "Proceedings of the 39th International Conference on Machine Learning",
+    editor    = "K. Chaudhuri and S. Jegelka and L. Song and C. Szepesvari and G. Niu and S. Sabato",
+    pages     = "20384--20404",
+    volume    = "162"
   )
 )

@@ -15,7 +15,7 @@ to predict whether a target value is smaller than a gamma quantile of the target
 distribution (assuming minimization).
 
 To specify the weighting type, set the value of the \code{lfbo.wt} parameter (\code{"ei"} or \code{"pi"}).
-To specify the \code{gamma} quantile of the target distribition set the value of the \code{lfbo.gamma} parameter.
+To specify the \code{gamma} quantile of the target distribution set the value of the \code{lfbo.gamma} parameter.
 }
 \examples{
 \donttest{
@@ -58,8 +58,8 @@ if (requireNamespace("mlr3learners") &
 \references{
 \itemize{
 \item Song, Jiaming, Yu, Lantao, Neiswanger, Willie, Ermon, Stefano (2022).
-\dQuote{A General Recipe for Likelihood-free Bayesian Optimization.}
-\emph{Proceedings of Machine Learning Research}, \bold{162}, 20384--20404.
+\dQuote{A General Recipe for Likelihood-Free Bayesian Optimization.}
+In Chaudhuri K, Jegelka S, Song L, Szepesvari C, Niu G, Sabato S (eds.), \emph{Proceedings of the 39th International Conference on Machine Learning}, volume 162, 20384--20404.
 }
 }
 \section{Super classes}{

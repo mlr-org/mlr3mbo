@@ -13,11 +13,11 @@
 #' distribution (assuming minimization).
 #'
 #' To specify the weighting type, set the value of the `lfbo.wt` parameter (`"ei"` or `"pi"`).
-#' To specify the `gamma` quantile of the target distribition set the value of the `lfbo.gamma` parameter.
-#' 
+#' To specify the `gamma` quantile of the target distribution set the value of the `lfbo.gamma` parameter.
+#'
 #' @references
 #' * `r format_bib("song_2022")`
-#' 
+#'
 #' @export
 #' @examples
 #' \donttest{
