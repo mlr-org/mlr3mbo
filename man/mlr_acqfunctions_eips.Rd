@@ -75,6 +75,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_lfbo}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_smsego}},
