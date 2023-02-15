@@ -7,7 +7,7 @@
 #' @import lgr
 #' @import mlr3
 #' @import mlr3tuning
-#' @importFrom stats setNames runif dnorm pnorm
+#' @importFrom stats setNames runif dnorm pnorm quantile
 #' @useDynLib mlr3mbo c_sms_indicator c_eps_indicator
 "_PACKAGE"
 
@@ -20,6 +20,10 @@
   # add mbo to optimizer dictionary
   x = utils::getFromNamespace("mlr_optimizers", ns = "bbotk")
   x$add("mbo", OptimizerMbo)
+
+  # add regr.lfbo to learner dictionary
+  x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
+  x$add("regr.lfbo", LearnerRegrLFBO)
 
   # setup logger
   assign("lg", lgr::get_logger("bbotk"), envir = parent.env(environment()))

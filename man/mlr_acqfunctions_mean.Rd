@@ -61,6 +61,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_lfbo}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_smsego}},
 \code{\link{mlr_acqfunctions_ttei}},
