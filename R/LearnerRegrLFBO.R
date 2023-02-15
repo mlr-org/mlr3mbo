@@ -11,9 +11,18 @@
 #' The new objective is a weighted version of a prediction problem, where the goal is
 #' to predict whether a target value is smaller than a gamma quantile of the target
 #' distribution (assuming minimization).
+#
+#' Note that the optimization direction must be specified explicitly!
+#' If minimization is required, set the value of the `lfbo.direction` parameter to `"minimize"`.
+#' If maximization is required, set the value of the `lfbo.direction` parameter to `"maximize"`.
 #'
 #' To specify the weighting type, set the value of the `lfbo.wt` parameter (`"ei"` or `"pi"`).
 #' To specify the `gamma` quantile of the target distribution set the value of the `lfbo.gamma` parameter.
+#'
+#' This learner should only be used for Bayesian Optimization in combination with an [AcqFunctionLFBO].
+#'
+#' The `$param_set` consists of a [paradox::ParamSetCollection] of the [paradox::ParamSet] of the `$learner_classif` and
+#' an `"lfbo"` [paradox::ParamSet] including the parameters `"lfbo.direction"`, `"lfbo.wt"`, and `"lfbo.gamma"`.
 #'
 #' @references
 #' * `r format_bib("song_2022")`
@@ -39,7 +48,7 @@
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
-#'   surrogate = srlrn(lrn("regr.lfbo", lrn("classif.ranger")))
+#'   surrogate = srlrn(lrn("regr.lfbo", lrn("classif.ranger"), lfbo.direction = "minimize"))
 #'
 #'   acq_function = acqf("lfbo")
 #'
@@ -77,7 +86,9 @@ LearnerRegrLFBO = R6Class("LearnerRegrLFBO",
       assert_true("weights" %in% learner_classif$properties)
       self$learner_classif = learner_classif
 
-      lfbo_param_set = ps(wt = p_fct(levels = c("ei", "pi"), default = "ei", tags = "train"), gamma = p_dbl(lower = 0, upper = 1, default = 1/3, tags = "train"))
+      lfbo_param_set = ps(direction = p_fct(levels = c("minimize", "maximize"), tags = c("required", "train")),
+                          wt = p_fct(levels = c("ei", "pi"), default = "ei", tags = "train"),
+                          gamma = p_dbl(lower = 0, upper = 1, default = 1/3, tags = "train"))
       lfbo_param_set$set_id = "lfbo"
 
       super$initialize(
@@ -109,8 +120,8 @@ LearnerRegrLFBO = R6Class("LearnerRegrLFBO",
     #' the object in its previous state.
     train = function(task, row_ids = NULL) {
       # create df with new data
-      if (is.null(self$surrogate_max_to_min)) {
-        stop("$surrogate_max_to_min must be set prior to training.")
+      if (is.null(self$param_set$values$lfbo.direction)) {
+        stopf("Learner '%s' requires the specification of the 'lfbo.direction' hyperparameter prior to training.", self$id)
       }
       row_ids = assert_row_ids(row_ids, null.ok = TRUE)
       task_new = private$.to_weighted_task(task, row_ids)
@@ -140,21 +151,7 @@ LearnerRegrLFBO = R6Class("LearnerRegrLFBO",
     }
   ),
 
-  active = list(
-    #' @field surrogate_max_to_min (`-1` | `1`)\cr
-    #'   Multiplicative factor to correct for minimization or maximization.
-    surrogate_max_to_min = function(rhs) {
-     if (missing(rhs)) {
-        private$.surrogate_max_to_min
-      } else {
-        private$.surrogate_max_to_min = assert_subset(rhs, choices = c(-1L, 1L))
-      }
-    }
-  ),
-
   private = list(
-    .surrogate_max_to_min = NULL,
-
     .to_weighted_task = function(task, row_ids) {
       data = do.call("cbind", private$.regr_to_weights(
         task$data(rows = row_ids, cols = task$feature_names),
@@ -165,12 +162,14 @@ LearnerRegrLFBO = R6Class("LearnerRegrLFBO",
     },
 
     .regr_to_weights = function(X, y) {
-      # wt and gamma are inferred from the param_set
-      # surrogate_max_to_min is inferred from the active bindings
+      # direction, wt and gamma are inferred from the param_set
       # adapted from https://github.com/lfbo-ml/lfbo
+      direction = self$param_set$values$lfbo.direction
       wt = if (is.null(self$param_set$values$lfbo.wt)) "ei" else self$param_set$values$lfbo.wt
       gamma = if (is.null(self$param_set$values$lfbo.gamma)) 1/3 else self$param_set$values$lfbo.gamma
-      y = self$surrogate_max_to_min * y
+      if (direction == "maximize") {
+        y = -1L * y
+      }
       tau = quantile(y, probs = gamma)
       z = y < tau
       if (wt == "ei") {

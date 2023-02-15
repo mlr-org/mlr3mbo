@@ -6,8 +6,12 @@
 \title{Acquisition Function LFBO}
 \description{
 Likelihood-Free Bayesian Optimization.
-Parameters specifying the weighting type and the gamma quantile of the target distribution have to be set via
+Parameters specifying the weighting type and the gamma quantile of the target distribution have to be set in
 the \link[paradox:ParamSet]{paradox::ParamSet} of the \link{LearnerRegrLFBO} used within the \link{SurrogateLearner}.
+
+By default, it is assumed that the optimization problem is a minimization problem!
+If maximization is required, change the value of the direction parameter of the \link{LearnerRegrLFBO} used within the
+\link{SurrogateLearner}.
 }
 \section{Dictionary}{
 
@@ -40,7 +44,7 @@ if (requireNamespace("mlr3learners") &
 
   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
 
-  learner = LearnerRegrLFBO$new(lrn("classif.ranger"))
+  learner = lrn("regr.lfbo", learner_classif = lrn("classif.ranger"), lfbo.direction = "minimize")
 
   surrogate = srlrn(learner, archive = instance$archive)
 
@@ -73,18 +77,6 @@ Other Acquisition Function:
 \concept{Acquisition Function}
 \section{Super classes}{
 \code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionLFBO}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
-Surrogate learner encapsulating a \link{LearnerRegrLFBO}.}
-
-\item{\code{surrogate_max_to_min}}{(\code{-1} | \code{1})\cr
-Multiplicative factor to correct for minimization or maximization of the acquisition function.
-Changing this value will be propagated to the \verb{$surrogate$model$surrogate_max_to_min} when possible.}
-}
-\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
