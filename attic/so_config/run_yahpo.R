@@ -27,7 +27,7 @@ for (sf in source_files) {
   source(sf)
 }
 
-reg = makeExperimentRegistry(file.dir = "/gscratch/lschnei8/registry_mlr3mbo_so_config", packages = packages, source = source_files)
+reg = makeExperimentRegistry(file.dir = "/gscratch/lschnei8/registry_mlr3mbo_lfbox", packages = packages, source = source_files)
 #reg = makeExperimentRegistry(file.dir = NA, conf.file = NA, packages = packages, source = source_files)  # interactive session
 saveRegistry(reg)
 
@@ -168,10 +168,42 @@ lfbo_wrapper = function(job, data, instance, ...) {
   optim_instance
 }
 
+lfbox_wrapper = function(job, data, instance, ...) {
+  reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
+  library(yahpogym)
+  logger = lgr::get_logger("bbotk")
+  logger$set_threshold("warn")
+  future::plan("sequential")
+
+  optim_instance = make_optim_instance(instance)
+
+  init_design_size = ceiling(0.25 * optim_instance$terminator$param_set$values$n_evals)
+  init_design = generate_design_random(optim_instance$search_space, n = init_design_size)$data
+
+  optim_instance$eval_batch(init_design)
+
+  random_interleave_iter = 0L
+
+  learner = lrn("regr.lfbo", lrn("classif.ranger", num.trees = 1000, min.node.size = 1), lfbo.direction = optim_instance$objective$codomain$tags[[optim_instance$archive$cols_y]])
+  learner$param_set$values$keep.inbag = TRUE
+
+  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>%
+                                                    po("imputeoor", multiplier = 3, affect_columns = selector_type(c("integer", "numeric", "character", "factor", "ordered"))) %>>%
+                                                    po("colapply", applicator = as.factor, affect_columns = selector_type("character")) %>>%
+                                                    learner))
+
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 1000L))
+
+  acq_function = AcqFunctionLFBO$new()
+  bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
+
+  optim_instance
+}
 
 # add algorithms
 addAlgorithm("mlr3mbo", fun = mlr3mbo_wrapper)
 addAlgorithm("lfbo", fun = lfbo_wrapper)
+addAlgorithm("lfbox", fun = lfbox_wrapper)
 
 # setup scenarios and instances
 get_nb301_setup = function(budget_factor = 40L) {
@@ -243,7 +275,7 @@ prob_designs = unlist(prob_designs, recursive = FALSE, use.names = FALSE)
 names(prob_designs) = nn
 
 # add jobs for optimizers
-optimizers = data.table(algorithm = "mlr3mbo")
+optimizers = data.table(algorithm = "lfbox")
 
 for (i in seq_len(nrow(optimizers))) {
   algo_designs = setNames(list(optimizers[i, ]), nm = optimizers[i, ]$algorithm)
@@ -257,7 +289,7 @@ for (i in seq_len(nrow(optimizers))) {
 }
 
 jobs = getJobTable()
-resources.default = list(walltime = 3600 * 8L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "beartooth", max.concurrent.jobs = 9999L)
+resources.default = list(walltime = 3600 * 1L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "beartooth", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()
@@ -280,5 +312,5 @@ results = reduceResultsList(done, function(x, job) {
   tmp
 })
 results = rbindlist(results, fill = TRUE)
-saveRDS(results, "/gscratch/lschnei8/results_yahpo_mlr3mbo.rds")
+saveRDS(results, "/gscratch/lschnei8/results_yahpo_lfbox.rds")
 
