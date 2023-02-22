@@ -105,6 +105,17 @@ bibentries = c(
     title          = "A Multi-Points Criterion for Deterministic Parallel Global Optimization Based on Gaussian Processes",
     author         = "Ginsbourger, David and Le Riche, Rodolphe and Carraro, Laurent",
     year           = "2008"
+  ),
+
+  emmerich_2016 = bibentry("incollection",
+    title       = "A Multicriteria Generalization of Bayesian Global Optimization",
+    author      = "Emmerich, Michael and Yang, Kaifeng and Deutz, Andr{\\'e} and Wang, Hao and Fonseca, Carlos M.",
+    editor      = "Pardalos, Panos M. and Zhigljavsky, Anatoly and {\\v{Z}}ilinskas, Julius",
+    bookTitle   = "Advances in Stochastic and Deterministic Global Optimization",
+    year        = "2016",
+    publisher   = "Springer International Publishing",
+    address     = "Cham",
+    pages       = "229--242"
   )
 )
 

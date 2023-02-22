@@ -76,6 +76,7 @@ Collate:
     'AcqFunction.R'
     'AcqFunctionAEI.R'
     'AcqFunctionCB.R'
+    'AcqFunctionEHVI.R'
     'AcqFunctionEI.R'
     'AcqFunctionEIPS.R'
     'AcqFunctionMean.R'
