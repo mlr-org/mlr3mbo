@@ -29,7 +29,6 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
         xdt = generate_design_random(inst$search_space, n = 1L)$data
         inst$eval_batch(xdt)
       }
-      incumbent = inst$archive$best()[, inst$archive$cols_x, with = FALSE]
       # check if .gen is already present, if yes continue from there
       gen = if (inst$archive$n_evals > 0L & ".gen" %in% colnames(inst$archive$data)) {
         max(inst$archive$data[[".gen"]], na.rm = TRUE)
@@ -37,6 +36,14 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
         0L
       }
       set(inst$archive$data, j = ".gen", value = gen)  # 0 for first batch
+
+      y_col = inst$archive$cols_y
+      y_col_orig = paste0(y_col, "_orig")
+
+      inst$archive$data[.gen == gen, (y_col_orig) := get(y_col)]
+
+      incumbent = inst$archive$best()[, inst$archive$cols_x, with = FALSE]
+
       repeat {
         gen = gen + 1L
         for (param_id in shuffle(inst$search_space$ids())) {
@@ -62,10 +69,20 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
             set(xdt, j = "incumbent", value = list(inst$archive$best()[, c(inst$archive$cols_x, inst$archive$cols_y), with = FALSE]))
             inst$eval_batch(xdt)
             incumbent = inst$archive$best()[, inst$archive$cols_x, with = FALSE]
-
             saveRDS(inst, file = self$param_set$values$rds_name)
           }
         }
+
+        # after each gen, update target evaluations of incumbents that have been evaluated multiple times by their mean
+        tmp = copy(inst$archive$data)
+        hashes = as.numeric(as.factor(map_chr(seq_len(nrow(tmp)), function(i) paste0(tmp[i, inst$archive$cols_x, with = FALSE], collapse = "_"))))
+        tmp[, hash := hashes]
+        tmp[.gen == gen, (y_col_orig) := get(y_col)]
+        tmp[, n_incumbent_repls := .N, by = .(hash)]
+        tmp[, (y_col) := mean(get(y_col_orig)), by = .(hash)]
+        inst$archive$data = tmp
+        incumbent = inst$archive$best()[, inst$archive$cols_x, with = FALSE]
+
         if (gen >= self$param_set$values$max_gen) {
           break
         }

@@ -21,7 +21,7 @@ objective = ObjectiveRFunDt$new(
     x6 = xdt$x6
     x6[is.na(x6)] = 0
     y = x3 * xdt$x1 - x6
-    data.table(y = y)
+    data.table(y = y + rnorm(nrow(xdt)))
   },
   domain = domain,
   codomain = ps(y = p_dbl(tags = "minimize"))
