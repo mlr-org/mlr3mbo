@@ -70,7 +70,7 @@ test_that("TunerMbo sugar", {
   learner = lrn("classif.debug", x = to_tune())
 
   instance = tune(
-    method = tnr("mbo", acq_function = acqf("cb"), acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))),
+    tnr("mbo", acq_function = acqf("cb"), acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))),
     task = tsk("iris"),
     learner = learner,
     measures = msr("classif.ce"),
