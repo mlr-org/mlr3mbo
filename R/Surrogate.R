@@ -175,6 +175,15 @@ Surrogate = R6Class("Surrogate",
       } else {
         stop("$properties is read-only.")
       }
+    },
+
+    #' @template field_predict_type_surrogate
+    predict_type = function(rhs) {
+      if (missing(rhs)) {
+        stop("Abstract.")
+      } else {
+        stop("$predict_type is read-only. To change it, modify $predict_type of the model directly.")
+      }
     }
   ),
 

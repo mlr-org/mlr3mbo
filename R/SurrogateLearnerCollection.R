@@ -214,8 +214,20 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       } else {
         stop("$properties is read-only.")
       }
-    }
+    },
 
+    #' @template field_predict_type_surrogate
+    predict_type = function(rhs) {
+      if (missing(rhs)) {
+        predict_types = Reduce(intersect, map(self$model, "predict_type"))
+        if (length(predict_types) == 0L) {
+          stop("Learners have different active predict types.")
+        }
+        predict_types
+      } else {
+        stop("$predict_type is read-only. To change it, modify $predict_type of the model directly.")
+      }
+    }
   ),
 
   private = list(

@@ -14,7 +14,8 @@ test_that("AcqFunctionEIPS works", {
   expect_equal(acqf$surrogate_max_to_min, c(y = 1, time = 1))  # FIXME: check this
   expect_equal(acqf$direction, "maximize")
   expect_equal(acqf$domain, inst$search_space)
-  # FIXME: expect_learner(acqf$surrogate$model)
+  expect_list(acqf$surrogate$model, types = "Learner")
+  expect_true(acqf$requires_predict_type_se)
 
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)

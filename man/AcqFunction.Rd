@@ -49,6 +49,9 @@ Pointing to the private acquistion function to be implemented by subclasses.}
 
 \item{\code{surrogate}}{(\link{Surrogate})\cr
 Surrogate.}
+
+\item{\code{requires_predict_type_se}}{(\code{logical(1)})\cr
+Whether the acquisition function requires the surrogate to have \code{"se"} as \verb{$predict_type}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -83,6 +86,7 @@ Note that the surrogate can be initialized lazy and can later be set via the act
   id,
   constants = ParamSet$new(),
   surrogate,
+  requires_predict_type_se,
   direction,
   label = NA_character_,
   man = NA_character_
@@ -99,6 +103,9 @@ Changeable constants or parameters.}
 
 \item{\code{surrogate}}{(\code{NULL} | \link{Surrogate}).
 Surrogate whose predictions are used in the acquisition function.}
+
+\item{\code{requires_predict_type_se}}{(\code{logical(1)})\cr
+Whether the acquisition function requires the surrogate to have \code{"se"} as \verb{$predict_type}.}
 
 \item{\code{direction}}{(\code{"same"} | \code{"minimize"} | \code{"maximize"}).
 Optimization direction of the acquisition function relative to the direction of the

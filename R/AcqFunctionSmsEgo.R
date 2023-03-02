@@ -101,7 +101,7 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       constants$values$lambda = lambda
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_smsego", constants = constants, surrogate = surrogate, direction = "minimize", label = "SMS-EGO", man = "mlr3mbo::mlr_acqfunctions_smsego")  # indeed, we minimize, see comments below about C code
+      super$initialize("acq_smsego", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "minimize", label = "SMS-EGO", man = "mlr3mbo::mlr_acqfunctions_smsego")  # indeed, we minimize, see comments below about C code
     },
 
     #' @description
