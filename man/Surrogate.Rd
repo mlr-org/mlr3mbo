@@ -56,6 +56,9 @@ A complete list of candidate feature types, grouped by task type, is stored in \
 \item{\code{properties}}{(\code{character()})\cr
 Stores a set of properties/capabilities the surrogate has.
 A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
+
+\item{\code{predict_type}}{(\code{character(1)})\cr
+Retrieves the currently active predict type, e.g. \code{"response"}.}
 }
 \if{html}{\out{</div>}}
 }

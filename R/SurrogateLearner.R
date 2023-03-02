@@ -179,14 +179,21 @@ SurrogateLearner = R6Class("SurrogateLearner",
       }
     },
 
-    #' @field properties (`character()`)\cr
-    #' Stores a set of properties/capabilities the learner has.
-    #' A complete list of candidate properties, grouped by task type, is stored in [`mlr_reflections$learner_properties`][mlr_reflections].
+    #' @template field_properties_surrogate
     properties = function(rhs) {
       if (missing(rhs)) {
         self$model$properties
       } else {
         stop("$properties is read-only.")
+      }
+    },
+
+    #' @template field_predict_type_surrogate
+    predict_type = function(rhs) {
+      if (missing(rhs)) {
+        self$model$predict_type
+      } else {
+        stop("$predict_type is read-only. To change it, modify $predict_type of the model directly.")
       }
     }
   ),

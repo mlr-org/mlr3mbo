@@ -88,7 +88,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       constants = ps(c = p_dbl(lower = 0, default = 1))
       constants$values$c = c
 
-      super$initialize("acq_aei", constants = constants, surrogate = surrogate, direction = "maximize", label = "Augmented Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_aei")
+      super$initialize("acq_aei", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Augmented Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_aei")
     },
 
     #' @description
