@@ -70,14 +70,12 @@ test_that("TunerMbo sugar", {
   learner = lrn("classif.debug", x = to_tune())
 
   instance = tune(
-    method = "mbo",
+    method = tnr("mbo", acq_function = acqf("cb"), acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))),
     task = tsk("iris"),
     learner = learner,
     measures = msr("classif.ce"),
     resampling = rsmp("holdout"),
-    term_evals = 5L,
-    acq_function = acqf("cb"),
-    acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+    term_evals = 5L
   )
 
   expect_true(NROW(instance$archive$data) == 5L)
@@ -155,12 +153,12 @@ test_that("TunerMbo reset", {
 
   learner = lrn("classif.debug", x = to_tune())
   learner$predict_type = "prob"
- 
+
   instance = TuningInstanceSingleCrit$new(tsk("iris"), learner = learner, resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
   tuner$optimize(instance)
 
   instance_mult = TuningInstanceMultiCrit$new(tsk("iris"), learner = learner, resampling = rsmp("holdout"), measure = msrs(c("classif.ce", "classif.logloss")), terminator = trm("evals", n_evals = 5L))
- 
+
   expect_error(tuner$optimize(instance_mult), "does not support multi-crit objectives")
   expect_loop_function(tuner$loop_function)
   expect_r6(tuner$surrogate, "Surrogate")
