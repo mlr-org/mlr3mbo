@@ -320,3 +320,5 @@ OptimizerMbo = R6Class("OptimizerMbo",
   )
 )
 
+#' @include aaa.R
+optimizers[["mbo"]] = OptimizerMbo
