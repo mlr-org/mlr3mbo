@@ -74,9 +74,9 @@ LearnerRegrGowerNNEnsemble = R6Class("LearnerRegrGowerNNEnsemble",
       for (feature in colnames(X)) {
         if ("factor" %in% class(X[[feature]])) {
           factor_levels = union(levels(X[[feature]]), levels(newdata[[feature]]))
-        }
         levels(X[[feature]]) = factor_levels
         levels(newdata[[feature]]) = factor_levels
+        }
       }
 
       n = max(ceiling(pv$sample_fraction * nrow(X)), nrow(X))
