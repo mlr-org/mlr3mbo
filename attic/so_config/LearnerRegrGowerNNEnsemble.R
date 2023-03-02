@@ -21,13 +21,14 @@ LearnerRegrGowerNNEnsemble = R6Class("LearnerRegrGowerNNEnsemble",
     initialize = function() {
       ps = ps(
         ks = p_uty(tags = "train"),
-        sample_fraction = p_dbl(lower = 0, upper = 1, tags = "train"),
+        sample.fraction = p_dbl(lower = 0, upper = 1, tags = "train"),
         replace = p_lgl(tags = "train"),
+        mtry.ratio = p_dbl(lower = 0, upper = 1, tags = "train"),
         nthread = p_int(lower = 1, tags = "predict")
       )
 
       ps$values$ks = c(1L, 3L, 5L, 7L, 10L)
-      ps$values$sample_fraction = 1 - exp(-1)
+      ps$values$sample.fraction = 1
       ps$values$replace = TRUE
       ps$values$nthread = 1L
 
@@ -36,7 +37,7 @@ LearnerRegrGowerNNEnsemble = R6Class("LearnerRegrGowerNNEnsemble",
         param_set = ps,
         predict_types = c("response", "se"),
         feature_types = c("logical", "integer", "numeric", "character", "factor", "ordered"),
-        properties = c("missings"),
+        properties = character(0),
         packages = c("mlr3mbo", "gower"),
         man = "mlr3mbo::mlr_learners_regr.gower_nn_ensemble"
       )
@@ -45,8 +46,10 @@ LearnerRegrGowerNNEnsemble = R6Class("LearnerRegrGowerNNEnsemble",
 
   private = list(
     .train = function(task) {
-
       pv = self$param_set$get_values(tags = "train")
+      if(is.null(pv$mtry.ratio)) {
+        pv = insert_named(pv, list(mtry.ratio = floor(sqrt(length(task$feature_names))) / length(task$feature_names)))
+      }
       if (any(pv$ks >= task$nrow)) {
         index = which(pv$ks >= task$nrow)
         stopf("Parameter k = %i must be smaller than the number of observations n = %i", pv$k[index], task$nrow)
@@ -70,7 +73,11 @@ LearnerRegrGowerNNEnsemble = R6Class("LearnerRegrGowerNNEnsemble",
       X = data[, self$model$feature_names, with = FALSE]
       y = data[, self$model$target_name, with = FALSE]
 
-      # FIXME: what about ordered here
+      stopifnot(all(colnames(X) == colnames(newdata)))
+
+      mtry = as.integer(round(pv$mtry.ratio * ncol(X)))
+
+      # FIXME: what about ordered here?
       for (feature in colnames(X)) {
         if ("factor" %in% class(X[[feature]])) {
           factor_levels = union(levels(X[[feature]]), levels(newdata[[feature]]))
@@ -79,11 +86,12 @@ LearnerRegrGowerNNEnsemble = R6Class("LearnerRegrGowerNNEnsemble",
         }
       }
 
-      n = max(ceiling(pv$sample_fraction * nrow(X)), nrow(X))
+      n = as.integer(max(ceiling(pv$sample.fraction * nrow(X)), nrow(X)))
 
       results = map_dtr(pv$ks, function(k) {
         ids = sample(seq_len(nrow(X)), size = n, replace = pv$replace)
-        top_n = invoke(gower::gower_topn, x = newdata, y = X[ids, ], n = k, nthread = pv$nthread)$index
+        features = sample(colnames(X), size = mtry, replace = FALSE)
+        top_n = invoke(gower::gower_topn, x = newdata[, features, with = FALSE], y = X[ids, features, with = FALSE], n = k, nthread = pv$nthread)$index
         tmp = map_dtc(seq_len(k), function(i) {
           setNames(y[ids, ][top_n[i, ], ], nm = paste0(self$model$target_name, "_", i))
         })
