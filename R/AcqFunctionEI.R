@@ -66,7 +66,7 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     initialize = function(surrogate = NULL) {
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
-      super$initialize("acq_ei", surrogate = surrogate, direction = "maximize", label = "Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_ei")
+      super$initialize("acq_ei", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_ei")
     },
 
     #' @description

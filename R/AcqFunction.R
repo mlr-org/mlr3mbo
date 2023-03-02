@@ -24,6 +24,8 @@ AcqFunction = R6Class("AcqFunction",
     #'   Changeable constants or parameters.
     #' @param surrogate (`NULL` | [Surrogate]).
     #'   Surrogate whose predictions are used in the acquisition function.
+    #' @param requires_predict_type_se (`logical(1)`)\cr
+    #'   Whether the acquisition function requires the surrogate to have `"se"` as `$predict_type`.
     #' @param direction (`"same"` | `"minimize"` | `"maximize"`).
     #'   Optimization direction of the acquisition function relative to the direction of the
     #'   objective function of the [bbotk::OptimInstance].
@@ -32,16 +34,22 @@ AcqFunction = R6Class("AcqFunction",
     #'   Label for this object.
     #' @param man (`character(1)`)\cr
     #'   String in the format `[pkg]::[topic]` pointing to a manual page for this object.
-    initialize = function(id, constants = ParamSet$new(), surrogate, direction, label = NA_character_, man = NA_character_) {
+    initialize = function(id, constants = ParamSet$new(), surrogate, requires_predict_type_se, direction, label = NA_character_, man = NA_character_) {
       # FIXME: Should we allow alternative search_space as additional argument?
       # If we do, we need to trafo values before updating the surrogate and predicting?
       assert_string(id)
       assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
+      private$.requires_predict_type_se = assert_flag(requires_predict_type_se)
+      private$.label = assert_string(label, na.ok = TRUE)
+      private$.man = assert_string(man, na.ok = TRUE)
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
       if (is.null(surrogate)) {
         domain = ParamSet$new()
         codomain = ParamSet$new()
       } else {
+        if (requires_predict_type_se && surrogate$predict_type != "se") {
+          stopf('%s requires the surrogate to have `"se"` as `$predict_type`.', label)
+        }
         private$.surrogate = surrogate
         private$.archive = assert_r6(surrogate$archive, classes = "Archive")
         codomain = generate_acq_codomain(surrogate$archive$codomain, id = id, direction = direction)
@@ -49,8 +57,6 @@ AcqFunction = R6Class("AcqFunction",
         domain = surrogate$archive$search_space$clone(deep = TRUE)
         domain$trafo = NULL
       }
-      private$.label = assert_string(label, na.ok = TRUE)
-      private$.man = assert_string(man, na.ok = TRUE)
       super$initialize(id = id, domain = domain, codomain = codomain, constants = constants)
     },
 
@@ -158,7 +164,11 @@ AcqFunction = R6Class("AcqFunction",
       if (missing(rhs)) {
         private$.surrogate
       } else {
-        private$.surrogate = assert_r6(rhs, classes = "Surrogate")
+        assert_r6(rhs, classes = "Surrogate")
+        if (self$requires_predict_type_se && rhs$predict_type != "se") {
+          stopf('%s requires the surrogate to have `"se"` as `$predict_type`.', self$label)
+        }
+        private$.surrogate = rhs
         private$.archive = assert_r6(rhs$archive, classes = "Archive")
         codomain = generate_acq_codomain(rhs$archive$codomain, id = self$id, direction = self$direction)
         self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs$archive$codomain, y_cols = rhs$y_cols)
@@ -167,6 +177,15 @@ AcqFunction = R6Class("AcqFunction",
         self$codomain = Codomain$new(codomain$params)  # lazy initialization requires this
         self$domain = domain
       }
+    },
+
+    #' @field requires_predict_type_se (`logical(1)`)\cr
+    #'   Whether the acquisition function requires the surrogate to have `"se"` as `$predict_type`.
+    requires_predict_type_se = function(rhs) {
+      if (!missing(rhs) && !identical(rhs, private$.requires_predict_type_se)) {
+        stop("$requires_predict_type_se is read-only.")
+      }
+      private$.requires_predict_type_se
     }
   ),
 
@@ -185,7 +204,9 @@ AcqFunction = R6Class("AcqFunction",
       stop("Abstract.")
     },
 
-    .surrogate = NULL
+    .surrogate = NULL,
+
+    .requires_predict_type_se = NULL
   )
 )
 

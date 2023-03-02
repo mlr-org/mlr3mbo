@@ -25,6 +25,7 @@ register_mlr3tuning = function() {
 } # nocov end
 
 .onLoad = function(libname, pkgname) { # nolint
+  # nocov start
   register_namespace_callback(pkgname, "bbotk", register_bbotk)
   register_namespace_callback(pkgname, "mlr3tuning", register_mlr3tuning)
 
@@ -36,9 +37,10 @@ register_mlr3tuning = function() {
 } # nocov end
 
 .onUnload = function(libpaths) { # nolint
+  # nocov start
   walk(names(optimizers), function(id) bbotk::mlr_optimizers$remove(id))
   walk(names(tuners), function(id) mlr3tuning::mlr_tuners$remove(id))
-}
+} # nocov end
 
 # static code checks should not complain about commonly used data.table columns
 utils::globalVariables("y_scal")

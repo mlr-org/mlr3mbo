@@ -20,6 +20,12 @@ test_that("SurrogateLearner API works", {
   
   surrogate$param_set$values$catch_errors = FALSE
   expect_error(surrogate$optimize(), class = "simpleError")
+
+  # predict_type
+  expect_equal(surrogate$predict_type, surrogate$model$predict_type)
+  surrogate$model$predict_type = "response"
+  expect_equal(surrogate$predict_type, surrogate$model$predict_type)
+  expect_error({surrogate$predict_type = "response"}, "is read-only")
 })
 
 test_that("predict_types are recognized", {

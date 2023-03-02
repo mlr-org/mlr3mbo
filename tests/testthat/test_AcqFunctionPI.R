@@ -11,6 +11,7 @@ test_that("AcqFunctionPI works", {
   expect_equal(acqf$direction, "maximize")
   expect_equal(acqf$domain, inst$search_space)
   expect_learner(acqf$surrogate$model)
+  expect_true(acqf$requires_predict_type_se)
 
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)

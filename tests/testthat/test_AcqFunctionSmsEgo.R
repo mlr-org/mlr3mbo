@@ -10,6 +10,7 @@ test_that("AcqFunctionSmsEgo works", {
   expect_equal(acqf$direction, "minimize")
   expect_equal(acqf$domain, inst$search_space)
   expect_list(acqf$surrogate$model, types = "Learner")
+  expect_true(acqf$requires_predict_type_se)
 
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)
