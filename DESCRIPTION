@@ -82,6 +82,7 @@ Collate:
     'AcqFunctionPI.R'
     'AcqFunctionSmsEgo.R'
     'AcqOptimizer.R'
+    'aaa.R'
     'OptimizerMbo.R'
     'Surrogate.R'
     'SurrogateLearner.R'

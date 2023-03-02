@@ -186,3 +186,5 @@ TunerMbo = R6Class("TunerMbo",
   )
 )
 
+#' @include aaa.R
+tuners[["mbo"]] = TunerMbo
