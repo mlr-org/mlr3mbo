@@ -122,7 +122,7 @@ task = tsk("pima")
 learner = lrn("classif.rpart", cp = to_tune(lower = 1e-04, upper = 1, logscale = TRUE))
 
 instance = tune(
-  method = "mbo",
+  tuner = tnr("mbo"),
   task = task,
   learner = learner,
   resampling = rsmp("holdout"),
