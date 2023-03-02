@@ -141,6 +141,11 @@ Pointing to the private acquistion function to be implemented by subclasses.</p>
 Surrogate.</p></dd>
 
 
+<dt><code>requires_predict_type_se</code></dt>
+<dd><p>(<code>logical(1)</code>)<br>
+Whether the acquisition function requires the surrogate to have <code>"se"</code> as <code>$predict_type</code>.</p></dd>
+
+
 </dl><p></p></div>
     </div>
     <div class="section level2">
@@ -166,6 +171,7 @@ Surrogate.</p></dd>
 <span>  <span class="va">id</span>,</span>
 <span>  constants <span class="op">=</span> <span class="va"><a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">ParamSet</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">surrogate</span>,</span>
+<span>  <span class="va">requires_predict_type_se</span>,</span>
 <span>  <span class="va">direction</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
 <span>  man <span class="op">=</span> <span class="cn">NA_character_</span></span>
@@ -186,6 +192,11 @@ Changeable constants or parameters.</p></dd>
 <dt><code>surrogate</code></dt>
 <dd><p>(<code>NULL</code> | <a href="Surrogate.html">Surrogate</a>).
 Surrogate whose predictions are used in the acquisition function.</p></dd>
+
+
+<dt><code>requires_predict_type_se</code></dt>
+<dd><p>(<code>logical(1)</code>)<br>
+Whether the acquisition function requires the surrogate to have <code>"se"</code> as <code>$predict_type</code>.</p></dd>
 
 
 <dt><code>direction</code></dt>
