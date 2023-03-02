@@ -704,6 +704,8 @@ ggplot(aes(x = y1, y = y2), data = instance$archive$best()) +
 
 ```{r, eval=FALSE}
 library(emoa)
+library(mlr3misc)
+library(data.table)
 anytime_hypervolume = map_dtr(unique(instance$archive$data$batch_nr), function(bnr) {
   pareto = instance$archive$best(batch = 1:bnr)[, instance$archive$cols_y, with = FALSE]
   dhv = dominated_hypervolume(t(pareto), ref = t(t(c(100, 144))))
