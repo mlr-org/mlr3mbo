@@ -30,12 +30,12 @@ OptimizerCoordinateDescent = R6Class("OptimizerCoordinateDescent", inherit = bbo
         inst$eval_batch(xdt)
       }
       # check if .gen is already present, if yes continue from there
-      gen = if (inst$archive$n_evals > 0L & ".gen" %in% colnames(inst$archive$data)) {
-        max(inst$archive$data[[".gen"]], na.rm = TRUE)
+      if (inst$archive$n_evals > 0L & ".gen" %in% colnames(inst$archive$data)) {
+        gen = max(inst$archive$data[[".gen"]], na.rm = TRUE)
       } else {
-        0L
+        gen = 0L
+        set(inst$archive$data, j = ".gen", value = gen)  # 0 for first batch
       }
-      set(inst$archive$data, j = ".gen", value = gen)  # 0 for first batch
 
       y_col = inst$archive$cols_y
       y_col_orig = paste0(y_col, "_orig")

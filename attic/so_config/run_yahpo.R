@@ -22,7 +22,7 @@ packages = c("data.table", "mlr3", "mlr3learners", "mlr3pipelines", "mlr3misc", 
 root = here::here()
 experiments_dir = file.path(root)
 
-source_files = map_chr(c("helpers.R", "AcqFunctionLogEI.R", "LearnerRegrRangerCustom.R", "OptimizerChain.R"), function(x) file.path(experiments_dir, x))
+source_files = map_chr(c("helpers.R", "AcqFunctionLogEI.R", "LearnerRegrRangerCustom.R", "LearnerRegrGowerNNEnsemble.R", "OptimizerChain.R"), function(x) file.path(experiments_dir, x))
 for (sf in source_files) {
   source(sf)
 }
@@ -40,7 +40,7 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
 
   optim_instance = make_optim_instance(instance)
 
-  xdt = data.table(loop_function = "ego_log", init = "random", init_size_fraction = "0.25", random_interleave = TRUE, random_interleave_iter = "10", rf_type = "smaclike_no_boot", acqf = "CB", acqf_ei_log = NA, lambda = "1", acqopt = "LS")
+  xdt = data.table(loop_function = "ego_log", init = "sobol", init_size_fraction = "0.25", random_interleave = FALSE, random_interleave_iter = "NA_chr", rf_type = "smaclike_boot", acqf = "EI", acqf_ei_log = FALSE, lambda = "NA_chr", acqopt = "LS")
 
   init_design_size = ceiling(as.numeric(xdt$init_size_fraction) * optim_instance$terminator$param_set$values$n_evals)
   init_design = if (xdt$init == "random") {
@@ -90,6 +90,79 @@ mlr3mbo_wrapper = function(job, data, instance, ...) {
 
   surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>%
                                                     po("imputeoor", multiplier = 3, affect_columns = selector_type(c("integer", "numeric", "character", "factor", "ordered"))) %>>%
+                                                    po("colapply", applicator = as.factor, affect_columns = selector_type("character")) %>>%
+                                                    learner))
+
+  acq_optimizer = if (xdt$acqopt == "RS_1000") {
+    AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 1000L))
+  } else if (xdt$acqopt == "RS") {
+    AcqOptimizer$new(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 20000L))
+  } else if (xdt$acqopt == "FS") {
+      n_repeats = 2L
+      maxit = 9L
+      batch_size = ceiling((20000L / n_repeats) / (1 + maxit))  # 1000L
+      AcqOptimizer$new(opt("focus_search", n_points = batch_size, maxit = maxit), terminator = trm("evals", n_evals = 20000L))
+  } else if (xdt$acqopt == "LS") {
+      optimizer = OptimizerChain$new(list(opt("local_search", n_points = 100L), opt("random_search", batch_size = 1000L)), terminators = list(trm("evals", n_evals = 10000L), trm("evals", n_evals = 10000L)))
+      acq_optimizer = AcqOptimizer$new(optimizer, terminator = trm("evals", n_evals = 20000L))
+      acq_optimizer$param_set$values$warmstart = TRUE
+      acq_optimizer$param_set$values$warmstart_size = "all"
+      acq_optimizer
+  }
+
+  acq_function = if (xdt$acqf == "EI") {
+    if (isTRUE(xdt$acqf_ei_log)) {
+      AcqFunctionLogEI$new()
+    } else {
+      AcqFunctionEI$new()
+    }
+  } else if (xdt$acqf == "CB") {
+    AcqFunctionCB$new(lambda = as.numeric(xdt$lambda))
+  } else if (xdt$acqf == "PI") {
+    AcqFunctionPI$new()
+  } else if (xdt$acqf == "Mean") {
+    AcqFunctionMean$new()
+  }
+
+  if (xdt$loop_function == "ego") {
+    bayesopt_ego(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
+  } else if (xdt$loop_function == "ego_log") {
+    bayesopt_ego_log(optim_instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = random_interleave_iter)
+  }
+
+  optim_instance
+}
+
+mlr3mbox_wrapper = function(job, data, instance, ...) {
+  reticulate::use_condaenv("/home/lschnei8/.conda/envs/env", required = TRUE)
+  library(yahpogym)
+  logger = lgr::get_logger("bbotk")
+  logger$set_threshold("warn")
+  future::plan("sequential")
+
+  optim_instance = make_optim_instance(instance)
+
+  xdt = data.table(loop_function = "ego_log", init = "sobol", init_size_fraction = "0.25", random_interleave = FALSE, random_interleave_iter = "NA_chr", acqf = "EI", acqf_ei_log = TRUE, lambda = "NA_chr", acqopt = "LS")
+
+  init_design_size = ceiling(as.numeric(xdt$init_size_fraction) * optim_instance$terminator$param_set$values$n_evals)
+  init_design = if (xdt$init == "random") {
+    generate_design_random(optim_instance$search_space, n = init_design_size)$data
+  } else if (xdt$init == "lhs") {
+    generate_design_lhs(optim_instance$search_space, n = init_design_size)$data
+  } else if (xdt$init == "sobol") {
+    generate_design_sobol(optim_instance$search_space, n = init_design_size)$data
+  }
+
+  optim_instance$eval_batch(init_design)
+
+  random_interleave_iter = if(xdt$random_interleave) as.numeric(xdt$random_interleave_iter) else 0L
+
+  learner = LearnerRegrGowerNNEnsemble$new()
+  learner$predict_type = "se"
+  learner$param_set$values$ks = rep(1, 10)
+
+  surrogate = SurrogateLearner$new(GraphLearner$new(po("imputesample", affect_columns = selector_type("logical")) %>>%
+                                                    po("imputeoor", multiplier = 10, affect_columns = selector_type(c("integer", "numeric", "character", "factor", "ordered"))) %>>%
                                                     po("colapply", applicator = as.factor, affect_columns = selector_type("character")) %>>%
                                                     learner))
 
@@ -202,6 +275,7 @@ lfbox_wrapper = function(job, data, instance, ...) {
 
 # add algorithms
 addAlgorithm("mlr3mbo", fun = mlr3mbo_wrapper)
+addAlgorithm("mlr3mbox", fun = mlr3mbox_wrapper)
 addAlgorithm("lfbo", fun = lfbo_wrapper)
 addAlgorithm("lfbox", fun = lfbox_wrapper)
 
@@ -275,7 +349,7 @@ prob_designs = unlist(prob_designs, recursive = FALSE, use.names = FALSE)
 names(prob_designs) = nn
 
 # add jobs for optimizers
-optimizers = data.table(algorithm = "lfbox")
+optimizers = data.table(algorithm = "mlr3mbox")
 
 for (i in seq_len(nrow(optimizers))) {
   algo_designs = setNames(list(optimizers[i, ]), nm = optimizers[i, ]$algorithm)
@@ -289,7 +363,7 @@ for (i in seq_len(nrow(optimizers))) {
 }
 
 jobs = getJobTable()
-resources.default = list(walltime = 3600 * 1L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "beartooth", max.concurrent.jobs = 9999L)
+resources.default = list(walltime = 3600 * 9L, memory = 2048L, ntasks = 1L, ncpus = 1L, nodes = 1L, clusters = "beartooth", max.concurrent.jobs = 9999L)
 submitJobs(jobs, resources = resources.default)
 
 done = findDone()
@@ -312,5 +386,5 @@ results = reduceResultsList(done, function(x, job) {
   tmp
 })
 results = rbindlist(results, fill = TRUE)
-saveRDS(results, "/gscratch/lschnei8/results_yahpo_lfbox.rds")
+saveRDS(results, "/gscratch/lschnei8/results_yahpo_mbox.rds")
 
