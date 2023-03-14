@@ -27,7 +27,7 @@ archive_x = function(archive) {
 fix_xdt_missing = function(xdt, x_cols, archive) {
   missing = x_cols[x_cols %nin% colnames(xdt)]
   types = map_chr(missing, function(x) typeof(archive$data[[x]]))
-  NA_types = list(double = NA_real_, integer = NA_integer_, character = NA_character_)[types]
+  NA_types = list(double = NA_real_, integer = NA_integer_, character = NA_character_, logical = NA)[types]
   for (i in seq_along(missing)) {
     xdt[, eval(missing[i]) := NA_types[i]]
   }
@@ -120,3 +120,14 @@ assert_xdt = function(xdt) {
   assert_data_table(xdt)
 }
 
+task_rm_backend = function(task) {
+  # fix task hash
+  ee = get_private(task)
+  ee$.hash = force(task$hash)
+  ee$.col_hashes = force(task$col_hashes)
+
+  # NULL backend
+  task$backend = NULL
+
+  task
+}
