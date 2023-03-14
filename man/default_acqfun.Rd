@@ -21,6 +21,7 @@ For multi-objective optimization, defaults to \link{mlr_acqfunctions_smsego}.
 Other mbo_defaults: 
 \code{\link{default_acqopt}()},
 \code{\link{default_loopfun}()},
+\code{\link{default_result_assigner}()},
 \code{\link{default_surrogate}()},
 \code{\link{mbo_defaults}}
 }

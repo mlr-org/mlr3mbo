@@ -20,6 +20,7 @@ Defaults to wrapping \link[bbotk:mlr_optimizers_random_search]{bbotk::OptimizerR
 Other mbo_defaults: 
 \code{\link{default_acqfun}()},
 \code{\link{default_loopfun}()},
+\code{\link{default_result_assigner}()},
 \code{\link{default_surrogate}()},
 \code{\link{mbo_defaults}}
 }

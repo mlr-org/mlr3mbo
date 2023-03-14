@@ -18,6 +18,7 @@ Other mbo_defaults:
 \code{\link{default_acqfun}()},
 \code{\link{default_acqopt}()},
 \code{\link{default_loopfun}()},
+\code{\link{default_result_assigner}()},
 \code{\link{default_surrogate}()}
 }
 \concept{mbo_defaults}

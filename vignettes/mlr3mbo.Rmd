@@ -426,12 +426,13 @@ optimizer
 ```
 
 Additional arguments, i.e., arguments of the `loop_function` can be passed via the `args` active binding.
-Finally, the mechanism how the final result is obtained after the optimization process (i.e., the best point in the case of single-objective and the Pareto set in the case of multi-objective optimization) can be changed via the `result_function` active binding.
-As an example, `r ref("mlr3mbo::result_by_surrogate_design", "result_by_surrogate_design")` will choose the final solution based on the prediction of the surrogate instead of the evaluations logged in the `archive` which is sensible in the case of noisy objective functions.
+Finally, the mechanism how the final result is obtained after the optimization process (i.e., the best point in the case of single-objective and the Pareto set in the case of multi-objective optimization) can be changed via the `result_assigner` active binding.
+As an example, `r ref("mlr3mbo::mlr_result_assigners_surrogate", "ResultAssignerSurrogate")` will choose the final solution based on the prediction of the surrogate instead of the evaluations logged in the `archive` which is sensible in the case of noisy objective functions.
+The default usually is to use `r ref("mlr3mbo::mlr_result_assigners_archive", "ResultAssignerArchive")` which will directly choose the final solution based on the evaluations logged in the `archive`.
 
-Note that important fields such as `$param_classes`, `$packages`, `$properties` are automatically determined based on the choice of the `loop_function`, `surrogate`, `acq_function`, and `acq_optimizer`.
+Note that important fields such as `$param_classes`, `$packages`, `$properties` are automatically determined based on the choice of the `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`.
 
-If arguments such as the `surrogate`, `acq_function`, and `acq_optimizer` were not fully specified during construction, e.g., the `surrogate` missing the `archive`, or the `acq_function` missing the `surrogate`, lazy initialization is completed prior to the optimizer being used for optimization.
+If arguments such as the `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner` were not fully specified during construction, e.g., the `surrogate` missing the `archive`, or the `acq_function` missing the `surrogate`, lazy initialization is completed prior to the optimizer being used for optimization.
 
 An object of class `OptimizerMbo` can be used to optimize an object of class `r ref("bbotk::OptimInstanceSingleCrit", "OptimInstanceSingleCrit")` or `r ref("bbotk::OptimInstanceMultiCrit", "OptimInstanceMultiCrit")`.
 
@@ -818,7 +819,6 @@ tuner = tnr("mbo",
 set.seed(2906)
 tuner$optimize(instance)
 instance$result
-instance$archive$best() # result_function is result_by_surrogate_design
 ```
 
 ## Multi-Objective HPO
@@ -851,13 +851,11 @@ surrogate = srlrn(lrn("regr.km",
 acq_function = acqf("ei")
 acq_optimizer = acqo(opt("focus_search", n_points = 100L, maxit = 9),
   terminator = trm("evals", n_evals = 3000))
-# result_by_surrogate_design is by default not sensible for ParEGO
 tuner = tnr("mbo",
   loop_function = bayesopt_parego,
   surrogate = surrogate,
   acq_function = acq_function,
-  acq_optimizer = acq_optimizer,
-  result_function = result_by_default)
+  acq_optimizer = acq_optimizer)
 
 set.seed(2906)
 tuner$optimize(instance)
