@@ -108,6 +108,11 @@ test_that("default_acqopt", {
   expect_r6(acqopt$optimizer, "OptimizerRandomSearch")
 })
 
+test_that("default_result_assigner", {
+  results_assigner = default_result_assigner(MAKE_INST_1D())
+  expect_r6(results_assigner, "ResultAssignerArchive")
+})
+
 test_that("stability and defaults", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("mlr3pipelines")
