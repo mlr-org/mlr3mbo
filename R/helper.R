@@ -120,14 +120,3 @@ assert_xdt = function(xdt) {
   assert_data_table(xdt)
 }
 
-task_rm_backend = function(task) {
-  # fix task hash
-  ee = get_private(task)
-  ee$.hash = force(task$hash)
-  ee$.col_hashes = force(task$col_hashes)
-
-  # NULL backend
-  task$backend = NULL
-
-  task
-}
