@@ -45,7 +45,7 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
 Points to the \link[bbotk:Archive]{bbotk::Archive} of the surrogate.}
 
 \item{\code{fun}}{(\code{function})\cr
-Pointing to the private acquistion function to be implemented by subclasses.}
+Pointing to the private acquisition function to be implemented by subclasses.}
 
 \item{\code{surrogate}}{(\link{Surrogate})\cr
 Surrogate.}
