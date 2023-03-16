@@ -9,6 +9,7 @@
 #' * Surrogate: [default_surrogate]\cr
 #' * Acquisition Function: [default_acqfun]\cr
 #' * Acqfun Optimizer: [default_acqopt]\cr
+#' * Result Assigner: [default_result_assigner]\cr
 #'
 #' @family mbo_defaults
 NULL
