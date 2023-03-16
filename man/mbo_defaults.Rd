@@ -11,6 +11,7 @@ respective fields are not set during initialization.
 \item Surrogate: \link{default_surrogate}\cr
 \item Acquisition Function: \link{default_acqfun}\cr
 \item Acqfun Optimizer: \link{default_acqopt}\cr
+\item Result Assigner: \link{default_result_assigner}\cr
 }
 }
 \seealso{
