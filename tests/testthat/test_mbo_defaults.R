@@ -7,72 +7,72 @@ test_that("default_surrogate", {
   # singlecrit all numeric, deterministic
   surrogate = default_surrogate(MAKE_INST_1D())
   expect_r6(surrogate, "SurrogateLearner")
-  expect_r6(surrogate$model, "LearnerRegrKM")
-  expect_equal(surrogate$model$param_set$values,
+  expect_r6(surrogate$learner, "LearnerRegrKM")
+  expect_equal(surrogate$learner$param_set$values,
     list(covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 1e-08))
-  expect_equal(surrogate$model$encapsulate, c(train = "evaluate", predict = "evaluate"))
-  expect_r6(surrogate$model$fallback, "LearnerRegrRanger")
+  expect_equal(surrogate$learner$encapsulate, c(train = "evaluate", predict = "evaluate"))
+  expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
 
   # singlecrit all numeric, noisy
   surrogate = default_surrogate(MAKE_INST_1D_NOISY())
   expect_r6(surrogate, "SurrogateLearner")
-  expect_r6(surrogate$model, "LearnerRegrKM")
-  expect_equal(surrogate$model$param_set$values,
+  expect_r6(surrogate$learner, "LearnerRegrKM")
+  expect_equal(surrogate$learner$param_set$values,
     list(covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.estim = TRUE, jitter = 1e-12))
-  expect_equal(surrogate$model$encapsulate, c(train = "evaluate", predict = "evaluate"))
-  expect_r6(surrogate$model$fallback, "LearnerRegrRanger")
+  expect_equal(surrogate$learner$encapsulate, c(train = "evaluate", predict = "evaluate"))
+  expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
 
   # twocrit all numeric, deterministic
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2, search_space = PS_1D))
   expect_r6(surrogate, "SurrogateLearnerCollection")
-  expect_list(surrogate$model, types = "LearnerRegrKM")
-  expect_equal(surrogate$model[[1L]]$param_set$values,
+  expect_list(surrogate$learner, types = "LearnerRegrKM")
+  expect_equal(surrogate$learner[[1L]]$param_set$values,
     list(covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 1e-08))
-  expect_equal(surrogate$model[[1L]]$encapsulate, c(train = "evaluate", predict = "evaluate"))
-  expect_r6(surrogate$model[[1L]]$fallback, "LearnerRegrRanger")
-  expect_equal(surrogate$model[[1L]]$param_set$values, surrogate$model[[2L]]$param_set$values)
-  expect_equal(surrogate$model[[1L]]$encapsulate, surrogate$model[[2L]]$encapsulate)
-  expect_equal(surrogate$model[[1L]]$fallback, surrogate$model[[2L]]$fallback)
+  expect_equal(surrogate$learner[[1L]]$encapsulate, c(train = "evaluate", predict = "evaluate"))
+  expect_r6(surrogate$learner[[1L]]$fallback, "LearnerRegrRanger")
+  expect_equal(surrogate$learner[[1L]]$param_set$values, surrogate$learner[[2L]]$param_set$values)
+  expect_equal(surrogate$learner[[1L]]$encapsulate, surrogate$learner[[2L]]$encapsulate)
+  expect_equal(surrogate$learner[[1L]]$fallback, surrogate$learner[[2L]]$fallback)
 
   # twocrit all numeric, noisy
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2_NOISY, search_space = PS_1D))
   expect_r6(surrogate, "SurrogateLearnerCollection")
-  expect_list(surrogate$model, types = "LearnerRegrKM")
-  expect_equal(surrogate$model[[1L]]$param_set$values,
+  expect_list(surrogate$learner, types = "LearnerRegrKM")
+  expect_equal(surrogate$learner[[1L]]$param_set$values,
     list(covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.estim = TRUE, jitter = 1e-12))
-  expect_equal(surrogate$model[[1L]]$encapsulate, c(train = "evaluate", predict = "evaluate"))
-  expect_r6(surrogate$model[[1L]]$fallback, "LearnerRegrRanger")
-  expect_equal(surrogate$model[[1L]]$param_set$values, surrogate$model[[2L]]$param_set$values)
-  expect_equal(surrogate$model[[1L]]$encapsulate, surrogate$model[[2L]]$encapsulate)
-  expect_equal(surrogate$model[[1L]]$fallback, surrogate$model[[2L]]$fallback)
+  expect_equal(surrogate$learner[[1L]]$encapsulate, c(train = "evaluate", predict = "evaluate"))
+  expect_r6(surrogate$learner[[1L]]$fallback, "LearnerRegrRanger")
+  expect_equal(surrogate$learner[[1L]]$param_set$values, surrogate$learner[[2L]]$param_set$values)
+  expect_equal(surrogate$learner[[1L]]$encapsulate, surrogate$learner[[2L]]$encapsulate)
+  expect_equal(surrogate$learner[[1L]]$fallback, surrogate$learner[[2L]]$fallback)
 
   # singlecrit mixed input
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED))
   expect_r6(surrogate, "SurrogateLearner")
-  expect_r6(surrogate$model, "LearnerRegrRanger")
-  expect_equal(surrogate$model$param_set$values,
+  expect_r6(surrogate$learner, "LearnerRegrRanger")
+  expect_equal(surrogate$learner$param_set$values,
     list(num.threads = 1L, num.trees = 500L, keep.inbag = TRUE, se.method = "jack"))
-  expect_equal(surrogate$model$encapsulate, c(train = "evaluate", predict = "evaluate"))
-  expect_r6(surrogate$model$fallback, "LearnerRegrRanger")
+  expect_equal(surrogate$learner$encapsulate, c(train = "evaluate", predict = "evaluate"))
+  expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
 
   # twocrit mixed input
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2_MIXED, search_space = PS_1D_MIXED))
   expect_r6(surrogate, "SurrogateLearnerCollection")
-  expect_list(surrogate$model, types = "LearnerRegrRanger")
-  expect_equal(surrogate$model[[1L]]$param_set$values,
+  expect_list(surrogate$learner, types = "LearnerRegrRanger")
+  expect_equal(surrogate$learner[[1L]]$param_set$values,
     list(num.threads = 1L, num.trees = 500L, keep.inbag = TRUE, se.method = "jack"))
-  expect_equal(surrogate$model[[1L]]$encapsulate, c(train = "evaluate", predict = "evaluate"))
-  expect_r6(surrogate$model[[1L]]$fallback, "LearnerRegrRanger")
-  expect_equal(surrogate$model[[1L]]$param_set$values, surrogate$model[[2L]]$param_set$values)
-  expect_equal(surrogate$model[[1L]]$encapsulate, surrogate$model[[2L]]$encapsulate)
-  expect_equal(surrogate$model[[1L]]$fallback, surrogate$model[[2L]]$fallback)
+  expect_equal(surrogate$learner[[1L]]$encapsulate, c(train = "evaluate", predict = "evaluate"))
+  expect_r6(surrogate$learner[[1L]]$fallback, "LearnerRegrRanger")
+  expect_equal(surrogate$learner[[1L]]$param_set$values, surrogate$learner[[2L]]$param_set$values)
+  expect_equal(surrogate$learner[[1L]]$encapsulate, surrogate$learner[[2L]]$encapsulate)
+  expect_equal(surrogate$learner[[1L]]$fallback, surrogate$learner[[2L]]$fallback)
 
   # singlecrit mixed input deps
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED_DEPS))
   expect_r6(surrogate, "SurrogateLearner")
-  expect_r6(surrogate$model, "GraphLearner")
-  expect_equal(surrogate$model$graph$ids(), c("imputesample", "imputeoor", "colapply", "regr.ranger"))
-  expect_equal(surrogate$model$param_set$values,
+  expect_r6(surrogate$learner, "GraphLearner")
+  expect_equal(surrogate$learner$graph$ids(), c("imputesample", "imputeoor", "colapply", "regr.ranger"))
+  expect_equal(surrogate$learner$param_set$values,
     list(imputesample.affect_columns = mlr3pipelines::selector_type("logical"),
          imputeoor.min = TRUE,
          imputeoor.offset = 1,
@@ -84,16 +84,16 @@ test_that("default_surrogate", {
          regr.ranger.num.trees = 500L,
          regr.ranger.keep.inbag = TRUE,
          regr.ranger.se.method = "jack"))
-  expect_r6(surrogate$model$fallback, "LearnerRegrFeatureless")
+  expect_r6(surrogate$learner$fallback, "LearnerRegrFeatureless")
 
   # specify own learner, specify n_objectives, twocrit all numeric, deterministic
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2, search_space = PS_1D), learner = lrn("regr.featureless"), n_learner = 1L)
   expect_r6(surrogate, "SurrogateLearner")
-  expect_r6(surrogate$model, "LearnerRegrFeatureless")
+  expect_r6(surrogate$learner, "LearnerRegrFeatureless")
 
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2, search_space = PS_1D), learner = lrn("regr.featureless"), n_learner = 3L)
   expect_r6(surrogate, "SurrogateLearnerCollection")
-  expect_list(surrogate$model, types = "LearnerRegrFeatureless")
+  expect_list(surrogate$learner, types = "LearnerRegrFeatureless")
 })
 
 test_that("default_acqfun", {
@@ -138,9 +138,9 @@ test_that("stability and defaults", {
   learner$fallback = lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE, se.method = "jack")
   surrogate = default_surrogate(instance, learner = learner, n_learner = 1L)
   expect_r6(surrogate, "SurrogateLearner")
-  expect_r6(surrogate$model, "LearnerRegrError")
-  expect_equal(surrogate$model$encapsulate, c(train = "evaluate", predict = "evaluate"))
-  expect_r6(surrogate$model$fallback, "LearnerRegrRanger")
+  expect_r6(surrogate$learner, "LearnerRegrError")
+  expect_equal(surrogate$learner$encapsulate, c(train = "evaluate", predict = "evaluate"))
+  expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
   acq_function = default_acqfun(instance)
   expect_r6(acq_function, "AcqFunctionEI")
   acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
@@ -150,19 +150,19 @@ test_that("stability and defaults", {
 
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
-  expect_equal(acq_function$surrogate$model$errors, "Surrogate Train Error.")
+  expect_equal(acq_function$surrogate$learner$errors, "Surrogate Train Error.")
   lines = readLines(f)
   # Nothing should happen here due to the fallback learner
   expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)
 
-  acq_function$surrogate$model$reset()
-  acq_function$surrogate$model$fallback = NULL
+  acq_function$surrogate$learner$reset()
+  acq_function$surrogate$learner$fallback = NULL
   instance$archive$clear()
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   lines = readLines(f)
   # Training fails but this error is not logged due to the "evaluate" encapsulate
-  expect_equal(acq_function$surrogate$model$errors, "Surrogate Train Error.")
+  expect_equal(acq_function$surrogate$learner$errors, "Surrogate Train Error.")
   expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)
   expect_true(sum(grepl("Cannot predict", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
   expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)

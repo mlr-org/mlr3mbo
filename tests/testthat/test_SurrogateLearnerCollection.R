@@ -7,8 +7,8 @@ test_that("SurrogateLearnerCollection API works", {
   expect_equal(surrogate$x_cols, "x")
   expect_equal(surrogate$y_cols, c("y1", "y2"))
   surrogate$update()
-  expect_learner(surrogate$model[[1L]])
-  expect_learner(surrogate$model[[2L]])
+  expect_learner(surrogate$learner[[1L]])
+  expect_learner(surrogate$learner[[2L]])
 
   xdt = data.table(x = seq(-1, 1, length.out = 5L))
   pred = surrogate$predict(xdt)
@@ -26,13 +26,13 @@ test_that("SurrogateLearnerCollection API works", {
   expect_error(surrogate$optimize(), class = "simpleError")
 
   # predict_type
-  expect_equal(surrogate$predict_type, surrogate$model[[1L]]$predict_type)
-  expect_equal(surrogate$predict_type, surrogate$model[[2L]]$predict_type)
-  surrogate$model[[1L]]$predict_type = "response"
+  expect_equal(surrogate$predict_type, surrogate$learner[[1L]]$predict_type)
+  expect_equal(surrogate$predict_type, surrogate$learner[[2L]]$predict_type)
+  surrogate$learner[[1L]]$predict_type = "response"
   expect_error({surrogate$predict_type}, "Learners have different active predict types")
-  surrogate$model[[2L]]$predict_type = "response"
-  expect_equal(surrogate$predict_type, surrogate$model[[1L]]$predict_type)
-  expect_equal(surrogate$predict_type, surrogate$model[[2L]]$predict_type)
+  surrogate$learner[[2L]]$predict_type = "response"
+  expect_equal(surrogate$predict_type, surrogate$learner[[1L]]$predict_type)
+  expect_equal(surrogate$predict_type, surrogate$learner[[2L]]$predict_type)
   expect_error({surrogate$predict_type = "response"}, "is read-only")
 
 })
@@ -110,7 +110,7 @@ test_that("deep clone", {
   surrogate1 = SurrogateLearnerCollection$new(learners = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
   surrogate2 = surrogate1$clone(deep = TRUE)
   expect_true(address(surrogate1) != address(surrogate2))
-  expect_true(address(surrogate1$model) != address(surrogate2$model))
+  expect_true(address(surrogate1$learner) != address(surrogate2$learner))
   expect_true(address(surrogate1$archive) != address(surrogate2$archive))
   inst$eval_batch(MAKE_DESIGN(inst))
   expect_true(address(surrogate1$archive$data) != address(surrogate2$archive$data))
@@ -120,13 +120,13 @@ test_that("packages", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
   surrogate = SurrogateLearnerCollection$new(learners = list(REGR_KM_DETERM, REGR_FEATURELESS))
-  expect_equal(surrogate$packages, unique(unlist(map(surrogate$model, "packages"))))
+  expect_equal(surrogate$packages, unique(unlist(map(surrogate$learner, "packages"))))
 })
 
 test_that("feature types", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
   surrogate = SurrogateLearnerCollection$new(learners = list(REGR_KM_DETERM, REGR_FEATURELESS))
-  expect_equal(surrogate$feature_types, Reduce(intersect, map(surrogate$model, "feature_types")))
+  expect_equal(surrogate$feature_types, Reduce(intersect, map(surrogate$learner, "feature_types")))
 })
 

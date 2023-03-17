@@ -246,10 +246,10 @@ or using syntactic sugar:
 surrogate = srlrn(lrn("regr.km"))
 ```
 
-The encapsulated learner can be accessed via the `$model` field:
+The encapsulated learner can be accessed via the `$learner` field:
 
 ```{r}
-surrogate$model
+surrogate$learner
 ```
 
 
