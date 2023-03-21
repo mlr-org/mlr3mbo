@@ -1,34 +1,86 @@
 test_that("ResultAssignerSurrogate works", {
-  ras = ResultAssignerSurrogate$new()
-  expect_null(ras$surrogate)
+  result_assigner = ResultAssignerSurrogate$new()
+  expect_null(result_assigner$surrogate)
 
-  inst = MAKE_INST_1D()
-  design = generate_design_random(inst$search_space, n = 4L)$data
-  inst$eval_batch(design)
+  instance = MAKE_INST_1D()
+  design = generate_design_random(instance$search_space, n = 4L)$data
+  instance$eval_batch(design)
 
-  expect_null(inst$result)
-  ras$assign_result(inst)
-  expect_r6(ras$surrogate, classes = "SurrogateLearner")
-  expect_data_table(inst$result, nrows = 1L)
-  # FIXME: test multicrit?
+  expect_null(instance$result)
+  result_assigner$assign_result(instance)
+  expect_r6(result_assigner$surrogate, classes = "SurrogateLearner")
+  expect_data_table(instance$result, nrows = 1L)
 })
 
 test_that("ResultAssignerSurrogate result and best can be different", {
   skip_if_not_installed("rpart")
-  ras = ResultAssignerSurrogate$new(surrogate = SurrogateLearner$new(lrn("regr.rpart")))
+  result_assigner = ResultAssignerSurrogate$new(surrogate = SurrogateLearner$new(lrn("regr.rpart")))
 
-  inst = MAKE_INST_1D()
-  design = generate_design_grid(inst$search_space, resolution = 4L)$data
-  inst$eval_batch(design)
+  instance = MAKE_INST_1D()
+  design = generate_design_grid(instance$search_space, resolution = 4L)$data
+  instance$eval_batch(design)
 
-  expect_null(inst$result)
-  ras$assign_result(inst)
-  expect_data_table(inst$result, nrows = 1L)
-  mean = ras$surrogate$predict(design)$mean
+  expect_null(instance$result)
+  result_assigner$assign_result(instance)
+  expect_data_table(instance$result, nrows = 1L)
+  mean = result_assigner$surrogate$predict(design)$mean
   best_index = which.min(mean)  # first one
-  expect_equal(inst$result[[inst$archive$cols_x]], design[best_index, ][[inst$archive$cols_x]])
-  expect_equal(inst$result[[inst$archive$cols_y]], inst$archive$data[best_index, ][[inst$archive$cols_y]])
-  expect_true(abs(inst$result[[inst$archive$cols_y]] - mean[best_index]) > 1e-3)
-  # FIXME: test multicrit?
+  expect_equal(instance$result[[instance$archive$cols_x]], design[best_index, ][[instance$archive$cols_x]])
+  expect_equal(instance$result[[instance$archive$cols_y]], instance$archive$data[best_index, ][[instance$archive$cols_y]])
+  expect_true(abs(instance$result[[instance$archive$cols_y]] - mean[best_index]) > 1e-2)
+})
+
+test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_ego", {
+  result_assigner = ResultAssignerSurrogate$new()
+  expect_null(result_assigner$surrogate)
+
+  instance = MAKE_INST_1D_NOISY()
+  surrogate = SurrogateLearner$new(REGR_KM_NOISY)
+  acq_function = AcqFunctionAEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+
+  optimizer = opt("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer$optimize(instance)
+  expect_true(nrow(instance$archive$data) == 5L)
+
+  expect_r6(result_assigner$surrogate, classes = "SurrogateLearner")
+  expect_r6(result_assigner$surrogate$learner, classes = "Learner")
+  expect_data_table(instance$result, nrow = 1L)
+})
+
+test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_parego", {
+  result_assigner = ResultAssignerSurrogate$new()
+  expect_null(result_assigner$surrogate)
+
+  instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+
+  optimizer = opt("mbo", loop_function = bayesopt_parego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer$optimize(instance)
+  expect_true(nrow(instance$archive$data) == 5L)
+
+  expect_r6(result_assigner$surrogate, classes = "SurrogateLearnerCollection")
+  expect_list(result_assigner$surrogate$learner, types = "Learner")
+  expect_data_table(instance$result, min.rows = 1L)
+})
+
+test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_smsego", {
+  result_assigner = ResultAssignerSurrogate$new()
+  expect_null(result_assigner$surrogate)
+
+  instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
+  surrogate = SurrogateLearnerCollection$new(list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)))
+  acq_function = AcqFunctionSmsEgo$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+
+  optimizer = opt("mbo", loop_function = bayesopt_smsego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer$optimize(instance)
+  expect_true(nrow(instance$archive$data) == 5L)
+
+  expect_r6(result_assigner$surrogate, classes = "SurrogateLearnerCollection")
+  expect_list(result_assigner$surrogate$learner, types = "Learner")
+  expect_data_table(instance$result, min.rows = 1L)
 })
 

@@ -10,6 +10,5 @@ test_that("ResultAssignerArchive works", {
   expect_data_table(inst$result, nrows = 1L)
   expect_equal(inst$result[[inst$archive$cols_x]], inst$archive$best()[[inst$archive$cols_x]])
   expect_equal(inst$result[[inst$archive$cols_y]], inst$archive$best()[[inst$archive$cols_y]])
-  # FIXME: test multicrit?
 })
 
