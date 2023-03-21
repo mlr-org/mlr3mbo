@@ -10,7 +10,7 @@ test_that("AcqFunctionPI works", {
   expect_equal(acqf$surrogate_max_to_min, c(y = 1))
   expect_equal(acqf$direction, "maximize")
   expect_equal(acqf$domain, inst$search_space)
-  expect_learner(acqf$surrogate$model)
+  expect_learner(acqf$surrogate$learner)
   expect_true(acqf$requires_predict_type_se)
 
   design = MAKE_DESIGN(inst)

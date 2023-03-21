@@ -66,7 +66,7 @@ if (requireNamespace("mlr3learners") &
 
   surrogate$update()
 
-  surrogate$model$model
+  surrogate$learner$model
 }
 }
 \section{Super class}{

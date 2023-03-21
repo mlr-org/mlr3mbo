@@ -73,9 +73,9 @@ if (requireNamespace("mlr3learners") &
 
   surrogate$update()
 
-  surrogate$model
+  surrogate$learner
 
-  surrogate$model[["y2"]]$model
+  surrogate$learner[["y2"]]$model
 }
 }
 \section{Super class}{

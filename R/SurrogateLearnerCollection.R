@@ -69,9 +69,9 @@
 #'
 #'   surrogate$update()
 #'
-#'   surrogate$model
+#'   surrogate$learner
 #'
-#'   surrogate$model[["y2"]]$model
+#'   surrogate$learner[["y2"]]$model
 #' }
 SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
   inherit = Surrogate,
@@ -113,7 +113,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       ps$add_dep("perf_measures", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_thresholds", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
-      super$initialize(model = learners, archive = archive, x_cols = x_cols, y_cols = y_cols, param_set = ps)
+      super$initialize(learner = learners, archive = archive, x_cols = x_cols, y_cols = y_cols, param_set = ps)
     },
 
     #' @description
@@ -129,15 +129,15 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       assert_xdt(xdt)
       xdt = fix_xdt_missing(xdt, x_cols = self$x_cols, archive = self$archive)
 
-      preds = lapply(self$model, function(model) {
-        pred = model$predict_newdata(newdata = xdt)
-        if (model$predict_type == "se") {
+      preds = lapply(self$learner, function(learner) {
+        pred = learner$predict_newdata(newdata = xdt)
+        if (learner$predict_type == "se") {
           data.table(mean = pred$response, se = pred$se)
         } else {
           data.table(mean = pred$response)
         }
       })
-      names(preds) = names(self$model)
+      names(preds) = names(self$learner)
       preds
     }
   ),
@@ -147,7 +147,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
-        paste0("(", paste0(map_chr(self$model, function(model) class(model)[1L]), collapse = " | "), ")")
+        paste0("(", paste0(map_chr(self$learner, function(learner) class(learner)[1L]), collapse = " | "), ")")
       } else {
         stop("$print_id is read-only.")
       }
@@ -155,7 +155,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
     #' @template field_n_learner_surrogate
     n_learner = function() {
-      length(self$model)
+      length(self$learner)
     },
 
     #' @template field_assert_insample_perf_surrogate
@@ -192,7 +192,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @template field_packages_surrogate
     packages = function(rhs) {
       if (missing(rhs)) {
-        unique(unlist(map(self$model, "packages")))
+        unique(unlist(map(self$learner, "packages")))
       } else {
         stop("$packages is read-only.")
       }
@@ -201,7 +201,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @template field_feature_types_surrogate
     feature_types = function(rhs) {
       if (missing(rhs)) {
-        Reduce(intersect, map(self$model, "feature_types"))
+        Reduce(intersect, map(self$learner, "feature_types"))
       } else {
         stop("$feature_types is read-only.")
       }
@@ -210,7 +210,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @template field_properties_surrogate
     properties = function(rhs) {
       if (missing(rhs)) {
-        Reduce(intersect, map(self$model, "properties"))
+        Reduce(intersect, map(self$learner, "properties"))
       } else {
         stop("$properties is read-only.")
       }
@@ -219,20 +219,20 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @template field_predict_type_surrogate
     predict_type = function(rhs) {
       if (missing(rhs)) {
-        predict_types = Reduce(intersect, map(self$model, "predict_type"))
+        predict_types = Reduce(intersect, map(self$learner, "predict_type"))
         if (length(predict_types) == 0L) {
           stop("Learners have different active predict types.")
         }
         predict_types
       } else {
-        stop("$predict_type is read-only. To change it, modify $predict_type of the model directly.")
+        stop("$predict_type is read-only. To change it, modify $predict_type of the learner directly.")
       }
     }
   ),
 
   private = list(
 
-    # Train model with new data.
+    # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
       xydt = self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE]
@@ -242,18 +242,18 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
         task = TaskRegr$new(id = paste0("surrogate_task_", y_col), backend = xydt[, c(features, y_col), with = FALSE], target = y_col)
         task
       })
-      pmap(list(model = self$model, task = tasks), .f = function(model, task) {
-        assert_learnable(task, learner = model)
-        model$train(task)
+      pmap(list(learner = self$learner, task = tasks), .f = function(learner, task) {
+        assert_learnable(task, learner = learner)
+        learner$train(task)
         invisible(NULL)
       })
-      names(self$model) = self$y_cols
+      names(self$learner) = self$y_cols
 
       if (self$param_set$values$assert_insample_perf) {
-        private$.insample_perf = setNames(pmap_dbl(list(model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),
-          .f = function(model, task, perf_measure) {
-            assert_measure(perf_measure, task = task, learner = model)
-            model$predict(task)$score(perf_measure, task = task, learner = model)
+        private$.insample_perf = setNames(pmap_dbl(list(learner = self$learner, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),
+          .f = function(learner, task, perf_measure) {
+            assert_measure(perf_measure, task = task, learner = learner)
+            learner$predict(task)$score(perf_measure, task = task, learner = learner)
           }
         ), nm = map_chr(self$param_set$values$perf_measures, "id"))
         self$assert_insample_perf
@@ -262,7 +262,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
     deep_clone = function(name, value) {
       switch(name,
-        model = map(value, function(x) x$clone(deep = TRUE)),
+        learner = map(value, function(x) x$clone(deep = TRUE)),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value
