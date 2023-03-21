@@ -12,3 +12,45 @@ test_that("ResultAssignerArchive works", {
   expect_equal(inst$result[[inst$archive$cols_y]], inst$archive$best()[[inst$archive$cols_y]])
 })
 
+test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_ego", {
+  result_assigner = ResultAssignerArchive$new()
+
+  instance = MAKE_INST_1D()
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+
+  optimizer = opt("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer$optimize(instance)
+  expect_true(nrow(instance$archive$data) == 5L)
+  expect_data_table(instance$result, nrow = 1L)
+})
+
+test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_parego", {
+  result_assigner = ResultAssignerArchive$new()
+
+  instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+
+  optimizer = opt("mbo", loop_function = bayesopt_parego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer$optimize(instance)
+  expect_true(nrow(instance$archive$data) == 5L)
+  expect_data_table(instance$result, min.rows = 1L)
+})
+
+test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_smsego", {
+  result_assigner = ResultAssignerArchive$new()
+
+  instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
+  surrogate = SurrogateLearnerCollection$new(list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)))
+  acq_function = AcqFunctionSmsEgo$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+
+  optimizer = opt("mbo", loop_function = bayesopt_smsego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer$optimize(instance)
+  expect_true(nrow(instance$archive$data) == 5L)
+  expect_data_table(instance$result, min.rows = 1L)
+})
+
