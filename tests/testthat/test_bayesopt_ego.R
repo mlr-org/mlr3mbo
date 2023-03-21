@@ -91,7 +91,7 @@ test_that("stable bayesopt_ego", {
   # this again should trigger a mbo_error and log the appropriate error message
   instance$archive$clear()
   surrogate = SurrogateLearner$new(LearnerRegrError$new())
-  surrogate$model$param_set$values$error_train = FALSE
+  surrogate$learner$param_set$values$error_train = FALSE
   acq_optimizer$param_set$values$logging_level = "info"
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
@@ -143,7 +143,7 @@ test_that("bayesopt_ego eips", {
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_true("acq_eips" %in% names(instance$archive$data))
-  expect_equal(names(surrogate$model), c("y", "time"))
+  expect_equal(names(surrogate$learner), c("y", "time"))
 })
 
 test_that("bayesopt_ego random interleave", {

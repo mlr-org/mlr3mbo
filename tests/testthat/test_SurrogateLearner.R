@@ -7,7 +7,7 @@ test_that("SurrogateLearner API works", {
   expect_equal(surrogate$x_cols, "x")
   expect_equal(surrogate$y_cols, "y")
   surrogate$update()
-  expect_learner(surrogate$model)
+  expect_learner(surrogate$learner)
 
   xdt = data.table(x = seq(-1, 1, length.out = 5L))
   pred = surrogate$predict(xdt)
@@ -22,9 +22,9 @@ test_that("SurrogateLearner API works", {
   expect_error(surrogate$optimize(), class = "simpleError")
 
   # predict_type
-  expect_equal(surrogate$predict_type, surrogate$model$predict_type)
-  surrogate$model$predict_type = "response"
-  expect_equal(surrogate$predict_type, surrogate$model$predict_type)
+  expect_equal(surrogate$predict_type, surrogate$learner$predict_type)
+  surrogate$learner$predict_type = "response"
+  expect_equal(surrogate$predict_type, surrogate$learner$predict_type)
   expect_error({surrogate$predict_type = "response"}, "is read-only")
 })
 
@@ -95,7 +95,7 @@ test_that("deep clone", {
   surrogate1 = SurrogateLearner$new(learner = REGR_FEATURELESS, archive = inst$archive)
   surrogate2 = surrogate1$clone(deep = TRUE)
   expect_true(address(surrogate1) != address(surrogate2))
-  expect_true(address(surrogate1$model) != address(surrogate2$model))
+  expect_true(address(surrogate1$learner) != address(surrogate2$learner))
   expect_true(address(surrogate1$archive) != address(surrogate2$archive))
   inst$eval_batch(MAKE_DESIGN(inst))
   expect_true(address(surrogate1$archive$data) != address(surrogate2$archive$data))
@@ -105,13 +105,13 @@ test_that("packages", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
-  expect_equal(surrogate$packages, surrogate$model$packages)
+  expect_equal(surrogate$packages, surrogate$learner$packages)
 })
 
 test_that("feature types", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
-  expect_equal(surrogate$feature_types, surrogate$model$feature_types)
+  expect_equal(surrogate$feature_types, surrogate$learner$feature_types)
 })
 

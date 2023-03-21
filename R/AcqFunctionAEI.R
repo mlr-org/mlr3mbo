@@ -99,8 +99,8 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       y_effective = p$mean + (self$surrogate_max_to_min * self$constants$values$c * p$se) # pessimistic prediction
       self$y_effective_best = min(self$surrogate_max_to_min * y_effective)
 
-      if (!is.null(self$surrogate$model$model) && length(self$surrogate$model$model@covariance@nugget) == 1L) {
-        self$noise_var = self$surrogate$model$model@covariance@nugget  # FIXME: check that this value really exists (otherwise calculate residual variance?)
+      if (!is.null(self$surrogate$learner$model) && length(self$surrogate$learner$model@covariance@nugget) == 1L) {
+        self$noise_var = self$surrogate$learner$model@covariance@nugget  # FIXME: check that this value really exists (otherwise calculate residual variance?)
       } else {
         lgr$warn('AcqFunctionAEI currently only works correctly with `"regr.km"` as surrogate model and `nugget.estim = TRUE` or given.')
         self$noise_var = 0
