@@ -77,9 +77,9 @@ wrapped as a \link{SurrogateLearnerCollection}.
 }
 \seealso{
 Other mbo_defaults: 
-\code{\link{default_acqfun}()},
-\code{\link{default_acqopt}()},
-\code{\link{default_loopfun}()},
+\code{\link{default_acqfunction}()},
+\code{\link{default_acqoptimizer}()},
+\code{\link{default_loop_function}()},
 \code{\link{default_result_assigner}()},
 \code{\link{mbo_defaults}}
 }

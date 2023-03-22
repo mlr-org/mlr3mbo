@@ -164,8 +164,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 If \code{surrogate} is \code{NULL} and the \code{acq_function$surrogate} field is populated, this \link{Surrogate} is used.
 Otherwise, \code{default_surrogate(instance)} is used.
 If \code{acq_function} is NULL and the \code{acq_optimizer$acq_function} field is populated, this \link{AcqFunction} is used (and therefore its \verb{$surrogate} if  populated; see above).
-Otherwise \code{default_acqfun(instance)} is used.
-If \code{acq_optimizer} is NULL, \code{default_acqopt(instance)} is used.
+Otherwise \code{default_acqfunction(instance)} is used.
+If \code{acq_optimizer} is NULL, \code{default_acqoptimizer(instance)} is used.
 
 Even if already initialized, the \verb{$surrogate$archive} field will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the current \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
 

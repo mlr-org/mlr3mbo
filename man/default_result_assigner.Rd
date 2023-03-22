@@ -19,9 +19,9 @@ Defaults to \link{ResultAssignerArchive}.
 }
 \seealso{
 Other mbo_defaults: 
-\code{\link{default_acqfun}()},
-\code{\link{default_acqopt}()},
-\code{\link{default_loopfun}()},
+\code{\link{default_acqfunction}()},
+\code{\link{default_acqoptimizer}()},
+\code{\link{default_loop_function}()},
 \code{\link{default_surrogate}()},
 \code{\link{mbo_defaults}}
 }

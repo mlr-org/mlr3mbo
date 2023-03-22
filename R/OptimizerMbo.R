@@ -97,8 +97,8 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' If `surrogate` is `NULL` and the `acq_function$surrogate` field is populated, this [Surrogate] is used.
     #' Otherwise, `default_surrogate(instance)` is used.
     #' If `acq_function` is NULL and the `acq_optimizer$acq_function` field is populated, this [AcqFunction] is used (and therefore its `$surrogate` if  populated; see above).
-    #' Otherwise `default_acqfun(instance)` is used.
-    #' If `acq_optimizer` is NULL, `default_acqopt(instance)` is used.
+    #' Otherwise `default_acqfunction(instance)` is used.
+    #' If `acq_optimizer` is NULL, `default_acqoptimizer(instance)` is used.
     #'
     #' Even if already initialized, the `$surrogate$archive` field will always be overwritten by the [bbotk::Archive] of the current [bbotk::OptimInstance] to be optimized.
     #'
@@ -281,11 +281,11 @@ OptimizerMbo = R6Class("OptimizerMbo",
     .optimize = function(inst) {
       # FIXME: this needs more checks for edge cases like eips or loop_function bayesopt_parego then default_surrogate should use one learner
       if (is.null(self$loop_function)) {
-        self$loop_function = default_loopfun(inst)
+        self$loop_function = default_loop_function(inst)
       }
 
       if (is.null(self$acq_function)) {  # acq_optimizer$acq_function has precedence
-        self$acq_function = self$acq_optimizer$acq_function %??% default_acqfun(inst)
+        self$acq_function = self$acq_optimizer$acq_function %??% default_acqfunction(inst)
       }
 
       if (is.null(self$surrogate)) {  # acq_function$surrogate has precedence
@@ -293,7 +293,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
       }
 
       if (is.null(self$acq_optimizer)) {
-        self$acq_optimizer = default_acqopt(self$acq_function)
+        self$acq_optimizer = default_acqoptimizer(self$acq_function)
       }
 
       if (is.null(self$result_assigner)) {
