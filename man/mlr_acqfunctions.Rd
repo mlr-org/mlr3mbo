@@ -26,7 +26,8 @@ acqf("ei")
 Sugar function: \code{\link[=acqf]{acqf()}}
 
 Other Dictionary: 
-\code{\link{mlr_loop_functions}}
+\code{\link{mlr_loop_functions}},
+\code{\link{mlr_result_assigners}}
 
 Other Acquisition Function: 
 \code{\link{AcqFunction}},

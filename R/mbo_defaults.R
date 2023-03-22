@@ -5,10 +5,11 @@
 #' The following defaults are set for [OptimizerMbo] during optimization if the
 #' respective fields are not set during initialization.
 #'
-#' * Optimization Loop: [default_loopfun]\cr
+#' * Optimization Loop: [default_loop_function]\cr
 #' * Surrogate: [default_surrogate]\cr
-#' * Acquisition Function: [default_acqfun]\cr
-#' * Acqfun Optimizer: [default_acqopt]\cr
+#' * Acquisition Function: [default_acqfunction]\cr
+#' * Acqfun Optimizer: [default_acqoptimizer]\cr
+#' * Result Assigner: [default_result_assigner]\cr
 #'
 #' @family mbo_defaults
 NULL
@@ -25,10 +26,10 @@ NULL
 #' @return [loop_function]
 #' @family mbo_defaults
 #' @export
-default_loopfun = function(instance) {
-  if (test_r6(instance, classes = "OptimInstanceSingleCrit")) {
+default_loop_function = function(instance) {
+  if (inherits(instance, "OptimInstanceSingleCrit")) {
     bayesopt_ego
-  } else if (test_r6(instance, classes = "OptimInstanceMultiCrit")) {
+  } else if (inherits(instance, "OptimInstanceMultiCrit")) {
     bayesopt_smsego
   }
 }
@@ -174,11 +175,11 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
 #' @return [AcqFunction]
 #' @family mbo_defaults
 #' @export
-default_acqfun = function(instance) {
+default_acqfunction = function(instance) {
   assert_r6(instance, classes = "OptimInstance")
-  if (testR6(instance, classes = "OptimInstanceSingleCrit")) {
+  if (inherits(instance, "OptimInstanceSingleCrit")) {
     AcqFunctionEI$new()
-  } else if (testR6(instance, classes = "OptimInstanceMultiCrit")) {
+  } else if (inherits(instance, "OptimInstanceMultiCrit")) {
     AcqFunctionSmsEgo$new()
   }
 }
@@ -193,8 +194,24 @@ default_acqfun = function(instance) {
 #' @return [AcqOptimizer]
 #' @family mbo_defaults
 #' @export
-default_acqopt = function(acq_function) {
+default_acqoptimizer = function(acq_function) {
   assert_r6(acq_function, classes = "AcqFunction")
   AcqOptimizer$new(optimizer = opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))  # FIXME: what do we use
+}
+
+#' @title Default Result Assigner
+#'
+#' @description
+#' Chooses a default result assigner.
+#' Defaults to [ResultAssignerArchive].
+#'
+#' @param instance ([bbotk::OptimInstance])\cr
+#'   An object that inherits from [bbotk::OptimInstance].
+#' @return [ResultAssigner]
+#' @family mbo_defaults
+#' @export
+default_result_assigner = function(instance) {
+  assert_r6(instance, classes = "OptimInstance")
+  ResultAssignerArchive$new()
 }
 

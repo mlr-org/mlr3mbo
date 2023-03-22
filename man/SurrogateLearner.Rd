@@ -66,7 +66,7 @@ if (requireNamespace("mlr3learners") &
 
   surrogate$update()
 
-  surrogate$model$model
+  surrogate$learner$model
 }
 }
 \section{Super class}{
@@ -93,8 +93,11 @@ Stores the feature types the surrogate can handle, e.g. \code{"logical"}, \code{
 A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
 
 \item{\code{properties}}{(\code{character()})\cr
-Stores a set of properties/capabilities the learner has.
+Stores a set of properties/capabilities the surrogate has.
 A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
+
+\item{\code{predict_type}}{(\code{character(1)})\cr
+Retrieves the currently active predict type, e.g. \code{"response"}.}
 }
 \if{html}{\out{</div>}}
 }

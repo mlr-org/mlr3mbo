@@ -9,23 +9,23 @@
 Surrogate = R6Class("Surrogate",
   public = list(
 
-    #' @field model (model)\cr
-    #'   Arbitrary model object depending on the subclass.
-    model = NULL,
+    #' @field learner (learner)\cr
+    #'   Arbitrary learner object depending on the subclass.
+    learner = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param model (model)\cr
-    #'   Arbitrary model object depending on the subclass.
+    #' @param learner (learner)\cr
+    #'   Arbitrary learner object depending on the subclass.
     #' @template param_archive_surrogate
     #' @template param_x_cols_surrogate
     #' @template param_y_cols_surrogate
     #' @param param_set ([paradox::ParamSet])\cr
     #'   Parameter space description depending on the subclass.
-    initialize = function(model, archive, x_cols, y_cols, param_set) {
+    initialize = function(learner, archive, x_cols, y_cols, param_set) {
       # most assertions are done in subclasses
-      self$model = model
+      self$learner = learner
       private$.archive = assert_r6(archive, classes = "Archive", null.ok = TRUE)
       private$.x_cols = assert_character(x_cols, min.len = 1L, null.ok = TRUE)
       private$.y_cols = y_cols = assert_character(y_cols, min.len = 1L, null.ok = TRUE)
@@ -35,7 +35,7 @@ Surrogate = R6Class("Surrogate",
     },
 
     #' @description
-    #' Train model with new data.
+    #' Train learner with new data.
     #' Subclasses must implement `$private.update()`.
     #'
     #' @return `NULL`.
@@ -174,6 +174,15 @@ Surrogate = R6Class("Surrogate",
         stop("Abstract.")
       } else {
         stop("$properties is read-only.")
+      }
+    },
+
+    #' @template field_predict_type_surrogate
+    predict_type = function(rhs) {
+      if (missing(rhs)) {
+        stop("Abstract.")
+      } else {
+        stop("$predict_type is read-only. To change it, modify $predict_type of the learner directly.")
       }
     }
   ),

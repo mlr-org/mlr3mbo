@@ -18,7 +18,7 @@ multi-objective Bayesian Optimization.
 ## Get Started
 
 An overview and gentle introduction is given in [this
-vignette](https://mlr3mbo.mlr-org.com/articles/mlr3mbo.html).
+vignette](https://mlr3mbo.mlr-org.com/dev/articles/mlr3mbo.html).
 
 ## Design
 
@@ -122,7 +122,7 @@ task = tsk("pima")
 learner = lrn("classif.rpart", cp = to_tune(lower = 1e-04, upper = 1, logscale = TRUE))
 
 instance = tune(
-  method = "mbo",
+  tuner = tnr("mbo"),
   task = task,
   learner = learner,
   resampling = rsmp("holdout"),
@@ -132,5 +132,5 @@ instance = tune(
 instance$result
 ```
 
-    ##           cp learner_param_vals  x_domain classif.ce
-    ## 1: -5.001241          <list[2]> <list[1]>  0.1914062
+    ##         cp learner_param_vals  x_domain classif.ce
+    ## 1: -4.6357          <list[2]> <list[1]>  0.1914062

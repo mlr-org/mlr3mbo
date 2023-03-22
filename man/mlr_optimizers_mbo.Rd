@@ -116,13 +116,8 @@ The acquisition function optimizer.}
 Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
 
-\item{\code{result_function}}{(\code{function} | \code{NULL})\cr
-Optional function called after the optimization terminates.
-Determines how the final result of the optimization is calculated.
-Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
-See for example \link{result_by_surrogate_design} which is used by default if the
-\link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
-\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
+\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+The result assigner.}
 
 \item{\code{param_classes}}{(\code{character()})\cr
 Supported parameter classes that the optimizer can optimize.
@@ -169,8 +164,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 If \code{surrogate} is \code{NULL} and the \code{acq_function$surrogate} field is populated, this \link{Surrogate} is used.
 Otherwise, \code{default_surrogate(instance)} is used.
 If \code{acq_function} is NULL and the \code{acq_optimizer$acq_function} field is populated, this \link{AcqFunction} is used (and therefore its \verb{$surrogate} if  populated; see above).
-Otherwise \code{default_acqfun(instance)} is used.
-If \code{acq_optimizer} is NULL, \code{default_acqopt(instance)} is used.
+Otherwise \code{default_acqfunction(instance)} is used.
+If \code{acq_optimizer} is NULL, \code{default_acqoptimizer(instance)} is used.
 
 Even if already initialized, the \verb{$surrogate$archive} field will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the current \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
 
@@ -182,7 +177,7 @@ For more information on default values for \code{loop_function}, \code{surrogate
   acq_function = NULL,
   acq_optimizer = NULL,
   args = NULL,
-  result_function = NULL
+  result_assigner = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -205,13 +200,8 @@ The acquisition function optimizer.}
 Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
 
-\item{\code{result_function}}{(\code{function} | \code{NULL})\cr
-Optional function called after the optimization terminates.
-Determines how the final result of the optimization is calculated.
-Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
-See for example \link{result_by_surrogate_design} which is used by default if the
-\link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
-\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
+\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+The result assigner.}
 }
 \if{html}{\out{</div>}}
 }
@@ -235,7 +225,7 @@ Print method.
 \subsection{Method \code{reset()}}{
 Reset the optimizer.
 Sets the following fields to \code{NULL}:
-\code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{args}, \code{result_function}
+\code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{args}, \code{result_assigner}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$reset()}\if{html}{\out{</div>}}
 }

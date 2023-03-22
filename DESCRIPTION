@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 0.1.1.9000
+Version: 0.2.0.9000
 Authors@R: c(
     person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0003-4152-5308")),
@@ -83,7 +83,12 @@ Collate:
     'AcqFunctionPI.R'
     'AcqFunctionSmsEgo.R'
     'AcqOptimizer.R'
+    'aaa.R'
     'OptimizerMbo.R'
+    'mlr_result_assigners.R'
+    'ResultAssigner.R'
+    'ResultAssignerArchive.R'
+    'ResultAssignerSurrogate.R'
     'Surrogate.R'
     'SurrogateLearner.R'
     'SurrogateLearnerCollection.R'
@@ -97,8 +102,6 @@ Collate:
     'helper.R'
     'loop_function.R'
     'mbo_defaults.R'
-    'result_by_default.R'
-    'result_by_surrogate_design.R'
     'sugar.R'
     'zzz.R'
 VignetteBuilder: knitr
