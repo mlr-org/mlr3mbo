@@ -22,6 +22,9 @@
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html</loc>
   </url>
   <url>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/ResultAssigner.html</loc>
+  </url>
+  <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.html</loc>
   </url>
   <url>
@@ -44,6 +47,9 @@
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_loopfun.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_result_assigner.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_surrogate.html</loc>
@@ -103,13 +109,19 @@
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_optimizers_mbo.html</loc>
   </url>
   <url>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_result_assigners.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_result_assigners_archive.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_result_assigners_surrogate.html</loc>
+  </url>
+  <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_tuners_mbo.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/dev/reference/result_by_default.html</loc>
-  </url>
-  <url>
-    <loc>https://mlr3mbo.mlr-org.com/dev/reference/result_by_surrogate_design.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/ras.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/srlrn.html</loc>

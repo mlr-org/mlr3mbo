@@ -144,14 +144,9 @@ Further arguments passed to the <code>loop_function</code>.
 For example, <code>random_interleave_iter</code>.</p></dd>
 
 
-<dt><code>result_function</code></dt>
-<dd><p>(<code>function</code> | <code>NULL</code>)<br>
-Optional function called after the optimization terminates.
-Determines how the final result of the optimization is calculated.
-Requires arguments <code>inst</code> (the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>) and <code>self</code> (the OptimizerMbo).
-See for example <a href="result_by_surrogate_design.html">result_by_surrogate_design</a> which is used by default if the
-<a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> has the property <code>"noisy"</code> (which is the case for a
-<a href="https://mlr3tuning.mlr-org.com/reference/TuningInstanceSingleCrit.html" class="external-link">mlr3tuning::TuningInstanceSingleCrit</a> or <a href="https://mlr3tuning.mlr-org.com/reference/TuningInstanceMultiCrit.html" class="external-link">mlr3tuning::TuningInstanceMultiCrit</a>).</p></dd>
+<dt><code>result_assigner</code></dt>
+<dd><p>(<a href="ResultAssigner.html">ResultAssigner</a> | <code>NULL</code>)<br>
+The result assigner.</p></dd>
 
 
 <dt><code>param_classes</code></dt>
@@ -208,7 +203,7 @@ If <code>acq_optimizer</code> is NULL, <code>default_acqopt(instance)</code> is 
 <span>  acq_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  acq_optimizer <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  args <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  result_function <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  result_assigner <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -240,14 +235,9 @@ Further arguments passed to the <code>loop_function</code>.
 For example, <code>random_interleave_iter</code>.</p></dd>
 
 
-<dt><code>result_function</code></dt>
-<dd><p>(<code>function</code> | <code>NULL</code>)<br>
-Optional function called after the optimization terminates.
-Determines how the final result of the optimization is calculated.
-Requires arguments <code>inst</code> (the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>) and <code>self</code> (the OptimizerMbo).
-See for example <a href="result_by_surrogate_design.html">result_by_surrogate_design</a> which is used by default if the
-<a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> has the property <code>"noisy"</code> (which is the case for a
-<a href="https://mlr3tuning.mlr-org.com/reference/TuningInstanceSingleCrit.html" class="external-link">mlr3tuning::TuningInstanceSingleCrit</a> or <a href="https://mlr3tuning.mlr-org.com/reference/TuningInstanceMultiCrit.html" class="external-link">mlr3tuning::TuningInstanceMultiCrit</a>).</p></dd>
+<dt><code>result_assigner</code></dt>
+<dd><p>(<a href="ResultAssigner.html">ResultAssigner</a> | <code>NULL</code>)<br>
+The result assigner.</p></dd>
 
 
 </dl><p></p></div>
@@ -269,7 +259,7 @@ See for example <a href="result_by_surrogate_design.html">result_by_surrogate_de
 <h3 id="method-reset-">Method <code>reset()</code><a class="anchor" aria-label="anchor" href="#method-reset-"></a></h3>
 <p>Reset the optimizer.
 Sets the following fields to <code>NULL</code>:
-<code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>, <code>args</code>, <code>result_function</code></p><div class="section">
+<code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>, <code>args</code>, <code>result_assigner</code></p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">OptimizerMbo</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
