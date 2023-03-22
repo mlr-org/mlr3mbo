@@ -7,6 +7,7 @@
 Abstract result assigner class.
 
 A result assigner is responsible for assigning the final optimization result to the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+Normally, it is only used within an \link{OptimizerMbo}.
 }
 \seealso{
 Other Result Assigner: 

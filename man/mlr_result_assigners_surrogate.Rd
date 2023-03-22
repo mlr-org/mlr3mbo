@@ -10,6 +10,9 @@ This is especially useful in the case of noisy objective functions.
 
 In the case of operating on an \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} the \link{SurrogateLearnerCollection} must use as many learners as there are objective functions.
 }
+\examples{
+result_assigner = ras("surrogate")
+}
 \seealso{
 Other Result Assigner: 
 \code{\link{ResultAssigner}},

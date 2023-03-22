@@ -9,6 +9,8 @@
 #'
 #' @family Result Assigner
 #' @export
+#' @examples
+#' result_assigner = ras("archive")
 ResultAssignerArchive = R6Class("ResultAssignerArchive",
   inherit = ResultAssigner,
 

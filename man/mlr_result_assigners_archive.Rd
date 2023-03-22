@@ -8,6 +8,9 @@
 Result assigner that chooses the final point(s) based on all evaluations in the \link[bbotk:Archive]{bbotk::Archive}.
 This mimics the default behavior of any \link[bbotk:Optimizer]{bbotk::Optimizer}.
 }
+\examples{
+result_assigner = ras("archive")
+}
 \seealso{
 Other Result Assigner: 
 \code{\link{ResultAssigner}},

@@ -6,6 +6,7 @@
 #' Abstract result assigner class.
 #'
 #' A result assigner is responsible for assigning the final optimization result to the [bbotk::OptimInstance].
+#' Normally, it is only used within an [OptimizerMbo].
 #'
 #' @family Result Assigner
 #' @export

@@ -11,6 +11,8 @@
 #'
 #' @family Result Assigner
 #' @export
+#' @examples
+#' result_assigner = ras("surrogate")
 ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
   inherit = ResultAssigner,
 
