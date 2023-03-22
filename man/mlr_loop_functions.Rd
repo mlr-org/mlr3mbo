@@ -33,7 +33,8 @@ as.data.table(mlr_loop_functions)
 }
 \seealso{
 Other Dictionary: 
-\code{\link{mlr_acqfunctions}}
+\code{\link{mlr_acqfunctions}},
+\code{\link{mlr_result_assigners}}
 
 Other Loop Function: 
 \code{\link{loop_function}},

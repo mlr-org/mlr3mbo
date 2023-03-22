@@ -120,3 +120,27 @@ acqo = function(optimizer, terminator, acq_function = NULL, ...) {
   acqopt
 }
 
+#' @title Syntactic Sugar Result Assigner Construction
+#'
+#' @description
+#' This function complements [mlr_result_assigners] with functions in the spirit
+#' of `mlr_sugar` from \CRANpkg{mlr3}.
+#'
+#' @param .key (`character(1)`)\cr
+#' Key passed to the respective [dictionary][mlr3misc::Dictionary] to retrieve
+#' the object.
+#' @param ... (named `list()`)\cr
+#' Named arguments passed to the constructor, to be set as parameters in the
+#' [paradox::ParamSet], or to be set as public field. See
+#' [mlr3misc::dictionary_sugar_get()] for more details.
+#'
+#' @return [ResultAssigner]
+#'
+#' @export
+#' @examples
+#' ras("archive")
+#' @export
+ras = function(.key, ...) {
+  dictionary_sugar_get(mlr_result_assigners, .key, ...)
+}
+

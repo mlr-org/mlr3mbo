@@ -73,13 +73,8 @@ The acquisition function optimizer.}
 Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
 
-\item{\code{result_function}}{(\code{function} | \code{NULL})\cr
-Optional function called after the optimization terminates.
-Determines how the final result of the optimization is calculated.
-Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
-See for example \link{result_by_surrogate_design} which is used by default if the
-\link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
-\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
+\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+The result assigner.}
 
 \item{\code{param_classes}}{(\code{character()})\cr
 Supported parameter classes that the optimizer can optimize.
@@ -133,7 +128,7 @@ the respective fields are simply (settable) active bindings to the fields of the
   acq_function = NULL,
   acq_optimizer = NULL,
   args = NULL,
-  result_function = NULL
+  result_assigner = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -156,13 +151,8 @@ The acquisition function optimizer.}
 Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
 
-\item{\code{result_function}}{(\code{function} | \code{NULL})\cr
-Optional function called after the optimization terminates.
-Determines how the final result of the optimization is calculated.
-Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
-See for example \link{result_by_surrogate_design} which is used by default if the
-\link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
-\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
+\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+The result assigner.}
 }
 \if{html}{\out{</div>}}
 }
@@ -186,7 +176,7 @@ Print method.
 \subsection{Method \code{reset()}}{
 Reset the tuner.
 Sets the following fields to \code{NULL}:
-\code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{args}, \code{result_function}
+\code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{args}, \code{result_assigner}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TunerMbo$reset()}\if{html}{\out{</div>}}
 }

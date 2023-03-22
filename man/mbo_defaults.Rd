@@ -11,6 +11,7 @@ respective fields are not set during initialization.
 \item Surrogate: \link{default_surrogate}\cr
 \item Acquisition Function: \link{default_acqfun}\cr
 \item Acqfun Optimizer: \link{default_acqopt}\cr
+\item Result Assigner: \link{default_result_assigner}\cr
 }
 }
 \seealso{
@@ -18,6 +19,7 @@ Other mbo_defaults:
 \code{\link{default_acqfun}()},
 \code{\link{default_acqopt}()},
 \code{\link{default_loopfun}()},
+\code{\link{default_result_assigner}()},
 \code{\link{default_surrogate}()}
 }
 \concept{mbo_defaults}

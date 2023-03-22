@@ -266,7 +266,7 @@ For more details on error handling, see the [Safety Nets](#safety-nets) section.
 
 Note that this insample performance assertion is not always meaningful, e.g., in the case of using a Gaussian Process with no nugget, the insample performance will always be perfect.
 
-Internally, the learner is fitted on a `r ref("mlr3::TaskRegr", "regression task")` constructed from the `r ref("bbotk::Archive", "Archive")` of the `r ref("bbotk::OptimInstance", "OptimInstance")` that is to be optimized and features and the target variable are determined automatically but can also be specified via the `x_cols` and `y_cols` active bindings.
+Internally, the learner is fitted on a `r ref("mlr3::TaskRegr", "regression task")` constructed from the `r ref("bbotk::Archive", "Archive")` of the `r ref("bbotk::OptimInstance", "OptimInstance")` that is to be optimized and features and the target variable are determined automatically but can also be specified via the `$x_cols` and `$y_cols` active bindings.
 Ideally, the `archive` is already passed during construction, however, lazy initialization is also possible (i.e., the `$archive` field will be automatically populated within the optimization routine of an `r ref("mlr3mbo::mlr_optimizers_mbo", "OptimizerMbo")`).
 
 Important methods are `$update()` and `$predict()` with the former one typically being used within the `loop_function` and the latter one being used within the implementation of an acquisition function.
@@ -294,10 +294,9 @@ Based on a surrogate, an acquisition function quantifies the attractiveness of e
 A popular example is given by the Expected Improvement [@jones_1998]:
 
 $$
-\mathbb{E}_{y} \left[ \max \left( f_{\mathrm{min}} - y, 0 \right) \right]
+\mathbb{E} \left[ \max \left( f_{\mathrm{min}} - Y(\mathbf{x}), 0 \right) \right]
 $$
-Here, $y$ is the surrogate prediction for a given point $x$ (which when using a Gaussian Process
-follows a normal distribution) and $f_{\mathrm{min}}$ is the currently best function value observed so far (when assuming minimization).
+Here, $Y(\mathbf{x})$ is the surrogate prediction (a random variable) for a given point $\mathbf{x}$ (which when using a Gaussian Process follows a normal distribution) and $f_{\mathrm{min}}$ is the currently best function value observed so far (when assuming minimization).
 
 To get an overview of available acquisition functions, the following dictionary can be inspected:
 
@@ -400,7 +399,7 @@ Again, you can also use custom `Optimizer`s or `Terminator`s by implementing new
 
 Having introduced all building blocks we are now ready to put everything together in the form of an `r ref( "mlr3mbo::mlr_optimizers_mbo", "OptimizerMbo")` or `r ref("mlr3mbo::mlr_tuners_mbo", "TunerMbo")`.
 
-`OptimizerMbo` inherits from `r ref("bbotk::Optimizer", "Optimizer")` and requires a `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`.
+`r ref( "mlr3mbo::mlr_optimizers_mbo", "OptimizerMbo")` inherits from `r ref("bbotk::Optimizer", "Optimizer")` and requires a `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`.
 
 Construction is performed via:
 
@@ -425,13 +424,33 @@ optimizer = opt("mbo",
 optimizer
 ```
 
-Additional arguments, i.e., arguments of the `loop_function` can be passed via the `args` active binding.
-Finally, the mechanism how the final result is obtained after the optimization process (i.e., the best point in the case of single-objective and the Pareto set in the case of multi-objective optimization) can be changed via the `result_function` active binding.
-As an example, `r ref("mlr3mbo::result_by_surrogate_design", "result_by_surrogate_design")` will choose the final solution based on the prediction of the surrogate instead of the evaluations logged in the `archive` which is sensible in the case of noisy objective functions.
+Additional arguments, i.e., arguments of the `loop_function` can be passed via the `args` argument during construction or the `$args` active binding.
+Finally, the mechanism how the final result is obtained after the optimization process (i.e., the best point in the case of single-objective and the Pareto set in the case of multi-objective optimization) can be changed via the `result_assigner` argument during construction or the `$result_assigner` active binding.
+As an example, `r ref("mlr3mbo::mlr_result_assigners_surrogate", "ResultAssignerSurrogate")` will choose the final solution based on the prediction of the surrogate instead of the evaluations logged in the `archive` which is sensible in the case of noisy objective functions.
+The default, however, is to use `r ref("mlr3mbo::mlr_result_assigners_archive", "ResultAssignerArchive")` which will directly choose the final solution based on the evaluations logged in the `archive`.
+To get an overview of available result assigners, the following dictionary can be inspected:
 
-Note that important fields such as `$param_classes`, `$packages`, `$properties` are automatically determined based on the choice of the `loop_function`, `surrogate`, `acq_function`, and `acq_optimizer`.
+```{r}
+as.data.table(mlr_result_assigners)
+```
 
-If arguments such as the `surrogate`, `acq_function`, and `acq_optimizer` were not fully specified during construction, e.g., the `surrogate` missing the `archive`, or the `acq_function` missing the `surrogate`, lazy initialization is completed prior to the optimizer being used for optimization.
+The dictionary shows the `key`, i.e., ID of the result assigner, a brief description, and how the documentation can be accessed.
+
+Construction of result assigners is straightforward:
+
+```{r}
+result_assigner = ResultAssignerArchive$new()
+```
+
+Syntactic sugar:
+
+```{r}
+result_assigner = ras("archive")
+```
+
+Note that important fields of an `OptimizerMbo` such as `$param_classes`, `$packages`, `$properties` are automatically determined based on the choice of the `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`.
+
+If arguments such as the `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner` were not fully initialized during construction, e.g., the `surrogate` missing the `archive`, or the `acq_function` missing the `surrogate`, lazy initialization is completed prior to the optimizer being used for optimization.
 
 An object of class `OptimizerMbo` can be used to optimize an object of class `r ref("bbotk::OptimInstanceSingleCrit", "OptimInstanceSingleCrit")` or `r ref("bbotk::OptimInstanceMultiCrit", "OptimInstanceMultiCrit")`.
 
@@ -498,7 +517,7 @@ These errors are then caught and a fallback is triggered: Evaluating the next ca
 Note that the same mechanism is actually also used to handle random interleaving.
 
 To illustrate this error handling mechanism, consider the following scenario:
-We try to minimize $f(x) = x^2$ for $x \in [-1, 1]$, however, our Gaussian Process fails due to data points being too close to each other:
+We try to minimize $f: [-1, 1] \rightarrow \mathbb{R}, x \mapsto x^2$, however, our Gaussian Process fails due to data points being too close to each other:
 
 ```{r}
 set.seed(2906)
@@ -566,8 +585,8 @@ To make sure that your BO loop behaved as expected, always inspect the log of th
 
 Writing a custom `loop_function` is straightforward.
 
-Any `loop_function` must be a decorated member of the S3 class `r ref("mlr3mbo::loop_function", "loop_function")`.
-Arguments must include `instance`, `surrogate`, `acq_function`, and `acq_optimizer` and attributes must include `id` (id of the loop function), `label` (brief description), `instance` ("single-crit" and or "multi_crit"), and `man` (link to the manual page).
+Any `loop_function` must be an object of the S3 class `r ref("mlr3mbo::loop_function", "loop_function")` (simply a standard R function with some requirements regarding its arguments and attributes).
+Arguments of the function must include `instance`, `surrogate`, `acq_function`, and `acq_optimizer` and attributes must include `id` (id of the loop function), `label` (brief description), `instance` ("single-crit" and or "multi_crit"), and `man` (link to the manual page).
 
 Technically, any `loop_function` therefore looks like the following:
 
@@ -818,7 +837,6 @@ tuner = tnr("mbo",
 set.seed(2906)
 tuner$optimize(instance)
 instance$result
-instance$archive$best() # result_function is result_by_surrogate_design
 ```
 
 ## Multi-Objective HPO
@@ -851,13 +869,11 @@ surrogate = srlrn(lrn("regr.km",
 acq_function = acqf("ei")
 acq_optimizer = acqo(opt("focus_search", n_points = 100L, maxit = 9),
   terminator = trm("evals", n_evals = 3000))
-# result_by_surrogate_design is by default not sensible for ParEGO
 tuner = tnr("mbo",
   loop_function = bayesopt_parego,
   surrogate = surrogate,
   acq_function = acq_function,
-  acq_optimizer = acq_optimizer,
-  result_function = result_by_default)
+  acq_optimizer = acq_optimizer)
 
 set.seed(2906)
 tuner$optimize(instance)

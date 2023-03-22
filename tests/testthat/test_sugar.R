@@ -22,3 +22,8 @@ test_that("AcqOptimizer sugar", {
   expect_equal(acqoptimizer$param_set$values$catch_errors, FALSE)
 })
 
+test_that("ResultAssigner sugar", {
+  resultassigner = ras("surrogate")
+  expect_r6(resultassigner, "ResultAssigner")
+})
+

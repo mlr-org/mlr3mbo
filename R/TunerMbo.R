@@ -65,9 +65,9 @@ TunerMbo = R6Class("TunerMbo",
     #' @template param_acq_function
     #' @template param_acq_optimizer
     #' @template param_args
-    #' @template param_result_function
-    initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
-      super$initialize(optimizer = OptimizerMbo$new(loop_function = loop_function, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, args = args, result_function = result_function), man = "mlr3mbo::TunerMbo")
+    #' @template param_result_assigner
+    initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_assigner = NULL) {
+      super$initialize(optimizer = OptimizerMbo$new(loop_function = loop_function, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, args = args, result_assigner = result_assigner), man = "mlr3mbo::TunerMbo")
     },
 
     #' @description
@@ -89,7 +89,7 @@ TunerMbo = R6Class("TunerMbo",
     #' @description
     #' Reset the tuner.
     #' Sets the following fields to `NULL`:
-    #' `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, `args`, `result_function`
+    #' `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, `args`, `result_assigner`
     reset = function() {
       private$.optimizer$reset()
     }
@@ -148,12 +148,12 @@ TunerMbo = R6Class("TunerMbo",
       }
     },
 
-    #' @template field_result_function
-    result_function = function(rhs) {
+    #' @template field_result_assigner
+    result_assigner = function(rhs) {
       if (missing(rhs)) {
-        private$.optimizer$result_function
+        private$.optimizer$result_assigner
       } else {
-        private$.optimizer$result_function = assert_function(rhs, args = c("instance", "optimizer_mbo"), null.ok = TRUE)
+        private$.optimizer$result_assigner = assert_r6(rhs, classes = "ResultAssigner", null.ok = TRUE)
       }
     },
 

@@ -152,7 +152,7 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @field fun (`function`)\cr
-    #'   Pointing to the private acquistion function to be implemented by subclasses.
+    #'   Pointing to the private acquisition function to be implemented by subclasses.
     fun = function(lhs) {
       if (!missing(lhs) && !identical(lhs, private$.fun)) stop("$fun is read-only.")
       private$.fun

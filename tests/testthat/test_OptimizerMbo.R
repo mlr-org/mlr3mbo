@@ -80,7 +80,7 @@ test_that("OptimizerMbo works for noisy problems", {
     surrogate = SurrogateLearner$new(REGR_KM_NOISY),
     acq_function = AcqFunctionEI$new(),
     acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L)),
-    result_function = result_by_surrogate_design,
+    result_assigner = ResultAssignerSurrogate$new(surrogate = SurrogateLearner$new(REGR_KM_NOISY))
   )
 
   design = MAKE_DESIGN(instance, 4L)
