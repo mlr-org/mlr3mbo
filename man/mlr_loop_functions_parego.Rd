@@ -127,7 +127,7 @@ if (requireNamespace("mlr3learners") &
 }
 \seealso{
 Other Loop Function: 
-\code{\link{loop_function}()},
+\code{\link{loop_function}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_mpcl}},
 \code{\link{mlr_loop_functions_smsego}},

@@ -3,7 +3,7 @@
 \name{mlr_acqfunctions_ehvi}
 \alias{mlr_acqfunctions_ehvi}
 \alias{AcqFunctionEHVI}
-\title{Acquisition Function EHVI}
+\title{Acquisition Function Expected Hypervolume Improvement}
 \description{
 Expected Hypervolume Improvement.
 }
