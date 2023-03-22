@@ -40,13 +40,13 @@
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/acqo.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_acqfun.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_acqfunction.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_acqopt.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_acqoptimizer.html</loc>
   </url>
   <url>
-    <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_loopfun.html</loc>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_loop_function.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_result_assigner.html</loc>

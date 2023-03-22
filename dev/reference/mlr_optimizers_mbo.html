@@ -192,8 +192,8 @@ Required packages are determined based on the <code>surrogate</code> and the <co
 <p>If <code>surrogate</code> is <code>NULL</code> and the <code>acq_function$surrogate</code> field is populated, this <a href="Surrogate.html">Surrogate</a> is used.
 Otherwise, <code>default_surrogate(instance)</code> is used.
 If <code>acq_function</code> is NULL and the <code>acq_optimizer$acq_function</code> field is populated, this <a href="AcqFunction.html">AcqFunction</a> is used (and therefore its <code>$surrogate</code> if  populated; see above).
-Otherwise <code>default_acqfun(instance)</code> is used.
-If <code>acq_optimizer</code> is NULL, <code>default_acqopt(instance)</code> is used.</p>
+Otherwise <code>default_acqfunction(instance)</code> is used.
+If <code>acq_optimizer</code> is NULL, <code>default_acqoptimizer(instance)</code> is used.</p>
 <p>Even if already initialized, the <code>$surrogate$archive</code> field will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the current <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> to be optimized.</p>
 <p>For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code> and <code>acq_optimizer</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
