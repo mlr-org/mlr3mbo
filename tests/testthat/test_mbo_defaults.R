@@ -1,3 +1,15 @@
+test_that("default_loop_function", {
+  instance = MAKE_INST_1D()
+  loop_function = default_loop_function(instance)
+  expect_class(loop_function, classes = "loop_function")
+  expect_true(attr(loop_function, "id") == "bayesopt_ego")
+
+  instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D)
+  loop_function = default_loop_function(instance)
+  expect_class(loop_function, classes = "loop_function")
+  expect_true(attr(loop_function, "id") == "bayesopt_smsego")
+})
+
 test_that("default_surrogate", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("mlr3pipelines")
@@ -96,14 +108,14 @@ test_that("default_surrogate", {
   expect_list(surrogate$learner, types = "LearnerRegrFeatureless")
 })
 
-test_that("default_acqfun", {
+test_that("default_acqfunction", {
   instance = MAKE_INST_1D()
-  acq = default_acqfun(instance)
+  acq = default_acqfunction(instance)
   expect_r6(acq, "AcqFunctionEI")
 })
 
-test_that("default_acqopt", {
-  acqopt = default_acqopt(default_acqfun(MAKE_INST_1D()))
+test_that("default_acqoptimizer", {
+  acqopt = default_acqoptimizer(default_acqfunction(MAKE_INST_1D()))
   expect_r6(acqopt, "AcqOptimizer")
   expect_r6(acqopt$optimizer, "OptimizerRandomSearch")
 })
@@ -146,7 +158,7 @@ test_that("stability and defaults", {
   expect_r6(surrogate$learner, "LearnerRegrError")
   expect_equal(surrogate$learner$encapsulate, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
-  acq_function = default_acqfun(instance)
+  acq_function = default_acqfunction(instance)
   expect_r6(acq_function, "AcqFunctionEI")
   acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   acq_optimizer$param_set$values$logging_level = "info"
