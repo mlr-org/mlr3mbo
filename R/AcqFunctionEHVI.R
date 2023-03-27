@@ -4,9 +4,9 @@
 #' @name mlr_acqfunctions_ehvi
 #'
 #' @description
-#' Expected Hypervolume Improvement.
-#'
-#' @section Parameters:
+#' Exact Expected Hypervolume Improvement.
+#' Calculates the exact expected hypervolume improvement in the case of two objectives.
+#' See Emmerich et al. (2016) for details.
 #'
 #' @references
 #' * `r format_bib("emmerich_2016")`
@@ -56,16 +56,17 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
 
     #' @field ys_front (`matrix()`)\cr
     #'   Approximated Pareto front. Sorted by the first objective.
-    #'   Signs are corrected for assuming minimization of objectives.
+    #'   Signs are corrected with respect to assuming minimization of objectives.
     ys_front = NULL,
 
     #' @field ref_point (`numeric()`)\cr
     #'   Reference point.
+    #'   Signs are corrected with respect to assuming minimization of objectives.
     ref_point = NULL,
 
     #' @field ys_front_augmented (`matrix()`)\cr
     #'   Augmented approximated Pareto front. Sorted by the first objective.
-    #'   Signs are corrected for assuming minimization of objectives.
+    #'   Signs are corrected with respect to assuming minimization of objectives.
     ys_front_augmented = NULL,
 
     #' @description
@@ -80,25 +81,25 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
     #' @description
     #' Updates acquisition function and sets `ys_front`, `ref_point`.
     update = function() {
-      # FIXME: how do we handle different implementations for different ks
-      #        the following works for k = 2
       n_obj = length(self$archive$cols_y)
-      columns = self$archive$cols_y
+      if (n_obj > 2L) {
+        stopf("%s only works for exactly two objectives.", self$label)
+      }
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
-      for (column in columns) {
+      for (column in self$archive$cols_y) {
         set(ys, j = column, value = ys[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
       }
       ys = as.matrix(ys)
 
-      self$ref_point = apply(ys, MARGIN = 2L, FUN = min) - 1  # offset = 1 like in mlrMBO
+      self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1  # offset = 1 like in mlrMBO
 
       self$ys_front = self$archive$best()[, self$archive$cols_y, with = FALSE]
-      for (column in columns) {
+      for (column in self$archive$cols_y) {
         set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
       }
-      setorderv(self$ys_front, cols = columns[1L], order = -1L)
+      setorderv(self$ys_front, cols = self$archive$cols_y[1L], order = -1L)
 
-      ys_front_augmented = rbind(t(setNames(c(self$ref_point[1L], - Inf), nm = columns)), self$ys_front, t(setNames(c(- Inf, self$ref_point[2L]), nm = columns)))
+      ys_front_augmented = rbind(t(setNames(c(self$ref_point[1L], - Inf), nm = self$archive$cols_y)), self$ys_front, t(setNames(c(- Inf, self$ref_point[2L]), nm = self$archive$cols_y)))
 
       self$ys_front = as.matrix(self$ys_front)
 
@@ -128,28 +129,31 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
       }
       ses = map_dtc(ps, "se")
 
-      map_dtr(seq_len(nrow(means)), function(j) {  # emmerich_2016 5.2.1 (16)
-        first_summands = map_dbl(seq_len(nrow(self$ys_front_augmented))[-1L], function(i) {
-          (self$ys_front_augmented[i - 1L, ][[columns[1L]]] - self$ys_front_augmented[i, ][[columns[1L]]]) *
-            pnorm(self$ys_front_augmented[i, ][[columns[1L]]], mean = means[j, ][[columns[1L]]], sd = ses[j, ][[columns[1L]]]) *
-            psi_function(a = self$ys_front_augmented[i, ][[columns[2L]]], b = self$ys_front_augmented[i, ][[columns[2L]]], mu = means[j, ][[columns[2L]]], sigma = ses[j, ][[columns[2L]]])
-        })
-        second_summands = map_dbl(seq_len(nrow(self$ys_front_augmented))[-1L], function(i) {
-          (psi_function(a = self$ys_front_augmented[i - 1L, ][[columns[1L]]], b = self$ys_front_augmented[i - 1L, ][[columns[1L]]], mu = means[j, ][[columns[1L]]], sigma = ses[j, ][[columns[1L]]]) -
-            psi_function(a = self$ys_front_augmented[i - 1L, ][[columns[1L]]], b = self$ys_front_augmented[i, ][[columns[1L]]], mu = means[j, ][[columns[1L]]], sigma = ses[j, ][[columns[1L]]])) *
-            psi_function(a = self$ys_front_augmented[i, ][[columns[2L]]], b = self$ys_front_augmented[i, ][[columns[2L]]], mu = means[j, ][[columns[2L]]], sigma = ses[j, ][[columns[2L]]])
-        })
-        data.table(acq_ehvi = sum(first_summands, na.rm = TRUE) + sum(second_summands, na.rm = TRUE))  # NA is 0
+      # Emmerich et al. (2016) 5.2.1 (16) but vectorized over candidate points
+      first_summands = map(seq_len(nrow(self$ys_front_augmented))[-1L], function(i) {
+        tmp = (self$ys_front_augmented[i - 1L, ][[columns[1L]]] - self$ys_front_augmented[i, ][[columns[1L]]]) *
+          pnorm(self$ys_front_augmented[i, ][[columns[1L]]], mean = means[[columns[1L]]], sd = ses[[columns[1L]]]) *
+          psi_function(a = self$ys_front_augmented[i, ][[columns[2L]]], b = self$ys_front_augmented[i, ][[columns[2L]]], mu = means[[columns[2L]]], sigma = ses[[columns[2L]]])
+        tmp[is.na(tmp)] = 0  # NA is 0
+        tmp
       })
-      # FIXME: what about ses = 0
-      # FIXME: how to add loop
+      second_summands = map(seq_len(nrow(self$ys_front_augmented))[-1L], function(i) {
+        tmp = (psi_function(a = self$ys_front_augmented[i - 1L, ][[columns[1L]]], b = self$ys_front_augmented[i - 1L, ][[columns[1L]]], mu = means[[columns[1L]]], sigma = ses[[columns[1L]]]) -
+         psi_function(a = self$ys_front_augmented[i - 1L, ][[columns[1L]]], b = self$ys_front_augmented[i, ][[columns[1L]]], mu = means[[columns[1L]]], sigma = ses[[columns[1L]]])) *
+         psi_function(a = self$ys_front_augmented[i, ][[columns[2L]]], b = self$ys_front_augmented[i, ][[columns[2L]]], mu = means[[columns[2L]]], sigma = ses[[columns[2L]]])
+        tmp[is.na(tmp)] = 0  # NA is 0
+        tmp
+      })
+      ehvi = Reduce("+", first_summands) + Reduce("+", second_summands)
+      ehvi = ifelse(apply(ses, MARGIN = 1L, FUN = function(se) any(se < 1e-20)), 0, ehvi)
+      data.table(acq_ehvi = ehvi)
     }
   )
 )
 
 mlr_acqfunctions$add("ehvi", AcqFunctionEHVI)
 
-# emmerich_2016 5.2.1
+# Emmerich et al. (2016) psi helper function 5.2.1
 psi_function = function(a, b, mu, sigma) {
   sigma * dnorm(b, mean = mu, sd = sigma) + (a - mu) * pnorm(b, mean = mu, sd = sigma)
 }

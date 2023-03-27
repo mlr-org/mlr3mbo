@@ -40,6 +40,7 @@ Other Loop Function:
 \code{\link{loop_function}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_mpcl}},
+\code{\link{mlr_loop_functions_multi_ego}},
 \code{\link{mlr_loop_functions_parego}},
 \code{\link{mlr_loop_functions_smsego}}
 }

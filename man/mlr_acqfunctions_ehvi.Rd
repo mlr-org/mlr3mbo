@@ -5,12 +5,10 @@
 \alias{AcqFunctionEHVI}
 \title{Acquisition Function Expected Hypervolume Improvement}
 \description{
-Expected Hypervolume Improvement.
+Exact Expected Hypervolume Improvement.
+Calculates the exact expected hypervolume improvement in the case of two objectives.
+See Emmerich et al. (2016) for details.
 }
-\section{Parameters}{
-
-}
-
 \examples{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
@@ -77,14 +75,15 @@ Other Acquisition Function:
 \describe{
 \item{\code{ys_front}}{(\code{matrix()})\cr
 Approximated Pareto front. Sorted by the first objective.
-Signs are corrected for assuming minimization of objectives.}
+Signs are corrected with respect to assuming minimization of objectives.}
 
 \item{\code{ref_point}}{(\code{numeric()})\cr
-Reference point.}
+Reference point.
+Signs are corrected with respect to assuming minimization of objectives.}
 
 \item{\code{ys_front_augmented}}{(\code{matrix()})\cr
 Augmented approximated Pareto front. Sorted by the first objective.
-Signs are corrected for assuming minimization of objectives.}
+Signs are corrected with respect to assuming minimization of objectives.}
 }
 \if{html}{\out{</div>}}
 }

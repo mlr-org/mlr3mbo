@@ -1,15 +1,15 @@
-#' @title Multi-Objective Bayesian Optimization via ParEGO
+#' @title Sequential Multi-Objective Bayesian Optimization
 #'
 #' @include mlr_loop_functions.R
-#' @name mlr_loop_functions_parego
+#' @name mlr_loop_functions_multi_ego
 #'
 #' @description
-#' Loop function for multi-objective Bayesian Optimization via ParEGO.
+#' Loop function for sequential multi-objective Bayesian Optimization.
 #' Normally used inside an [OptimizerMbo].
+#' The conceptual counterpart to [mlr_loop_functions_ego].
 #'
-#' In each iteration after the initial design, the observed objective function values are normalized and `q` candidates are
-#' obtained by scalarizing these values via the augmented Tchebycheff function, updating the surrogate with respect to
-#' these scalarized values and optimizing the acquisition function.
+#' In each iteration after the initial design, the surrogate and acquisition function are updated and the next candidate
+#' is chosen based on optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceMultiCrit])\cr
 #'   The [bbotk::OptimInstanceMultiCrit] to be optimized.
@@ -18,22 +18,12 @@
 #'   If `NULL` and the [bbotk::Archive] contains no evaluations, \code{4 * d} is used with \code{d} being the
 #'   dimensionality of the search space.
 #'   Points are drawn uniformly at random.
-#' @param surrogate ([SurrogateLearner])\cr
-#'   [SurrogateLearner] to be used as a surrogate.
+#' @param surrogate ([Surrogate])\cr
+#'   [SurrogateLearnerCollection] to be used as a surrogate.
 #' @param acq_function ([AcqFunction])\cr
 #'   [AcqFunction] to be used as acquisition function.
 #' @param acq_optimizer ([AcqOptimizer])\cr
 #'   [AcqOptimizer] to be used as acquisition function optimizer.
-#' @param q (`integer(1)`)\cr
-#'   Batch size, i.e., the number of candidates to be obtained for a single batch.
-#'   Default is `1`.
-#' @param s (`integer(1)`)\cr
-#'   \eqn{s} in Equation 1 in Knowles (2006).
-#'   Determines the total number of possible random weight vectors.
-#'   Default is `100`.
-#' @param rho (`numeric(1)`)\cr
-#'   \eqn{\rho} in Equation 2 in Knowles (2006) scaling the linear part of the augmented Tchebycheff function.
-#'   Default is `0.05`
 #' @param random_interleave_iter (`integer(1)`)\cr
 #'   Every `random_interleave_iter` iteration (starting after the initial design), a point is
 #'   sampled uniformly at random and evaluated (instead of a model based proposal).
@@ -45,16 +35,9 @@
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
 #' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::Archive] of the [bbotk::OptimInstanceMultiCrit].
-#' * The scalarizations of the objective function values are stored as the `y_scal` column in the
-#'   [bbotk::Archive] of the [bbotk::OptimInstanceMultiCrit].
-#' * To make use of parallel evaluations in the case of `q > 1, the objective
-#'   function of the [bbotk::OptimInstanceMultiCrit] must be implemented accordingly.
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.
-#'
-#' @references
-#' * `r format_bib("knowles_2006")`
 #'
 #' @family Loop Function
 #' @export
@@ -79,16 +62,16 @@
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
-#'   surrogate = default_surrogate(instance, n_learner = 1)
+#'   surrogate = default_surrogate(instance)
 #'
-#'   acq_function = acqf("ei")
+#'   acq_function = acqf("ehvi")
 #'
 #'   acq_optimizer = acqo(
 #'     optimizer = opt("random_search", batch_size = 100),
 #'     terminator = trm("evals", n_evals = 100))
 #'
 #'   optimizer = opt("mbo",
-#'     loop_function = bayesopt_parego,
+#'     loop_function = bayesopt_multi_ego,
 #'     surrogate = surrogate,
 #'     acq_function = acq_function,
 #'     acq_optimizer = acq_optimizer)
@@ -96,37 +79,29 @@
 #'   optimizer$optimize(instance)
 #' }
 #' }
-bayesopt_parego = function(
+bayesopt_multi_ego = function(
     instance,
     init_design_size = NULL,
     surrogate,
     acq_function,
     acq_optimizer,
-    q = 1L,
-    s = 100L,
-    rho = 0.05,
     random_interleave_iter = 0L
   ) {
 
   # assertions and defaults
   assert_r6(instance, "OptimInstanceMultiCrit")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
-  assert_r6(surrogate, classes = "SurrogateLearner")
+  assert_r6(surrogate, classes = "SurrogateLearnerCollection")
   assert_r6(acq_function, classes = "AcqFunction")
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
-  assert_int(q, lower = 1L)
-  assert_int(s, lower = 1L)
-  assert_number(rho, lower = 0, upper = 1)
   assert_int(random_interleave_iter, lower = 0L)
 
   archive = instance$archive
   domain = instance$search_space
   d = domain$length
-  k = length(archive$cols_y)  # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
   if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
 
   surrogate$archive = archive
-  surrogate$y_cols = "y_scal"
   acq_function$surrogate = surrogate
   acq_optimizer$acq_function = acq_function
 
@@ -138,38 +113,21 @@ bayesopt_parego = function(
     init_design_size = instance$archive$n_evals
   }
 
-  lambdas = calculate_parego_weights(s, k = k)
-  qs = seq_len(q)
-
   # loop
   repeat {
-    data = archive$data
-    ydt = data[, archive$cols_y, with = FALSE]
-    ydt = Map("*", ydt, mult_max_to_min(archive$codomain))  # we always assume minimization
-    ydt = Map(function(y) (y - min(y, na.rm = TRUE)) / diff(range(y, na.rm = TRUE)), ydt)  # scale y to [0, 1]
-
-    xdt = map_dtr(qs, function(q) {
-      # scalarize y
-      lambda = lambdas[sample.int(nrow(lambdas), 1L), , drop = TRUE]
-      mult = Map("*", ydt, lambda)
-      yscal = Reduce("+", mult)
-      yscal = do.call(pmax, mult) + rho * yscal  # augmented Tchebycheff function
-      data[, y_scal := yscal]  # need to name it yscal due to data.table's behavior
-
-      tryCatch({
-        # random interleaving is handled here
-        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-          stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
-        }
-        acq_function$surrogate$update()
-        acq_function$update()
-        acq_optimizer$optimize()
-      }, mbo_error = function(mbo_error_condition) {
-        lg$info(paste0(class(mbo_error_condition), collapse = " / "))
-        lg$info("Proposing a randomly sampled point")
-        SamplerUnif$new(domain)$sample(1L)$data
-      })
-    }, .fill = TRUE)
+    xdt = tryCatch({
+      # random interleaving is handled here
+      if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+        stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
+      }
+      acq_function$surrogate$update()
+      acq_function$update()
+      acq_optimizer$optimize()
+    }, mbo_error = function(mbo_error_condition) {
+      lg$info(paste0(class(mbo_error_condition), collapse = " / "))
+      lg$info("Proposing a randomly sampled point")
+      SamplerUnif$new(domain)$sample(1L)$data
+    })
 
     instance$eval_batch(xdt)
     if (instance$is_terminated) break
@@ -178,11 +136,11 @@ bayesopt_parego = function(
   return(invisible(instance))
 }
 
-class(bayesopt_parego) = "loop_function"
-attr(bayesopt_parego, "id") = "bayesopt_parego"
-attr(bayesopt_parego, "label") = "ParEGO"
-attr(bayesopt_parego, "instance") = "multi-crit"
-attr(bayesopt_parego, "man") = "mlr3mbo::mlr_loop_functions_parego"
+class(bayesopt_multi_ego) = "loop_function"
+attr(bayesopt_multi_ego, "id") = "bayesopt_multi_ego"
+attr(bayesopt_multi_ego, "label") = "Multi-Objective EGO"
+attr(bayesopt_multi_ego, "instance") = "multi-crit"
+attr(bayesopt_multi_ego, "man") = "mlr3mbo::mlr_loop_functions_multi_ego"
 
-mlr_loop_functions$add("bayesopt_parego", bayesopt_parego)
+mlr_loop_functions$add("bayesopt_multi_ego", bayesopt_multi_ego)
 

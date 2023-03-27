@@ -91,10 +91,12 @@ Other Acquisition Function:
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{ys_front}}{(\code{matrix()})\cr
-Approximated Pareto front.}
+Approximated Pareto front.
+Signs are corrected with respect to assuming minimization of objectives.}
 
 \item{\code{ref_point}}{(\code{numeric()})\cr
-Reference point.}
+Reference point.
+Signs are corrected with respect to assuming minimization of objectives.}
 
 \item{\code{epsilon}}{(\code{numeric()})\cr
 Epsilon used for the additive epsilon dominance.}
