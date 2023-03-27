@@ -68,10 +68,12 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
 
     #' @field ys_front (`matrix()`)\cr
     #'   Approximated Pareto front.
+    #'   Signs are corrected with respect to assuming minimization of objectives.
     ys_front = NULL,
 
     #' @field ref_point (`numeric()`)\cr
     #'   Reference point.
+    #'   Signs are corrected with respect to assuming minimization of objectives.
     ref_point = NULL,
 
     #' @field epsilon (`numeric()`)\cr
@@ -113,12 +115,22 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
 
       n_obj = length(self$archive$cols_y)
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
-      ys = as.matrix(ys) %*% diag(self$surrogate_max_to_min)
-      self$ys_front = as.matrix(self$archive$best()[, self$archive$cols_y, with = FALSE]) %*% diag(self$surrogate_max_to_min)
+      for (column in self$archive$cols_y) {
+        set(ys, j = column, value = ys[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
+      }
+      ys = as.matrix(ys)
+
       self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1  # offset = 1 like in mlrMBO
 
+      self$ys_front = self$archive$best()[, self$archive$cols_y, with = FALSE]
+      for (column in self$archive$cols_y) {
+        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
+      }
+
+      self$ys_front = as.matrix(self$ys_front)
+
       if (is.null(self$constants$values$epsilon)) {
-        # The following formula is taken from Horn et al. 2015.
+        # The following formula is taken from Horn et al. (2015).
         # Note that the one in Ponweiser et al. 2008 has a typo.
         # Note that nrow(self$ys_front) is correct and mlrMBO has a bug https://github.com/mlr-org/mlrMBO/blob/2dd83601ed80030713dfe0f55d4a5b8661919ce1/R/infill_crits.R#L292
         c_val = 1 - (1 / (2 ^ n_obj))
