@@ -52,6 +52,8 @@ Imports:
     R6 (>= 2.4.1)
 Suggests:
     DiceKriging,
+    emoa,
+    fastGHQuad,
     knitr,
     lhs,
     mlr3learners (>= 0.5.4),
@@ -77,6 +79,7 @@ Collate:
     'AcqFunctionAEI.R'
     'AcqFunctionCB.R'
     'AcqFunctionEHVI.R'
+    'AcqFunctionEHVIGH.R'
     'AcqFunctionEI.R'
     'AcqFunctionEIPS.R'
     'AcqFunctionMean.R'

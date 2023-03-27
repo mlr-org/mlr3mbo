@@ -14,5 +14,13 @@ test_that("default bayesopt_multi_ego", {
   bayesopt_multi_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_true(!is.na(instance$archive$data$acq_ehvi[5L]))
+
+  skip_if_not_installed("emoa")
+  skip_if_not_installed("fastGHQuad")
+  instance$archive$clear()
+  acq_function = AcqFunctionEHVIGH$new()
+  bayesopt_multi_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  expect_true(nrow(instance$archive$data) == 5L)
+  expect_true(!is.na(instance$archive$data$acq_ehvigh[5L]))
 })
 

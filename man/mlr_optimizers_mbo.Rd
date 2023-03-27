@@ -167,7 +167,7 @@ If \code{acq_function} is NULL and the \code{acq_optimizer$acq_function} field i
 Otherwise \code{default_acqfunction(instance)} is used.
 If \code{acq_optimizer} is NULL, \code{default_acqoptimizer(instance)} is used.
 
-Even if already initialized, the \verb{$surrogate$archive} field will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the current \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
+Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the current \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
 
 For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
 \subsection{Usage}{

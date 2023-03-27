@@ -144,6 +144,7 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
         tmp[is.na(tmp)] = 0  # NA is 0
         tmp
       })
+
       ehvi = Reduce("+", first_summands) + Reduce("+", second_summands)
       ehvi = ifelse(apply(ses, MARGIN = 1L, FUN = function(se) any(se < 1e-20)), 0, ehvi)
       data.table(acq_ehvi = ehvi)
@@ -155,5 +156,5 @@ mlr_acqfunctions$add("ehvi", AcqFunctionEHVI)
 
 # Emmerich et al. (2016) psi helper function 5.2.1
 psi_function = function(a, b, mu, sigma) {
-  sigma * dnorm(b, mean = mu, sd = sigma) + (a - mu) * pnorm(b, mean = mu, sd = sigma)
+  (sigma * dnorm(b, mean = mu, sd = sigma)) + ((a - mu) * pnorm(b, mean = mu, sd = sigma))
 }

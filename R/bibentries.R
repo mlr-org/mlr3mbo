@@ -116,6 +116,15 @@ bibentries = c(
     publisher   = "Springer International Publishing",
     address     = "Cham",
     pages       = "229--242"
+  ),
+
+  rahat_2022 = bibentry("inproceedings",
+    title     = "Efficient Approximation of Expected Hypervolume Improvement using Gauss-Hermit Quadrature",
+    author    = "Rahat, Alma and Chugh, Tinkle and Fieldsend, Jonathan and Allmendinger, Richard and Miettinen, Kaisa",
+    editor    = "Rudolph, G{\u00FC}nter and Kononova, Anna V. and Aguirre, Hern{\\'a}n and Kerschke, Pascal and Ochoa, Gabriela and Tu{\\v{s}}ar, Tea",
+    booktitle = "Parallel Problem Solving from Nature -- PPSN XVII",
+    year      = "2022",
+    pages     = "90--103"
   )
 )
 
