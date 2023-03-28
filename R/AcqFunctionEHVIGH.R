@@ -7,6 +7,8 @@
 #' Expected Hypervolume Improvement.
 #' Computed via Gauss-Hermite quadrature.
 #'
+#' In the case of optimizing only two objective functions [AcqFunctionEHVI] is to be preferred.
+#'
 #' @section Parameters:
 #' * `"k"` (`integer(1)`)\cr
 #'   Number of nodes per objective used for the numerical integration via Gauss-Hermite quadrature.
@@ -82,6 +84,7 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
     #'   Data required for the Gauss-Hermite quadrature rule in the form of a matrix of dimension (k x 2).
     #'   Each row corresponds to one Gauss-Hermite node (column `"x"`) and corresponding weight (column `"w"`).
     #'   Computed via [fastGHQuad::gaussHermiteData].
+    #'   Nodes are scaled by a factor of `sqrt(2)` and weights are normalized under a sum to one constraint.
     gh_data = NULL,
 
     #' @description
@@ -131,6 +134,8 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
       self$hypervolume = invoke(emoa::dominated_hypervolume, points = t(self$ys_front), ref = t(self$ref_point))
 
       self$gh_data = invoke(fastGHQuad::gaussHermiteData, n = self$constants$values$k)  # k because the multi-dimensional grid is created within adjust_gh_data
+      self$gh_data$x = self$gh_data$x * sqrt(2)
+      self$gh_data$w = self$gh_data$w / sum(self$gh_data$w)
       self$gh_data = do.call(cbind, self$gh_data)
     }
   ),
@@ -157,12 +162,11 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
 
       ehvi = map_dbl(seq_len(nrow(xdt)), function(i) {
         gh_data = adjust_gh_data(self$gh_data, mu = means[i, ], sigma = diag(vars[i, ]), r = r)
-        weighted_hvis = map_dbl(seq_along(gh_data$weights), function(j) {
+        hvs = map_dbl(seq_along(gh_data$weights), function(j) {
           ys = rbind(self$ys_front, gh_data$nodes[j, ] %*% diag(self$surrogate_max_to_min))
-          hvi = invoke(emoa::dominated_hypervolume, points = t(ys), ref = t(self$ref_point)) - self$hypervolume
-          gh_data$weights[j] * hvi
+          invoke(emoa::dominated_hypervolume, points = t(ys), ref = t(self$ref_point))
         })
-        sum(weighted_hvis, na.rm = TRUE)
+        sum((hvs - self$hypervolume) * gh_data$weights, na.rm = TRUE)
       })
 
       ehvi = ifelse(apply(sqrt(vars), MARGIN = 1L, FUN = function(se) any(se < 1e-20)), 0, ehvi)

@@ -22,5 +22,6 @@ test_that("AcqFunctionEHVI works", {
   res = acqf$eval_dt(xdt)
   expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
   expect_named(res, acqf$id)
+  expect_true(all(res[[acqf$id]] >= 0))
 })
 

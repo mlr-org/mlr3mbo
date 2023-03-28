@@ -7,6 +7,7 @@
 \description{
 Exact Expected Hypervolume Improvement.
 Calculates the exact expected hypervolume improvement in the case of two objectives.
+In the case of optimizing more than two objective functions, \link{AcqFunctionEHVIGH} can be used.
 See Emmerich et al. (2016) for details.
 }
 \examples{

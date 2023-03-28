@@ -7,6 +7,8 @@
 \description{
 Expected Hypervolume Improvement.
 Computed via Gauss-Hermite quadrature.
+
+In the case of optimizing only two objective functions \link{AcqFunctionEHVI} is to be preferred.
 }
 \section{Parameters}{
 
@@ -101,7 +103,8 @@ Current hypervolume of the approximated Pareto front with respect to the referen
 \item{\code{gh_data}}{(\code{matrix()})\cr
 Data required for the Gauss-Hermite quadrature rule in the form of a matrix of dimension (k x 2).
 Each row corresponds to one Gauss-Hermite node (column \code{"x"}) and corresponding weight (column \code{"w"}).
-Computed via \link[fastGHQuad:gaussHermiteData]{fastGHQuad::gaussHermiteData}.}
+Computed via \link[fastGHQuad:gaussHermiteData]{fastGHQuad::gaussHermiteData}.
+Nodes are scaled by a factor of \code{sqrt(2)} and weights are normalized under a sum to one constraint.}
 }
 \if{html}{\out{</div>}}
 }

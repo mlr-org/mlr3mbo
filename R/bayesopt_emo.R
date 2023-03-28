@@ -1,7 +1,7 @@
 #' @title Sequential Multi-Objective Bayesian Optimization
 #'
 #' @include mlr_loop_functions.R
-#' @name mlr_loop_functions_multi_ego
+#' @name mlr_loop_functions_emo
 #'
 #' @description
 #' Loop function for sequential multi-objective Bayesian Optimization.
@@ -71,7 +71,7 @@
 #'     terminator = trm("evals", n_evals = 100))
 #'
 #'   optimizer = opt("mbo",
-#'     loop_function = bayesopt_multi_ego,
+#'     loop_function = bayesopt_emo,
 #'     surrogate = surrogate,
 #'     acq_function = acq_function,
 #'     acq_optimizer = acq_optimizer)
@@ -79,7 +79,7 @@
 #'   optimizer$optimize(instance)
 #' }
 #' }
-bayesopt_multi_ego = function(
+bayesopt_emo = function(
     instance,
     init_design_size = NULL,
     surrogate,
@@ -136,11 +136,11 @@ bayesopt_multi_ego = function(
   return(invisible(instance))
 }
 
-class(bayesopt_multi_ego) = "loop_function"
-attr(bayesopt_multi_ego, "id") = "bayesopt_multi_ego"
-attr(bayesopt_multi_ego, "label") = "Multi-Objective EGO"
-attr(bayesopt_multi_ego, "instance") = "multi-crit"
-attr(bayesopt_multi_ego, "man") = "mlr3mbo::mlr_loop_functions_multi_ego"
+class(bayesopt_emo) = "loop_function"
+attr(bayesopt_emo, "id") = "bayesopt_emo"
+attr(bayesopt_emo, "label") = "Multi-Objective EGO"
+attr(bayesopt_emo, "instance") = "multi-crit"
+attr(bayesopt_emo, "man") = "mlr3mbo::mlr_loop_functions_emo"
 
-mlr_loop_functions$add("bayesopt_multi_ego", bayesopt_multi_ego)
+mlr_loop_functions$add("bayesopt_emo", bayesopt_emo)
 
