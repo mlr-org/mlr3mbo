@@ -156,5 +156,5 @@ mlr_acqfunctions$add("ehvi", AcqFunctionEHVI)
 
 # Emmerich et al. (2016) psi helper function 5.2.1
 psi_function = function(a, b, mu, sigma) {
-  (sigma * dnorm(b, mean = mu, sd = sigma)) + ((a - mu) * pnorm(b, mean = mu, sd = sigma))
+  (sigma * dnorm((b - mu) / sigma) + ((a - mu) * pnorm((b - mu) / sigma)))
 }
