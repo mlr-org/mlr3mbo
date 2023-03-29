@@ -66,6 +66,8 @@ Other Acquisition Function:
 \code{\link{AcqFunction}},
 \code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
+\code{\link{mlr_acqfunctions_ehvigh}},
+\code{\link{mlr_acqfunctions_ehvi}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_mean}},

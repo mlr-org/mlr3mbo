@@ -28,3 +28,12 @@ test_that("AcqFunction requires_predict_type_se works", {
   expect_error({acqf$requires_predict_type_se = FALSE}, "is read-only")
 })
 
+test_that("AcqFunction packages works", {
+  inst = MAKE_INST_1D()
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
+
+  expect_warning(AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, packages = "TestPackageThatDoesNotExist", requires_predict_type_se = FALSE, direction = "same"), "required but not installed for acquisition function")
+  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, packages = "mlr3mbo", requires_predict_type_se = FALSE, direction = "same")
+  expect_equal(acqf$packages, "mlr3mbo")
+})
+

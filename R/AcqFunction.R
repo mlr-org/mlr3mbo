@@ -32,7 +32,7 @@ AcqFunction = R6Class("AcqFunction",
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
     #' @param packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled prior to construction if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
     #' @param label (`character(1)`)\cr
     #'   Label for this object.
     #' @param man (`character(1)`)\cr
@@ -42,17 +42,21 @@ AcqFunction = R6Class("AcqFunction",
       # If we do, we need to trafo values before updating the surrogate and predicting?
       assert_string(id)
       assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
+      assert_character(packages, null.ok = TRUE)
+      if (!is.null(packages)) {
+        check_packages_installed(packages, msg = sprintf("Package '%%s' required but not installed for acquisition function '%s'", sprintf("<%s:%s>", "AcqFunction", id)))
+      }
       private$.requires_predict_type_se = assert_flag(requires_predict_type_se)
       private$.label = assert_string(label, na.ok = TRUE)
       private$.man = assert_string(man, na.ok = TRUE)
-      private$.packages = assert_string(packages, null.ok = TRUE)
+      private$.packages = packages
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
       if (is.null(surrogate)) {
         domain = ParamSet$new()
         codomain = ParamSet$new()
       } else {
         if (requires_predict_type_se && surrogate$predict_type != "se") {
-          stopf('%s requires the surrogate to have `"se"` as `$predict_type`.', label)
+          stopf("Acquisition function '%s' requires the surrogate to have `\"se\"` as `$predict_type`.", sprintf("<%s:%s>", "AcqFunction", id))
         }
         private$.surrogate = surrogate
         private$.archive = assert_r6(surrogate$archive, classes = "Archive")
@@ -170,7 +174,7 @@ AcqFunction = R6Class("AcqFunction",
       } else {
         assert_r6(rhs, classes = "Surrogate")
         if (self$requires_predict_type_se && rhs$predict_type != "se") {
-          stopf('%s requires the surrogate to have `"se"` as `$predict_type`.', self$label)
+          stopf("Acquisition function '%s' requires the surrogate to have `\"se\"` as `$predict_type`.", format(self))
         }
         private$.surrogate = rhs
         private$.archive = assert_r6(rhs$archive, classes = "Archive")

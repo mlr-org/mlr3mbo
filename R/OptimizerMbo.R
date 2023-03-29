@@ -100,7 +100,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' Otherwise `default_acqfunction(instance)` is used.
     #' If `acq_optimizer` is NULL, `default_acqoptimizer(instance)` is used.
     #'
-    #' Even if already initialized, the `$surrogate$archive` field will always be overwritten by the [bbotk::Archive] of the current [bbotk::OptimInstance] to be optimized.
+    #' Even if already initialized, the `surrogate$archive` field will always be overwritten by the [bbotk::Archive] of the current [bbotk::OptimInstance] to be optimized.
     #'
     #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
     #'

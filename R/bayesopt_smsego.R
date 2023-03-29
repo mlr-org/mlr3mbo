@@ -105,7 +105,6 @@ bayesopt_smsego = function(
   archive = instance$archive
   domain = instance$search_space
   d = domain$length
-  k = length(archive$cols_y)  # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
   if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
 
   surrogate$archive = archive
