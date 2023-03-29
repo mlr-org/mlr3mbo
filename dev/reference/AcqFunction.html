@@ -146,6 +146,11 @@ Surrogate.</p></dd>
 Whether the acquisition function requires the surrogate to have <code>"se"</code> as <code>$predict_type</code>.</p></dd>
 
 
+<dt><code>packages</code></dt>
+<dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
+Set of required packages.</p></dd>
+
+
 </dl><p></p></div>
     </div>
     <div class="section level2">
@@ -173,6 +178,7 @@ Whether the acquisition function requires the surrogate to have <code>"se"</code
 <span>  <span class="va">surrogate</span>,</span>
 <span>  <span class="va">requires_predict_type_se</span>,</span>
 <span>  <span class="va">direction</span>,</span>
+<span>  packages <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
 <span>  man <span class="op">=</span> <span class="cn">NA_character_</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
@@ -204,6 +210,12 @@ Whether the acquisition function requires the surrogate to have <code>"se"</code
 Optimization direction of the acquisition function relative to the direction of the
 objective function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.
 Must be <code>"same"</code>, <code>"minimize"</code>, or <code>"maximize"</code>.</p></dd>
+
+
+<dt><code>packages</code></dt>
+<dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
+Set of required packages.
+A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>.</p></dd>
 
 
 <dt><code>label</code></dt>
