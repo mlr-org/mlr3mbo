@@ -30,11 +30,14 @@ AcqFunction = R6Class("AcqFunction",
     #'   Optimization direction of the acquisition function relative to the direction of the
     #'   objective function of the [bbotk::OptimInstance].
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
+    #' @param packages (`character()`)\cr
+    #'   Set of required packages.
+    #'   A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
     #' @param label (`character(1)`)\cr
     #'   Label for this object.
     #' @param man (`character(1)`)\cr
     #'   String in the format `[pkg]::[topic]` pointing to a manual page for this object.
-    initialize = function(id, constants = ParamSet$new(), surrogate, requires_predict_type_se, direction, label = NA_character_, man = NA_character_) {
+    initialize = function(id, constants = ParamSet$new(), surrogate, requires_predict_type_se, direction, packages = NULL, label = NA_character_, man = NA_character_) {
       # FIXME: Should we allow alternative search_space as additional argument?
       # If we do, we need to trafo values before updating the surrogate and predicting?
       assert_string(id)
@@ -42,6 +45,7 @@ AcqFunction = R6Class("AcqFunction",
       private$.requires_predict_type_se = assert_flag(requires_predict_type_se)
       private$.label = assert_string(label, na.ok = TRUE)
       private$.man = assert_string(man, na.ok = TRUE)
+      private$.packages = assert_string(packages, null.ok = TRUE)
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
       if (is.null(surrogate)) {
         domain = ParamSet$new()
@@ -186,6 +190,16 @@ AcqFunction = R6Class("AcqFunction",
         stop("$requires_predict_type_se is read-only.")
       }
       private$.requires_predict_type_se
+    },
+
+    #' @field packages (`character()`)\cr
+    #'   Set of required packages.
+    packages = function(rhs) {
+      if (missing(rhs)) {
+        private$.packages
+      } else {
+        stop("$packages is read-only.")
+      }
     }
   ),
 
@@ -206,7 +220,9 @@ AcqFunction = R6Class("AcqFunction",
 
     .surrogate = NULL,
 
-    .requires_predict_type_se = NULL
+    .requires_predict_type_se = NULL,
+
+    .packages = NULL
   )
 )
 

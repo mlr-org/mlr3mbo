@@ -2,7 +2,7 @@ test_that("AcqFunction API works", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
 
-  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = FALSE, direction = "same")
+  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = FALSE, direction = "same", packages = "mlr3mbo", label = "label", man = "man")
 
   expect_r6(acqf$codomain, "ParamSet")
   expect_equal(acqf$codomain$ids(), "acqf")
@@ -11,6 +11,9 @@ test_that("AcqFunction API works", {
   expect_equal(acqf$domain, inst$search_space)
   expect_learner(acqf$surrogate$learner)
   expect_equal(acqf$requires_predict_type_se, FALSE)
+  expect_equal(acqf$packages, "mlr3mbo")
+  expect_equal(acqf$label, "label")
+  expect_equal(acqf$man, "man")
 })
 
 test_that("AcqFunction requires_predict_type_se works", {
