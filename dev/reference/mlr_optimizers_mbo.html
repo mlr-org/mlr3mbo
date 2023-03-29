@@ -194,7 +194,7 @@ Otherwise, <code>default_surrogate(instance)</code> is used.
 If <code>acq_function</code> is NULL and the <code>acq_optimizer$acq_function</code> field is populated, this <a href="AcqFunction.html">AcqFunction</a> is used (and therefore its <code>$surrogate</code> if  populated; see above).
 Otherwise <code>default_acqfunction(instance)</code> is used.
 If <code>acq_optimizer</code> is NULL, <code>default_acqoptimizer(instance)</code> is used.</p>
-<p>Even if already initialized, the <code>$surrogate$archive</code> field will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the current <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> to be optimized.</p>
+<p>Even if already initialized, the <code>surrogate$archive</code> field will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the current <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> to be optimized.</p>
 <p>For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code> and <code>acq_optimizer</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/mlr_optimizers_mbo.html">OptimizerMbo</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
@@ -350,8 +350,9 @@ Sets the following fields to <code>NULL</code>:
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           x  x_domain       y1       y2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 3.962884 &lt;list[1]&gt; 15.70445 3.852912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            x  x_domain       y1        y2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -1.126799 &lt;list[1]&gt; 1.269677 9.7768738</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  1.779786 &lt;list[1]&gt; 3.167637 0.0484943</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

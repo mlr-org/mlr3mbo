@@ -113,6 +113,8 @@ In <em>International Conference on Evolutionary Multi-Criterion Optimization</em
 <code><a href="AcqFunction.html">AcqFunction</a></code>,
 <code><a href="mlr_acqfunctions_aei.html">mlr_acqfunctions_aei</a></code>,
 <code><a href="mlr_acqfunctions_cb.html">mlr_acqfunctions_cb</a></code>,
+<code><a href="mlr_acqfunctions_ehvigh.html">mlr_acqfunctions_ehvigh</a></code>,
+<code><a href="mlr_acqfunctions_ehvi.html">mlr_acqfunctions_ehvi</a></code>,
 <code><a href="mlr_acqfunctions_eips.html">mlr_acqfunctions_eips</a></code>,
 <code><a href="mlr_acqfunctions_ei.html">mlr_acqfunctions_ei</a></code>,
 <code><a href="mlr_acqfunctions_mean.html">mlr_acqfunctions_mean</a></code>,
@@ -127,12 +129,14 @@ In <em>International Conference on Evolutionary Multi-Criterion Optimization</em
     <h2 id="public-fields">Public fields<a class="anchor" aria-label="anchor" href="#public-fields"></a></h2>
     <p></p><div class="r6-fields"><dl><dt><code>ys_front</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix()</a></code>)<br>
-Approximated Pareto front.</p></dd>
+Approximated Pareto front.
+Signs are corrected with respect to assuming minimization of objectives.</p></dd>
 
 
 <dt><code>ref_point</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric()</a></code>)<br>
-Reference point.</p></dd>
+Reference point.
+Signs are corrected with respect to assuming minimization of objectives.</p></dd>
 
 
 <dt><code>epsilon</code></dt>
@@ -253,9 +257,9 @@ Note that this requires the <a href="https://bbotk.mlr-org.com/reference/OptimIn
 <span class="r-in"><span>  <span class="va">acq_function</span><span class="op">$</span><span class="fu">eval_dt</span><span class="op">(</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    acq_smsego</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:  -524.6242</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  -682.1472</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -1081.6406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:   23.00332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:   10.80403</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -194.70446</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

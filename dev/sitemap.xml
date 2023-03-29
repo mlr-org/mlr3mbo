@@ -76,6 +76,12 @@
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_cb.html</loc>
   </url>
   <url>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_ehvi.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_ehvigh.html</loc>
+  </url>
+  <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_ei.html</loc>
   </url>
   <url>
@@ -95,6 +101,9 @@
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_ego.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_emo.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_mpcl.html</loc>
