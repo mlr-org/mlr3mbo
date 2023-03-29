@@ -52,6 +52,9 @@ Surrogate.}
 
 \item{\code{requires_predict_type_se}}{(\code{logical(1)})\cr
 Whether the acquisition function requires the surrogate to have \code{"se"} as \verb{$predict_type}.}
+
+\item{\code{packages}}{(\code{character()})\cr
+Set of required packages.}
 }
 \if{html}{\out{</div>}}
 }
@@ -88,6 +91,7 @@ Note that the surrogate can be initialized lazy and can later be set via the act
   surrogate,
   requires_predict_type_se,
   direction,
+  packages = NULL,
   label = NA_character_,
   man = NA_character_
 )}\if{html}{\out{</div>}}
@@ -111,6 +115,10 @@ Whether the acquisition function requires the surrogate to have \code{"se"} as \
 Optimization direction of the acquisition function relative to the direction of the
 objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
+
+\item{\code{packages}}{(\code{character()})\cr
+Set of required packages.
+A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 
 \item{\code{label}}{(\code{character(1)})\cr
 Label for this object.}

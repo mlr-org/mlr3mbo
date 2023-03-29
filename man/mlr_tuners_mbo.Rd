@@ -90,7 +90,7 @@ When fully initialized, properties are determined based on the \code{loop_functi
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
 A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.
-Required packages are determined based on the \code{surrogate} and the \code{acq_optimizer}.}
+Required packages are determined based on the \code{acq_function}, \code{surrogate} and the \code{acq_optimizer}.}
 }
 \if{html}{\out{</div>}}
 }
