@@ -84,7 +84,7 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
     update = function() {
       n_obj = length(self$archive$cols_y)
       if (n_obj > 2L) {
-        stopf("%s only works for exactly two objectives.", self$label)
+        stopf("'%s' only works for exactly two objectives.", format(self))
       }
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
       for (column in self$archive$cols_y) {

@@ -120,7 +120,7 @@ Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
-A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
+A warning is signaled prior to construction if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 
 \item{\code{label}}{(\code{character(1)})\cr
 Label for this object.}

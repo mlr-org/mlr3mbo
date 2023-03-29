@@ -13,6 +13,7 @@ test_that("AcqFunctionEHVIGH works", {
   expect_equal(acqf$domain, inst$search_space)
   expect_list(acqf$surrogate$learner, types = "Learner")
   expect_true(acqf$requires_predict_type_se)
+  expect_setequal(acqf$packages, c("emoa", "fastGHQuad"))
 
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)

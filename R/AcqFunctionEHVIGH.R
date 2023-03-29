@@ -94,12 +94,6 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
     #' @param k (`integer(1)`).
     #' @param r (`numeric(1)`).
     initialize = function(surrogate = NULL, k = 15L, r = 0.2) {
-      if (!requireNamespace("emoa", quietly = TRUE)) {
-        stopf('%s requires the "emoa" package.', self$label)
-      }
-      if (!requireNamespace("fastGHQuad", quietly = TRUE)) {
-        stopf('%s requires the "fastGHQuad" package.', self$label)
-      }
       assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       assert_int(k, lower = 2L)
 
@@ -110,7 +104,7 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
       constants$values$k = k
       constants$values$r = r
 
-      super$initialize("acq_ehvigh", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "EHVI via GH", man = "mlr3mbo::mlr_acqfunctions_ehvigh")
+      super$initialize("acq_ehvigh", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", packages = c("emoa", "fastGHQuad"), label = "EHVI via GH", man = "mlr3mbo::mlr_acqfunctions_ehvigh")
     },
 
     #' @description
