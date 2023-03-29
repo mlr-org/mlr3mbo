@@ -138,7 +138,24 @@ SurrogateLearner = R6Class("SurrogateLearner",
 
     #' @template field_assert_insample_perf_surrogate
     assert_insample_perf = function(rhs) {
-      if (!missing(rhs)) {
+      if (missing(rhs)) {
+        if (!self$param_set$values$assert_insample_perf) {
+          return(invisible(self$insample_perf))
+        }
+
+        perf_measure = self$param_set$values$perf_measure %??% mlr_measures$get("regr.rsq")
+        perf_threshold = self$param_set$values$perf_threshold %??% 0
+        check = if (perf_measure$minimize) {
+          self$insample_perf < perf_threshold
+        } else {
+          self$insample_perf > perf_threshold
+        }
+
+        if (!check) {
+          stop("Current insample performance of the Surrogate Model does not meet the performance threshold.")
+        }
+        invisible(self$insample_perf)
+      } else {
         stop("$assert_insample_perf is read-only.")
       }
 
@@ -167,7 +184,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
       } else {
         stop("$packages is read-only.")
       }
-
     },
 
     #' @template field_feature_types_surrogate

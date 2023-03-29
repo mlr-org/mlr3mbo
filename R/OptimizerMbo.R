@@ -263,7 +263,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template field_packages
     packages = function(rhs) {
       if (missing(rhs)) {
-        union("mlr3mbo", c(self$surrogate$packages, self$acq_optimizer$optimizer$packages, self$result_assigner$packages))
+        union("mlr3mbo", c(self$acq_function$packages, self$surrogate$packages, self$acq_optimizer$optimizer$packages, self$result_assigner$packages))
       } else {
         stop("$packages is read-only.")
       }

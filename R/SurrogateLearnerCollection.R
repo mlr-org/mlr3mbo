@@ -160,33 +160,29 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
     #' @template field_assert_insample_perf_surrogate
     assert_insample_perf = function(rhs) {
-      if (!missing(rhs)) {
+      if (missing(rhs)) {
+        check = all(pmap_lgl(
+          list(
+            insample_perf = self$insample_perf,
+            perf_threshold = self$param_set$values$perf_thresholds %??% rep(0, self$n_learner),
+            perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)
+          ),
+          .f = function(insample_perf, perf_threshold, perf_measure) {
+            if (perf_measure$minimize) {
+              insample_perf < perf_threshold
+            } else {
+              insample_perf > perf_threshold
+            }
+          })
+        )
+
+        if (!check) {
+          stop("Current insample performance of the Surrogate Model does not meet the performance threshold.")
+        }
+        invisible(self$insample_perf)
+      } else {
         stop("$assert_insample_perf is read-only.")
       }
-
-      if (!self$param_set$values$assert_insample_perf) {
-        invisible(self$insample_perf)
-      }
-
-      check = all(pmap_lgl(
-        list(
-          insample_perf = self$insample_perf,
-          perf_threshold = self$param_set$values$perf_thresholds %??% rep(0, self$n_learner),
-          perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)
-        ),
-        .f = function(insample_perf, perf_threshold, perf_measure) {
-          if (perf_measure$minimize) {
-            insample_perf < perf_threshold
-          } else {
-            insample_perf > perf_threshold
-          }
-        })
-      )
-
-      if (!check) {
-        stop("Current insample performance of the Surrogate Model does not meet the performance threshold.")
-      }
-      invisible(self$insample_perf)
     },
 
     #' @template field_packages_surrogate
