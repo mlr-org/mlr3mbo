@@ -76,7 +76,7 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
     #' @param surrogate (`NULL` | [SurrogateLearnerCollection]).
     initialize = function(surrogate = NULL) {
       assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
-      super$initialize("acq_ehvi", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "EHVI", man = "mlr3mbo::mlr_acqfunctions_ehvi")
+      super$initialize("acq_ehvi", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Hypervolume Improvement", man = "mlr3mbo::mlr_acqfunctions_ehvi")
     },
 
     #' @description
