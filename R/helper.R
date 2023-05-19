@@ -105,9 +105,21 @@ check_instance_attribute = function(x) {
   return(TRUE)
 }
 
+check_learner_surrogate = function(learner) {
+  if (test_r6(learner, classes = "Learner")) {
+    return(TRUE)
+  } else {
+    if (inherits(learner, what = "list") && all(map_lgl(learner, .f = function(x) test_r6(x, classes = "Learner")))) {
+      return(TRUE)
+    }
+  }
+  
+  "Must inherit from class 'Learner' or be a list of elements inheriting from class 'Learner'"
+}
+
 assert_loop_function = function(x, .var.name = vname(x)) {
   if (is.null(x)) return(x)
-  # NOTE: this is buggy in checkmate; assert should always return x invisible not a TRUE as is the case here
+  # NOTE: this is buggy in checkmate; assert should always return x invisible not TRUE as is the case here
   assert(check_class(x, classes = "loop_function"),
          check_function(x, args = c("instance", "surrogate", "acq_function", "acq_optimizer")),
          check_attributes(x, attribute_names = c("id", "label", "instance", "man")),
@@ -118,5 +130,12 @@ assert_loop_function = function(x, .var.name = vname(x)) {
 
 assert_xdt = function(xdt) {
   assert_data_table(xdt)
+}
+
+assert_learner_surrogate = function(x, .var.name = vname(x)) {
+  # NOTE: this is buggy in checkmate; assert should always return x invisible not TRUE as is the case here
+  assert(check_learner_surrogate(x), .var.name = .var.name)
+
+  x
 }
 

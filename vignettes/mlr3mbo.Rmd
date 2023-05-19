@@ -764,7 +764,7 @@ learner_y1 = lrn("regr.km",
   nugget.stability = 10^-8,
   control = list(trace = FALSE))
 learner_y2 = learner_y1$clone(deep = TRUE)
-surrogate = srlrnc(list(learner_y1, learner_y2))
+surrogate = srlrn(list(learner_y1, learner_y2))
 acq_function = acqf("smsego")
 acq_optimizer = acqo(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"),
   terminator = trm("stagnation", threshold = 1e-8))

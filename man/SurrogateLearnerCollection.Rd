@@ -69,7 +69,7 @@ if (requireNamespace("mlr3learners") &
     keep.inbag = TRUE,
     se.method = "jack")
 
-  surrogate = srlrnc(list(learner1, learner2), archive = instance$archive)
+  surrogate = srlrn(list(learner1, learner2), archive = instance$archive)
 
   surrogate$update()
 
@@ -150,11 +150,11 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
 \item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
-Column Id's of variables that should be used as features.
+Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
 \item{\code{y_cols}}{(\code{character()} | \code{NULL})\cr
-Column Id's of variables that should be used as targets.
+Column id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 }
 \if{html}{\out{</div>}}
