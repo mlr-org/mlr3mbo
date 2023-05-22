@@ -136,11 +136,11 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
 \item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
-Column Id's of variables that should be used as features.
+Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
 \item{\code{y_col}}{(\code{character(1)} | \code{NULL})\cr
-Column Id of variable that should be used as a target.
+Column id of variable that should be used as a target.
 By default, automatically inferred based on the archive.}
 }
 \if{html}{\out{</div>}}

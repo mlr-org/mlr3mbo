@@ -52,7 +52,7 @@ if (requireNamespace("mlr3learners") &
     nugget.stability = 10^-8,
     control = list(trace = FALSE))
 
-  surrogate = srlrnc(list(learner, learner$clone(deep = TRUE)), archive = instance$archive)
+  surrogate = srlrn(list(learner, learner$clone(deep = TRUE)), archive = instance$archive)
   surrogate$y_cols = c("y", "time")
 
   acq_function = acqf("eips", surrogate = surrogate)

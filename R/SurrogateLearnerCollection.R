@@ -65,7 +65,7 @@
 #'     keep.inbag = TRUE,
 #'     se.method = "jack")
 #'
-#'   surrogate = srlrnc(list(learner1, learner2), archive = instance$archive)
+#'   surrogate = srlrn(list(learner1, learner2), archive = instance$archive)
 #'
 #'   surrogate$update()
 #'
