@@ -138,6 +138,10 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
+
+\item{\code{col_y}}{(\code{character(1)} | \code{NULL})\cr
+Column id of variable that should be used as a target.
+By default, automatically inferred based on the archive.}
 }
 \if{html}{\out{</div>}}
 }

@@ -13,7 +13,43 @@ test_that("bayesopt_ego", {
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
+  expect_true(sum(is.na(instance$archive$data$acq_ei)) == 4L)
   expect_true(!is.na(instance$archive$data$acq_ei[5L]))
+})
+
+test_that("bayesopt_ego custom initial design and sizes", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 6L))
+  design = generate_design_random(instance$search_space, n = 5L)$data
+  instance$eval_batch(design)
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  expect_true(nrow(instance$archive$data) == 6L)
+  expect_true(sum(is.na(instance$archive$data$acq_ei)) == 5L)
+  expect_true(!is.na(instance$archive$data$acq_ei[6L]))
+
+  instance$archive$clear()
+  instance$eval_batch(design)
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, init_design_size = 10L)  # ignored
+  expect_true(nrow(instance$archive$data) == 6L)
+  expect_true(sum(is.na(instance$archive$data$acq_ei)) == 5L)
+  expect_true(!is.na(instance$archive$data$acq_ei[6L]))
+
+  instance$archive$clear()
+  bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, init_design_size = 3L)
+  expect_true(nrow(instance$archive$data) == 6L)
+  expect_true(sum(is.na(instance$archive$data$acq_ei)) == 3L)
+  expect_true(!is.na(instance$archive$data$acq_ei[4L]))
+  expect_true(!is.na(instance$archive$data$acq_ei[5L]))
+  expect_true(!is.na(instance$archive$data$acq_ei[6L]))
+
+  instance$archive$clear()
+  expect_error(bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, init_design_size = 6L), "terminated")
 })
 
 test_that("stable bayesopt_ego", {

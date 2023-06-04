@@ -96,45 +96,43 @@
 #' }
 bayesopt_mpcl = function(
     instance,
-    init_design_size = NULL,
     surrogate,
     acq_function,
     acq_optimizer,
+    init_design_size = NULL,
     q = 2L,
     liar = mean,
     random_interleave_iter = 0L
   ) {
 
-  # assertions and defaults
+  # assertions
   assert_r6(instance, "OptimInstanceSingleCrit")
-  assert_int(init_design_size, lower = 1L, null.ok = TRUE)
   assert_r6(surrogate, classes = "Surrogate")  # cannot be SurrogateLearner due to EIPS
   assert_r6(acq_function, classes = "AcqFunction")
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
+  assert_int(init_design_size, lower = 1L, null.ok = TRUE)
   assert_int(q, lower = 2L)
   assert_function(liar)
   assert_int(random_interleave_iter, lower = 0L)
 
-  archive = instance$archive
-  domain = instance$search_space
-  d = domain$length
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
+  # initial design
+  search_space = instance$search_space
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) {
+    init_design_size = 4L * search_space$length
+  }
+  if (!is.null(init_design_size) && init_design_size > 0L && instance$archive$n_evals == 0L) {
+    design = generate_design_sobol(search_space, n = init_design_size)$data
+    instance$eval_batch(design)
+  }
 
-  surrogate$archive = archive
+  # completing initialization
+  surrogate$archive = instance$archive
   acq_function$surrogate = surrogate
   acq_optimizer$acq_function = acq_function
 
-  # initial design
-  if (isTRUE(init_design_size > 0L)) {
-    design = generate_design_sobol(domain, n = init_design_size)$data
-    instance$eval_batch(design)
-  } else {
-    init_design_size = instance$archive$n_evals
-  }
-
   lie = data.table()
 
-  # loop
+  # actual loop
   repeat {
     # normal ego proposal with error catching
     xdt = tryCatch({
@@ -143,13 +141,13 @@ bayesopt_mpcl = function(
       acq_optimizer$optimize()
     }, mbo_error = function(mbo_error_condition) {
       #lg$info("Proposing a randomly sampled point") no logging because we do not evaluate this point
-      SamplerUnif$new(domain)$sample(1L)$data
+      generate_design_random(search_space, n = 1L)$data
     })
 
     # prepare lie objects
-    tmp_archive = archive$clone(deep = TRUE)
+    tmp_archive = instance$archive$clone(deep = TRUE)
     acq_function$surrogate$archive = tmp_archive
-    lie[, archive$cols_y := liar(archive$data[[archive$cols_y]])]  # FIXME: assert output of liar
+    lie[, instance$archive$cols_y := liar(instance$archive$data[[instance$archive$cols_y]])]  # FIXME: assert output of liar
     xdt_new = xdt
 
     # obtain proposals using fake archive with lie, also with error catching
@@ -170,12 +168,12 @@ bayesopt_mpcl = function(
       }, mbo_error = function(mbo_error_condition) {
         lg$info(paste0(class(mbo_error_condition), collapse = " / "))
         lg$info("Proposing a randomly sampled point")
-        SamplerUnif$new(domain)$sample(1L)$data
+        generate_design_random(search_space, n = 1L)$data
       })
       xdt = rbind(xdt, xdt_new)
     }
 
-    acq_function$surrogate$archive = archive
+    acq_function$surrogate$archive = instance$archive
 
     instance$eval_batch(xdt)
 
