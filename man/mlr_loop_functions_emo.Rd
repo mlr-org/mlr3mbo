@@ -22,7 +22,7 @@ The \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be opt
 Size of the initial design.
 If \code{NULL} and the \link[bbotk:Archive]{bbotk::Archive} contains no evaluations, \code{4 * d} is used with \code{d} being the
 dimensionality of the search space.
-Points are drawn uniformly at random.}
+Points are generated via a Sobol sequence.}
 
 \item{surrogate}{(\link{Surrogate})\cr
 \link{SurrogateLearnerCollection} to be used as a surrogate.}

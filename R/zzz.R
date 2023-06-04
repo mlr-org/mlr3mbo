@@ -3,6 +3,7 @@
 #' @import checkmate
 #' @import data.table
 #' @import paradox
+#' @import spacefillr
 #' @import mlr3misc
 #' @import bbotk
 #' @import lgr

@@ -49,6 +49,7 @@ Imports:
     mlr3 (>= 0.14.0),
     mlr3misc (>= 0.11.0),
     paradox (>= 0.10.0),
+    spacefillr,
     R6 (>= 2.4.1)
 Suggests:
     DiceKriging,
@@ -63,7 +64,6 @@ Suggests:
     rgenoud,
     rmarkdown,
     rpart,
-    spacefillr,
     stringi,
     testthat (>= 3.0.0),
 ByteCompile: no

@@ -17,7 +17,7 @@
 #'   Size of the initial design.
 #'   If `NULL` and the [bbotk::Archive] contains no evaluations, \code{4 * d} is used with \code{d} being the
 #'   dimensionality of the search space.
-#'   Points are drawn uniformly at random.
+#'   Points are generated via a Sobol sequence.
 #' @param surrogate ([SurrogateLearner])\cr
 #'   [SurrogateLearner] to be used as a surrogate.
 #' @param acq_function ([AcqFunction])\cr
@@ -132,7 +132,7 @@ bayesopt_parego = function(
 
   # initial design
   if (isTRUE(init_design_size > 0L)) {
-    design = generate_design_random(domain, n = init_design_size)$data
+    design = generate_design_sobol(domain, n = init_design_size)$data
     instance$eval_batch(design)
   } else {
     init_design_size = instance$archive$n_evals
