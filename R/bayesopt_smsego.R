@@ -86,54 +86,52 @@
 #' }
 bayesopt_smsego = function(
     instance,
-    init_design_size = NULL,
     surrogate,
     acq_function,
     acq_optimizer,
+    init_design_size = NULL,
     random_interleave_iter = 0L
   ) {
 
-  # assertions and defaults
+  # assertions
   assert_r6(instance, "OptimInstanceMultiCrit")
   assert_r6(instance$terminator, "TerminatorEvals")
-  assert_int(init_design_size, lower = 1L, null.ok = TRUE)
   assert_r6(surrogate, classes = "SurrogateLearnerCollection")
   assert_r6(acq_function, classes = "AcqFunctionSmsEgo")
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
+  assert_int(init_design_size, lower = 1L, null.ok = TRUE)
   assert_int(random_interleave_iter, lower = 0L)
 
-  archive = instance$archive
-  domain = instance$search_space
-  d = domain$length
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
+  # initial design
+  search_space = instance$search_space
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) {
+    init_design_size = 4L * search_space$length
+  }
+  if (!is.null(init_design_size) && init_design_size > 0L && instance$archive$n_evals == 0L) {
+    design = generate_design_sobol(search_space, n = init_design_size)$data
+    instance$eval_batch(design)
+  }
 
-  surrogate$archive = archive
+  # completing initialization
+  surrogate$archive = instance$archive
   acq_function$surrogate = surrogate
   acq_optimizer$acq_function = acq_function
 
-  # initial design
-  if (isTRUE(init_design_size > 0L)) {
-    design = generate_design_sobol(domain, n = init_design_size)$data
-    instance$eval_batch(design)
-  } else {
-    init_design_size = instance$archive$n_evals
-  }
-
-  # loop
+  # actual loop
   repeat {
     xdt = tryCatch({
       # random interleaving is handled here
       if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
         stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
       }
-      acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
+      acq_function$progress = instance$terminator$param_set$values$n_evals - instance$archive$n_evals
       acq_function$surrogate$update()
       acq_function$update()
       acq_optimizer$optimize()
     }, mbo_error = function(mbo_error_condition) {
       lg$info(paste0(class(mbo_error_condition), collapse = " / "))
       lg$info("Proposing a randomly sampled point")
-      SamplerUnif$new(domain)$sample(1L)$data
+      generate_design_random(search_space, n = 1L)$data
     })
 
     instance$eval_batch(xdt)

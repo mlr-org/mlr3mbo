@@ -7,10 +7,10 @@
 \usage{
 bayesopt_emo(
   instance,
-  init_design_size = NULL,
   surrogate,
   acq_function,
   acq_optimizer,
+  init_design_size = NULL,
   random_interleave_iter = 0L
 )
 }
@@ -18,13 +18,7 @@ bayesopt_emo(
 \item{instance}{(\link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit})\cr
 The \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be optimized.}
 
-\item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
-Size of the initial design.
-If \code{NULL} and the \link[bbotk:Archive]{bbotk::Archive} contains no evaluations, \code{4 * d} is used with \code{d} being the
-dimensionality of the search space.
-Points are generated via a Sobol sequence.}
-
-\item{surrogate}{(\link{Surrogate})\cr
+\item{surrogate}{(\link{SurrogateLearnerCollection})\cr
 \link{SurrogateLearnerCollection} to be used as a surrogate.}
 
 \item{acq_function}{(\link{AcqFunction})\cr
@@ -32,6 +26,12 @@ Points are generated via a Sobol sequence.}
 
 \item{acq_optimizer}{(\link{AcqOptimizer})\cr
 \link{AcqOptimizer} to be used as acquisition function optimizer.}
+
+\item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
+Size of the initial design.
+If \code{NULL} and the \link[bbotk:Archive]{bbotk::Archive} contains no evaluations, \code{4 * d} is used with \code{d} being the
+dimensionality of the search space.
+Points are generated via a Sobol sequence.}
 
 \item{random_interleave_iter}{(\code{integer(1)})\cr
 Every \code{random_interleave_iter} iteration (starting after the initial design), a point is
