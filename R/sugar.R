@@ -4,7 +4,7 @@
 #' This function allows to construct a [SurrogateLearner] or [SurrogateLearnerCollection] in the spirit
 #' of `mlr_sugar` from \CRANpkg{mlr3}.
 #'
-#' If the `archive` references more than one target variable or `y_cols` contains more than one
+#' If the `archive` references more than one target variable or `cols_y` contains more than one
 #' target variable but only a single `learner` is specified, this learner is replicated as many
 #' times as needed to build the [SurrogateLearnerCollection].
 #'
@@ -14,12 +14,12 @@
 #' @param archive (`NULL` | [bbotk::Archive])\cr
 #'   [bbotk::Archive] of the [bbotk::OptimInstance] used.
 #'   Can also be `NULL`.
-#' @param x_cols (`NULL` | `character()`)\cr
+#' @param cols_x (`NULL` | `character()`)\cr
 #'   Column ids in the [bbotk::Archive] that should be used as features.
 #'   Can also be `NULL` in which case this is automatically inferred based on the archive.
-#' @param y_cols (`NULL` | `character()`)\cr
+#' @param cols_y (`NULL` | `character()`)\cr
 #'   Column id(s) in the [bbotk::Archive] that should be used as a target.
-#'   If a list of [mlr3::LearnerRegr] is provided as the `learner` argument and `y_cols` is
+#'   If a list of [mlr3::LearnerRegr] is provided as the `learner` argument and `cols_y` is
 #'   specified as well, as many column names as learners must be provided. 
 #'   Can also be `NULL` in which case this is automatically inferred based on the archive.
 #' @param ... (named `list()`)\cr
@@ -33,20 +33,20 @@
 #' srlrn(lrn("regr.featureless"), catch_errors = FALSE)
 #' srlrn(list(lrn("regr.featureless"), lrn("regr.featureless")))
 #' @export
-srlrn = function(learner, archive = NULL, x_cols = NULL, y_cols = NULL, ...) {
+srlrn = function(learner, archive = NULL, cols_x = NULL, cols_y = NULL, ...) {
   dots = list(...)
   assert_learner_surrogate(learner)
 
   surrogate = if (test_r6(learner, classes = "Learner")) {
-    SurrogateLearner$new(learner = learner, archive = archive, x_cols = x_cols, y_col = y_cols)
+    SurrogateLearner$new(learner = learner, archive = archive, cols_x = cols_x, col_y = cols_y)
   } else if (inherits(learner, what = "list")) {
     if (length(learner) == 1L) {
       learner = learner[1L]
       # if a single learner is provided in a list, we unlist it
-      SurrogateLearner$new(learner = learner, archive = archive, x_cols = x_cols, y_col = y_cols)
+      SurrogateLearner$new(learner = learner, archive = archive, cols_x = cols_x, col_y = cols_y)
     } else {
-      assert_character(y_cols, len = length(learner), null.ok = TRUE)
-      SurrogateLearnerCollection$new(learners = learner, archive = archive, x_cols = x_cols, y_col = y_cols)
+      assert_character(cols_y, len = length(learner), null.ok = TRUE)
+      SurrogateLearnerCollection$new(learners = learner, archive = archive, cols_x = cols_x, cols_y = cols_y)
     }
   }
   surrogate$param_set$values = insert_named(surrogate$param_set$values, dots)

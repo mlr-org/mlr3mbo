@@ -266,7 +266,7 @@ For more details on error handling, see the [Safety Nets](#safety-nets) section.
 
 Note that this insample performance assertion is not always meaningful, e.g., in the case of using a Gaussian Process with no nugget, the insample performance will always be perfect.
 
-Internally, the learner is fitted on a `r ref("mlr3::TaskRegr", "regression task")` constructed from the `r ref("bbotk::Archive", "Archive")` of the `r ref("bbotk::OptimInstance", "OptimInstance")` that is to be optimized and features and the target variable are determined automatically but can also be specified via the `$x_cols` and `$y_cols` active bindings.
+Internally, the learner is fitted on a `r ref("mlr3::TaskRegr", "regression task")` constructed from the `r ref("bbotk::Archive", "Archive")` of the `r ref("bbotk::OptimInstance", "OptimInstance")` that is to be optimized and features and the target variable are determined automatically but can also be specified via the `$cols_x` and `$cols_y` active bindings.
 Ideally, the `archive` is already passed during construction, however, lazy initialization is also possible (i.e., the `$archive` field will be automatically populated within the optimization routine of an `r ref("mlr3mbo::mlr_optimizers_mbo", "OptimizerMbo")`).
 
 Important methods are `$update()` and `$predict()` with the former one typically being used within the `loop_function` and the latter one being used within the implementation of an acquisition function.

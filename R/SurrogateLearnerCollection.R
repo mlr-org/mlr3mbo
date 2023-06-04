@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Surrogate model containing multiple [mlr3::LearnerRegr].
-#' The [mlr3::LearnerRegr] are fit on the target variables as indicated via `y_cols`.
+#' The [mlr3::LearnerRegr] are fit on the target variables as indicated via `cols_y`.
 #' Note that redundant [mlr3::LearnerRegr] must be deep clones.
 #'
 #' @section Parameters:
@@ -83,9 +83,9 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #'
     #' @param learners (list of [mlr3::LearnerRegr]).
     #' @template param_archive_surrogate
-    #' @template param_x_cols_surrogate
-    #' @template param_y_cols_surrogate
-    initialize = function(learners, archive = NULL, x_cols = NULL, y_cols = NULL) {
+    #' @template param_cols_x_surrogate
+    #' @template param_cols_y_surrogate
+    initialize = function(learners, archive = NULL, cols_x = NULL, cols_y = NULL) {
       assert_learners(learners)
       addresses = map(learners, address)
       if (length(unique(addresses)) != length(addresses)) {
@@ -100,8 +100,8 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 
-      assert_character(x_cols, min.len = 1L, null.ok = TRUE)
-      assert_character(y_cols, len = length(learners), null.ok = TRUE)
+      assert_character(cols_x, min.len = 1L, null.ok = TRUE)
+      assert_character(cols_y, len = length(learners), null.ok = TRUE)
 
       ps = ParamSet$new(list(
         ParamLgl$new("assert_insample_perf"),
@@ -113,13 +113,13 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       ps$add_dep("perf_measures", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_thresholds", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
-      super$initialize(learner = learners, archive = archive, x_cols = x_cols, y_cols = y_cols, param_set = ps)
+      super$initialize(learner = learners, archive = archive, cols_x = cols_x, cols_y = cols_y, param_set = ps)
     },
 
     #' @description
     #' Predict mean response and standard error.
     #' Returns a named list of data.tables.
-    #' Each contains the mean response and standard error for one `y_col`.
+    #' Each contains the mean response and standard error for one `col_y`.
     #'
     #' @param xdt ([data.table::data.table()])\cr
     #'   New data. One row per observation.
@@ -127,7 +127,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @return list of [data.table::data.table()]s with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
-      xdt = fix_xdt_missing(xdt, x_cols = self$x_cols, archive = self$archive)
+      xdt = fix_xdt_missing(xdt, cols_x = self$cols_x, archive = self$archive)
 
       preds = lapply(self$learner, function(learner) {
         pred = learner$predict_newdata(newdata = xdt)
@@ -231,11 +231,11 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
-      xydt = self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE]
-      features = setdiff(names(xydt), self$y_cols)
-      tasks = lapply(self$y_cols, function(y_col) {
+      xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
+      features = setdiff(names(xydt), self$cols_y)
+      tasks = lapply(self$cols_y, function(col_y) {
         # if this turns out to be a bottleneck, we can also operate on a single task here
-        task = TaskRegr$new(id = paste0("surrogate_task_", y_col), backend = xydt[, c(features, y_col), with = FALSE], target = y_col)
+        task = TaskRegr$new(id = paste0("surrogate_task_", col_y), backend = xydt[, c(features, col_y), with = FALSE], target = col_y)
         task
       })
       pmap(list(learner = self$learner, task = tasks), .f = function(learner, task) {
@@ -243,7 +243,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
         learner$train(task)
         invisible(NULL)
       })
-      names(self$learner) = self$y_cols
+      names(self$learner) = self$cols_y
 
       if (self$param_set$values$assert_insample_perf) {
         private$.insample_perf = setNames(pmap_dbl(list(learner = self$learner, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),

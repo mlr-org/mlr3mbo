@@ -24,14 +24,14 @@ archive_x = function(archive) {
 }
 
 # during surrogate prediction it may have happened that whole columns where dropped (e.g., during focussearch if the search space was shrunk)
-fix_xdt_missing = function(xdt, x_cols, archive) {
-  missing = x_cols[x_cols %nin% colnames(xdt)]
+fix_xdt_missing = function(xdt, cols_x, archive) {
+  missing = cols_x[cols_x %nin% colnames(xdt)]
   types = map_chr(missing, function(x) typeof(archive$data[[x]]))
   NA_types = list(double = NA_real_, integer = NA_integer_, character = NA_character_, logical = NA)[types]
   for (i in seq_along(missing)) {
     xdt[, eval(missing[i]) := NA_types[i]]
   }
-  assert_subset(x_cols, colnames(xdt))
+  assert_subset(cols_x, colnames(xdt))
   xdt
 }
 
@@ -46,15 +46,15 @@ calculate_parego_weights = function(s, k) {
   matrix(unlist(fun(s, k)), ncol = k, byrow = TRUE) / s
 }
 
-surrogate_mult_max_to_min = function(codomain, y_cols) {
-  mult = map_int(y_cols, function(y_col) {
-    mult = if (y_col %in% codomain$ids()) {
-      if(has_element(codomain$tags[[y_col]], "maximize")) -1L else 1L
+surrogate_mult_max_to_min = function(codomain, cols_y) {
+  mult = map_int(cols_y, function(col_y) {
+    mult = if (col_y %in% codomain$ids()) {
+      if(has_element(codomain$tags[[col_y]], "maximize")) -1L else 1L
     } else {
       1L
     }
   })
-  setNames(mult, nm = y_cols)
+  setNames(mult, nm = cols_y)
 }
 
 mult_max_to_min = function(codomain) {

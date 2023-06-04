@@ -74,9 +74,9 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #'
     #' @param learner ([mlr3::LearnerRegr]).
     #' @template param_archive_surrogate
-    #' @template param_x_cols_surrogate
-    #' @template param_y_col_surrogate
-    initialize = function(learner, archive = NULL, x_cols = NULL, y_col = NULL) {
+    #' @template param_cols_y_surrogate
+    #' @template param_cols_x_surrogate
+    initialize = function(learner, archive = NULL, cols_x = NULL, col_y = NULL) {
       assert_learner(learner)
       if (learner$predict_type != "se" && "se" %in% learner$predict_types) {
         learner$predict_type = "se"
@@ -84,8 +84,8 @@ SurrogateLearner = R6Class("SurrogateLearner",
 
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 
-      assert_character(x_cols, min.len = 1L, null.ok = TRUE)
-      assert_string(y_col, null.ok = TRUE)
+      assert_character(cols_x, min.len = 1L, null.ok = TRUE)
+      assert_string(col_y, null.ok = TRUE)
 
       ps = ParamSet$new(list(
         ParamLgl$new("assert_insample_perf"),
@@ -97,7 +97,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
       ps$add_dep("perf_measure", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_threshold", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
-      super$initialize(learner = learner, archive = archive, x_cols = x_cols, y_cols = y_col, param_set = ps)
+      super$initialize(learner = learner, archive = archive, cols_x = cols_x, cols_y = col_y, param_set = ps)
     },
 
     #' @description
@@ -109,7 +109,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
-      xdt = fix_xdt_missing(xdt, x_cols = self$x_cols, archive = self$archive)
+      xdt = fix_xdt_missing(xdt, cols_x = self$cols_x, archive = self$archive)
 
       pred = self$learner$predict_newdata(newdata = xdt)
       if (self$learner$predict_type == "se") {
@@ -218,8 +218,8 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
-      xydt = self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE]
-      task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$y_cols)
+      xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
+      task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$cols_y)
       assert_learnable(task, learner = self$learner)
       self$learner$train(task)
 

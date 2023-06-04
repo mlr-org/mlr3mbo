@@ -5,7 +5,7 @@
 \title{Surrogate Model Containing Multiple Learners}
 \description{
 Surrogate model containing multiple \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
-The \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} are fit on the target variables as indicated via \code{y_cols}.
+The \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} are fit on the target variables as indicated via \code{cols_y}.
 Note that redundant \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} must be deep clones.
 }
 \section{Parameters}{
@@ -136,8 +136,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateLearnerCollection$new(
   learners,
   archive = NULL,
-  x_cols = NULL,
-  y_cols = NULL
+  cols_x = NULL,
+  cols_y = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -149,11 +149,11 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
+\item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
-\item{\code{y_cols}}{(\code{character()} | \code{NULL})\cr
+\item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 }
@@ -166,7 +166,7 @@ By default, automatically inferred based on the archive.}
 \subsection{Method \code{predict()}}{
 Predict mean response and standard error.
 Returns a named list of data.tables.
-Each contains the mean response and standard error for one \code{y_col}.
+Each contains the mean response and standard error for one \code{col_y}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateLearnerCollection$predict(xdt)}\if{html}{\out{</div>}}
 }

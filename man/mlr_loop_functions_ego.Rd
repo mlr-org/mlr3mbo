@@ -109,7 +109,7 @@ if (requireNamespace("mlr3learners") &
     terminator = trm("evals", n_evals = 5))
 
   surrogate = default_surrogate(instance, n_learner = 2)
-  surrogate$y_cols = c("y", "time")
+  surrogate$cols_y = c("y", "time")
 
   optimizer = opt("mbo",
     loop_function = bayesopt_ego,

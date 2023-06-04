@@ -19,16 +19,16 @@ Surrogate = R6Class("Surrogate",
     #' @param learner (learner)\cr
     #'   Arbitrary learner object depending on the subclass.
     #' @template param_archive_surrogate
-    #' @template param_x_cols_surrogate
-    #' @template param_y_cols_surrogate
+    #' @template param_cols_x_surrogate
+    #' @template param_cols_y_surrogate
     #' @param param_set ([paradox::ParamSet])\cr
     #'   Parameter space description depending on the subclass.
-    initialize = function(learner, archive, x_cols, y_cols, param_set) {
+    initialize = function(learner, archive, cols_x, cols_y, param_set) {
       # most assertions are done in subclasses
       self$learner = learner
       private$.archive = assert_r6(archive, classes = "Archive", null.ok = TRUE)
-      private$.x_cols = assert_character(x_cols, min.len = 1L, null.ok = TRUE)
-      private$.y_cols = y_cols = assert_character(y_cols, min.len = 1L, null.ok = TRUE)
+      private$.cols_x = assert_character(cols_x, min.len = 1L, null.ok = TRUE)
+      private$.cols_y = cols_y = assert_character(cols_y, min.len = 1L, null.ok = TRUE)
       assert_r6(param_set, classes = "ParamSet")
       assert_r6(param_set$params$catch_errors, classes = "ParamLgl")
       private$.param_set = param_set
@@ -109,21 +109,21 @@ Surrogate = R6Class("Surrogate",
       stop("Abstract.")
     },
 
-    #' @template field_x_cols_surrogate
-    x_cols = function(rhs) {
+    #' @template field_cols_x_surrogate
+    cols_x = function(rhs) {
       if (missing(rhs)) {
-        if (is.null(private$.x_cols)) self$archive$cols_x else private$.x_cols
+        if (is.null(private$.cols_x)) self$archive$cols_x else private$.cols_x
       } else {
-        private$.x_cols = assert_character(rhs, min.len = 1L)
+        private$.cols_x = assert_character(rhs, min.len = 1L)
       }
     },
 
-    #' @template field_y_cols_surrogate
-    y_cols = function(rhs) {
+    #' @template field_cols_y_surrogate
+    cols_y = function(rhs) {
       if (missing(rhs)) {
-        if (is.null(private$.y_cols)) self$archive$cols_y else private$.y_cols
+        if (is.null(private$.cols_y)) self$archive$cols_y else private$.cols_y
       } else {
-        private$.y_cols = assert_character(rhs, len = self$n_learner)
+        private$.cols_y = assert_character(rhs, len = self$n_learner)
       }
     },
 
@@ -193,9 +193,9 @@ Surrogate = R6Class("Surrogate",
 
     .archive = NULL,
 
-    .x_cols = NULL,
+    .cols_x = NULL,
 
-    .y_cols = NULL,
+    .cols_y = NULL,
 
     .insample_perf = NULL,
 

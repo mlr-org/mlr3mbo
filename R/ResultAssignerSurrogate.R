@@ -58,7 +58,7 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
         map_dtc(preds, "mean")
       }
       archive_tmp = archive$clone(deep = TRUE)
-      archive_tmp$data[, self$surrogate$y_cols := means]
+      archive_tmp$data[, self$surrogate$cols_y := means]
       best = archive_tmp$best()[, archive_tmp$cols_x, with = FALSE]
 
       # ys are still the ones originally evaluated

@@ -126,7 +126,7 @@ bayesopt_parego = function(
   if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
 
   surrogate$archive = archive
-  surrogate$y_cols = "y_scal"
+  surrogate$cols_y = "y_scal"
   acq_function$surrogate = surrogate
   acq_optimizer$acq_function = acq_function
 

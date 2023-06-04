@@ -72,7 +72,7 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     #' @description
     #' Updates acquisition function and sets `y_best`.
     update = function() {
-      self$y_best = min(self$surrogate_max_to_min * self$archive$data[[self$surrogate$y_cols]])
+      self$y_best = min(self$surrogate_max_to_min * self$archive$data[[self$surrogate$cols_y]])
     }
   ),
 
