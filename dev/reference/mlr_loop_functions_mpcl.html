@@ -122,7 +122,7 @@ The <a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingleCrit.html" c
 Size of the initial design.
 If <code>NULL</code> and the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> contains no evaluations, <code>4 * d</code> is used with <code>d</code> being the
 dimensionality of the search space.
-Points are drawn uniformly at random.</p></dd>
+Points are generated via a Sobol sequence.</p></dd>
 
 
 <dt>surrogate</dt>
@@ -237,7 +237,7 @@ function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceSingle
 <span class="r-in"><span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            x  x_domain         y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.1079162 &lt;list[1]&gt; 0.0116459</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.4151775 &lt;list[1]&gt; 0.1723724</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
