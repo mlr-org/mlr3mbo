@@ -97,10 +97,10 @@ is chosen based on optimizing the acquisition function.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bayesopt_emo</span><span class="op">(</span></span>
 <span>  <span class="va">instance</span>,</span>
-<span>  init_design_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">surrogate</span>,</span>
 <span>  <span class="va">acq_function</span>,</span>
 <span>  <span class="va">acq_optimizer</span>,</span>
+<span>  init_design_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  random_interleave_iter <span class="op">=</span> <span class="fl">0L</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -112,16 +112,8 @@ is chosen based on optimizing the acquisition function.</p>
 The <a href="https://bbotk.mlr-org.com/reference/OptimInstanceMultiCrit.html" class="external-link">bbotk::OptimInstanceMultiCrit</a> to be optimized.</p></dd>
 
 
-<dt>init_design_size</dt>
-<dd><p>(<code>NULL</code> | <code>integer(1)</code>)<br>
-Size of the initial design.
-If <code>NULL</code> and the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> contains no evaluations, <code>4 * d</code> is used with <code>d</code> being the
-dimensionality of the search space.
-Points are generated via a Sobol sequence.</p></dd>
-
-
 <dt>surrogate</dt>
-<dd><p>(<a href="Surrogate.html">Surrogate</a>)<br><a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a> to be used as a surrogate.</p></dd>
+<dd><p>(<a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>)<br><a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a> to be used as a surrogate.</p></dd>
 
 
 <dt>acq_function</dt>
@@ -130,6 +122,14 @@ Points are generated via a Sobol sequence.</p></dd>
 
 <dt>acq_optimizer</dt>
 <dd><p>(<a href="AcqOptimizer.html">AcqOptimizer</a>)<br><a href="AcqOptimizer.html">AcqOptimizer</a> to be used as acquisition function optimizer.</p></dd>
+
+
+<dt>init_design_size</dt>
+<dd><p>(<code>NULL</code> | <code>integer(1)</code>)<br>
+Size of the initial design.
+If <code>NULL</code> and the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> contains no evaluations, <code>4 * d</code> is used with <code>d</code> being the
+dimensionality of the search space.
+Points are generated via a Sobol sequence.</p></dd>
 
 
 <dt>random_interleave_iter</dt>
