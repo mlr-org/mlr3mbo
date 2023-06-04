@@ -134,7 +134,7 @@ test_that("bayesopt_ego eips", {
   )
 
   surrogate = default_surrogate(instance, learner = REGR_FEATURELESS, n_learner = 2L)
-  surrogate$y_cols = c("y", "time")
+  surrogate$cols_y = c("y", "time")
 
   acq_function = AcqFunctionEIPS$new()
 

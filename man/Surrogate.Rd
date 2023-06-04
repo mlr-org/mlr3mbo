@@ -28,11 +28,11 @@ Id used when printing.}
 \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of surrogate models.}
 
-\item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
+\item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
-\item{\code{y_cols}}{(\code{character()} | \code{NULL})\cr
+\item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 
@@ -79,7 +79,7 @@ Retrieves the currently active predict type, e.g. \code{"response"}.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$new(learner, archive, x_cols, y_cols, param_set)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Surrogate$new(learner, archive, cols_x, cols_y, param_set)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -91,11 +91,11 @@ Arbitrary learner object depending on the subclass.}
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
+\item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
-\item{\code{y_cols}}{(\code{character()} | \code{NULL})\cr
+\item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 

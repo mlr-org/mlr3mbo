@@ -10,7 +10,7 @@ Expected Improvement per Second.
 It is assumed that calculations are performed on an \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit}.
 Additionally to target values of the codomain that should be minimized or maximized, the
 \link[bbotk:Objective]{bbotk::Objective} of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} should return time values.
-The column names of the target variable and time variable must be passed as \code{y_cols} in the
+The column names of the target variable and time variable must be passed as \code{cols_y} in the
 order \verb{(target, time)} when constructing the \link{SurrogateLearnerCollection} that is being used as a
 surrogate.
 }
@@ -53,7 +53,7 @@ if (requireNamespace("mlr3learners") &
     control = list(trace = FALSE))
 
   surrogate = srlrn(list(learner, learner$clone(deep = TRUE)), archive = instance$archive)
-  surrogate$y_cols = c("y", "time")
+  surrogate$cols_y = c("y", "time")
 
   acq_function = acqf("eips", surrogate = surrogate)
 
@@ -98,9 +98,9 @@ In the case of maximization, this already includes the necessary change of sign.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{y_col}}{(\code{character(1)}).}
+\item{\code{col_y}}{(\code{character(1)}).}
 
-\item{\code{time_col}}{(\code{character(1)}).}
+\item{\code{col_time}}{(\code{character(1)}).}
 }
 \if{html}{\out{</div>}}
 }

@@ -4,8 +4,8 @@ test_that("SurrogateLearner API works", {
   inst$eval_batch(design)
   surrogate = SurrogateLearner$new(learner = REGR_FEATURELESS, archive = inst$archive)
   expect_r6(surrogate$archive, "Archive")
-  expect_equal(surrogate$x_cols, "x")
-  expect_equal(surrogate$y_cols, "y")
+  expect_equal(surrogate$cols_x, "x")
+  expect_equal(surrogate$cols_y, "y")
   surrogate$update()
   expect_learner(surrogate$learner)
 
