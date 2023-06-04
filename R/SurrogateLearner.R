@@ -74,7 +74,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #'
     #' @param learner ([mlr3::LearnerRegr]).
     #' @template param_archive_surrogate
-    #' @template param_cols_y_surrogate
+    #' @template param_col_y_surrogate
     #' @template param_cols_x_surrogate
     initialize = function(learner, archive = NULL, cols_x = NULL, col_y = NULL) {
       assert_learner(learner)
