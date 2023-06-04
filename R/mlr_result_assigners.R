@@ -18,6 +18,7 @@
 #' Sugar function: [ras()]
 #' @export
 #' @examples
+#' library(data.table)
 #' as.data.table(mlr_result_assigners)
 #' ras("archive")
 mlr_result_assigners = R6Class("DictionaryResultAssigner", inherit = Dictionary, cloneable = FALSE)$new()

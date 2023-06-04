@@ -18,6 +18,7 @@
 #' Sugar function: [acqf()]
 #' @export
 #' @examples
+#' library(data.table)
 #' as.data.table(mlr_acqfunctions)
 #' acqf("ei")
 mlr_acqfunctions = R6Class("DictionaryAcqFunction", inherit = Dictionary, cloneable = FALSE)$new()

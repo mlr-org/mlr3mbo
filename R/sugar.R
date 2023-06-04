@@ -30,6 +30,7 @@
 #'
 #' @export
 #' @examples
+#' library(mlr3)
 #' srlrn(lrn("regr.featureless"), catch_errors = FALSE)
 #' srlrn(list(lrn("regr.featureless"), lrn("regr.featureless")))
 #' @export

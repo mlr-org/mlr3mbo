@@ -41,6 +41,7 @@ target variable but only a single \code{learner} is specified, this learner is r
 times as needed to build the \link{SurrogateLearnerCollection}.
 }
 \examples{
+library(mlr3)
 srlrn(lrn("regr.featureless"), catch_errors = FALSE)
 srlrn(list(lrn("regr.featureless"), lrn("regr.featureless")))
 }

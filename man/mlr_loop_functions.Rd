@@ -29,6 +29,7 @@ See \link[mlr3misc:Dictionary]{mlr3misc::Dictionary}.
 }
 
 \examples{
+library(data.table)
 as.data.table(mlr_loop_functions)
 }
 \seealso{

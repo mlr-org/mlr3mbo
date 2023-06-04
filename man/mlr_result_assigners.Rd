@@ -19,6 +19,7 @@ See \link[mlr3misc:Dictionary]{mlr3misc::Dictionary}.
 }
 
 \examples{
+library(data.table)
 as.data.table(mlr_result_assigners)
 ras("archive")
 }
