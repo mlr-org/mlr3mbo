@@ -29,6 +29,7 @@ test_that("AcqFunctionEHVIGH works", {
 })
 
 test_that("AcqFunctionEHVIGH is close to AcqFunctionEHVI", {
+  skip_on_cran()
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
   skip_if_not_installed("rgenoud")

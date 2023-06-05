@@ -13,6 +13,7 @@ test_that("ResultAssignerSurrogate works", {
 })
 
 test_that("ResultAssignerSurrogate result and best can be different", {
+  skip_on_cran()
   skip_if_not_installed("rpart")
   result_assigner = ResultAssignerSurrogate$new(surrogate = SurrogateLearner$new(lrn("regr.rpart")))
 
