@@ -131,9 +131,9 @@ algorithms that can be used in a straightforward manner.</p>
 <p>We assume that the reader is somewhat familiar with black box
 optimization and <a href="https://bbotk.mlr-org.com" class="external-link">bbotk</a>,
 hyperparameter optimization and <a href="https://mlr3tuning.mlr-org.com" class="external-link">mlr3tuning</a> and knows the
-basics of BO. Background material is, for example, given by <span class="citation">Garnett (2022)</span>, <span class="citation">Bischl et
-al. (2021)</span>, and <span class="citation">Becker et al.
-(2022)</span>.</p>
+basics of BO. Background material is, for example, given by <span class="citation">Garnett (2022)</span>, <span class="citation">Bischl,
+Binder, et al. (2023)</span>, and <span class="citation">Bischl,
+Sonabend, et al. (2023)</span>.</p>
 </div>
 <div class="section level2">
 <h2 id="building-blocks">Building Blocks<a class="anchor" aria-label="anchor" href="#building-blocks"></a>
@@ -689,7 +689,7 @@ Process fails due to data points being too close to each other:</p>
 <span>  acq_optimizer <span class="op">=</span> <span class="va">acq_optimizer</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [07:30:27.643] [bbotk] missing value where TRUE/FALSE needed</span></span>
+<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [07:51:15.981] [bbotk] missing value where TRUE/FALSE needed</span></span>
 <span><span class="co">#&gt;             x  x_domain            y</span></span>
 <span><span class="co">#&gt; 1: 0.01617037 &lt;list[1]&gt; 0.0002614808</span></span></code></pre></div>
 <p>The log tells us that an error happened and was caught:
@@ -701,16 +701,16 @@ column is NA here):</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="co">#&gt;               x            y  x_domain           timestamp batch_nr     acq_ei</span></span>
-<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 07:30:27        1         NA</span></span>
-<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 07:30:27        1         NA</span></span>
-<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 07:30:27        1         NA</span></span>
-<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 07:30:27        1         NA</span></span>
-<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2023-06-05 07:30:27        2         NA</span></span>
-<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2023-06-05 07:30:27        3 0.04353876</span></span>
-<span><span class="co">#&gt;  7:  0.45532567 0.2073214654 &lt;list[1]&gt; 2023-06-05 07:30:28        4 0.08484728</span></span>
-<span><span class="co">#&gt;  8: -0.24229299 0.0587058937 &lt;list[1]&gt; 2023-06-05 07:30:28        5 0.18996836</span></span>
-<span><span class="co">#&gt;  9: -0.99835097 0.9967046528 &lt;list[1]&gt; 2023-06-05 07:30:28        6 0.09128629</span></span>
-<span><span class="co">#&gt; 10:  0.01617037 0.0002614808 &lt;list[1]&gt; 2023-06-05 07:30:28        7 0.09341134</span></span>
+<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 07:51:15        1         NA</span></span>
+<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 07:51:15        1         NA</span></span>
+<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 07:51:15        1         NA</span></span>
+<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 07:51:15        1         NA</span></span>
+<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2023-06-05 07:51:15        2         NA</span></span>
+<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2023-06-05 07:51:16        3 0.04353876</span></span>
+<span><span class="co">#&gt;  7:  0.45532567 0.2073214654 &lt;list[1]&gt; 2023-06-05 07:51:16        4 0.08484728</span></span>
+<span><span class="co">#&gt;  8: -0.24229299 0.0587058937 &lt;list[1]&gt; 2023-06-05 07:51:16        5 0.18996836</span></span>
+<span><span class="co">#&gt;  9: -0.99835097 0.9967046528 &lt;list[1]&gt; 2023-06-05 07:51:17        6 0.09128629</span></span>
+<span><span class="co">#&gt; 10:  0.01617037 0.0002614808 &lt;list[1]&gt; 2023-06-05 07:51:17        7 0.09341134</span></span>
 <span><span class="co">#&gt;     .already_evaluated</span></span>
 <span><span class="co">#&gt;  1:                 NA</span></span>
 <span><span class="co">#&gt;  2:                 NA</span></span>
@@ -965,9 +965,9 @@ following:</p>
 <span><span class="va">task</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">tsk</a></span><span class="op">(</span><span class="st">"wine"</span><span class="op">)</span></span>
 <span><span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"classif.rpart"</span>,</span>
 <span>  cp <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1e-4</span>, upper <span class="op">=</span> <span class="fl">1</span>, logscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  maxdepth <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,</span>
-<span>  minbucket <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,</span>
-<span>  minsplit <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
+<span>  maxdepth <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>  minbucket <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>  minsplit <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">resampling</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">rsmp</a></span><span class="op">(</span><span class="st">"cv"</span>, folds <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">measure</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">msr</a></span><span class="op">(</span><span class="st">"classif.acc"</span><span class="op">)</span></span>
 <span></span>
@@ -1005,9 +1005,9 @@ following:</p>
 <code class="sourceCode R"><span><span class="va">task</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">tsk</a></span><span class="op">(</span><span class="st">"wine"</span><span class="op">)</span></span>
 <span><span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"classif.rpart"</span>,</span>
 <span>  cp <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1e-4</span>, upper <span class="op">=</span> <span class="fl">1</span>, logscale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  maxdepth <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,</span>
-<span>  minbucket <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,</span>
-<span>  minsplit <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
+<span>  maxdepth <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>  minbucket <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>  minsplit <span class="op">=</span> <span class="fu"><a href="https://paradox.mlr-org.com/reference/to_tune.html" class="external-link">to_tune</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">resampling</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">rsmp</a></span><span class="op">(</span><span class="st">"cv"</span>, folds <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">measures</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">msrs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"classif.acc"</span>, <span class="st">"selected_features"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -1039,15 +1039,17 @@ following:</p>
 <span><span class="va">tuner</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span>
 <span><span class="va">instance</span><span class="op">$</span><span class="va">result</span></span></code></pre></div>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-mlr3book" class="csl-entry">
-Becker, Marc, Martin Binder, Bernd Bischl, Natalie Foss, Lars Kotthoff,
-Michel Lang, Florian Pfisterer, et al. 2022. <span>“<span class="nocase">mlr3book</span>.”</span> <a href="https://mlr3book.mlr-org.com" class="external-link">https://mlr3book.mlr-org.com</a>.
-</div>
 <div id="ref-bischl_2021" class="csl-entry">
 Bischl, Bernd, Martin Binder, Michel Lang, Tobias Pielok, Jakob Richter,
-Stefan Coors, Janek Thomas, et al. 2021. <span>“Hyperparameter
-Optimization: Foundations, Algorithms, Best Practices and Open
-Challenges.”</span> <em>arXiv:2107.05847 [Cs, Stat]</em>. <a href="https://arxiv.org/abs/2107.05847" class="external-link">https://arxiv.org/abs/2107.05847</a>.
+Stefan Coors, Janek Thomas, et al. 2023. <span>“Hyperparameter
+Optimization: Foundations, Algorithms, Best Practices, and Open
+Challenges.”</span> <em>Wiley Interdisciplinary Reviews: Data Mining and
+Knowledge Discovery</em>, e1484.
+</div>
+<div id="ref-mlr3book" class="csl-entry">
+Bischl, Bernd, Raphael Sonabend, Lars Kotthoff, and Michel Lang, eds.
+2023. <em><span class="nocase">Flexible and Robust Machine Learning
+Using mlr3 in R</span></em>. <a href="https://mlr3book.mlr-org.com" class="external-link">https://mlr3book.mlr-org.com</a>.
 </div>
 <div id="ref-garnett_2022" class="csl-entry">
 Garnett, Roman. 2022. <em><span>Bayesian Optimization</span></em>.
