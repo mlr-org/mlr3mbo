@@ -84,6 +84,7 @@ Collate:
     'AcqFunctionEIPS.R'
     'AcqFunctionMean.R'
     'AcqFunctionPI.R'
+    'AcqFunctionSD.R'
     'AcqFunctionSmsEgo.R'
     'AcqOptimizer.R'
     'aaa.R'
