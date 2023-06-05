@@ -17,7 +17,7 @@
 * BREAKING CHANGE: `result_function`s now replaced by `ResultAssigner`s.
 * BREAKING CHANGE: renamed `$model` field of all `Surrogate` classes to `$learner`.
 * BREAKING CHANGE: For all `Surrogate` and `AcquisitionFunction` classes fields `*_cols` renamed to
-                   `cols_*` (e.g., `x_cols` to `cols_x`) .
+                   `cols_*` (e.g., `x_cols` to `cols_x`).
 
 # mlr3mbo 0.1.2
 
