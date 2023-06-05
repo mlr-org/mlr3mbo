@@ -805,9 +805,9 @@ library(mlr3)
 task = tsk("wine")
 learner = lrn("classif.rpart",
   cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE),
-  maxdepth = to_tune(lower = 1, upper = 30),
-  minbucket = to_tune(lower = 1, upper = 100),
-  minsplit = to_tune(lower = 1, upper = 100))
+  maxdepth = to_tune(lower = 1, upper = 10),
+  minbucket = to_tune(lower = 1, upper = 10),
+  minsplit = to_tune(lower = 1, upper = 10))
 resampling = rsmp("cv", folds = 3)
 measure = msr("classif.acc")
 
@@ -845,9 +845,9 @@ instance$result
 task = tsk("wine")
 learner = lrn("classif.rpart",
   cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE),
-  maxdepth = to_tune(lower = 1, upper = 30),
-  minbucket = to_tune(lower = 1, upper = 100),
-  minsplit = to_tune(lower = 1, upper = 100))
+  maxdepth = to_tune(lower = 1, upper = 10),
+  minbucket = to_tune(lower = 1, upper = 10),
+  minsplit = to_tune(lower = 1, upper = 10))
 resampling = rsmp("cv", folds = 3)
 measures = msrs(c("classif.acc", "selected_features"))
 
