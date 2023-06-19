@@ -18,8 +18,10 @@ respective fields are not set during initialization.
 Other mbo_defaults: 
 \code{\link{default_acqfunction}()},
 \code{\link{default_acqoptimizer}()},
+\code{\link{default_gp}()},
 \code{\link{default_loop_function}()},
 \code{\link{default_result_assigner}()},
+\code{\link{default_rf}()},
 \code{\link{default_surrogate}()}
 }
 \concept{mbo_defaults}

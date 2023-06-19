@@ -18,3 +18,4 @@
 ^\.editorconfig$
 ^\.ignore$
 ^CRAN-SUBMISSION$
+^cran-comments\.md$
