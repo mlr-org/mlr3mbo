@@ -4,7 +4,7 @@
         Gaussian Process and random forest as for example used within `default_surrogate`.
 * refactor: changed Gaussian Process and random forest defaults (in `default_gp` and `default_rf` and therefore also in
             `default_surrogate`). Gaussian Process now uses a `"matern5_2"` kernel. Random forest now uses 100 trees.
-             The number of trees used in the fallback random forest were reduced to 10 trees.
+             The number of trees used in the fallback random forest was reduced to 10.
 
 # mlr3mbo 0.2.1
 
