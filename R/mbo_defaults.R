@@ -74,7 +74,6 @@ default_gp = function(noisy = FALSE) {
   learner
 }
 
-
 #' @title Default Random Forest
 #'
 #' @description
