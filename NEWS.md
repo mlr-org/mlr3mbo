@@ -1,6 +1,6 @@
 # mlr3mbo 0.2.1.9000
 
-* feat: added `default_gp` and `default_rf` helpers that allow for construction of the default
+* feat: added `default_gp` and `default_rf` helpers that allow for construction of a default
         Gaussian Process and random forest as for example used within `default_surrogate`.
 * refactor: changed Gaussian Process and random forest defaults (in `default_gp` and `default_rf` and therefore also in
             `default_surrogate`). Gaussian Process now uses a `"matern5_2"` kernel. Random forest now uses 100 trees.
