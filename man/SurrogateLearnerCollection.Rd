@@ -58,16 +58,9 @@ if (requireNamespace("mlr3learners") &
 
   instance$eval_batch(xdt)
 
-  learner1 = lrn("regr.km",
-    covtype = "matern3_2",
-    optim.method = "gen",
-    nugget.stability = 10^-8,
-    control = list(trace = FALSE))
+  learner1 = default_gp()
 
-  learner2 = lrn("regr.ranger",
-    num.trees = 500,
-    keep.inbag = TRUE,
-    se.method = "jack")
+  learner2 = default_rf()
 
   surrogate = srlrn(list(learner1, learner2), archive = instance$archive)
 

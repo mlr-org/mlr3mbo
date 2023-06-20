@@ -54,7 +54,7 @@ if (requireNamespace("mlr3learners") &
   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
 
   learner = lrn("regr.km",
-    covtype = "matern3_2",
+    covtype = "matern5_2",
     optim.method = "gen",
     nugget.estim = TRUE,
     jitter = 1e-12,

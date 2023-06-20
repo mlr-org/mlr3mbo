@@ -40,6 +40,45 @@ Default is \code{TRUE}.
 }
 }
 
+\examples{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+  library(data.table)
+
+  fun = function(xs) {
+    list(y = xs$x ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+
+  learner = default_gp()
+
+  surrogate = srlrn(learner, archive = instance$archive)
+
+  acq_function = acqf("ei", surrogate = surrogate)
+
+  acq_function$surrogate$update()
+  acq_function$update()
+
+  acq_optimizer = acqo(
+    optimizer = opt("random_search", batch_size = 1000),
+    terminator = trm("evals", n_evals = 1000),
+    acq_function = acq_function)
+
+  acq_optimizer$optimize()
+}
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{

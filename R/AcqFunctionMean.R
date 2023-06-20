@@ -33,11 +33,7 @@
 #'
 #'   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
 #'
-#'   learner = lrn("regr.km",
-#'     covtype = "matern3_2",
-#'     optim.method = "gen",
-#'     nugget.stability = 10^-8,
-#'     control = list(trace = FALSE))
+#'   learner = default_gp()
 #'
 #'   surrogate = srlrn(learner, archive = instance$archive)
 #'

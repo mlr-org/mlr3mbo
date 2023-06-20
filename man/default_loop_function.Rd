@@ -22,7 +22,9 @@ For multi-objective optimization, defaults to \link{bayesopt_smsego}.
 Other mbo_defaults: 
 \code{\link{default_acqfunction}()},
 \code{\link{default_acqoptimizer}()},
+\code{\link{default_gp}()},
 \code{\link{default_result_assigner}()},
+\code{\link{default_rf}()},
 \code{\link{default_surrogate}()},
 \code{\link{mbo_defaults}}
 }

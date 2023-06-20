@@ -10,51 +10,33 @@ default_surrogate(instance, learner = NULL, n_learner = NULL)
 \item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance})\cr
 An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{learner}{(\code{NULL} | \link[mlr3:Learner]{mlr3::Learner}).}
+\item{learner}{(\code{NULL} | \link[mlr3:Learner]{mlr3::Learner}).
+If specified, this learner will be used instead of the defaults described above.}
 
-\item{n_learner}{(\code{NULL} | \code{integer(1)}).}
+\item{n_learner}{(\code{NULL} | \code{integer(1)}).
+Number of learners to be considered in the construction of the \link{SurrogateLearner} or \link{SurrogateLearnerCollection}.
+If not specified will be based on the number of objectives as stated by the instance.}
 }
 \value{
 \link{Surrogate}
 }
 \description{
-This is a helper function that generates a default \link{Surrogate} based on properties of the
+This is a helper function that constructs a default \link{Surrogate} based on properties of the
 \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 
-For numeric-only (including integers) parameter spaces without any dependencies:
-\itemize{
-\item{A Kriging model \dQuote{"regr.km"} with kernel \dQuote{"matern3_2"} is created.}
-\item{If the objective function is deterministic we add a small nugget effect (10^-8*Var(y),
-y is vector of observed outcomes in current design) to increase numerical stability to
-hopefully prevent crashes of \CRANpkg{DiceKriging}.
-Whether the objective function is deterministic can be observed from the objective function's
-properties.}
-\item{If the objective function is noisy the nugget effect will be estimated with
-\code{nugget.estim = TRUE}.}
-\item{Also \code{jitter} is set to \code{TRUE} to circumvent a problem with \CRANpkg{DiceKriging}
-where already trained input values produce the exact trained output.
-Whether the objective function is noisy can be observed from the objective functions
-properties.}
-\item{Instead of the default \code{"BFGS"} optimization method we use rgenoud (\code{"gen"}),
-which is a hybrid algorithm, to combine global search based on genetic algorithms and local search
-based on gradients.
-This may improve the model fit and will less frequently produce a constant surrogate model.}
-}
+For numeric-only (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via
+\code{\link[=default_gp]{default_gp()}}.
+For mixed numeric-categorical parameter spaces, or spaces with conditional parameters a random forest is constructed via
+\code{\link[=default_rf]{default_rf()}}.
 
-For mixed numeric-categorical parameter spaces, or spaces with conditional parameters:
-\itemize{
-\item{A ranger regression forest \dQuote{"regr.ranger"} with 500 trees is created.}
-\item{The standard error of a prediction (if required by the infill criterion) is estimated via jackknife.
-This is the \code{se.method = "jack"} option of the \dQuote{"regr.ranger"} learner (default).
-}
-}
 In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
-in cases where the surrogate learner errors. Currently, the following learner is used as a fallback:
-\code{lrn("regr.ranger", num.trees = 20L, keep.inbag = TRUE, se.method = "jack")}.
+in cases where the surrogate learner errors.
+Currently, the following learner is used as a fallback:
+\code{lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")}.
 
 If additionally dependencies are present in the parameter space, inactive conditional parameters
 are represented by missing \code{NA} values in the training design data.
-We simply handle those with an imputation method, added to the ranger random forest, more
+We simply handle those with an imputation method, added to the random forest, more
 concretely we use \code{po("imputesample")} (for logicals) and \code{po("imputeoor")} (for anything else) from
 package \CRANpkg{mlr3pipelines}.
 Characters are always encoded as factors via \code{po("colapply")}.
@@ -65,7 +47,7 @@ In the case of dependencies, the following learner is used as a fallback:
 If the instance is of class \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} the learner is wrapped as a
 \link{SurrogateLearner}.
 
-If the instance is of class \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} deep clones of the learner are
+If the instance is of class \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} multiple deep clones of the learner are
 wrapped as a \link{SurrogateLearnerCollection}.
 }
 \references{
@@ -79,8 +61,10 @@ wrapped as a \link{SurrogateLearnerCollection}.
 Other mbo_defaults: 
 \code{\link{default_acqfunction}()},
 \code{\link{default_acqoptimizer}()},
+\code{\link{default_gp}()},
 \code{\link{default_loop_function}()},
 \code{\link{default_result_assigner}()},
+\code{\link{default_rf}()},
 \code{\link{mbo_defaults}}
 }
 \concept{mbo_defaults}
