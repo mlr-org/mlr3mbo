@@ -238,6 +238,10 @@ for higher dimensional mixed (and / or hierarchical) search spaces</li>
 <p>or using syntactic sugar:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Note that <a href="https://mlr3mbo.mlr-org.com/reference/default_gp.html"><code>default_gp</code></a>
+and <a href="https://mlr3mbo.mlr-org.com/reference/default_rf.html"><code>default_rf</code></a>
+allow for the construction of a Gaussian Process and random forest with
+sensible hyperparamter values already specified.</p>
 <p>The encapsulated learner can be accessed via the
 <code>$learner</code> field:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -674,11 +678,7 @@ Process fails due to data points being too close to each other:</p>
 <span><span class="va">initial_design</span> <span class="op">=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="va">initial_design</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span>,</span>
-<span>  covtype <span class="op">=</span> <span class="st">"matern3_2"</span>,</span>
-<span>  optim.method <span class="op">=</span> <span class="st">"gen"</span>,</span>
-<span>  nugget.stability <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="op">-</span><span class="fl">8</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="../reference/default_gp.html">default_gp</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">acq_function</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqf.html">acqf</a></span><span class="op">(</span><span class="st">"ei"</span><span class="op">)</span></span>
 <span><span class="va">acq_optimizer</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqo.html">acqo</a></span><span class="op">(</span><span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"random_search"</span>, batch_size <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>,</span>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
@@ -689,9 +689,9 @@ Process fails due to data points being too close to each other:</p>
 <span>  acq_optimizer <span class="op">=</span> <span class="va">acq_optimizer</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [11:26:34.440] [bbotk] missing value where TRUE/FALSE needed</span></span>
-<span><span class="co">#&gt;             x  x_domain            y</span></span>
-<span><span class="co">#&gt; 1: 0.01617037 &lt;list[1]&gt; 0.0002614808</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [08:20:13.968] [bbotk] missing value where TRUE/FALSE needed</span></span>
+<span><span class="co">#&gt;              x  x_domain            y</span></span>
+<span><span class="co">#&gt; 1: -0.01951836 &lt;list[1]&gt; 0.0003809664</span></span></code></pre></div>
 <p>The log tells us that an error happened and was caught:
 <code>"surrogate_update_error / mbo_error / error / condition"</code>.
 We also see in the <code>archive</code> that the first candidate after
@@ -700,17 +700,17 @@ optimizing the acquisition function (because the <code>"acq_ei"</code>
 column is NA here):</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span></span>
-<span><span class="co">#&gt;               x            y  x_domain           timestamp batch_nr     acq_ei</span></span>
-<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 11:26:34        1         NA</span></span>
-<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 11:26:34        1         NA</span></span>
-<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 11:26:34        1         NA</span></span>
-<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-05 11:26:34        1         NA</span></span>
-<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2023-06-05 11:26:34        2         NA</span></span>
-<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2023-06-05 11:26:34        3 0.04353978</span></span>
-<span><span class="co">#&gt;  7:  0.45532567 0.2073214654 &lt;list[1]&gt; 2023-06-05 11:26:35        4 0.08484728</span></span>
-<span><span class="co">#&gt;  8: -0.24229299 0.0587058937 &lt;list[1]&gt; 2023-06-05 11:26:35        5 0.18996836</span></span>
-<span><span class="co">#&gt;  9: -0.99835097 0.9967046528 &lt;list[1]&gt; 2023-06-05 11:26:36        6 0.09128632</span></span>
-<span><span class="co">#&gt; 10:  0.01617037 0.0002614808 &lt;list[1]&gt; 2023-06-05 11:26:36        7 0.09341133</span></span>
+<span><span class="co">#&gt;               x            y  x_domain           timestamp batch_nr      acq_ei</span></span>
+<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-20 08:20:13        1          NA</span></span>
+<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-20 08:20:13        1          NA</span></span>
+<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-20 08:20:13        1          NA</span></span>
+<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-06-20 08:20:13        1          NA</span></span>
+<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2023-06-20 08:20:13        2          NA</span></span>
+<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2023-06-20 08:20:14        3 0.043580458</span></span>
+<span><span class="co">#&gt;  7:  0.38834314 0.1508103944 &lt;list[1]&gt; 2023-06-20 08:20:14        4 0.126429731</span></span>
+<span><span class="co">#&gt;  8: -0.53253872 0.2835974922 &lt;list[1]&gt; 2023-06-20 08:20:14        5 0.223167941</span></span>
+<span><span class="co">#&gt;  9:  0.04818857 0.0023221379 &lt;list[1]&gt; 2023-06-20 08:20:15        6 0.125654246</span></span>
+<span><span class="co">#&gt; 10: -0.01951836 0.0003809664 &lt;list[1]&gt; 2023-06-20 08:20:15        7 0.002040261</span></span>
 <span><span class="co">#&gt;     .already_evaluated</span></span>
 <span><span class="co">#&gt;  1:                 NA</span></span>
 <span><span class="co">#&gt;  2:                 NA</span></span>
@@ -808,10 +808,7 @@ following:</p>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Gaussian Process, EI, DIRECT</span></span>
-<span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span>,</span>
-<span>  covtype <span class="op">=</span> <span class="st">"matern3_2"</span>,</span>
-<span>  optim.method <span class="op">=</span> <span class="st">"gen"</span>,</span>
-<span>  nugget.stability <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="op">-</span><span class="fl">8</span>, control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="../reference/default_gp.html">default_gp</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">acq_function</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqf.html">acqf</a></span><span class="op">(</span><span class="st">"ei"</span><span class="op">)</span></span>
 <span><span class="va">acq_optimizer</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqo.html">acqo</a></span><span class="op">(</span><span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"nloptr"</span>, algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_DIRECT_L"</span><span class="op">)</span>,</span>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"stagnation"</span>, threshold <span class="op">=</span> <span class="fl">1e-8</span><span class="op">)</span><span class="op">)</span></span>
@@ -864,11 +861,7 @@ following:</p>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Gaussian Process, EI, DIRECT</span></span>
-<span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span>,</span>
-<span>  covtype <span class="op">=</span> <span class="st">"matern3_2"</span>,</span>
-<span>  optim.method <span class="op">=</span> <span class="st">"gen"</span>,</span>
-<span>  nugget.stability <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="op">-</span><span class="fl">8</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="../reference/default_gp.html">default_gp</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">acq_function</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqf.html">acqf</a></span><span class="op">(</span><span class="st">"ei"</span><span class="op">)</span></span>
 <span><span class="va">acq_optimizer</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqo.html">acqo</a></span><span class="op">(</span><span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"nloptr"</span>, algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_DIRECT_L"</span><span class="op">)</span>,</span>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"stagnation"</span>, threshold <span class="op">=</span> <span class="fl">1e-8</span><span class="op">)</span><span class="op">)</span></span>
@@ -921,11 +914,7 @@ following:</p>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Gaussian Processes, SMS-EGO, DIRECT</span></span>
-<span><span class="va">learner_y1</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span>,</span>
-<span>  covtype <span class="op">=</span> <span class="st">"matern3_2"</span>,</span>
-<span>  optim.method <span class="op">=</span> <span class="st">"gen"</span>,</span>
-<span>  nugget.stability <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="op">-</span><span class="fl">8</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">learner_y1</span> <span class="op">=</span> <span class="fu"><a href="../reference/default_gp.html">default_gp</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">learner_y2</span> <span class="op">=</span> <span class="va">learner_y1</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">learner_y1</span>, <span class="va">learner_y2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">acq_function</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqf.html">acqf</a></span><span class="op">(</span><span class="st">"smsego"</span><span class="op">)</span></span>
@@ -979,12 +968,7 @@ following:</p>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Gaussian Process, EI, FocusSearch</span></span>
-<span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span>,</span>
-<span>  covtype <span class="op">=</span> <span class="st">"matern3_2"</span>,</span>
-<span>  optim.method <span class="op">=</span> <span class="st">"gen"</span>,</span>
-<span>  nugget.estim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  jitter <span class="op">=</span> <span class="fl">1e-12</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="../reference/default_gp.html">default_gp</a></span><span class="op">(</span>noisy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">acq_function</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqf.html">acqf</a></span><span class="op">(</span><span class="st">"ei"</span><span class="op">)</span></span>
 <span><span class="va">acq_optimizer</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqo.html">acqo</a></span><span class="op">(</span><span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"focus_search"</span>, n_points <span class="op">=</span> <span class="fl">100L</span>, maxit <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span><span class="op">)</span></span>
@@ -1020,12 +1004,7 @@ following:</p>
 <span>  store_models <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># required due to selected features</span></span>
 <span></span>
 <span><span class="co"># Gaussian Process, EI, FocusSearch</span></span>
-<span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span>,</span>
-<span>  covtype <span class="op">=</span> <span class="st">"matern3_2"</span>,</span>
-<span>  optim.method <span class="op">=</span> <span class="st">"gen"</span>,</span>
-<span>  nugget.estim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  jitter <span class="op">=</span> <span class="fl">1e-12</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="../reference/default_gp.html">default_gp</a></span><span class="op">(</span>noisy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">acq_function</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqf.html">acqf</a></span><span class="op">(</span><span class="st">"ei"</span><span class="op">)</span></span>
 <span><span class="va">acq_optimizer</span> <span class="op">=</span> <span class="fu"><a href="../reference/acqo.html">acqo</a></span><span class="op">(</span><span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"focus_search"</span>, n_points <span class="op">=</span> <span class="fl">100L</span>, maxit <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span><span class="op">)</span></span>

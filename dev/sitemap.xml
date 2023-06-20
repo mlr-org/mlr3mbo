@@ -46,10 +46,16 @@
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_acqoptimizer.html</loc>
   </url>
   <url>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_gp.html</loc>
+  </url>
+  <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_loop_function.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_result_assigner.html</loc>
+  </url>
+  <url>
+    <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_rf.html</loc>
   </url>
   <url>
     <loc>https://mlr3mbo.mlr-org.com/dev/reference/default_surrogate.html</loc>

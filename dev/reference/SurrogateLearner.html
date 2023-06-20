@@ -268,11 +268,7 @@ New data. One row per observation.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.km"</span>,</span></span>
-<span class="r-in"><span>    covtype <span class="op">=</span> <span class="st">"matern3_2"</span>,</span></span>
-<span class="r-in"><span>    optim.method <span class="op">=</span> <span class="st">"gen"</span>,</span></span>
-<span class="r-in"><span>    nugget.stability <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="op">-</span><span class="fl">8</span>,</span></span>
-<span class="r-in"><span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="default_gp.html">default_gp</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="srlrn.html">srlrn</a></span><span class="op">(</span><span class="va">learner</span>, archive <span class="op">=</span> <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -280,27 +276,23 @@ New data. One row per observation.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">surrogate</span><span class="op">$</span><span class="va">learner</span><span class="op">$</span><span class="va">model</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: DiceKriging</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: rgenoud</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: paradox</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: mlr3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DiceKriging::km(design = data, response = task$truth(), covtype = "matern3_2", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 2.53166860009112e-06, optim.method = "gen", control = pv$control)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DiceKriging::km(design = data, response = task$truth(), covtype = "matern5_2", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 6.28404962310663e-06, optim.method = "gen", control = pv$control)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Trend  coeff.:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)    32.9862</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)    31.9378</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Covar. type  : matern3_2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Covar. type  : matern5_2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Covar. coeff.:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     7.7210</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     6.7621</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 1028.901</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 805.0371</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 2.531669e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 6.28405e-06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
