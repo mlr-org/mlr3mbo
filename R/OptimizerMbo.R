@@ -44,13 +44,7 @@
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
-#'   learner = lrn("regr.km",
-#'     covtype = "matern3_2",
-#'     optim.method = "gen",
-#'     nugget.stability = 10^-8,
-#'     control = list(trace = FALSE))
-#'
-#'   surrogate = srlrn(learner)
+#'   surrogate = default_surrogate(instance)
 #'
 #'   acq_function = acqf("ei")
 #'

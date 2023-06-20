@@ -246,6 +246,8 @@ or using syntactic sugar:
 surrogate = srlrn(lrn("regr.km"))
 ```
 
+Note that `r ref("mlr3mbo::default_gp", "default_gp")` and `r ref("mlr3mbo::default_rf", "default_rf")` allow for the construction of a Gaussian Process and random forest with sensible hyperparamter values already specified.
+
 The encapsulated learner can be accessed via the `$learner` field:
 
 ```{r}
@@ -541,11 +543,7 @@ instance = OptimInstanceSingleCrit$new(
 initial_design = data.table(x = rep(1, 4))
 instance$eval_batch(initial_design)
 
-surrogate = srlrn(lrn("regr.km",
-  covtype = "matern3_2",
-  optim.method = "gen",
-  nugget.stability = 10^-8,
-  control = list(trace = FALSE)))
+surrogate = srlrn(default_gp())
 acq_function = acqf("ei")
 acq_optimizer = acqo(opt("random_search", batch_size = 1000),
   terminator = trm("evals", n_evals = 1000))
@@ -638,10 +636,7 @@ instance = OptimInstanceSingleCrit$new(
   terminator = trm("evals", n_evals = 60))
 
 # Gaussian Process, EI, DIRECT
-surrogate = srlrn(lrn("regr.km",
-  covtype = "matern3_2",
-  optim.method = "gen",
-  nugget.stability = 10^-8, control = list(trace = FALSE)))
+surrogate = srlrn(default_gp())
 acq_function = acqf("ei")
 acq_optimizer = acqo(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"),
   terminator = trm("stagnation", threshold = 1e-8))
@@ -697,11 +692,7 @@ instance = OptimInstanceMultiCrit$new(
   terminator = trm("evals", n_evals = 30))
 
 # Gaussian Process, EI, DIRECT
-surrogate = srlrn(lrn("regr.km",
-  covtype = "matern3_2",
-  optim.method = "gen",
-  nugget.stability = 10^-8,
-  control = list(trace = FALSE)))
+surrogate = srlrn(default_gp())
 acq_function = acqf("ei")
 acq_optimizer = acqo(opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"),
   terminator = trm("stagnation", threshold = 1e-8))
@@ -758,11 +749,7 @@ instance = OptimInstanceMultiCrit$new(
   terminator = trm("evals", n_evals = 30))
 
 # Gaussian Processes, SMS-EGO, DIRECT
-learner_y1 = lrn("regr.km",
-  covtype = "matern3_2",
-  optim.method = "gen",
-  nugget.stability = 10^-8,
-  control = list(trace = FALSE))
+learner_y1 = default_gp()
 learner_y2 = learner_y1$clone(deep = TRUE)
 surrogate = srlrn(list(learner_y1, learner_y2))
 acq_function = acqf("smsego")
@@ -819,12 +806,7 @@ instance = TuningInstanceSingleCrit$new(
   terminator = trm("evals", n_evals = 30))
 
 # Gaussian Process, EI, FocusSearch
-surrogate = srlrn(lrn("regr.km",
-  covtype = "matern3_2",
-  optim.method = "gen",
-  nugget.estim = TRUE,
-  jitter = 1e-12,
-  control = list(trace = FALSE)))
+surrogate = srlrn(default_gp(noisy = TRUE))
 acq_function = acqf("ei")
 acq_optimizer = acqo(opt("focus_search", n_points = 100L, maxit = 9),
   terminator = trm("evals", n_evals = 3000))
@@ -860,12 +842,7 @@ instance = TuningInstanceMultiCrit$new(
   store_models = TRUE) # required due to selected features
 
 # Gaussian Process, EI, FocusSearch
-surrogate = srlrn(lrn("regr.km",
-  covtype = "matern3_2",
-  optim.method = "gen",
-  nugget.estim = TRUE,
-  jitter = 1e-12,
-  control = list(trace = FALSE)))
+surrogate = srlrn(default_gp(noisy = TRUE))
 acq_function = acqf("ei")
 acq_optimizer = acqo(opt("focus_search", n_points = 100L, maxit = 9),
   terminator = trm("evals", n_evals = 3000))
