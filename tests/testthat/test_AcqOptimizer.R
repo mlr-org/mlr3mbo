@@ -47,7 +47,13 @@ test_that("AcqOptimizer API works", {
   lines = readLines(f)
   expect_character(lines, min.len = 1L)
 
-  # warmstart | warmstart_size | skip_already_evaluated
+  # n_candidates | warmstart | warmstart_size | skip_already_evaluated
+  acqopt = AcqOptimizer$new(opt("design_points", batch_size = 1L, design = data.table(x = c(-1, -0.5, 0, 0.5, 1))), trm("evals", n_evals = 5L), acq_function = acqfun)
+  acqopt$param_set$values$n_candidates = 3L
+  xdt = acqopt$optimize()
+  expect_true(nrow(xdt) == 3L)
+  expect_setequal(xdt[["x"]], c(-0.5, 0, 0.5))
+
   acqopt = AcqOptimizer$new(opt("design_points", batch_size = 1L, design = data.table(x = 0)), trm("evals", n_evals = 5L), acq_function = acqfun)
   acqopt$param_set$values$warmstart = TRUE
   xdt = acqopt$optimize()
@@ -62,7 +68,7 @@ test_that("AcqOptimizer API works", {
   acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
   acqopt$param_set$values$warmstart = TRUE
   acqopt$param_set$values$warmstart_size = "all"
-  expect_error(acqopt$optimize(), "All candidates were already evaluated.")
+  expect_error(acqopt$optimize(), "Less then `n_select` \\(1\\) candidate points found during acquisition function optimization were not already evaluated.")
 
   acqopt$param_set$values$skip_already_evaluated = FALSE
   xdt = acqopt$optimize()
@@ -77,7 +83,8 @@ test_that("AcqOptimizer API works", {
 test_that("AcqOptimizer param_set", {
   acqopt = AcqOptimizer$new(opt("random_search", batch_size = 1L), trm("evals", n_evals = 1L))
   expect_r6(acqopt$param_set, "ParamSet")
-  expect_setequal(acqopt$param_set$ids(), c("logging_level", "warmstart", "warmstart_size", "skip_already_evaluated", "catch_errors"))
+  expect_setequal(acqopt$param_set$ids(), c("n_candidates", "logging_level", "warmstart", "warmstart_size", "skip_already_evaluated", "catch_errors"))
+  expect_r6(acqopt$param_set$params$n_candidates, "ParamInt")
   expect_r6(acqopt$param_set$params$logging_level, "ParamFct")
   expect_r6(acqopt$param_set$params$warmstart, "ParamLgl")
   expect_r6(acqopt$param_set$params$warmstart_size, "ParamInt")
