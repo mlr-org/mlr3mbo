@@ -44,7 +44,7 @@ register_mlr3tuning = function() {
 } # nocov end
 
 # static code checks should not complain about commonly used data.table columns
-utils::globalVariables("y_scal")
+utils::globalVariables(c("N", "y_scal"))
 
 if (!Sys.getenv("DEVTOOLS_LOAD") == "true") {
   leanify_package()
