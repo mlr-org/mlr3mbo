@@ -4,21 +4,28 @@
 \alias{AcqOptimizer}
 \title{Acquisition Function Optimizer}
 \description{
-Optimizer for \link{AcqFunction}s which performs the infill optimization.
+Optimizer for \link{AcqFunction}s which performs the acquisition function optimization.
 Wraps an \link[bbotk:Optimizer]{bbotk::Optimizer} and \link[bbotk:Terminator]{bbotk::Terminator}.
 }
 \section{Parameters}{
 
 \describe{
+\item{\code{n_candidates}}{\code{integer(1)}\cr
+Number of candidate points to propose.
+Note that this does not affect how the acquisition function itself is calculated (e.g., setting \code{n_candidates > 1} will not
+result in computing the q- or multi-Expected Improvement) but rather the top \code{n-candidates} are selected from the
+\link[bbotk:Archive]{bbotk::Archive} of the acquisition function \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+Note that setting \code{n_candidates > 1} is usually not a sensible idea but it is still supported for experimental reasons.
+Default is \code{1}.}
 \item{\code{logging_level}}{\code{character(1)}\cr
-Logging level during the infill optimization.
+Logging level during the acquisition function optimization.
 Can be \code{"fatal"}, \code{"error"}, \code{"warn"}, \code{"info"}, \code{"debug"} or \code{"trace"}.
 Default is \code{"warn"}, i.e., only warnings are logged.
 }
 \item{\code{warmstart}}{\code{logical(1)}\cr
-Should the infill optimization be warm-started by evaluating the best point(s) present in the \link[bbotk:Archive]{bbotk::Archive} of
+Should the acquisition function optimization be warm-started by evaluating the best point(s) present in the \link[bbotk:Archive]{bbotk::Archive} of
 the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}?
-This is sensible when using a population based infill optimizer, e.g., local search or mutation.
+This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 Default is \code{FALSE}.
 }
 \item{\code{warmstart_size}}{\code{integer(1) | "all"}\cr
@@ -28,13 +35,13 @@ Only relevant if \code{warmstart = TRUE}.
 Default is \code{1}.
 }
 \item{\code{skip_already_evaluated}}{\code{logical(1)}\cr
-It can happen that the candidate resulting of the infill optimization was already evaluated in a previous
+It can happen that the candidate resulting of the acquisition function optimization was already evaluated in a previous
 iteration. Should this candidate proposal be ignored and the next best point be selected as a candidate?
 Default is \code{TRUE}.
 }
 \item{\code{catch_errors}}{\code{logical(1)}\cr
-Should errors during the infill optimization be caught and propagated to the \code{loop_function} which can then handle
-the failed infill optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
+Should errors during the acquisition function optimization be caught and propagated to the \code{loop_function} which can then handle
+the failed acquisition function optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
 Default is \code{TRUE}.
 }
 }

@@ -62,8 +62,8 @@ mult_max_to_min = function(codomain) {
 }
 
 # used in AcqOptimizer
-# FIXME: currently only supports singlecrit acqfunctions
-get_best_not_evaluated = function(instance, evaluated) {
+# FIXME: currently only supports singlecrit acquisition functions
+get_best_not_evaluated = function(instance, evaluated, n_select) {
   data = copy(instance$archive$data[, c(instance$archive$cols_x, "x_domain", instance$archive$cols_y), with = FALSE])
   evaluated = copy(evaluated)
   already_evaluated_id = ".already_evaluated"
@@ -72,13 +72,13 @@ get_best_not_evaluated = function(instance, evaluated) {
   }
   data[, eval(already_evaluated_id) := FALSE][evaluated, eval(already_evaluated_id) := TRUE, on = instance$archive$cols_x]
   candidates = data[get(already_evaluated_id) == FALSE]
-  if (nrow(candidates) == 0L) {
-    stop("All candidates were already evaluated.")
+  if (nrow(candidates) < n_select) {
+    stopf("Less then `n_select` (%i) candidate points found during acquisition function optimization were not already evaluated.", n_select)
   }
   candidates[[instance$archive$cols_y]] = candidates[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
-  xdt = setorderv(candidates, cols = instance$archive$cols_y)[1L, ]
+  xdt = setorderv(candidates, cols = instance$archive$cols_y)
   xdt[[instance$archive$cols_y]] = xdt[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
-  xdt
+  xdt[seq_len(n_select), ]
 }
 
 catn = function(..., file = "") {
