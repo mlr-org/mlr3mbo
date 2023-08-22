@@ -31,7 +31,7 @@ if (requireNamespace("mlr3learners") &
   domain = ps(
     x1 = p_dbl(lower = -5, upper = 10),
     x2 = p_dbl(lower = 0, upper = 15),
-    fidelity = p_int(lower = 1, upper = 100, tags = "budget"))
+    fidelity = p_int(lower = 10, upper = 100, tags = "budget"))
   codomain = ps(y = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
@@ -51,7 +51,7 @@ if (requireNamespace("mlr3learners") &
     acq_function = acq_function,
     acq_optimizer = acq_optimizer)
 
-  optimizer = opt("hyperband", eta = 3, sampler = sampler, repetitions = 3)
+  optimizer = opt("hyperband", eta = 3, sampler = sampler, repetitions = 2)
   optimizer$optimize(instance)
 }
 }
