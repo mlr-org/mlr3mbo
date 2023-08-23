@@ -85,11 +85,6 @@ SamplerMbo = R6Class("SamplerMbo", inherit = paradox::Sampler,
     #' @template field_acq_function
     acq_function = NULL,
 
-    #' @field acq_function_domain ([paradox::Domain])\cr
-    #'   The domain of the acquisition function within the model based proposal mechanism.
-    #'   This is the same as `search_space_sampler` without any potential transformation functions.
-    acq_function_domain = NULL,
-
     #' @template field_acq_optimizer
     acq_optimizer = NULL,
 
@@ -127,13 +122,10 @@ SamplerMbo = R6Class("SamplerMbo", inherit = paradox::Sampler,
       self$tmp_archive = self$instance$archive$clone(deep = TRUE)
       self$surrogate = assert_r6(surrogate, classes = "Surrogate")
       self$acq_function = assert_r6(acq_function, classes = "AcqFunction")
-      self$acq_function_domain = self$search_space_sampler$clone(deep = TRUE)
-      self$acq_function_domain$trafo = NULL
       self$acq_optimizer = assert_r6(acq_optimizer, classes = "AcqOptimizer")
       self$surrogate$archive = self$tmp_archive
       self$surrogate$cols_x = setdiff(surrogate$cols_x, self$budget_id)
       self$acq_function$surrogate = self$surrogate
-      self$acq_function$domain = self$acq_function_domain
       self$acq_optimizer$acq_function = self$acq_function
       self$sampler_random = SamplerUnif$new(self$search_space_sampler)
       super$initialize(self$search_space_sampler)
@@ -157,8 +149,6 @@ SamplerMbo = R6Class("SamplerMbo", inherit = paradox::Sampler,
         data = self$instance$archive$data[get(self$budget_id) == budget_table[1L, ][[self$budget_id]], ]
         # we then do one iteration of BO based on this subset of observations excluding the budget id as a parameter
         self$tmp_archive$data = data
-        self$acq_function$surrogate$archive = self$tmp_archive
-        self$acq_function$domain = self$acq_function_domain
         self$acq_function$surrogate$update()
         self$acq_function$update()
         self$acq_optimizer$param_set$values$n_candidates = n - n_random
