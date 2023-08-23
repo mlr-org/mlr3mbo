@@ -25,7 +25,7 @@
 #' }
 #' \item{`catch_errors`}{`logical(1)`\cr
 #'   Should errors during updating the surrogate be caught and propagated to the `loop_function` which can then handle
-#'   the failed infill optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 #'   Default is `TRUE`.
 #' }
 #' }
