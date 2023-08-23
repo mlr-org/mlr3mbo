@@ -40,25 +40,40 @@ default_loop_function = function(instance) {
 #' This is a helper function that generates a default Gaussian Process [mlr3::LearnerRegr] which is for example used in
 #' [default_surrogate].
 #'
-#' Constructs a Kriging learner \dQuote{"regr.km"} with kernel \dQuote{"matern5_2"}.
-#' If \code{noisy = FALSE} (default) a small nugget effect is added \code{nugget.stability = 10^-8} to increase
-#' numerical stability to hopefully prevent crashes of \CRANpkg{DiceKriging}.
-#' If \code{noisy = TRUE} the nugget effect will be estimated with \code{nugget.estim = TRUE}.
-#' If \code{noisy = TRUE} \code{jitter} is set to \code{TRUE} to circumvent a problem with \CRANpkg{DiceKriging} where
+#' Constructs a Gaussian Process (Kriging) learner ([mlr3learners::LearnerRegrKM]) with kernel `"matern5_2"`.
+#' If `noisy = FALSE` (default) a small nugget effect is added `nugget.stability = 10^-8` to increase
+#' numerical stability to hopefully prevent crashes of [DiceKriging::km].
+#' If `noisy = TRUE` the nugget effect will be estimated with `nugget.estim = TRUE`.
+#' If `noisy = TRUE` `jitter` is set to `TRUE` to circumvent a problem with [DiceKriging::km] where
 #' already trained input values produce the exact trained output.
-#' In general, instead of the default \code{"BFGS"} optimization method we use rgenoud (\code{"gen"}), which is a hybrid
+#' In general, instead of the default `"BFGS"` optimization method we use rgenoud (`optim.method = "gen"`), which is a hybrid
 #' algorithm, to combine global search based on genetic algorithms and local search based on gradients.
 #' This may improve the model fit and will less frequently produce a constant model prediction.
 #'
-#' @param noisy (logical(1))\cr
+#' If `input_scaling = TRUE` (default is `FALSE`) the input features are preprocessed and transformed to the unit cube via
+#' min-max scaling via [mlr3pipelines::PipeOpColApply] using the lower and upper bounds provided in the `search_space`.
+#'
+#' @param noisy (`logical(1)`)\cr
 #'   Whether the learner will be used in a noisy objective function scenario.
-#'   See above.
+#' @param input_scaling (`logical(1)`)\cr
+#'   Whether the input features should be scaled to the unit cube.
+#' @param search_space ([paradox::ParamSet])\cr
+#'   Search space containing the lower and upper bounds of the input features, i.e., usually the search space of the
+#'   [bbotk::OptimInstance] that is to be optimized.
 #' @return [mlr3::LearnerRegr]
 #' @family mbo_defaults
 #' @export
-default_gp = function(noisy = FALSE) {
+default_gp = function(noisy = FALSE, input_scaling = FALSE, search_space = NULL) {
   assert_flag(noisy)
+  assert_flag(input_scaling)
+  assert_r6(search_space, classes = "ParamSet", null.ok = TRUE)
+  if (input_scaling) {
+    if (is.null(search_space)) {
+      stop("`search_space` must be specified if `input_scaling = TRUE`.")
+    }
+  }
   require_namespaces("mlr3learners")
+  require_namespaces("mlr3pipelines")
   require_namespaces("DiceKriging")
   require_namespaces("rgenoud")
   learner = mlr3learners::LearnerRegrKM$new()
@@ -71,6 +86,38 @@ default_gp = function(noisy = FALSE) {
   } else {
     learner$param_set$values = insert_named(learner$param_set$values, list(nugget.stability = 10^-8))
   }
+
+  if (input_scaling) {
+    ids = search_space$ids()
+    preprocess = mlr3pipelines::po("colapply",
+      id = paste0("scale_", ids[1L]),
+      affect_columns = mlr3pipelines::selector_name(ids[1L]),
+      applicator = function(x) {
+        (x - search_space$params[[ids[1L]]]$lower) / (search_space$params[[ids[1L]]]$upper - search_space$params[[ids[1L]]]$lower)
+      }
+    )
+    if (length(ids) > 1L) {
+      for (id in ids[-1L]) {
+        preprocess = mlr3pipelines::"%>>%"(
+          preprocess,
+          mlr3pipelines::po("colapply",
+            id = paste0("scale_", id),
+            affect_columns = mlr3pipelines::selector_name(id),
+            applicator = function(x) {
+              (x - search_space$params[[id]]$lower) / (search_space$params[[id]]$upper - search_space$params[[id]]$lower)
+            }
+          )
+        )
+      }
+    }
+    learner = mlr3pipelines::GraphLearner$new(
+      mlr3pipelines::"%>>%"(
+        preprocess,
+        learner
+      )
+    )
+  }
+
   learner
 }
 
@@ -80,10 +127,10 @@ default_gp = function(noisy = FALSE) {
 #' This is a helper function that constructs a default random forest [mlr3::LearnerRegr] which is for example used in
 #' [default_surrogate].
 #'
-#' Constructs a ranger learner \dQuote{"regr.ranger"} with \code{num.trees = 100}, \code{keep.inbag = TRUE} and
-#' \code{se.method = "jack"}.
+#' Constructs a ranger random forest learner ([mlr3learners::LearnerRegrRanger]) with `num.trees = 100`, `keep.inbag = TRUE` and
+#' `se.method = "jack"`.
 #'
-#' @param noisy (logical(1))\cr
+#' @param noisy (`logical(1)`)\cr
 #'   Whether the learner will be used in a noisy objective function scenario.
 #'   Currently has no effect.
 #' @return [mlr3::LearnerRegr]
@@ -107,25 +154,23 @@ default_rf = function(noisy = FALSE) {
 #' This is a helper function that constructs a default [Surrogate] based on properties of the
 #' [bbotk::OptimInstance].
 #'
-#' For numeric-only (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via
+#' For numeric-only (including integers) search spaces without any dependencies a Gaussian Process is constructed via
 #' [default_gp()].
-#' For mixed numeric-categorical parameter spaces, or spaces with conditional parameters a random forest is constructed via
+#' For mixed numeric-categorical search spaces, or spaces with conditional parameters a random forest is constructed via
 #' [default_rf()].
 #'
-#' In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
+#' In any case, learners are encapsulated using `"evaluate"`, and a fallback learner is set,
 #' in cases where the surrogate learner errors.
 #' Currently, the following learner is used as a fallback:
-#' \code{lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")}.
+#' `lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")`.
 #'
-#' If additionally dependencies are present in the parameter space, inactive conditional parameters
-#' are represented by missing \code{NA} values in the training design data.
+#' If additionally dependencies are present in the search space, inactive conditional parameters
+#' are represented by missing `NA` values in the training design data.
 #' We simply handle those with an imputation method, added to the random forest, more
-#' concretely we use \code{po("imputesample")} (for logicals) and \code{po("imputeoor")} (for anything else) from
-#' package \CRANpkg{mlr3pipelines}.
-#' Characters are always encoded as factors via \code{po("colapply")}.
+#' concretely we use [mlr3pipelines::PipeOpImputeSample] (for logicals) and [mlr3pipelines::PipeOpImputeOOR] (for anything else).
+#' Characters are always encoded as factors via [mlr3pipelines::PipeOpColApply].
 #' Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
-#' In the case of dependencies, the following learner is used as a fallback:
-#' \code{lrn("regr.featureless")}.
+#' In the case of dependencies a `lrn("regr.featureless")` is used as a fallback.
 #'
 #' If the instance is of class [bbotk::OptimInstanceSingleCrit] the learner is wrapped as a
 #' [SurrogateLearner].
@@ -142,7 +187,7 @@ default_rf = function(noisy = FALSE) {
 #'   If specified, this learner will be used instead of the defaults described above.
 #' @param n_learner (`NULL` | `integer(1)`).
 #'  Number of learners to be considered in the construction of the [SurrogateLearner] or [SurrogateLearnerCollection].
-#'  If not specified will be based on the number of objectives as stated by the instance.
+#'  If not specified this will be determined automatically based on the number of objectives as stated by the instance.
 #' @return [Surrogate]
 #' @family mbo_defaults
 #' @export
@@ -176,10 +221,10 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
         mlr3pipelines::"%>>%"(
           mlr3pipelines::"%>>%"(
             mlr3pipelines::po("imputesample", affect_columns = mlr3pipelines::selector_type("logical")),
-              mlr3pipelines::"%>>%"(
-                mlr3pipelines::po("imputeoor", multiplier = 3, affect_columns = mlr3pipelines::selector_type(c("integer", "numeric", "character", "factor", "ordered"))),
-                mlr3pipelines::po("colapply", applicator = as.factor, affect_columns = mlr3pipelines::selector_type("character"))
-              )
+            mlr3pipelines::"%>>%"(
+              mlr3pipelines::po("imputeoor", multiplier = 3, affect_columns = mlr3pipelines::selector_type(c("integer", "numeric", "character", "factor", "ordered"))),
+              mlr3pipelines::po("colapply", applicator = as.factor, affect_columns = mlr3pipelines::selector_type("character"))
+            )
           ),
           learner
         )

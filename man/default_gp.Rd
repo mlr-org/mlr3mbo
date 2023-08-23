@@ -4,12 +4,18 @@
 \alias{default_gp}
 \title{Default Gaussian Process}
 \usage{
-default_gp(noisy = FALSE)
+default_gp(noisy = FALSE, input_scaling = FALSE, search_space = NULL)
 }
 \arguments{
-\item{noisy}{(logical(1))\cr
-Whether the learner will be used in a noisy objective function scenario.
-See above.}
+\item{noisy}{(\code{logical(1)})\cr
+Whether the learner will be used in a noisy objective function scenario.}
+
+\item{input_scaling}{(\code{logical(1)})\cr
+Whether the input features should be scaled to the unit cube.}
+
+\item{search_space}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+Search space containing the lower and upper bounds of the input features, i.e., usually the search space of the
+\link[bbotk:OptimInstance]{bbotk::OptimInstance} that is to be optimized.}
 }
 \value{
 \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}
@@ -18,15 +24,18 @@ See above.}
 This is a helper function that generates a default Gaussian Process \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} which is for example used in
 \link{default_surrogate}.
 
-Constructs a Kriging learner \dQuote{"regr.km"} with kernel \dQuote{"matern5_2"}.
+Constructs a Gaussian Process (Kriging) learner (\link[mlr3learners:mlr_learners_regr.km]{mlr3learners::LearnerRegrKM}) with kernel \code{"matern5_2"}.
 If \code{noisy = FALSE} (default) a small nugget effect is added \code{nugget.stability = 10^-8} to increase
-numerical stability to hopefully prevent crashes of \CRANpkg{DiceKriging}.
+numerical stability to hopefully prevent crashes of \link[DiceKriging:km]{DiceKriging::km}.
 If \code{noisy = TRUE} the nugget effect will be estimated with \code{nugget.estim = TRUE}.
-If \code{noisy = TRUE} \code{jitter} is set to \code{TRUE} to circumvent a problem with \CRANpkg{DiceKriging} where
+If \code{noisy = TRUE} \code{jitter} is set to \code{TRUE} to circumvent a problem with \link[DiceKriging:km]{DiceKriging::km} where
 already trained input values produce the exact trained output.
-In general, instead of the default \code{"BFGS"} optimization method we use rgenoud (\code{"gen"}), which is a hybrid
+In general, instead of the default \code{"BFGS"} optimization method we use rgenoud (\code{optim.method = "gen"}), which is a hybrid
 algorithm, to combine global search based on genetic algorithms and local search based on gradients.
 This may improve the model fit and will less frequently produce a constant model prediction.
+
+If \code{input_scaling = TRUE} (default is \code{FALSE}) the input features are preprocessed and transformed to the unit cube via
+min-max scaling via \link[mlr3pipelines:mlr_pipeops_colapply]{mlr3pipelines::PipeOpColApply} using the lower and upper bounds provided in the \code{search_space}.
 }
 \seealso{
 Other mbo_defaults: 

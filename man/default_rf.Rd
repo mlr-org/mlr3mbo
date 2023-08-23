@@ -7,7 +7,7 @@
 default_rf(noisy = FALSE)
 }
 \arguments{
-\item{noisy}{(logical(1))\cr
+\item{noisy}{(\code{logical(1)})\cr
 Whether the learner will be used in a noisy objective function scenario.
 Currently has no effect.}
 }
@@ -18,7 +18,7 @@ Currently has no effect.}
 This is a helper function that constructs a default random forest \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} which is for example used in
 \link{default_surrogate}.
 
-Constructs a ranger learner \dQuote{"regr.ranger"} with \code{num.trees = 100}, \code{keep.inbag = TRUE} and
+Constructs a ranger random forest learner (\link[mlr3learners:mlr_learners_regr.ranger]{mlr3learners::LearnerRegrRanger}) with \code{num.trees = 100}, \code{keep.inbag = TRUE} and
 \code{se.method = "jack"}.
 }
 \seealso{
