@@ -49,29 +49,32 @@ FUN_1D_2_MIXED = function(xs) {
 }
 OBJ_1D_2_MIXED = ObjectiveRFun$new(fun = FUN_1D_2_MIXED, domain = PS_1D_MIXED, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
 
-# Simple 2D Function
-PS_2D_domain = ParamSet$new(list(
-  ParamDbl$new("x1", lower = -1, upper = 1),
-  ParamDbl$new("x2", lower = -1, upper = 1),
-  ParamUty$new("foo")  # the domain of the function should not matter
-))
+# Simple 2D Functions
 PS_2D = ParamSet$new(list(
   ParamDbl$new("x1", lower = -1, upper = 1),
   ParamDbl$new("x2", lower = -1, upper = 1)
 ))
+PS_2D_trafo = ParamSet$new(list(
+  ParamDbl$new("x1", lower = -1, upper = 1),
+  ParamDbl$new("x2", lower = -1, upper = 1)
+))
+PS_2D_trafo$trafo = function(x, param_set) {
+  x$x2 = x$x2 ^ 2
+  x
+}
 FUN_2D = function(xs) {
   y = sum(as.numeric(xs)^2)
   list(y = y)
 }
 FUN_2D_CODOMAIN = ParamSet$new(list(ParamDbl$new("y", tags = c("minimize", "random_tag"))))
-OBJ_2D = ObjectiveRFun$new(fun = FUN_2D, domain = PS_2D_domain, properties = "single-crit")
+OBJ_2D = ObjectiveRFun$new(fun = FUN_2D, domain = PS_2D, properties = "single-crit")
 
 # Simple 2D Function with noise
 FUN_2D_NOISY = function(xs) {
   y = sum(as.numeric(xs)^2) + rnorm(1, sd = 0.5)
   list(y = y)
 }
-OBJ_2D_NOISY = ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D_domain, properties = c("single-crit", "noisy"))
+OBJ_2D_NOISY = ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D, properties = c("single-crit", "noisy"))
 
 # Instance helper
 MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 10L)) {
