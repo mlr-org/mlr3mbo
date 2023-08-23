@@ -114,7 +114,7 @@ Default is <code>0</code> for each learner.</p></dd>
 <dt><code>catch_errors</code></dt>
 <dd><p><code>logical(1)</code><br>
 Should errors during updating the surrogate be caught and propagated to the <code>loop_function</code> which can then handle
-the failed infill optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 Default is <code>TRUE</code>.</p></dd>
 
 
@@ -307,8 +307,8 @@ New data. One row per observation.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Target node size:                 5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variable importance mode:         none </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Splitrule:                        variance </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OOB prediction error (MSE):       71.21115 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R squared (OOB):                  -0.2727248 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OOB prediction error (MSE):       1187.576 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R squared (OOB):                  -0.3908377 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

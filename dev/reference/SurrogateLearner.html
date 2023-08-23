@@ -108,7 +108,7 @@ Default is <code>0</code>.</p></dd>
 <dt><code>catch_errors</code></dt>
 <dd><p><code>logical(1)</code><br>
 Should errors during updating the surrogate be caught and propagated to the <code>loop_function</code> which can then handle
-the failed infill optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 Default is <code>TRUE</code>.</p></dd>
 
 
@@ -279,20 +279,20 @@ New data. One row per observation.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DiceKriging::km(design = data, response = task$truth(), covtype = "matern5_2", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 1.32850977786401e-05, optim.method = "gen", control = pv$control)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 6.92541720905138e-06, optim.method = "gen", control = pv$control)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Trend  coeff.:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)    44.2118</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)    28.7631</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Covar. type  : matern5_2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Covar. coeff.:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     5.7453</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     2.9129</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 1648.476</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 562.0502</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 1.32851e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 6.925417e-06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
