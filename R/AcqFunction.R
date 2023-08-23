@@ -60,10 +60,9 @@ AcqFunction = R6Class("AcqFunction",
         }
         private$.surrogate = surrogate
         private$.archive = assert_r6(surrogate$archive, classes = "Archive")
-        codomain = generate_acq_codomain(surrogate$archive$codomain, id = id, direction = direction)
-        self$surrogate_max_to_min = surrogate_mult_max_to_min(surrogate$archive$codomain, cols_y = surrogate$cols_y)
-        domain = surrogate$archive$search_space$clone(deep = TRUE)
-        domain$trafo = NULL
+        codomain = generate_acq_codomain(surrogate, id = id, direction = direction)
+        self$surrogate_max_to_min = surrogate_mult_max_to_min(surrogate)
+        domain = generate_acq_domain(surrogate)
       }
       super$initialize(id = id, domain = domain, codomain = codomain, constants = constants)
     },
@@ -160,7 +159,7 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @field fun (`function`)\cr
-    #'   Pointing to the private acquisition function to be implemented by subclasses.
+    #'   Points to the private acquisition function to be implemented by subclasses.
     fun = function(lhs) {
       if (!missing(lhs) && !identical(lhs, private$.fun)) stop("$fun is read-only.")
       private$.fun
@@ -178,10 +177,9 @@ AcqFunction = R6Class("AcqFunction",
         }
         private$.surrogate = rhs
         private$.archive = assert_r6(rhs$archive, classes = "Archive")
-        codomain = generate_acq_codomain(rhs$archive$codomain, id = self$id, direction = self$direction)
-        self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs$archive$codomain, cols_y = rhs$cols_y)
-        domain = rhs$archive$search_space$clone(deep = TRUE)
-        domain$trafo = NULL
+        codomain = generate_acq_codomain(rhs, id = self$id, direction = self$direction)
+        self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs)
+        domain = generate_acq_domain(rhs)
         self$codomain = Codomain$new(codomain$params)  # lazy initialization requires this
         self$domain = domain
       }

@@ -37,3 +37,36 @@ test_that("AcqFunction packages works", {
   expect_equal(acqf$packages, "mlr3mbo")
 })
 
+test_that("AcqFunction generate_acq_codomain works", {
+  inst = MAKE_INST(OBJ_2D, search_space = PS_2D)
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
+  codomain = generate_acq_codomain(surrogate, "acqf")
+  expect_r6(codomain, "ParamSet")
+  expect_equal(codomain$tags[["acqf"]], "minimize")
+})
+
+test_that("AcqFunction generate_acq_domain works", {
+  inst = MAKE_INST(OBJ_2D, search_space = PS_2D)
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
+  domain = generate_acq_domain(surrogate)
+  expect_equal(domain, OBJ_2D$domain)
+  expect_equal(domain, inst$search_space)
+
+  inst = MAKE_INST(OBJ_2D, search_space = PS_2D_trafo)
+  expect_true(inst$search_space$has_trafo)
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
+  domain = generate_acq_domain(surrogate)
+  expect_equal(domain, OBJ_2D$domain)
+  expect_false(domain$has_trafo)
+
+  surrogate$cols_x = "x2"
+  domain = generate_acq_domain(surrogate)
+  surrogate$cols_x = "x2"
+  domain = generate_acq_domain(surrogate)
+  expect_equal(domain, OBJ_2D$domain$clone(deep = TRUE)$subset("x2"))
+  expect_false(domain$has_trafo)
+
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS)
+  expect_error(generate_acq_domain(surrogate), "Must be an R6 class, not 'NULL'")
+})
+
