@@ -140,6 +140,9 @@ SamplerMbo = R6Class("SamplerMbo", inherit = paradox::Sampler,
         return(self$sampler_random$sample(n)$data)
       }
       budget_table = self$instance$archive$data[, .N, by = eval(self$budget_id)][N >= self$Nmin]
+      if (nrow(budget_table) == 0L) {
+        return(self$sampler_random$sample(n)$data)
+      }
       # a fraction of rho of the n candidate points are proposed uniformly at random
       propose_random = runif(n, min = 0, max = 1) <= self$rho
       n_random = sum(propose_random)
