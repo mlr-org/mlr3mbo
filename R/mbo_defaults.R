@@ -88,28 +88,7 @@ default_gp = function(noisy = FALSE, input_scaling = FALSE, search_space = NULL)
   }
 
   if (input_scaling) {
-    ids = search_space$ids()
-    preprocess = mlr3pipelines::po("colapply",
-      id = paste0("scale_", ids[1L]),
-      affect_columns = mlr3pipelines::selector_name(ids[1L]),
-      applicator = function(x) {
-        (x - search_space$params[[ids[1L]]]$lower) / (search_space$params[[ids[1L]]]$upper - search_space$params[[ids[1L]]]$lower)
-      }
-    )
-    if (length(ids) > 1L) {
-      for (id in ids[-1L]) {
-        preprocess = mlr3pipelines::"%>>%"(
-          preprocess,
-          mlr3pipelines::po("colapply",
-            id = paste0("scale_", id),
-            affect_columns = mlr3pipelines::selector_name(id),
-            applicator = function(x) {
-              (x - search_space$params[[id]]$lower) / (search_space$params[[id]]$upper - search_space$params[[id]]$lower)
-            }
-          )
-        )
-      }
-    }
+    preprocess = mlr3pipelines::po("scaleinput", search_space = search_space, affect_columns = mlr3pipelines::selector_name(names(search_space$is_number)))
     learner = mlr3pipelines::GraphLearner$new(
       mlr3pipelines::"%>>%"(
         preprocess,
@@ -117,7 +96,6 @@ default_gp = function(noisy = FALSE, input_scaling = FALSE, search_space = NULL)
       )
     )
   }
-
   learner
 }
 
