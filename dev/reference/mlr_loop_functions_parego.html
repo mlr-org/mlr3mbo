@@ -239,8 +239,11 @@ function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceMultiC
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           x  x_domain       y1         y2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 2.105497 &lt;list[1]&gt; 4.433118 0.01112964</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [16:36:39.398] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [16:36:39.446] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           x  x_domain       y1        y2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 1.134356 &lt;list[1]&gt; 1.286764 0.7493391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 1.467836 &lt;list[1]&gt; 2.154544 0.2831980</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
