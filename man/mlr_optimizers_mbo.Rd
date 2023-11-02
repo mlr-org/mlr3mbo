@@ -16,6 +16,13 @@ By optimizing a comparably cheap to evaluate acquisition function defined on the
 Detailed descriptions of different MBO flavors are provided in the documentation of the respective \link{loop_function}.
 
 Termination is handled via a \link[bbotk:Terminator]{bbotk::Terminator} part of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
+
+Note that in general the \link{Surrogate} is updated one final time on all available data after the optimization process has terminated.
+However, in certain scenarios this is not always possible or meaningful, e.g., when using \code{\link[=bayesopt_parego]{bayesopt_parego()}} for multi-objective optimization
+which uses a surrogate that relies on a scalarization of the objectives.
+It is therefore recommended to manually inspect the \link{Surrogate} after optimization if it is to be used, e.g., for visualization purposes to make
+sure that it has been properly updated on all available data.
+If this final update of the \link{Surrogate} could not be performed successfully, a warning will be logged.
 }
 \section{Archive}{
 
