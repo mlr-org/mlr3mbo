@@ -10,6 +10,35 @@ test_that("default_loop_function", {
   expect_true(attr(loop_function, "id") == "bayesopt_smsego")
 })
 
+test_that("default_gp input scaling", {
+  domain = ParamSet$new(list(ParamDbl$new("x1", lower = 0, upper = 10), ParamDbl$new("x2", lower = 5, upper = 15)))
+  search_space = ParamSet$new(list(ParamDbl$new("x1", lower = 0, upper = 10), ParamDbl$new("x2", lower = log(5), upper = log(15))))
+  search_space$trafo = function(x, param_set) {
+    x[["x2"]] = exp(x[["x2"]])
+    x
+  }
+  objective = ObjectiveRFun$new(
+    fun = function(xs) {
+      list(y = sum(as.numeric(xs)^2))
+    },
+    domain = domain,
+    properties = "single-crit")
+  instance = OptimInstanceSingleCrit$new(
+    objective = objective,
+    search_space = search_space,
+    terminator = trm("evals", n_evals = 10L))
+  xdt = generate_design_random(instance$search_space, n = 10L)$data
+  instance$eval_batch(xdt)
+
+  surrogate = SurrogateLearner$new(default_gp(input_scaling = TRUE, search_space = instance$search_space), archive = instance$archive)
+
+  surrogate$update()
+
+  # FIXME: maybe just check train task feature ranges or state of pipeop
+  expect_true(all(apply(surrogate$learner$model$regr.km$model@X, MARGIN = 2L, FUN = max) <= 1))
+  expect_true(all(apply(surrogate$learner$model$regr.km$model@X, MARGIN = 2L, FUN = min) >= 0))
+})
+
 test_that("default_surrogate", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("mlr3pipelines")

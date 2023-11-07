@@ -15,7 +15,7 @@
 #'   The [bbotk::OptimInstanceMultiCrit] to be optimized.
 #' @param init_design_size (`NULL` | `integer(1)`)\cr
 #'   Size of the initial design.
-#'   If `NULL` and the [bbotk::Archive] contains no evaluations, \code{4 * d} is used with \code{d} being the
+#'   If `NULL` and the [bbotk::Archive] contains no evaluations, `4 * d` is used with `d` being the
 #'   dimensionality of the search space.
 #'   Points are generated via a Sobol sequence.
 #' @param surrogate ([SurrogateLearner])\cr

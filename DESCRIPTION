@@ -47,6 +47,7 @@ Imports:
     lgr (>= 0.3.4),
     mlr3 (>= 0.14.0),
     mlr3misc (>= 0.11.0),
+    mlr3pipelines (>= 0.4.2),
     mlr3tuning (>= 0.14.0),
     paradox (>= 0.10.0),
     spacefillr,
@@ -58,7 +59,6 @@ Suggests:
     knitr,
     lhs,
     mlr3learners (>= 0.5.4),
-    mlr3pipelines (>= 0.4.2),
     nloptr,
     ranger,
     rgenoud,
@@ -89,6 +89,7 @@ Collate:
     'AcqOptimizer.R'
     'aaa.R'
     'OptimizerMbo.R'
+    'PipeOpScaleInput.R'
     'mlr_result_assigners.R'
     'ResultAssigner.R'
     'ResultAssignerArchive.R'

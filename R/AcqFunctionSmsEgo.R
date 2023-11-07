@@ -10,7 +10,7 @@
 #' * `"lambda"` (`numeric(1)`)\cr
 #'   \eqn{\lambda} value used for the confidence bound.
 #'   Defaults to `1`.
-#'   Based on \code{confidence = (1 - 2 * dnorm(lambda)) ^ m} you can calculate a
+#'   Based on `confidence = (1 - 2 * dnorm(lambda)) ^ m` you can calculate a
 #'   lambda for a given confidence level, see Ponweiser et al. (2008).
 #' * `"epsilon"` (`numeric(1)`)\cr
 #'   \eqn{\epsilon} used for the additive epsilon dominance.

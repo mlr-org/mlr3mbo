@@ -63,8 +63,7 @@ PS_2D_trafo$trafo = function(x, param_set) {
   x
 }
 FUN_2D = function(xs) {
-  y = sum(as.numeric(xs)^2)
-  list(y = y)
+  list(y = sum(as.numeric(xs)^2))
 }
 FUN_2D_CODOMAIN = ParamSet$new(list(ParamDbl$new("y", tags = c("minimize", "random_tag"))))
 OBJ_2D = ObjectiveRFun$new(fun = FUN_2D, domain = PS_2D, properties = "single-crit")

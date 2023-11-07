@@ -15,7 +15,7 @@ If specified, this learner will be used instead of the defaults described above.
 
 \item{n_learner}{(\code{NULL} | \code{integer(1)}).
 Number of learners to be considered in the construction of the \link{SurrogateLearner} or \link{SurrogateLearnerCollection}.
-If not specified will be based on the number of objectives as stated by the instance.}
+If not specified this will be determined automatically based on the number of objectives as stated by the instance.}
 }
 \value{
 \link{Surrogate}
@@ -24,25 +24,23 @@ If not specified will be based on the number of objectives as stated by the inst
 This is a helper function that constructs a default \link{Surrogate} based on properties of the
 \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 
-For numeric-only (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via
+For numeric-only (including integers) search spaces without any dependencies a Gaussian Process is constructed via
 \code{\link[=default_gp]{default_gp()}}.
-For mixed numeric-categorical parameter spaces, or spaces with conditional parameters a random forest is constructed via
+For mixed numeric-categorical search spaces, or spaces with conditional parameters a random forest is constructed via
 \code{\link[=default_rf]{default_rf()}}.
 
-In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
+In any case, learners are encapsulated using \code{"evaluate"}, and a fallback learner is set,
 in cases where the surrogate learner errors.
 Currently, the following learner is used as a fallback:
 \code{lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")}.
 
-If additionally dependencies are present in the parameter space, inactive conditional parameters
+If additionally dependencies are present in the search space, inactive conditional parameters
 are represented by missing \code{NA} values in the training design data.
 We simply handle those with an imputation method, added to the random forest, more
-concretely we use \code{po("imputesample")} (for logicals) and \code{po("imputeoor")} (for anything else) from
-package \CRANpkg{mlr3pipelines}.
-Characters are always encoded as factors via \code{po("colapply")}.
+concretely we use \link[mlr3pipelines:mlr_pipeops_imputesample]{mlr3pipelines::PipeOpImputeSample} (for logicals) and \link[mlr3pipelines:mlr_pipeops_imputeoor]{mlr3pipelines::PipeOpImputeOOR} (for anything else).
+Characters are always encoded as factors via \link[mlr3pipelines:mlr_pipeops_colapply]{mlr3pipelines::PipeOpColApply}.
 Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
-In the case of dependencies, the following learner is used as a fallback:
-\code{lrn("regr.featureless")}.
+In the case of dependencies a \code{lrn("regr.featureless")} is used as a fallback.
 
 If the instance is of class \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} the learner is wrapped as a
 \link{SurrogateLearner}.
