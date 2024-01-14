@@ -16,7 +16,7 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
 
 generate_acq_domain = function(surrogate) {
   assert_r6(surrogate$archive, classes = "Archive")
-  if ("set_id" %in% names(domain)) {
+  if ("set_id" %in% names(ps())) {
     # old paradox
     domain = surrogate$archive$search_space$clone(deep = TRUE)$subset(surrogate$cols_x)
     domain$trafo = NULL
