@@ -16,8 +16,18 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
 
 generate_acq_domain = function(surrogate) {
   assert_r6(surrogate$archive, classes = "Archive")
-  domain = surrogate$archive$search_space$clone(deep = TRUE)$subset(surrogate$cols_x)
-  domain$trafo = NULL
+  if ("set_id" %in% names(domain)) {
+    # old paradox
+    domain = surrogate$archive$search_space$clone(deep = TRUE)$subset(surrogate$cols_x)
+    domain$trafo = NULL
+  } else {
+    # get "domain" objects, set their .trafo-entry to NULL individually
+    dms = lapply(surrogate$archive$search_space$domains[surrogate$cols_x], function(x) {
+      x$.trafo[1] = list(NULL)
+      x
+    })
+    domain = do.call(ps, dms)
+  }
   domain
 }
 
@@ -127,7 +137,7 @@ check_learner_surrogate = function(learner) {
       return(TRUE)
     }
   }
-  
+
   "Must inherit from class 'Learner' or be a list of elements inheriting from class 'Learner'"
 }
 
