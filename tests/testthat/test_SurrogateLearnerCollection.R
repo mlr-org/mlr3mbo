@@ -63,7 +63,7 @@ test_that("param_set", {
   expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measures", "perf_thresholds", "catch_errors"))
   expect_equal(surrogate$param_set$class[["assert_insample_perf"]], "ParamLgl")
   expect_equal(surrogate$param_set$class[["perf_measures"]], "ParamUty")
-  expect_equal(surrogate$param_set$class[["perf_threshold"]], "ParamUty")
+  expect_equal(surrogate$param_set$class[["perf_thresholds"]], "ParamUty")
   expect_equal(surrogate$param_set$class[["catch_errors"]], "ParamLgl")
   expect_error({surrogate$param_set = list()}, regexp = "param_set is read-only.")
 })
