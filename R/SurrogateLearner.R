@@ -87,7 +87,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
         assert_insample_perf = p_lgl(),
         perf_measure = p_uty(custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
         perf_threshold = p_dbl(lower = -Inf, upper = Inf),
-        catch_errors = p_lgl())
+        catch_errors = p_lgl()
       )
       ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE)
       ps$add_dep("perf_measure", on = "assert_insample_perf", cond = CondEqual$new(TRUE))

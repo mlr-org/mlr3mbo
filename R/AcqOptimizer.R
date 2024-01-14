@@ -109,7 +109,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
         warmstart = p_lgl(default = FALSE),
         warmstart_size = p_int(lower = 1L, special_vals = list("all")),
         skip_already_evaluated = p_lgl(default = TRUE),
-        catch_errors = p_lgl(default = TRUE))
+        catch_errors = p_lgl(default = TRUE)
       )
       ps$values = list(n_candidates = 1, logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, catch_errors = TRUE)
       ps$add_dep("warmstart_size", on = "warmstart", cond = CondEqual$new(TRUE))
