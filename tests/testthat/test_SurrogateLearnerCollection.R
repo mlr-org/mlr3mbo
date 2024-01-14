@@ -21,7 +21,7 @@ test_that("SurrogateLearnerCollection API works", {
   # upgrading error class works
   surrogate = SurrogateLearnerCollection$new(learners = list(LearnerRegrError$new(), LearnerRegrError$new()), archive = inst$archive)
   expect_error(surrogate$update(), class = "surrogate_update_error")
-  
+
   surrogate$param_set$values$catch_errors = FALSE
   expect_error(surrogate$optimize(), class = "simpleError")
 
@@ -61,10 +61,10 @@ test_that("param_set", {
   surrogate = SurrogateLearnerCollection$new(learner = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
   expect_r6(surrogate$param_set, "ParamSet")
   expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measures", "perf_thresholds", "catch_errors"))
-  expect_r6(surrogate$param_set$params$assert_insample_perf, "ParamLgl")
-  expect_r6(surrogate$param_set$params$perf_measure, "ParamUty")
-  expect_r6(surrogate$param_set$params$perf_threshold, "ParamUty")
-  expect_r6(surrogate$param_set$params$catch_errors, "ParamLgl")
+  expect_equal(surrogate$param_set$class[["assert_insample_perf"]], "ParamLgl")
+  expect_equal(surrogate$param_set$class[["perf_measure"]], "ParamUty")
+  expect_equal(surrogate$param_set$class[["perf_threshold"]], "ParamUty")
+  expect_equal(surrogate$param_set$class[["catch_errors"]], "ParamLgl")
   expect_error({surrogate$param_set = list()}, regexp = "param_set is read-only.")
 })
 
