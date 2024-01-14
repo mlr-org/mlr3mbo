@@ -6,7 +6,7 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
     if (surrogate$archive$codomain$length > 1L) {
       stop("Not supported yet.")  # FIXME: But should be?
     }
-    tags = surrogate$archive$codomain$params[[1L]]$tags
+    tags = surrogate$archive$codomain$tags[[1L]]
     tags = tags[tags %in% c("minimize", "maximize")]  # only filter out the relevant one
   } else {
     tags = direction
