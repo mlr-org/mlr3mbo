@@ -103,13 +103,13 @@ AcqOptimizer = R6Class("AcqOptimizer",
       self$optimizer = assert_r6(optimizer, "Optimizer")
       self$terminator = assert_r6(terminator, "Terminator")
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
-      ps = ParamSet$new(list(
-        ParamInt$new("n_candidates", lower = 1, default = 1L),
-        ParamFct$new("logging_level", levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
-        ParamLgl$new("warmstart", default = FALSE),
-        ParamInt$new("warmstart_size", lower = 1L, special_vals = list("all")),
-        ParamLgl$new("skip_already_evaluated", default = TRUE),
-        ParamLgl$new("catch_errors", default = TRUE))
+      ps = ps(
+        n_candidates = p_int(lower = 1, default = 1L),
+        logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
+        warmstart = p_lgl(default = FALSE),
+        warmstart_size = p_int(lower = 1L, special_vals = list("all")),
+        skip_already_evaluated = p_lgl(default = TRUE),
+        catch_errors = p_lgl(default = TRUE))
       )
       ps$values = list(n_candidates = 1, logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, catch_errors = TRUE)
       ps$add_dep("warmstart_size", on = "warmstart", cond = CondEqual$new(TRUE))

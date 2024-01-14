@@ -11,10 +11,7 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
   } else {
     tags = direction
   }
-  codomain = ParamSet$new(list(
-    ParamDbl$new(id, tags = tags)
-  ))
-  codomain
+  do.call(ps, structure(list(p_dbl(tags = tags)), names = id))
 }
 
 generate_acq_domain = function(surrogate) {

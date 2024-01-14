@@ -93,10 +93,10 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
       assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       assert_int(k, lower = 2L)
 
-      constants = ParamSet$new(list(
-        ParamInt$new("k", lower = 2L, default = 15L),
-        ParamDbl$new("r", lower = 0, upper = 1, default = 0.2)
-      ))
+      constants = ps(
+        k = p_int(lower = 2L, default = 15L),
+        r = p_dbl(lower = 0, upper = 1, default = 0.2)
+      )
       constants$values$k = k
       constants$values$r = r
 
