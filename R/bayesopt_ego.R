@@ -30,6 +30,9 @@
 #'   For example, if `random_interleave_iter = 2`, random interleaving is performed in the second,
 #'   fourth, sixth, ... iteration.
 #'   Default is `0`, i.e., no random interleaving is performed at all.
+#' @param hook_fun ([function])\cr
+#'   [Function] to be called in each iteration of the loop, before evaluating the next proposed point.
+#'   See examples.
 #'
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
@@ -82,6 +85,42 @@
 #'
 #'   optimizer$optimize(instance)
 #'
+#'   # same as above, but plot files with information at each iteration of the loop
+#'   library(ggplot2)
+#'   library(gridExtra)
+#'   
+#'   myPlot = function(xdt, instance, surrogate, acq_function, acq_optimizer) {
+#'       data.plot = data.table(x = seq(instance$objective$domain$lower, instance$objective$domain$upper, length.out = 100))
+#'       data.plot$y = instance$objective$eval_dt(data.plot)$y
+#'       data.plot$acq_ei = acq_optimizer$acq_function$eval_dt(data.table(x = data.plot$x))$acq_ei
+#'       data.plot = data.table(data.plot, surrogate$predict(data.plot))
+#'   
+#'       p1 = ggplot(data.plot, aes(x = x, y = y)) +
+#'         geom_ribbon(aes(ymin = mean - se, ymax = mean + se), fill = "lightgray") +
+#'         geom_line() +
+#'         geom_line(aes(y = mean), linetype = "dashed") +
+#'         geom_point(data = xdt, aes(x = x, y = surrogate$predict(data.table(x = x))$mean), color = "red") +
+#'         geom_point(data = instance$archive$data, aes(x = x, y = y), color = "darkgreen") +
+#'         theme(axis.title.x = element_blank(),
+#'           axis.text.x = element_blank(),
+#'           axis.ticks.x = element_blank())
+#'   
+#'       p2 = ggplot(data.plot, aes(x = x, y = acq_ei)) +
+#'         geom_line()
+#'   
+#'       p = grid.arrange(p1, p2, ncol = 1)
+#'       ggsave(p, file = paste("mbo-", instance$archive$n_evals, ".pdf", sep = ""))
+#'   }
+#'   
+#'   optimizer = opt("mbo",
+#'     loop_function = bayesopt_ego,
+#'     surrogate = surrogate,
+#'     acq_function = acqfun,
+#'     acq_optimizer = acqopt,
+#'     args = list("hook_fun" = myPlot))
+#'   
+#'   optimizer$optimize(instance)
+#'
 #'   # expected improvement per second example
 #'   fun = function(xs) {
 #'     list(y = xs$x ^ 2, time = abs(xs$x))
@@ -112,7 +151,8 @@ bayesopt_ego = function(
     acq_function,
     acq_optimizer,
     init_design_size = NULL,
-    random_interleave_iter = 0L
+    random_interleave_iter = 0L,
+    hook_fun = function(...) {}
   ) {
 
   # assertions
@@ -153,6 +193,8 @@ bayesopt_ego = function(
       lg$info("Proposing a randomly sampled point")
       generate_design_random(search_space, n = 1L)$data
     })
+
+    hook_fun(xdt, instance, surrogate, acq_function, acq_optimizer)
 
     instance$eval_batch(xdt)
     if (instance$is_terminated) break

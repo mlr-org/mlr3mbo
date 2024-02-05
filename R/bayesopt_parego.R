@@ -40,6 +40,9 @@
 #'   For example, if `random_interleave_iter = 2`, random interleaving is performed in the second,
 #'   fourth, sixth, ... iteration.
 #'   Default is `0`, i.e., no random interleaving is performed at all.
+#' @param hook_fun ([function])\cr
+#'   [Function] to be called in each iteration of the loop, before evaluating the next proposed point.
+#'   See examples in [mlr_loop_functions_ego].
 #'
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
@@ -105,7 +108,8 @@ bayesopt_parego = function(
     q = 1L,
     s = 100L,
     rho = 0.05,
-    random_interleave_iter = 0L
+    random_interleave_iter = 0L,
+    hook_fun = function(...) {}
   ) {
 
   # assertions
@@ -168,6 +172,8 @@ bayesopt_parego = function(
         generate_design_random(search_space, n = 1L)$data
       })
     }, .fill = TRUE)
+
+    hook_fun(xdt, instance, surrogate, acq_function, acq_optimizer)
 
     instance$eval_batch(xdt)
     if (instance$is_terminated) break
