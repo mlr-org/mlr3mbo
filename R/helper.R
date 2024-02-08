@@ -1,5 +1,5 @@
 generate_acq_codomain = function(surrogate, id, direction = "same") {
-  assert_r6(surrogate$archive, classes = "Archive")
+  assert_multi_class(surrogate$archive, c("Archive", "ArchiveRush"))
   assert_string(id)
   assert_choice(direction, choices = c("same", "minimize", "maximize"))
   if (direction == "same") {
@@ -18,7 +18,7 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
 }
 
 generate_acq_domain = function(surrogate) {
-  assert_r6(surrogate$archive, classes = "Archive")
+  assert_multi_class(surrogate$archive, c("Archive", "ArchiveRush"))
   domain = surrogate$archive$search_space$clone(deep = TRUE)$subset(surrogate$cols_x)
   domain$trafo = NULL
   domain
@@ -130,7 +130,7 @@ check_learner_surrogate = function(learner) {
       return(TRUE)
     }
   }
-  
+
   "Must inherit from class 'Learner' or be a list of elements inheriting from class 'Learner'"
 }
 

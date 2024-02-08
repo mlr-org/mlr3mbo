@@ -87,9 +87,10 @@ SurrogateLearner = R6Class("SurrogateLearner",
         ParamLgl$new("assert_insample_perf"),
         ParamUty$new("perf_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
         ParamDbl$new("perf_threshold", lower = -Inf, upper = Inf),
-        ParamLgl$new("catch_errors"))
+        ParamLgl$new("catch_errors"),
+        ParamLgl$new("impute_missings"))
       )
-      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE)
+      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE, impute_missings = FALSE)
       ps$add_dep("perf_measure", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_threshold", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
@@ -214,7 +215,14 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
-      xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
+
+      if (self$param_set$values$impute_missings) {
+        xydt = self$archive$rush$fetch_tasks(fields = c("xs", "ys"))[, c(self$cols_x, self$cols_y), with = FALSE]
+        setnafill(xydt, type = "const", fill = mean(xydt[[self$cols_y]], na.rm = TRUE), cols = self$cols_y)
+      } else {
+        xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
+      }
+
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$cols_y)
       assert_learnable(task, learner = self$learner)
       self$learner$train(task)

@@ -112,10 +112,10 @@ In \emph{Proceedings of the 10th International Conference on Parallel Problem So
 \seealso{
 Other Loop Function: 
 \code{\link{loop_function}},
+\code{\link{mlr_loop_functions}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_emo}},
 \code{\link{mlr_loop_functions_mpcl}},
-\code{\link{mlr_loop_functions_parego}},
-\code{\link{mlr_loop_functions}}
+\code{\link{mlr_loop_functions_parego}}
 }
 \concept{Loop Function}

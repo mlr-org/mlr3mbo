@@ -11,9 +11,9 @@ Normally, it is only used within an \link{OptimizerMbo}.
 }
 \seealso{
 Other Result Assigner: 
+\code{\link{mlr_result_assigners}},
 \code{\link{mlr_result_assigners_archive}},
-\code{\link{mlr_result_assigners_surrogate}},
-\code{\link{mlr_result_assigners}}
+\code{\link{mlr_result_assigners_surrogate}}
 }
 \concept{Result Assigner}
 \section{Active bindings}{

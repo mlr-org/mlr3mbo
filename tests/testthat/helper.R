@@ -199,3 +199,15 @@ expect_acqfunction = function(acqf) {
   expect_man_exists(acqf$man)
 }
 
+expect_rush_reset = function(rush, type = "kill") {
+  processes = rush$processes
+  rush$reset(type = type)
+  expect_list(rush$connector$command(c("KEYS", "*")), len = 0)
+  walk(processes, function(p) p$kill())
+}
+
+flush_redis = function() {
+  config = redux::redis_config()
+  r = redux::hiredis(config)
+  r$FLUSHDB()
+}

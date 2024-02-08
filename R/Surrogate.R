@@ -99,7 +99,7 @@ Surrogate = R6Class("Surrogate",
       if (missing(rhs)) {
         private$.archive
       } else {
-        private$.archive = assert_r6(rhs, classes = "Archive")
+        private$.archive = assert_multi_class(rhs, c("Archive", "ArchiveRush"))
         invisible(private$.archive)
       }
     },

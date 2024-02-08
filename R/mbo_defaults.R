@@ -147,7 +147,7 @@ default_rf = function(noisy = FALSE) {
 #' @family mbo_defaults
 #' @export
 default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
-  assert_r6(instance, "OptimInstance")
+  assert_multi_class(instance, c("OptimInstance", "OptimInstanceRush"))
   assert_r6(learner, "Learner", null.ok = TRUE)
   assert_int(n_learner, lower = 1L, null.ok = TRUE)
   noisy = "noisy" %in% instance$objective$properties

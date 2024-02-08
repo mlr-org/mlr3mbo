@@ -14,8 +14,8 @@ result_assigner = ras("archive")
 \seealso{
 Other Result Assigner: 
 \code{\link{ResultAssigner}},
-\code{\link{mlr_result_assigners_surrogate}},
-\code{\link{mlr_result_assigners}}
+\code{\link{mlr_result_assigners}},
+\code{\link{mlr_result_assigners_surrogate}}
 }
 \concept{Result Assigner}
 \section{Super class}{
