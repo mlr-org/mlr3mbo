@@ -22,6 +22,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
     optimize = function(inst) {
 
       if (rush_available()) {
+        inst$archive$start_time = Sys.time()
 
         # generate initial design
         pv = self$param_set$values
@@ -56,6 +57,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
       # wait
       while(!inst$is_terminated) {
         Sys.sleep(1)
+        inst$rush$print_log()
         inst$rush$detect_lost_workers()
       }
 
