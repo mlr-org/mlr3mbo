@@ -97,7 +97,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
         task = rush$pop_task(fields = "xs")
         xs_trafoed = trafo_xs(task$xs, inst$search_space)
         ys = inst$objective$eval(xs_trafoed)
-        rush$push_results(task$key, yss = list(ys), extra = list(list(timestamp_ys = Sys.time(), stage = "initial_design")))
+        rush$push_results(task$key, yss = list(ys), extra = list(list(x_domain = list(xs_trafoed), timestamp_ys = Sys.time(), stage = "initial_design")))
       }
 
       # actual loop
@@ -106,10 +106,11 @@ OptimizerADBO = R6Class("OptimizerADBO",
         acq_function$surrogate$update()
         acq_function$update()
         xdt = acq_optimizer$optimize()
-        xss = transform_xdt_to_xss(xdt, search_space)
-        keys = rush$push_running_task(xss, extra = list(list(timestamp_xs = Sys.time())))
-        ys = inst$objective$eval(xss[[1]])
-        rush$push_results(keys, list(ys), extra = list(list(timestamp_ys = Sys.time(), stage = "mbo")))
+        xs = transpose_list(xdt)
+        xs_trafoed = transform_xdt_to_xss(xdt, search_space)
+        keys = rush$push_running_task(xs, extra = list(list(timestamp_xs = Sys.time())))
+        ys = inst$objective$eval(xs_trafoed[[1]])
+        rush$push_results(keys, list(ys), extra = list(list(x_domain = xs_trafoed, timestamp_ys = Sys.time(), stage = "mbo")))
       }
     }
   )
