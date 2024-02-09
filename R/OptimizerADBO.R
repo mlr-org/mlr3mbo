@@ -23,6 +23,8 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
       if (rush_available()) {
         inst$archive$start_time = Sys.time()
+        inst$.__enclos_env__$private$.context = ContextOptimization$new(instance = inst, optimizer = self)
+        call_back("on_optimization_begin", inst$callbacks, get_private(inst)$.context)
 
         # generate initial design
         pv = self$param_set$values
@@ -69,9 +71,8 @@ OptimizerADBO = R6Class("OptimizerADBO",
       lg$info("Finished optimizing after %i evaluation(s)", inst$archive$n_evals)
       lg$info("Result:")
       lg$info(capture.output(print(inst$result, lass = FALSE, row.names = FALSE, print.keys = FALSE)))
+      call_back("on_optimization_end", inst$callbacks, get_private(inst)$.context)
       return(inst$result)
-
-      result
     }
   ),
 
@@ -92,6 +93,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
       # evaluate initial design
       while (rush$n_queued_tasks > 0) {
+        lg$debug("Evaluating initial design")
         task = rush$pop_task(fields = "xs")
         xs_trafoed = trafo_xs(task$xs, inst$search_space)
         ys = inst$objective$eval(xs_trafoed)
@@ -100,6 +102,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
       # actual loop
       while (!inst$is_terminated) {
+        lg$debug("Optimizing")
         acq_function$surrogate$update()
         acq_function$update()
         xdt = acq_optimizer$optimize()
