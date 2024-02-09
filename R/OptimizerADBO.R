@@ -106,11 +106,14 @@ OptimizerADBO = R6Class("OptimizerADBO",
         acq_function$surrogate$update()
         acq_function$update()
         xdt = acq_optimizer$optimize()
-        xs = transpose_list(xdt)
-        xs_trafoed = transform_xdt_to_xss(xdt, search_space)
-        keys = rush$push_running_task(xs, extra = list(list(timestamp_xs = Sys.time())))
-        ys = inst$objective$eval(xs_trafoed[[1]])
-        rush$push_results(keys, list(ys), extra = list(list(x_domain = xs_trafoed, timestamp_ys = Sys.time(), stage = "mbo")))
+        xss = transpose_list(xdt)
+        xs = xss[[1]][inst$archive$cols_x]
+        xs_trafoed = trafo_xs(xs, search_space)
+        extra = xss[[1]][c("acq_cb", ".already_evaluated")]
+
+        keys = rush$push_running_task(list(xs), extra = list(list(timestamp_xs = Sys.time())))
+        ys = inst$objective$eval(xs_trafoed)
+        rush$push_results(keys, yss = list(ys), extra = list(c(extra, list(x_domain = list(xs_trafoed), timestamp_ys = Sys.time(), stage = "mbo"))))
       }
     }
   )
