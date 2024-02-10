@@ -217,7 +217,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
     .update = function() {
 
       if (self$param_set$values$impute_missings) {
-        xydt = self$archive$rush$fetch_tasks(fields = c("xs", "ys"))[, c(self$cols_x, self$cols_y), with = FALSE]
+        xydt = self$archive$rush$fetch_active_tasks()[, c(self$cols_x, self$cols_y), with = FALSE]
         setnafill(xydt, type = "const", fill = mean(xydt[[self$cols_y]], na.rm = TRUE), cols = self$cols_y)
       } else {
         xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
