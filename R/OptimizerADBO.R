@@ -43,7 +43,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
           packages = c("bbotk", "mlr3mbo"),
           optimizer = self,
           instance = inst,
-          lgr_thresholds = c(bbotk = "debug"),
+          lgr_thresholds = c(bbotk = "debug", rush = "debug"),
           wait_for_workers = TRUE)
       } else {
         stop("No rush plan available. See `?rush::rush_plan()`")
@@ -62,6 +62,8 @@ OptimizerADBO = R6Class("OptimizerADBO",
         inst$rush$print_log()
         inst$rush$detect_lost_workers()
       }
+
+      inst$rush$stop_workers(type = "kill")
 
       # assign result
       private$.assign_result(inst)
