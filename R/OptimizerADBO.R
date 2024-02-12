@@ -21,65 +21,31 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
     optimize = function(inst) {
 
-      if (rush_available()) {
-        inst$archive$start_time = Sys.time()
-        inst$.__enclos_env__$private$.context = ContextOptimization$new(instance = inst, optimizer = self)
-        call_back("on_optimization_begin", inst$callbacks, get_private(inst)$.context)
-
-        # generate initial design
-        pv = self$param_set$values
-        design = if (is.null(pv$initial_design)) {
-          generate_design_sobol(inst$search_space, n = pv$init_design_size)$data
-        } else {
-          pv$initial_design
-        }
-
-        # send initial design to workers
-        inst$rush$push_tasks(transpose_list(design), extra = list(list(timestamp_xs = Sys.time())))
-
-        # start rush workers
-        inst$rush$start_workers(
-          worker_loop = bbotk_worker_loop_decentralized,
-          packages = c("bbotk", "mlr3mbo"),
-          optimizer = self,
-          instance = inst,
-          wait_for_workers = TRUE)
+      # generate initial design
+      pv = self$param_set$values
+      design = if (is.null(pv$initial_design)) {
+        generate_design_sobol(inst$search_space, n = pv$init_design_size)$data
       } else {
-        stop("No rush plan available. See `?rush::rush_plan()`")
+        pv$initial_design
       }
 
-      lg$info("Starting to optimize %i parameter(s) with '%s' and '%s' on %i worker(s)",
-        inst$search_space$length,
-        self$format(),
-        inst$terminator$format(with_params = TRUE),
-        inst$rush$n_running_workers
-      )
+      # send initial design to workers
+      inst$rush$push_tasks(transpose_list(design), extra = list(list(timestamp_xs = Sys.time())))
 
-      # wait
-      while(!inst$is_terminated) {
-        Sys.sleep(1)
-        inst$rush$print_log()
-        inst$rush$detect_lost_workers()
-      }
+      # optimize
+      inst$archive$start_time = Sys.time()
+      result = optimize_decentralized(inst, self, private)
 
+      # FIXME: kill workers to increase the chance of a fitting the final model
       inst$rush$stop_workers(type = "kill")
 
-      # assign result
-      private$.assign_result(inst)
-
-      # assign result
-      private$.assign_result(inst)
-      lg$info("Finished optimizing after %i evaluation(s)", inst$archive$n_evals)
-      lg$info("Result:")
-      lg$info(capture.output(print(inst$result, lass = FALSE, row.names = FALSE, print.keys = FALSE)))
-      call_back("on_optimization_end", inst$callbacks, get_private(inst)$.context)
-      return(inst$result)
+      result
     }
   ),
 
   private = list(
 
-    .optimize_remote = function(inst) {
+    .optimize = function(inst) {
       search_space = inst$search_space
       rush = inst$rush
 

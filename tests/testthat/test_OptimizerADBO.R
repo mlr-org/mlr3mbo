@@ -1,7 +1,6 @@
 test_that("search works with decentralized network", {
   flush_redis()
-  library(rush)
-  rush_plan(n_workers = 2)
+  rush::rush_plan(n_workers = 2)
 
   learner = lrn("classif.rpart",
     minsplit  = to_tune(2, 128),
