@@ -43,7 +43,6 @@ OptimizerADBO = R6Class("OptimizerADBO",
           packages = c("bbotk", "mlr3mbo"),
           optimizer = self,
           instance = inst,
-          lgr_thresholds = c(bbotk = "debug", rush = "debug", mlr3automl = "debug"),
           wait_for_workers = TRUE)
       } else {
         stop("No rush plan available. See `?rush::rush_plan()`")
@@ -93,26 +92,28 @@ OptimizerADBO = R6Class("OptimizerADBO",
       acq_function$surrogate = surrogate
       acq_optimizer$acq_function = acq_function
 
+      lg$debug("Optimizer '%s' evaluates the initial design", self$id)
+
       # evaluate initial design
       while (rush$n_queued_tasks > 0) {
-        lg$debug("Evaluating initial design")
         task = rush$pop_task(fields = "xs")
         xs_trafoed = trafo_xs(task$xs, inst$search_space)
         ys = inst$objective$eval(xs_trafoed)
         rush$push_results(task$key, yss = list(ys), extra = list(list(x_domain = list(xs_trafoed), timestamp_ys = Sys.time(), stage = "initial_design")))
       }
 
+      lg$debug("Optimizer '%s' starts the tuning phase", self$id)
+
       # actual loop
       while (!inst$is_terminated) {
-        lg$debug("Optimizing")
         acq_function$surrogate$update()
         acq_function$update()
         xdt = acq_optimizer$optimize()
         xss = transpose_list(xdt)
         xs = xss[[1]][inst$archive$cols_x]
+        lg$trace("Optimizer '%s' draws %s", self$id, as_short_string(xs))
         xs_trafoed = trafo_xs(xs, search_space)
         extra = xss[[1]][c("acq_cb", ".already_evaluated")]
-
         keys = rush$push_running_task(list(xs), extra = list(list(timestamp_xs = Sys.time())))
         ys = inst$objective$eval(xs_trafoed)
         rush$push_results(keys, yss = list(ys), extra = list(c(extra, list(x_domain = list(xs_trafoed), timestamp_ys = Sys.time(), stage = "mbo"))))

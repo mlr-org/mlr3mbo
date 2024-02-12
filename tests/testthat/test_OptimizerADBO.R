@@ -19,6 +19,8 @@ test_that("search works with decentralized network", {
   optimizer = tnr("adbo", init_design_size = 4)
   optimizer$optimize(instance)
 
+  # instance$rush = RushWorker$new(instance$rush$network_id, host = "local")
+  # inst = instance
   # instance$archive$data[order(timestamp_ys)]
   # instance$rush$processes[[1]]$read_all_error_lines()
   # instance$rush$read_log()

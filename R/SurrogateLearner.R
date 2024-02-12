@@ -215,9 +215,8 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
-
       if (self$param_set$values$impute_missings) {
-        xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finsished"))[, c(self$cols_x, self$cols_y), with = FALSE]
+        xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y), with = FALSE]
         setnafill(xydt, type = "const", fill = mean(xydt[[self$cols_y]], na.rm = TRUE), cols = self$cols_y)
       } else {
         xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
