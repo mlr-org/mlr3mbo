@@ -50,7 +50,8 @@ Imports:
     mlr3tuning (>= 0.14.0),
     paradox (>= 0.10.0),
     spacefillr,
-    R6 (>= 2.4.1)
+    R6 (>= 2.4.1),
+    rush
 Suggests:
     DiceKriging,
     emoa,
