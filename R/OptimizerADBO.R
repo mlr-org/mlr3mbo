@@ -41,10 +41,11 @@ OptimizerADBO = R6Class("OptimizerADBO",
         rate = p_dbl(lower = 0, default = 0.1),
         period = p_int(lower = 1L, default = 25L),
         design_size = p_int(lower = 1L),
-        initial_design = p_uty()
+        initial_design = p_uty(),
+        impute_method = p_fct(c("mean", "random"), default = "random")
       )
 
-      param_set$set_values(lambda = 1.96, exponential_decay = TRUE, rate = 0.1, period = 25L, design_size = 1L)
+      param_set$set_values(lambda = 1.96, exponential_decay = TRUE, rate = 0.1, period = 25L, design_size = 1L, impute_method = "random")
 
       super$initialize("adbo",
         param_set = param_set,
@@ -99,7 +100,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
       t = 0
 
       surrogate = default_surrogate(inst)
-      surrogate$param_set$set_values(impute_missings = TRUE)
+      surrogate$param_set$set_values(impute_missings = pv$impute_method)
       acq_function = acqf("cb", lambda = runif(1, 1 , 3))
       acq_optimizer = acqo(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))
 

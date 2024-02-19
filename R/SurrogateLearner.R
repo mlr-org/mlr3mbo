@@ -88,9 +88,9 @@ SurrogateLearner = R6Class("SurrogateLearner",
         ParamUty$new("perf_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
         ParamDbl$new("perf_threshold", lower = -Inf, upper = Inf),
         ParamLgl$new("catch_errors"),
-        ParamLgl$new("impute_missings"))
+        ParamFct$new("impute_missings", levels = c("none", "mean", "random")))
       )
-      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE, impute_missings = FALSE)
+      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE, impute_missings = "none")
       ps$add_dep("perf_measure", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_threshold", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
@@ -215,9 +215,17 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
-      if (self$param_set$values$impute_missings) {
+      if (self$param_set$values$impute_missings == "mean") {
         xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y), with = FALSE]
         setnafill(xydt, type = "const", fill = mean(xydt[[self$cols_y]], na.rm = TRUE), cols = self$cols_y)
+      } else if (self$param_set$values$impute_missings == "random") {
+        xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE]
+        walk(self$cols_y, function(col) {
+          min = min(xydt[[col]], na.rm = TRUE)
+          max = max(xydt[[col]], na.rm = TRUE)
+          xydt[state %in% c("queued", "running"), (col) := runif(.N, min, max)]
+        })
+        set(xydt, j = "state", value = NULL)
       } else {
         xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
       }

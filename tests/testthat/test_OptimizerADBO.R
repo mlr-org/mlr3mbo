@@ -1,5 +1,5 @@
 test_that("adbo optimizer works", {
-  #options("bbotk_local" = TRUE)
+  options("bbotk_local" = TRUE)
   rush::rush_plan(n_workers = 5)
 
   search_space = domain = ps(
@@ -31,9 +31,9 @@ test_that("adbo optimizer works", {
 
 
 test_that("adbo tuner works", {
-  #options("bbotk_local" = TRUE)
+  # options("bbotk_local" = TRUE)
   flush_redis()
-  rush::rush_plan(n_workers = 2)
+  rush::rush_plan(n_workers = 5)
 
   learner = lrn("classif.rpart",
     minsplit  = to_tune(2, 128),
@@ -48,7 +48,7 @@ test_that("adbo tuner works", {
     store_benchmark_result = FALSE
   )
 
-  optimizer = tnr("adbo", init_design_size = 4)
+  optimizer = tnr("adbo", design_size = 4)
   optimizer$optimize(instance)
 
   expect_data_table(instance$archive$data, min.rows = 20L)
