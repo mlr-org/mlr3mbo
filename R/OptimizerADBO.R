@@ -1,30 +1,74 @@
+#' @title Asynchronous Decentralized Bayesian Optimization
+#' @name mlr_optimizers_adbo
+#'
+#' @description
+#' Asynchronous Decentralized Bayesian Optimization (ADBO).
+#'
+#' @notes
+#' The \eqn{\lambda} parameter of the upper confidence bound acquisition function controls the trade-off between exploration and exploitation.
+#' A large \eqn{\lambda} value leads to more exploration, while a small \eqn{\lambda} value leads to more exploitation.
+#' ADBO can use periodic exponential decay to reduce \eqn{\lambda} periodically to the exploitation phase.
+#'
+#' @section Parameters:
+#' \describe{
+#' \item{`lambda`}{`numeric(1)`\cr
+#'   \eqn{\lambda} value used for the confidence bound.
+#'   Defaults to `1.96`.}
+#' \item{`exponential_decay`}{`lgl(1)`\cr
+#'   Whether to use periodic exponential decay for \eqn{\lambda}.}
+#' \item{`rate`}{`numeric(1)`\cr
+#'   Rate of the exponential decay.}
+#' \item{`t`}{`integer(1)`\cr
+#'   Period of the exponential decay.}
+#' \item{`initial_design_size`}{`integer(1)`\cr
+#'   Size of the initial design.}
+#' \item{`initial_design`}{`data.table`\cr
+#'   Initial design.}
+#' }
+#'
 #' @export
 OptimizerADBO = R6Class("OptimizerADBO",
   inherit = bbotk::Optimizer,
 
   public = list(
 
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function() {
       param_set = ps(
-        init_design_size = p_int(lower = 1L),
+        lambda = p_dbl(lower = 0, default = 1.96),
+        exponential_decay = p_lgl(default = TRUE),
+        rate = p_dbl(lower = 0, default = 0.1),
+        period = p_int(lower = 1L, default = 25L),
+        design_size = p_int(lower = 1L),
         initial_design = p_uty()
       )
+
+      param_set$set_values(lambda = 1.96, exponential_decay = TRUE, rate = 0.1, period = 25L, design_size = 1L)
 
       super$initialize("adbo",
         param_set = param_set,
         param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
-        properties = c("dependencies", "multi-crit", "single-crit"),
+        properties = c("dependencies", "single-crit"),
         packages = "mlr3mbo",
         label = "Asynchronous Decentralized Bayesian Optimization",
         man = "mlr3mbo::OptimizerADBO")
     },
 
+
+    #' @description
+    #' Performs the optimization and writes optimization result into
+    #' [OptimInstance]. The optimization result is returned but the complete
+    #' optimization path is stored in [Archive] of [OptimInstance].
+    #'
+    #' @param inst ([OptimInstance]).
+    #' @return [data.table::data.table].
     optimize = function(inst) {
 
       # generate initial design
       pv = self$param_set$values
       design = if (is.null(pv$initial_design)) {
-        generate_design_sobol(inst$search_space, n = pv$init_design_size)$data
+        generate_design_sobol(inst$search_space, n = pv$design_size)$data
       } else {
         pv$initial_design
       }
@@ -46,8 +90,13 @@ OptimizerADBO = R6Class("OptimizerADBO",
   private = list(
 
     .optimize = function(inst) {
+      pv = self$param_set$values
       search_space = inst$search_space
       rush = inst$rush
+
+      # sample lambda from exponential distribution
+      lambda_0 = rexp(1, 1 / pv$lambda)
+      t = 0
 
       surrogate = default_surrogate(inst)
       surrogate$param_set$set_values(impute_missings = TRUE)
@@ -72,6 +121,15 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
       # actual loop
       while (!inst$is_terminated) {
+
+        if (pv$exponential_decay) {
+          lambda = lambda_0 * exp(-pv$rate * (t %% pv$period))
+          t = t + 1
+        } else {
+          lambda = pv$lambda
+        }
+
+        acq_function$constants$set_values(lambda = lambda)
         acq_function$surrogate$update()
         acq_function$update()
         xdt = acq_optimizer$optimize()
@@ -82,7 +140,12 @@ OptimizerADBO = R6Class("OptimizerADBO",
         extra = xss[[1]][c("acq_cb", ".already_evaluated")]
         keys = rush$push_running_task(list(xs), extra = list(list(timestamp_xs = Sys.time())))
         ys = inst$objective$eval(xs_trafoed)
-        rush$push_results(keys, yss = list(ys), extra = list(c(extra, list(x_domain = list(xs_trafoed), timestamp_ys = Sys.time(), stage = "mbo"))))
+        rush$push_results(keys, yss = list(ys), extra = list(c(extra, list(
+          x_domain = list(xs_trafoed),
+          timestamp_ys = Sys.time(),
+          stage = "mbo",
+          lambda_0 = lambda_0,
+          lambda = lambda))))
       }
     }
   )
