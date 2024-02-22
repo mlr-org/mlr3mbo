@@ -55,6 +55,33 @@ test_that("adbo tuner works", {
   expect_rush_reset(instance$rush)
 })
 
+test_that("adbo tuner works with limited number of workers", {
+  # options("bbotk_local" = TRUE)
+  lgr::get_logger("rush")$set_threshold("debug")
+
+  flush_redis()
+  rush::rush_plan(n_workers = 5)
+
+  learner = lrn("classif.rpart",
+    minsplit  = to_tune(2, 128),
+    cp        = to_tune(1e-04, 1e-1))
+
+  instance = TuningInstanceRushSingleCrit$new(
+    task = tsk("pima"),
+    learner = learner,
+    resampling = rsmp("cv", folds = 3),
+    measure = msr("classif.ce"),
+    terminator = trm("evals", n_evals = 20),
+    store_benchmark_result = FALSE
+  )
+
+  optimizer = tnr("adbo", design_size = 4, n_workers = 2)
+  optimizer$optimize(instance)
+
+  expect_data_table(instance$archive$data, min.rows = 20L)
+  expect_rush_reset(instance$rush)
+})
+
 test_that("adbo works with transformation functions", {
   flush_redis()
   rush::rush_plan(n_workers = 2)
