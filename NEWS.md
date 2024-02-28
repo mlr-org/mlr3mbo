@@ -1,11 +1,16 @@
 # mlr3mbo 0.2.1.9000
 
 * refactor: compatibility with upcoming paradox upgrade.
+* feat: `OptimizerMbo` and `TunerMbo` now update the `Surrogate` a final time after the optimization process finished to
+        ensure that the `Surrogate` correctly reflects the state of being trained on all data seen during optimization.
+* fix: `AcqFunction` domain construction now respects `Surrogate` cols_x field.
+* feat: support more than one candidate point as a result of acquisition function optimization even for
+        non-batch acquisition functions.
 * feat: added `default_gp` and `default_rf` helpers that allow for construction of a default
         Gaussian Process and random forest as for example used within `default_surrogate`.
 * refactor: changed Gaussian Process and random forest defaults (in `default_gp` and `default_rf` and therefore also in
             `default_surrogate`). Gaussian Process now uses a `"matern5_2"` kernel. Random forest now uses 100 trees.
-             The number of trees used in the fallback random forest was reduced to 10.
+            The number of trees used in the fallback random forest was reduced to 10.
 
 # mlr3mbo 0.2.1
 
