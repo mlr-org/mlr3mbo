@@ -14,10 +14,10 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.7/font.css" rel="stylesheet">
-<link href="../deps/JetBrains_Mono-0.4.7/font.css" rel="stylesheet">
-<link href="../deps/Roboto_Slab-0.4.7/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.8/font.css" rel="stylesheet">
+<link href="../deps/JetBrains_Mono-0.4.8/font.css" rel="stylesheet">
+<link href="../deps/Roboto_Slab-0.4.8/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="mlr3mbo">
@@ -169,14 +169,17 @@ the following dictionary can be inspected:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3mbo.mlr-org.com">mlr3mbo</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_loop_functions</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_loop_functions</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Key: &lt;key&gt;</span></span>
 <span><span class="co">#&gt;                key                         label    instance</span></span>
+<span><span class="co">#&gt;             &lt;char&gt;                        &lt;char&gt;      &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1:    bayesopt_ego Efficient Global Optimization single-crit</span></span>
 <span><span class="co">#&gt; 2:    bayesopt_emo           Multi-Objective EGO  multi-crit</span></span>
 <span><span class="co">#&gt; 3:   bayesopt_mpcl      Multipoint Constant Liar single-crit</span></span>
 <span><span class="co">#&gt; 4: bayesopt_parego                        ParEGO  multi-crit</span></span>
 <span><span class="co">#&gt; 5: bayesopt_smsego                       SMS-EGO  multi-crit</span></span>
 <span><span class="co">#&gt;                                   man</span></span>
+<span><span class="co">#&gt;                                &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1:    mlr3mbo::mlr_loop_functions_ego</span></span>
 <span><span class="co">#&gt; 2:    mlr3mbo::mlr_loop_functions_emo</span></span>
 <span><span class="co">#&gt; 3:   mlr3mbo::mlr_loop_functions_mpcl</span></span>
@@ -246,7 +249,7 @@ sensible hyperparamter values already specified.</p>
 <code>$learner</code> field:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surrogate</span><span class="op">$</span><span class="va">learner</span></span>
-<span><span class="co">#&gt; &lt;LearnerRegrKM:regr.km&gt;</span></span>
+<span><span class="co">#&gt; &lt;LearnerRegrKM:regr.km&gt;: Kriging</span></span>
 <span><span class="co">#&gt; * Model: -</span></span>
 <span><span class="co">#&gt; * Parameters: list()</span></span>
 <span><span class="co">#&gt; * Packages: mlr3, mlr3learners, DiceKriging</span></span>
@@ -257,15 +260,25 @@ sensible hyperparamter values already specified.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surrogate</span><span class="op">$</span><span class="va">param_set</span></span>
 <span><span class="co">#&gt; &lt;ParamSet&gt;</span></span>
-<span><span class="co">#&gt;                      id    class lower upper nlevels        default</span></span>
-<span><span class="co">#&gt; 1: assert_insample_perf ParamLgl    NA    NA       2 &lt;NoDefault[3]&gt;</span></span>
-<span><span class="co">#&gt; 2:         catch_errors ParamLgl    NA    NA       2 &lt;NoDefault[3]&gt;</span></span>
-<span><span class="co">#&gt; 3:         perf_measure ParamUty    NA    NA     Inf &lt;NoDefault[3]&gt;</span></span>
-<span><span class="co">#&gt; 4:       perf_threshold ParamDbl  -Inf   Inf     Inf &lt;NoDefault[3]&gt;</span></span>
-<span><span class="co">#&gt;                 parents value</span></span>
-<span><span class="co">#&gt; 1:                      FALSE</span></span>
-<span><span class="co">#&gt; 2:                       TRUE</span></span>
-<span><span class="co">#&gt; 3: assert_insample_perf      </span></span>
+<span><span class="co">#&gt; Warning: Unknown argument 'on' has been passed.</span></span>
+<span><span class="co">#&gt; Key: &lt;id&gt;</span></span>
+<span><span class="co">#&gt;                      id    class lower upper nlevels</span></span>
+<span><span class="co">#&gt;                  &lt;char&gt;   &lt;char&gt; &lt;num&gt; &lt;num&gt;   &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: assert_insample_perf ParamLgl    NA    NA       2</span></span>
+<span><span class="co">#&gt; 2:         catch_errors ParamLgl    NA    NA       2</span></span>
+<span><span class="co">#&gt; 3:         perf_measure ParamUty    NA    NA     Inf</span></span>
+<span><span class="co">#&gt; 4:       perf_threshold ParamDbl  -Inf   Inf     Inf</span></span>
+<span><span class="co">#&gt;                                                                                      default</span></span>
+<span><span class="co">#&gt;                                                                                       &lt;list&gt;</span></span>
+<span><span class="co">#&gt; 1: &lt;NoDefault&gt;\n  Public:\n    clone: function (deep = FALSE) \n    initialize: function () </span></span>
+<span><span class="co">#&gt; 2: &lt;NoDefault&gt;\n  Public:\n    clone: function (deep = FALSE) \n    initialize: function () </span></span>
+<span><span class="co">#&gt; 3: &lt;NoDefault&gt;\n  Public:\n    clone: function (deep = FALSE) \n    initialize: function () </span></span>
+<span><span class="co">#&gt; 4: &lt;NoDefault&gt;\n  Public:\n    clone: function (deep = FALSE) \n    initialize: function () </span></span>
+<span><span class="co">#&gt;                 parents  value</span></span>
+<span><span class="co">#&gt;                  &lt;list&gt; &lt;list&gt;</span></span>
+<span><span class="co">#&gt; 1:                       FALSE</span></span>
+<span><span class="co">#&gt; 2:                        TRUE</span></span>
+<span><span class="co">#&gt; 3: assert_insample_perf       </span></span>
 <span><span class="co">#&gt; 4: assert_insample_perf</span></span></code></pre></div>
 <p><code>assert_insample_perf = TRUE</code> results in the insample
 performance of the learner being calculated and asserted against a
@@ -305,7 +318,7 @@ scenario described above.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3learners.mlr-org.com" class="external-link">mlr3learners</a></span><span class="op">)</span></span>
 <span><span class="co"># there are plenty of more in mlr3extralearners</span></span>
 <span><span class="co"># library(mlr3extralearners)</span></span>
-<span><span class="va">learners</span> <span class="op">=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_learners</span><span class="op">)</span></span>
+<span><span class="va">learners</span> <span class="op">=</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_learners</span><span class="op">)</span></span>
 <span><span class="va">learners</span><span class="op">[</span><span class="va">task_type</span> <span class="op">==</span> <span class="st">"regr"</span><span class="op">]</span></span></code></pre></div>
 <p>To use a custom learner not included in <a href="https://mlr3.mlr-org.com" class="external-link">mlr3</a>, <a href="https://mlr3learners.mlr-org.com" class="external-link">mlr3learners</a>, or <a href="https://mlr3extralearners.mlr-org.com" class="external-link">mlr3extralearners</a>, you
 can inherit from <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link"><code>LearnerRegr</code></a>
@@ -328,8 +341,10 @@ function value observed so far (when assuming minimization).</p>
 <p>To get an overview of available acquisition functions, the following
 dictionary can be inspected:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_acqfunctions</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_acqfunctions</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Key: &lt;key&gt;</span></span>
 <span><span class="co">#&gt;        key                                              label</span></span>
+<span><span class="co">#&gt;     &lt;char&gt;                                             &lt;char&gt;</span></span>
 <span><span class="co">#&gt;  1:    aei                     Augmented Expected Improvement</span></span>
 <span><span class="co">#&gt;  2:     cb                     Lower / Upper Confidence Bound</span></span>
 <span><span class="co">#&gt;  3:   ehvi                   Expected Hypervolume Improvement</span></span>
@@ -341,6 +356,7 @@ dictionary can be inspected:</p>
 <span><span class="co">#&gt;  9:     sd                       Posterior Standard Deviation</span></span>
 <span><span class="co">#&gt; 10: smsego                                            SMS-EGO</span></span>
 <span><span class="co">#&gt;                                  man</span></span>
+<span><span class="co">#&gt;                               &lt;char&gt;</span></span>
 <span><span class="co">#&gt;  1:    mlr3mbo::mlr_acqfunctions_aei</span></span>
 <span><span class="co">#&gt;  2:     mlr3mbo::mlr_acqfunctions_cb</span></span>
 <span><span class="co">#&gt;  3:   mlr3mbo::mlr_acqfunctions_ehvi</span></span>
@@ -383,8 +399,9 @@ hyperparameters should be passed as constants, e.g.:</p>
 <span><span class="co">#&gt; Empty.</span></span>
 <span><span class="co">#&gt; Constants:</span></span>
 <span><span class="co">#&gt; &lt;ParamSet&gt;</span></span>
-<span><span class="co">#&gt;        id    class lower upper nlevels default value</span></span>
-<span><span class="co">#&gt; 1: lambda ParamDbl     0   Inf     Inf       2     2</span></span></code></pre></div>
+<span><span class="co">#&gt;        id    class lower upper nlevels default  value</span></span>
+<span><span class="co">#&gt;    &lt;char&gt;   &lt;char&gt; &lt;num&gt; &lt;num&gt;   &lt;num&gt;  &lt;list&gt; &lt;list&gt;</span></span>
+<span><span class="co">#&gt; 1: lambda ParamDbl     0   Inf     Inf       2      2</span></span></code></pre></div>
 <p>To use a custom acquisition function you should implement a new
 <code>R6</code> class inheriting from <a href="https://mlr3mbo.mlr-org.com/reference/AcqFunction.html"><code>AcqFunction</code></a>.</p>
 </div>
@@ -428,20 +445,32 @@ has the following hyperparameters:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">acq_optimizer</span><span class="op">$</span><span class="va">param_set</span></span>
 <span><span class="co">#&gt; &lt;ParamSet&gt;</span></span>
-<span><span class="co">#&gt;                        id    class lower upper nlevels        default   parents</span></span>
-<span><span class="co">#&gt; 1:           catch_errors ParamLgl    NA    NA       2           TRUE          </span></span>
-<span><span class="co">#&gt; 2:          logging_level ParamFct    NA    NA       6           warn          </span></span>
-<span><span class="co">#&gt; 3:           n_candidates ParamInt     1   Inf     Inf              1          </span></span>
-<span><span class="co">#&gt; 4: skip_already_evaluated ParamLgl    NA    NA       2           TRUE          </span></span>
-<span><span class="co">#&gt; 5:              warmstart ParamLgl    NA    NA       2          FALSE          </span></span>
-<span><span class="co">#&gt; 6:         warmstart_size ParamInt     1   Inf     Inf &lt;NoDefault[3]&gt; warmstart</span></span>
-<span><span class="co">#&gt;    value</span></span>
-<span><span class="co">#&gt; 1:  TRUE</span></span>
-<span><span class="co">#&gt; 2:  warn</span></span>
-<span><span class="co">#&gt; 3:     1</span></span>
-<span><span class="co">#&gt; 4:  TRUE</span></span>
-<span><span class="co">#&gt; 5: FALSE</span></span>
-<span><span class="co">#&gt; 6:</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Unknown argument 'on' has been passed.</span></span>
+<span><span class="co">#&gt; Key: &lt;id&gt;</span></span>
+<span><span class="co">#&gt;                        id    class lower upper nlevels</span></span>
+<span><span class="co">#&gt;                    &lt;char&gt;   &lt;char&gt; &lt;num&gt; &lt;num&gt;   &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:           catch_errors ParamLgl    NA    NA       2</span></span>
+<span><span class="co">#&gt; 2:          logging_level ParamFct    NA    NA       6</span></span>
+<span><span class="co">#&gt; 3:           n_candidates ParamInt     1   Inf     Inf</span></span>
+<span><span class="co">#&gt; 4: skip_already_evaluated ParamLgl    NA    NA       2</span></span>
+<span><span class="co">#&gt; 5:              warmstart ParamLgl    NA    NA       2</span></span>
+<span><span class="co">#&gt; 6:         warmstart_size ParamInt     1   Inf     Inf</span></span>
+<span><span class="co">#&gt;                                                                                      default</span></span>
+<span><span class="co">#&gt;                                                                                       &lt;list&gt;</span></span>
+<span><span class="co">#&gt; 1:                                                                                      TRUE</span></span>
+<span><span class="co">#&gt; 2:                                                                                      warn</span></span>
+<span><span class="co">#&gt; 3:                                                                                         1</span></span>
+<span><span class="co">#&gt; 4:                                                                                      TRUE</span></span>
+<span><span class="co">#&gt; 5:                                                                                     FALSE</span></span>
+<span><span class="co">#&gt; 6: &lt;NoDefault&gt;\n  Public:\n    clone: function (deep = FALSE) \n    initialize: function () </span></span>
+<span><span class="co">#&gt;      parents  value</span></span>
+<span><span class="co">#&gt;       &lt;list&gt; &lt;list&gt;</span></span>
+<span><span class="co">#&gt; 1:             TRUE</span></span>
+<span><span class="co">#&gt; 2:             warn</span></span>
+<span><span class="co">#&gt; 3:                1</span></span>
+<span><span class="co">#&gt; 4:             TRUE</span></span>
+<span><span class="co">#&gt; 5:            FALSE</span></span>
+<span><span class="co">#&gt; 6: warmstart</span></span></code></pre></div>
 <p><code>catch_errors = TRUE</code> results in catching any errors that
 can happen during the acquisition function optimization which allows
 for, e.g., proposing the next candidate uniformly at random within the
@@ -465,10 +494,10 @@ usually be part of the initial population to further optimize local
 optima).</p>
 <p>To get an overview of all <code>Optimizer</code>s implemented in <a href="https://bbotk.mlr-org.com" class="external-link">bbotk</a> you can use:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_optimizers</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_optimizers</span><span class="op">)</span></span></code></pre></div>
 <p>And similarly for <code>Terminator</code>s:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_terminators</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_terminators</span><span class="op">)</span></span></code></pre></div>
 <p>Again, you can also use custom <code>Optimizer</code>s or
 <code>Terminator</code>s by implementing new <code>R6</code> classes
 inheriting from <a href="https://bbotk.mlr-org.com/reference/Optimizer.html" class="external-link"><code>Optimizer</code></a>
@@ -527,8 +556,10 @@ which will directly choose the final solution based on the evaluations
 logged in the <code>archive</code>. To get an overview of available
 result assigners, the following dictionary can be inspected:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_result_assigners</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_result_assigners</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Key: &lt;key&gt;</span></span>
 <span><span class="co">#&gt;          key                     label                                     man</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;                    &lt;char&gt;                                  &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1:   archive                   Archive   mlr3mbo::mlr_result_assigners_archive</span></span>
 <span><span class="co">#&gt; 2: surrogate Mean Surrogate Prediction mlr3mbo::mlr_result_assigners_surrogate</span></span></code></pre></div>
 <p>The dictionary shows the <code>key</code>, i.e., ID of the result
@@ -677,7 +708,7 @@ Process fails due to data points being too close to each other:</p>
 <span>  objective <span class="op">=</span> <span class="va">objective</span>,</span>
 <span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">initial_design</span> <span class="op">=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">initial_design</span> <span class="op">=</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="va">initial_design</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">surrogate</span> <span class="op">=</span> <span class="fu"><a href="../reference/srlrn.html">srlrn</a></span><span class="op">(</span><span class="fu"><a href="../reference/default_gp.html">default_gp</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
@@ -691,8 +722,9 @@ Process fails due to data points being too close to each other:</p>
 <span>  acq_optimizer <span class="op">=</span> <span class="va">acq_optimizer</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [16:37:03.211] [bbotk] missing value where TRUE/FALSE needed</span></span>
+<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [17:58:52.253] [bbotk] missing value where TRUE/FALSE needed</span></span>
 <span><span class="co">#&gt;              x  x_domain            y</span></span>
+<span><span class="co">#&gt;          &lt;num&gt;    &lt;list&gt;        &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1: -0.01951836 &lt;list[1]&gt; 0.0003809664</span></span></code></pre></div>
 <p>The log tells us that an error happened and was caught:
 <code>"surrogate_update_error / mbo_error / error / condition"</code>.
@@ -703,17 +735,19 @@ column is NA here):</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="co">#&gt;               x            y  x_domain           timestamp batch_nr      acq_ei</span></span>
-<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-11-02 16:37:02        1          NA</span></span>
-<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-11-02 16:37:02        1          NA</span></span>
-<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-11-02 16:37:02        1          NA</span></span>
-<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2023-11-02 16:37:02        1          NA</span></span>
-<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2023-11-02 16:37:03        2          NA</span></span>
-<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2023-11-02 16:37:03        3 0.043581438</span></span>
-<span><span class="co">#&gt;  7:  0.38834314 0.1508103944 &lt;list[1]&gt; 2023-11-02 16:37:04        4 0.126450234</span></span>
-<span><span class="co">#&gt;  8: -0.53253872 0.2835974922 &lt;list[1]&gt; 2023-11-02 16:37:04        5 0.223167948</span></span>
-<span><span class="co">#&gt;  9:  0.04818857 0.0023221379 &lt;list[1]&gt; 2023-11-02 16:37:05        6 0.125654545</span></span>
-<span><span class="co">#&gt; 10: -0.01951836 0.0003809664 &lt;list[1]&gt; 2023-11-02 16:37:05        7 0.002040261</span></span>
+<span><span class="co">#&gt;           &lt;num&gt;        &lt;num&gt;    &lt;list&gt;              &lt;POSc&gt;    &lt;int&gt;       &lt;num&gt;</span></span>
+<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-02-28 17:58:52        1          NA</span></span>
+<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-02-28 17:58:52        1          NA</span></span>
+<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-02-28 17:58:52        1          NA</span></span>
+<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-02-28 17:58:52        1          NA</span></span>
+<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2024-02-28 17:58:52        2          NA</span></span>
+<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2024-02-28 17:58:52        3 0.043581438</span></span>
+<span><span class="co">#&gt;  7:  0.38834314 0.1508103944 &lt;list[1]&gt; 2024-02-28 17:58:52        4 0.126450234</span></span>
+<span><span class="co">#&gt;  8: -0.53253872 0.2835974922 &lt;list[1]&gt; 2024-02-28 17:58:53        5 0.223167948</span></span>
+<span><span class="co">#&gt;  9:  0.04818857 0.0023221379 &lt;list[1]&gt; 2024-02-28 17:58:53        6 0.125654545</span></span>
+<span><span class="co">#&gt; 10: -0.01951836 0.0003809664 &lt;list[1]&gt; 2024-02-28 17:58:53        7 0.002040261</span></span>
 <span><span class="co">#&gt;     .already_evaluated</span></span>
+<span><span class="co">#&gt;                 &lt;lgcl&gt;</span></span>
 <span><span class="co">#&gt;  1:                 NA</span></span>
 <span><span class="co">#&gt;  2:                 NA</span></span>
 <span><span class="co">#&gt;  3:                 NA</span></span>
@@ -880,13 +914,13 @@ following:</p>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.statistik.tu-dortmund.de/~olafm/software/emoa/" class="external-link">emoa</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/olafmersmann/emoa/" class="external-link">emoa</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3misc.mlr-org.com" class="external-link">mlr3misc</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="va">anytime_hypervolume</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3misc.mlr-org.com/reference/compat-map.html" class="external-link">map_dtr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">batch_nr</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">bnr</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">pareto</span> <span class="op">=</span> <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">best</span><span class="op">(</span>batch <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">bnr</span><span class="op">)</span><span class="op">[</span>, <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">cols_y</span>, with <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span>  <span class="va">dhv</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/emoa/man/dominated_hypervolume.html" class="external-link">dominated_hypervolume</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">pareto</span><span class="op">)</span>, ref <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">144</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>batch_nr <span class="op">=</span> <span class="va">bnr</span>, dhv <span class="op">=</span> <span class="va">dhv</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>batch_nr <span class="op">=</span> <span class="va">bnr</span>, dhv <span class="op">=</span> <span class="va">dhv</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">batch_nr</span>, y <span class="op">=</span> <span class="va">dhv</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">anytime_hypervolume</span><span class="op">[</span><span class="va">batch_nr</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
@@ -938,7 +972,7 @@ following:</p>
 <code class="sourceCode R"><span><span class="va">anytime_hypervolume</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3misc.mlr-org.com/reference/compat-map.html" class="external-link">map_dtr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">batch_nr</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">bnr</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">pareto</span> <span class="op">=</span> <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="fu">best</span><span class="op">(</span>batch <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">bnr</span><span class="op">)</span><span class="op">[</span>, <span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">cols_y</span>, with <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span>  <span class="va">dhv</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/emoa/man/dominated_hypervolume.html" class="external-link">dominated_hypervolume</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">pareto</span><span class="op">)</span>, ref <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">144</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>batch_nr <span class="op">=</span> <span class="va">bnr</span>, dhv <span class="op">=</span> <span class="va">dhv</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>batch_nr <span class="op">=</span> <span class="va">bnr</span>, dhv <span class="op">=</span> <span class="va">dhv</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">batch_nr</span>, y <span class="op">=</span> <span class="va">dhv</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">anytime_hypervolume</span><span class="op">[</span><span class="va">batch_nr</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1019,7 +1053,7 @@ following:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2906</span><span class="op">)</span></span>
 <span><span class="va">tuner</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span>
 <span><span class="va">instance</span><span class="op">$</span><span class="va">result</span></span></code></pre></div>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-bischl_2021" class="csl-entry">
 Bischl, Bernd, Martin Binder, Michel Lang, Tobias Pielok, Jakob Richter,
 Stefan Coors, Janek Thomas, et al. 2023. <span>“Hyperparameter
