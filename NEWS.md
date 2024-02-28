@@ -1,6 +1,6 @@
 # mlr3mbo 0.2.1.9000
 
-* Compatibility with upcoming paradox upgrade.
+* refactor: compatibility with upcoming paradox upgrade.
 * feat: added `default_gp` and `default_rf` helpers that allow for construction of a default
         Gaussian Process and random forest as for example used within `default_surrogate`.
 * refactor: changed Gaussian Process and random forest defaults (in `default_gp` and `default_rf` and therefore also in
