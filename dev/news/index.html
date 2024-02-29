@@ -78,7 +78,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1.9000" id="mlr3mbo-0219000">mlr3mbo 0.2.1.9000<a class="anchor" aria-label="anchor" href="#mlr3mbo-0219000"></a></h2>
-<ul><li>feat: <code>OptimizerMbo</code> and <code>TunerMbo</code> now update the <code>Surrogate</code> a final time after the optimization process finished to ensure that the <code>Surrogate</code> correctly reflects the state of being trained on all data seen during optimization.</li>
+<ul><li>refactor: compatibility with upcoming paradox upgrade.</li>
+<li>feat: <code>OptimizerMbo</code> and <code>TunerMbo</code> now update the <code>Surrogate</code> a final time after the optimization process finished to ensure that the <code>Surrogate</code> correctly reflects the state of being trained on all data seen during optimization.</li>
 <li>fix: <code>AcqFunction</code> domain construction now respects <code>Surrogate</code> cols_x field.</li>
 <li>feat: support more than one candidate point as a result of acquisition function optimization even for non-batch acquisition functions.</li>
 <li>feat: added <code>default_gp</code> and <code>default_rf</code> helpers that allow for construction of a default Gaussian Process and random forest as for example used within <code>default_surrogate</code>.</li>
