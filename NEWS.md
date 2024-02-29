@@ -1,5 +1,6 @@
 # mlr3mbo 0.2.1.9000
 
+* refactor: compatibility with upcoming paradox upgrade.
 * feat: `OptimizerMbo` and `TunerMbo` now update the `Surrogate` a final time after the optimization process finished to
         ensure that the `Surrogate` correctly reflects the state of being trained on all data seen during optimization.
 * fix: `AcqFunction` domain construction now respects `Surrogate` cols_x field.

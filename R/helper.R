@@ -6,21 +6,28 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
     if (surrogate$archive$codomain$length > 1L) {
       stop("Not supported yet.")  # FIXME: But should be?
     }
-    tags = surrogate$archive$codomain$params[[1L]]$tags
+    tags = surrogate$archive$codomain$tags[[1L]]
     tags = tags[tags %in% c("minimize", "maximize")]  # only filter out the relevant one
   } else {
     tags = direction
   }
-  codomain = ParamSet$new(list(
-    ParamDbl$new(id, tags = tags)
-  ))
-  codomain
+  do.call(ps, structure(list(p_dbl(tags = tags)), names = id))
 }
 
 generate_acq_domain = function(surrogate) {
   assert_r6(surrogate$archive, classes = "Archive")
-  domain = surrogate$archive$search_space$clone(deep = TRUE)$subset(surrogate$cols_x)
-  domain$trafo = NULL
+  if ("set_id" %in% names(ps())) {
+    # old paradox
+    domain = surrogate$archive$search_space$clone(deep = TRUE)$subset(surrogate$cols_x)
+    domain$trafo = NULL
+  } else {
+    # get "domain" objects, set their .trafo-entry to NULL individually
+    dms = lapply(surrogate$archive$search_space$domains[surrogate$cols_x], function(x) {
+      x$.trafo[1] = list(NULL)
+      x
+    })
+    domain = do.call(ps, dms)
+  }
   domain
 }
 
@@ -130,7 +137,7 @@ check_learner_surrogate = function(learner) {
       return(TRUE)
     }
   }
-  
+
   "Must inherit from class 'Learner' or be a list of elements inheriting from class 'Learner'"
 }
 

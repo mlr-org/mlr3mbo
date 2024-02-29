@@ -83,11 +83,11 @@ SurrogateLearner = R6Class("SurrogateLearner",
       assert_character(cols_x, min.len = 1L, null.ok = TRUE)
       assert_string(col_y, null.ok = TRUE)
 
-      ps = ParamSet$new(list(
-        ParamLgl$new("assert_insample_perf"),
-        ParamUty$new("perf_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
-        ParamDbl$new("perf_threshold", lower = -Inf, upper = Inf),
-        ParamLgl$new("catch_errors"))
+      ps = ps(
+        assert_insample_perf = p_lgl(),
+        perf_measure = p_uty(custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
+        perf_threshold = p_dbl(lower = -Inf, upper = Inf),
+        catch_errors = p_lgl()
       )
       ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE)
       ps$add_dep("perf_measure", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
