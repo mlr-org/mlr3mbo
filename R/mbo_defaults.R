@@ -37,7 +37,7 @@ default_loop_function = function(instance) {
 #' @title Default Gaussian Process
 #'
 #' @description
-#' This is a helper function that generates a default Gaussian Process [mlr3::LearnerRegr] which is for example used in
+#' This is a helper function that constructs a default Gaussian Process [mlr3::LearnerRegr] which is for example used in
 #' [default_surrogate].
 #'
 #' Constructs a Kriging learner \dQuote{"regr.km"} with kernel \dQuote{"matern5_2"}.

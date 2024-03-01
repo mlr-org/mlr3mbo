@@ -15,7 +15,7 @@ See above.}
 \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}
 }
 \description{
-This is a helper function that generates a default Gaussian Process \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} which is for example used in
+This is a helper function that constructs a default Gaussian Process \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} which is for example used in
 \link{default_surrogate}.
 
 Constructs a Kriging learner \dQuote{"regr.km"} with kernel \dQuote{"matern5_2"}.
