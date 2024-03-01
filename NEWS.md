@@ -1,4 +1,4 @@
-# mlr3mbo 0.2.1.9000
+# mlr3mbo 0.2.2
 
 * refactor: compatibility with upcoming paradox upgrade.
 * feat: `OptimizerMbo` and `TunerMbo` now update the `Surrogate` a final time after the optimization process finished to
