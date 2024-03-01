@@ -101,10 +101,10 @@ if (requireNamespace("mlr3learners") &
 \seealso{
 Other Loop Function: 
 \code{\link{loop_function}},
+\code{\link{mlr_loop_functions}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_mpcl}},
 \code{\link{mlr_loop_functions_parego}},
-\code{\link{mlr_loop_functions_smsego}},
-\code{\link{mlr_loop_functions}}
+\code{\link{mlr_loop_functions_smsego}}
 }
 \concept{Loop Function}

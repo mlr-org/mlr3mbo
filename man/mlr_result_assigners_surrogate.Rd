@@ -16,8 +16,8 @@ result_assigner = ras("surrogate")
 \seealso{
 Other Result Assigner: 
 \code{\link{ResultAssigner}},
-\code{\link{mlr_result_assigners_archive}},
-\code{\link{mlr_result_assigners}}
+\code{\link{mlr_result_assigners}},
+\code{\link{mlr_result_assigners_archive}}
 }
 \concept{Result Assigner}
 \section{Super class}{
