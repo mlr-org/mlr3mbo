@@ -15,9 +15,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.8/font.css" rel="stylesheet">
-<link href="../deps/JetBrains_Mono-0.4.8/font.css" rel="stylesheet">
-<link href="../deps/Roboto_Slab-0.4.8/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.9/font.css" rel="stylesheet">
+<link href="../deps/JetBrains_Mono-0.4.9/font.css" rel="stylesheet">
+<link href="../deps/Roboto_Slab-0.4.9/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="mlr3mbo">
@@ -722,7 +722,7 @@ Process fails due to data points being too close to each other:</p>
 <span>  acq_optimizer <span class="op">=</span> <span class="va">acq_optimizer</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [20:21:49.075] [bbotk] missing value where TRUE/FALSE needed</span></span>
+<span><span class="co">#&gt; <span style="color: #FFD75F;">WARN </span> [08:16:43.154] [bbotk] missing value where TRUE/FALSE needed</span></span>
 <span><span class="co">#&gt;              x  x_domain            y</span></span>
 <span><span class="co">#&gt;          &lt;num&gt;    &lt;list&gt;        &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1: -0.01951836 &lt;list[1]&gt; 0.0003809664</span></span></code></pre></div>
@@ -736,16 +736,16 @@ column is NA here):</p>
 <code class="sourceCode R"><span><span class="va">instance</span><span class="op">$</span><span class="va">archive</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="co">#&gt;               x            y  x_domain           timestamp batch_nr      acq_ei</span></span>
 <span><span class="co">#&gt;           &lt;num&gt;        &lt;num&gt;    &lt;list&gt;              &lt;POSc&gt;    &lt;int&gt;       &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-03-01 20:21:48        1          NA</span></span>
-<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-03-01 20:21:48        1          NA</span></span>
-<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-03-01 20:21:48        1          NA</span></span>
-<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-03-01 20:21:48        1          NA</span></span>
-<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2024-03-01 20:21:49        2          NA</span></span>
-<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2024-03-01 20:21:49        3 0.043581438</span></span>
-<span><span class="co">#&gt;  7:  0.38834314 0.1508103944 &lt;list[1]&gt; 2024-03-01 20:21:49        4 0.126450234</span></span>
-<span><span class="co">#&gt;  8: -0.53253872 0.2835974922 &lt;list[1]&gt; 2024-03-01 20:21:49        5 0.223167948</span></span>
-<span><span class="co">#&gt;  9:  0.04818857 0.0023221379 &lt;list[1]&gt; 2024-03-01 20:21:50        6 0.125654545</span></span>
-<span><span class="co">#&gt; 10: -0.01951836 0.0003809664 &lt;list[1]&gt; 2024-03-01 20:21:50        7 0.002040261</span></span>
+<span><span class="co">#&gt;  1:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-03-31 08:16:42        1          NA</span></span>
+<span><span class="co">#&gt;  2:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-03-31 08:16:42        1          NA</span></span>
+<span><span class="co">#&gt;  3:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-03-31 08:16:42        1          NA</span></span>
+<span><span class="co">#&gt;  4:  1.00000000 1.0000000000 &lt;list[1]&gt; 2024-03-31 08:16:42        1          NA</span></span>
+<span><span class="co">#&gt;  5:  0.67422986 0.4545859064 &lt;list[1]&gt; 2024-03-31 08:16:43        2          NA</span></span>
+<span><span class="co">#&gt;  6:  0.66865060 0.4470936288 &lt;list[1]&gt; 2024-03-31 08:16:43        3 0.043581438</span></span>
+<span><span class="co">#&gt;  7:  0.38834314 0.1508103944 &lt;list[1]&gt; 2024-03-31 08:16:43        4 0.126450234</span></span>
+<span><span class="co">#&gt;  8: -0.53253872 0.2835974922 &lt;list[1]&gt; 2024-03-31 08:16:43        5 0.223167948</span></span>
+<span><span class="co">#&gt;  9:  0.04818857 0.0023221379 &lt;list[1]&gt; 2024-03-31 08:16:44        6 0.125654545</span></span>
+<span><span class="co">#&gt; 10: -0.01951836 0.0003809664 &lt;list[1]&gt; 2024-03-31 08:16:44        7 0.002040261</span></span>
 <span><span class="co">#&gt;     .already_evaluated</span></span>
 <span><span class="co">#&gt;                 &lt;lgcl&gt;</span></span>
 <span><span class="co">#&gt;  1:                 NA</span></span>
