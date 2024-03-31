@@ -1,20 +1,27 @@
 #' @title Acquisition Function Optimizer
 #'
 #' @description
-#' Optimizer for [AcqFunction]s which performs the infill optimization.
+#' Optimizer for [AcqFunction]s which performs the acquisition function optimization.
 #' Wraps an [bbotk::Optimizer] and [bbotk::Terminator].
 #'
 #' @section Parameters:
 #' \describe{
+#' \item{`n_candidates`}{`integer(1)`\cr
+#'   Number of candidate points to propose.
+#'   Note that this does not affect how the acquisition function itself is calculated (e.g., setting `n_candidates > 1` will not
+#'   result in computing the q- or multi-Expected Improvement) but rather the top `n-candidates` are selected from the
+#'   [bbotk::Archive] of the acquisition function [bbotk::OptimInstance].
+#'   Note that setting `n_candidates > 1` is usually not a sensible idea but it is still supported for experimental reasons.
+#'   Default is `1`.}
 #' \item{`logging_level`}{`character(1)`\cr
-#'   Logging level during the infill optimization.
+#'   Logging level during the acquisition function optimization.
 #'   Can be `"fatal"`, `"error"`, `"warn"`, `"info"`, `"debug"` or `"trace"`.
 #'   Default is `"warn"`, i.e., only warnings are logged.
 #' }
 #' \item{`warmstart`}{`logical(1)`\cr
-#'   Should the infill optimization be warm-started by evaluating the best point(s) present in the [bbotk::Archive] of
+#'   Should the acquisition function optimization be warm-started by evaluating the best point(s) present in the [bbotk::Archive] of
 #'   the actual [bbotk::OptimInstance]?
-#'   This is sensible when using a population based infill optimizer, e.g., local search or mutation.
+#'   This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 #'   Default is `FALSE`.
 #' }
 #' \item{`warmstart_size`}{`integer(1) | "all"`\cr
@@ -24,18 +31,56 @@
 #'   Default is `1`.
 #' }
 #' \item{`skip_already_evaluated`}{`logical(1)`\cr
-#'   It can happen that the candidate resulting of the infill optimization was already evaluated in a previous
+#'   It can happen that the candidate resulting of the acquisition function optimization was already evaluated in a previous
 #'   iteration. Should this candidate proposal be ignored and the next best point be selected as a candidate?
 #'   Default is `TRUE`.
 #' }
 #' \item{`catch_errors`}{`logical(1)`\cr
-#'   Should errors during the infill optimization be caught and propagated to the `loop_function` which can then handle
-#'   the failed infill optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   Should errors during the acquisition function optimization be caught and propagated to the `loop_function` which can then handle
+#'   the failed acquisition function optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
 #'   Default is `TRUE`.
 #' }
 #' }
 #'
 #' @export
+#' @examples
+#' if (requireNamespace("mlr3learners") &
+#'     requireNamespace("DiceKriging") &
+#'     requireNamespace("rgenoud")) {
+#'   library(bbotk)
+#'   library(paradox)
+#'   library(mlr3learners)
+#'   library(data.table)
+#'
+#'   fun = function(xs) {
+#'     list(y = xs$x ^ 2)
+#'   }
+#'   domain = ps(x = p_dbl(lower = -10, upper = 10))
+#'   codomain = ps(y = p_dbl(tags = "minimize"))
+#'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+#'
+#'   instance = OptimInstanceSingleCrit$new(
+#'     objective = objective,
+#'     terminator = trm("evals", n_evals = 5))
+#'
+#'   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+#'
+#'   learner = default_gp()
+#'
+#'   surrogate = srlrn(learner, archive = instance$archive)
+#'
+#'   acq_function = acqf("ei", surrogate = surrogate)
+#'
+#'   acq_function$surrogate$update()
+#'   acq_function$update()
+#'
+#'   acq_optimizer = acqo(
+#'     optimizer = opt("random_search", batch_size = 1000),
+#'     terminator = trm("evals", n_evals = 1000),
+#'     acq_function = acq_function)
+#'
+#'   acq_optimizer$optimize()
+#' }
 AcqOptimizer = R6Class("AcqOptimizer",
   public = list(
 
@@ -58,14 +103,15 @@ AcqOptimizer = R6Class("AcqOptimizer",
       self$optimizer = assert_r6(optimizer, "Optimizer")
       self$terminator = assert_r6(terminator, "Terminator")
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
-      ps = ParamSet$new(list(
-        ParamFct$new("logging_level", levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
-        ParamLgl$new("warmstart", default = FALSE),
-        ParamInt$new("warmstart_size", lower = 1L, special_vals = list("all")),
-        ParamLgl$new("skip_already_evaluated", default = TRUE),
-        ParamLgl$new("catch_errors", default = TRUE))
+      ps = ps(
+        n_candidates = p_int(lower = 1, default = 1L),
+        logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
+        warmstart = p_lgl(default = FALSE),
+        warmstart_size = p_int(lower = 1L, special_vals = list("all")),
+        skip_already_evaluated = p_lgl(default = TRUE),
+        catch_errors = p_lgl(default = TRUE)
       )
-      ps$values = list(logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, catch_errors = TRUE)
+      ps$values = list(n_candidates = 1, logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, catch_errors = TRUE)
       ps$add_dep("warmstart_size", on = "warmstart", cond = CondEqual$new(TRUE))
       private$.param_set = ps
     },
@@ -90,7 +136,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #'
     #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
     optimize = function() {
-      # FIXME: currently only supports singlecrit acqfunctions
+      # FIXME: currently only supports singlecrit acquisition functions
       if (self$acq_function$codomain$length > 1L) {
         stop("Multi-objective acquisition functions are currently not supported.")
       }
@@ -109,36 +155,40 @@ AcqOptimizer = R6Class("AcqOptimizer",
         instance$eval_batch(self$acq_function$archive$best(n_select = n_select)[, instance$search_space$ids(), with = FALSE])
       }
 
-      # infill optimization
-      xdt = if (self$param_set$values$catch_errors) {
-        tryCatch(self$optimizer$optimize(instance),
-          error = function(error_condition) {
-            lg$warn(error_condition$message)
-            stop(set_class(list(message = error_condition$message, call = NULL),
-              classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
-          }
-        )
+      # acquisition function optimization
+      xdt = if (self$param_set$values$skip_already_evaluated) {
+        if (self$param_set$values$catch_errors) {
+          tryCatch(
+            {
+              self$optimizer$optimize(instance)
+              get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates)
+            }, error = function(error_condition) {
+              lg$warn(error_condition$message)
+              stop(set_class(list(message = error_condition$message, call = NULL),
+                classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
+            }
+          )
+        } else {
+          self$optimizer$optimize(instance)
+          get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates)
+        }
       } else {
-        self$optimizer$optimize(instance)
-      }
-
-      # check if candidate was already evaluated and if so get the best one not evaluated so far
-      if (self$param_set$values$skip_already_evaluated) {
-        if (nrow(self$acq_function$archive$data[xdt[, instance$archive$cols_x, with = FALSE], on = instance$archive$cols_x]) > 0L) {
-          xdt = if (self$param_set$values$catch_errors) {
-            tryCatch(get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data),
-              error = function(error_condition) {
-                lg$warn(error_condition$message)
-                stop(set_class(list(message = error_condition$message, call = NULL),
-                  classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
-              }
-            )
-          } else {
-            get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data)
-          }
+        if (self$param_set$values$catch_errors) {
+          tryCatch(
+            {
+              self$optimizer$optimize(instance)
+              instance$archive$best(n_select = self$param_set$values$n_candidates)
+            }, error = function(error_condition) {
+              lg$warn(error_condition$message)
+              stop(set_class(list(message = error_condition$message, call = NULL),
+                classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
+            }
+          )
+        } else {
+          self$optimizer$optimize(instance)
+          instance$archive$best(n_select = self$param_set$values$n_candidates)
         }
       }
-
       xdt
     }
   ),

@@ -47,7 +47,7 @@
 #'   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
 #'
 #'   learner = lrn("regr.km",
-#'     covtype = "matern3_2",
+#'     covtype = "matern5_2",
 #'     optim.method = "gen",
 #'     nugget.estim = TRUE,
 #'     jitter = 1e-12,
@@ -88,7 +88,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       constants = ps(c = p_dbl(lower = 0, default = 1))
       constants$values$c = c
 
-      super$initialize("acq_aei", constants = constants, surrogate = surrogate, direction = "maximize", label = "Augmented Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_aei")
+      super$initialize("acq_aei", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Augmented Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_aei")
     },
 
     #' @description
@@ -99,8 +99,8 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       y_effective = p$mean + (self$surrogate_max_to_min * self$constants$values$c * p$se) # pessimistic prediction
       self$y_effective_best = min(self$surrogate_max_to_min * y_effective)
 
-      if (!is.null(self$surrogate$model$model) && length(self$surrogate$model$model@covariance@nugget) == 1L) {
-        self$noise_var = self$surrogate$model$model@covariance@nugget  # FIXME: check that this value really exists (otherwise calculate residual variance?)
+      if (!is.null(self$surrogate$learner$model) && length(self$surrogate$learner$model@covariance@nugget) == 1L) {
+        self$noise_var = self$surrogate$learner$model@covariance@nugget  # FIXME: check that this value really exists (otherwise calculate residual variance?)
       } else {
         lgr$warn('AcqFunctionAEI currently only works correctly with `"regr.km"` as surrogate model and `nugget.estim = TRUE` or given.')
         self$noise_var = 0

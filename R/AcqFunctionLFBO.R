@@ -21,6 +21,7 @@
 #' @family Acquisition Function
 #' @export
 #' @examples
+#' \donttest{
 #' if (requireNamespace("mlr3learners") &
 #'     requireNamespace("ranger")) {
 #'   library(bbotk)
@@ -51,6 +52,7 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
+#' }
 AcqFunctionLFBO = R6Class("AcqFunctionLFBO",
   inherit = AcqFunction,
 
@@ -62,7 +64,7 @@ AcqFunctionLFBO = R6Class("AcqFunctionLFBO",
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     initialize = function(surrogate = NULL) {
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
-      super$initialize("acq_lfbo", surrogate = surrogate, direction = "maximize", label = "Likelihood-Free Bayesian Optimization", man = "mlr3mbo::mlr_acqfunctions_lfbo")
+      super$initialize("acq_lfbo", surrogate = surrogate, requires_predict_type_se = FALSE, direction = "maximize", label = "Likelihood-Free Bayesian Optimization", man = "mlr3mbo::mlr_acqfunctions_lfbo")
     }
   ),
 

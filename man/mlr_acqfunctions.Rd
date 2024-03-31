@@ -19,6 +19,7 @@ See \link[mlr3misc:Dictionary]{mlr3misc::Dictionary}.
 }
 
 \examples{
+library(data.table)
 as.data.table(mlr_acqfunctions)
 acqf("ei")
 }
@@ -26,17 +27,21 @@ acqf("ei")
 Sugar function: \code{\link[=acqf]{acqf()}}
 
 Other Dictionary: 
-\code{\link{mlr_loop_functions}}
+\code{\link{mlr_loop_functions}},
+\code{\link{mlr_result_assigners}}
 
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
 \code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
-\code{\link{mlr_acqfunctions_eips}},
+\code{\link{mlr_acqfunctions_ehvi}},
+\code{\link{mlr_acqfunctions_ehvigh}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_lfbo}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
+\code{\link{mlr_acqfunctions_sd}},
 \code{\link{mlr_acqfunctions_smsego}},
 \code{\link{mlr_acqfunctions_ttei}}
 }

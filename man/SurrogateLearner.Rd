@@ -27,7 +27,7 @@ Default is \code{0}.
 }
 \item{\code{catch_errors}}{\code{logical(1)}\cr
 Should errors during updating the surrogate be caught and propagated to the \code{loop_function} which can then handle
-the failed infill optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 Default is \code{TRUE}.
 }
 }
@@ -56,17 +56,13 @@ if (requireNamespace("mlr3learners") &
 
   instance$eval_batch(xdt)
 
-  learner = lrn("regr.km",
-    covtype = "matern3_2",
-    optim.method = "gen",
-    nugget.stability = 10^-8,
-    control = list(trace = FALSE))
+  learner = default_gp()
 
   surrogate = srlrn(learner, archive = instance$archive)
 
   surrogate$update()
 
-  surrogate$model$model
+  surrogate$learner$model
 }
 }
 \section{Super class}{
@@ -93,8 +89,11 @@ Stores the feature types the surrogate can handle, e.g. \code{"logical"}, \code{
 A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
 
 \item{\code{properties}}{(\code{character()})\cr
-Stores a set of properties/capabilities the learner has.
+Stores a set of properties/capabilities the surrogate has.
 A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
+
+\item{\code{predict_type}}{(\code{character(1)})\cr
+Retrieves the currently active predict type, e.g. \code{"response"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -121,7 +120,7 @@ A complete list of candidate properties, grouped by task type, is stored in \cod
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearner$new(learner, archive = NULL, x_cols = NULL, y_col = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearner$new(learner, archive = NULL, cols_x = NULL, col_y = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -132,12 +131,12 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
-Column Id's of variables that should be used as features.
+\item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
+Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
-\item{\code{y_col}}{(\code{character(1)} | \code{NULL})\cr
-Column Id of variable that should be used as a target.
+\item{\code{col_y}}{(\code{character(1)} | \code{NULL})\cr
+Column id of variable that should be used as a target.
 By default, automatically inferred based on the archive.}
 }
 \if{html}{\out{</div>}}

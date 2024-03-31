@@ -1,67 +1,55 @@
-#' @title Syntactic Sugar Surrogate Learner Construction
+#' @title Syntactic Sugar Surrogate Construction
 #'
 #' @description
-#' This function allows to construct a [SurrogateLearner] in the spirit
+#' This function allows to construct a [SurrogateLearner] or [SurrogateLearnerCollection] in the spirit
 #' of `mlr_sugar` from \CRANpkg{mlr3}.
 #'
-#' @param learner ([mlr3::LearnerRegr])\cr
-#'   [mlr3::LearnerRegr] that is to be used.
+#' If the `archive` references more than one target variable or `cols_y` contains more than one
+#' target variable but only a single `learner` is specified, this learner is replicated as many
+#' times as needed to build the [SurrogateLearnerCollection].
+#'
+#' @param learner ([mlr3::LearnerRegr] | List of [mlr3::LearnerRegr])\cr
+#'   [mlr3::LearnerRegr] that is to be used within the [SurrogateLearner] or a list of [mlr3::LearnerRegr] that are to
+#'   be used within the [SurrogateLearnerCollection].
 #' @param archive (`NULL` | [bbotk::Archive])\cr
 #'   [bbotk::Archive] of the [bbotk::OptimInstance] used.
 #'   Can also be `NULL`.
-#' @param x_cols (`NULL` | `character()`)\cr
-#'   Names of columns in the [bbotk::Archive] that should be used as features.
-#'   Can also be `NULL`.
-#' @param y_col (`NULL` | `character(1)`)\cr
-#'   Name of the column in the [bbotk::Archive] that should be used as a target.
-#'   Can also be `NULL`.
+#' @param cols_x (`NULL` | `character()`)\cr
+#'   Column ids in the [bbotk::Archive] that should be used as features.
+#'   Can also be `NULL` in which case this is automatically inferred based on the archive.
+#' @param cols_y (`NULL` | `character()`)\cr
+#'   Column id(s) in the [bbotk::Archive] that should be used as a target.
+#'   If a list of [mlr3::LearnerRegr] is provided as the `learner` argument and `cols_y` is
+#'   specified as well, as many column names as learners must be provided. 
+#'   Can also be `NULL` in which case this is automatically inferred based on the archive.
 #' @param ... (named `list()`)\cr
 #' Named arguments passed to the constructor, to be set as parameters in the
 #' [paradox::ParamSet].
 #'
-#' @return [SurrogateLearner]
+#' @return [SurrogateLearner] | [SurrogateLearnerCollection]
 #'
 #' @export
 #' @examples
+#' library(mlr3)
 #' srlrn(lrn("regr.featureless"), catch_errors = FALSE)
+#' srlrn(list(lrn("regr.featureless"), lrn("regr.featureless")))
 #' @export
-srlrn = function(learner, archive = NULL, x_cols = NULL, y_col = NULL, ...) {
+srlrn = function(learner, archive = NULL, cols_x = NULL, cols_y = NULL, ...) {
   dots = list(...)
-  surrogate = SurrogateLearner$new(learner = learner, archive = archive, x_cols = x_cols, y_col = y_col)
-  surrogate$param_set$values = insert_named(surrogate$param_set$values, dots)
-  surrogate
-}
+  assert_learner_surrogate(learner)
 
-#' @title Syntactic Sugar Surrogate Learner Collection Construction
-#'
-#' @description
-#' This function allows to construct a [SurrogateLearnerCollection] in the spirit
-#' of `mlr_sugar` from \CRANpkg{mlr3}.
-#'
-#' @param learners (List of [mlr3::LearnerRegr])\cr
-#'   [mlr3::LearnerRegr] that are to be used.
-#' @param archive (`NULL` | [bbotk::Archive])\cr
-#'   [bbotk::Archive] of the [bbotk::OptimInstance] used.
-#'   Can also be `NULL`.
-#' @param x_cols (`NULL` | `character()`)\cr
-#'   Names of columns in the [bbotk::Archive] that should be used as features.
-#'   Can also be `NULL`.
-#' @param y_cols (`NULL` | `character()`)\cr
-#'   Names of the columns in the [bbotk::Archive] that should be used as targets.
-#'   Can also be `NULL`.
-#' @param ... (named `list()`)\cr
-#' Named arguments passed to the constructor, to be set as parameters in the
-#' [paradox::ParamSet].
-#'
-#' @return [SurrogateLearnerCollection]
-#'
-#' @export
-#' @examples
-#' srlrnc(list(lrn("regr.featureless"), lrn("regr.featureless")), catch_errors = FALSE)
-#' @export
-srlrnc = function(learners, archive = NULL, x_cols = NULL, y_cols = NULL, ...) {
-  dots = list(...)
-  surrogate = SurrogateLearnerCollection$new(learners = learners, archive = archive, x_cols = x_cols, y_cols = y_cols)
+  surrogate = if (test_r6(learner, classes = "Learner")) {
+    SurrogateLearner$new(learner = learner, archive = archive, cols_x = cols_x, col_y = cols_y)
+  } else if (inherits(learner, what = "list")) {
+    if (length(learner) == 1L) {
+      learner = learner[1L]
+      # if a single learner is provided in a list, we unlist it
+      SurrogateLearner$new(learner = learner, archive = archive, cols_x = cols_x, col_y = cols_y)
+    } else {
+      assert_character(cols_y, len = length(learner), null.ok = TRUE)
+      SurrogateLearnerCollection$new(learners = learner, archive = archive, cols_x = cols_x, cols_y = cols_y)
+    }
+  }
   surrogate$param_set$values = insert_named(surrogate$param_set$values, dots)
   surrogate
 }
@@ -118,5 +106,29 @@ acqo = function(optimizer, terminator, acq_function = NULL, ...) {
   acqopt = AcqOptimizer$new(optimizer = optimizer, terminator = terminator, acq_function = acq_function)
   acqopt$param_set$values = insert_named(acqopt$param_set$values, dots)
   acqopt
+}
+
+#' @title Syntactic Sugar Result Assigner Construction
+#'
+#' @description
+#' This function complements [mlr_result_assigners] with functions in the spirit
+#' of `mlr_sugar` from \CRANpkg{mlr3}.
+#'
+#' @param .key (`character(1)`)\cr
+#' Key passed to the respective [dictionary][mlr3misc::Dictionary] to retrieve
+#' the object.
+#' @param ... (named `list()`)\cr
+#' Named arguments passed to the constructor, to be set as parameters in the
+#' [paradox::ParamSet], or to be set as public field. See
+#' [mlr3misc::dictionary_sugar_get()] for more details.
+#'
+#' @return [ResultAssigner]
+#'
+#' @export
+#' @examples
+#' ras("archive")
+#' @export
+ras = function(.key, ...) {
+  dictionary_sugar_get(mlr_result_assigners, .key, ...)
 }
 

@@ -97,7 +97,7 @@ AcqFunctionTTEI = R6Class("AcqFunctionTTEI",
       constants$values$beta = beta
       private$.toplvl_acq_function_ei = AcqFunctionEI$new(surrogate = surrogate)  # FIXME: AB and read-only?
       private$.toplvl_acq_optimizer = toplvl_acq_optimizer$clone(deep = TRUE)  # FIXME: AB and read-only?
-      super$initialize("acq_ttei", constants = constants, surrogate = surrogate, direction = "maximize", label = "Top-Two Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_ttei")
+      super$initialize("acq_ttei", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Top-Two Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_ttei")
     },
 
     #' @description

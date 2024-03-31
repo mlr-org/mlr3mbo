@@ -24,6 +24,7 @@ acqf("lfbo")
 }
 
 \examples{
+\donttest{
 if (requireNamespace("mlr3learners") &
     requireNamespace("ranger")) {
   library(bbotk)
@@ -55,6 +56,7 @@ if (requireNamespace("mlr3learners") &
   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 }
 }
+}
 \references{
 \itemize{
 \item Song, Jiaming, Yu, Lantao, Neiswanger, Willie, Ermon, Stefano (2022).
@@ -65,15 +67,18 @@ In Chaudhuri K, Jegelka S, Song L, Szepesvari C, Niu G, Sabato S (eds.), \emph{P
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
+\code{\link{mlr_acqfunctions}},
 \code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
-\code{\link{mlr_acqfunctions_eips}},
+\code{\link{mlr_acqfunctions_ehvi}},
+\code{\link{mlr_acqfunctions_ehvigh}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
+\code{\link{mlr_acqfunctions_sd}},
 \code{\link{mlr_acqfunctions_smsego}},
-\code{\link{mlr_acqfunctions_ttei}},
-\code{\link{mlr_acqfunctions}}
+\code{\link{mlr_acqfunctions_ttei}}
 }
 \concept{Acquisition Function}
 \section{Super classes}{

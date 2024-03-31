@@ -12,7 +12,7 @@
 #' It is assumed that calculations are performed on an [bbotk::OptimInstanceSingleCrit].
 #' Additionally to target values of the codomain that should be minimized or maximized, the
 #' [bbotk::Objective] of the [bbotk::OptimInstanceSingleCrit] should return time values.
-#' The column names of the target variable and time variable must be passed as `y_cols` in the
+#' The column names of the target variable and time variable must be passed as `cols_y` in the
 #' order `(target, time)` when constructing the [SurrogateLearnerCollection] that is being used as a
 #' surrogate.
 #'
@@ -43,14 +43,10 @@
 #'
 #'   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
 #'
-#'   learner = lrn("regr.km",
-#'     covtype = "matern3_2",
-#'     optim.method = "gen",
-#'     nugget.stability = 10^-8,
-#'     control = list(trace = FALSE))
+#'   learner = default_gp()
 #'
-#'   surrogate = srlrnc(list(learner, learner$clone(deep = TRUE)), archive = instance$archive)
-#'   surrogate$y_cols = c("y", "time")
+#'   surrogate = srlrn(list(learner, learner$clone(deep = TRUE)), archive = instance$archive)
+#'   surrogate$cols_y = c("y", "time")
 #'
 #'   acq_function = acqf("eips", surrogate = surrogate)
 #'
@@ -74,38 +70,38 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #' @param surrogate (`NULL` | [SurrogateLearnerCollection]).
     initialize = function(surrogate = NULL) {
       assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
-      # FIXME: check that y_col, time_col is the same as surrogate$y_cols?
+      # FIXME: check that col_y, col_time is the same as surrogate$cols_y?
 
-      super$initialize("acq_eips", surrogate = surrogate, direction = "maximize", label = "Expected Improvement Per Second", man = "mlr3mbo::mlr_acqfunctions_eips")
+      super$initialize("acq_eips", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Improvement Per Second", man = "mlr3mbo::mlr_acqfunctions_eips")
     },
 
     #' @description
     #' Updates acquisition function and sets `y_best`.
     update = function() {
-      self$y_best = min(self$surrogate_max_to_min[[self$y_col]] * self$archive$data[[self$y_col]])
+      self$y_best = min(self$surrogate_max_to_min[[self$col_y]] * self$archive$data[[self$col_y]])
     }
   ),
 
   active = list(
 
-    #' @field y_col (`character(1)`).
-    y_col = function(rhs) {
+    #' @field col_y (`character(1)`).
+    col_y = function(rhs) {
       if (!missing(rhs)) {
-        stop("$y_col is read-only.")
+        stop("$col_y is read-only.")
       }
       self$archive$cols_y
     },
 
-    #' @field time_col (`character(1)`).
-    time_col = function(rhs) {
+    #' @field col_time (`character(1)`).
+    col_time = function(rhs) {
       if (!missing(rhs)) {
-        stop("$time_col is read-only.")
+        stop("$col_time is read-only.")
       }
-      time_col = self$archive$codomain$ids(tags = "time")
-      if (length(time_col) != 1L) {
+      col_time = self$archive$codomain$ids(tags = "time")
+      if (length(col_time) != 1L) {
         stop("Need exactly one parameter in the codomain tagged as 'time'.")
       }
-      time_col
+      col_time
     }
   ),
 
@@ -115,10 +111,10 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
         stop("$y_best is not set. Missed to call $update()?")
       }
       p = self$surrogate$predict(xdt)
-      mu = p[[self$y_col]]$mean
-      se = p[[self$y_col]]$se
-      mu_t = p[[self$time_col]]$mean
-      d = self$y_best - self$surrogate_max_to_min[[self$y_col]] * mu
+      mu = p[[self$col_y]]$mean
+      se = p[[self$col_y]]$se
+      mu_t = p[[self$col_time]]$mean
+      d = self$y_best - self$surrogate_max_to_min[[self$col_y]] * mu
       d_norm = d / se
       ei = d * pnorm(d_norm) + se * dnorm(d_norm)
       eips = ei / mu_t

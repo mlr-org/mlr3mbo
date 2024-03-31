@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Surrogate model containing multiple [mlr3::LearnerRegr].
-#' The [mlr3::LearnerRegr] are fit on the target variables as indicated via `y_cols`.
+#' The [mlr3::LearnerRegr] are fit on the target variables as indicated via `cols_y`.
 #' Note that redundant [mlr3::LearnerRegr] must be deep clones.
 #'
 #' @section Parameters:
@@ -25,7 +25,7 @@
 #' }
 #' \item{`catch_errors`}{`logical(1)`\cr
 #'   Should errors during updating the surrogate be caught and propagated to the `loop_function` which can then handle
-#'   the failed infill optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 #'   Default is `TRUE`.
 #' }
 #' }
@@ -54,24 +54,17 @@
 #'
 #'   instance$eval_batch(xdt)
 #'
-#'   learner1 = lrn("regr.km",
-#'     covtype = "matern3_2",
-#'     optim.method = "gen",
-#'     nugget.stability = 10^-8,
-#'     control = list(trace = FALSE))
+#'   learner1 = default_gp()
 #'
-#'   learner2 = lrn("regr.ranger",
-#'     num.trees = 500,
-#'     keep.inbag = TRUE,
-#'     se.method = "jack")
+#'   learner2 = default_rf()
 #'
-#'   surrogate = srlrnc(list(learner1, learner2), archive = instance$archive)
+#'   surrogate = srlrn(list(learner1, learner2), archive = instance$archive)
 #'
 #'   surrogate$update()
 #'
-#'   surrogate$model
+#'   surrogate$learner
 #'
-#'   surrogate$model[["y2"]]$model
+#'   surrogate$learner[["y2"]]$model
 #' }
 SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
   inherit = Surrogate,
@@ -83,9 +76,9 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #'
     #' @param learners (list of [mlr3::LearnerRegr]).
     #' @template param_archive_surrogate
-    #' @template param_x_cols_surrogate
-    #' @template param_y_cols_surrogate
-    initialize = function(learners, archive = NULL, x_cols = NULL, y_cols = NULL) {
+    #' @template param_cols_x_surrogate
+    #' @template param_cols_y_surrogate
+    initialize = function(learners, archive = NULL, cols_x = NULL, cols_y = NULL) {
       assert_learners(learners)
       addresses = map(learners, address)
       if (length(unique(addresses)) != length(addresses)) {
@@ -100,26 +93,26 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 
-      assert_character(x_cols, min.len = 1L, null.ok = TRUE)
-      assert_character(y_cols, len = length(learners), null.ok = TRUE)
+      assert_character(cols_x, min.len = 1L, null.ok = TRUE)
+      assert_character(cols_y, len = length(learners), null.ok = TRUE)
 
-      ps = ParamSet$new(list(
-        ParamLgl$new("assert_insample_perf"),
-        ParamUty$new("perf_measures", custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(learners))),  # FIXME: actually want check_measures
-        ParamUty$new("perf_thresholds", custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(learners))),
-        ParamLgl$new("catch_errors"))
+      ps = ps(
+        assert_insample_perf = p_lgl(),
+        perf_measures = p_uty(custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(learners))),  # FIXME: actually want check_measures
+        perf_thresholds = p_uty(custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(learners))),
+        catch_errors = p_lgl()
       )
       ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE)
       ps$add_dep("perf_measures", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_thresholds", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
-      super$initialize(model = learners, archive = archive, x_cols = x_cols, y_cols = y_cols, param_set = ps)
+      super$initialize(learner = learners, archive = archive, cols_x = cols_x, cols_y = cols_y, param_set = ps)
     },
 
     #' @description
     #' Predict mean response and standard error.
     #' Returns a named list of data.tables.
-    #' Each contains the mean response and standard error for one `y_col`.
+    #' Each contains the mean response and standard error for one `col_y`.
     #'
     #' @param xdt ([data.table::data.table()])\cr
     #'   New data. One row per observation.
@@ -127,17 +120,17 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @return list of [data.table::data.table()]s with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
-      xdt = fix_xdt_missing(xdt, x_cols = self$x_cols, archive = self$archive)
+      xdt = fix_xdt_missing(xdt, cols_x = self$cols_x, archive = self$archive)
 
-      preds = lapply(self$model, function(model) {
-        pred = model$predict_newdata(newdata = xdt)
-        if (model$predict_type == "se") {
+      preds = lapply(self$learner, function(learner) {
+        pred = learner$predict_newdata(newdata = xdt)
+        if (learner$predict_type == "se") {
           data.table(mean = pred$response, se = pred$se)
         } else {
           data.table(mean = pred$response)
         }
       })
-      names(preds) = names(self$model)
+      names(preds) = names(self$learner)
       preds
     }
   ),
@@ -147,7 +140,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
-        paste0("(", paste0(map_chr(self$model, function(model) class(model)[1L]), collapse = " | "), ")")
+        paste0("(", paste0(map_chr(self$learner, function(learner) class(learner)[1L]), collapse = " | "), ")")
       } else {
         stop("$print_id is read-only.")
       }
@@ -155,44 +148,40 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
     #' @template field_n_learner_surrogate
     n_learner = function() {
-      length(self$model)
+      length(self$learner)
     },
 
     #' @template field_assert_insample_perf_surrogate
     assert_insample_perf = function(rhs) {
-      if (!missing(rhs)) {
+      if (missing(rhs)) {
+        check = all(pmap_lgl(
+          list(
+            insample_perf = self$insample_perf,
+            perf_threshold = self$param_set$values$perf_thresholds %??% rep(0, self$n_learner),
+            perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)
+          ),
+          .f = function(insample_perf, perf_threshold, perf_measure) {
+            if (perf_measure$minimize) {
+              insample_perf < perf_threshold
+            } else {
+              insample_perf > perf_threshold
+            }
+          })
+        )
+
+        if (!check) {
+          stop("Current insample performance of the Surrogate Model does not meet the performance threshold.")
+        }
+        invisible(self$insample_perf)
+      } else {
         stop("$assert_insample_perf is read-only.")
       }
-
-      if (!self$param_set$values$assert_insample_perf) {
-        invisible(self$insample_perf)
-      }
-
-      check = all(pmap_lgl(
-        list(
-          insample_perf = self$insample_perf,
-          perf_threshold = self$param_set$values$perf_thresholds %??% rep(0, self$n_learner),
-          perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)
-        ),
-        .f = function(insample_perf, perf_threshold, perf_measure) {
-          if (perf_measure$minimize) {
-            insample_perf < perf_threshold
-          } else {
-            insample_perf > perf_threshold
-          }
-        })
-      )
-
-      if (!check) {
-        stop("Current insample performance of the Surrogate Model does not meet the performance threshold.")
-      }
-      invisible(self$insample_perf)
     },
 
     #' @template field_packages_surrogate
     packages = function(rhs) {
       if (missing(rhs)) {
-        unique(unlist(map(self$model, "packages")))
+        unique(unlist(map(self$learner, "packages")))
       } else {
         stop("$packages is read-only.")
       }
@@ -201,7 +190,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @template field_feature_types_surrogate
     feature_types = function(rhs) {
       if (missing(rhs)) {
-        Reduce(intersect, map(self$model, "feature_types"))
+        Reduce(intersect, map(self$learner, "feature_types"))
       } else {
         stop("$feature_types is read-only.")
       }
@@ -210,38 +199,50 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @template field_properties_surrogate
     properties = function(rhs) {
       if (missing(rhs)) {
-        Reduce(intersect, map(self$model, "properties"))
+        Reduce(intersect, map(self$learner, "properties"))
       } else {
         stop("$properties is read-only.")
       }
-    }
+    },
 
+    #' @template field_predict_type_surrogate
+    predict_type = function(rhs) {
+      if (missing(rhs)) {
+        predict_types = Reduce(intersect, map(self$learner, "predict_type"))
+        if (length(predict_types) == 0L) {
+          stop("Learners have different active predict types.")
+        }
+        predict_types
+      } else {
+        stop("$predict_type is read-only. To change it, modify $predict_type of the learner directly.")
+      }
+    }
   ),
 
   private = list(
 
-    # Train model with new data.
+    # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
-      xydt = self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE]
-      features = setdiff(names(xydt), self$y_cols)
-      tasks = lapply(self$y_cols, function(y_col) {
+      xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
+      features = setdiff(names(xydt), self$cols_y)
+      tasks = lapply(self$cols_y, function(col_y) {
         # if this turns out to be a bottleneck, we can also operate on a single task here
-        task = TaskRegr$new(id = paste0("surrogate_task_", y_col), backend = xydt[, c(features, y_col), with = FALSE], target = y_col)
+        task = TaskRegr$new(id = paste0("surrogate_task_", col_y), backend = xydt[, c(features, col_y), with = FALSE], target = col_y)
         task
       })
-      pmap(list(model = self$model, task = tasks), .f = function(model, task) {
-        assert_learnable(task, learner = model)
-        model$train(task)
+      pmap(list(learner = self$learner, task = tasks), .f = function(learner, task) {
+        assert_learnable(task, learner = learner)
+        learner$train(task)
         invisible(NULL)
       })
-      names(self$model) = self$y_cols
+      names(self$learner) = self$cols_y
 
       if (self$param_set$values$assert_insample_perf) {
-        private$.insample_perf = setNames(pmap_dbl(list(model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),
-          .f = function(model, task, perf_measure) {
-            assert_measure(perf_measure, task = task, learner = model)
-            model$predict(task)$score(perf_measure, task = task, learner = model)
+        private$.insample_perf = setNames(pmap_dbl(list(learner = self$learner, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),
+          .f = function(learner, task, perf_measure) {
+            assert_measure(perf_measure, task = task, learner = learner)
+            learner$predict(task)$score(perf_measure, task = task, learner = learner)
           }
         ), nm = map_chr(self$param_set$values$perf_measures, "id"))
         self$assert_insample_perf
@@ -250,7 +251,7 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
     deep_clone = function(name, value) {
       switch(name,
-        model = map(value, function(x) x$clone(deep = TRUE)),
+        learner = map(value, function(x) x$clone(deep = TRUE)),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value

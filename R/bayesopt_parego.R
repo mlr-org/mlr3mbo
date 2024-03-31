@@ -17,7 +17,7 @@
 #'   Size of the initial design.
 #'   If `NULL` and the [bbotk::Archive] contains no evaluations, \code{4 * d} is used with \code{d} being the
 #'   dimensionality of the search space.
-#'   Points are drawn uniformly at random.
+#'   Points are generated via a Sobol sequence.
 #' @param surrogate ([SurrogateLearner])\cr
 #'   [SurrogateLearner] to be used as a surrogate.
 #' @param acq_function ([AcqFunction])\cr
@@ -98,64 +98,61 @@
 #' }
 bayesopt_parego = function(
     instance,
-    init_design_size = NULL,
     surrogate,
     acq_function,
     acq_optimizer,
+    init_design_size = NULL,
     q = 1L,
     s = 100L,
     rho = 0.05,
     random_interleave_iter = 0L
   ) {
 
-  # assertions and defaults
+  # assertions
   assert_r6(instance, "OptimInstanceMultiCrit")
-  assert_int(init_design_size, lower = 1L, null.ok = TRUE)
   assert_r6(surrogate, classes = "SurrogateLearner")
   assert_r6(acq_function, classes = "AcqFunction")
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
+  assert_int(init_design_size, lower = 1L, null.ok = TRUE)
   assert_int(q, lower = 1L)
   assert_int(s, lower = 1L)
   assert_number(rho, lower = 0, upper = 1)
   assert_int(random_interleave_iter, lower = 0L)
 
-  archive = instance$archive
-  domain = instance$search_space
-  d = domain$length
-  k = length(archive$cols_y)  # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
+  # initial design
+  search_space = instance$search_space
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) {
+    init_design_size = 4L * search_space$length
+  }
+  if (!is.null(init_design_size) && instance$archive$n_evals == 0L) {
+    design = generate_design_sobol(search_space, n = init_design_size)$data
+    instance$eval_batch(design)
+  }
 
-  surrogate$archive = archive
-  surrogate$y_cols = "y_scal"
+  # completing initialization
+  surrogate$archive = instance$archive
+  surrogate$cols_y = "y_scal"
   acq_function$surrogate = surrogate
   acq_optimizer$acq_function = acq_function
 
-  # initial design
-  if (isTRUE(init_design_size > 0L)) {
-    design = generate_design_random(domain, n = init_design_size)$data
-    instance$eval_batch(design)
-  } else {
-    init_design_size = instance$archive$n_evals
-  }
-
+  k = length(instance$archive$cols_y)  # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
   lambdas = calculate_parego_weights(s, k = k)
   qs = seq_len(q)
 
-  # loop
+  # actual loop
   repeat {
-    data = archive$data
-    ydt = data[, archive$cols_y, with = FALSE]
-    # FIXME: use inplace operations
-    ydt = Map("*", ydt, mult_max_to_min(archive$codomain))  # we always assume minimization
+    data = instance$archive$data
+    ydt = data[, instance$archive$cols_y, with = FALSE]
+    ydt = Map("*", ydt, mult_max_to_min(instance$archive$codomain))  # we always assume minimization
     ydt = Map(function(y) (y - min(y, na.rm = TRUE)) / diff(range(y, na.rm = TRUE)), ydt)  # scale y to [0, 1]
 
     xdt = map_dtr(qs, function(q) {
       # scalarize y
       lambda = lambdas[sample.int(nrow(lambdas), 1L), , drop = TRUE]
       mult = Map("*", ydt, lambda)
-      yscal = Reduce("+", mult)
-      yscal = do.call(pmax, mult) + rho * yscal  # augmented Tchebycheff function
-      data[, y_scal := yscal]  # need to name it yscal due to data.table's behavior
+      y_scal = Reduce("+", mult)
+      y_scal = do.call(pmax, mult) + rho * y_scal  # augmented Tchebycheff function
+      set(data, j = "y_scal", value = y_scal)
 
       tryCatch({
         # random interleaving is handled here
@@ -168,7 +165,7 @@ bayesopt_parego = function(
       }, mbo_error = function(mbo_error_condition) {
         lg$info(paste0(class(mbo_error_condition), collapse = " / "))
         lg$info("Proposing a randomly sampled point")
-        SamplerUnif$new(domain)$sample(1L)$data
+        generate_design_random(search_space, n = 1L)$data
       })
     }, .fill = TRUE)
 

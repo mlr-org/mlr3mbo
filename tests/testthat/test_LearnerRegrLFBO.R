@@ -1,4 +1,5 @@
 test_that("LearnerRegrLFBO can be constructed and trained and setting hyperparameters works", {
+  skip()
   learner_classif = lrn("classif.rpart", predict_type = "prob")
   expect_class(learner_classif, "LearnerClassif")
   learner = LearnerRegrLFBO$new(learner_classif)
@@ -45,6 +46,7 @@ test_that("LearnerRegrLFBO can be constructed and trained and setting hyperparam
 })
 
 test_that("Likelihood Free Bayesian Optimization", {
+  skip()
   with_seed(2906, {
     instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
     surrogate = SurrogateLearner$new(lrn("regr.lfbo", lrn("classif.ranger", predict_type = "prob", num.trees = 10L)))

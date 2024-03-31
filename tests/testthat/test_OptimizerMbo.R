@@ -3,7 +3,7 @@ test_that("OptimizerMbo works", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
   skip_if_not_installed("rgenoud")
-  
+
   optimizer = OptimizerMbo$new()
   expect_r6(optimizer, classes = "OptimizerMbo")
 
@@ -80,7 +80,7 @@ test_that("OptimizerMbo works for noisy problems", {
     surrogate = SurrogateLearner$new(REGR_KM_NOISY),
     acq_function = AcqFunctionEI$new(),
     acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L)),
-    result_function = result_by_surrogate_design,
+    result_assigner = ResultAssignerSurrogate$new(surrogate = SurrogateLearner$new(REGR_KM_NOISY))
   )
 
   design = MAKE_DESIGN(instance, 4L)
@@ -197,5 +197,24 @@ test_that("OptimizerMbo reset", {
   expect_r6(optimizer$surrogate, "Surrogate")
   expect_r6(optimizer$acq_function, "AcqFunction")
   expect_r6(optimizer$acq_optimizer, "AcqOptimizer")
+})
+
+test_that("OptimizerMbo up to date surrogate after optimization", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+
+  surrogate = srlrn(lrn("regr.km", covtype = "matern5_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 10^-8))
+  acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  optimizer = opt("mbo", surrogate = surrogate, acq_optimizer = acq_optimizer)
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
+  optimizer$optimize(instance)
+
+  expect_equal(surrogate, optimizer$surrogate)
+
+  expect_true(surrogate$learner$state$train_task$nrow == 5L)
+
+  predictions = surrogate$predict(instance$archive$data[, instance$archive$cols_x, with = FALSE])
+  expect_true(all(sqrt((predictions$mean - instance$archive$data$y) ^ 2) < 1e-4))
+  expect_true(all(predictions$se < 1e-4))
 })
 

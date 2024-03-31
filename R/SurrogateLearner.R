@@ -23,7 +23,7 @@
 #' }
 #' \item{`catch_errors`}{`logical(1)`\cr
 #'   Should errors during updating the surrogate be caught and propagated to the `loop_function` which can then handle
-#'   the failed infill optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 #'   Default is `TRUE`.
 #' }
 #' }
@@ -52,17 +52,13 @@
 #'
 #'   instance$eval_batch(xdt)
 #'
-#'   learner = lrn("regr.km",
-#'     covtype = "matern3_2",
-#'     optim.method = "gen",
-#'     nugget.stability = 10^-8,
-#'     control = list(trace = FALSE))
+#'   learner = default_gp()
 #'
 #'   surrogate = srlrn(learner, archive = instance$archive)
 #'
 #'   surrogate$update()
 #'
-#'   surrogate$model$model
+#'   surrogate$learner$model
 #' }
 SurrogateLearner = R6Class("SurrogateLearner",
   inherit = Surrogate,
@@ -74,30 +70,30 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #'
     #' @param learner ([mlr3::LearnerRegr]).
     #' @template param_archive_surrogate
-    #' @template param_x_cols_surrogate
-    #' @template param_y_col_surrogate
-    initialize = function(learner, archive = NULL, x_cols = NULL, y_col = NULL) {
+    #' @template param_col_y_surrogate
+    #' @template param_cols_x_surrogate
+    initialize = function(learner, archive = NULL, cols_x = NULL, col_y = NULL) {
       assert_learner(learner)
-      #if (learner$predict_type != "se" && "se" %in% learner$predict_types) {
-      #  learner$predict_type = "se"
-      #}
+      if (learner$predict_type != "se" && "se" %in% learner$predict_types) {
+        learner$predict_type = "se"
+      }
 
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 
-      assert_character(x_cols, min.len = 1L, null.ok = TRUE)
-      assert_string(y_col, null.ok = TRUE)
+      assert_character(cols_x, min.len = 1L, null.ok = TRUE)
+      assert_string(col_y, null.ok = TRUE)
 
-      ps = ParamSet$new(list(
-        ParamLgl$new("assert_insample_perf"),
-        ParamUty$new("perf_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
-        ParamDbl$new("perf_threshold", lower = -Inf, upper = Inf),
-        ParamLgl$new("catch_errors"))
+      ps = ps(
+        assert_insample_perf = p_lgl(),
+        perf_measure = p_uty(custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
+        perf_threshold = p_dbl(lower = -Inf, upper = Inf),
+        catch_errors = p_lgl()
       )
       ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE)
       ps$add_dep("perf_measure", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_threshold", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
-      super$initialize(model = learner, archive = archive, x_cols = x_cols, y_cols = y_col, param_set = ps)
+      super$initialize(learner = learner, archive = archive, cols_x = cols_x, cols_y = col_y, param_set = ps)
     },
 
     #' @description
@@ -109,10 +105,10 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
-      xdt = fix_xdt_missing(xdt, x_cols = self$x_cols, archive = self$archive)
+      xdt = fix_xdt_missing(xdt, cols_x = self$cols_x, archive = self$archive)
 
-      pred = self$model$predict_newdata(newdata = xdt)
-      if (self$model$predict_type == "se") {
+      pred = self$learner$predict_newdata(newdata = xdt)
+      if (self$learner$predict_type == "se") {
         data.table(mean = pred$response, se = pred$se)
       } else {
         data.table(mean = pred$response)
@@ -125,7 +121,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
-        class(self$model)[1L]
+        class(self$learner)[1L]
       } else {
         stop("$print_id is read-only.")
       }
@@ -138,7 +134,24 @@ SurrogateLearner = R6Class("SurrogateLearner",
 
     #' @template field_assert_insample_perf_surrogate
     assert_insample_perf = function(rhs) {
-      if (!missing(rhs)) {
+      if (missing(rhs)) {
+        if (!self$param_set$values$assert_insample_perf) {
+          return(invisible(self$insample_perf))
+        }
+
+        perf_measure = self$param_set$values$perf_measure %??% mlr_measures$get("regr.rsq")
+        perf_threshold = self$param_set$values$perf_threshold %??% 0
+        check = if (perf_measure$minimize) {
+          self$insample_perf < perf_threshold
+        } else {
+          self$insample_perf > perf_threshold
+        }
+
+        if (!check) {
+          stop("Current insample performance of the Surrogate Model does not meet the performance threshold.")
+        }
+        invisible(self$insample_perf)
+      } else {
         stop("$assert_insample_perf is read-only.")
       }
 
@@ -163,53 +176,59 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #' @template field_packages_surrogate
     packages = function(rhs) {
       if (missing(rhs)) {
-        self$model$packages
+        self$learner$packages
       } else {
         stop("$packages is read-only.")
       }
-
     },
 
     #' @template field_feature_types_surrogate
     feature_types = function(rhs) {
       if (missing(rhs)) {
-        self$model$feature_types
+        self$learner$feature_types
       } else {
         stop("$feature_types is read-only.")
       }
     },
 
-    #' @field properties (`character()`)\cr
-    #' Stores a set of properties/capabilities the learner has.
-    #' A complete list of candidate properties, grouped by task type, is stored in [`mlr_reflections$learner_properties`][mlr_reflections].
+    #' @template field_properties_surrogate
     properties = function(rhs) {
       if (missing(rhs)) {
-        self$model$properties
+        self$learner$properties
       } else {
         stop("$properties is read-only.")
+      }
+    },
+
+    #' @template field_predict_type_surrogate
+    predict_type = function(rhs) {
+      if (missing(rhs)) {
+        self$learner$predict_type
+      } else {
+        stop("$predict_type is read-only. To change it, modify $predict_type of the learner directly.")
       }
     }
   ),
 
   private = list(
-    # Train model with new data.
+    # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
-      xydt = self$archive$data[, c(self$x_cols, self$y_cols), with = FALSE]
-      task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$y_cols)
-      assert_learnable(task, learner = self$model)
-      self$model$train(task)
+      xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
+      task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$cols_y)
+      assert_learnable(task, learner = self$learner)
+      self$learner$train(task)
 
       if (self$param_set$values$assert_insample_perf) {
-        measure = assert_measure(self$param_set$values$perf_measure %??% mlr_measures$get("regr.rsq"), task = task, learner = self$model)
-        private$.insample_perf = self$model$predict(task)$score(measure, task = task, learner = self$model)
+        measure = assert_measure(self$param_set$values$perf_measure %??% mlr_measures$get("regr.rsq"), task = task, learner = self$learner)
+        private$.insample_perf = self$learner$predict(task)$score(measure, task = task, learner = self$learner)
         self$assert_insample_perf
       }
     },
 
     deep_clone = function(name, value) {
       switch(name,
-        model = value$clone(deep = TRUE),
+        learner = value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value

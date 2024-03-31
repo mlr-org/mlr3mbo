@@ -11,8 +11,8 @@ A surrogate model is used to model the unknown objective function(s) based on al
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{model}}{(model)\cr
-Arbitrary model object depending on the subclass.}
+\item{\code{learner}}{(learner)\cr
+Arbitrary learner object depending on the subclass.}
 }
 \if{html}{\out{</div>}}
 }
@@ -28,12 +28,12 @@ Id used when printing.}
 \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of surrogate models.}
 
-\item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
-Column Id's of variables that should be used as features.
+\item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
+Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
-\item{\code{y_cols}}{(\code{character()} | \code{NULL})\cr
-Column Id's of variables that should be used as targets.
+\item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
+Column id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 
 \item{\code{insample_perf}}{(\code{numeric()})\cr
@@ -56,6 +56,9 @@ A complete list of candidate feature types, grouped by task type, is stored in \
 \item{\code{properties}}{(\code{character()})\cr
 Stores a set of properties/capabilities the surrogate has.
 A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
+
+\item{\code{predict_type}}{(\code{character(1)})\cr
+Retrieves the currently active predict type, e.g. \code{"response"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -76,24 +79,24 @@ A complete list of candidate properties, grouped by task type, is stored in \cod
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$new(model, archive, x_cols, y_cols, param_set)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Surrogate$new(learner, archive, cols_x, cols_y, param_set)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{model}}{(model)\cr
-Arbitrary model object depending on the subclass.}
+\item{\code{learner}}{(learner)\cr
+Arbitrary learner object depending on the subclass.}
 
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{\code{x_cols}}{(\code{character()} | \code{NULL})\cr
-Column Id's of variables that should be used as features.
+\item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
+Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
-\item{\code{y_cols}}{(\code{character()} | \code{NULL})\cr
-Column Id's of variables that should be used as targets.
+\item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
+Column id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 
 \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
@@ -106,7 +109,7 @@ Parameter space description depending on the subclass.}
 \if{html}{\out{<a id="method-Surrogate-update"></a>}}
 \if{latex}{\out{\hypertarget{method-Surrogate-update}{}}}
 \subsection{Method \code{update()}}{
-Train model with new data.
+Train learner with new data.
 Subclasses must implement \verb{$private.update()}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$update()}\if{html}{\out{</div>}}

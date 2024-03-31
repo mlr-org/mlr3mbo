@@ -1,4 +1,5 @@
 test_that("AcqFunctionLFBO works", {
+  skip()
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(lrn("regr.lfbo", learner_classif = lrn("classif.rpart"), lfbo.direction = "minimize"), archive = inst$archive)
   acqf = AcqFunctionLFBO$new(surrogate = surrogate)

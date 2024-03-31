@@ -16,6 +16,13 @@ By optimizing a comparably cheap to evaluate acquisition function defined on the
 Detailed descriptions of different MBO flavors are provided in the documentation of the respective \link{loop_function}.
 
 Termination is handled via a \link[bbotk:Terminator]{bbotk::Terminator} part of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
+
+Note that in general the \link{Surrogate} is updated one final time on all available data after the optimization process has terminated.
+However, in certain scenarios this is not always possible or meaningful, e.g., when using \code{\link[=bayesopt_parego]{bayesopt_parego()}} for multi-objective optimization
+which uses a surrogate that relies on a scalarization of the objectives.
+It is therefore recommended to manually inspect the \link{Surrogate} after optimization if it is to be used, e.g., for visualization purposes to make
+sure that it has been properly updated on all available data.
+If this final update of the \link{Surrogate} could not be performed successfully, a warning will be logged.
 }
 \section{Archive}{
 
@@ -50,13 +57,7 @@ if (requireNamespace("mlr3learners") &
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
-  learner = lrn("regr.km",
-    covtype = "matern3_2",
-    optim.method = "gen",
-    nugget.stability = 10^-8,
-    control = list(trace = FALSE))
-
-  surrogate = srlrn(learner)
+  surrogate = default_surrogate(instance)
 
   acq_function = acqf("ei")
 
@@ -116,18 +117,14 @@ The acquisition function optimizer.}
 Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
 
-\item{\code{result_function}}{(\code{function} | \code{NULL})\cr
-Optional function called after the optimization terminates.
-Determines how the final result of the optimization is calculated.
-Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
-See for example \link{result_by_surrogate_design} which is used by default if the
-\link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
-\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
+\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+The result assigner.}
 
 \item{\code{param_classes}}{(\code{character()})\cr
 Supported parameter classes that the optimizer can optimize.
 Determined based on the \code{surrogate} and the \code{acq_optimizer}.
-Subclasses of \link[paradox:Param]{paradox::Param}.}
+This corresponds to the values given by a \link[paradox:ParamSet]{paradox::ParamSet}'s
+\verb{$class} field.}
 
 \item{\code{properties}}{(\code{character()})\cr
 Set of properties of the optimizer.
@@ -138,7 +135,7 @@ When fully initialized, properties are determined based on the \code{loop_functi
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
 A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.
-Required packages are determined based on the \code{surrogate} and the \code{acq_optimizer}.}
+Required packages are determined based on the \code{acq_function}, \code{surrogate} and the \code{acq_optimizer}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -169,10 +166,10 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 If \code{surrogate} is \code{NULL} and the \code{acq_function$surrogate} field is populated, this \link{Surrogate} is used.
 Otherwise, \code{default_surrogate(instance)} is used.
 If \code{acq_function} is NULL and the \code{acq_optimizer$acq_function} field is populated, this \link{AcqFunction} is used (and therefore its \verb{$surrogate} if  populated; see above).
-Otherwise \code{default_acqfun(instance)} is used.
-If \code{acq_optimizer} is NULL, \code{default_acqopt(instance)} is used.
+Otherwise \code{default_acqfunction(instance)} is used.
+If \code{acq_optimizer} is NULL, \code{default_acqoptimizer(instance)} is used.
 
-Even if already initialized, the \verb{$surrogate$archive} field will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the current \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
+Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the current \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
 
 For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
 \subsection{Usage}{
@@ -182,7 +179,7 @@ For more information on default values for \code{loop_function}, \code{surrogate
   acq_function = NULL,
   acq_optimizer = NULL,
   args = NULL,
-  result_function = NULL
+  result_assigner = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -205,13 +202,8 @@ The acquisition function optimizer.}
 Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
 
-\item{\code{result_function}}{(\code{function} | \code{NULL})\cr
-Optional function called after the optimization terminates.
-Determines how the final result of the optimization is calculated.
-Requires arguments \code{inst} (the \link[bbotk:OptimInstance]{bbotk::OptimInstance}) and \code{self} (the \link{OptimizerMbo}).
-See for example \link{result_by_surrogate_design} which is used by default if the
-\link[bbotk:OptimInstance]{bbotk::OptimInstance} has the property \code{"noisy"} (which is the case for a
-\link[mlr3tuning:TuningInstanceSingleCrit]{mlr3tuning::TuningInstanceSingleCrit} or \link[mlr3tuning:TuningInstanceMultiCrit]{mlr3tuning::TuningInstanceMultiCrit}).}
+\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+The result assigner.}
 }
 \if{html}{\out{</div>}}
 }
@@ -235,7 +227,7 @@ Print method.
 \subsection{Method \code{reset()}}{
 Reset the optimizer.
 Sets the following fields to \code{NULL}:
-\code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{args}, \code{result_function}
+\code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{args}, \code{result_assigner}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$reset()}\if{html}{\out{</div>}}
 }

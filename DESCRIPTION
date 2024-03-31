@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 0.1.1.9000
+Version: 0.2.2.9000
 Authors@R: c(
     person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0003-4152-5308")),
@@ -39,7 +39,6 @@ License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
-    mlr3tuning (>= 0.14.0),
     R (>= 3.1.0)
 Imports:
     bbotk (>= 0.5.4),
@@ -48,10 +47,14 @@ Imports:
     lgr (>= 0.3.4),
     mlr3 (>= 0.14.0),
     mlr3misc (>= 0.11.0),
+    mlr3tuning (>= 0.14.0),
     paradox (>= 0.10.0),
+    spacefillr,
     R6 (>= 2.4.1)
 Suggests:
     DiceKriging,
+    emoa,
+    fastGHQuad,
     knitr,
     lhs,
     mlr3learners (>= 0.5.4),
@@ -61,7 +64,6 @@ Suggests:
     rgenoud,
     rmarkdown,
     rpart,
-    spacefillr,
     stringi,
     testthat (>= 3.0.0),
 ByteCompile: no
@@ -70,22 +72,30 @@ Config/testthat/edition: 3
 Config/testthat/parallel: false
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE, r6 = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Collate:
     'mlr_acqfunctions.R'
     'AcqFunction.R'
     'AcqFunctionAEI.R'
     'AcqFunctionCB.R'
+    'AcqFunctionEHVI.R'
+    'AcqFunctionEHVIGH.R'
     'AcqFunctionEI.R'
     'AcqFunctionEIPS.R'
     'AcqFunctionLFBO.R'
     'AcqFunctionMean.R'
     'AcqFunctionPI.R'
+    'AcqFunctionSD.R'
     'AcqFunctionSmsEgo.R'
     'AcqFunctionTTEI.R'
     'AcqOptimizer.R'
     'LearnerRegrLFBO.R'
+    'aaa.R'
     'OptimizerMbo.R'
+    'mlr_result_assigners.R'
+    'ResultAssigner.R'
+    'ResultAssignerArchive.R'
+    'ResultAssignerSurrogate.R'
     'Surrogate.R'
     'SurrogateLearner.R'
     'SurrogateLearnerCollection.R'
@@ -93,6 +103,7 @@ Collate:
     'mlr_loop_functions.R'
     'bayesopt_ego.R'
     'bayesopt_ego_log.R'
+    'bayesopt_emo.R'
     'bayesopt_mpcl.R'
     'bayesopt_parego.R'
     'bayesopt_smsego.R'
@@ -100,8 +111,6 @@ Collate:
     'helper.R'
     'loop_function.R'
     'mbo_defaults.R'
-    'result_by_default.R'
-    'result_by_surrogate_design.R'
     'sugar.R'
     'zzz.R'
 VignetteBuilder: knitr

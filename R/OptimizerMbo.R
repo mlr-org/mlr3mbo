@@ -15,6 +15,13 @@
 #'
 #' Termination is handled via a [bbotk::Terminator] part of the [bbotk::OptimInstance] to be optimized.
 #'
+#' Note that in general the [Surrogate] is updated one final time on all available data after the optimization process has terminated.
+#' However, in certain scenarios this is not always possible or meaningful, e.g., when using [bayesopt_parego()] for multi-objective optimization
+#' which uses a surrogate that relies on a scalarization of the objectives.
+#' It is therefore recommended to manually inspect the [Surrogate] after optimization if it is to be used, e.g., for visualization purposes to make
+#' sure that it has been properly updated on all available data.
+#' If this final update of the [Surrogate] could not be performed successfully, a warning will be logged.
+#'
 #' @section Archive:
 #' The [bbotk::Archive] holds the following additional columns that are specific to MBO algorithms:
 #'   * `[acq_function$id]` (`numeric(1)`)\cr
@@ -44,13 +51,7 @@
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
-#'   learner = lrn("regr.km",
-#'     covtype = "matern3_2",
-#'     optim.method = "gen",
-#'     nugget.stability = 10^-8,
-#'     control = list(trace = FALSE))
-#'
-#'   surrogate = srlrn(learner)
+#'   surrogate = default_surrogate(instance)
 #'
 #'   acq_function = acqf("ei")
 #'
@@ -97,10 +98,10 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' If `surrogate` is `NULL` and the `acq_function$surrogate` field is populated, this [Surrogate] is used.
     #' Otherwise, `default_surrogate(instance)` is used.
     #' If `acq_function` is NULL and the `acq_optimizer$acq_function` field is populated, this [AcqFunction] is used (and therefore its `$surrogate` if  populated; see above).
-    #' Otherwise `default_acqfun(instance)` is used.
-    #' If `acq_optimizer` is NULL, `default_acqopt(instance)` is used.
+    #' Otherwise `default_acqfunction(instance)` is used.
+    #' If `acq_optimizer` is NULL, `default_acqoptimizer(instance)` is used.
     #'
-    #' Even if already initialized, the `$surrogate$archive` field will always be overwritten by the [bbotk::Archive] of the current [bbotk::OptimInstance] to be optimized.
+    #' Even if already initialized, the `surrogate$archive` field will always be overwritten by the [bbotk::Archive] of the current [bbotk::OptimInstance] to be optimized.
     #'
     #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
     #'
@@ -109,8 +110,8 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template param_acq_function
     #' @template param_acq_optimizer
     #' @template param_args
-    #' @template param_result_function
-    initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_function = NULL) {
+    #' @template param_result_assigner
+    initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_assigner = NULL) {
       param_set = ParamSet$new()
       super$initialize("mbo",
                        param_set = param_set,
@@ -128,7 +129,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
         assert_subset(names(args), choices = setdiff(names(formals(self$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)
       }
       self$args = args
-      self$result_function = assert_function(result_function, args = c("instance", "optimizer_mbo"), null.ok = TRUE)
+      self$result_assigner = assert_r6(result_assigner, classes = "ResultAssigner", null.ok = TRUE)
     },
 
     #' @description
@@ -150,14 +151,14 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @description
     #' Reset the optimizer.
     #' Sets the following fields to `NULL`:
-    #' `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, `args`, `result_function`
+    #' `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, `args`, `result_assigner`
     reset = function() {
       private$.loop_function = NULL
       private$.surrogate = NULL
       private$.acq_function = NULL
       private$.acq_optimizer = NULL
       private$.args = NULL
-      private$.result_function = NULL
+      private$.result_assigner = NULL
     }
   ),
 
@@ -214,12 +215,12 @@ OptimizerMbo = R6Class("OptimizerMbo",
       }
     },
 
-    #' @template field_result_function
-    result_function = function(rhs) {
+    #' @template field_result_assigner
+    result_assigner = function(rhs) {
       if (missing(rhs)) {
-        private$.result_function
+        private$.result_assigner
       } else {
-        private$.result_function = assert_function(rhs, args = c("instance", "optimizer_mbo"), null.ok = TRUE)
+        private$.result_assigner = assert_r6(rhs, classes = "ResultAssigner", null.ok = TRUE)
       }
     },
 
@@ -263,7 +264,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template field_packages
     packages = function(rhs) {
       if (missing(rhs)) {
-        union("mlr3mbo", c(self$surrogate$packages, self$acq_optimizer$optimizer$packages))
+        union("mlr3mbo", c(self$acq_function$packages, self$surrogate$packages, self$acq_optimizer$optimizer$packages, self$result_assigner$packages))
       } else {
         stop("$packages is read-only.")
       }
@@ -276,16 +277,17 @@ OptimizerMbo = R6Class("OptimizerMbo",
     .acq_function = NULL,
     .acq_optimizer = NULL,
     .args = NULL,
-    .result_function = NULL,
+    .result_assigner = NULL,
 
     .optimize = function(inst) {
       # FIXME: this needs more checks for edge cases like eips or loop_function bayesopt_parego then default_surrogate should use one learner
+
       if (is.null(self$loop_function)) {
-        self$loop_function = default_loopfun(inst)
+        self$loop_function = default_loop_function(inst)
       }
 
       if (is.null(self$acq_function)) {  # acq_optimizer$acq_function has precedence
-        self$acq_function = self$acq_optimizer$acq_function %??% default_acqfun(inst)
+        self$acq_function = self$acq_optimizer$acq_function %??% default_acqfunction(inst)
       }
 
       if (is.null(self$surrogate)) {  # acq_function$surrogate has precedence
@@ -293,30 +295,40 @@ OptimizerMbo = R6Class("OptimizerMbo",
       }
 
       if (is.null(self$acq_optimizer)) {
-        self$acq_optimizer = default_acqopt(self$acq_function)
+        self$acq_optimizer = default_acqoptimizer(self$acq_function)
+      }
+
+      if (is.null(self$result_assigner)) {
+        self$result_assigner = default_result_assigner(inst)
       }
 
       self$surrogate$archive = inst$archive
       self$acq_function$surrogate = self$surrogate
       self$acq_optimizer$acq_function = self$acq_function
 
+      # FIXME: if result_assigner is for example ResultAssignerSurrogate the surrogate won't be set automatically
+
       check_packages_installed(self$packages, msg = sprintf("Package '%%s' required but not installed for Optimizer '%s'", format(self)))
 
       invoke(self$loop_function, instance = inst, surrogate = self$surrogate, acq_function = self$acq_function, acq_optimizer = self$acq_optimizer, .args = self$args)
+
+      on.exit({
+        tryCatch(
+          {
+            self$surrogate$update()
+          }, surrogate_update_error = function(error_condition) {
+            logger = lgr::get_logger("bbotk")
+            logger$warn("Could not update the surrogate a final time after the optimization process has terminated.")
+          }
+        )
+      })
     },
 
     .assign_result = function(inst) {
-      if (is.null(self$result_function)) {
-        if ("noisy" %in% inst$objective$properties) {
-          # FIXME: this needs more checks bayesopt_parego will fail here (multicrit) but single surrogate
-          result_by_surrogate_design(inst, self)
-        } else {
-          super$.assign_result(inst)
-        }
-      } else {
-        self$result_function(inst, self)
-      }
+      self$result_assigner$assign_result(inst)
     }
   )
 )
 
+#' @include aaa.R
+optimizers[["mbo"]] = OptimizerMbo

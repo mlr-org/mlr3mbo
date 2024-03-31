@@ -2,37 +2,46 @@
 % Please edit documentation in R/sugar.R
 \name{srlrn}
 \alias{srlrn}
-\title{Syntactic Sugar Surrogate Learner Construction}
+\title{Syntactic Sugar Surrogate Construction}
 \usage{
-srlrn(learner, archive = NULL, x_cols = NULL, y_col = NULL, ...)
+srlrn(learner, archive = NULL, cols_x = NULL, cols_y = NULL, ...)
 }
 \arguments{
-\item{learner}{(\link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
-\link[mlr3:LearnerRegr]{mlr3::LearnerRegr} that is to be used.}
+\item{learner}{(\link[mlr3:LearnerRegr]{mlr3::LearnerRegr} | List of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
+\link[mlr3:LearnerRegr]{mlr3::LearnerRegr} that is to be used within the \link{SurrogateLearner} or a list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} that are to
+be used within the \link{SurrogateLearnerCollection}.}
 
 \item{archive}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} used.
 Can also be \code{NULL}.}
 
-\item{x_cols}{(\code{NULL} | \code{character()})\cr
-Names of columns in the \link[bbotk:Archive]{bbotk::Archive} that should be used as features.
-Can also be \code{NULL}.}
+\item{cols_x}{(\code{NULL} | \code{character()})\cr
+Column ids in the \link[bbotk:Archive]{bbotk::Archive} that should be used as features.
+Can also be \code{NULL} in which case this is automatically inferred based on the archive.}
 
-\item{y_col}{(\code{NULL} | \code{character(1)})\cr
-Name of the column in the \link[bbotk:Archive]{bbotk::Archive} that should be used as a target.
-Can also be \code{NULL}.}
+\item{cols_y}{(\code{NULL} | \code{character()})\cr
+Column id(s) in the \link[bbotk:Archive]{bbotk::Archive} that should be used as a target.
+If a list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} is provided as the \code{learner} argument and \code{cols_y} is
+specified as well, as many column names as learners must be provided.
+Can also be \code{NULL} in which case this is automatically inferred based on the archive.}
 
 \item{...}{(named \code{list()})\cr
 Named arguments passed to the constructor, to be set as parameters in the
 \link[paradox:ParamSet]{paradox::ParamSet}.}
 }
 \value{
-\link{SurrogateLearner}
+\link{SurrogateLearner} | \link{SurrogateLearnerCollection}
 }
 \description{
-This function allows to construct a \link{SurrogateLearner} in the spirit
+This function allows to construct a \link{SurrogateLearner} or \link{SurrogateLearnerCollection} in the spirit
 of \code{mlr_sugar} from \CRANpkg{mlr3}.
+
+If the \code{archive} references more than one target variable or \code{cols_y} contains more than one
+target variable but only a single \code{learner} is specified, this learner is replicated as many
+times as needed to build the \link{SurrogateLearnerCollection}.
 }
 \examples{
+library(mlr3)
 srlrn(lrn("regr.featureless"), catch_errors = FALSE)
+srlrn(list(lrn("regr.featureless"), lrn("regr.featureless")))
 }

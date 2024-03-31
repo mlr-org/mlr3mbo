@@ -33,11 +33,7 @@
 #'
 #'   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
 #'
-#'   learner = lrn("regr.km",
-#'     covtype = "matern3_2",
-#'     optim.method = "gen",
-#'     nugget.stability = 10^-8,
-#'     control = list(trace = FALSE))
+#'   learner = default_gp()
 #'
 #'   surrogate = srlrn(learner, archive = instance$archive)
 #'
@@ -58,7 +54,7 @@ AcqFunctionMean = R6Class("AcqFunctionMean",
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     initialize = function(surrogate = NULL) {
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
-      super$initialize("acq_mean", surrogate = surrogate, direction = "same", label = "Posterior Mean", man = "mlr3mbo::mlr_acqfunctions_mean")
+      super$initialize("acq_mean", surrogate = surrogate, requires_predict_type_se = FALSE, direction = "same", label = "Posterior Mean", man = "mlr3mbo::mlr_acqfunctions_mean")
     }
   ),
 

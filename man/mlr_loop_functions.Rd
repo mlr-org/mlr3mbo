@@ -29,16 +29,19 @@ See \link[mlr3misc:Dictionary]{mlr3misc::Dictionary}.
 }
 
 \examples{
+library(data.table)
 as.data.table(mlr_loop_functions)
 }
 \seealso{
 Other Dictionary: 
-\code{\link{mlr_acqfunctions}}
+\code{\link{mlr_acqfunctions}},
+\code{\link{mlr_result_assigners}}
 
 Other Loop Function: 
 \code{\link{loop_function}},
-\code{\link{mlr_loop_functions_ego_log}},
 \code{\link{mlr_loop_functions_ego}},
+\code{\link{mlr_loop_functions_ego_log}},
+\code{\link{mlr_loop_functions_emo}},
 \code{\link{mlr_loop_functions_mpcl}},
 \code{\link{mlr_loop_functions_parego}},
 \code{\link{mlr_loop_functions_smsego}}

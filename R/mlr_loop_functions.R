@@ -14,6 +14,7 @@
 #' @family Loop Function
 #' @export
 #' @examples
+#' library(data.table)
 #' as.data.table(mlr_loop_functions)
 mlr_loop_functions = R6Class("DictionaryLoopFunction", inherit = Dictionary, cloneable = FALSE,
   public = list(

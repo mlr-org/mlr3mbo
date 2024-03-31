@@ -36,11 +36,7 @@
 #'
 #'   instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
 #'
-#'   learner = lrn("regr.km",
-#'     covtype = "matern3_2",
-#'     optim.method = "gen",
-#'     nugget.stability = 10^-8,
-#'     control = list(trace = FALSE))
+#'   learner = default_gp()
 #'
 #'   surrogate = srlrn(learner, archive = instance$archive)
 #'
@@ -66,13 +62,13 @@ AcqFunctionPI = R6Class("AcqFunctionPI",
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     initialize = function(surrogate = NULL) {
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
-      super$initialize("acq_pi", surrogate = surrogate, direction = "maximize", label = "Probability Of Improvement", man = "mlr3mbo::mlr_acqfunctions_pi")
+      super$initialize("acq_pi", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Probability Of Improvement", man = "mlr3mbo::mlr_acqfunctions_pi")
     },
 
     #' @description
     #' Updates acquisition function and sets `y_best`.
     update = function() {
-      self$y_best = min(self$surrogate_max_to_min * self$archive$data[[self$surrogate$y_cols]])
+      self$y_best = min(self$surrogate_max_to_min * self$archive$data[[self$surrogate$cols_y]])
     }
   ),
 

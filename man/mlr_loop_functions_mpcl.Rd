@@ -7,10 +7,10 @@
 \usage{
 bayesopt_mpcl(
   instance,
-  init_design_size = NULL,
   surrogate,
   acq_function,
   acq_optimizer,
+  init_design_size = NULL,
   q = 2L,
   liar = mean,
   random_interleave_iter = 0L
@@ -19,12 +19,6 @@ bayesopt_mpcl(
 \arguments{
 \item{instance}{(\link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit})\cr
 The \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} to be optimized.}
-
-\item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
-Size of the initial design.
-If \code{NULL} and the \link[bbotk:Archive]{bbotk::Archive} contains no evaluations, \code{4 * d} is used with \code{d} being the
-dimensionality of the search space.
-Points are drawn uniformly at random.}
 
 \item{surrogate}{(\link{Surrogate})\cr
 \link{Surrogate} to be used as a surrogate.
@@ -35,6 +29,12 @@ Typically a \link{SurrogateLearner}.}
 
 \item{acq_optimizer}{(\link{AcqOptimizer})\cr
 \link{AcqOptimizer} to be used as acquisition function optimizer.}
+
+\item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
+Size of the initial design.
+If \code{NULL} and the \link[bbotk:Archive]{bbotk::Archive} contains no evaluations, \code{4 * d} is used with \code{d} being the
+dimensionality of the search space.
+Points are generated via a Sobol sequence.}
 
 \item{q}{(\code{integer(1)})\cr
 Batch size > \code{1}.
@@ -125,10 +125,11 @@ if (requireNamespace("mlr3learners") &
 \seealso{
 Other Loop Function: 
 \code{\link{loop_function}},
-\code{\link{mlr_loop_functions_ego_log}},
+\code{\link{mlr_loop_functions}},
 \code{\link{mlr_loop_functions_ego}},
+\code{\link{mlr_loop_functions_ego_log}},
+\code{\link{mlr_loop_functions_emo}},
 \code{\link{mlr_loop_functions_parego}},
-\code{\link{mlr_loop_functions_smsego}},
-\code{\link{mlr_loop_functions}}
+\code{\link{mlr_loop_functions_smsego}}
 }
 \concept{Loop Function}
