@@ -44,7 +44,7 @@ register_mlr3tuning = function() {
 } # nocov end
 
 # static code checks should not complain about commonly used data.table columns
-utils::globalVariables(c("y_scal", "y_trafo"))
+utils::globalVariables(c("y_scal", "y_trafo", "predict", "batch_nr"))
 
 if (!("mlr3mbo" %in% Sys.getenv("DEVTOOLS_LOAD"))) {
   leanify_package()

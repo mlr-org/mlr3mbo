@@ -198,7 +198,7 @@ expect_acqfunction = function(acqf) {
 
 sortnames = function(x) {
   if (!is.null(names(x))) {
-    x <- x[order(names(x), decreasing = TRUE)]
+    x = x[order(names(x), decreasing = TRUE)]
   }
   x
 }

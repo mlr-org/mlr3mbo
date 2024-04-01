@@ -35,14 +35,14 @@ Default is \code{TRUE}.
 
 \examples{
 if (requireNamespace("mlr3learners") &
-    requireNamespace("DiceKriging") &
-    requireNamespace("rgenoud")) {
+  requireNamespace("DiceKriging") &
+  requireNamespace("rgenoud")) {
   library(bbotk)
   library(paradox)
   library(mlr3learners)
 
   fun = function(xs) {
-    list(y = xs$x ^ 2)
+    list(y = xs$x^2)
   }
   domain = ps(x = p_dbl(lower = -10, upper = 10))
   codomain = ps(y = p_dbl(tags = "minimize"))
@@ -50,7 +50,8 @@ if (requireNamespace("mlr3learners") &
 
   instance = OptimInstanceSingleCrit$new(
     objective = objective,
-    terminator = trm("evals", n_evals = 5))
+    terminator = trm("evals", n_evals = 5)
+  )
 
   xdt = generate_design_random(instance$search_space, n = 4)$data
 

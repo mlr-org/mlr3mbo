@@ -31,14 +31,14 @@
 #' @export
 #' @examples
 #' if (requireNamespace("mlr3learners") &
-#'     requireNamespace("DiceKriging") &
-#'     requireNamespace("rgenoud")) {
+#'   requireNamespace("DiceKriging") &
+#'   requireNamespace("rgenoud")) {
 #'   library(bbotk)
 #'   library(paradox)
 #'   library(mlr3learners)
 #'
 #'   fun = function(xs) {
-#'     list(y = xs$x ^ 2)
+#'     list(y = xs$x^2)
 #'   }
 #'   domain = ps(x = p_dbl(lower = -10, upper = 10))
 #'   codomain = ps(y = p_dbl(tags = "minimize"))
@@ -46,7 +46,8 @@
 #'
 #'   instance = OptimInstanceSingleCrit$new(
 #'     objective = objective,
-#'     terminator = trm("evals", n_evals = 5))
+#'     terminator = trm("evals", n_evals = 5)
+#'   )
 #'
 #'   xdt = generate_design_random(instance$search_space, n = 4)$data
 #'
@@ -62,7 +63,6 @@
 #' }
 SurrogateLearner = R6Class("SurrogateLearner",
   inherit = Surrogate,
-
   public = list(
 
     #' @description
@@ -85,7 +85,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
 
       ps = ps(
         assert_insample_perf = p_lgl(),
-        perf_measure = p_uty(custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
+        perf_measure = p_uty(custom_check = function(x) check_r6(x, classes = "MeasureRegr")), # FIXME: actually want check_measure
         perf_threshold = p_dbl(lower = -Inf, upper = Inf),
         catch_errors = p_lgl()
       )
@@ -115,7 +115,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
       }
     }
   ),
-
   active = list(
 
     #' @template field_print_id
@@ -209,7 +208,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
       }
     }
   ),
-
   private = list(
     # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
@@ -225,7 +223,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
         self$assert_insample_perf
       }
     },
-
     deep_clone = function(name, value) {
       switch(name,
         learner = value$clone(deep = TRUE),
@@ -236,4 +233,3 @@ SurrogateLearner = R6Class("SurrogateLearner",
     }
   )
 )
-

@@ -21,7 +21,7 @@
 #'   Size of the initial design.
 #'   If `NULL` and the [bbotk::Archive] contains no evaluations, \code{4 * d} is used with \code{d} being the
 #'   dimensionality of the search space.
-#'   Points are drawn uniformly at random.
+#'   Points are generated via a Sobol sequence.
 #' @param surrogate ([Surrogate])\cr
 #'   [Surrogate] to be used as a surrogate.
 #'   Typically a [SurrogateLearner].
@@ -79,7 +79,7 @@
 #'   acq_function = acqf("ei")
 #'
 #'   acq_optimizer = acqo(
-#'     optimizer = opt("random_search"),
+#'     optimizer = opt("random_search", batch_size = 100),
 #'     terminator = trm("evals", n_evals = 100))
 #'
 #'   optimizer = opt("mbo",
@@ -93,48 +93,46 @@
 #'}
 bayesopt_ego_log = function(
     instance,
-    init_design_size = NULL,
     surrogate,
     acq_function,
     acq_optimizer,
+    init_design_size = NULL,
     random_interleave_iter = 0L,
     epsilon = 1e-3
   ) {
 
   # assertions and defaults
   assert_r6(instance, "OptimInstanceSingleCrit")
-  assert_int(init_design_size, lower = 1L, null.ok = TRUE)
   assert_r6(surrogate, classes = "Surrogate")  # cannot be SurrogateLearner due to EIPS
   assert_r6(acq_function, classes = "AcqFunction")  # FIXME: should explicityly assert acqfs and make sure that codomain tag is handled
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
+  assert_int(init_design_size, lower = 1L, null.ok = TRUE)
   assert_int(random_interleave_iter, lower = 0L)
   assert_number(epsilon, lower = 0, upper = 1)
 
-  archive = instance$archive
-  domain = instance$search_space
-  d = domain$length
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4L * d
+  # initial design
+  search_space = instance$search_space
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) {
+    init_design_size = 4L * search_space$length
+  }
+  if (!is.null(init_design_size) && instance$archive$n_evals == 0L) {
+    design = generate_design_sobol(search_space, n = init_design_size)$data
+    instance$eval_batch(design)
+  }
 
-  surrogate$archive = archive
+  # completing initialization
+  surrogate$archive = instance$archive
   acq_function$surrogate = surrogate
   acq_optimizer$acq_function = acq_function
 
-  surrogate$y_cols = "y_trafo"
+  surrogate$cols_y = "y_trafo"
   acq_function$surrogate_max_to_min = 1
 
-  if (test_r6(acq_function, classes = "AcqFunctionCB") | test_r6(acq_function, classes = "AcqFunctionMean")) {
+  if (test_r6(acq_function, classes = "AcqFunctionCB") || test_r6(acq_function, classes = "AcqFunctionMean")) {
     acq_function$codomain$params[[acq_function$id]]$tags = "minimize"
   }
 
-  # initial design
-  if (isTRUE(init_design_size > 0L)) {
-    design = generate_design_random(domain, n = init_design_size)$data
-    instance$eval_batch(design)
-  } else {
-    init_design_size = instance$archive$n_evals
-  }
-
-  # loop
+  # actual loop
   repeat {
     y = instance$archive$data[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
     min_y = min(y) - epsilon * diff(range(y))
@@ -153,7 +151,7 @@ bayesopt_ego_log = function(
     }, mbo_error = function(mbo_error_condition) {
       lg$info(paste0(class(mbo_error_condition), collapse = " / "))
       lg$info("Proposing a randomly sampled point")
-      SamplerUnif$new(domain)$sample(1L)$data
+      generate_design_random(search_space, n = 1L)$data
     })
 
     instance$eval_batch(xdt)
