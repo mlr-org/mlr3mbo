@@ -138,3 +138,6 @@ mutate = function(value, param, sigma) {
   }
   value
 }
+
+#' @include aaa.R
+optimizers[["local_search"]] = OptimizerLocalSearch

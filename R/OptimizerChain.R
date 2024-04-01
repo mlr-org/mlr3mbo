@@ -112,3 +112,6 @@ OptimizerChain = R6Class("OptimizerChain",
     }
   )
 )
+
+#' @include aaa.R
+optimizers[["chain"]] = OptimizerChain
