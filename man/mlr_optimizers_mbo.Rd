@@ -123,7 +123,8 @@ The result assigner.}
 \item{\code{param_classes}}{(\code{character()})\cr
 Supported parameter classes that the optimizer can optimize.
 Determined based on the \code{surrogate} and the \code{acq_optimizer}.
-Subclasses of \link[paradox:Param]{paradox::Param}.}
+This corresponds to the values given by a \link[paradox:ParamSet]{paradox::ParamSet}'s
+\verb{$class} field.}
 
 \item{\code{properties}}{(\code{character()})\cr
 Set of properties of the optimizer.

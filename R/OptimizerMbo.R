@@ -89,7 +89,7 @@
 #' }
 #' }
 OptimizerMbo = R6Class("OptimizerMbo",
-  inherit = bbotk::Optimizer,
+  inherit = bbotk::OptimizerBatch,
 
   public = list(
     #' @description

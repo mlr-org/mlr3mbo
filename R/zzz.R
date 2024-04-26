@@ -47,7 +47,6 @@ register_mlr3tuning = function() {
 # static code checks should not complain about commonly used data.table columns
 utils::globalVariables("y_scal")
 
-if (!Sys.getenv("DEVTOOLS_LOAD") == "true") {
+if (!("mlr3mbo" %in% Sys.getenv("DEVTOOLS_LOAD"))) {
   leanify_package()
 }
-
