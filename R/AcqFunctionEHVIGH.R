@@ -41,7 +41,7 @@
 #'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceMultiCrit$new(
+#'   instance = OptimInstanceBatchMultiCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -175,20 +175,20 @@ adjust_gh_data = function(gh_data, mu, sigma, r) {
   idx = as.matrix(expand.grid(rep(list(1:n), n_obj)))
   nodes = matrix(gh_data[idx, 1L], nrow = nrow(idx), ncol = n_obj)
   weights = apply(matrix(gh_data[idx, 2L], nrow = nrow(idx), ncol = n_obj), MARGIN = 1L, FUN = prod)
- 
-  # pruning with pruning rate r 
+
+  # pruning with pruning rate r
   if (r > 0) {
     weights_quantile = quantile(weights, probs = r)
     nodes = nodes[weights > weights_quantile, ]
     weights = weights[weights > weights_quantile]
   }
-  
+
   # rotate, scale, translate nodes with error catching
   # rotation will not have an effect unless we support surrogate models modelling correlated objectives
   # for now we still support this more general case and scaling is useful anyways
   nodes = tryCatch(
     {
-      eigen_decomp = eigen(sigma) 
+      eigen_decomp = eigen(sigma)
       rotation = eigen_decomp$vectors %*% diag(sqrt(eigen_decomp$values))
       nodes = t(rotation %*% t(nodes) + mu)
     }, error = function(ec) nodes

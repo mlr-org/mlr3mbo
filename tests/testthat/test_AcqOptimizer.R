@@ -4,7 +4,7 @@ test_that("AcqOptimizer API works", {
   skip_if_not_installed("rgenoud")
 
   # EI, random search
-  instance = OptimInstanceSingleCrit$new(OBJ_1D, terminator = trm("evals", n_evals = 5L))
+  instance = OptimInstanceBatchSingleCrit$new(OBJ_1D, terminator = trm("evals", n_evals = 5L))
   design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
   acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_KM_DETERM, archive = instance$archive))

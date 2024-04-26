@@ -1,5 +1,5 @@
 generate_acq_codomain = function(surrogate, id, direction = "same") {
-  assert_multi_class(surrogate$archive, c("Archive", "ArchiveRush"))
+  assert_multi_class(surrogate$archive, c("Archive", "ArchiveAsync"))
   assert_string(id)
   assert_choice(direction, choices = c("same", "minimize", "maximize"))
   if (direction == "same") {
@@ -18,7 +18,7 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
 }
 
 generate_acq_domain = function(surrogate) {
-  assert_multi_class(surrogate$archive, c("Archive", "ArchiveRush"))
+  assert_archive(surrogate$archive)
   domain = surrogate$archive$search_space$clone(deep = TRUE)$subset(surrogate$cols_x)
   domain$trafo = NULL
   domain

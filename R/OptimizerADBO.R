@@ -4,7 +4,7 @@
 #' @description
 #' Asynchronous Decentralized Bayesian Optimization (ADBO).
 #'
-#' @notes
+#' @note
 #' The \eqn{\lambda} parameter of the upper confidence bound acquisition function controls the trade-off between exploration and exploitation.
 #' A large \eqn{\lambda} value leads to more exploration, while a small \eqn{\lambda} value leads to more exploitation.
 #' ADBO can use periodic exponential decay to reduce \eqn{\lambda} periodically to the exploitation phase.
@@ -28,7 +28,7 @@
 #'
 #' @export
 OptimizerADBO = R6Class("OptimizerADBO",
-  inherit = bbotk::Optimizer,
+  inherit = OptimizerAsync,
 
   public = list(
 
@@ -59,33 +59,28 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
 
     #' @description
-    #' Performs the optimization and writes optimization result into
-    #' [OptimInstance]. The optimization result is returned but the complete
-    #' optimization path is stored in [Archive] of [OptimInstance].
+    #' Performs the optimization on a [OptimInstanceAsyncSingleCrit] or [OptimInstanceAsyncMultiCrit] until termination.
+    #' The single evaluations will be written into the [ArchiveAsync].
+    #' The result will be written into the instance object.
     #'
-    #' @param inst ([OptimInstance]).
-    #' @return [data.table::data.table].
+    #' @param inst ([OptimInstanceAsyncSingleCrit] | [OptimInstanceAsyncMultiCrit]).
+    #'
+    #' @return [data.table::data.table()]
     optimize = function(inst) {
-
-      # generate initial design
       pv = self$param_set$values
+
+      # initial design
       design = if (is.null(pv$initial_design)) {
+
+        lg$debug("Generating sobol design with size %s", pv$design_size)
         generate_design_sobol(inst$search_space, n = pv$design_size)$data
       } else {
+
+        lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
         pv$initial_design
       }
 
-      # send initial design to workers
-      inst$rush$push_tasks(transpose_list(design), extra = list(list(timestamp_xs = Sys.time())))
-
-      # optimize
-      inst$archive$start_time = Sys.time()
-      result = optimize_decentralized(inst, self, private)
-
-      # FIXME: kill workers to increase the chance of a fitting the final model
-      inst$rush$stop_workers(type = "kill")
-
-      result
+      optimize_async_default(inst, self, design)
     }
   ),
 
@@ -94,7 +89,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
     .optimize = function(inst) {
       pv = self$param_set$values
       search_space = inst$search_space
-      rush = inst$rush
+      archive = inst$archive
 
       # sample lambda from exponential distribution
       lambda_0 = rexp(1, 1 / pv$lambda)
@@ -110,20 +105,14 @@ OptimizerADBO = R6Class("OptimizerADBO",
       acq_optimizer$acq_function = acq_function
 
       lg$debug("Optimizer '%s' evaluates the initial design", self$id)
-
-      # evaluate initial design
-      while (rush$n_queued_tasks > 0) {
-        task = rush$pop_task(fields = "xs")
-        xs_trafoed = trafo_xs(task$xs, inst$search_space)
-        ys = inst$objective$eval(xs_trafoed)
-        rush$push_results(task$key, yss = list(ys), extra = list(list(x_domain = list(xs_trafoed), timestamp_ys = Sys.time(), stage = "initial_design")))
-      }
+      evaluate_queue_default(inst)
 
       lg$debug("Optimizer '%s' starts the tuning phase", self$id)
 
       # actual loop
       while (!inst$is_terminated) {
 
+        # decrease lambda
         if (pv$exponential_decay) {
           lambda = lambda_0 * exp(-pv$rate * (t %% pv$period))
           t = t + 1
@@ -131,23 +120,25 @@ OptimizerADBO = R6Class("OptimizerADBO",
           lambda = pv$lambda
         }
 
+        # sample
         acq_function$constants$set_values(lambda = lambda)
         acq_function$surrogate$update()
         acq_function$update()
         xdt = acq_optimizer$optimize()
+
+        # transpose point
         xss = transpose_list(xdt)
         xs = xss[[1]][inst$archive$cols_x]
         lg$trace("Optimizer '%s' draws %s", self$id, as_short_string(xs))
         xs_trafoed = trafo_xs(xs, search_space)
-        extra = xss[[1]][c("acq_cb", ".already_evaluated")]
-        keys = rush$push_running_task(list(xs), extra = list(list(timestamp_xs = Sys.time())))
+
+        # eval
+        key = archive$push_running_point(xs)
         ys = inst$objective$eval(xs_trafoed)
-        rush$push_results(keys, yss = list(ys), extra = list(c(extra, list(
-          x_domain = list(xs_trafoed),
-          timestamp_ys = Sys.time(),
-          stage = "mbo",
-          lambda_0 = lambda_0,
-          lambda = lambda))))
+
+        # push result
+        extra = c(xss[[1]][c("acq_cb", ".already_evaluated")], list(stage = "mbo", lambda_0 = lambda_0, lambda = lambda))
+        archive$push_result(key, ys, x_domain = xs_trafoed, extra = extra)
       }
     }
   )

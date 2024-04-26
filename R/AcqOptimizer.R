@@ -59,7 +59,7 @@
 #'   codomain = ps(y = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceSingleCrit$new(
+#'   instance = OptimInstanceBatchSingleCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -146,7 +146,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
       logger$set_threshold(self$param_set$values$logging_level)
       on.exit(logger$set_threshold(old_threshold))
 
-      instance = OptimInstanceSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, keep_evals = "all")
+      instance = OptimInstanceBatchSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE)
 
       # warmstart
       if (self$param_set$values$warmstart) {

@@ -14,7 +14,7 @@ default_acqoptimizer(acq_function)
 }
 \description{
 Chooses a default acquisition function optimizer.
-Defaults to wrapping \link[bbotk:mlr_optimizers_random_search]{bbotk::OptimizerRandomSearch} allowing 10000 function evaluations (with a batch size of 1000) via a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
+Defaults to wrapping \link[bbotk:mlr_optimizers_random_search]{bbotk::OptimizerBatchRandomSearch} allowing 10000 function evaluations (with a batch size of 1000) via a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
 }
 \seealso{
 Other mbo_defaults: 

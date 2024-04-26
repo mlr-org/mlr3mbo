@@ -7,6 +7,11 @@
 \description{
 Asynchronous Decentralized Bayesian Optimization (ADBO).
 }
+\note{
+The \eqn{\lambda} parameter of the upper confidence bound acquisition function controls the trade-off between exploration and exploitation.
+A large \eqn{\lambda} value leads to more exploration, while a small \eqn{\lambda} value leads to more exploitation.
+ADBO can use periodic exponential decay to reduce \eqn{\lambda} periodically to the exploitation phase.
+}
 \section{Parameters}{
 
 \describe{
@@ -27,7 +32,7 @@ Initial design.}
 }
 
 \section{Super classes}{
-\code{\link[mlr3tuning:Tuner]{mlr3tuning::Tuner}} -> \code{\link[mlr3tuning:TunerFromOptimizer]{mlr3tuning::TunerFromOptimizer}} -> \code{TunerADBO}
+\code{\link[mlr3tuning:Tuner]{mlr3tuning::Tuner}} -> \code{\link[mlr3tuning:TunerAsync]{mlr3tuning::TunerAsync}} -> \code{\link[mlr3tuning:TunerAsyncFromOptimizerAsync]{mlr3tuning::TunerAsyncFromOptimizerAsync}} -> \code{TunerADBO}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -42,7 +47,7 @@ Initial design.}
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-format'><code>mlr3tuning::Tuner$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-help'><code>mlr3tuning::Tuner$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="print"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-print'><code>mlr3tuning::Tuner$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerFromOptimizer" data-id="optimize"><a href='../../mlr3tuning/html/TunerFromOptimizer.html#method-TunerFromOptimizer-optimize'><code>mlr3tuning::TunerFromOptimizer$optimize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerAsyncFromOptimizerAsync" data-id="optimize"><a href='../../mlr3tuning/html/TunerAsyncFromOptimizerAsync.html#method-TunerAsyncFromOptimizerAsync-optimize'><code>mlr3tuning::TunerAsyncFromOptimizerAsync$optimize()</code></a></span></li>
 </ul>
 </details>
 }}

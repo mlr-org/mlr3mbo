@@ -4,7 +4,7 @@
 #' @description
 #' Asynchronous Decentralized Bayesian Optimization (ADBO).
 #'
-#' @notes
+#' @note
 #' The \eqn{\lambda} parameter of the upper confidence bound acquisition function controls the trade-off between exploration and exploitation.
 #' A large \eqn{\lambda} value leads to more exploration, while a small \eqn{\lambda} value leads to more exploitation.
 #' ADBO can use periodic exponential decay to reduce \eqn{\lambda} periodically to the exploitation phase.
@@ -28,7 +28,7 @@
 #'
 #' @export
 TunerADBO = R6Class("TunerADBO",
-  inherit = mlr3tuning::TunerFromOptimizer,
+  inherit = mlr3tuning::TunerAsyncFromOptimizerAsync,
   public = list(
 
    #' @description

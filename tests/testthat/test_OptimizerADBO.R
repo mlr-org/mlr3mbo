@@ -1,45 +1,31 @@
 test_that("adbo optimizer works", {
-  options("bbotk_local" = TRUE)
-  rush::rush_plan(n_workers = 5)
+  # options(bbotk_local = TRUE)
+  skip_on_cran()
+  skip_if_not_installed("rush")
+  flush_redis()
 
-  search_space = domain = ps(
-    x1 = p_dbl(-5, 10),
-    x2 = p_dbl(0, 15)
+  rush_plan(n_workers = 2)
+  instance = oi_async(
+    objective = OBJ_2D,
+    search_space = PS_2D,
+    terminator = trm("evals", n_evals = 100),
   )
-
-  codomain = ps(y = p_dbl(tags = "minimize"))
-
-  fun = function(xs) {
-    list(y = branin(x1 = xs$x1, x2 = xs$x2))
-  }
-
-  objective = ObjectiveRFun$new(
-    fun = fun,
-    domain = domain,
-    codomain = codomain
-  )
-
- instance = OptimInstanceRushSingleCrit$new(
-   objective = objective,
-   search_space = search_space,
-   terminator = trm("evals", n_evals = 100)
-  )
-
   optimizer = opt("adbo", design_size = 4)
   optimizer$optimize(instance)
 })
 
-
 test_that("adbo tuner works", {
-  # options("bbotk_local" = TRUE)
+  # options(bbotk_local = TRUE)
+  skip_on_cran()
+  skip_if_not_installed("rush")
   flush_redis()
-  rush::rush_plan(n_workers = 5)
 
   learner = lrn("classif.rpart",
     minsplit  = to_tune(2, 128),
     cp        = to_tune(1e-04, 1e-1))
 
-  instance = TuningInstanceRushSingleCrit$new(
+  rush_plan(n_workers = 2)
+  instance = ti_async(
     task = tsk("pima"),
     learner = learner,
     resampling = rsmp("cv", folds = 3),
@@ -48,39 +34,13 @@ test_that("adbo tuner works", {
     store_benchmark_result = FALSE
   )
 
-  optimizer = tnr("adbo", design_size = 4)
-  optimizer$optimize(instance)
+  tuner = tnr("adbo", design_size = 4)
+  tuner$optimize(instance)
 
   expect_data_table(instance$archive$data, min.rows = 20L)
   expect_rush_reset(instance$rush)
 })
 
-test_that("adbo tuner works with limited number of workers", {
-  # options("bbotk_local" = TRUE)
-  lgr::get_logger("rush")$set_threshold("debug")
-
-  flush_redis()
-  rush::rush_plan(n_workers = 5)
-
-  learner = lrn("classif.rpart",
-    minsplit  = to_tune(2, 128),
-    cp        = to_tune(1e-04, 1e-1))
-
-  instance = TuningInstanceRushSingleCrit$new(
-    task = tsk("pima"),
-    learner = learner,
-    resampling = rsmp("cv", folds = 3),
-    measure = msr("classif.ce"),
-    terminator = trm("evals", n_evals = 20),
-    store_benchmark_result = FALSE
-  )
-
-  optimizer = tnr("adbo", design_size = 4, n_workers = 2)
-  optimizer$optimize(instance)
-
-  expect_data_table(instance$archive$data, min.rows = 20L)
-  expect_rush_reset(instance$rush)
-})
 
 test_that("adbo works with transformation functions", {
   flush_redis()

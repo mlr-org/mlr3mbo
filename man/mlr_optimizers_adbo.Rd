@@ -7,6 +7,11 @@
 \description{
 Asynchronous Decentralized Bayesian Optimization (ADBO).
 }
+\note{
+The \eqn{\lambda} parameter of the upper confidence bound acquisition function controls the trade-off between exploration and exploitation.
+A large \eqn{\lambda} value leads to more exploration, while a small \eqn{\lambda} value leads to more exploitation.
+ADBO can use periodic exponential decay to reduce \eqn{\lambda} periodically to the exploitation phase.
+}
 \section{Parameters}{
 
 \describe{
@@ -26,8 +31,8 @@ Initial design.}
 }
 }
 
-\section{Super class}{
-\code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{OptimizerADBO}
+\section{Super classes}{
+\code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{\link[bbotk:OptimizerAsync]{bbotk::OptimizerAsync}} -> \code{OptimizerADBO}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -60,9 +65,9 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<a id="method-OptimizerADBO-optimize"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerADBO-optimize}{}}}
 \subsection{Method \code{optimize()}}{
-Performs the optimization and writes optimization result into
-\link{OptimInstance}. The optimization result is returned but the complete
-optimization path is stored in \link{Archive} of \link{OptimInstance}.
+Performs the optimization on a \link{OptimInstanceAsyncSingleCrit} or \link{OptimInstanceAsyncMultiCrit} until termination.
+The single evaluations will be written into the \link{ArchiveAsync}.
+The result will be written into the instance object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerADBO$optimize(inst)}\if{html}{\out{</div>}}
 }
@@ -70,12 +75,12 @@ optimization path is stored in \link{Archive} of \link{OptimInstance}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{inst}}{(\link{OptimInstance}).}
+\item{\code{inst}}{(\link{OptimInstanceAsyncSingleCrit} | \link{OptimInstanceAsyncMultiCrit}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\link[data.table:data.table]{data.table::data.table}.
+\code{\link[data.table:data.table]{data.table::data.table()}}
 }
 }
 \if{html}{\out{<hr>}}

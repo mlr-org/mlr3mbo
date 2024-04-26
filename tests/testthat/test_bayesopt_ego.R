@@ -164,7 +164,7 @@ test_that("bayesopt_ego eips", {
 
   terminator = trm("evals", n_evals = 5L)
 
-  instance = OptimInstanceSingleCrit$new(
+  instance = OptimInstanceBatchSingleCrit$new(
     objective = objective,
     terminator = terminator
   )

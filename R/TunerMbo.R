@@ -1,4 +1,4 @@
-#' @title Tuner using Model Based Optimization
+#' @title TunerBatch using Model Based Optimization
 #'
 #' @name mlr_tuners_mbo
 #'
@@ -50,7 +50,7 @@
 #' }
 #' }
 TunerMbo = R6Class("TunerMbo",
-  inherit = mlr3tuning::TunerFromOptimizer,
+  inherit = mlr3tuning::TunerBatchFromOptimizerBatch,
 
   public = list(
     #' @description

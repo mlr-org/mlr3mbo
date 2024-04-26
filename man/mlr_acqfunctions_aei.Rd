@@ -47,7 +47,7 @@ if (requireNamespace("mlr3learners") &
     codomain = codomain,
     properties = "noisy")
 
-  instance = OptimInstanceSingleCrit$new(
+  instance = OptimInstanceBatchSingleCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
