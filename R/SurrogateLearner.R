@@ -223,7 +223,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
         walk(self$cols_y, function(col) {
           min = min(xydt[[col]], na.rm = TRUE)
           max = max(xydt[[col]], na.rm = TRUE)
-          xydt[state %in% c("queued", "running"), (col) := runif(.N, min, max)]
+          xydt[c("queued", "running"), (col) := runif(.N, min, max), on = "state"]
         })
         set(xydt, j = "state", value = NULL)
       } else {

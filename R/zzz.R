@@ -10,7 +10,7 @@
 #' @import mlr3
 #' @import mlr3tuning
 #' @import rush
-#' @importFrom stats setNames runif dnorm pnorm quantile
+#' @importFrom stats setNames runif dnorm pnorm quantile rexp
 #' @useDynLib mlr3mbo c_sms_indicator c_eps_indicator
 "_PACKAGE"
 

@@ -24,7 +24,7 @@ if (requireNamespace("mlr3learners") &
   resampling = rsmp("cv", folds = 3)
   measure = msr("classif.acc")
 
-  instance = TuningInstanceSingleCrit$new(
+  instance = TuningInstanceBatchSingleCrit$new(
     task = task,
     learner = learner,
     resampling = resampling,
@@ -39,7 +39,7 @@ if (requireNamespace("mlr3learners") &
   resampling = rsmp("cv", folds = 3)
   measures = msrs(c("classif.acc", "selected_features"))
 
-  instance = TuningInstanceMultiCrit$new(
+  instance = TuningInstanceBatchMultiCrit$new(
     task = task,
     learner = learner,
     resampling = resampling,

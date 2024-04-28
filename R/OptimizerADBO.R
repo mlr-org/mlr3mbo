@@ -42,8 +42,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
         period = p_int(lower = 1L, default = 25L),
         design_size = p_int(lower = 1L),
         initial_design = p_uty(),
-        impute_method = p_fct(c("mean", "random"), default = "random"),
-        n_workers = p_int(lower = 1L)
+        impute_method = p_fct(c("mean", "random"), default = "random")
       )
 
       param_set$set_values(lambda = 1.96, exponential_decay = TRUE, rate = 0.1, period = 25L, design_size = 1L, impute_method = "random")
