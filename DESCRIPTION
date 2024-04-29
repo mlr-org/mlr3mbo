@@ -41,17 +41,16 @@ BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
     R (>= 3.1.0)
 Imports:
-    bbotk (>= 0.5.4),
+    bbotk (>= 0.8.0.9000),
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
     mlr3 (>= 0.14.0),
     mlr3misc (>= 0.11.0),
-    mlr3tuning (>= 0.14.0),
+    mlr3tuning (>= 0.20.0.9000),
     paradox (>= 0.10.0),
     spacefillr,
-    R6 (>= 2.4.1),
-    rush
+    R6 (>= 2.4.1)
 Suggests:
     DiceKriging,
     emoa,
@@ -65,8 +64,13 @@ Suggests:
     rgenoud,
     rmarkdown,
     rpart,
+    rush,
     stringi,
-    testthat (>= 3.0.0),
+    testthat (>= 3.0.0)
+Remotes:
+    mlr-org/bbotk,
+    mlr-org/mlr3tuning,
+    mlr-org/rush
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
