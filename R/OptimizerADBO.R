@@ -136,7 +136,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
         ys = inst$objective$eval(xs_trafoed)
 
         # push result
-        extra = c(xss[[1]][c("acq_cb", ".already_evaluated")], list(stage = "mbo", lambda_0 = lambda_0, lambda = lambda))
+        extra = c(xss[[1]][c("acq_cb", ".already_evaluated")], list(lambda_0 = lambda_0, lambda = lambda))
         archive$push_result(key, ys, x_domain = xs_trafoed, extra = extra)
       }
     }
