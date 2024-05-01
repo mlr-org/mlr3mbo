@@ -3,7 +3,7 @@ test_that("adbo optimizer works", {
   skip_if_not_installed("rush")
   flush_redis()
 
-  rush_plan(n_workers = 2)
+  rush::rush_plan(n_workers = 2)
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,

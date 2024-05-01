@@ -33,7 +33,7 @@ test_that("adbo works with transformation functions", {
     minsplit  = to_tune(2, 128, logscale = TRUE),
     cp        = to_tune(1e-04, 1e-1, logscale = TRUE))
 
-  rush_plan(n_workers = 2)
+  rush::rush_plan(n_workers = 2)
   instance = ti_async(
     task = tsk("pima"),
     learner = learner,
@@ -60,7 +60,7 @@ test_that("search works with dependencies", {
     cp        = to_tune(1e-04, 1e-1),
     keep_model = to_tune())
 
-  rush_plan(n_workers = 2)
+  rush::rush_plan(n_workers = 2)
   instance = ti_async(
     task = tsk("pima"),
     learner = learner,
@@ -92,7 +92,7 @@ test_that("adbo works with branching", {
     "branch.selection" = to_tune(c("rpart", "debug"))
   )
 
-  rush_plan(n_workers = 2)
+  rush::rush_plan(n_workers = 2)
   instance = ti_async(
     task = tsk("pima"),
     learner = graph_learner,
