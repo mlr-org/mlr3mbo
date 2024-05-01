@@ -28,6 +28,11 @@ Period of the exponential decay.}
 Size of the initial design.}
 \item{\code{initial_design}}{\code{data.table}\cr
 Initial design.}
+\item{\code{impute_method}}{\code{character(1)}\cr
+Imputation method for missing values in the surrogate model.}
+\item{\code{n_workers}}{\code{integer(1)}\cr
+Number of workers to use.
+Defaults to the number of workers set by \code{rush::rush_plan()}}
 }
 }
 

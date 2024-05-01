@@ -24,6 +24,11 @@
 #'   Size of the initial design.}
 #' \item{`initial_design`}{`data.table`\cr
 #'   Initial design.}
+#' \item{`impute_method`}{`character(1)`\cr
+#'   Imputation method for missing values in the surrogate model.}
+#' \item{`n_workers`}{`integer(1)`\cr
+#'   Number of workers to use.
+#'   Defaults to the number of workers set by `rush::rush_plan()`}
 #' }
 #'
 #' @export
@@ -42,7 +47,8 @@ OptimizerADBO = R6Class("OptimizerADBO",
         period = p_int(lower = 1L, default = 25L),
         design_size = p_int(lower = 1L),
         initial_design = p_uty(),
-        impute_method = p_fct(c("mean", "random"), default = "random")
+        impute_method = p_fct(c("mean", "random"), default = "random"),
+        n_workers = p_int(lower = 1L, default = NULL, special_vals = list(NULL))
       )
 
       param_set$set_values(lambda = 1.96, exponential_decay = TRUE, rate = 0.1, period = 25L, design_size = 1L, impute_method = "random")
@@ -79,7 +85,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
         pv$initial_design
       }
 
-      optimize_async_default(inst, self, design)
+      optimize_async_default(inst, self, design, n_workers = pv$n_workers)
     }
   ),
 
