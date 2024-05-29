@@ -43,9 +43,9 @@ OptimizerLocalSearch = R6Class("OptimizerLocalSearch",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function() {
       param_set = ps(
-        mu = p_int(lower = 1L, default = 10L, tags = "required"),
-        n_points = p_int(lower = 1L, default = 100L, tags = "required"),
-        sigma = p_dbl(lower = 0L, default = 0.1, tags = "required")
+        mu = p_int(lower = 1L, default = 10L),
+        n_points = p_int(lower = 1L, default = 100L),
+        sigma = p_dbl(lower = 0L, default = 0.1)
       )
       param_set$values = list(mu = 10L, n_points = 100L, sigma = 0.1)
 
