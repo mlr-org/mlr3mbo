@@ -214,6 +214,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
+      xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$cols_y)
       assert_learnable(task, learner = self$learner)
       self$learner$train(task)

@@ -195,3 +195,14 @@ expect_acqfunction = function(acqf) {
   expect_man_exists(acqf$man)
 }
 
+sortnames = function(x) {
+  if (!is.null(names(x))) {
+    x = x[order(names(x), decreasing = TRUE)]
+  }
+  x
+}
+
+expect_equal_sorted = function(x, y, ...) {
+  expect_equal(sortnames(x), sortnames(y), ...)
+}
+
