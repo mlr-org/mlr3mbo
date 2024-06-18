@@ -64,13 +64,11 @@ Suggests:
     rgenoud,
     rmarkdown,
     rpart,
-    rush,
     stringi,
     testthat (>= 3.0.0)
 Remotes:
     mlr-org/bbotk,
     mlr-org/mlr3tuning,
-    mlr-org/rush
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
@@ -93,7 +91,6 @@ Collate:
     'AcqFunctionSmsEgo.R'
     'AcqOptimizer.R'
     'aaa.R'
-    'OptimizerADBO.R'
     'OptimizerMbo.R'
     'mlr_result_assigners.R'
     'ResultAssigner.R'
@@ -102,7 +99,6 @@ Collate:
     'Surrogate.R'
     'SurrogateLearner.R'
     'SurrogateLearnerCollection.R'
-    'TunerADBO.R'
     'TunerMbo.R'
     'mlr_loop_functions.R'
     'bayesopt_ego.R'
