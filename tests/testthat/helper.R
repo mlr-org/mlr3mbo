@@ -210,7 +210,7 @@ flush_redis = function() {
 
 sortnames = function(x) {
   if (!is.null(names(x))) {
-    x <- x[order(names(x), decreasing = TRUE)]
+    x = x[order(names(x), decreasing = TRUE)]
   }
   x
 }
@@ -218,3 +218,4 @@ sortnames = function(x) {
 expect_equal_sorted = function(x, y, ...) {
   expect_equal(sortnames(x), sortnames(y), ...)
 }
+
