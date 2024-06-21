@@ -11,8 +11,8 @@
 #' obtained by scalarizing these values via the augmented Tchebycheff function, updating the surrogate with respect to
 #' these scalarized values and optimizing the acquisition function.
 #'
-#' @param instance ([bbotk::OptimInstanceMultiCrit])\cr
-#'   The [bbotk::OptimInstanceMultiCrit] to be optimized.
+#' @param instance ([bbotk::OptimInstanceBatchMultiCrit])\cr
+#'   The [bbotk::OptimInstanceBatchMultiCrit] to be optimized.
 #' @param init_design_size (`NULL` | `integer(1)`)\cr
 #'   Size of the initial design.
 #'   If `NULL` and the [bbotk::Archive] contains no evaluations, \code{4 * d} is used with \code{d} being the
@@ -44,11 +44,11 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::Archive] of the [bbotk::OptimInstanceMultiCrit].
+#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::Archive] of the [bbotk::OptimInstanceBatchMultiCrit].
 #' * The scalarizations of the objective function values are stored as the `y_scal` column in the
-#'   [bbotk::Archive] of the [bbotk::OptimInstanceMultiCrit].
+#'   [bbotk::Archive] of the [bbotk::OptimInstanceBatchMultiCrit].
 #' * To make use of parallel evaluations in the case of `q > 1, the objective
-#'   function of the [bbotk::OptimInstanceMultiCrit] must be implemented accordingly.
+#'   function of the [bbotk::OptimInstanceBatchMultiCrit] must be implemented accordingly.
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.
@@ -75,7 +75,7 @@
 #'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceMultiCrit$new(
+#'   instance = OptimInstanceBatchMultiCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -109,7 +109,7 @@ bayesopt_parego = function(
   ) {
 
   # assertions
-  assert_r6(instance, "OptimInstanceMultiCrit")
+  assert_r6(instance, "OptimInstanceBatchMultiCrit")
   assert_r6(surrogate, classes = "SurrogateLearner")
   assert_r6(acq_function, classes = "AcqFunction")
   assert_r6(acq_optimizer, classes = "AcqOptimizer")

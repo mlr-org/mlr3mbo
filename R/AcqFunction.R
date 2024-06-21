@@ -176,7 +176,7 @@ AcqFunction = R6Class("AcqFunction",
           stopf("Acquisition function '%s' requires the surrogate to have `\"se\"` as `$predict_type`.", format(self))
         }
         private$.surrogate = rhs
-        private$.archive = assert_r6(rhs$archive, classes = "Archive")
+        private$.archive = assert_archive(rhs$archive)
         codomain = generate_acq_codomain(rhs, id = self$id, direction = self$direction)
         self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs)
         domain = generate_acq_domain(rhs)

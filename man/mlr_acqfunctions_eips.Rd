@@ -7,9 +7,9 @@
 \description{
 Expected Improvement per Second.
 
-It is assumed that calculations are performed on an \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit}.
+It is assumed that calculations are performed on an \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit}.
 Additionally to target values of the codomain that should be minimized or maximized, the
-\link[bbotk:Objective]{bbotk::Objective} of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} should return time values.
+\link[bbotk:Objective]{bbotk::Objective} of the \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} should return time values.
 The column names of the target variable and time variable must be passed as \code{cols_y} in the
 order \verb{(target, time)} when constructing the \link{SurrogateLearnerCollection} that is being used as a
 surrogate.
@@ -40,7 +40,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceSingleCrit$new(
+  instance = OptimInstanceBatchSingleCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 

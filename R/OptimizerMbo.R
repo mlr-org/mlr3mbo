@@ -47,7 +47,7 @@
 #'   codomain = ps(y = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceSingleCrit$new(
+#'   instance = OptimInstanceBatchSingleCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -75,7 +75,7 @@
 #'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceMultiCrit$new(
+#'   instance = OptimInstanceBatchMultiCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -89,7 +89,7 @@
 #' }
 #' }
 OptimizerMbo = R6Class("OptimizerMbo",
-  inherit = bbotk::Optimizer,
+  inherit = bbotk::OptimizerBatch,
 
   public = list(
     #' @description

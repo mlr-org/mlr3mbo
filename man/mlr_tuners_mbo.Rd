@@ -3,7 +3,7 @@
 \name{mlr_tuners_mbo}
 \alias{mlr_tuners_mbo}
 \alias{TunerMbo}
-\title{Tuner using Model Based Optimization}
+\title{TunerBatch using Model Based Optimization}
 \description{
 \code{TunerMbo} class that implements Model Based Optimization (MBO).
 This is a minimal interface internally passing on to \link{OptimizerMbo}.
@@ -24,7 +24,7 @@ if (requireNamespace("mlr3learners") &
   resampling = rsmp("cv", folds = 3)
   measure = msr("classif.acc")
 
-  instance = TuningInstanceSingleCrit$new(
+  instance = TuningInstanceBatchSingleCrit$new(
     task = task,
     learner = learner,
     resampling = resampling,
@@ -39,7 +39,7 @@ if (requireNamespace("mlr3learners") &
   resampling = rsmp("cv", folds = 3)
   measures = msrs(c("classif.acc", "selected_features"))
 
-  instance = TuningInstanceMultiCrit$new(
+  instance = TuningInstanceBatchMultiCrit$new(
     task = task,
     learner = learner,
     resampling = resampling,
@@ -52,7 +52,7 @@ if (requireNamespace("mlr3learners") &
 }
 }
 \section{Super classes}{
-\code{\link[mlr3tuning:Tuner]{mlr3tuning::Tuner}} -> \code{\link[mlr3tuning:TunerFromOptimizer]{mlr3tuning::TunerFromOptimizer}} -> \code{TunerMbo}
+\code{\link[mlr3tuning:Tuner]{mlr3tuning::Tuner}} -> \code{\link[mlr3tuning:TunerBatch]{mlr3tuning::TunerBatch}} -> \code{\link[mlr3tuning:TunerBatchFromOptimizerBatch]{mlr3tuning::TunerBatchFromOptimizerBatch}} -> \code{TunerMbo}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -109,7 +109,7 @@ Required packages are determined based on the \code{acq_function}, \code{surroga
 <ul>
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-format'><code>mlr3tuning::Tuner$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-help'><code>mlr3tuning::Tuner$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerFromOptimizer" data-id="optimize"><a href='../../mlr3tuning/html/TunerFromOptimizer.html#method-TunerFromOptimizer-optimize'><code>mlr3tuning::TunerFromOptimizer$optimize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerBatchFromOptimizerBatch" data-id="optimize"><a href='../../mlr3tuning/html/TunerBatchFromOptimizerBatch.html#method-TunerBatchFromOptimizerBatch-optimize'><code>mlr3tuning::TunerBatchFromOptimizerBatch$optimize()</code></a></span></li>
 </ul>
 </details>
 }}
