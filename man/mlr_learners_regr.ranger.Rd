@@ -2,23 +2,22 @@
 % Please edit documentation in R/LearnerRegrRangerCustom.R
 \name{mlr_learners_regr.ranger}
 \alias{mlr_learners_regr.ranger}
-\alias{LearnerRegrRangerCustom}
+\alias{LearnerRegrRangerMbo}
 \title{Custom Ranger Regression Learner}
 \description{
 Random regression forest.
 Calls \code{\link[ranger:ranger]{ranger::ranger()}} from package \CRANpkg{ranger}.
-...
 }
 \section{Super classes}{
-\code{\link[mlr3:Learner]{mlr3::Learner}} -> \code{\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}} -> \code{LearnerRegrRangerCustom}
+\code{\link[mlr3:Learner]{mlr3::Learner}} -> \code{\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}} -> \code{LearnerRegrRangerMbo}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-LearnerRegrRangerCustom-new}{\code{LearnerRegrRangerCustom$new()}}
-\item \href{#method-LearnerRegrRangerCustom-importance}{\code{LearnerRegrRangerCustom$importance()}}
-\item \href{#method-LearnerRegrRangerCustom-oob_error}{\code{LearnerRegrRangerCustom$oob_error()}}
-\item \href{#method-LearnerRegrRangerCustom-clone}{\code{LearnerRegrRangerCustom$clone()}}
+\item \href{#method-LearnerRegrRangerMbo-new}{\code{LearnerRegrRangerMbo$new()}}
+\item \href{#method-LearnerRegrRangerMbo-importance}{\code{LearnerRegrRangerMbo$importance()}}
+\item \href{#method-LearnerRegrRangerMbo-oob_error}{\code{LearnerRegrRangerMbo$oob_error()}}
+\item \href{#method-LearnerRegrRangerMbo-clone}{\code{LearnerRegrRangerMbo$clone()}}
 }
 }
 \if{html}{\out{
@@ -36,24 +35,24 @@ Calls \code{\link[ranger:ranger]{ranger::ranger()}} from package \CRANpkg{ranger
 </details>
 }}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LearnerRegrRangerCustom-new"></a>}}
-\if{latex}{\out{\hypertarget{method-LearnerRegrRangerCustom-new}{}}}
+\if{html}{\out{<a id="method-LearnerRegrRangerMbo-new"></a>}}
+\if{latex}{\out{\hypertarget{method-LearnerRegrRangerMbo-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LearnerRegrRangerCustom$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{LearnerRegrRangerMbo$new()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LearnerRegrRangerCustom-importance"></a>}}
-\if{latex}{\out{\hypertarget{method-LearnerRegrRangerCustom-importance}{}}}
+\if{html}{\out{<a id="method-LearnerRegrRangerMbo-importance"></a>}}
+\if{latex}{\out{\hypertarget{method-LearnerRegrRangerMbo-importance}{}}}
 \subsection{Method \code{importance()}}{
 The importance scores are extracted from the model slot \code{variable.importance}.
 Parameter \code{importance.mode} must be set to \code{"impurity"}, \code{"impurity_corrected"}, or
 \code{"permutation"}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LearnerRegrRangerCustom$importance()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{LearnerRegrRangerMbo$importance()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
@@ -61,12 +60,12 @@ Named \code{numeric()}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LearnerRegrRangerCustom-oob_error"></a>}}
-\if{latex}{\out{\hypertarget{method-LearnerRegrRangerCustom-oob_error}{}}}
+\if{html}{\out{<a id="method-LearnerRegrRangerMbo-oob_error"></a>}}
+\if{latex}{\out{\hypertarget{method-LearnerRegrRangerMbo-oob_error}{}}}
 \subsection{Method \code{oob_error()}}{
 The out-of-bag error, extracted from model slot \code{prediction.error}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LearnerRegrRangerCustom$oob_error()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{LearnerRegrRangerMbo$oob_error()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
@@ -74,12 +73,12 @@ The out-of-bag error, extracted from model slot \code{prediction.error}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LearnerRegrRangerCustom-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-LearnerRegrRangerCustom-clone}{}}}
+\if{html}{\out{<a id="method-LearnerRegrRangerMbo-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-LearnerRegrRangerMbo-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LearnerRegrRangerCustom$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{LearnerRegrRangerMbo$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

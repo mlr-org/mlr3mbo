@@ -10,10 +10,10 @@
 #'
 #' In each iteration, for each of the `mu` initial best points, `n_points` neighbors are generated
 #' by local mutation. Local mutation generates a neighbor by sampling a single parameter that is to
-#' be mutated and then proceeds as follows: Double parameters ([paradox::ParamDbl]) are mutated via
+#' be mutated and then proceeds as follows: Double parameters ([paradox::p_dbl]) are mutated via
 #' Gaussian mutation (with a prior standardization to `[0, 1]` and retransformation after mutation).
-#' Integer parameters ([paradox::ParamInt]) undergo the same mutation but are rounded to the closest
-#' integer after mutation. Categorical parameters ([paradox::ParamFct] and [paradox::ParamLgl]) are
+#' Integer parameters ([paradox::p_int]) undergo the same mutation but are rounded to the closest
+#' integer after mutation. Categorical parameters ([paradox::p_fct] and [paradox::p_lgl]) are
 #' mutated via uniform mutation. Note that parameters that are conditioned on (i.e., they are
 #' parents of a [paradox::Condition], see the dependencies of the search space) are not mutated.
 #'

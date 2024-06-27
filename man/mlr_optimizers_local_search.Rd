@@ -12,10 +12,10 @@ random are evaluated.
 
 In each iteration, for each of the \code{mu} initial best points, \code{n_points} neighbors are generated
 by local mutation. Local mutation generates a neighbor by sampling a single parameter that is to
-be mutated and then proceeds as follows: Double parameters (\link[paradox:ParamDbl]{paradox::ParamDbl}) are mutated via
+be mutated and then proceeds as follows: Double parameters (\link[paradox:Domain]{paradox::p_dbl}) are mutated via
 Gaussian mutation (with a prior standardization to \verb{[0, 1]} and retransformation after mutation).
-Integer parameters (\link[paradox:ParamInt]{paradox::ParamInt}) undergo the same mutation but are rounded to the closest
-integer after mutation. Categorical parameters (\link[paradox:ParamFct]{paradox::ParamFct} and \link[paradox:ParamLgl]{paradox::ParamLgl}) are
+Integer parameters (\link[paradox:Domain]{paradox::p_int}) undergo the same mutation but are rounded to the closest
+integer after mutation. Categorical parameters (\link[paradox:Domain]{paradox::p_fct} and \link[paradox:Domain]{paradox::p_lgl}) are
 mutated via uniform mutation. Note that parameters that are conditioned on (i.e., they are
 parents of a \link[paradox:Condition]{paradox::Condition}, see the dependencies of the search space) are not mutated.
 }
@@ -53,7 +53,6 @@ Default is \code{0.1}.
 <ul>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="optimize"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-optimize'><code>bbotk::Optimizer$optimize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="print"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-print'><code>bbotk::Optimizer$print()</code></a></span></li>
 </ul>
 </details>

@@ -92,17 +92,17 @@
 #'}
 #'}
 bayesopt_ego_log = function(
-    instance,
-    surrogate,
-    acq_function,
-    acq_optimizer,
-    init_design_size = NULL,
-    random_interleave_iter = 0L,
-    epsilon = 1e-3
+  instance,
+  surrogate,
+  acq_function,
+  acq_optimizer,
+  init_design_size = NULL,
+  random_interleave_iter = 0L,
+  epsilon = 1e-3
   ) {
 
   # assertions and defaults
-  assert_r6(instance, "OptimInstanceSingleCrit")
+  assert_r6(instance, "OptimInstanceBatchSingleCrit")
   assert_r6(surrogate, classes = "Surrogate")  # cannot be SurrogateLearner due to EIPS
   assert_r6(acq_function, classes = "AcqFunction")  # FIXME: should explicityly assert acqfs and make sure that codomain tag is handled
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
@@ -128,9 +128,11 @@ bayesopt_ego_log = function(
   surrogate$cols_y = "y_trafo"
   acq_function$surrogate_max_to_min = 1
 
-  if (test_r6(acq_function, classes = "AcqFunctionCB") || test_r6(acq_function, classes = "AcqFunctionMean")) {
-    acq_function$codomain$params[[acq_function$id]]$tags = "minimize"
-  }
+  # FIXME: Cannot be set with new paradox
+  #
+  # if (test_r6(acq_function, classes = "AcqFunctionCB") || test_r6(acq_function, classes = "AcqFunctionMean")) {
+  #   acq_function$codomain$params[[acq_function$id]]$tags = "minimize"
+  # }
 
   # actual loop
   repeat {
@@ -168,4 +170,3 @@ attr(bayesopt_ego_log, "instance") = "single-crit"
 attr(bayesopt_ego_log, "man") = "mlr3mbo::mlr_loop_functions_ego_log"
 
 mlr_loop_functions$add("bayesopt_ego_log", bayesopt_ego_log)
-

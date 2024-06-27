@@ -5,10 +5,9 @@
 #' @description
 #' Random regression forest.
 #' Calls [ranger::ranger()] from package \CRANpkg{ranger}.
-#' ...
 #'
 #' @export
-LearnerRegrRangerCustom = R6Class("LearnerRegrRangerCustom",
+LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
   inherit = LearnerRegr,
   public = list(
 
@@ -16,18 +15,17 @@ LearnerRegrRangerCustom = R6Class("LearnerRegrRangerCustom",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function() {
       ps = ps(
-        alpha                        = p_dbl(default = 0.5, tags = "train"),
+        alpha                        = p_dbl(default = 0.5, tags = "train", depends = quote(splitrule == "maxstat")),
         always.split.variables       = p_uty(tags = "train"),
         holdout                      = p_lgl(default = FALSE, tags = "train"),
         importance                   = p_fct(c("none", "impurity", "impurity_corrected", "permutation"), tags = "train"),
         keep.inbag                   = p_lgl(default = FALSE, tags = "train"),
         max.depth                    = p_int(default = NULL, lower = 0L, special_vals = list(NULL), tags = "train"),
         min.node.size                = p_int(1L, default = 5L, special_vals = list(NULL), tags = "train"),
-        min.prop                     = p_dbl(default = 0.1, tags = "train"),
-        minprop                      = p_dbl(default = 0.1, tags = "train"),
+        minprop                      = p_dbl(default = 0.1, tags = "train", depends = quote(splitrule == "maxstat")),
         mtry                         = p_int(lower = 1L, special_vals = list(NULL), tags = "train"),
         mtry.ratio                   = p_dbl(lower = 0, upper = 1, tags = "train"),
-        num.random.splits            = p_int(1L, default = 1L, tags = "train"),
+        num.random.splits            = p_int(1L, default = 1L, tags = "train", depends = quote(splitrule == "extratrees")),
         num.threads                  = p_int(1L, default = 1L, tags = c("train", "predict", "threads")),
         num.trees                    = p_int(1L, default = 500L, tags = c("train", "predict", "hotstart")),
         oob.error                    = p_lgl(default = TRUE, tags = "train"),
@@ -38,7 +36,7 @@ LearnerRegrRangerCustom = R6Class("LearnerRegrRangerCustom",
         respect.unordered.factors    = p_fct(c("ignore", "order", "partition"), default = "ignore", tags = "train"),
         sample.fraction              = p_dbl(0L, 1L, tags = "train"),
         save.memory                  = p_lgl(default = FALSE, tags = "train"),
-        scale.permutation.importance = p_lgl(default = FALSE, tags = "train"),
+        scale.permutation.importance = p_lgl(default = FALSE, tags = "train", depends = quote(importance == "permutation")),
         se.method                    = p_fct(c("jack", "infjack", "simple"), default = "infjack", tags = "predict"), # FIXME: only works if predict_type == "se"
         seed                         = p_int(default = NULL, special_vals = list(NULL), tags = c("train", "predict")),
         split.select.weights         = p_uty(default = NULL, tags = "train"),
@@ -49,21 +47,15 @@ LearnerRegrRangerCustom = R6Class("LearnerRegrRangerCustom",
 
       ps$values = list(num.threads = 1L)
 
-      # deps
-      ps$add_dep("num.random.splits", "splitrule", CondEqual$new("extratrees"))
-      ps$add_dep("alpha", "splitrule", CondEqual$new("maxstat"))
-      ps$add_dep("minprop", "splitrule", CondEqual$new("maxstat"))
-      ps$add_dep("scale.permutation.importance", "importance", CondEqual$new("permutation"))
-
-
       super$initialize(
-        id = "regr.ranger_custom",
+        id = "regr.ranger_mbo",
         param_set = ps,
         predict_types = c("response", "se"),
         feature_types = c("logical", "integer", "numeric", "character", "factor", "ordered"),
         properties = c("weights", "importance", "oob_error", "hotstart_backward"),
         packages = c("mlr3learners", "ranger"),
-        man = "mlr3learners::mlr_learners_regr.ranger_custom"
+        label = "Custom MBO Random Forest",
+        man = "mlr3mbo::mlr_learners_regr.ranger_mbo"
       )
     },
 
@@ -125,6 +117,7 @@ LearnerRegrRangerCustom = R6Class("LearnerRegrRangerCustom",
         list(response = prediction$predictions, se = prediction$se)
       }
     },
+
     .hotstart = function(task) {
       model = self$model
       model$num.trees = self$param_set$values$num.trees
@@ -134,7 +127,7 @@ LearnerRegrRangerCustom = R6Class("LearnerRegrRangerCustom",
 )
 
 #' @export
-default_values.LearnerRegrRangerCustom = function(x, search_space, task, ...) { # nolint
+default_values.LearnerRegrRangerMbo = function(x, search_space, task, ...) { # nolint
   special_defaults = list(
     mtry = floor(sqrt(length(task$feature_names))),
     mtry.ratio = floor(sqrt(length(task$feature_names))) / length(task$feature_names),
@@ -144,4 +137,6 @@ default_values.LearnerRegrRangerCustom = function(x, search_space, task, ...) { 
   defaults[search_space$ids()]
 }
 
-# FIXME: add to dictionary
+#' @include aaa.R
+learners[["regr.ranger_mbo"]] = LearnerRegrRangerMbo
+
