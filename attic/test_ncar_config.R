@@ -10,10 +10,16 @@ library(mlr3learners)
 #   cp        = to_tune(1e-04, 1e-1, logscale = TRUE)
 # )
 
+# learner = lrn("classif.glmnet",
+#   alpha = to_tune(0, 1),
+#   lambda = to_tune(p_dbl(1e-4, 1e4, logscale = TRUE))
+# )
+
 learner = lrn("classif.glmnet",
   alpha = to_tune(0, 1),
-  lambda = to_tune(p_dbl(1e-4, 1e4, logscale = TRUE))
+  s     = to_tune(1e-4, 1e4, logscale = TRUE)
 )
+
 
 budget = 40L
 
