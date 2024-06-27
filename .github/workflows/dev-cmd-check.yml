@@ -38,6 +38,10 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
 
+      - uses: supercharge/redis-github-action@1.7.0
+        with:
+          redis-version: 7
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
@@ -48,3 +52,6 @@ jobs:
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
+        with:
+          args: 'c("--no-manual")' # "--as-cran" prevents to start external processes
+

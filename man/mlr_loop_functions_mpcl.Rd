@@ -17,8 +17,8 @@ bayesopt_mpcl(
 )
 }
 \arguments{
-\item{instance}{(\link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit})\cr
-The \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} to be optimized.}
+\item{instance}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit})\cr
+The \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} to be optimized.}
 
 \item{surrogate}{(\link{Surrogate})\cr
 \link{Surrogate} to be used as a surrogate.
@@ -68,9 +68,9 @@ This is repeated \code{q - 1} times to obtain a total of \code{q} candidates tha
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
-\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit}.
+\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit}.
 \item To make use of parallel evaluations in the case of `q > 1, the objective
-function of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} must be implemented accordingly.
+function of the \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} must be implemented accordingly.
 }
 }
 \examples{
@@ -90,7 +90,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceSingleCrit$new(
+  instance = OptimInstanceBatchSingleCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 7))
 

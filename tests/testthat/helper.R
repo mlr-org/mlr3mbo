@@ -75,9 +75,9 @@ OBJ_2D_NOISY = ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D, properties 
 # Instance helper
 MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 10L)) {
   if (objective$codomain$length == 1L) {
-    OptimInstanceSingleCrit$new(objective = objective, search_space = search_space, terminator = terminator)
+    OptimInstanceBatchSingleCrit$new(objective = objective, search_space = search_space, terminator = terminator)
   } else {
-    OptimInstanceMultiCrit$new(objective = objective, search_space = search_space, terminator = terminator)
+    OptimInstanceBatchMultiCrit$new(objective = objective, search_space = search_space, terminator = terminator)
   }
 }
 
@@ -195,7 +195,6 @@ expect_acqfunction = function(acqf) {
   expect_man_exists(acqf$man)
 }
 
-
 sortnames = function(x) {
   if (!is.null(names(x))) {
     x = x[order(names(x), decreasing = TRUE)]
@@ -206,3 +205,4 @@ sortnames = function(x) {
 expect_equal_sorted = function(x, y, ...) {
   expect_equal(sortnames(x), sortnames(y), ...)
 }
+

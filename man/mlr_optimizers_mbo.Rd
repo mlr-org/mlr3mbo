@@ -53,7 +53,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceSingleCrit$new(
+  instance = OptimInstanceBatchSingleCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
@@ -81,7 +81,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceMultiCrit$new(
+  instance = OptimInstanceBatchMultiCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
@@ -95,8 +95,8 @@ if (requireNamespace("mlr3learners") &
 }
 }
 }
-\section{Super class}{
-\code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{OptimizerMbo}
+\section{Super classes}{
+\code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch}} -> \code{OptimizerMbo}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -153,7 +153,7 @@ Required packages are determined based on the \code{acq_function}, \code{surroga
 <ul>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="optimize"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-optimize'><code>bbotk::Optimizer$optimize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="OptimizerBatch" data-id="optimize"><a href='../../bbotk/html/OptimizerBatch.html#method-OptimizerBatch-optimize'><code>bbotk::OptimizerBatch$optimize()</code></a></span></li>
 </ul>
 </details>
 }}

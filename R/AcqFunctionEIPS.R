@@ -9,9 +9,9 @@
 #' @description
 #' Expected Improvement per Second.
 #'
-#' It is assumed that calculations are performed on an [bbotk::OptimInstanceSingleCrit].
+#' It is assumed that calculations are performed on an [bbotk::OptimInstanceBatchSingleCrit].
 #' Additionally to target values of the codomain that should be minimized or maximized, the
-#' [bbotk::Objective] of the [bbotk::OptimInstanceSingleCrit] should return time values.
+#' [bbotk::Objective] of the [bbotk::OptimInstanceBatchSingleCrit] should return time values.
 #' The column names of the target variable and time variable must be passed as `cols_y` in the
 #' order `(target, time)` when constructing the [SurrogateLearnerCollection] that is being used as a
 #' surrogate.
@@ -37,7 +37,7 @@
 #'   codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceSingleCrit$new(
+#'   instance = OptimInstanceBatchSingleCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'

@@ -118,7 +118,7 @@ test_that("default_acqfunction", {
 test_that("default_acqoptimizer", {
   acqopt = default_acqoptimizer(default_acqfunction(MAKE_INST_1D()))
   expect_r6(acqopt, "AcqOptimizer")
-  expect_r6(acqopt$optimizer, "OptimizerRandomSearch")
+  expect_r6(acqopt$optimizer, "OptimizerBatchRandomSearch")
 })
 
 test_that("default_result_assigner", {
@@ -164,7 +164,7 @@ test_that("stability and defaults", {
   acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   acq_optimizer$param_set$values$logging_level = "info"
   expect_r6(acq_optimizer, "AcqOptimizer")
-  expect_r6(acq_optimizer$optimizer, "OptimizerRandomSearch")
+  expect_r6(acq_optimizer$optimizer, "OptimizerBatchRandomSearch")
 
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)

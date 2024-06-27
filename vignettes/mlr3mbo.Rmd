@@ -454,7 +454,7 @@ Note that important fields of an `OptimizerMbo` such as `$param_classes`, `$pack
 
 If arguments such as the `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner` were not fully initialized during construction, e.g., the `surrogate` missing the `archive`, or the `acq_function` missing the `surrogate`, lazy initialization is completed prior to the optimizer being used for optimization.
 
-An object of class `OptimizerMbo` can be used to optimize an object of class `r ref("bbotk::OptimInstanceSingleCrit", "OptimInstanceSingleCrit")` or `r ref("bbotk::OptimInstanceMultiCrit", "OptimInstanceMultiCrit")`.
+An object of class `OptimizerMbo` can be used to optimize an object of class `r ref("bbotk::OptimInstanceBatchSingleCrit", "OptimInstanceBatchSingleCrit")` or `r ref("bbotk::OptimInstanceBatchMultiCrit", "OptimInstanceBatchMultiCrit")`.
 
 For hyperparameter optimization, `r ref("mlr3mbo::mlr_tuners_mbo", "TunerMbo")` should be used (which simply relies on an `OptimizerMbo` that is constructed internally):
 
@@ -536,7 +536,7 @@ objective = ObjectiveRFun$new(
   domain = domain,
   codomain = codomain)
 
-instance = OptimInstanceSingleCrit$new(
+instance = OptimInstanceBatchSingleCrit$new(
   objective = objective,
   terminator = trm("evals", n_evals = 10))
 
@@ -630,7 +630,7 @@ objective = ObjectiveRFun$new(
   domain = domain,
   codomain = codomain)
 
-instance = OptimInstanceSingleCrit$new(
+instance = OptimInstanceBatchSingleCrit$new(
   objective = objective,
   search_space = domain,
   terminator = trm("evals", n_evals = 60))
@@ -686,7 +686,7 @@ objective = ObjectiveRFun$new(
   domain = domain,
   codomain = codomain)
 
-instance = OptimInstanceMultiCrit$new(
+instance = OptimInstanceBatchMultiCrit$new(
   objective = objective,
   search_space = domain,
   terminator = trm("evals", n_evals = 30))
@@ -743,7 +743,7 @@ objective = ObjectiveRFun$new(
   domain = domain,
   codomain = codomain)
 
-instance = OptimInstanceMultiCrit$new(
+instance = OptimInstanceBatchMultiCrit$new(
   objective = objective,
   search_space = domain,
   terminator = trm("evals", n_evals = 30))
@@ -798,7 +798,7 @@ learner = lrn("classif.rpart",
 resampling = rsmp("cv", folds = 3)
 measure = msr("classif.acc")
 
-instance = TuningInstanceSingleCrit$new(
+instance = TuningInstanceBatchSingleCrit$new(
   task = task,
   learner = learner,
   resampling = resampling,
@@ -833,7 +833,7 @@ learner = lrn("classif.rpart",
 resampling = rsmp("cv", folds = 3)
 measures = msrs(c("classif.acc", "selected_features"))
 
-instance = TuningInstanceMultiCrit$new(
+instance = TuningInstanceBatchMultiCrit$new(
   task = task,
   learner = learner,
   resampling = resampling,
