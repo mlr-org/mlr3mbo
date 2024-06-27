@@ -19,6 +19,13 @@ register_bbotk = function() {
   iwalk(optimizers, function(obj, nm) x$add(nm, obj))
 } # nocov end
 
+#' @include aaa.R
+register_mlr3 = function() {
+  x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
+
+  iwalk(learners, function(obj, nm) x$add(nm, obj))
+}
+
 register_mlr3tuning = function() {
   # nocov start
   x = utils::getFromNamespace("mlr_tuners", ns = "mlr3tuning")
@@ -29,6 +36,7 @@ register_mlr3tuning = function() {
   # nocov start
   register_namespace_callback(pkgname, "bbotk", register_bbotk)
   register_namespace_callback(pkgname, "mlr3tuning", register_mlr3tuning)
+  register_namespace_callback(pkgname, "mlr3", register_mlr3)
 
   assign("lg", lgr::get_logger("bbotk"), envir = parent.env(environment()))
 
@@ -39,6 +47,7 @@ register_mlr3tuning = function() {
 
 .onUnload = function(libpaths) { # nolint
   # nocov start
+  walk(names(learners), function(id) mlr3::mlr_learners$remove(id))
   walk(names(optimizers), function(id) bbotk::mlr_optimizers$remove(id))
   walk(names(tuners), function(id) mlr3tuning::mlr_tuners$remove(id))
 } # nocov end
