@@ -44,24 +44,26 @@ OptimizerChain = R6Class("OptimizerChain",
       assert_list(optimizers, types = "Optimizer", any.missing = FALSE)
       assert_list(terminators, types = c("Terminator", "NULL"), len = length(optimizers))
 
-      param_sets = vector(mode = "list", length = length(optimizers))
-      ids_taken = character(0L)
+      # param_sets = vector(mode = "list", length = length(optimizers))
+      # ids_taken = character(0L)
       # for each optimizer check whether the id of the param_set
       # (decuded from the optimizer class) is already taken;
       # if necessary postfix the id
-      for (i_opt in seq_along(optimizers)) {
-        opt = optimizers[[i_opt]]
-        ps = opt$param_set$clone(deep = TRUE)
-        ps$set_id = class(opt)[[1L]]
-        try_postfix = 0L
-        while (ps$set_id %in% ids_taken) {
-          try_postfix = try_postfix + 1L
-          ps$set_id = paste0(class(opt)[[1L]], "_", try_postfix)
-        }
-        ids_taken[[i_opt]] = ps$set_id
-        param_sets[[i_opt]] = ps
-      }
-      private$.ids = map_chr(param_sets, "set_id")
+      # for (i_opt in seq_along(optimizers)) {
+      #   opt = optimizers[[i_opt]]
+      #   ps = opt$param_set$clone(deep = TRUE)
+      #   ps$set_id = class(opt)[[1L]]
+      #   try_postfix = 0L
+      #   while (ps$set_id %in% ids_taken) {
+      #     try_postfix = try_postfix + 1L
+      #     ps$set_id = paste0(class(opt)[[1L]], "_", try_postfix)
+      #   }
+      #   ids_taken[[i_opt]] = ps$set_id
+      #   param_sets[[i_opt]] = ps
+      # }
+
+      param_sets = map(optimizers, function(x) x$param_set$clone(deep = TRUE))
+      private$.ids = map_chr(optimizers, "id")
       super$initialize(
         param_set = ParamSetCollection$new(param_sets),
         param_classes = Reduce(intersect, mlr3misc::map(optimizers, "param_classes")),
