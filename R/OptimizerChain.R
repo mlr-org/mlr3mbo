@@ -3,7 +3,7 @@
 #' @name mlr_optimizers_chain
 #'
 #' @description
-#' `OptimizerChain` allows to run different [Optimizer]s sequentially.
+#' `OptimizerBatchChain` allows to run different [Optimizer]s sequentially.
 #'
 #' For each [Optimizer] an (optional) additional [Terminator] can be specified
 #' during construction.
@@ -18,7 +18,7 @@
 #' additional [Terminator]), the second [Optimizer] (and so on) is run unless
 #' the original [Terminator] of the [OptimInstance] indicates termination.
 #'
-#' [OptimizerChain] can also be used for random restarts of the same
+#' [OptimizerBatchChain] can also be used for random restarts of the same
 #' [Optimizer] (if applicable) by setting the [Terminator] of the [OptimInstance] to
 #' [TerminatorNone] and setting identical additional [Terminator]s during
 #' construction.
@@ -31,7 +31,7 @@
 #'
 #'
 #' @export
-OptimizerChain = R6Class("OptimizerChain",
+OptimizerBatchChain = R6Class("OptimizerBatchChain",
   inherit = bbotk::OptimizerBatch,
   public = list(
 
@@ -116,4 +116,4 @@ OptimizerChain = R6Class("OptimizerChain",
 )
 
 #' @include aaa.R
-optimizers[["chain"]] = OptimizerChain
+optimizers[["chain"]] = OptimizerBatchChain

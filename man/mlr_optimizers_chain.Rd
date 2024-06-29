@@ -2,10 +2,10 @@
 % Please edit documentation in R/OptimizerChain.R
 \name{mlr_optimizers_chain}
 \alias{mlr_optimizers_chain}
-\alias{OptimizerChain}
+\alias{OptimizerBatchChain}
 \title{Run Optimizers Sequentially}
 \description{
-\code{OptimizerChain} allows to run different \link{Optimizer}s sequentially.
+\code{OptimizerBatchChain} allows to run different \link{Optimizer}s sequentially.
 
 For each \link{Optimizer} an (optional) additional \link{Terminator} can be specified
 during construction.
@@ -20,7 +20,7 @@ Once this \link{TerminatorCombo} indicates termination (usually via the
 additional \link{Terminator}), the second \link{Optimizer} (and so on) is run unless
 the original \link{Terminator} of the \link{OptimInstance} indicates termination.
 
-\link{OptimizerChain} can also be used for random restarts of the same
+\link{OptimizerBatchChain} can also be used for random restarts of the same
 \link{Optimizer} (if applicable) by setting the \link{Terminator} of the \link{OptimInstance} to
 \link{TerminatorNone} and setting identical additional \link{Terminator}s during
 construction.
@@ -32,14 +32,14 @@ Parameters are inherited from the individual \link{Optimizer}s and collected as 
 ..., if the same \link{Optimizer}s are used multiple times).
 }
 
-\section{Super class}{
-\code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{OptimizerChain}
+\section{Super classes}{
+\code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch}} -> \code{OptimizerBatchChain}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-OptimizerChain-new}{\code{OptimizerChain$new()}}
-\item \href{#method-OptimizerChain-clone}{\code{OptimizerChain$clone()}}
+\item \href{#method-OptimizerBatchChain-new}{\code{OptimizerBatchChain$new()}}
+\item \href{#method-OptimizerBatchChain-clone}{\code{OptimizerBatchChain$clone()}}
 }
 }
 \if{html}{\out{
@@ -48,16 +48,17 @@ Parameters are inherited from the individual \link{Optimizer}s and collected as 
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="print"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-print'><code>bbotk::Optimizer$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="OptimizerBatch" data-id="optimize"><a href='../../bbotk/html/OptimizerBatch.html#method-OptimizerBatch-optimize'><code>bbotk::OptimizerBatch$optimize()</code></a></span></li>
 </ul>
 </details>
 }}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-OptimizerChain-new"></a>}}
-\if{latex}{\out{\hypertarget{method-OptimizerChain-new}{}}}
+\if{html}{\out{<a id="method-OptimizerBatchChain-new"></a>}}
+\if{latex}{\out{\hypertarget{method-OptimizerBatchChain-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerChain$new(
+\if{html}{\out{<div class="r">}}\preformatted{OptimizerBatchChain$new(
   optimizers,
   terminators = rep(list(NULL), length(optimizers))
 )}\if{html}{\out{</div>}}
@@ -74,12 +75,12 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-OptimizerChain-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-OptimizerChain-clone}{}}}
+\if{html}{\out{<a id="method-OptimizerBatchChain-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-OptimizerBatchChain-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerChain$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{OptimizerBatchChain$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

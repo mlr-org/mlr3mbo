@@ -3,7 +3,7 @@
 #' @name mlr_optimizers_local_search
 #'
 #' @description
-#' `OptimizerLocalSearch` class that implements a simple Local Search.
+#' `OptimizerBatchLocalSearch` class that implements a simple Local Search.
 #' Local Search starts by determining the `mu` initial best points present in the [Archive] of the
 #' [OptimInstance]. If fewer points than `mu` are present, additional points sampled uniformly at
 #' random are evaluated.
@@ -35,7 +35,7 @@
 #' }
 #'
 #' @export
-OptimizerLocalSearch = R6Class("OptimizerLocalSearch",
+OptimizerBatchLocalSearch = R6Class("OptimizerBatchLocalSearch",
   inherit = bbotk::OptimizerBatch,
   public = list(
 
@@ -76,11 +76,9 @@ OptimizerLocalSearch = R6Class("OptimizerLocalSearch",
 
       # we do not mutate parents of conditions
       ids_to_mutate = setdiff(inst$search_space$ids(), unique(inst$search_space$deps$on))
-
-      ids_numeric = intersect(names(which(inst$search_space$is_number)), ids_to_mutate)
-
-      ids_categorical = intersect(names(which(inst$search_space$is_categ)), ids_to_mutate)
-      ids_categorical = ids_categorical[which(inst$search_space$nlevels > 1)]
+      ids_numeric = intersect(inst$search_space$ids(class = c("ParamDbl", "ParamInt")), ids_to_mutate)
+      ids_categorical = intersect(inst$search_space$ids(class = c("ParamLgl", "ParamFct")), ids_to_mutate)
+      ids_categorical = intersect(ids_categorical, search_space$ids()[search_space$nlevels > 1])
 
       point_id = ".point_id"
       while (point_id %in% c(inst$archive$cols_x, inst$archive$cols_y)) {
@@ -119,28 +117,24 @@ mutate_point = function(point, search_space, ids_numeric, ids_categorical, sigma
   valid_numeric_to_mutate = intersect(names(which(!map_lgl(neighbor, is.na))), ids_numeric)
   valid_cateorical_to_mutate = intersect(names(which(!map_lgl(neighbor, is.na))), ids_categorical)
   id = sample(c(valid_numeric_to_mutate, valid_cateorical_to_mutate), size = 1L)
-  neighbor[1L, ][[id]] = mutate(neighbor[1L, ][[id]], param = search_space$params[[id]], sigma = sigma)
+  neighbor[1L, ][[id]] = mutate(neighbor[1L, ][[id]], subspace = search_space$subspaces(ids = id)[[1]], sigma = sigma)
   neighbor
 }
 
-mutate = function(value, , sigma) {
-  #stopifnot(param$class %in% c("ParamDbl", "ParamFct", "ParamInt", "ParamLgl"))
-
-
-
-  if (param$class %in% c("ParamDbl", "ParamInt")) {
-    value_ = (value - param$lower) / (param$upper - param$lower)
+mutate = function(value, subspace, sigma) {
+  if (subspace$class %in% c("ParamDbl", "ParamInt")) {
+    value_ = (value - subspace$lower) / (subspace$upper - subspace$lower)
     value_ = max(0, min(stats::rnorm(1L, mean = value_, sd = sigma), 1))
-    value = (value_ * (param$upper - param$lower)) + param$lower
-    if (param$class == "ParamInt") {
+    value = (value_ * (subspace$upper - subspace$lower)) + subspace$lower
+    if (subspace$class == "ParamInt") {
       value = round(value, 0L)
     }
-    value = min(max(value, param$lower), param$upper)
-  } else if (param$class %in% c("ParamFct", "ParamLgl")) {
-    value = sample(setdiff(param$levels, value), size = 1L)
+    value = min(max(value, subspace$lower), subspace$upper)
+  } else if (subspace$class %in% c("ParamFct", "ParamLgl")) {
+    value = sample(setdiff(subspace$levels[[1]], value), size = 1L)
   }
   value
 }
 
 #' @include aaa.R
-optimizers[["local_search"]] = OptimizerLocalSearch
+optimizers[["local_search"]] = OptimizerBatchLocalSearch
