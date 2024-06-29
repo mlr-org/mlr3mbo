@@ -32,7 +32,7 @@
 #'
 #' @export
 OptimizerChain = R6Class("OptimizerChain",
-  inherit = bbotk::Optimizer,
+  inherit = bbotk::OptimizerBatch,
   public = list(
 
     #' @description

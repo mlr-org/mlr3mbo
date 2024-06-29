@@ -36,7 +36,7 @@
 #'
 #' @export
 OptimizerLocalSearch = R6Class("OptimizerLocalSearch",
-  inherit = bbotk::Optimizer,
+  inherit = bbotk::OptimizerBatch,
   public = list(
 
     #' @description
@@ -80,7 +80,7 @@ OptimizerLocalSearch = R6Class("OptimizerLocalSearch",
       ids_numeric = intersect(names(which(inst$search_space$is_number)), ids_to_mutate)
 
       ids_categorical = intersect(names(which(inst$search_space$is_categ)), ids_to_mutate)
-      ids_categorical = ids_categorical[map_lgl(inst$search_space$params[ids_categorical], function(x) x$nlevels > 1L)]
+      ids_categorical = ids_categorical[which(inst$search_space$nlevels > 1)]
 
       point_id = ".point_id"
       while (point_id %in% c(inst$archive$cols_x, inst$archive$cols_y)) {
@@ -123,8 +123,11 @@ mutate_point = function(point, search_space, ids_numeric, ids_categorical, sigma
   neighbor
 }
 
-mutate = function(value, param, sigma) {
-  stopifnot(param$class %in% c("ParamDbl", "ParamFct", "ParamInt", "ParamLgl"))
+mutate = function(value, , sigma) {
+  #stopifnot(param$class %in% c("ParamDbl", "ParamFct", "ParamInt", "ParamLgl"))
+
+
+
   if (param$class %in% c("ParamDbl", "ParamInt")) {
     value_ = (value - param$lower) / (param$upper - param$lower)
     value_ = max(0, min(stats::rnorm(1L, mean = value_, sd = sigma), 1))
