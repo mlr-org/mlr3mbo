@@ -84,7 +84,7 @@ This corresponds to the values given by a \link[paradox:ParamSet]{paradox::Param
 
 \item{\code{properties}}{(\code{character()})\cr
 Set of properties of the optimizer.
-Must be a subset of \code{\link[=bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
+Must be a subset of \code{\link[bbotk:bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
 MBO in principle is very flexible and by default we assume that the optimizer has all properties.
 When fully initialized, properties are determined based on the \code{loop_function} and \code{surrogate}.}
 
