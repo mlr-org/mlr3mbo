@@ -454,7 +454,7 @@ Note that important fields of an `OptimizerMbo` such as `$param_classes`, `$pack
 
 If arguments such as the `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner` were not fully initialized during construction, e.g., the `surrogate` missing the `archive`, or the `acq_function` missing the `surrogate`, lazy initialization is completed prior to the optimizer being used for optimization.
 
-An object of class `OptimizerMbo` can be used to optimize an object of class `r ref("bbotk::OptimInstanceBatchSingleCrit", "OptimInstanceBatchSingleCrit")` or `r ref("bbotk::OptimInstanceBatchMultiCrit", "OptimInstanceBatchMultiCrit")`.
+An object of class `OptimizerMbo` can be used to optimize an object of class `OptimInstanceBatchSingleCrit`  or `OptimInstanceBatchMultiCrit`.
 
 For hyperparameter optimization, `r ref("mlr3mbo::mlr_tuners_mbo", "TunerMbo")` should be used (which simply relies on an `OptimizerMbo` that is constructed internally):
 
