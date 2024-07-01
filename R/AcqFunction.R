@@ -47,8 +47,6 @@ AcqFunction = R6Class("AcqFunction",
         check_packages_installed(packages, msg = sprintf("Package '%%s' required but not installed for acquisition function '%s'", sprintf("<%s:%s>", "AcqFunction", id)))
       }
       private$.requires_predict_type_se = assert_flag(requires_predict_type_se)
-      private$.label = assert_string(label, na.ok = TRUE)
-      private$.man = assert_string(man, na.ok = TRUE)
       private$.packages = packages
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
       if (is.null(surrogate)) {
@@ -64,7 +62,7 @@ AcqFunction = R6Class("AcqFunction",
         self$surrogate_max_to_min = surrogate_mult_max_to_min(surrogate)
         domain = generate_acq_domain(surrogate)
       }
-      super$initialize(id = id, domain = domain, codomain = codomain, constants = constants)
+      super$initialize(id = id, domain = domain, codomain = codomain, constants = constants, label = label, man = man)
     },
 
     #' @description
