@@ -78,7 +78,7 @@ OptimizerBatchLocalSearch = R6Class("OptimizerBatchLocalSearch",
       ids_to_mutate = setdiff(inst$search_space$ids(), unique(inst$search_space$deps$on))
       ids_numeric = intersect(inst$search_space$ids(class = c("ParamDbl", "ParamInt")), ids_to_mutate)
       ids_categorical = intersect(inst$search_space$ids(class = c("ParamLgl", "ParamFct")), ids_to_mutate)
-      ids_categorical = intersect(ids_categorical, search_space$ids()[search_space$nlevels > 1])
+      ids_categorical = intersect(ids_categorical, inst$search_space$ids()[inst$search_space$nlevels > 1])
 
       point_id = ".point_id"
       while (point_id %in% c(inst$archive$cols_x, inst$archive$cols_y)) {
