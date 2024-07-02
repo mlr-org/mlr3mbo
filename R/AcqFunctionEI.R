@@ -77,7 +77,7 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
       if (is.null(self$y_best)) {
         stop("$y_best is not set. Missed to call $update()?")
       }
-      browser()
+
       p = self$surrogate$predict(xdt)
       mu = p$mean
       se = p$se
