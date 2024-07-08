@@ -128,11 +128,9 @@ bayesopt_ego_log = function(
   surrogate$cols_y = "y_trafo"
   acq_function$surrogate_max_to_min = 1
 
-  # FIXME: Cannot be set with new paradox
-  #
-  # if (test_r6(acq_function, classes = "AcqFunctionCB") || test_r6(acq_function, classes = "AcqFunctionMean")) {
-  #   acq_function$codomain$params[[acq_function$id]]$tags = "minimize"
-  # }
+  if (test_r6(acq_function, classes = "AcqFunctionCB") || test_r6(acq_function, classes = "AcqFunctionMean")) {
+    acq_function$codomain$tags[[acq_function$id]] = "minimize"
+  }
 
   # actual loop
   repeat {
