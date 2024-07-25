@@ -25,9 +25,9 @@ vignette](https://mlr3mbo.mlr-org.com/dev/articles/mlr3mbo.html).
 `mlr3mbo` is built modular relying on the following
 [R6](https://cran.r-project.org/package=R6) classes:
 
-- `Surrogate`: Surrogate Model
-- `AcqFunction`: Acquisition Function
-- `AcqOptimizer`: Acquisition Function Optimizer
+-   `Surrogate`: Surrogate Model
+-   `AcqFunction`: Acquisition Function
+-   `AcqOptimizer`: Acquisition Function Optimizer
 
 Based on these, Bayesian Optimization loops can be written, see, e.g.,
 `bayesopt_ego` for sequential single-objective BO.
@@ -58,7 +58,7 @@ obfun = ObjectiveRFun$new(
   domain = ps(x = p_dbl(lower = -10, upper = 10)),
   codomain = ps(y1 = p_dbl(tags = "minimize")))
 
-instance = OptimInstanceSingleCrit$new(
+instance = oi(
   objective = obfun,
   terminator = trm("evals", n_evals = 10))
 
@@ -77,6 +77,7 @@ optimizer$optimize(instance)
 ```
 
     ##             x  x_domain          y1
+    ##         <num>    <list>       <num>
     ## 1: 0.03897209 <list[1]> 0.001518824
 
 Note that you can also use `bb_optimize` as a shorthand:
@@ -133,4 +134,5 @@ instance$result
 ```
 
     ##           cp learner_param_vals  x_domain classif.ce
-    ## 1: -4.594102          <list[2]> <list[1]>  0.2109375
+    ##        <num>             <list>    <list>      <num>
+    ## 1: -4.381681          <list[2]> <list[1]>  0.2070312
