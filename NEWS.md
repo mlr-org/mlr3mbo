@@ -1,3 +1,5 @@
+# mlr3mbo (development version)
+
 # mlr3mbo 0.2.4
 
 * fix: Improve runtime of `AcqOptimizer` by setting `check_values = FALSE`.
