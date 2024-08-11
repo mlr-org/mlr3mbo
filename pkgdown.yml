@@ -3,7 +3,7 @@ pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   mlr3mbo: mlr3mbo.html
-last_built: 2024-08-11T16:56Z
+last_built: 2024-08-11T17:02Z
 urls:
   reference: https://mlr3mbo.mlr-org.com/reference
   article: https://mlr3mbo.mlr-org.com/articles
