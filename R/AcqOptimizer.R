@@ -71,7 +71,7 @@
 #'
 #'   acq_function = acqf("ei", surrogate = surrogate)
 #'
-#'   acq_function$surrogate$update()
+#'   acq_function$surrogate$update(
 #'   acq_function$update()
 #'
 #'   acq_optimizer = acqo(
@@ -84,7 +84,7 @@
 AcqOptimizer = R6Class("AcqOptimizer",
   public = list(
 
-    #' @field optimizer ([bbotk::Optimizer]).
+    #' @field optimizer ([bbotk::OptimizerBatch]).
     optimizer = NULL,
 
     #' @field terminator ([bbotk::Terminator]).
@@ -93,16 +93,21 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' @field acq_function ([AcqFunction]).
     acq_function = NULL,
 
+    #' @field callbacks (`NULL` | list of [bbotk::CallbackBatch]).
+    callbacks = NULL,
+
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param optimizer ([bbotk::Optimizer]).
     #' @param terminator ([bbotk::Terminator]).
     #' @param acq_function (`NULL` | [AcqFunction]).
-    initialize = function(optimizer, terminator, acq_function = NULL) {
+    #' @param callbacks (`NULL` | list of [bbotk::CallbackBatch])
+    initialize = function(optimizer, terminator, acq_function = NULL, callbacks = NULL) {
       self$optimizer = assert_r6(optimizer, "Optimizer")
       self$terminator = assert_r6(terminator, "Terminator")
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
+      self$callbacks = assert_callbacks(as_callbacks(callbacks))
       ps = ps(
         n_candidates = p_int(lower = 1, default = 1L),
         logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
@@ -146,7 +151,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
       logger$set_threshold(self$param_set$values$logging_level)
       on.exit(logger$set_threshold(old_threshold))
 
-      instance = OptimInstanceBatchSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE)
+      instance = OptimInstanceBatchSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, callbacks = self$callbacks)
 
       # warmstart
       if (self$param_set$values$warmstart) {

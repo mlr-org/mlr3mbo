@@ -75,7 +75,7 @@ if (requireNamespace("mlr3learners") &
 
   acq_function = acqf("ei", surrogate = surrogate)
 
-  acq_function$surrogate$update()
+  acq_function$surrogate$update(
   acq_function$update()
 
   acq_optimizer = acqo(
@@ -89,11 +89,13 @@ if (requireNamespace("mlr3learners") &
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{optimizer}}{(\link[bbotk:Optimizer]{bbotk::Optimizer}).}
+\item{\code{optimizer}}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch}).}
 
 \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 
 \item{\code{acq_function}}{(\link{AcqFunction}).}
+
+\item{\code{callbacks}}{(\code{NULL} | list of \link[bbotk:CallbackBatch]{bbotk::CallbackBatch}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -124,7 +126,7 @@ Set of hyperparameters.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator, acq_function = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator, acq_function = NULL, callbacks = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -135,6 +137,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 
 \item{\code{acq_function}}{(\code{NULL} | \link{AcqFunction}).}
+
+\item{\code{callbacks}}{(\code{NULL} | list of \link[bbotk:CallbackBatch]{bbotk::CallbackBatch})}
 }
 \if{html}{\out{</div>}}
 }
