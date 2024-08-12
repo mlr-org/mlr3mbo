@@ -71,7 +71,7 @@
 #'
 #'   acq_function = acqf("ei", surrogate = surrogate)
 #'
-#'   acq_function$surrogate$update(
+#'   acq_function$surrogate$update()
 #'   acq_function$update()
 #'
 #'   acq_optimizer = acqo(
@@ -84,7 +84,7 @@
 AcqOptimizer = R6Class("AcqOptimizer",
   public = list(
 
-    #' @field optimizer ([bbotk::OptimizerBatch]).
+    #' @field optimizer ([bbotk::Optimizer]).
     optimizer = NULL,
 
     #' @field terminator ([bbotk::Terminator]).
@@ -93,7 +93,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' @field acq_function ([AcqFunction]).
     acq_function = NULL,
 
-    #' @field callbacks (`NULL` | list of [bbotk::CallbackBatch]).
+    #' @field callbacks (`NULL` | list of [mlr3misc::Callback]).
     callbacks = NULL,
 
     #' @description
@@ -102,7 +102,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' @param optimizer ([bbotk::Optimizer]).
     #' @param terminator ([bbotk::Terminator]).
     #' @param acq_function (`NULL` | [AcqFunction]).
-    #' @param callbacks (`NULL` | list of [bbotk::CallbackBatch])
+    #' @param callbacks (`NULL` | list of [mlr3misc::Callback])
     initialize = function(optimizer, terminator, acq_function = NULL, callbacks = NULL) {
       self$optimizer = assert_r6(optimizer, "Optimizer")
       self$terminator = assert_r6(terminator, "Terminator")
