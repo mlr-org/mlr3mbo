@@ -17,6 +17,17 @@ acqf("log_ei")
 }\if{html}{\out{</div>}}
 }
 
+\section{Parameters}{
+
+\itemize{
+\item \code{"epsilon"} (\code{numeric(1)})\cr
+\eqn{\epsilon} value used to determine the amount of exploration.
+Higher values result in the importance of improvements predicted by the posterior mean
+decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
+Defaults to \code{0} (standard Expected Improvement).
+}
+}
+
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
@@ -71,13 +82,15 @@ On log scale.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionLogEI$new(surrogate = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionLogEI$new(surrogate = NULL, epsilon = 0)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearner}).}
+
+\item{\code{epsilon}}{(\code{numeric(1)}).}
 }
 \if{html}{\out{</div>}}
 }

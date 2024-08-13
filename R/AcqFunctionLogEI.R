@@ -9,10 +9,18 @@
 #' @description
 #' Expected Improvement assuming that the target variable is to be minimized and has been modeled on log scale.
 #'
+#' @section Parameters:
+#' * `"epsilon"` (`numeric(1)`)\cr
+#'   \eqn{\epsilon} value used to determine the amount of exploration.
+#'   Higher values result in the importance of improvements predicted by the posterior mean
+#'   decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
+#'   Defaults to `0` (standard Expected Improvement).
+#'
 #' @family Acquisition Function
 #' @export
 AcqFunctionLogEI = R6Class("AcqFunctionLogEI",
   inherit = AcqFunction,
+
   public = list(
 
     #' @field y_best (`numeric(1)`)\cr
@@ -24,6 +32,7 @@ AcqFunctionLogEI = R6Class("AcqFunctionLogEI",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param surrogate (`NULL` | [SurrogateLearner]).
+    #' @param epsilon (`numeric(1)`).
     initialize = function(surrogate = NULL, epsilon = 0) {
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       assert_number(epsilon, lower = 0, finite = TRUE)
@@ -40,9 +49,10 @@ AcqFunctionLogEI = R6Class("AcqFunctionLogEI",
       if (self$surrogate_max_to_min != 1L) {
         stop("Log EI assumes minimization of the log transformed target value.")
       }
-      self$y_best = min(self$surrogate_max_to_min * self$archive$data[[self$surrogate$cols_y]])
+      self$y_best = min(self$archive$data[[self$surrogate$cols_y]])
     }
   ),
+
   private = list(
     .fun = function(xdt, ...) {
       if (is.null(self$y_best)) {
@@ -56,7 +66,7 @@ AcqFunctionLogEI = R6Class("AcqFunctionLogEI",
       p = self$surrogate$predict(xdt)
       mu = p$mean
       se = p$se
-      d = self$y_best - mu - epsilon
+      d = (self$y_best - mu) - epsilon
       d_norm = d / se
       log_ei = (exp(self$y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) + mu) * pnorm(d_norm - se))
       log_ei = ifelse(se < 1e-20, 0, log_ei)
