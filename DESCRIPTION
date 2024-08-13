@@ -66,6 +66,7 @@ Suggests:
     rpart,
     stringi,
     testthat (>= 3.0.0)
+Remotes: mlr-org/bbotk
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3

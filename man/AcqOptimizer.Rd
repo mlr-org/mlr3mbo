@@ -94,6 +94,8 @@ if (requireNamespace("mlr3learners") &
 \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 
 \item{\code{acq_function}}{(\link{AcqFunction}).}
+
+\item{\code{callbacks}}{(\code{NULL} | list of \link[mlr3misc:Callback]{mlr3misc::Callback}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -124,7 +126,7 @@ Set of hyperparameters.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator, acq_function = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator, acq_function = NULL, callbacks = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -135,6 +137,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 
 \item{\code{acq_function}}{(\code{NULL} | \link{AcqFunction}).}
+
+\item{\code{callbacks}}{(\code{NULL} | list of \link[mlr3misc:Callback]{mlr3misc::Callback})}
 }
 \if{html}{\out{</div>}}
 }

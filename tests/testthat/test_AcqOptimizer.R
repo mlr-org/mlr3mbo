@@ -120,3 +120,32 @@ test_that("AcqOptimizer deep clone", {
   expect_true(address(acqopt1$terminator) != address(acqopt2$terminator))
 })
 
+test_that("AcqOptimizer callbacks", {
+  domain = ps(x = p_dbl(lower = 10, upper = 20, trafo = function(x) x - 15))
+  objective = ObjectiveRFunDt$new(
+    fun = function(xdt) data.table(y = xdt$x ^ 2),
+    domain = domain,
+    codomain = ps(y = p_dbl(tags = "minimize")),
+    check_values = FALSE
+  )
+  instance = MAKE_INST(objective = objective, search_space = domain, terminator = trm("evals", n_evals = 5L))
+  design = MAKE_DESIGN(instance)
+  instance$eval_batch(design)
+  callback = callback_batch("mlr3mbo.acqopt_time",
+    on_optimization_begin = function(callback, context) {
+      callback$state$begin = Sys.time()
+    },
+    on_optimization_end = function(callback, context) {
+      callback$state$end = Sys.time()
+      attr(callback$state$outer_instance, "acq_opt_runtime") = as.numeric(callback$state$end - callback$state$begin)
+    }
+  )
+  callback$state$outer_instance = instance
+  acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_FEATURELESS, archive = instance$archive))
+  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 10L), trm("evals", n_evals = 10L), acq_function = acqfun, callbacks = callback)
+  acqfun$surrogate$update()
+  acqfun$update()
+  res = acqopt$optimize()
+  expect_number(attr(instance, "acq_opt_runtime"))
+})
+
