@@ -62,7 +62,7 @@ AcqFunction = R6Class("AcqFunction",
         self$surrogate_max_to_min = surrogate_mult_max_to_min(surrogate)
         domain = generate_acq_domain(surrogate)
       }
-      super$initialize(id = id, domain = domain, codomain = codomain, constants = constants, label = label, man = man)
+      super$initialize(id = id, domain = domain, codomain = codomain, constants = constants, check_values = FALSE, label = label, man = man)
     },
 
     #' @description

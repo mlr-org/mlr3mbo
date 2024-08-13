@@ -15,6 +15,9 @@ test_that("AcqFunctionEHVIGH works", {
   expect_true(acqf$requires_predict_type_se)
   expect_setequal(acqf$packages, c("emoa", "fastGHQuad"))
 
+  expect_r6(acqf$constants, "ParamSet")
+  expect_equal(acqf$constants$ids(), c("k", "r"))
+
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)
 
