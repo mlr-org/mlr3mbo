@@ -12,6 +12,9 @@ test_that("AcqFunctionSmsEgo works", {
   expect_list(acqf$surrogate$learner, types = "Learner")
   expect_true(acqf$requires_predict_type_se)
 
+  expect_r6(acqf$constants, "ParamSet")
+  expect_equal(acqf$constants$ids(), c("lambda", "epsilon"))
+
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)
 
