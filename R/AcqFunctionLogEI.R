@@ -24,9 +24,14 @@ AcqFunctionLogEI = R6Class("AcqFunctionLogEI",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param surrogate (`NULL` | [SurrogateLearner]).
-    initialize = function(surrogate = NULL) {
+    initialize = function(surrogate = NULL, epsilon = 0) {
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
-      super$initialize("acq_log_ei", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Log Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_log_ei")
+      assert_number(epsilon, lower = 0, finite = TRUE)
+
+      constants = ps(epsilon = p_dbl(lower = 0, default = 0))
+      constants$values$epsilon = epsilon
+
+      super$initialize("acq_log_ei", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Log Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_log_ei")
     },
 
     #' @description
@@ -39,17 +44,20 @@ AcqFunctionLogEI = R6Class("AcqFunctionLogEI",
     }
   ),
   private = list(
-    .fun = function(xdt) {
+    .fun = function(xdt, ...) {
       if (is.null(self$y_best)) {
         stop("$y_best is not set. Missed to call $update()?")
       }
       if (self$surrogate_max_to_min != 1L) {
         stop("Log EI assumes minimization of the log transformed target value.")
       }
+      constants = list(...)
+      epsilon = constants$epsilon
       p = self$surrogate$predict(xdt)
       mu = p$mean
       se = p$se
-      d_norm = (self$y_best - mu) / se
+      d = self$y_best - mu - epsilon
+      d_norm = d / se
       log_ei = (exp(self$y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) + mu) * pnorm(d_norm - se))
       log_ei = ifelse(se < 1e-20, 0, log_ei)
       data.table(acq_log_ei = log_ei)
