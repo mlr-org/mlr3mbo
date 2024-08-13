@@ -59,6 +59,16 @@
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">acqf</span>(<span class="st">"ei"</span>)</span></code></pre><p></p></div>
     </div>
     <div class="section level2">
+    <h2 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a></h2>
+
+
+<ul><li><p><code>"epsilon"</code> (<code>numeric(1)</code>)<br>
+\(\epsilon\) value used to determine the amount of exploration.
+Higher values result in the importance of improvements predicted by the posterior mean
+decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
+Defaults to <code>0</code> (standard Expected Improvement).</p></li>
+</ul></div>
+    <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
 
 <ul><li><p>Jones, R. D, Schonlau, Matthias, Welch, J. W (1998).
@@ -113,13 +123,17 @@ In the case of maximization, this already includes the necessary change of sign.
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/mlr_acqfunctions_ei.html">AcqFunctionEI</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>surrogate <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/mlr_acqfunctions_ei.html">AcqFunctionEI</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>surrogate <span class="op">=</span> <span class="cn">NULL</span>, epsilon <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>surrogate</code></dt>
 <dd><p>(<code>NULL</code> | <a href="SurrogateLearner.html">SurrogateLearner</a>).</p></dd>
+
+
+<dt><code>epsilon</code></dt>
+<dd><p>(<code>numeric(1)</code>).</p></dd>
 
 
 </dl><p></p></div>
