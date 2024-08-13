@@ -39,12 +39,18 @@ PS_1D_MIXED_DEPS = PS_1D_MIXED$clone(deep = TRUE)
 PS_1D_MIXED_DEPS$add_dep("x2", on = "x4", cond = CondEqual$new(TRUE))
 
 FUN_1D_MIXED = function(xs) {
+  if (is.null(xs$x2)) {
+    xs$x2 = "a"
+  }
   list(y = (xs$x1 - switch(xs$x2, "a" = 0, "b" = 1, "c" = 2)) %% xs$x3 + (if (xs$x4) xs$x1 else pi))
 }
 OBJ_1D_MIXED = ObjectiveRFun$new(fun = FUN_1D_MIXED, domain = PS_1D_MIXED, properties = "single-crit")
 OBJ_1D_MIXED_DEPS = ObjectiveRFun$new(fun = FUN_1D_MIXED, domain = PS_1D_MIXED_DEPS, properties = "single-crit")
 
 FUN_1D_2_MIXED = function(xs) {
+  if (is.null(xs$x2)) {
+    xs$x2 = "a"
+  }
   list(y1 = (xs$x1 - switch(xs$x2, "a" = 0, "b" = 1, "c" = 2)) %% xs$x3 + (if (xs$x4) xs$x1 else pi), y2 = xs$x1)
 }
 OBJ_1D_2_MIXED = ObjectiveRFun$new(fun = FUN_1D_2_MIXED, domain = PS_1D_MIXED, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
