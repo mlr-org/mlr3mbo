@@ -53,7 +53,7 @@ of <code>mlr_sugar</code> from <a href="https://CRAN.R-project.org/package=mlr3"
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">acqo</span><span class="op">(</span><span class="va">optimizer</span>, <span class="va">terminator</span>, acq_function <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">acqo</span><span class="op">(</span><span class="va">optimizer</span>, <span class="va">terminator</span>, acq_function <span class="op">=</span> <span class="cn">NULL</span>, callbacks <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,6 +71,11 @@ of <code>mlr_sugar</code> from <a href="https://CRAN.R-project.org/package=mlr3"
 <dt id="arg-acq-function">acq_function<a class="anchor" aria-label="anchor" href="#arg-acq-function"></a></dt>
 <dd><p>(<code>NULL</code> | <a href="AcqFunction.html">AcqFunction</a>)<br><a href="AcqFunction.html">AcqFunction</a> that is to be used.
 Can also be <code>NULL</code>.</p></dd>
+
+
+<dt id="arg-callbacks">callbacks<a class="anchor" aria-label="anchor" href="#arg-callbacks"></a></dt>
+<dd><p>(<code>NULL</code> | list of <a href="https://mlr3misc.mlr-org.com/reference/Callback.html" class="external-link">mlr3misc::Callback</a>)
+Callbacks used during acquisition function optimization.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
