@@ -13,6 +13,9 @@ test_that("AcqFunctionEI works", {
   expect_learner(acqf$surrogate$learner)
   expect_true(acqf$requires_predict_type_se)
 
+  expect_r6(acqf$constants, "ParamSet")
+  expect_equal(acqf$constants$ids(), "epsilon")
+
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)
 

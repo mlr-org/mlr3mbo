@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 0.2.3.9000
+Version: 0.2.4.9000
 Authors@R: c(
     person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0003-4152-5308")),
@@ -66,13 +66,14 @@ Suggests:
     rpart,
     stringi,
     testthat (>= 3.0.0)
+Remotes: mlr-org/bbotk
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE, r6 = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Collate:
     'mlr_acqfunctions.R'
     'AcqFunction.R'
