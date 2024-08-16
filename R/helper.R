@@ -1,17 +1,25 @@
 generate_acq_codomain = function(surrogate, id, direction = "same") {
-  assert_multi_class(surrogate$archive, c("Archive", "ArchiveAsync"))
+  assert_r6(surrogate$archive, "Archive")
   assert_string(id)
   assert_choice(direction, choices = c("same", "minimize", "maximize"))
   if (direction == "same") {
-    if (surrogate$archive$codomain$length > 1L) {
-      stop("Not supported yet.")  # FIXME: But should be?
-    }
+    assert(surrogate$archive$codomain$length == 1L)
     tags = surrogate$archive$codomain$tags[[1L]]
-    tags = tags[tags %in% c("minimize", "maximize")]  # only filter out the relevant one
+    tag = tags[tags %in% c("minimize", "maximize")]  # only filter out the relevant one
   } else {
-    tags = direction
+    tag = direction
   }
-  do.call(ps, structure(list(p_dbl(tags = tags)), names = id))
+  codomain = do.call(ps, structure(list(p_dbl(tags = tag)), names = id))
+  codomain
+}
+
+generate_acq_multi_codomain = function(surrogate, acq_functions) {
+  codomain = do.call(c, map(acq_functions, function(acq_function) acq_function$codomain))
+  if (any(codomain$tags == "same")) {
+    assert(surrogate$archive$codomain$length == 1L)
+  }
+  codomain$tags = structure(as.list(rep("minimize", length(acq_functions))), names = map_chr(acq_functions, function(acq_function) acq_function$id))
+  codomain
 }
 
 generate_acq_domain = function(surrogate) {
