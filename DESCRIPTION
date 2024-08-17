@@ -90,7 +90,7 @@ Collate:
     'AcqFunctionSmsEgo.R'
     'AcqOptimizer.R'
     'aaa.R'
-    'LearnerRegrRangerCustom.R'
+    'LearnerRegrRangerMbo.R'
     'OptimizerMbo.R'
     'mlr_result_assigners.R'
     'ResultAssigner.R'

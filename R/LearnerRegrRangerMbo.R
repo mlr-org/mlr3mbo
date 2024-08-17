@@ -21,10 +21,12 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
         importance                   = p_fct(c("none", "impurity", "impurity_corrected", "permutation"), tags = "train"),
         keep.inbag                   = p_lgl(default = FALSE, tags = "train"),
         max.depth                    = p_int(default = NULL, lower = 0L, special_vals = list(NULL), tags = "train"),
+        min.bucket                   = p_int(1L, default = 1L, tags = "train"),
         min.node.size                = p_int(1L, default = 5L, special_vals = list(NULL), tags = "train"),
         minprop                      = p_dbl(default = 0.1, tags = "train", depends = quote(splitrule == "maxstat")),
         mtry                         = p_int(lower = 1L, special_vals = list(NULL), tags = "train"),
         mtry.ratio                   = p_dbl(lower = 0, upper = 1, tags = "train"),
+        node.stats                   = p_lgl(default = FALSE, tags = "train"),
         num.random.splits            = p_int(1L, default = 1L, tags = "train", depends = quote(splitrule == "extratrees")),
         num.threads                  = p_int(1L, default = 1L, tags = c("train", "predict", "threads")),
         num.trees                    = p_int(1L, default = 500L, tags = c("train", "predict", "hotstart")),
@@ -37,7 +39,7 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
         sample.fraction              = p_dbl(0L, 1L, tags = "train"),
         save.memory                  = p_lgl(default = FALSE, tags = "train"),
         scale.permutation.importance = p_lgl(default = FALSE, tags = "train", depends = quote(importance == "permutation")),
-        se.method                    = p_fct(c("jack", "infjack", "simple"), default = "infjack", tags = c("train", "predict")), # FIXME: only works if predict_type == "se"
+        se.method                    = p_fct(c("jack", "infjack", "simple", "law_of_total_variance"), default = "infjack", tags = c("train", "predict")), # FIXME: only works if predict_type == "se"
         seed                         = p_int(default = NULL, special_vals = list(NULL), tags = c("train", "predict")),
         split.select.weights         = p_uty(default = NULL, tags = "train"),
         splitrule                    = p_fct(c("variance", "extratrees", "maxstat"), default = "variance", tags = "train"),
@@ -93,7 +95,7 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
       pv = mlr3learners:::convert_ratio(pv, "mtry", "mtry.ratio", length(task$feature_names))
       if ("se.method" %in% names(pv)) {
         if (self$predict_type != "se") {
-          stop('$predict_type must be "se" if "se.method" is set to "simple".')
+          stop('$predict_type must be "se" if "se.method" is set to "simple" or "law_of_total_variance".')
         }
         pv[["se.method"]] = NULL
       }
@@ -109,7 +111,7 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
         .args = pv
       )
 
-      if (isTRUE(self$param_set$get_values()[["se.method"]] == "simple")) {
+      if (isTRUE(self$param_set$get_values()[["se.method"]] %in% c("simple", "law_of_total_variance"))) {
         data = mlr3learners:::ordered_features(task, self)
         prediction_nodes = mlr3misc::invoke(predict, model, data = data, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
         y = task$data(cols = task$target_names)[[1L]]
@@ -132,7 +134,7 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
       pv = self$param_set$get_values(tags = "predict")
       newdata = mlr3learners:::ordered_features(task, self)
 
-      if (isTRUE(pv$se.method == "simple")) {
+      if (isTRUE(pv$se.method == "law_of_total_variance")) {
         prediction_nodes = mlr3misc::invoke(predict, self$model$model, data = newdata, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
         n_observations = NROW(prediction_nodes$predictions)
         n_trees = length(self$model$mu_sigma2_per_node_per_tree)
@@ -147,6 +149,21 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
           response[i] = mean(mus)
           # law of total variance assuming a mixture of normal distributions for each tree
           se[i] = sqrt(mean((mus ^ 2) + sigmas2) - (response[i] ^ 2))
+        }
+        list(response = response, se = se)
+      } else if (isTRUE(pv$se.method == "simple")) {
+        prediction_nodes = mlr3misc::invoke(predict, self$model$model, data = newdata, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
+        n_observations = NROW(prediction_nodes$predictions)
+        n_trees = length(self$model$mu_sigma2_per_node_per_tree)
+        response = numeric(n_observations)
+        se = numeric(n_observations)
+        for (i in seq_len(n_observations)) {
+          mu_sigma2_per_tree = lapply(seq_len(n_trees), function(tree) {
+            self$model$mu_sigma2_per_node_per_tree[[tree]][[as.character(prediction_nodes$predictions[i, tree])]]
+          })
+          mus = sapply(mu_sigma2_per_tree, "[[", 1)
+          response[i] = mean(mus)
+          se[i] = sqrt(var(mus))
         }
         list(response = response, se = se)
       } else {
