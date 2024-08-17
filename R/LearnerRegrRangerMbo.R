@@ -1,4 +1,4 @@
-#' @title Custom Ranger Regression Learner
+#' @title Custom Ranger Regression Learner for Model Based Optimization
 #'
 #' @name mlr_learners_regr.ranger
 #'
@@ -37,7 +37,7 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
         sample.fraction              = p_dbl(0L, 1L, tags = "train"),
         save.memory                  = p_lgl(default = FALSE, tags = "train"),
         scale.permutation.importance = p_lgl(default = FALSE, tags = "train", depends = quote(importance == "permutation")),
-        se.method                    = p_fct(c("jack", "infjack", "simple"), default = "infjack", tags = "predict"), # FIXME: only works if predict_type == "se"
+        se.method                    = p_fct(c("jack", "infjack", "simple"), default = "infjack", tags = c("train", "predict")), # FIXME: only works if predict_type == "se"
         seed                         = p_int(default = NULL, special_vals = list(NULL), tags = c("train", "predict")),
         split.select.weights         = p_uty(default = NULL, tags = "train"),
         splitrule                    = p_fct(c("variance", "extratrees", "maxstat"), default = "variance", tags = "train"),
@@ -91,29 +91,66 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
     .train = function(task) {
       pv = self$param_set$get_values(tags = "train")
       pv = mlr3learners:::convert_ratio(pv, "mtry", "mtry.ratio", length(task$feature_names))
+      if ("se.method" %in% names(pv)) {
+        if (self$predict_type != "se") {
+          stop('$predict_type must be "se" if "se.method" is set to "simple".')
+        }
+        pv[["se.method"]] = NULL
+      }
 
       if (self$predict_type == "se") {
         pv$keep.inbag = TRUE # nolint
       }
 
-      mlr3misc::invoke(ranger::ranger,
+      model = mlr3misc::invoke(ranger::ranger,
         dependent.variable.name = task$target_names,
         data = task$data(),
         case.weights = task$weights$weight,
         .args = pv
       )
+
+      if (isTRUE(self$param_set$get_values()[["se.method"]] == "simple")) {
+        data = mlr3learners:::ordered_features(task, self)
+        prediction_nodes = mlr3misc::invoke(predict, model, data = data, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
+        y = task$data(cols = task$target_names)[[1L]]
+        observation_node_table = prediction_nodes$predictions
+        n_trees = NCOL(observation_node_table)
+        unique_nodes_per_tree = apply(observation_node_table, MARGIN = 2L, FUN = unique, simplify = FALSE)
+        mu_sigma2_per_node_per_tree = lapply(seq_len(n_trees), function(tree) {
+          nodes = unique_nodes_per_tree[[tree]]
+          setNames(lapply(nodes, function(node) {
+            y_tmp = y[observation_node_table[, tree] == node]
+            c(mu = mean(y_tmp), sigma2 = if (length(y_tmp) > 1L) var(y_tmp) else 0)
+          }), nm = nodes)
+        })
+        list(model = model, mu_sigma2_per_node_per_tree = mu_sigma2_per_node_per_tree)
+      } else {
+        list(model = model)
+      }
     },
     .predict = function(task) {
       pv = self$param_set$get_values(tags = "predict")
       newdata = mlr3learners:::ordered_features(task, self)
 
       if (isTRUE(pv$se.method == "simple")) {
-        prediction = mlr3misc::invoke(predict, self$model, data = newdata, type = "response", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
-        response = rowMeans(prediction$predictions)
-        variance = rowMeans(0.01 + prediction$predictions^2) - (response^2) # law of total variance assuming sigma_b(x) is 0 due to min.node.size = 1 and always splitting; then set 0.01 as lower bound for sigma_b(x)
-        list(response = response, se = sqrt(variance))
+        prediction_nodes = mlr3misc::invoke(predict, self$model$model, data = newdata, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
+        n_observations = NROW(prediction_nodes$predictions)
+        n_trees = length(self$model$mu_sigma2_per_node_per_tree)
+        response = numeric(n_observations)
+        se = numeric(n_observations)
+        for (i in seq_len(n_observations)) {
+          mu_sigma2_per_tree = lapply(seq_len(n_trees), function(tree) {
+            self$model$mu_sigma2_per_node_per_tree[[tree]][[as.character(prediction_nodes$predictions[i, tree])]]
+          })
+          mus = sapply(mu_sigma2_per_tree, "[[", 1)
+          sigmas2 = sapply(mu_sigma2_per_tree, "[[", 2)
+          response[i] = mean(mus)
+          # law of total variance assuming a mixture of normal distributions for each tree
+          se[i] = sqrt(mean((mus ^ 2) + sigmas2) - (response[i] ^ 2))
+        }
+        list(response = response, se = se)
       } else {
-        prediction = mlr3misc::invoke(predict, self$model, data = newdata, type = self$predict_type, .args = pv)
+        prediction = mlr3misc::invoke(predict, self$model$model, data = newdata, type = self$predict_type, .args = pv)
         list(response = prediction$predictions, se = prediction$se)
       }
     },
@@ -139,4 +176,3 @@ default_values.LearnerRegrRangerMbo = function(x, search_space, task, ...) { # n
 
 #' @include aaa.R
 learners[["regr.ranger_mbo"]] = LearnerRegrRangerMbo
-
