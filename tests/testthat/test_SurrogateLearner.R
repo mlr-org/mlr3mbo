@@ -50,7 +50,7 @@ test_that("param_set", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(learner = REGR_FEATURELESS, archive = inst$archive)
   expect_r6(surrogate$param_set, "ParamSet")
-  expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measure", "perf_threshold", "catch_errors", "impute_missings"))
+  expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measure", "perf_threshold", "catch_errors"))
   expect_equal(surrogate$param_set$class[["assert_insample_perf"]], "ParamLgl")
   expect_equal(surrogate$param_set$class[["perf_measure"]], "ParamUty")
   expect_equal(surrogate$param_set$class[["perf_threshold"]], "ParamDbl")

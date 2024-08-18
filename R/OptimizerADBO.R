@@ -101,10 +101,9 @@ OptimizerADBO = R6Class("OptimizerADBO",
       t = 0
 
       surrogate = default_surrogate(inst)
-      surrogate$param_set$set_values(impute_missings = pv$impute_method)
+      surrogate$param_set$set_values(impute_method = pv$impute_method)
       acq_function = acqf("cb", lambda = runif(1, 1 , 3))
       acq_optimizer = acqo(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))
-
       surrogate$archive = inst$archive
       acq_function$surrogate = surrogate
       acq_optimizer$acq_function = acq_function

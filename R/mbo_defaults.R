@@ -190,8 +190,10 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
   }
 
   if (is.null(n_learner)) n_learner = length(instance$archive$cols_y)
-  if (n_learner == 1L) {
+  if (n_learner == 1L && inherits(instance, "OptimInstanceBatch")) {
     SurrogateLearner$new(learner)
+  } else if (n_learner == 1L && inherits(instance, "OptimInstanceAsync")) {
+    SurrogateLearnerAsync$new(learner)
   } else  {
     learners = replicate(n_learner, learner$clone(deep = TRUE), simplify = FALSE)
     SurrogateLearnerCollection$new(learners)

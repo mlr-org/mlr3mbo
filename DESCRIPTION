@@ -73,7 +73,7 @@ Config/testthat/edition: 3
 Config/testthat/parallel: false
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE, r6 = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Collate:
     'mlr_acqfunctions.R'
     'AcqFunction.R'
@@ -97,6 +97,7 @@ Collate:
     'ResultAssignerSurrogate.R'
     'Surrogate.R'
     'SurrogateLearner.R'
+    'SurrogateLearnerAsync.R'
     'SurrogateLearnerCollection.R'
     'TunerADBO.R'
     'TunerMbo.R'

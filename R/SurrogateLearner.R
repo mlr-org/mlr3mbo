@@ -87,10 +87,9 @@ SurrogateLearner = R6Class("SurrogateLearner",
         assert_insample_perf = p_lgl(),
         perf_measure = p_uty(custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
         perf_threshold = p_dbl(lower = -Inf, upper = Inf),
-        catch_errors = p_lgl(),
-        impute_missings = p_fct(c("none", "mean", "random"))
+        catch_errors = p_lgl()
       )
-      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE, impute_missings = "none")
+      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE)
       ps$add_dep("perf_measure", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_threshold", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
@@ -215,21 +214,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
-      if (self$param_set$values$impute_missings == "mean") {
-        xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y), with = FALSE]
-        setnafill(xydt, type = "const", fill = mean(xydt[[self$cols_y]], na.rm = TRUE), cols = self$cols_y)
-      } else if (self$param_set$values$impute_missings == "random") {
-        xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE]
-        walk(self$cols_y, function(col) {
-          min = min(xydt[[col]], na.rm = TRUE)
-          max = max(xydt[[col]], na.rm = TRUE)
-          xydt[c("queued", "running"), (col) := runif(.N, min, max), on = "state"]
-        })
-        set(xydt, j = "state", value = NULL)
-      } else {
-        xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
-      }
-
+      xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$cols_y)
       assert_learnable(task, learner = self$learner)
       self$learner$train(task)
