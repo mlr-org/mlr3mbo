@@ -223,7 +223,6 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
     # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
-    # If
     .update = function() {
       assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
       one_to_multiple = length(self$cols_y) == 1L

@@ -58,12 +58,12 @@ test_that("AcqOptimizer API works", {
   acqopt$param_set$values$warmstart = TRUE
   xdt = acqopt$optimize()
   expect_true(xdt[["x"]] == 0)
-  expect_true(xdt[[".already_evaluated"]] == FALSE)
+  expect_false(xdt[[".already_evaluated"]])
 
   acqopt$param_set$values$warmstart_size = 1L
   xdt = acqopt$optimize()
   expect_true(xdt[["x"]] == 0)
-  expect_true(xdt[[".already_evaluated"]] == FALSE)
+  expect_false(xdt[[".already_evaluated"]])
 
   acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
   acqopt$param_set$values$warmstart = TRUE
