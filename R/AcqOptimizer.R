@@ -141,23 +141,29 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #'
     #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
     optimize = function() {
-      # FIXME: currently only supports singlecrit acquisition functions
-      if (self$acq_function$codomain$length > 1L) {
-        stop("Multi-objective acquisition functions are currently not supported.")
-      }
+      is_multi_acq_function = self$acq_function$codomain$length > 1L
 
       logger = lgr::get_logger("bbotk")
       old_threshold = logger$threshold
       logger$set_threshold(self$param_set$values$logging_level)
       on.exit(logger$set_threshold(old_threshold))
 
-      instance = OptimInstanceBatchSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, callbacks = self$callbacks)
+      if (is_multi_acq_function) {
+        instance = OptimInstanceBatchMultiCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, callbacks = self$callbacks)
+      } else {
+        instance = OptimInstanceBatchSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, callbacks = self$callbacks)
+      }
 
       # warmstart
       if (self$param_set$values$warmstart) {
         warmstart_size = if (isTRUE(self$param_set$values$warmstart_size == "all")) Inf else self$param_set$values$warmstart_size %??% 1L  # default is 1L
         n_select = min(nrow(self$acq_function$archive$data), warmstart_size)
-        instance$eval_batch(self$acq_function$archive$best(n_select = n_select)[, instance$search_space$ids(), with = FALSE])
+        warmstart_xdt = if (is_multi_acq_function) {
+          self$acq_function$archive$nds_selection(n_select = n_select)[, instance$search_space$ids(), with = FALSE]
+        } else {
+          self$acq_function$archive$best(n_select = n_select)[, instance$search_space$ids(), with = FALSE]
+        }
+        instance$eval_batch(warmstart_xdt)
       }
 
       # acquisition function optimization
@@ -166,7 +172,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
           tryCatch(
             {
               self$optimizer$optimize(instance)
-              get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates)
+              get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = TRUE)
             }, error = function(error_condition) {
               lg$warn(error_condition$message)
               stop(set_class(list(message = error_condition$message, call = NULL),
@@ -175,14 +181,14 @@ AcqOptimizer = R6Class("AcqOptimizer",
           )
         } else {
           self$optimizer$optimize(instance)
-          get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates)
+          get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = TRUE)
         }
       } else {
         if (self$param_set$values$catch_errors) {
           tryCatch(
             {
               self$optimizer$optimize(instance)
-              instance$archive$best(n_select = self$param_set$values$n_candidates)
+              get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = FALSE)
             }, error = function(error_condition) {
               lg$warn(error_condition$message)
               stop(set_class(list(message = error_condition$message, call = NULL),
@@ -191,9 +197,16 @@ AcqOptimizer = R6Class("AcqOptimizer",
           )
         } else {
           self$optimizer$optimize(instance)
-          instance$archive$best(n_select = self$param_set$values$n_candidates)
+          get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = FALSE)
         }
       }
+      #if (is_multi_acq_function) {
+      #  set(xdt, j = instance$objective$id, value = apply(xdt[, instance$objective$acq_function_ids, with = FALSE], MARGIN = 1L, FUN = c, simplify = FALSE))
+      #  for (acq_function_id in instance$objective$acq_function_ids) {
+      #    set(xdt, j = acq_function_id, value = NULL)
+      #  }
+      #  setcolorder(xdt, c(instance$archive$cols_x, "x_domain", instance$objective$id))
+      #}
       xdt
     }
   ),

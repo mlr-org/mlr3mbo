@@ -14,11 +14,12 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
 }
 
 generate_acq_multi_codomain = function(surrogate, acq_functions) {
+  acq_functions = unname(acq_functions)  # needed for c of ParamSets to keep original ids
   codomain = do.call(c, map(acq_functions, function(acq_function) acq_function$codomain))
   if (any(codomain$tags == "same")) {
     assert(surrogate$archive$codomain$length == 1L)
   }
-  codomain$tags = structure(as.list(rep("minimize", length(acq_functions))), names = map_chr(acq_functions, function(acq_function) acq_function$id))
+  codomain$tags = structure(as.list(rep("maximize", length(acq_functions))), names = map_chr(acq_functions, function(acq_function) acq_function$id))
   codomain
 }
 
@@ -92,23 +93,25 @@ mult_max_to_min = function(codomain) {
 }
 
 # used in AcqOptimizer
-# FIXME: currently only supports singlecrit acquisition functions
-get_best_not_evaluated = function(instance, evaluated, n_select) {
+get_best= function(instance, is_multi_acq_function, evaluated, n_select, not_already_evaluated = TRUE) {
   data = copy(instance$archive$data[, c(instance$archive$cols_x, "x_domain", instance$archive$cols_y), with = FALSE])
   evaluated = copy(evaluated)
   already_evaluated_id = ".already_evaluated"
-  while (already_evaluated_id %in% c(instance$archive$cols_x, "x_domain", instance$archive$cols_y)) {
-    already_evaluated_id = paste0(".", already_evaluated_id)
+  set(data, j = already_evaluated_id, value = FALSE)
+  data[evaluated, eval(already_evaluated_id) := TRUE, on = instance$archive$cols_x]
+  set(instance$archive$data, j = already_evaluated_id, value = data[[already_evaluated_id]])
+  if (not_already_evaluated) {
+    not_already_evaluated = which(data[[already_evaluated_id]] == FALSE)
+    if (length(not_already_evaluated) < n_select) {
+      stopf("Less then `n_select` (%i) candidate points found during acquisition function optimization were not already evaluated.", n_select)
+    }
+    instance$archive$data = instance$archive$data[not_already_evaluated, ]
   }
-  data[, eval(already_evaluated_id) := FALSE][evaluated, eval(already_evaluated_id) := TRUE, on = instance$archive$cols_x]
-  candidates = data[get(already_evaluated_id) == FALSE]
-  if (nrow(candidates) < n_select) {
-    stopf("Less then `n_select` (%i) candidate points found during acquisition function optimization were not already evaluated.", n_select)
+  if (is_multi_acq_function) {
+    instance$archive$nds_selection(n_select = n_select)
+  } else {
+    instance$archive$best(n_select = n_select)
   }
-  candidates[[instance$archive$cols_y]] = candidates[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
-  xdt = setorderv(candidates, cols = instance$archive$cols_y)
-  xdt[[instance$archive$cols_y]] = xdt[[instance$archive$cols_y]] * instance$objective_multiplicator[instance$archive$cols_y]
-  xdt[seq_len(n_select), ]
 }
 
 catn = function(..., file = "") {
@@ -145,7 +148,6 @@ check_learner_surrogate = function(learner) {
       return(TRUE)
     }
   }
-
   "Must inherit from class 'Learner' or be a list of elements inheriting from class 'Learner'"
 }
 
@@ -155,10 +157,11 @@ assert_loop_function = function(x, .var.name = vname(x)) {
   }
   # NOTE: this is buggy in checkmate; assert should always return x invisible not TRUE as is the case here
   assert(check_class(x, classes = "loop_function"),
-         check_function(x, args = c("instance", "surrogate", "acq_function", "acq_optimizer")),
-         check_attributes(x, attribute_names = c("id", "label", "instance", "man")),
-         check_instance_attribute(x),
-         combine = "and", .var.name = .var.name)
+    check_function(x, args = c("instance", "surrogate", "acq_function", "acq_optimizer")),
+    check_attributes(x, attribute_names = c("id", "label", "instance", "man")),
+    check_instance_attribute(x),
+    combine = "and", .var.name = .var.name
+  )
   x
 }
 

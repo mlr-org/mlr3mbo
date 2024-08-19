@@ -78,6 +78,31 @@ acqf = function(.key, ...) {
   dictionary_sugar_get(mlr_acqfunctions, .key, ...)
 }
 
+#' @title Syntactic Sugar Acquisition Functions Construction
+#'
+#' @description
+#' This function complements [mlr_acqfunctions] with functions in the spirit
+#' of `mlr_sugar` from \CRANpkg{mlr3}.
+#'
+#' @param .keys (`character()`)\cr
+#' Keys passed to the respective [dictionary][mlr3misc::Dictionary] to retrieve
+#' multiple objects.
+#' @param ... (named `list()`)\cr
+#' Named arguments passed to the constructor, to be set as parameters in the
+#' [paradox::ParamSet], or to be set as public field. See
+#' [mlr3misc::dictionary_sugar_get()] for more details.
+#'
+#' @return List of [AcqFunction]s
+#'
+#' @export
+#' @examples
+#' acqfs(c("ei", "pi", "cb"))
+#' @export
+acqfs = function(.keys, ...) {
+  dictionary_sugar_mget(dict = mlr_acqfunctions, .keys, ...)
+}
+
+
 #' @title Syntactic Sugar Acquisition Function Optimizer Construction
 #'
 #' @description

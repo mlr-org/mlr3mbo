@@ -78,6 +78,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_mean}},
+\code{\link{mlr_acqfunctions_multi}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_sd}}
 }
@@ -150,7 +151,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<a id="method-AcqFunctionSmsEgo-update"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionSmsEgo-update}{}}}
 \subsection{Method \code{update()}}{
-Updates acquisition function and sets \code{ys_front}, \code{ref_point}, \code{epsilon}.
+Update the acquisition function and set \code{ys_front}, \code{ref_point} and \code{epsilon}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionSmsEgo$update()}\if{html}{\out{</div>}}
 }
