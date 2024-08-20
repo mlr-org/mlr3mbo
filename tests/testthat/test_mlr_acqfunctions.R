@@ -3,8 +3,14 @@ test_that("mlr_acqfunctions", {
   keys = mlr_acqfunctions$keys()
 
   for (key in keys) {
-    a = mlr_acqfunctions$get(key)
-    expect_r6(a, classes = "AcqFunction")
+    if (key == "multi") {
+      a1 = AcqFunctionMean$new()
+      a2 = AcqFunctionSD$new()
+      a = mlr_acqfunctions$get(key, acq_functions = list(a1, a2))
+    } else {
+      a = mlr_acqfunctions$get(key)
+      expect_r6(a, classes = "AcqFunction")
+    }
   }
 })
 

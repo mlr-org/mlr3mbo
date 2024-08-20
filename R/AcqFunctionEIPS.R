@@ -76,7 +76,7 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     },
 
     #' @description
-    #' Updates acquisition function and sets `y_best`.
+    #' Update the acquisition function and set `y_best`.
     update = function() {
       self$y_best = min(self$surrogate_max_to_min[[self$col_y]] * self$archive$data[[self$col_y]])
     }

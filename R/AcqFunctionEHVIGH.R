@@ -104,7 +104,7 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
     },
 
     #' @description
-    #' Updates acquisition function and sets `ys_front`, `ref_point`, `hypervolume`, `gh_data`.
+    #' Update the acquisition function and set `ys_front`, `ref_point`, `hypervolume` and `gh_data`.
     update = function() {
       n_obj = length(self$archive$cols_y)
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]

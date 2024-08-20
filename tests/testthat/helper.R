@@ -110,7 +110,7 @@ REGR_FEATURELESS = lrn("regr.featureless")
 REGR_FEATURELESS$encapsulate = c(train = "callr", predict = "callr")
 
 OptimizerError = R6Class("OptimizerError",
-  inherit = Optimizer,
+  inherit = OptimizerBatch,
   public = list(
 
     initialize = function() {
