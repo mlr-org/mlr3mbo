@@ -46,8 +46,9 @@ more details.
 
 ## Simple Optimization Example
 
-Minimize the two-dimensional Branin via sequential BO using a GP as
-surrogate and EI optimized via DIRECT as acquisition function:
+Minimize the two-dimensional Branin function via sequential BO using a
+GP as surrogate and EI as acquisition function optimized via a local
+serch:
 
 ``` r
 library(bbotk)
@@ -85,8 +86,8 @@ surrogate = srlrn(lrn("regr.km", control = list(trace = FALSE)))
 acq_function = acqf("ei")
 
 acq_optimizer = acqo(
-  opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"),
-  terminator = trm("stagnation", threshold = 1e-8)
+  opt("local_search", n_initial_points = 10, initial_random_sample_size = 1000, neighbors_per_point = 10),
+  terminator = trm("evals", n_evals = 3000)
 )
 
 optimizer = opt("mbo",
@@ -99,13 +100,14 @@ optimizer = opt("mbo",
 optimizer$optimize(instance)
 ```
 
-    ##           x1    x2  x_domain         y
-    ##        <num> <num>    <list>     <num>
-    ## 1: -3.055556  12.5 <list[2]> 0.6190032
+    ##          x1       x2  x_domain         y
+    ##       <num>    <num>    <list>     <num>
+    ## 1: 3.090821 2.299709 <list[2]> 0.4104925
 
-We can quickly visualize the contours of the objective function as well
-as the sampling behavior of our BO run (lighter blue colours indicating
-points that were evaluated in later stages of the optimization process).
+We can quickly visualize the contours of the objective function (on log
+scale) as well as the sampling behavior of our BO run (lighter blue
+colours indicating points that were evaluated in later stages of the
+optimization process; the first batch is given by the initial design).
 
 ``` r
 library(ggplot2)
@@ -115,7 +117,7 @@ grid[, y := branin(x1 = x1, x2 = x2)]
 ggplot(aes(x = x1, y = x2, z = log(y)), data = grid) +
   geom_contour(colour = "black") +
   geom_point(aes(x = x1, y = x2, colour = batch_nr), data = instance$archive$data) +
-  labs(x =  "x_1", y = "x2") +
+  labs(x =  expression(x[1]), y = expression(x[2])) +
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
@@ -145,4 +147,10 @@ instance = tune(
   resampling = rsmp("holdout"),
   measure = msr("classif.ce"),
   term_evals = 10)
+
+instance$result
 ```
+
+    ##           cp learner_param_vals  x_domain classif.ce
+    ##        <num>             <list>    <list>      <num>
+    ## 1: -6.188733          <list[2]> <list[1]>  0.2382812
