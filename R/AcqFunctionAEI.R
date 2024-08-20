@@ -92,7 +92,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     },
 
     #' @description
-    #' Updates acquisition function and sets `y_effective_best` and `noise_var`.
+    #' Update the acquisition function and set `y_effective_best` and `noise_var`.
     update = function() {
       xdt = self$archive$data[, self$archive$cols_x, with = FALSE]
       p = self$surrogate$predict(xdt)

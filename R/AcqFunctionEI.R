@@ -9,6 +9,13 @@
 #' @description
 #' Expected Improvement.
 #'
+#' @section Parameters:
+#' * `"epsilon"` (`numeric(1)`)\cr
+#'   \eqn{\epsilon} value used to determine the amount of exploration.
+#'   Higher values result in the importance of improvements predicted by the posterior mean
+#'   decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
+#'   Defaults to `0` (standard Expected Improvement).
+#'
 #' @references
 #' * `r format_bib("jones_1998")`
 #'
@@ -60,27 +67,35 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param surrogate (`NULL` | [SurrogateLearner]).
-    initialize = function(surrogate = NULL) {
+    #' @param epsilon (`numeric(1)`).
+    initialize = function(surrogate = NULL, epsilon = 0) {
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
-      super$initialize("acq_ei", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_ei")
+      assert_number(epsilon, lower = 0, finite = TRUE)
+
+      constants = ps(epsilon = p_dbl(lower = 0, default = 0))
+      constants$values$epsilon = epsilon
+
+      super$initialize("acq_ei", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_ei")
     },
 
     #' @description
-    #' Updates acquisition function and sets `y_best`.
+    #' Update the acquisition function and set `y_best`.
     update = function() {
       self$y_best = min(self$surrogate_max_to_min * self$archive$data[[self$surrogate$cols_y]])
     }
   ),
 
   private = list(
-    .fun = function(xdt) {
+    .fun = function(xdt, ...) {
       if (is.null(self$y_best)) {
         stop("$y_best is not set. Missed to call $update()?")
       }
+      constants = list(...)
+      epsilon = constants$epsilon
       p = self$surrogate$predict(xdt)
       mu = p$mean
       se = p$se
-      d = self$y_best - self$surrogate_max_to_min * mu
+      d = (self$y_best - self$surrogate_max_to_min * mu) - epsilon
       d_norm = d / se
       ei = d * pnorm(d_norm) + se * dnorm(d_norm)
       ei = ifelse(se < 1e-20, 0, ei)

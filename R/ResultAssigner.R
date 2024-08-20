@@ -36,6 +36,8 @@ ResultAssigner = R6Class("ResultAssigner",
 
     #' @description
     #' Helper for print outputs.
+    #'
+    #' @return (`character(1)`).
     format = function() {
       sprintf("<%s>", class(self)[1L])
     },

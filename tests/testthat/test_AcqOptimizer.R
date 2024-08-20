@@ -58,12 +58,12 @@ test_that("AcqOptimizer API works", {
   acqopt$param_set$values$warmstart = TRUE
   xdt = acqopt$optimize()
   expect_true(xdt[["x"]] == 0)
-  expect_true(xdt[[".already_evaluated"]] == FALSE)
+  expect_false(xdt[[".already_evaluated"]])
 
   acqopt$param_set$values$warmstart_size = 1L
   xdt = acqopt$optimize()
   expect_true(xdt[["x"]] == 0)
-  expect_true(xdt[[".already_evaluated"]] == FALSE)
+  expect_false(xdt[[".already_evaluated"]])
 
   acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
   acqopt$param_set$values$warmstart = TRUE
@@ -72,12 +72,12 @@ test_that("AcqOptimizer API works", {
 
   acqopt$param_set$values$skip_already_evaluated = FALSE
   xdt = acqopt$optimize()
-  expect_true(is.null(xdt[[".already_evaluated"]]))
+  expect_true((xdt[[".already_evaluated"]]))
 
   acqopt$param_set$values$warmstart_size = NULL
   acqopt$param_set$values$warmstart = FALSE
   xdt = acqopt$optimize()
-  expect_true(is.null(xdt[[".already_evaluated"]]))
+  expect_true((xdt[[".already_evaluated"]]))
 })
 
 test_that("AcqOptimizer param_set", {
@@ -118,5 +118,27 @@ test_that("AcqOptimizer deep clone", {
   expect_true(address(acqopt1) != address(acqopt2))
   expect_true(address(acqopt1$optimizer) != address(acqopt2$optimizer))
   expect_true(address(acqopt1$terminator) != address(acqopt2$terminator))
+})
+
+test_that("AcqOptimizer callbacks", {
+  instance = OptimInstanceBatchSingleCrit$new(OBJ_1D, terminator = trm("evals", n_evals = 5L))
+  design = MAKE_DESIGN(instance)
+  instance$eval_batch(design)
+  callback = callback_batch("mlr3mbo.acqopt_time",
+    on_optimization_begin = function(callback, context) {
+      callback$state$begin = Sys.time()
+    },
+    on_optimization_end = function(callback, context) {
+      callback$state$end = Sys.time()
+      attr(callback$state$outer_instance, "acq_opt_runtime") = as.numeric(callback$state$end - callback$state$begin)
+    }
+  )
+  callback$state$outer_instance = instance
+  acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_FEATURELESS, archive = instance$archive))
+  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 10L), trm("evals", n_evals = 10L), acq_function = acqfun, callbacks = callback)
+  acqfun$surrogate$update()
+  acqfun$update()
+  res = acqopt$optimize()
+  expect_number(attr(instance, "acq_opt_runtime"))
 })
 

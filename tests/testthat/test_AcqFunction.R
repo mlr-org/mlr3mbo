@@ -10,7 +10,7 @@ test_that("AcqFunction API works", {
   expect_equal(acqf$direction, "same")
   expect_equal(acqf$domain, inst$search_space)
   expect_learner(acqf$surrogate$learner)
-  expect_equal(acqf$requires_predict_type_se, FALSE)
+  expect_false(acqf$requires_predict_type_se)
   expect_equal(acqf$packages, "mlr3mbo")
   expect_equal(acqf$label, "label")
   expect_equal(acqf$man, "man")

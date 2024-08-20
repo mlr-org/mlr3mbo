@@ -232,7 +232,8 @@ default_acqfunction = function(instance) {
 #' @export
 default_acqoptimizer = function(acq_function) {
   assert_r6(acq_function, classes = "AcqFunction")
-  AcqOptimizer$new(optimizer = opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))  # FIXME: what do we use
+  AcqOptimizer$new(optimizer = opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))  # FIXME: what do we use?
+  # NOTE: adjust for single-objective vs. multi-objective acquisition function
 }
 
 #' @title Default Result Assigner

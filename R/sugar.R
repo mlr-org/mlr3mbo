@@ -20,7 +20,7 @@
 #' @param cols_y (`NULL` | `character()`)\cr
 #'   Column id(s) in the [bbotk::Archive] that should be used as a target.
 #'   If a list of [mlr3::LearnerRegr] is provided as the `learner` argument and `cols_y` is
-#'   specified as well, as many column names as learners must be provided. 
+#'   specified as well, as many column names as learners must be provided.
 #'   Can also be `NULL` in which case this is automatically inferred based on the archive.
 #' @param ... (named `list()`)\cr
 #' Named arguments passed to the constructor, to be set as parameters in the
@@ -78,6 +78,31 @@ acqf = function(.key, ...) {
   dictionary_sugar_get(mlr_acqfunctions, .key, ...)
 }
 
+#' @title Syntactic Sugar Acquisition Functions Construction
+#'
+#' @description
+#' This function complements [mlr_acqfunctions] with functions in the spirit
+#' of `mlr_sugar` from \CRANpkg{mlr3}.
+#'
+#' @param .keys (`character()`)\cr
+#' Keys passed to the respective [dictionary][mlr3misc::Dictionary] to retrieve
+#' multiple objects.
+#' @param ... (named `list()`)\cr
+#' Named arguments passed to the constructor, to be set as parameters in the
+#' [paradox::ParamSet], or to be set as public field. See
+#' [mlr3misc::dictionary_sugar_get()] for more details.
+#'
+#' @return List of [AcqFunction]s
+#'
+#' @export
+#' @examples
+#' acqfs(c("ei", "pi", "cb"))
+#' @export
+acqfs = function(.keys, ...) {
+  dictionary_sugar_mget(dict = mlr_acqfunctions, .keys, ...)
+}
+
+
 #' @title Syntactic Sugar Acquisition Function Optimizer Construction
 #'
 #' @description
@@ -90,6 +115,8 @@ acqf = function(.key, ...) {
 #' @param acq_function (`NULL` | [AcqFunction])\cr
 #'   [AcqFunction] that is to be used.
 #'   Can also be `NULL`.
+#' @param callbacks (`NULL` | list of [mlr3misc::Callback])
+#'   Callbacks used during acquisition function optimization.
 #' @param ... (named `list()`)\cr
 #' Named arguments passed to the constructor, to be set as parameters in the
 #' [paradox::ParamSet].
@@ -101,9 +128,9 @@ acqf = function(.key, ...) {
 #' library(bbotk)
 #' acqo(opt("random_search"), trm("evals"), catch_errors = FALSE)
 #' @export
-acqo = function(optimizer, terminator, acq_function = NULL, ...) {
+acqo = function(optimizer, terminator, acq_function = NULL, callbacks = NULL, ...) {
   dots = list(...)
-  acqopt = AcqOptimizer$new(optimizer = optimizer, terminator = terminator, acq_function = acq_function)
+  acqopt = AcqOptimizer$new(optimizer = optimizer, terminator = terminator, acq_function = acq_function, callbacks = callbacks)
   acqopt$param_set$values = insert_named(acqopt$param_set$values, dots)
   acqopt
 }

@@ -103,7 +103,7 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     },
 
     #' @description
-    #' Updates acquisition function and sets `ys_front`, `ref_point`, `epsilon`.
+    #' Update the acquisition function and set `ys_front`, `ref_point` and `epsilon`.
     update = function() {
       if (is.null(self$progress)) {
         stop("$progress is not set.")  # needs self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
