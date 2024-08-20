@@ -5,7 +5,7 @@
 \title{Sampler Suitable for Combining Hyperband With Model Based Optimization}
 \description{
 This class provides a \link[paradox:Sampler]{paradox::Sampler} that allows for sampling points relying on Model Based Optimization.
-Using this sampler together with \link[mlr3hyperband:mlr_optimizers_hyperband]{mlr3hyperband::OptimizerHyperband} or \link[mlr3hyperband:mlr_tuners_hyperband]{mlr3hyperband::TunerHyperband} allows for constructing an optimizer
+Using this sampler together with \link[mlr3hyperband:mlr_optimizers_hyperband]{mlr3hyperband::OptimizerBatchHyperband} or \link[mlr3hyperband:mlr_tuners_hyperband]{mlr3hyperband::TunerBatchHyperband} allows for constructing an optimizer
 that performs a combination of Hyperband and Model Based Optimization similarly as the BOHB algorithm in the context of multifidelity optimization.
 }
 \examples{
@@ -17,10 +17,10 @@ if (requireNamespace("mlr3learners") &
   library(bbotk)
   library(paradox)
   library(mlr3hyperband)
-  
+
   # Augmented Branin function
   fun = function(xs) {
-    y = 
+    y =
       (
         xs[["x2"]] - ((5.1 / (4 * pi^2)) - 0.1 * (1 - (xs[["fidelity"]] / 100))) *
         xs[["x1"]]^2 + (5 / pi) * xs[["x1"]] - 6
@@ -85,10 +85,6 @@ The surrogate.}
 
 \item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
 The acquisition function.}
-
-\item{\code{acq_function_domain}}{(\link[paradox:Domain]{paradox::Domain})\cr
-The domain of the acquisition function within the model based proposal mechanism.
-This is the same as \code{search_space_sampler} without any potential transformation functions.}
 
 \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
 The acquisition function optimizer.}

@@ -2,7 +2,7 @@
 #'
 #' @description
 #' This class provides a [paradox::Sampler] that allows for sampling points relying on Model Based Optimization.
-#' Using this sampler together with [mlr3hyperband::OptimizerHyperband] or [mlr3hyperband::TunerHyperband] allows for constructing an optimizer
+#' Using this sampler together with [mlr3hyperband::OptimizerBatchHyperband] or [mlr3hyperband::TunerBatchHyperband] allows for constructing an optimizer
 #' that performs a combination of Hyperband and Model Based Optimization similarly as the BOHB algorithm in the context of multifidelity optimization.
 #'
 #' @export
@@ -15,10 +15,10 @@
 #'   library(bbotk)
 #'   library(paradox)
 #'   library(mlr3hyperband)
-#'   
+#'
 #'   # Augmented Branin function
 #'   fun = function(xs) {
-#'     y = 
+#'     y =
 #'       (
 #'         xs[["x2"]] - ((5.1 / (4 * pi^2)) - 0.1 * (1 - (xs[["fidelity"]] / 100))) *
 #'         xs[["x1"]]^2 + (5 / pi) * xs[["x1"]] - 6
@@ -78,7 +78,7 @@ SamplerMbo = R6Class("SamplerMbo", inherit = paradox::Sampler,
     #' @field tmp_archive ([bbotk::Archive])\cr
     #'   Temporal archive which is a copy of the archive of the [bbotk::OptimInstance] used for updating the surrogate model within the model based proposal mechanism.
     tmp_archive = NULL,
-    
+
     #' @template field_surrogate
     surrogate = NULL,
 
