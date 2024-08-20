@@ -17,20 +17,22 @@ multi-objective Bayesian Optimization.
 
 ## Get Started
 
-An overview and gentle introduction is given in [this
-vignette](https://mlr3mbo.mlr-org.com/dev/articles/mlr3mbo.html).
+The best entry point to get familiar with `mlr3mbo` is provided via the
+[Bayesian
+Optimization](https://mlr3book.mlr-org.com/chapters/chapter5/advanced_tuning_methods_and_black_box_optimization.html#sec-bayesian-optimization)
+chapter in the `mlr3book`.
 
 ## Design
 
 `mlr3mbo` is built modular relying on the following
 [R6](https://cran.r-project.org/package=R6) classes:
 
--   `Surrogate`: Surrogate Model
--   `AcqFunction`: Acquisition Function
--   `AcqOptimizer`: Acquisition Function Optimizer
+- `Surrogate`: Surrogate Model
+- `AcqFunction`: Acquisition Function
+- `AcqOptimizer`: Acquisition Function Optimizer
 
-Based on these, Bayesian Optimization loops can be written, see, e.g.,
-`bayesopt_ego` for sequential single-objective BO.
+Based on these, Bayesian Optimization (BO) loops can be written, see,
+e.g., `bayesopt_ego` for sequential single-objective BO.
 
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other
 `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk)
@@ -44,8 +46,8 @@ more details.
 
 ## Simple Optimization Example
 
-Minimize `f(x) = x^2` via sequential single-objective BO using a GP as
-surrogate and EI optimized via random search as acquisition function:
+Minimize the two-dimensional Branin via sequential BO using a GP as
+surrogate and EI optimized via DIRECT as acquisition function:
 
 ``` r
 library(bbotk)
@@ -53,61 +55,75 @@ library(mlr3mbo)
 library(mlr3learners)
 set.seed(1)
 
-obfun = ObjectiveRFun$new(
-  fun = function(xs) list(y1 = xs$x ^ 2),
-  domain = ps(x = p_dbl(lower = -10, upper = 10)),
-  codomain = ps(y1 = p_dbl(tags = "minimize")))
+fun = function(xdt) {
+  y = branin(xdt[["x1"]], xdt[["x2"]])
+  data.table(y = y)
+}
+
+domain = ps(
+  x1 = p_dbl(-5, 10),
+  x2 = p_dbl(0, 15)
+)
+
+codomain = ps(
+  y = p_dbl(tags = "minimize")
+)
+
+objective = ObjectiveRFunDt$new(
+  fun = fun,
+  domain = domain,
+  codomain = codomain
+)
 
 instance = oi(
-  objective = obfun,
-  terminator = trm("evals", n_evals = 10))
+  objective = objective,
+  terminator = trm("evals", n_evals = 25)
+)
 
 surrogate = srlrn(lrn("regr.km", control = list(trace = FALSE)))
-acqfun = acqf("ei")
-acqopt = acqo(opt("random_search", batch_size = 100),
-  terminator = trm("evals", n_evals = 100))
+
+acq_function = acqf("ei")
+
+acq_optimizer = acqo(
+  opt("nloptr", algorithm = "NLOPT_GN_DIRECT_L"),
+  terminator = trm("stagnation", threshold = 1e-8)
+)
 
 optimizer = opt("mbo",
   loop_function = bayesopt_ego,
   surrogate = surrogate,
-  acq_function = acqfun,
-  acq_optimizer = acqopt)
+  acq_function = acq_function,
+  acq_optimizer = acq_optimizer
+)
 
 optimizer$optimize(instance)
 ```
 
-    ##             x  x_domain          y1
-    ##         <num>    <list>       <num>
-    ## 1: 0.03897209 <list[1]> 0.001518824
+    ##           x1    x2  x_domain         y
+    ##        <num> <num>    <list>     <num>
+    ## 1: -3.055556  12.5 <list[2]> 0.6190032
 
-Note that you can also use `bb_optimize` as a shorthand:
+We can quickly visualize the contours of the objective function as well
+as the sampling behavior of our BO run (lighter blue colours indicating
+points that were evaluated in later stages of the optimization process).
 
 ``` r
-library(bbotk)
-library(mlr3mbo)
-library(mlr3learners)
-set.seed(1)
+library(ggplot2)
+grid = generate_design_grid(instance$search_space, resolution = 1000L)$data
+grid[, y := branin(x1 = x1, x2 = x2)]
 
-fun = function(xs) list(y1 = xs$x ^ 2)
-
-surrogate = srlrn(lrn("regr.km", control = list(trace = FALSE)))
-acqfun = acqf("ei")
-acqopt = acqo(opt("random_search", batch_size = 100),
-  terminator = trm("evals", n_evals = 100))
-
-optimizer = opt("mbo",
-  loop_function = bayesopt_ego,
-  surrogate = surrogate,
-  acq_function = acqfun,
-  acq_optimizer = acqopt)
-
-result = bb_optimize(
-  fun,
-  method = optimizer,
-  lower = c(x = -10),
-  upper = c(x = 10),
-  max_evals = 10)
+ggplot(aes(x = x1, y = x2, z = log(y)), data = grid) +
+  geom_contour(colour = "black") +
+  geom_point(aes(x = x1, y = x2, colour = batch_nr), data = instance$archive$data) +
+  labs(x =  "x_1", y = "x2") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
 ```
+
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+Note that you can also use `bb_optimize` as a shorthand instead of
+constructing an optimization instance.
 
 ## Simple Tuning Example
 
@@ -129,10 +145,4 @@ instance = tune(
   resampling = rsmp("holdout"),
   measure = msr("classif.ce"),
   term_evals = 10)
-
-instance$result
 ```
-
-    ##           cp learner_param_vals  x_domain classif.ce
-    ##        <num>             <list>    <list>      <num>
-    ## 1: -4.381681          <list[2]> <list[1]>  0.2070312
