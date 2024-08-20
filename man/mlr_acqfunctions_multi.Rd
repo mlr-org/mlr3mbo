@@ -7,6 +7,15 @@
 \description{
 Wrapping multiple \link{AcqFunction}s resulting in a multi-objective acquisition function composed of the individual ones.
 Note that the optimization direction of each wrapped acquisition function is corrected for maximization.
+
+For each acquisition function, the same \link{Surrogate} must be used.
+If acquisition functions passed during construction already have been initialized with a surrogate, it is checked whether
+the surrogate is the same for all acquisition functions.
+If acquisition functions have not been initialized with a surrogate, the surrogate passed during construction or lazy initialization
+will be used for all acquisition functions.
+
+For optimization, \link{AcqOptimizer} can be used as for any other \link{AcqFunction}, however, the \link[bbotk:Optimizer]{bbotk::Optimizer} wrapped within the \link{AcqOptimizer}
+must support multi-objective optimization as indicated via the \code{multi-crit} property.
 }
 \section{Dictionary}{
 
@@ -80,10 +89,10 @@ Other Acquisition Function:
 Surrogate.}
 
 \item{\code{acq_functions}}{(list of \link{AcqFunction})\cr
-Points to the list of the individual acqusition functions.}
+Points to the list of the individual acquisition functions.}
 
 \item{\code{acq_function_ids}}{(character())\cr
-Points to the ids of the individual acqusition functions.}
+Points to the ids of the individual acquisition functions.}
 }
 \if{html}{\out{</div>}}
 }

@@ -150,6 +150,9 @@ Helper for print outputs.
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$format()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+(\code{character(1)}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Surrogate-print"></a>}}

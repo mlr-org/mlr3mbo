@@ -69,6 +69,8 @@ Surrogate = R6Class("Surrogate",
 
     #' @description
     #' Helper for print outputs.
+    #'
+    #' @return (`character(1)`).
     format = function() {
       sprintf("<%s>", class(self)[1L])
     },
