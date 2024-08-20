@@ -41,7 +41,7 @@
 #'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceMultiCrit$new(
+#'   instance = OptimInstanceBatchMultiCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -93,10 +93,10 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
       assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       assert_int(k, lower = 2L)
 
-      constants = ParamSet$new(list(
-        ParamInt$new("k", lower = 2L, default = 15L),
-        ParamDbl$new("r", lower = 0, upper = 1, default = 0.2)
-      ))
+      constants = ps(
+        k = p_int(lower = 2L, default = 15L),
+        r = p_dbl(lower = 0, upper = 1, default = 0.2)
+      )
       constants$values$k = k
       constants$values$r = r
 
@@ -104,7 +104,7 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
     },
 
     #' @description
-    #' Updates acquisition function and sets `ys_front`, `ref_point`, `hypervolume`, `gh_data`.
+    #' Update the acquisition function and set `ys_front`, `ref_point`, `hypervolume` and `gh_data`.
     update = function() {
       n_obj = length(self$archive$cols_y)
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
@@ -175,20 +175,20 @@ adjust_gh_data = function(gh_data, mu, sigma, r) {
   idx = as.matrix(expand.grid(rep(list(1:n), n_obj)))
   nodes = matrix(gh_data[idx, 1L], nrow = nrow(idx), ncol = n_obj)
   weights = apply(matrix(gh_data[idx, 2L], nrow = nrow(idx), ncol = n_obj), MARGIN = 1L, FUN = prod)
- 
-  # pruning with pruning rate r 
+
+  # pruning with pruning rate r
   if (r > 0) {
     weights_quantile = quantile(weights, probs = r)
     nodes = nodes[weights > weights_quantile, ]
     weights = weights[weights > weights_quantile]
   }
-  
+
   # rotate, scale, translate nodes with error catching
   # rotation will not have an effect unless we support surrogate models modelling correlated objectives
   # for now we still support this more general case and scaling is useful anyways
   nodes = tryCatch(
     {
-      eigen_decomp = eigen(sigma) 
+      eigen_decomp = eigen(sigma)
       rotation = eigen_decomp$vectors %*% diag(sqrt(eigen_decomp$values))
       nodes = t(rotation %*% t(nodes) + mu)
     }, error = function(ec) nodes

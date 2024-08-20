@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 0.2.1.9000
+Version: 0.2.4.9000
 Authors@R: c(
     person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0003-4152-5308")),
@@ -41,14 +41,14 @@ BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
     R (>= 3.1.0)
 Imports:
-    bbotk (>= 0.5.4),
+    bbotk (>= 1.0.0),
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
     mlr3 (>= 0.14.0),
     mlr3misc (>= 0.11.0),
-    mlr3tuning (>= 0.14.0),
-    paradox (>= 0.10.0),
+    mlr3tuning (>= 1.0.0),
+    paradox (>= 1.0.0),
     spacefillr,
     R6 (>= 2.4.1)
 Suggests:
@@ -66,14 +66,15 @@ Suggests:
     rmarkdown,
     rpart,
     stringi,
-    testthat (>= 3.0.0),
+    testthat (>= 3.0.0)
+Remotes: mlr-org/bbotk
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE, r6 = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Collate:
     'mlr_acqfunctions.R'
     'AcqFunction.R'
@@ -84,6 +85,7 @@ Collate:
     'AcqFunctionEI.R'
     'AcqFunctionEIPS.R'
     'AcqFunctionMean.R'
+    'AcqFunctionMulti.R'
     'AcqFunctionPI.R'
     'AcqFunctionSD.R'
     'AcqFunctionSmsEgo.R'

@@ -40,7 +40,7 @@
 #'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceMultiCrit$new(
+#'   instance = OptimInstanceBatchMultiCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -92,10 +92,10 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       assert_number(lambda, lower = 1, finite = TRUE)
       assert_number(epsilon, lower = 0, finite = TRUE, null.ok = TRUE)
 
-      constants = ParamSet$new(list(
-        ParamDbl$new("lambda", lower = 0, default = 1),
-        ParamDbl$new("epsilon", lower = 0, default = NULL, special_vals = list(NULL))  # for NULL, it will be calculated dynamically
-      ))
+      constants = ps(
+        lambda = p_dbl(lower = 0, default = 1),
+        epsilon = p_dbl(lower = 0, default = NULL, special_vals = list(NULL))  # for NULL, it will be calculated dynamically
+      )
       constants$values$lambda = lambda
       constants$values$epsilon = epsilon
 
@@ -103,7 +103,7 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     },
 
     #' @description
-    #' Updates acquisition function and sets `ys_front`, `ref_point`, `epsilon`.
+    #' Update the acquisition function and set `ys_front`, `ref_point` and `epsilon`.
     update = function() {
       if (is.null(self$progress)) {
         stop("$progress is not set.")  # needs self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals

@@ -47,7 +47,7 @@
 #'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceMultiCrit$new(
+#'   instance = OptimInstanceBatchMultiCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'   xdt = generate_design_random(instance$search_space, n = 4)$data
@@ -96,11 +96,11 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       assert_character(cols_x, min.len = 1L, null.ok = TRUE)
       assert_character(cols_y, len = length(learners), null.ok = TRUE)
 
-      ps = ParamSet$new(list(
-        ParamLgl$new("assert_insample_perf"),
-        ParamUty$new("perf_measures", custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(learners))),  # FIXME: actually want check_measures
-        ParamUty$new("perf_thresholds", custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(learners))),
-        ParamLgl$new("catch_errors"))
+      ps = ps(
+        assert_insample_perf = p_lgl(),
+        perf_measures = p_uty(custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(learners))),  # FIXME: actually want check_measures
+        perf_thresholds = p_uty(custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(learners))),
+        catch_errors = p_lgl()
       )
       ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE)
       ps$add_dep("perf_measures", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
@@ -224,6 +224,8 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     # Train learner with new data.
     # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
+      assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
+      one_to_multiple = length(self$cols_y) == 1L
       xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
       features = setdiff(names(xydt), self$cols_y)
       tasks = lapply(self$cols_y, function(col_y) {
@@ -231,12 +233,20 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
         task = TaskRegr$new(id = paste0("surrogate_task_", col_y), backend = xydt[, c(features, col_y), with = FALSE], target = col_y)
         task
       })
+      if (one_to_multiple) {
+        tasks = replicate(length(self$learner), tasks[[1L]])
+      }
       pmap(list(learner = self$learner, task = tasks), .f = function(learner, task) {
         assert_learnable(task, learner = learner)
         learner$train(task)
         invisible(NULL)
       })
-      names(self$learner) = self$cols_y
+
+      if (one_to_multiple) {
+        names(self$learner) = rep(self$cols_y, length(self$learner))
+      } else {
+        names(self$learner) = self$cols_y
+      }
 
       if (self$param_set$values$assert_insample_perf) {
         private$.insample_perf = setNames(pmap_dbl(list(learner = self$learner, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),

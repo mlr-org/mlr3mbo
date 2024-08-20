@@ -30,7 +30,7 @@
 #'   codomain = ps(y = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceSingleCrit$new(
+#'   instance = OptimInstanceBatchSingleCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -66,7 +66,7 @@ AcqFunctionPI = R6Class("AcqFunctionPI",
     },
 
     #' @description
-    #' Updates acquisition function and sets `y_best`.
+    #' Update the acquisition function and set `y_best`.
     update = function() {
       self$y_best = min(self$surrogate_max_to_min * self$archive$data[[self$surrogate$cols_y]])
     }

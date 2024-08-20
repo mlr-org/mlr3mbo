@@ -35,7 +35,7 @@
 #'   codomain = ps(y = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceSingleCrit$new(
+#'   instance = OptimInstanceBatchSingleCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -76,8 +76,8 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
       constants = list(...)
       lambda  = constants$lambda
       p = self$surrogate$predict(xdt)
-      res = p$mean - self$surrogate_max_to_min * lambda * p$se
-      data.table(acq_cb = res)
+      cb = p$mean - self$surrogate_max_to_min * lambda * p$se
+      data.table(acq_cb = cb)
     }
   )
 )

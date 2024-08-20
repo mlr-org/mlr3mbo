@@ -30,7 +30,7 @@ Surrogate = R6Class("Surrogate",
       private$.cols_x = assert_character(cols_x, min.len = 1L, null.ok = TRUE)
       private$.cols_y = cols_y = assert_character(cols_y, min.len = 1L, null.ok = TRUE)
       assert_r6(param_set, classes = "ParamSet")
-      assert_r6(param_set$params$catch_errors, classes = "ParamLgl")
+      stopifnot(param_set$class[["catch_errors"]] == "ParamLgl")
       private$.param_set = param_set
     },
 
@@ -69,6 +69,8 @@ Surrogate = R6Class("Surrogate",
 
     #' @description
     #' Helper for print outputs.
+    #'
+    #' @return (`character(1)`).
     format = function() {
       sprintf("<%s>", class(self)[1L])
     },
@@ -99,7 +101,7 @@ Surrogate = R6Class("Surrogate",
       if (missing(rhs)) {
         private$.archive
       } else {
-        private$.archive = assert_r6(rhs, classes = "Archive")
+        private$.archive = assert_archive(rhs, null_ok = TRUE)
         invisible(private$.archive)
       }
     },

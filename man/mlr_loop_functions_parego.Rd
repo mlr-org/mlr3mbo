@@ -18,8 +18,8 @@ bayesopt_parego(
 )
 }
 \arguments{
-\item{instance}{(\link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit})\cr
-The \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be optimized.}
+\item{instance}{(\link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit})\cr
+The \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} to be optimized.}
 
 \item{surrogate}{(\link{SurrogateLearner})\cr
 \link{SurrogateLearner} to be used as a surrogate.}
@@ -72,11 +72,11 @@ these scalarized values and optimizing the acquisition function.
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
-\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit}.
+\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
 \item The scalarizations of the objective function values are stored as the \code{y_scal} column in the
-\link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit}.
+\link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
 \item To make use of parallel evaluations in the case of `q > 1, the objective
-function of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} must be implemented accordingly.
+function of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} must be implemented accordingly.
 }
 }
 \examples{
@@ -96,7 +96,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceMultiCrit$new(
+  instance = OptimInstanceBatchMultiCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
@@ -128,10 +128,10 @@ if (requireNamespace("mlr3learners") &
 \seealso{
 Other Loop Function: 
 \code{\link{loop_function}},
+\code{\link{mlr_loop_functions}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_emo}},
 \code{\link{mlr_loop_functions_mpcl}},
-\code{\link{mlr_loop_functions_smsego}},
-\code{\link{mlr_loop_functions}}
+\code{\link{mlr_loop_functions_smsego}}
 }
 \concept{Loop Function}

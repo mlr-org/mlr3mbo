@@ -15,6 +15,13 @@
 #'
 #' Termination is handled via a [bbotk::Terminator] part of the [bbotk::OptimInstance] to be optimized.
 #'
+#' Note that in general the [Surrogate] is updated one final time on all available data after the optimization process has terminated.
+#' However, in certain scenarios this is not always possible or meaningful, e.g., when using [bayesopt_parego()] for multi-objective optimization
+#' which uses a surrogate that relies on a scalarization of the objectives.
+#' It is therefore recommended to manually inspect the [Surrogate] after optimization if it is to be used, e.g., for visualization purposes to make
+#' sure that it has been properly updated on all available data.
+#' If this final update of the [Surrogate] could not be performed successfully, a warning will be logged.
+#'
 #' @section Archive:
 #' The [bbotk::Archive] holds the following additional columns that are specific to MBO algorithms:
 #'   * `[acq_function$id]` (`numeric(1)`)\cr
@@ -40,7 +47,7 @@
 #'   codomain = ps(y = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceSingleCrit$new(
+#'   instance = OptimInstanceBatchSingleCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -68,7 +75,7 @@
 #'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceMultiCrit$new(
+#'   instance = OptimInstanceBatchMultiCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -82,7 +89,7 @@
 #' }
 #' }
 OptimizerMbo = R6Class("OptimizerMbo",
-  inherit = bbotk::Optimizer,
+  inherit = bbotk::OptimizerBatch,
 
   public = list(
     #' @description
@@ -274,6 +281,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
     .optimize = function(inst) {
       # FIXME: this needs more checks for edge cases like eips or loop_function bayesopt_parego then default_surrogate should use one learner
+
       if (is.null(self$loop_function)) {
         self$loop_function = default_loop_function(inst)
       }
@@ -303,6 +311,17 @@ OptimizerMbo = R6Class("OptimizerMbo",
       check_packages_installed(self$packages, msg = sprintf("Package '%%s' required but not installed for Optimizer '%s'", format(self)))
 
       invoke(self$loop_function, instance = inst, surrogate = self$surrogate, acq_function = self$acq_function, acq_optimizer = self$acq_optimizer, .args = self$args)
+
+      on.exit({
+        tryCatch(
+          {
+            self$surrogate$update()
+          }, surrogate_update_error = function(error_condition) {
+            logger = lgr::get_logger("bbotk")
+            logger$warn("Could not update the surrogate a final time after the optimization process has terminated.")
+          }
+        )
+      })
     },
 
     .assign_result = function(inst) {

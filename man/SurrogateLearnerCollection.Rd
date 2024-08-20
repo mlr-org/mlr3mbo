@@ -51,7 +51,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceMultiCrit$new(
+  instance = OptimInstanceBatchMultiCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
   xdt = generate_design_random(instance$search_space, n = 4)$data
@@ -92,11 +92,11 @@ A warning is signaled if at least one of the packages is not installed, but load
 
 \item{\code{feature_types}}{(\code{character()})\cr
 Stores the feature types the surrogate can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
-A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
+A complete list of candidate feature types, grouped by task type, is stored in \code{\link[mlr3:mlr_reflections]{mlr_reflections$task_feature_types}}.}
 
 \item{\code{properties}}{(\code{character()})\cr
 Stores a set of properties/capabilities the surrogate has.
-A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
+A complete list of candidate properties, grouped by task type, is stored in \code{\link[mlr3:mlr_reflections]{mlr_reflections$learner_properties}}.}
 
 \item{\code{predict_type}}{(\code{character(1)})\cr
 Retrieves the currently active predict type, e.g. \code{"response"}.}

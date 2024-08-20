@@ -13,10 +13,13 @@ Wraps an \link[bbotk:Optimizer]{bbotk::Optimizer} and \link[bbotk:Terminator]{bb
 \item{\code{n_candidates}}{\code{integer(1)}\cr
 Number of candidate points to propose.
 Note that this does not affect how the acquisition function itself is calculated (e.g., setting \code{n_candidates > 1} will not
-result in computing the q- or multi-Expected Improvement) but rather the top \code{n-candidates} are selected from the
+result in computing the q- or multi-Expected Improvement) but rather the top \code{n_candidates} are selected from the
 \link[bbotk:Archive]{bbotk::Archive} of the acquisition function \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 Note that setting \code{n_candidates > 1} is usually not a sensible idea but it is still supported for experimental reasons.
-Default is \code{1}.}
+Note that in the case of the acquisition function \link[bbotk:OptimInstance]{bbotk::OptimInstance} being multi-criteria, due to using an \link{AcqFunctionMulti},
+selection of the best candidates is performed via non-dominated-sorting.
+Default is \code{1}.
+}
 \item{\code{logging_level}}{\code{character(1)}\cr
 Logging level during the acquisition function optimization.
 Can be \code{"fatal"}, \code{"error"}, \code{"warn"}, \code{"info"}, \code{"debug"} or \code{"trace"}.
@@ -24,24 +27,26 @@ Default is \code{"warn"}, i.e., only warnings are logged.
 }
 \item{\code{warmstart}}{\code{logical(1)}\cr
 Should the acquisition function optimization be warm-started by evaluating the best point(s) present in the \link[bbotk:Archive]{bbotk::Archive} of
-the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}?
+the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} (which is contained in the archive of the \link{AcqFunction})?
 This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 Default is \code{FALSE}.
+Note that in the case of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} being multi-criteria, selection of the best point(s) is performed via non-dominated-sorting.
 }
 \item{\code{warmstart_size}}{\code{integer(1) | "all"}\cr
-Number of best points selected from the \link[bbotk:Archive]{bbotk::Archive} that are to be used for warm starting.
-Can also be "all" to use all available points.
+Number of best points selected from the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that are to be used for warm starting.
+Can either be an integer or "all" to use all available points.
 Only relevant if \code{warmstart = TRUE}.
 Default is \code{1}.
 }
 \item{\code{skip_already_evaluated}}{\code{logical(1)}\cr
-It can happen that the candidate resulting of the acquisition function optimization was already evaluated in a previous
-iteration. Should this candidate proposal be ignored and the next best point be selected as a candidate?
+It can happen that the candidate(s) resulting of the acquisition function optimization were already evaluated on the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+Should such candidate proposals be ignored and only candidates that were yet not evaluated be considered?
 Default is \code{TRUE}.
 }
 \item{\code{catch_errors}}{\code{logical(1)}\cr
 Should errors during the acquisition function optimization be caught and propagated to the \code{loop_function} which can then handle
 the failed acquisition function optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
+Setting this to \code{FALSE} can be helpful for debugging.
 Default is \code{TRUE}.
 }
 }
@@ -63,7 +68,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceSingleCrit$new(
+  instance = OptimInstanceBatchSingleCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
@@ -94,6 +99,8 @@ if (requireNamespace("mlr3learners") &
 \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 
 \item{\code{acq_function}}{(\link{AcqFunction}).}
+
+\item{\code{callbacks}}{(\code{NULL} | list of \link[mlr3misc:Callback]{mlr3misc::Callback}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -124,7 +131,7 @@ Set of hyperparameters.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator, acq_function = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator, acq_function = NULL, callbacks = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -135,6 +142,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 
 \item{\code{acq_function}}{(\code{NULL} | \link{AcqFunction}).}
+
+\item{\code{callbacks}}{(\code{NULL} | list of \link[mlr3misc:Callback]{mlr3misc::Callback})}
 }
 \if{html}{\out{</div>}}
 }
@@ -148,6 +157,9 @@ Helper for print outputs.
 \if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$format()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+(\code{character(1)}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizer-print"></a>}}
@@ -172,7 +184,7 @@ Optimize the acquisition function.
 }
 
 \subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per optimum and x as columns.
+\code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
 }
 }
 \if{html}{\out{<hr>}}

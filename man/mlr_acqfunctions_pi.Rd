@@ -33,7 +33,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceSingleCrit$new(
+  instance = OptimInstanceBatchSingleCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
@@ -60,16 +60,17 @@ if (requireNamespace("mlr3learners") &
 \seealso{
 Other Acquisition Function: 
 \code{\link{AcqFunction}},
+\code{\link{mlr_acqfunctions}},
 \code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
-\code{\link{mlr_acqfunctions_ehvigh}},
 \code{\link{mlr_acqfunctions_ehvi}},
-\code{\link{mlr_acqfunctions_eips}},
+\code{\link{mlr_acqfunctions_ehvigh}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_mean}},
+\code{\link{mlr_acqfunctions_multi}},
 \code{\link{mlr_acqfunctions_sd}},
-\code{\link{mlr_acqfunctions_smsego}},
-\code{\link{mlr_acqfunctions}}
+\code{\link{mlr_acqfunctions_smsego}}
 }
 \concept{Acquisition Function}
 \section{Super classes}{
@@ -93,10 +94,11 @@ In the case of maximization, this already includes the necessary change of sign.
 }
 }
 \if{html}{\out{
-<details open><summary>Inherited methods</summary>
+<details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
@@ -124,7 +126,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<a id="method-AcqFunctionPI-update"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionPI-update}{}}}
 \subsection{Method \code{update()}}{
-Updates acquisition function and sets \code{y_best}.
+Update the acquisition function and set \code{y_best}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionPI$update()}\if{html}{\out{</div>}}
 }

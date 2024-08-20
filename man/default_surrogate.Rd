@@ -44,10 +44,10 @@ Out of range imputation makes sense for tree-based methods and is usually hard t
 In the case of dependencies, the following learner is used as a fallback:
 \code{lrn("regr.featureless")}.
 
-If the instance is of class \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} the learner is wrapped as a
+If the instance is of class \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} the learner is wrapped as a
 \link{SurrogateLearner}.
 
-If the instance is of class \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} multiple deep clones of the learner are
+If the instance is of class \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} multiple deep clones of the learner are
 wrapped as a \link{SurrogateLearnerCollection}.
 }
 \references{

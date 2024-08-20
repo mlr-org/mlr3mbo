@@ -51,11 +51,11 @@ A warning is signaled if at least one of the packages is not installed, but load
 
 \item{\code{feature_types}}{(\code{character()})\cr
 Stores the feature types the surrogate can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
-A complete list of candidate feature types, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$task_feature_types}}.}
+A complete list of candidate feature types, grouped by task type, is stored in \code{\link[mlr3:mlr_reflections]{mlr_reflections$task_feature_types}}.}
 
 \item{\code{properties}}{(\code{character()})\cr
 Stores a set of properties/capabilities the surrogate has.
-A complete list of candidate properties, grouped by task type, is stored in \code{\link[=mlr_reflections]{mlr_reflections$learner_properties}}.}
+A complete list of candidate properties, grouped by task type, is stored in \code{\link[mlr3:mlr_reflections]{mlr_reflections$learner_properties}}.}
 
 \item{\code{predict_type}}{(\code{character(1)})\cr
 Retrieves the currently active predict type, e.g. \code{"response"}.}
@@ -150,6 +150,9 @@ Helper for print outputs.
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$format()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+(\code{character(1)}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Surrogate-print"></a>}}

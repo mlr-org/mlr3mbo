@@ -27,9 +27,9 @@ NULL
 #' @family mbo_defaults
 #' @export
 default_loop_function = function(instance) {
-  if (inherits(instance, "OptimInstanceSingleCrit")) {
+  if (inherits(instance, "OptimInstanceBatchSingleCrit")) {
     bayesopt_ego
-  } else if (inherits(instance, "OptimInstanceMultiCrit")) {
+  } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
     bayesopt_smsego
   }
 }
@@ -37,7 +37,7 @@ default_loop_function = function(instance) {
 #' @title Default Gaussian Process
 #'
 #' @description
-#' This is a helper function that generates a default Gaussian Process [mlr3::LearnerRegr] which is for example used in
+#' This is a helper function that constructs a default Gaussian Process [mlr3::LearnerRegr] which is for example used in
 #' [default_surrogate].
 #'
 #' Constructs a Kriging learner \dQuote{"regr.km"} with kernel \dQuote{"matern5_2"}.
@@ -127,10 +127,10 @@ default_rf = function(noisy = FALSE) {
 #' In the case of dependencies, the following learner is used as a fallback:
 #' \code{lrn("regr.featureless")}.
 #'
-#' If the instance is of class [bbotk::OptimInstanceSingleCrit] the learner is wrapped as a
+#' If the instance is of class [bbotk::OptimInstanceBatchSingleCrit] the learner is wrapped as a
 #' [SurrogateLearner].
 #'
-#' If the instance is of class [bbotk::OptimInstanceMultiCrit] multiple deep clones of the learner are
+#' If the instance is of class [bbotk::OptimInstanceBatchMultiCrit] multiple deep clones of the learner are
 #' wrapped as a [SurrogateLearnerCollection].
 #'
 #' @references
@@ -147,7 +147,7 @@ default_rf = function(noisy = FALSE) {
 #' @family mbo_defaults
 #' @export
 default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
-  assert_r6(instance, "OptimInstance")
+  assert_multi_class(instance, c("OptimInstance", "OptimInstanceAsync"))
   assert_r6(learner, "Learner", null.ok = TRUE)
   assert_int(n_learner, lower = 1L, null.ok = TRUE)
   noisy = "noisy" %in% instance$objective$properties
@@ -211,9 +211,9 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
 #' @export
 default_acqfunction = function(instance) {
   assert_r6(instance, classes = "OptimInstance")
-  if (inherits(instance, "OptimInstanceSingleCrit")) {
+  if (inherits(instance, "OptimInstanceBatchSingleCrit")) {
     AcqFunctionEI$new()
-  } else if (inherits(instance, "OptimInstanceMultiCrit")) {
+  } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
     AcqFunctionSmsEgo$new()
   }
 }
@@ -222,7 +222,7 @@ default_acqfunction = function(instance) {
 #'
 #' @description
 #' Chooses a default acquisition function optimizer.
-#' Defaults to wrapping [bbotk::OptimizerRandomSearch] allowing 10000 function evaluations (with a batch size of 1000) via a [bbotk::TerminatorEvals].
+#' Defaults to wrapping [bbotk::OptimizerBatchRandomSearch] allowing 10000 function evaluations (with a batch size of 1000) via a [bbotk::TerminatorEvals].
 #'
 #' @param acq_function ([AcqFunction]).
 #' @return [AcqOptimizer]
@@ -230,7 +230,8 @@ default_acqfunction = function(instance) {
 #' @export
 default_acqoptimizer = function(acq_function) {
   assert_r6(acq_function, classes = "AcqFunction")
-  AcqOptimizer$new(optimizer = opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))  # FIXME: what do we use
+  AcqOptimizer$new(optimizer = opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))  # FIXME: what do we use?
+  # NOTE: adjust for single-objective vs. multi-objective acquisition function
 }
 
 #' @title Default Result Assigner

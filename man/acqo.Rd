@@ -4,7 +4,7 @@
 \alias{acqo}
 \title{Syntactic Sugar Acquisition Function Optimizer Construction}
 \usage{
-acqo(optimizer, terminator, acq_function = NULL, ...)
+acqo(optimizer, terminator, acq_function = NULL, callbacks = NULL, ...)
 }
 \arguments{
 \item{optimizer}{(\link[bbotk:Optimizer]{bbotk::Optimizer})\cr
@@ -16,6 +16,9 @@ acqo(optimizer, terminator, acq_function = NULL, ...)
 \item{acq_function}{(\code{NULL} | \link{AcqFunction})\cr
 \link{AcqFunction} that is to be used.
 Can also be \code{NULL}.}
+
+\item{callbacks}{(\code{NULL} | list of \link[mlr3misc:Callback]{mlr3misc::Callback})
+Callbacks used during acquisition function optimization.}
 
 \item{...}{(named \code{list()})\cr
 Named arguments passed to the constructor, to be set as parameters in the

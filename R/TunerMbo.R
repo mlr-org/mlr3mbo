@@ -1,4 +1,4 @@
-#' @title Tuner using Model Based Optimization
+#' @title TunerBatch using Model Based Optimization
 #'
 #' @name mlr_tuners_mbo
 #'
@@ -23,7 +23,7 @@
 #'   resampling = rsmp("cv", folds = 3)
 #'   measure = msr("classif.acc")
 #'
-#'   instance = TuningInstanceSingleCrit$new(
+#'   instance = TuningInstanceBatchSingleCrit$new(
 #'     task = task,
 #'     learner = learner,
 #'     resampling = resampling,
@@ -38,7 +38,7 @@
 #'   resampling = rsmp("cv", folds = 3)
 #'   measures = msrs(c("classif.acc", "selected_features"))
 #'
-#'   instance = TuningInstanceMultiCrit$new(
+#'   instance = TuningInstanceBatchMultiCrit$new(
 #'     task = task,
 #'     learner = learner,
 #'     resampling = resampling,
@@ -50,7 +50,7 @@
 #' }
 #' }
 TunerMbo = R6Class("TunerMbo",
-  inherit = mlr3tuning::TunerFromOptimizer,
+  inherit = mlr3tuning::TunerBatchFromOptimizerBatch,
 
   public = list(
     #' @description

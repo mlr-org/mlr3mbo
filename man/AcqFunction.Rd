@@ -10,17 +10,18 @@ Based on the predictions of a \link{Surrogate}, the acquisition function encodes
 }
 \seealso{
 Other Acquisition Function: 
+\code{\link{mlr_acqfunctions}},
 \code{\link{mlr_acqfunctions_aei}},
 \code{\link{mlr_acqfunctions_cb}},
-\code{\link{mlr_acqfunctions_ehvigh}},
 \code{\link{mlr_acqfunctions_ehvi}},
-\code{\link{mlr_acqfunctions_eips}},
+\code{\link{mlr_acqfunctions_ehvigh}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_mean}},
+\code{\link{mlr_acqfunctions_multi}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_sd}},
-\code{\link{mlr_acqfunctions_smsego}},
-\code{\link{mlr_acqfunctions}}
+\code{\link{mlr_acqfunctions_smsego}}
 }
 \concept{Acquisition Function}
 \section{Super class}{
@@ -76,6 +77,7 @@ Set of required packages.}
 <ul>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
 </ul>
 </details>

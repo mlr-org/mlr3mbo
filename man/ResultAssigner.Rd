@@ -11,9 +11,9 @@ Normally, it is only used within an \link{OptimizerMbo}.
 }
 \seealso{
 Other Result Assigner: 
+\code{\link{mlr_result_assigners}},
 \code{\link{mlr_result_assigners_archive}},
-\code{\link{mlr_result_assigners_surrogate}},
-\code{\link{mlr_result_assigners}}
+\code{\link{mlr_result_assigners_surrogate}}
 }
 \concept{Result Assigner}
 \section{Active bindings}{
@@ -74,7 +74,7 @@ Assigns the result, i.e., the final point(s) to the instance.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{instance}}{(\link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} | \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit})\cr
+\item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit})\cr
 The \link[bbotk:OptimInstance]{bbotk::OptimInstance} the final result should be assigned to.}
 }
 \if{html}{\out{</div>}}
@@ -89,6 +89,9 @@ Helper for print outputs.
 \if{html}{\out{<div class="r">}}\preformatted{ResultAssigner$format()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+(\code{character(1)}).
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ResultAssigner-print"></a>}}

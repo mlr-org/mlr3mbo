@@ -15,8 +15,8 @@ bayesopt_smsego(
 )
 }
 \arguments{
-\item{instance}{(\link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit})\cr
-The \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be optimized.}
+\item{instance}{(\link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit})\cr
+The \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} to be optimized.}
 
 \item{surrogate}{(\link{SurrogateLearnerCollection})\cr
 \link{SurrogateLearnerCollection} to be used as a surrogate.}
@@ -55,9 +55,9 @@ updated and the next candidate is chosen based on optimizing the acquisition fun
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
-\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit}.
+\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
 \item Due to the iterative computation of the epsilon within the \link{mlr_acqfunctions_smsego}, requires the \link[bbotk:Terminator]{bbotk::Terminator} of
-the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
+the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} to be a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
 }
 }
 \examples{
@@ -77,7 +77,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceMultiCrit$new(
+  instance = OptimInstanceBatchMultiCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
@@ -112,10 +112,10 @@ In \emph{Proceedings of the 10th International Conference on Parallel Problem So
 \seealso{
 Other Loop Function: 
 \code{\link{loop_function}},
+\code{\link{mlr_loop_functions}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_emo}},
 \code{\link{mlr_loop_functions_mpcl}},
-\code{\link{mlr_loop_functions_parego}},
-\code{\link{mlr_loop_functions}}
+\code{\link{mlr_loop_functions_parego}}
 }
 \concept{Loop Function}

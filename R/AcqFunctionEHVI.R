@@ -30,7 +30,7 @@
 #'   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 #'   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
-#'   instance = OptimInstanceMultiCrit$new(
+#'   instance = OptimInstanceBatchMultiCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
 #'
@@ -76,7 +76,7 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
     },
 
     #' @description
-    #' Updates acquisition function and sets `ys_front`, `ref_point`.
+    #' Update the acquisition function and set `ys_front` and `ref_point`.
     update = function() {
       n_obj = length(self$archive$cols_y)
       if (n_obj > 2L) {
@@ -117,7 +117,7 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
       }
 
       columns = colnames(self$ys_front_augmented)
-      
+
       ps = self$surrogate$predict(xdt)
       means = map_dtc(ps, "mean")
 

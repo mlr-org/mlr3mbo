@@ -15,8 +15,8 @@ bayesopt_emo(
 )
 }
 \arguments{
-\item{instance}{(\link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit})\cr
-The \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit} to be optimized.}
+\item{instance}{(\link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit})\cr
+The \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} to be optimized.}
 
 \item{surrogate}{(\link{SurrogateLearnerCollection})\cr
 \link{SurrogateLearnerCollection} to be used as a surrogate.}
@@ -56,7 +56,7 @@ is chosen based on optimizing the acquisition function.
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
-\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceMultiCrit]{bbotk::OptimInstanceMultiCrit}.
+\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
 }
 }
 \examples{
@@ -76,7 +76,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceMultiCrit$new(
+  instance = OptimInstanceBatchMultiCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
@@ -101,10 +101,10 @@ if (requireNamespace("mlr3learners") &
 \seealso{
 Other Loop Function: 
 \code{\link{loop_function}},
+\code{\link{mlr_loop_functions}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_mpcl}},
 \code{\link{mlr_loop_functions_parego}},
-\code{\link{mlr_loop_functions_smsego}},
-\code{\link{mlr_loop_functions}}
+\code{\link{mlr_loop_functions_smsego}}
 }
 \concept{Loop Function}

@@ -27,6 +27,7 @@ jobs:
           - {os: ubuntu-latest, r: 'release', dev-package: 'mlr-org/bbotk'}
           - {os: ubuntu-latest, r: 'release', dev-package: 'mlr-org/mlr3'}
           - {os: ubuntu-latest, r: 'release', dev-package: 'mlr-org/mlr3tuning'}
+          - {os: ubuntu-latest, r: 'release', dev-package: "mlr-org/mlr3tuning', 'mlr-org/mlr3learners', 'mlr-org/mlr3pipelines', 'mlr-org/bbotk', 'mlr-org/paradox"}
 
     steps:
       - uses: actions/checkout@v3
@@ -37,13 +38,20 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
 
+      - uses: supercharge/redis-github-action@1.7.0
+        with:
+          redis-version: 7
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
           needs: check
 
       - name: Install dev versions
-        run: pak::pkg_install('${{ matrix.config.dev-package }}')
+        run: pak::pkg_install(c('${{ matrix.config.dev-package }}'))
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
+        with:
+          args: 'c("--no-manual")' # "--as-cran" prevents to start external processes
+

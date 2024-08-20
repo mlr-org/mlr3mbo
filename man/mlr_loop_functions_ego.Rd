@@ -15,8 +15,8 @@ bayesopt_ego(
 )
 }
 \arguments{
-\item{instance}{(\link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit})\cr
-The \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit} to be optimized.}
+\item{instance}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit})\cr
+The \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} to be optimized.}
 
 \item{surrogate}{(\link{Surrogate})\cr
 \link{Surrogate} to be used as a surrogate.
@@ -56,7 +56,7 @@ is chosen based on optimizing the acquisition function.
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
-\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceSingleCrit]{bbotk::OptimInstanceSingleCrit}.
+\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit}.
 }
 }
 \examples{
@@ -76,7 +76,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y = p_dbl(tags = "minimize"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceSingleCrit$new(
+  instance = OptimInstanceBatchSingleCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
@@ -104,7 +104,7 @@ if (requireNamespace("mlr3learners") &
   codomain = ps(y = p_dbl(tags = "minimize"), time = p_dbl(tags = "time"))
   objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 
-  instance = OptimInstanceSingleCrit$new(
+  instance = OptimInstanceBatchSingleCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
 
@@ -134,10 +134,10 @@ In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neur
 \seealso{
 Other Loop Function: 
 \code{\link{loop_function}},
+\code{\link{mlr_loop_functions}},
 \code{\link{mlr_loop_functions_emo}},
 \code{\link{mlr_loop_functions_mpcl}},
 \code{\link{mlr_loop_functions_parego}},
-\code{\link{mlr_loop_functions_smsego}},
-\code{\link{mlr_loop_functions}}
+\code{\link{mlr_loop_functions_smsego}}
 }
 \concept{Loop Function}
