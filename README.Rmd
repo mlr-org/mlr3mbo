@@ -96,7 +96,7 @@ optimizer$optimize(instance)
 
 We can quickly visualize the contours of the objective function (on log scale) as well as the sampling behavior of our BO run (lighter blue colours indicating points that were evaluated in later stages of the optimization process; the first batch is given by the initial design).
 
-```{r}
+```{r, eval = FALSE}
 library(ggplot2)
 grid = generate_design_grid(instance$search_space, resolution = 1000L)$data
 grid[, y := branin(x1 = x1, x2 = x2)]

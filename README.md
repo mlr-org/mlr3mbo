@@ -122,8 +122,6 @@ ggplot(aes(x = x1, y = x2, z = log(y)), data = grid) +
   theme(legend.position = "bottom")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-
 Note that you can also use `bb_optimize` as a shorthand instead of
 constructing an optimization instance.
 
