@@ -11,6 +11,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/SurrogateLearner.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/SurrogateLearnerCollection.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/acqf.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/acqfs.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/acqo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/default_acqfunction.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/default_acqoptimizer.html</loc></url>
@@ -31,6 +32,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_ei.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_eips.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_mean.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_multi.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_pi.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_sd.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_smsego.html</loc></url>

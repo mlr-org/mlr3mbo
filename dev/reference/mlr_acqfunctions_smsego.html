@@ -86,6 +86,7 @@ In <em>International Conference on Evolutionary Multi-Criterion Optimization</em
 <code><a href="mlr_acqfunctions_ei.html">mlr_acqfunctions_ei</a></code>,
 <code><a href="mlr_acqfunctions_eips.html">mlr_acqfunctions_eips</a></code>,
 <code><a href="mlr_acqfunctions_mean.html">mlr_acqfunctions_mean</a></code>,
+<code><a href="mlr_acqfunctions_multi.html">mlr_acqfunctions_multi</a></code>,
 <code><a href="mlr_acqfunctions_pi.html">mlr_acqfunctions_pi</a></code>,
 <code><a href="mlr_acqfunctions_sd.html">mlr_acqfunctions_sd</a></code></p></div>
     </div>
@@ -161,7 +162,7 @@ Note that this requires the <a href="https://bbotk.mlr-org.com/reference/OptimIn
 
 </div><p></p><hr><a id="method-AcqFunctionSmsEgo-update"></a><div class="section">
 <h3 id="method-update-">Method <code><a href="https://rdrr.io/r/stats/update.html" class="external-link">update()</a></code><a class="anchor" aria-label="anchor" href="#method-update-"></a></h3>
-<p>Updates acquisition function and sets <code>ys_front</code>, <code>ref_point</code>, <code>epsilon</code>.</p><div class="section">
+<p>Update the acquisition function and set <code>ys_front</code>, <code>ref_point</code> and <code>epsilon</code>.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunctionSmsEgo</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -223,9 +224,9 @@ Note that this requires the <a href="https://bbotk.mlr-org.com/reference/OptimIn
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    acq_smsego</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:  -581.3215</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  -730.5539</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -1132.2505</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:  -581.3330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  -730.5685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -1132.3435</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
