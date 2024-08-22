@@ -1,4 +1,5 @@
 #' @title Asynchronous Model Based Optimization
+#'
 #' @name mlr_optimizers_async_mbo
 #'
 #' @description
@@ -13,6 +14,14 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function(surrogate = NULL, acq_function = NULL, acq_optimizer = NULL) {
+      param_set = ps(
+        initial_design = p_uty(),
+        design_size = p_int(lower = 1, default = 10),
+        design_function = p_fct(c("random", "sobol", "lhs"), default = "sobol")
+      )
+
+      param_set$set_values(design_size = 10, design_function = "sobol")
+
       super$initialize("async_mbo",
         param_set = param_set,
         param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
@@ -40,11 +49,16 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
 
       # initial design
       design = if (is.null(pv$initial_design)) {
+        # generate initial design
+        generate_design = switch(pv$design_function,
+          "random" = generate_design_random,
+          "sobol" = generate_design_sobol,
+          "lhs" = generate_design_lhs)
 
         lg$debug("Generating sobol design with size %s", pv$design_size)
-        generate_design_sobol(inst$search_space, n = pv$design_size)$data
+        generate_design(inst$search_space, n = pv$design_size)$data
       } else {
-
+        # use provided initial design
         lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
         pv$initial_design
       }
@@ -116,7 +130,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
     #' @template field_packages
     packages = function(rhs) {
       assert_ro_binding(rhs)
-      union("mlr3mbo", c(self$acq_function$packages, self$surrogate$packages, self$acq_optimizer$optimizer$packages, self$result_assigner$packages))
+      union("mlr3mbo", c(self$acq_function$packages, self$surrogate$packages, self$acq_optimizer$optimizer$packages))
     }
   ),
 
@@ -142,9 +156,9 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         self$acq_optimizer = default_acqoptimizer(self$acq_function)
       }
 
-      surrogate$archive = inst$archive
-      acq_function$surrogate = surrogate
-      acq_optimizer$acq_function = acq_function
+      self$surrogate$archive = inst$archive
+      self$acq_function$surrogate = self$surrogate
+      self$acq_optimizer$acq_function = self$acq_function
 
       lg$debug("Optimizer '%s' evaluates the initial design", self$id)
       evaluate_queue_default(inst)
@@ -154,9 +168,9 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       # actual loop
       while (!inst$is_terminated) {
         # sample
-        acq_function$surrogate$update()
-        acq_function$update()
-        xdt = acq_optimizer$optimize()
+        self$acq_function$surrogate$update()
+        self$acq_function$update()
+        xdt = self$acq_optimizer$optimize()
 
         # transpose point
         xss = transpose_list(xdt)
@@ -169,7 +183,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         ys = inst$objective$eval(xs_trafoed)
 
         # push result
-        extra = c(xss[[1]][c("acq_cb", ".already_evaluated")], list(lambda_0 = lambda_0, lambda = lambda))
+        extra = xss[[1]][c(self$acq_function$id, ".already_evaluated")]
         archive$push_result(key, ys, x_domain = xs_trafoed, extra = extra)
       }
     }
@@ -177,4 +191,4 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
 )
 
 #' @include aaa.R
-optimizers[["adbo"]] = OptimizerADBO
+optimizers[["async_mbo"]] = OptimizerAsyncMbo
