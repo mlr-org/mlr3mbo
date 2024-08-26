@@ -69,7 +69,7 @@ AcqFunctionLogEI = R6Class("AcqFunctionLogEI",
       d = (self$y_best - mu) - epsilon
       d_norm = d / se
       log_ei = (exp(self$y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) + mu) * pnorm(d_norm - se))
-      log_ei = ifelse(se < 1e-20, 0, log_ei)
+      log_ei = ifelse(se < 1e-20 | is.na(log_ei), 0, log_ei)
       data.table(acq_log_ei = log_ei)
     }
   )
