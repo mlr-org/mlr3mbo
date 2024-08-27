@@ -64,17 +64,39 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       assert_number(lambda, lower = 0, finite = TRUE)
 
-      constants = ps(lambda = p_dbl(lower = 0, default = 2))
+      constants = ps(
+        lambda = p_dbl(lower = 0, default = 2),
+        lambda_min = p_dbl(lower = 0),
+        lambda_max = p_dbl(lower = 0),
+        lambda_sample = p_uty(),
+        lambda_decay = p_uty()
+      )
       constants$values$lambda = lambda
 
-      super$initialize("acq_cb", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "same", label = "Lower / Upper Confidence Bound", man = "mlr3mbo::mlr_acqfunctions_cb")
+      super$initialize("acq_cb",
+        constants = constants,
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        direction = "same",
+        label = "Lower / Upper Confidence Bound",
+        man = "mlr3mbo::mlr_acqfunctions_cb")
+    },
+
+    #' @description
+    #' Update the acquisition function.
+    update = function() {
+
+      if (!is.null(lambda_decay)) {
+        self$constants$values$lambda = lambda_decay()
+      }
+
     }
   ),
 
   private = list(
-    .fun = function(xdt, ...) {
-      constants = list(...)
-      lambda  = constants$lambda
+    .fun = function(xdt, lambda) {
+      #constants = list(...)
+      #lambda  = constants$lambda
       p = self$surrogate$predict(xdt)
       cb = p$mean - self$surrogate_max_to_min * lambda * p$se
       data.table(acq_cb = cb)
