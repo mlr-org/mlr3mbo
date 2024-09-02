@@ -9,10 +9,13 @@
 #' \item{`n_candidates`}{`integer(1)`\cr
 #'   Number of candidate points to propose.
 #'   Note that this does not affect how the acquisition function itself is calculated (e.g., setting `n_candidates > 1` will not
-#'   result in computing the q- or multi-Expected Improvement) but rather the top `n-candidates` are selected from the
+#'   result in computing the q- or multi-Expected Improvement) but rather the top `n_candidates` are selected from the
 #'   [bbotk::Archive] of the acquisition function [bbotk::OptimInstance].
 #'   Note that setting `n_candidates > 1` is usually not a sensible idea but it is still supported for experimental reasons.
-#'   Default is `1`.}
+#'   Note that in the case of the acquisition function [bbotk::OptimInstance] being multi-criteria, due to using an [AcqFunctionMulti],
+#'   selection of the best candidates is performed via non-dominated-sorting.
+#'   Default is `1`.
+#' }
 #' \item{`logging_level`}{`character(1)`\cr
 #'   Logging level during the acquisition function optimization.
 #'   Can be `"fatal"`, `"error"`, `"warn"`, `"info"`, `"debug"` or `"trace"`.
@@ -20,24 +23,26 @@
 #' }
 #' \item{`warmstart`}{`logical(1)`\cr
 #'   Should the acquisition function optimization be warm-started by evaluating the best point(s) present in the [bbotk::Archive] of
-#'   the actual [bbotk::OptimInstance]?
+#'   the actual [bbotk::OptimInstance] (which is contained in the archive of the [AcqFunction])?
 #'   This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 #'   Default is `FALSE`.
+#'   Note that in the case of the [bbotk::OptimInstance] being multi-criteria, selection of the best point(s) is performed via non-dominated-sorting.
 #' }
 #' \item{`warmstart_size`}{`integer(1) | "all"`\cr
-#'   Number of best points selected from the [bbotk::Archive] that are to be used for warm starting.
-#'   Can also be "all" to use all available points.
+#'   Number of best points selected from the [bbotk::Archive] of the actual [bbotk::OptimInstance] that are to be used for warm starting.
+#'   Can either be an integer or "all" to use all available points.
 #'   Only relevant if `warmstart = TRUE`.
 #'   Default is `1`.
 #' }
 #' \item{`skip_already_evaluated`}{`logical(1)`\cr
-#'   It can happen that the candidate resulting of the acquisition function optimization was already evaluated in a previous
-#'   iteration. Should this candidate proposal be ignored and the next best point be selected as a candidate?
+#'   It can happen that the candidate(s) resulting of the acquisition function optimization were already evaluated on the actual [bbotk::OptimInstance].
+#'   Should such candidate proposals be ignored and only candidates that were yet not evaluated be considered?
 #'   Default is `TRUE`.
 #' }
 #' \item{`catch_errors`}{`logical(1)`\cr
 #'   Should errors during the acquisition function optimization be caught and propagated to the `loop_function` which can then handle
 #'   the failed acquisition function optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   Setting this to `FALSE` can be helpful for debugging.
 #'   Default is `TRUE`.
 #' }
 #' }
@@ -123,6 +128,8 @@ AcqOptimizer = R6Class("AcqOptimizer",
 
     #' @description
     #' Helper for print outputs.
+    #'
+    #' @return (`character(1)`).
     format = function() {
       sprintf("<%s>", class(self)[1L])
     },
@@ -139,25 +146,31 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' @description
     #' Optimize the acquisition function.
     #'
-    #' @return [data.table::data.table()] with 1 row per optimum and x as columns.
+    #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
-      # FIXME: currently only supports singlecrit acquisition functions
-      if (self$acq_function$codomain$length > 1L) {
-        stop("Multi-objective acquisition functions are currently not supported.")
-      }
+      is_multi_acq_function = self$acq_function$codomain$length > 1L
 
       logger = lgr::get_logger("bbotk")
       old_threshold = logger$threshold
       logger$set_threshold(self$param_set$values$logging_level)
       on.exit(logger$set_threshold(old_threshold))
 
-      instance = OptimInstanceBatchSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, callbacks = self$callbacks)
+      if (is_multi_acq_function) {
+        instance = OptimInstanceBatchMultiCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, callbacks = self$callbacks)
+      } else {
+        instance = OptimInstanceBatchSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, callbacks = self$callbacks)
+      }
 
       # warmstart
       if (self$param_set$values$warmstart) {
         warmstart_size = if (isTRUE(self$param_set$values$warmstart_size == "all")) Inf else self$param_set$values$warmstart_size %??% 1L  # default is 1L
         n_select = min(nrow(self$acq_function$archive$data), warmstart_size)
-        instance$eval_batch(self$acq_function$archive$best(n_select = n_select)[, instance$search_space$ids(), with = FALSE])
+        warmstart_xdt = if (is_multi_acq_function) {
+          self$acq_function$archive$nds_selection(n_select = n_select)[, instance$search_space$ids(), with = FALSE]
+        } else {
+          self$acq_function$archive$best(n_select = n_select)[, instance$search_space$ids(), with = FALSE]
+        }
+        instance$eval_batch(warmstart_xdt)
       }
 
       # acquisition function optimization
@@ -166,7 +179,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
           tryCatch(
             {
               self$optimizer$optimize(instance)
-              get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates)
+              get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = TRUE)
             }, error = function(error_condition) {
               lg$warn(error_condition$message)
               stop(set_class(list(message = error_condition$message, call = NULL),
@@ -175,14 +188,14 @@ AcqOptimizer = R6Class("AcqOptimizer",
           )
         } else {
           self$optimizer$optimize(instance)
-          get_best_not_evaluated(instance, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates)
+          get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = TRUE)
         }
       } else {
         if (self$param_set$values$catch_errors) {
           tryCatch(
             {
               self$optimizer$optimize(instance)
-              instance$archive$best(n_select = self$param_set$values$n_candidates)
+              get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = FALSE)
             }, error = function(error_condition) {
               lg$warn(error_condition$message)
               stop(set_class(list(message = error_condition$message, call = NULL),
@@ -191,10 +204,17 @@ AcqOptimizer = R6Class("AcqOptimizer",
           )
         } else {
           self$optimizer$optimize(instance)
-          instance$archive$best(n_select = self$param_set$values$n_candidates)
+          get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = FALSE)
         }
       }
-      xdt
+      #if (is_multi_acq_function) {
+      #  set(xdt, j = instance$objective$id, value = apply(xdt[, instance$objective$acq_function_ids, with = FALSE], MARGIN = 1L, FUN = c, simplify = FALSE))
+      #  for (acq_function_id in instance$objective$acq_function_ids) {
+      #    set(xdt, j = acq_function_id, value = NULL)
+      #  }
+      #  setcolorder(xdt, c(instance$archive$cols_x, "x_domain", instance$objective$id))
+      #}
+      xdt[, -c("timestamp", "batch_nr")]  # drop timestamp and batch_nr information from the candidates
     }
   ),
 

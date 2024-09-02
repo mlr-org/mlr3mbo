@@ -76,6 +76,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_log_ei}},
 \code{\link{mlr_acqfunctions_mean}},
+\code{\link{mlr_acqfunctions_multi}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_sd}},
 \code{\link{mlr_acqfunctions_smsego}}
@@ -143,7 +144,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<a id="method-AcqFunctionEIPS-update"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionEIPS-update}{}}}
 \subsection{Method \code{update()}}{
-Updates acquisition function and sets \code{y_best}.
+Update the acquisition function and set \code{y_best}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEIPS$update()}\if{html}{\out{</div>}}
 }

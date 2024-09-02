@@ -11,7 +11,7 @@
 A simple \link[mlr3misc:Dictionary]{mlr3misc::Dictionary} storing objects of class \link{AcqFunction}.
 Each acquisition function has an associated help page, see \code{mlr_acqfunctions_[id]}.
 
-For a more convenient way to retrieve and construct an acquisition function, see \code{\link[=acqf]{acqf()}}.
+For a more convenient way to retrieve and construct an acquisition function, see \code{\link[=acqf]{acqf()}} and \code{\link[=acqfs]{acqfs()}}.
 }
 \section{Methods}{
 
@@ -24,7 +24,7 @@ as.data.table(mlr_acqfunctions)
 acqf("ei")
 }
 \seealso{
-Sugar function: \code{\link[=acqf]{acqf()}}
+Sugar functions: \code{\link[=acqf]{acqf()}}, \code{\link[=acqfs]{acqfs()}}
 
 Other Dictionary: 
 \code{\link{mlr_loop_functions}},
@@ -40,6 +40,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_log_ei}},
 \code{\link{mlr_acqfunctions_mean}},
+\code{\link{mlr_acqfunctions_multi}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_sd}},
 \code{\link{mlr_acqfunctions_smsego}}

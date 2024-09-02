@@ -55,14 +55,12 @@ Suggests:
     DiceKriging,
     emoa,
     fastGHQuad,
-    knitr,
     lhs,
     mlr3learners (>= 0.5.4),
     mlr3pipelines (>= 0.4.2),
     nloptr,
     ranger,
     rgenoud,
-    rmarkdown,
     rpart,
     stringi,
     testthat (>= 3.0.0)
@@ -85,6 +83,7 @@ Collate:
     'AcqFunctionEIPS.R'
     'AcqFunctionLogEI.R'
     'AcqFunctionMean.R'
+    'AcqFunctionMulti.R'
     'AcqFunctionPI.R'
     'AcqFunctionSD.R'
     'AcqFunctionSmsEgo.R'
@@ -113,4 +112,3 @@ Collate:
     'mbo_defaults.R'
     'sugar.R'
     'zzz.R'
-VignetteBuilder: knitr

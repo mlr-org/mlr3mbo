@@ -58,12 +58,12 @@ test_that("AcqOptimizer API works", {
   acqopt$param_set$values$warmstart = TRUE
   xdt = acqopt$optimize()
   expect_true(xdt[["x"]] == 0)
-  expect_true(xdt[[".already_evaluated"]] == FALSE)
+  expect_false(xdt[[".already_evaluated"]])
 
   acqopt$param_set$values$warmstart_size = 1L
   xdt = acqopt$optimize()
   expect_true(xdt[["x"]] == 0)
-  expect_true(xdt[[".already_evaluated"]] == FALSE)
+  expect_false(xdt[[".already_evaluated"]])
 
   acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
   acqopt$param_set$values$warmstart = TRUE
@@ -72,12 +72,12 @@ test_that("AcqOptimizer API works", {
 
   acqopt$param_set$values$skip_already_evaluated = FALSE
   xdt = acqopt$optimize()
-  expect_true(is.null(xdt[[".already_evaluated"]]))
+  expect_true((xdt[[".already_evaluated"]]))
 
   acqopt$param_set$values$warmstart_size = NULL
   acqopt$param_set$values$warmstart = FALSE
   xdt = acqopt$optimize()
-  expect_true(is.null(xdt[[".already_evaluated"]]))
+  expect_true((xdt[[".already_evaluated"]]))
 })
 
 test_that("AcqOptimizer param_set", {
@@ -121,14 +121,7 @@ test_that("AcqOptimizer deep clone", {
 })
 
 test_that("AcqOptimizer callbacks", {
-  domain = ps(x = p_dbl(lower = 10, upper = 20, trafo = function(x) x - 15))
-  objective = ObjectiveRFunDt$new(
-    fun = function(xdt) data.table(y = xdt$x ^ 2),
-    domain = domain,
-    codomain = ps(y = p_dbl(tags = "minimize")),
-    check_values = FALSE
-  )
-  instance = MAKE_INST(objective = objective, search_space = domain, terminator = trm("evals", n_evals = 5L))
+  instance = OptimInstanceBatchSingleCrit$new(OBJ_1D, terminator = trm("evals", n_evals = 5L))
   design = MAKE_DESIGN(instance)
   instance$eval_batch(design)
   callback = callback_batch("mlr3mbo.acqopt_time",

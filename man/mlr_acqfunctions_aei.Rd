@@ -87,6 +87,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_log_ei}},
 \code{\link{mlr_acqfunctions_mean}},
+\code{\link{mlr_acqfunctions_multi}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_sd}},
 \code{\link{mlr_acqfunctions_smsego}}
@@ -151,7 +152,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<a id="method-AcqFunctionAEI-update"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionAEI-update}{}}}
 \subsection{Method \code{update()}}{
-Updates acquisition function and sets \code{y_effective_best} and \code{noise_var}.
+Update the acquisition function and set \code{y_effective_best} and \code{noise_var}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionAEI$update()}\if{html}{\out{</div>}}
 }
