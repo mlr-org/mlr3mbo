@@ -150,7 +150,7 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
           # law of total variance assuming a mixture of normal distributions for each tree
           se[i] = sqrt(mean((mus ^ 2) + sigmas2) - (response[i] ^ 2))
         }
-        se[se < .Machine$double.eps] = 1e-8
+      se[se < .Machine$double.eps | is.na(se)] = 1e-8
         list(response = response, se = se)
       } else if (isTRUE(pv$se.method == "simple")) {
         prediction_nodes = mlr3misc::invoke(predict, self$model$model, data = newdata, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
