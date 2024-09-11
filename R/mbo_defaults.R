@@ -211,8 +211,6 @@ default_acqfunction = function(instance) {
   assert_r6(instance, classes = "OptimInstance")
   if (inherits(instance, "OptimInstanceBatchSingleCrit")) {
     AcqFunctionEI$new()
-  } else if (inherits(instance, "OptimInstanceAsyncSingleCrit")) {
-    AcqFunctionCB$new()
   } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
     AcqFunctionSmsEgo$new()
   }
