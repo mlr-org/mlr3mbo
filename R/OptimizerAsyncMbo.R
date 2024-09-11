@@ -62,7 +62,6 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
         pv$initial_design
       }
-
       optimize_async_default(inst, self, design, n_workers = pv$n_workers)
     }
   ),
@@ -161,7 +160,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       self$acq_optimizer$acq_function = self$acq_function
 
       lg$debug("Optimizer '%s' evaluates the initial design", self$id)
-      evaluate_queue_default(inst)
+      get_private(inst)$.eval_queue()
 
       lg$debug("Optimizer '%s' starts the tuning phase", self$id)
 
@@ -171,20 +170,10 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         self$acq_function$surrogate$update()
         self$acq_function$update()
         xdt = self$acq_optimizer$optimize()
-
-        # transpose point
-        xss = transpose_list(xdt)
-        xs = xss[[1]][inst$archive$cols_x]
-        lg$trace("Optimizer '%s' draws %s", self$id, as_short_string(xs))
-        xs_trafoed = trafo_xs(xs, search_space)
+        xs = transpose_list(xdt)[[1]]
 
         # eval
-        key = archive$push_running_point(xs)
-        ys = inst$objective$eval(xs_trafoed)
-
-        # push result
-        extra = xss[[1]][c(self$acq_function$id, ".already_evaluated")]
-        archive$push_result(key, ys, x_domain = xs_trafoed, extra = extra)
+        get_private(inst)$.eval_point(xs)
       }
     }
   )

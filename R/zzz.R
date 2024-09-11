@@ -25,10 +25,17 @@ register_mlr3tuning = function() {
   iwalk(tuners, function(obj, nm) x$add(nm, obj))
 } # nocov end
 
+register_mlr3misc = function() {
+  # nocov start
+  x = utils::getFromNamespace("mlr_callbacks", ns = "mlr3misc")
+  iwalk(callbacks, function(obj, nm) x$add(nm, obj))
+} # nocov end
+
 .onLoad = function(libname, pkgname) { # nolint
   # nocov start
   register_namespace_callback(pkgname, "bbotk", register_bbotk)
   register_namespace_callback(pkgname, "mlr3tuning", register_mlr3tuning)
+  register_namespace_callback(pkgname, "mlr3misc", register_mlr3misc)
 
   assign("lg", lgr::get_logger("bbotk"), envir = parent.env(environment()))
 
@@ -41,6 +48,7 @@ register_mlr3tuning = function() {
   # nocov start
   walk(names(optimizers), function(id) bbotk::mlr_optimizers$remove(id))
   walk(names(tuners), function(id) mlr3tuning::mlr_tuners$remove(id))
+  walk(names(callbacks), function(id) mlr3misc::mlr_callbacks$remove(id))
 } # nocov end
 
 # static code checks should not complain about commonly used data.table columns

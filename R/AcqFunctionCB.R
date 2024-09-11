@@ -65,11 +65,7 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
       assert_number(lambda, lower = 0, finite = TRUE)
 
       constants = ps(
-        lambda = p_dbl(lower = 0, default = 2),
-        lambda_min = p_dbl(lower = 0),
-        lambda_max = p_dbl(lower = 0),
-        lambda_sample = p_uty(),
-        lambda_decay = p_uty()
+        lambda = p_dbl(lower = 0, default = 2)
       )
       constants$values$lambda = lambda
 
@@ -80,16 +76,6 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
         direction = "same",
         label = "Lower / Upper Confidence Bound",
         man = "mlr3mbo::mlr_acqfunctions_cb")
-    },
-
-    #' @description
-    #' Update the acquisition function.
-    update = function() {
-
-      if (!is.null(lambda_decay)) {
-        self$constants$values$lambda = lambda_decay()
-      }
-
     }
   ),
 

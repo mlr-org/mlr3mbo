@@ -33,7 +33,7 @@
 #'
 #' @export
 OptimizerADBO = R6Class("OptimizerADBO",
-  inherit = OptimizerAsync,
+  inherit = OptimizerAsynMbo,
 
   public = list(
 

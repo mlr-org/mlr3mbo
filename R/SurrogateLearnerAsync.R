@@ -60,6 +60,7 @@ SurrogateLearnerAsync = R6Class("SurrogateLearnerAsync",
     .update = function() {
       xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE]
 
+
       if (self$param_set$values$impute_method == "mean") {
         setnafill(xydt, type = "const", fill = mean(xydt[[self$cols_y]], na.rm = TRUE), cols = self$cols_y)
       } else if (self$param_set$values$impute_method == "random") {

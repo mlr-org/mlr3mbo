@@ -67,7 +67,8 @@ Suggests:
     rush,
     stringi,
     testthat (>= 3.0.0)
-Remotes: mlr-org/bbotk
+Remotes:
+    mlr-org/mlr3tuning@eval_point
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
@@ -114,6 +115,7 @@ Collate:
     'helper.R'
     'loop_function.R'
     'mbo_defaults.R'
+    'mlr_callbacks.R'
     'sugar.R'
     'zzz.R'
 VignetteBuilder: knitr
