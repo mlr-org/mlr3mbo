@@ -13,12 +13,13 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    initialize = function(surrogate = NULL, acq_function = NULL, acq_optimizer = NULL) {
-      param_set = ps(
+    initialize = function(surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, param_set = NULL) {
+      default_param_set = ps(
         initial_design = p_uty(),
         design_size = p_int(lower = 1, default = 10),
         design_function = p_fct(c("random", "sobol", "lhs"), default = "sobol")
       )
+      param_set = c(default_param_set, param_set)
 
       param_set$set_values(design_size = 10, design_function = "sobol")
 
@@ -113,17 +114,13 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
     properties = function(rhs) {
       assert_ro_binding(rhs)
 
-      properties_loop_function = c("single-crit", "multi-crit")
-      if (!is.null(self$loop_function)) {
-        properties_loop_function = intersect(properties_loop_function, attr(self$loop_function, "instance"))
-      }
       properties_surrogate = "dependencies"
       if (!is.null(self$surrogate)) {
         if ("missings" %nin% self$surrogate$properties) {
           properties_surrogate = character()
         }
       }
-      unname(c(properties_surrogate, properties_loop_function))
+      unname(c(properties_surrogate))
     },
 
     #' @template field_packages
