@@ -17,7 +17,8 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       default_param_set = ps(
         initial_design = p_uty(),
         design_size = p_int(lower = 1, default = 10),
-        design_function = p_fct(c("random", "sobol", "lhs"), default = "sobol")
+        design_function = p_fct(c("random", "sobol", "lhs"), default = "sobol"),
+        n_workers = p_int(lower = 1L, default = NULL, special_vals = list(NULL))
       )
       param_set = c(default_param_set, param_set)
 
