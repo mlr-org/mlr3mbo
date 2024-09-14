@@ -161,14 +161,13 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
       default_rf(noisy)
     }
     # stability: evaluate and add a fallback
-    learner$encapsulate[c("train", "predict")] = "evaluate"
     require_namespaces("ranger")
     fallback = mlr3learners::LearnerRegrRanger$new()
     fallback$param_set$values = insert_named(
       fallback$param_set$values,
       list(num.trees = 10L, keep.inbag = TRUE, se.method = "jack")
     )
-    learner$fallback = fallback
+    learner$encapsulate("evaluate", fallback)
 
     if (has_deps) {
       require_namespaces("mlr3pipelines")
@@ -184,14 +183,15 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
           learner
         )
       )
-      learner$encapsulate[c("train", "predict")] = "evaluate"
-      learner$fallback = LearnerRegrFeatureless$new()
+      learner$encapsulate("evaluate", lrn("regr.featureless"))
     }
   }
 
   if (is.null(n_learner)) n_learner = length(instance$archive$cols_y)
-  if (n_learner == 1L) {
+  if (n_learner == 1L && inherits(instance, "OptimInstanceBatch")) {
     SurrogateLearner$new(learner)
+  } else if (n_learner == 1L && inherits(instance, "OptimInstanceAsync")) {
+    SurrogateLearnerAsync$new(learner)
   } else  {
     learners = replicate(n_learner, learner$clone(deep = TRUE), simplify = FALSE)
     SurrogateLearnerCollection$new(learners)
@@ -213,6 +213,8 @@ default_acqfunction = function(instance) {
   assert_r6(instance, classes = "OptimInstance")
   if (inherits(instance, "OptimInstanceBatchSingleCrit")) {
     AcqFunctionEI$new()
+  } else if (inherits(instance, "OptimInstanceAsyncSingleCrit")) {
+    AcqFunctionCB$new()
   } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
     AcqFunctionSmsEgo$new()
   }

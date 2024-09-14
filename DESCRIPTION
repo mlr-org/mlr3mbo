@@ -41,13 +41,13 @@ BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
     R (>= 3.1.0)
 Imports:
-    bbotk (>= 1.0.0),
+    bbotk (>= 1.1.0),
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
-    mlr3 (>= 0.14.0),
+    mlr3 (>= 0.20.2.9000),
     mlr3misc (>= 0.11.0),
-    mlr3tuning (>= 1.0.0),
+    mlr3tuning (>= 1.0.1),
     paradox (>= 1.0.0),
     spacefillr,
     R6 (>= 2.4.1)
@@ -62,9 +62,11 @@ Suggests:
     ranger,
     rgenoud,
     rpart,
+    rush,
     stringi,
     testthat (>= 3.0.0)
-Remotes: mlr-org/bbotk
+Remotes:
+    mlr-org/mlr3
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
@@ -88,6 +90,7 @@ Collate:
     'AcqFunctionSmsEgo.R'
     'AcqOptimizer.R'
     'aaa.R'
+    'OptimizerAsyncMbo.R'
     'OptimizerMbo.R'
     'mlr_result_assigners.R'
     'ResultAssigner.R'
@@ -95,7 +98,9 @@ Collate:
     'ResultAssignerSurrogate.R'
     'Surrogate.R'
     'SurrogateLearner.R'
+    'SurrogateLearnerAsync.R'
     'SurrogateLearnerCollection.R'
+    'TunerAsyncMbo.R'
     'TunerMbo.R'
     'mlr_loop_functions.R'
     'bayesopt_ego.R'
@@ -107,5 +112,6 @@ Collate:
     'helper.R'
     'loop_function.R'
     'mbo_defaults.R'
+    'mlr_callbacks.R'
     'sugar.R'
     'zzz.R'

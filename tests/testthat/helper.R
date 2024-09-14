@@ -102,12 +102,12 @@ MAKE_DESIGN = function(instance, n = 4L) {
 if (requireNamespace("mlr3learners") && requireNamespace("DiceKriging") && requireNamespace("rgenoud")) {
   library(mlr3learners)
   REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE, max.generations = 2), nugget.estim = TRUE, jitter = 1e-12)
-  REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
+  REGR_KM_NOISY$encapsulate("callr", lrn("regr.featureless"))
   REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE, max.generations = 2), nugget.stability = 10^-8)
-  REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
+  REGR_KM_DETERM$encapsulate("callr", lrn("regr.featureless"))
 }
 REGR_FEATURELESS = lrn("regr.featureless")
-REGR_FEATURELESS$encapsulate = c(train = "callr", predict = "callr")
+REGR_FEATURELESS$encapsulate("callr", lrn("regr.featureless"))
 
 OptimizerError = R6Class("OptimizerError",
   inherit = OptimizerBatch,
@@ -199,6 +199,19 @@ expect_acqfunction = function(acqf) {
   expect_string(acqf$id, pattern = "acq")
   expect_string(acqf$label)
   expect_man_exists(acqf$man)
+}
+
+expect_rush_reset = function(rush, type = "kill") {
+  processes = rush$processes
+  rush$reset(type = type)
+  expect_list(rush$connector$command(c("KEYS", "*")), len = 0)
+  walk(processes, function(p) p$kill())
+}
+
+flush_redis = function() {
+  config = redux::redis_config()
+  r = redux::hiredis(config)
+  r$FLUSHDB()
 }
 
 sortnames = function(x) {
