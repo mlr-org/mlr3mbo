@@ -3,10 +3,27 @@
 \name{mlr_tuners_async_mbo}
 \alias{mlr_tuners_async_mbo}
 \alias{TunerAsyncMbo}
-\title{Asynchronous Model Based Optimization}
+\title{Asynchronous Model Based Tuning}
 \description{
-\code{TunerAsyncMbo} class that implements Asynchronous Model Based Optimization (MBO).
+\code{TunerAsyncMbo} class that implements asynchronous Model Based Tuning (MBO).
 }
+\section{Parameters}{
+
+\describe{
+\item{\code{initial_design}}{\code{data.table::data.table()}\cr
+Initial design of the optimization.
+If \code{NULL}, a design of size \code{design_size} is generated with \code{design_function}.}
+\item{\code{design_size}}{\code{integer(1)}\cr
+Size of the initial design.}
+\item{\code{design_function}}{\code{character(1)}\cr
+Function to generate the initial design.
+One of \code{c("random", "sobol", "lhs")}.}
+\item{\code{n_workers}}{\code{integer(1)}\cr
+Number of parallel workers.
+If \code{NULL}, all rush workers set with \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.}
+}
+}
+
 \section{Super classes}{
 \code{\link[mlr3tuning:Tuner]{mlr3tuning::Tuner}} -> \code{\link[mlr3tuning:TunerAsync]{mlr3tuning::TunerAsync}} -> \code{\link[mlr3tuning:TunerAsyncFromOptimizerAsync]{mlr3tuning::TunerAsyncFromOptimizerAsync}} -> \code{TunerAsyncMbo}
 }
@@ -33,9 +50,31 @@
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TunerAsyncMbo$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TunerAsyncMbo$new(
+  surrogate = NULL,
+  acq_function = NULL,
+  acq_optimizer = NULL,
+  param_set = NULL
+)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+The surrogate.}
+
+\item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+The acquisition function.}
+
+\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+The acquisition function optimizer.}
+
+\item{\code{param_set}}{\link[paradox:ParamSet]{paradox::ParamSet}\cr
+Set of control parameters.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TunerAsyncMbo-clone"></a>}}

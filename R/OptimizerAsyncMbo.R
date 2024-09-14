@@ -5,6 +5,28 @@
 #' @description
 #' `OptimizerAsyncMbo` class that implements asynchronous Model Based Optimization (MBO).
 #'
+#' @section Parameters:
+#' \describe{
+#' \item{`initial_design`}{`data.table::data.table()`\cr
+#'   Initial design of the optimization.
+#'   If `NULL`, a design of size `design_size` is generated with `design_function`.}
+#' \item{`design_size`}{`integer(1)`\cr
+#'   Size of the initial design.}
+#' \item{`design_function`}{`character(1)`\cr
+#'   Function to generate the initial design.
+#'   One of `c("random", "sobol", "lhs")`.}
+#' \item{`n_workers`}{`integer(1)`\cr
+#'   Number of parallel workers.
+#'   If `NULL`, all rush workers set with [rush::rush_plan()] are used.}
+#' }
+#'
+#' @template param_surrogate
+#' @template param_acq_function
+#' @template param_acq_optimizer
+#'
+#' @param param_set [paradox::ParamSet]\cr
+#'  Set of control parameters.
+#'
 #' @export
 OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
   inherit = OptimizerAsync,
@@ -18,7 +40,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         initial_design = p_uty(),
         design_size = p_int(lower = 1, default = 10),
         design_function = p_fct(c("random", "sobol", "lhs"), default = "sobol"),
-        n_workers = p_int(lower = 1L, default = NULL, special_vals = list(NULL))
+        n_workers = p_int(lower = 1L)
       )
       param_set = c(default_param_set, param_set)
 
