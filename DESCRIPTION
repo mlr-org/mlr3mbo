@@ -45,7 +45,7 @@ Imports:
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
-    mlr3 (>= 0.14.0),
+    mlr3 (>= 0.21.0),
     mlr3misc (>= 0.11.0),
     mlr3tuning (>= 1.0.0),
     paradox (>= 1.0.0),
@@ -64,8 +64,6 @@ Suggests:
     rpart,
     stringi,
     testthat (>= 3.0.0)
-Remotes:
-    mlr-org/mlr3
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
