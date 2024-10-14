@@ -15,7 +15,7 @@ these scalarized values and optimizing the acquisition function."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,12 +24,13 @@ these scalarized values and optimizing the acquisition function."></head><body>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-file-alt"></span> Reference</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/mlr3mbo.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://mlr3book.mlr-org.com"><span class="fa fa-link"></span> mlr3book</a></li>
-      </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/mlr-org/mlr3mbo/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+      </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/mlr-org/mlr3mbo/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/"><span class="fa fa-comments"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://stackoverflow.com/questions/tagged/mlr3"><span class="fa fab fa-stack-overflow"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://stackoverflow.com/questions/tagged/mlr"><span class="fa fab fa-stack-overflow"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://mlr-org.com/"><span class="fa fa-rss"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
@@ -46,7 +47,7 @@ these scalarized values and optimizing the acquisition function."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Multi-Objective Bayesian Optimization via ParEGO</h1>
-      <small class="dont-index">Source: <a href="https://github.com/mlr-org/mlr3mbo/blob/v0.2.4/R/bayesopt_parego.R" class="external-link"><code>R/bayesopt_parego.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mlr-org/mlr3mbo/blob/main/R/bayesopt_parego.R" class="external-link"><code>R/bayesopt_parego.R</code></a></small>
       <div class="d-none name"><code>mlr_loop_functions_parego.Rd</code></div>
     </div>
 
@@ -202,12 +203,11 @@ function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchM
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [17:12:58.391] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [17:12:58.416] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           x  x_domain       y1        y2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;num&gt;    &lt;list&gt;    &lt;num&gt;     &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 1.134356 &lt;list[1]&gt; 1.286764 0.7493391</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 1.467836 &lt;list[1]&gt; 2.154544 0.2831980</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [17:52:09.999] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [17:52:10.025] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            x  x_domain        y1       y2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;num&gt;    &lt;list&gt;     &lt;num&gt;    &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.3766036 &lt;list[1]&gt; 0.1418303 2.635416</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
@@ -220,7 +220,7 @@ function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchM
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

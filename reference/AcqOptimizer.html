@@ -9,7 +9,7 @@ Wraps an bbotk::Optimizer and bbotk::Terminator."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,12 +18,13 @@ Wraps an bbotk::Optimizer and bbotk::Terminator."></head><body>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html"><span class="fa fa-file-alt"></span> Reference</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/mlr3mbo.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://mlr3book.mlr-org.com"><span class="fa fa-link"></span> mlr3book</a></li>
-      </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/mlr-org/mlr3mbo/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+      </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/mlr-org/mlr3mbo/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/"><span class="fa fa-comments"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://stackoverflow.com/questions/tagged/mlr3"><span class="fa fab fa-stack-overflow"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://stackoverflow.com/questions/tagged/mlr"><span class="fa fab fa-stack-overflow"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://mlr-org.com/"><span class="fa fa-rss"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
@@ -40,7 +41,7 @@ Wraps an bbotk::Optimizer and bbotk::Terminator."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Acquisition Function Optimizer</h1>
-      <small class="dont-index">Source: <a href="https://github.com/mlr-org/mlr3mbo/blob/v0.2.4/R/AcqOptimizer.R" class="external-link"><code>R/AcqOptimizer.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mlr-org/mlr3mbo/blob/main/R/AcqOptimizer.R" class="external-link"><code>R/AcqOptimizer.R</code></a></small>
       <div class="d-none name"><code>AcqOptimizer.Rd</code></div>
     </div>
 
@@ -58,9 +59,11 @@ Wraps an <a href="https://bbotk.mlr-org.com/reference/Optimizer.html" class="ext
 <dd><p><code>integer(1)</code><br>
 Number of candidate points to propose.
 Note that this does not affect how the acquisition function itself is calculated (e.g., setting <code>n_candidates &gt; 1</code> will not
-result in computing the q- or multi-Expected Improvement) but rather the top <code>n-candidates</code> are selected from the
+result in computing the q- or multi-Expected Improvement) but rather the top <code>n_candidates</code> are selected from the
 <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the acquisition function <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.
 Note that setting <code>n_candidates &gt; 1</code> is usually not a sensible idea but it is still supported for experimental reasons.
+Note that in the case of the acquisition function <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> being multi-criteria, due to using an <a href="mlr_acqfunctions_multi.html">AcqFunctionMulti</a>,
+selection of the best candidates is performed via non-dominated-sorting.
 Default is <code>1</code>.</p></dd>
 
 <dt><code>logging_level</code></dt>
@@ -72,27 +75,29 @@ Default is <code>"warn"</code>, i.e., only warnings are logged.</p></dd>
 <dt><code>warmstart</code></dt>
 <dd><p><code>logical(1)</code><br>
 Should the acquisition function optimization be warm-started by evaluating the best point(s) present in the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of
-the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>?
+the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> (which is contained in the archive of the <a href="AcqFunction.html">AcqFunction</a>)?
 This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
-Default is <code>FALSE</code>.</p></dd>
+Default is <code>FALSE</code>.
+Note that in the case of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> being multi-criteria, selection of the best point(s) is performed via non-dominated-sorting.</p></dd>
 
 <dt><code>warmstart_size</code></dt>
 <dd><p><code>integer(1) | "all"</code><br>
-Number of best points selected from the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> that are to be used for warm starting.
-Can also be "all" to use all available points.
+Number of best points selected from the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> that are to be used for warm starting.
+Can either be an integer or "all" to use all available points.
 Only relevant if <code>warmstart = TRUE</code>.
 Default is <code>1</code>.</p></dd>
 
 <dt><code>skip_already_evaluated</code></dt>
 <dd><p><code>logical(1)</code><br>
-It can happen that the candidate resulting of the acquisition function optimization was already evaluated in a previous
-iteration. Should this candidate proposal be ignored and the next best point be selected as a candidate?
+It can happen that the candidate(s) resulting of the acquisition function optimization were already evaluated on the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.
+Should such candidate proposals be ignored and only candidates that were yet not evaluated be considered?
 Default is <code>TRUE</code>.</p></dd>
 
 <dt><code>catch_errors</code></dt>
 <dd><p><code>logical(1)</code><br>
 Should errors during the acquisition function optimization be caught and propagated to the <code>loop_function</code> which can then handle
 the failed acquisition function optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
+Setting this to <code>FALSE</code> can be helpful for debugging.
 Default is <code>TRUE</code>.</p></dd>
 
 
@@ -109,6 +114,10 @@ Default is <code>TRUE</code>.</p></dd>
 
 <dt><code>acq_function</code></dt>
 <dd><p>(<a href="AcqFunction.html">AcqFunction</a>).</p></dd>
+
+
+<dt><code>callbacks</code></dt>
+<dd><p>(<code>NULL</code> | list of <a href="https://mlr3misc.mlr-org.com/reference/Callback.html" class="external-link">mlr3misc::Callback</a>).</p></dd>
 
 
 </dl><p></p></div>
@@ -142,7 +151,7 @@ Set of hyperparameters.</p></dd>
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/AcqOptimizer.html">AcqOptimizer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">optimizer</span>, <span class="va">terminator</span>, acq_function <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/AcqOptimizer.html">AcqOptimizer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">optimizer</span>, <span class="va">terminator</span>, acq_function <span class="op">=</span> <span class="cn">NULL</span>, callbacks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -159,6 +168,10 @@ Set of hyperparameters.</p></dd>
 <dd><p>(<code>NULL</code> | <a href="AcqFunction.html">AcqFunction</a>).</p></dd>
 
 
+<dt><code>callbacks</code></dt>
+<dd><p>(<code>NULL</code> | list of <a href="https://mlr3misc.mlr-org.com/reference/Callback.html" class="external-link">mlr3misc::Callback</a>)</p></dd>
+
+
 </dl><p></p></div>
 </div>
 
@@ -169,6 +182,10 @@ Set of hyperparameters.</p></dd>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizer</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+<div class="section">
+<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<p>(<code>character(1)</code>).</p>
+</div>
 
 </div><p></p><hr><a id="method-AcqOptimizer-print"></a><div class="section">
 <h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
@@ -178,7 +195,7 @@ Set of hyperparameters.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>).</p>
 </div>
 
@@ -190,8 +207,8 @@ Set of hyperparameters.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p><code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code> with 1 row per optimum and x as columns.</p>
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<p><code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code> with 1 row per candidate.</p>
 </div>
 
 </div><p></p><hr><a id="method-AcqOptimizer-clone"></a><div class="section">
@@ -257,9 +274,9 @@ Set of hyperparameters.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: rgenoud</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: paradox</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: mlr3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           x  x_domain   acq_ei .already_evaluated</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;num&gt;    &lt;list&gt;    &lt;num&gt;             &lt;lgcl&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 1.187665 &lt;list[1]&gt; 5.305171              FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           x   acq_ei  x_domain .already_evaluated</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;num&gt;    &lt;num&gt;    &lt;list&gt;             &lt;lgcl&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 1.187665 5.305171 &lt;list[1]&gt;              FALSE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -271,7 +288,7 @@ Set of hyperparameters.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
