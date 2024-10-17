@@ -1,4 +1,6 @@
-# mlr3mbo (development version)
+# mlr3mbo 0.2.6
+
+* refactor: Extract internal tuned values in instance.
 
 # mlr3mbo 0.2.5
 
