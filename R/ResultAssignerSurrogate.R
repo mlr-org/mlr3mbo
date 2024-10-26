@@ -60,6 +60,7 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
       archive_tmp = archive$clone(deep = TRUE)
       archive_tmp$data[, self$surrogate$cols_y := means]
       xydt = archive_tmp$best()
+      extra = xydt[, !c(archive_tmp$cols_x, archive_tmp$cols_y), with = FALSE]
       best = xydt[, archive_tmp$cols_x, with = FALSE]
 
       # ys are still the ones originally evaluated
@@ -68,7 +69,7 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
       } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
         archive$data[best, on = archive$cols_x][, archive$cols_y, with = FALSE]
       }
-      instance$assign_result(xdt = best, best_y, xydt = xydt)
+      instance$assign_result(xdt = best, best_y, extra = extra)
     }
   ),
 
