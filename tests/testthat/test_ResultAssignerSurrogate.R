@@ -85,3 +85,31 @@ test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_smsego",
   expect_data_table(instance$result, min.rows = 1L)
 })
 
+test_that("ResultAssignerSurrogate passes internal tuned values", {
+  result_assigner = ResultAssignerSurrogate$new()
+
+  learner = lrn("classif.debug",
+    validate = 0.2,
+    early_stopping = TRUE,
+    x = to_tune(0.2, 0.3),
+    iter = to_tune(upper = 1000, internal = TRUE, aggr = function(x) 99))
+
+  instance = ti(
+    task = tsk("pima"),
+    learner = learner,
+    resampling = rsmp("cv", folds = 3),
+    measures = msr("classif.ce"),
+    terminator = trm("evals", n_evals = 20),
+    store_benchmark_result = TRUE
+  )
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+
+  tuner = tnr("mbo", result_assigner = result_assigner)
+  expect_data_table(tuner$optimize(instance), nrows = 1)
+  expect_list(instance$archive$data$internal_tuned_values, len = 20, types = "list")
+  expect_equal(instance$archive$data$internal_tuned_values[[1]], list(iter = 99))
+  expect_false(instance$result_learner_param_vals$early_stopping)
+  expect_equal(instance$result_learner_param_vals$iter, 99)
+})

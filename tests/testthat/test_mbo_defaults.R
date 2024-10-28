@@ -45,7 +45,11 @@ test_that("default_surrogate", {
   expect_r6(surrogate$learner[[1L]]$fallback, "LearnerRegrRanger")
   expect_equal(surrogate$learner[[1L]]$param_set$values, surrogate$learner[[2L]]$param_set$values)
   expect_equal(surrogate$learner[[1L]]$encapsulation, surrogate$learner[[2L]]$encapsulation)
+<<<<<<< HEAD
   # expect_equal(surrogate$learner[[1L]]$fallback, surrogate$learner[[2L]]$fallback)
+=======
+  suppressWarnings(expect_equal(surrogate$learner[[1L]]$fallback, surrogate$learner[[2L]]$fallback))
+>>>>>>> main
 
   # twocrit all numeric, noisy
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2_NOISY, search_space = PS_1D))
@@ -171,17 +175,5 @@ test_that("stability and defaults", {
   lines = readLines(f)
   # Nothing should happen here due to the fallback learner
   expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)
-
-  # acq_function$surrogate$learner$reset()
-  # acq_function$surrogate$learner$fallback = NULL
-  # instance$archive$clear()
-  # bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
-  # expect_true(nrow(instance$archive$data) == 5L)
-  # lines = readLines(f)
-  # # Training fails but this error is not logged due to the "evaluate" encapsulate
-  # expect_equal(acq_function$surrogate$learner$errors, "Surrogate Train Error.")
-  # expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)
-  # expect_true(sum(grepl("Cannot predict", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
-  # expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
 })
 

@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 0.2.4.9000
+Version: 0.2.6.9000
 Authors@R: c(
     person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0003-4152-5308")),
@@ -55,14 +55,12 @@ Suggests:
     DiceKriging,
     emoa,
     fastGHQuad,
-    knitr,
     lhs,
     mlr3learners (>= 0.5.4),
     mlr3pipelines (>= 0.4.2),
     nloptr,
     ranger,
     rgenoud,
-    rmarkdown,
     rpart,
     rush,
     stringi,
@@ -115,4 +113,3 @@ Collate:
     'mlr_callbacks.R'
     'sugar.R'
     'zzz.R'
-VignetteBuilder: knitr

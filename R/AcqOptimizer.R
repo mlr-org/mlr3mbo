@@ -214,7 +214,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
       #  }
       #  setcolorder(xdt, c(instance$archive$cols_x, "x_domain", instance$objective$id))
       #}
-      xdt
+      xdt[, -c("timestamp", "batch_nr")]  # drop timestamp and batch_nr information from the candidates
     }
   ),
 
