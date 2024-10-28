@@ -39,6 +39,7 @@ License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
+    mlr3tuning (>= 1.1.0),
     R (>= 3.1.0)
 Imports:
     bbotk (>= 1.2.0),
@@ -47,7 +48,6 @@ Imports:
     lgr (>= 0.3.4),
     mlr3 (>= 0.21.1),
     mlr3misc (>= 0.11.0),
-    mlr3tuning (>= 1.1.0),
     paradox (>= 1.0.1),
     spacefillr,
     R6 (>= 2.4.1)
@@ -62,6 +62,7 @@ Suggests:
     ranger,
     rgenoud,
     rpart,
+    redux,
     rush,
     stringi,
     testthat (>= 3.0.0)

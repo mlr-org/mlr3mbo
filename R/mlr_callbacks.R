@@ -1,6 +1,6 @@
 #' @title Sample Lambda from an Uniform Distribution
 #'
-#' @name mlr3mbo.sample_lambda
+#' @name mlr3mbo.sample_lambda_uniform
 #'
 #' @description
 #' This [CallbackAsyncTuning] samples the lambda parameter of the confidence bounds acquisition function.
@@ -14,7 +14,7 @@
 #' Defaults to `10`.
 #'
 #' @examples
-#' clbk("mlr3mbo.sample_lambda", min_lambda = 0.01, max_lambda = 10)
+#' clbk("mlr3mbo.sample_lambda_uniform", min_lambda = 0.01, max_lambda = 10)
 NULL
 
 load_callback_sample_lambda_uniform = function() {
@@ -78,7 +78,7 @@ callbacks[["mlr3mbo.sample_lambda_exponential"]] = load_callback_sample_lambda_e
 
 #' @title Exponential Decay of Lambda
 #'
-#' @name mlr3mbo.lambda_decay
+#' @name mlr3mbo.exponential_lambda_decay
 #'
 #' @description
 #' This [CallbackAsyncTuning] decays the lambda parameter of the confidence bounds acquisition function.
@@ -131,7 +131,7 @@ callbacks[["mlr3mbo.exponential_lambda_decay"]] = load_callback_exponential_lamb
 
 #' @title Epsilon Decay
 #'
-#' @name mlr3mbo.sample_epsilon
+#' @name mlr3mbo.epsilon_decay
 #'
 #' @description
 #' This [CallbackAsyncTuning] decays the epsilon parameter of the expected improvement acquisition function.
@@ -143,7 +143,7 @@ callbacks[["mlr3mbo.exponential_lambda_decay"]] = load_callback_exponential_lamb
 #' Period of the exponential decay.
 #' Defaults to `25`.
 #' @examples
-#' clbk("mlr3mbo.sample_epsilon", rate = 0.1, period = 25)
+#' clbk("mlr3mbo.epsilon_decay", rate = 0.1, period = 25)
 NULL
 
 load_callback_epsilon_decay = function() {

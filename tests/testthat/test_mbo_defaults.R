@@ -45,11 +45,7 @@ test_that("default_surrogate", {
   expect_r6(surrogate$learner[[1L]]$fallback, "LearnerRegrRanger")
   expect_equal(surrogate$learner[[1L]]$param_set$values, surrogate$learner[[2L]]$param_set$values)
   expect_equal(surrogate$learner[[1L]]$encapsulation, surrogate$learner[[2L]]$encapsulation)
-<<<<<<< HEAD
-  # expect_equal(surrogate$learner[[1L]]$fallback, surrogate$learner[[2L]]$fallback)
-=======
   suppressWarnings(expect_equal(surrogate$learner[[1L]]$fallback, surrogate$learner[[2L]]$fallback))
->>>>>>> main
 
   # twocrit all numeric, noisy
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2_NOISY, search_space = PS_1D))
