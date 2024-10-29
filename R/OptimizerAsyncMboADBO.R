@@ -11,12 +11,8 @@
 #'
 #' @section Parameters:
 #' \describe{
-#' \item{`min_lambda`}{`numeric(1)`\cr
-#'   Minimum value of \eqn{\lambda}.
-#'   Defaults to `0.01`.}
-#' \item{`max_lambda`}{`numeric(1)`\cr
-#'  Maximum value of \eqn{\lambda}.
-#'  Defaults to `10`.}
+#' \item{`lambda`}{`numeric(1)`\cr
+#'   Lambda value for sampling from the exponential distribution.}
 #' \item{`rate`}{`numeric(1)`\cr
 #'   Rate of the exponential decay.}
 #' \item{`period`}{`integer(1)`\cr
@@ -38,6 +34,9 @@
 #'   If `NULL`, all rush workers set with [rush::rush_plan()] are used.}
 #' }
 #'
+#' @references
+#' * `r format_bib("egele_2023")`
+#'
 #' @export
 OptimizerAsyncMboADBO = R6Class("OptimizerAsyncMboADBO",
   inherit = OptimizerAsyncMbo,
@@ -48,9 +47,7 @@ OptimizerAsyncMboADBO = R6Class("OptimizerAsyncMboADBO",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function() {
       param_set = ps(
-        min_lambda = p_dbl(lower = 0, default = 0.01),
-        max_lambda = p_dbl(lower = 0, default = 10),
-        exponential_decay = p_lgl(default = TRUE),
+        lambda = p_dbl(lower = 0, default = 1.96),
         rate = p_dbl(lower = 0, default = 0.1),
         period = p_int(lower = 1L, default = 25L)
       )
@@ -62,8 +59,7 @@ OptimizerAsyncMboADBO = R6Class("OptimizerAsyncMboADBO",
         man = "mlr3mbo::OptimizerAsyncMboADBO")
 
       self$param_set$set_values(
-        min_lambda = 0.01,
-        max_lambda = 10,
+        lambda = 1.96,
         rate = 0.1,
         period = 25L)
     }
@@ -74,8 +70,7 @@ OptimizerAsyncMboADBO = R6Class("OptimizerAsyncMboADBO",
     .optimize = function(inst) {
 
       self$acq_function = acqf("stochastic_cb",
-        min_lambda = self$param_set$values$min_lambda,
-        max_lambda = self$param_set$values$max_lambda,
+        lambda = self$param_set$values$lambda,
         rate = self$param_set$values$rate,
         period = self$param_set$values$period
       )

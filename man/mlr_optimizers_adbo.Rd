@@ -15,12 +15,8 @@ ADBO can use periodic exponential decay to reduce \eqn{\lambda} periodically to 
 \section{Parameters}{
 
 \describe{
-\item{\code{min_lambda}}{\code{numeric(1)}\cr
-Minimum value of \eqn{\lambda}.
-Defaults to \code{0.01}.}
-\item{\code{max_lambda}}{\code{numeric(1)}\cr
-Maximum value of \eqn{\lambda}.
-Defaults to \code{10}.}
+\item{\code{lambda}}{\code{numeric(1)}\cr
+Lambda value for sampling from the exponential distribution.}
 \item{\code{rate}}{\code{numeric(1)}\cr
 Rate of the exponential decay.}
 \item{\code{period}}{\code{integer(1)}\cr
@@ -43,6 +39,14 @@ If \code{NULL}, all rush workers set with \code{\link[rush:rush_plan]{rush::rush
 }
 }
 
+\references{
+\itemize{
+\item Egele R, Guyon I, Vishwanath V, Balaprakash P (2023).
+\dQuote{Asynchronous Decentralized Bayesian Optimization for Large Scale Hyperparameter Optimization.}
+\emph{arXiv}.
+\url{https://arxiv.org/abs/2207.00479}.
+}
+}
 \section{Super classes}{
 \code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{\link[bbotk:OptimizerAsync]{bbotk::OptimizerAsync}} -> \code{\link[mlr3mbo:OptimizerAsyncMbo]{mlr3mbo::OptimizerAsyncMbo}} -> \code{OptimizerAsyncMboADBO}
 }

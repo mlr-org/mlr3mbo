@@ -8,15 +8,18 @@
 #'
 #' @description
 #' Lower / Upper Confidence Bound with lambda sampling and decay.
-#' The initial lambda value is drawn from an uniform or exponential distribution with rate `1 / lambda`.
+#' The initial lambda value is drawn from an uniform distribution between `min_lambda` and `max_lambda` or from an exponential distribution with rate `1 / lambda`.
 #' The lambda value is updated after each evaluation by the formula `lambda * exp(-rate * (t %% period))`.
 #'
 #' @section Parameters:
+#' * `"lambda"` (`numeric(1)`)\cr
+#'   Lambda value for sampling from the exponential distribution.
+#'   Defaults to `1.96`.
 #' * `"min_lambda"` (`numeric(1)`)\cr
-#'   Minimum value of lambda.
+#'   Minimum value of lambda for sampling from the uniform distribution.
 #'   Defaults to `0.01`.
 #' * `"max_lambda"` (`numeric(1)`)\cr
-#'   Maximum value of lambda.
+#'   Maximum value of lambda for sampling from the uniform distribution.
 #'   Defaults to `10`.
 #' * `"distribution"` (`character(1)`)\cr
 #'   Distribution to sample lambda from.
@@ -52,6 +55,7 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
     #' @param period (`integer(1)`).
     initialize = function(
       surrogate = NULL,
+      lambda = 1.96,
       min_lambda = 0.01,
       max_lambda = 10,
       distribution = "uniform",
@@ -59,9 +63,19 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
       period = NULL
       ) {
       assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
-      private$.min_lambda = assert_number(min_lambda, lower = .Machine$double.neg.eps)
-      private$.max_lambda = assert_number(max_lambda, lower = .Machine$double.neg.eps)
+      private$.lambda = assert_number(lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
+      private$.min_lambda = assert_number(min_lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
+      private$.max_lambda = assert_number(max_lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
       private$.distribution = assert_choice(distribution, choices = c("uniform", "exponential"))
+
+      if (private$.distribution == "uniform" && (is.null(private$.min_lambda) || is.null(private$.max_lambda))) {
+        stop("If `distribution` is 'uniform', `min_lambda` and `max_lambda` must be set.")
+      }
+
+      if (private$.distribution == "exponential" && is.null(private$.lambda)) {
+        stop("If `distribution` is 'exponential', `lambda` must be set.")
+      }
+
       private$.rate = assert_number(rate, lower = 0)
       private$.period = assert_int(period, lower = 1, null.ok = TRUE)
 
@@ -84,12 +98,13 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
     update = function() {
       # sample lambda
       if (is.null(self$constants$values$lambda)) {
-        fun = switch(private$.distribution,
-          uniform = runif,
-          exponential = rexp
-        )
 
-        lambda = fun(1, private$.min_lambda, private$.max_lambda)
+        if (private$.distribution == "uniform") {
+          lambda = runif(1, private$.min_lambda, private$.max_lambda)
+        } else {
+          lambda = rexp(1, 1 / private$.lambda)
+        }
+
         private$.lambda_0 = lambda
         self$constants$values$lambda = lambda
       }
@@ -108,6 +123,7 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
   ),
 
   private = list(
+    .lambda = NULL,
     .min_lambda = NULL,
     .max_lambda = NULL,
     .distribution = NULL,

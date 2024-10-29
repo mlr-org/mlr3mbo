@@ -6,7 +6,7 @@
 \title{Acquisition Function Stochastic Confidence Bound}
 \description{
 Lower / Upper Confidence Bound with lambda sampling and decay.
-The initial lambda value is drawn from an uniform or exponential distribution with rate \code{1 / lambda}.
+The initial lambda value is drawn from an uniform distribution between \code{min_lambda} and \code{max_lambda} or from an exponential distribution with rate \code{1 / lambda}.
 The lambda value is updated after each evaluation by the formula \code{lambda * exp(-rate * (t \%\% period))}.
 }
 \section{Dictionary}{
@@ -22,11 +22,14 @@ acqf("stochastic_cb")
 \section{Parameters}{
 
 \itemize{
+\item \code{"lambda"} (\code{numeric(1)})\cr
+Lambda value for sampling from the exponential distribution.
+Defaults to \code{1.96}.
 \item \code{"min_lambda"} (\code{numeric(1)})\cr
-Minimum value of lambda.
+Minimum value of lambda for sampling from the uniform distribution.
 Defaults to \code{0.01}.
 \item \code{"max_lambda"} (\code{numeric(1)})\cr
-Maximum value of lambda.
+Maximum value of lambda for sampling from the uniform distribution.
 Defaults to \code{10}.
 \item \code{"distribution"} (\code{character(1)})\cr
 Distribution to sample lambda from.
@@ -101,6 +104,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticCB$new(
   surrogate = NULL,
+  lambda = 1.96,
   min_lambda = 0.01,
   max_lambda = 10,
   distribution = "uniform",
@@ -114,6 +118,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \describe{
 \item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearner}).}
 
+\item{\code{lambda}}{(\code{numeric(1)}).}
+
 \item{\code{min_lambda}}{(\code{numeric(1)}).}
 
 \item{\code{max_lambda}}{(\code{numeric(1)}).}
@@ -123,8 +129,6 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{rate}}{(\code{numeric(1)}).}
 
 \item{\code{period}}{(\code{integer(1)}).}
-
-\item{\code{lambda}}{(\code{numeric(1)}).}
 }
 \if{html}{\out{</div>}}
 }
