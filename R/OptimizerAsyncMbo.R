@@ -20,9 +20,12 @@
 #'   If `NULL`, all rush workers set with [rush::rush_plan()] are used.}
 #' }
 #'
+#' @template param_id
 #' @template param_surrogate
 #' @template param_acq_function
 #' @template param_acq_optimizer
+#' @template param_label
+#' @template param_man
 #'
 #' @param param_set [paradox::ParamSet]\cr
 #'  Set of control parameters.
@@ -35,24 +38,45 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    initialize = function(surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, param_set = NULL) {
+    #'
+    #' @param param_classes (`character()`)\cr
+    #' Supported parameter classes that the optimizer can optimize, as given in the [`paradox::ParamSet`] `$class` field.
+    #' @param properties (`character()`)\cr
+    #' Set of properties of the optimizer.
+    #' Must be a subset of [`bbotk_reflections$optimizer_properties`][bbotk_reflections].
+    #' @param packages (`character()`)\cr
+    #' Set of required packages.
+    #' A warning is signaled by the constructor if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    initialize = function(
+      id = "async_mbo",
+      surrogate = NULL,
+      acq_function = NULL,
+      acq_optimizer = NULL,
+      param_set = NULL,
+      param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
+      properties = c("dependencies", "single-crit"),
+      packages = c("mlr3mbo", "rush"),
+      label = "Asynchronous Model Based Optimization",
+      man = "mlr3mbo::OptimizerAsyncMbo"
+      ) {
+
       default_param_set = ps(
         initial_design = p_uty(),
-        design_size = p_int(lower = 1, default = 10),
+        design_size = p_int(lower = 1, default = 100L),
         design_function = p_fct(c("random", "sobol", "lhs"), default = "sobol"),
         n_workers = p_int(lower = 1L)
       )
       param_set = c(default_param_set, param_set)
 
-      param_set$set_values(design_size = 10, design_function = "sobol")
+      param_set$set_values(design_size = 100L, design_function = "sobol")
 
       super$initialize("async_mbo",
         param_set = param_set,
-        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
-        properties = c("dependencies", "single-crit"),
-        packages = c("mlr3mbo", "rush"),
-        label = "Asynchronous Model Based Optimization",
-        man = "mlr3mbo::OptimizerAsyncMbo")
+        param_classes = param_classes,
+        properties = properties,
+        packages = packages,
+        label = label,
+        man = man)
 
       self$surrogate = assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
       self$acq_function = assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)

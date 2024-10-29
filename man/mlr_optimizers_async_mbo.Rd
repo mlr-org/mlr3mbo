@@ -82,16 +82,25 @@ Required packages are determined based on the \code{acq_function}, \code{surroga
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerAsyncMbo$new(
+  id = "async_mbo",
   surrogate = NULL,
   acq_function = NULL,
   acq_optimizer = NULL,
-  param_set = NULL
+  param_set = NULL,
+  param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
+  properties = c("dependencies", "single-crit"),
+  packages = c("mlr3mbo", "rush"),
+  label = "Asynchronous Model Based Optimization",
+  man = "mlr3mbo::OptimizerAsyncMbo"
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{id}}{(\code{character(1)})\cr
+Identifier for the new instance.}
+
 \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
 The surrogate.}
 
@@ -103,6 +112,25 @@ The acquisition function optimizer.}
 
 \item{\code{param_set}}{\link[paradox:ParamSet]{paradox::ParamSet}\cr
 Set of control parameters.}
+
+\item{\code{param_classes}}{(\code{character()})\cr
+Supported parameter classes that the optimizer can optimize, as given in the \code{\link[paradox:ParamSet]{paradox::ParamSet}} \verb{$class} field.}
+
+\item{\code{properties}}{(\code{character()})\cr
+Set of properties of the optimizer.
+Must be a subset of \code{\link[=bbotk_reflections]{bbotk_reflections$optimizer_properties}}.}
+
+\item{\code{packages}}{(\code{character()})\cr
+Set of required packages.
+A warning is signaled by the constructor if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
+
+\item{\code{label}}{(\code{character(1)})\cr
+Label for this object.
+Can be used in tables, plot and text output instead of the ID.}
+
+\item{\code{man}}{(\code{character(1)})\cr
+String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.
+The referenced help package can be opened via method \verb{$help()}.}
 }
 \if{html}{\out{</div>}}
 }

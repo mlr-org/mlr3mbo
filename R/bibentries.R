@@ -125,6 +125,13 @@ bibentries = c(
     booktitle = "Parallel Problem Solving from Nature -- PPSN XVII",
     year      = "2022",
     pages     = "90--103"
+  ),
+
+  egele_2023 = bibentry("article",
+    title    = "Asynchronous Decentralized Bayesian Optimization for Large Scale Hyperparameter Optimization",
+    author   = "Romain Egele and Isabelle Guyon and Venkatram Vishwanath and Prasanna Balaprakash",
+    year     = "2023",
+    journal  = "arXiv",
+    url      = "https://arxiv.org/abs/2207.00479"
   )
 )
-

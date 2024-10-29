@@ -143,17 +143,19 @@ default_rf = function(noisy = FALSE) {
 #' @param n_learner (`NULL` | `integer(1)`).
 #'  Number of learners to be considered in the construction of the [SurrogateLearner] or [SurrogateLearnerCollection].
 #'  If not specified will be based on the number of objectives as stated by the instance.
+#' @param force_rf (`logical(1)`).
+#'  If `TRUE`, a random forest is constructed even if the parameter space is numeric-only.
 #' @return [Surrogate]
 #' @family mbo_defaults
 #' @export
-default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
+default_surrogate = function(instance, learner = NULL, n_learner = NULL, force_rf = FALSE) {
   assert_multi_class(instance, c("OptimInstance", "OptimInstanceAsync"))
   assert_r6(learner, "Learner", null.ok = TRUE)
   assert_int(n_learner, lower = 1L, null.ok = TRUE)
   noisy = "noisy" %in% instance$objective$properties
 
   if (is.null(learner)) {
-    is_mixed_space = !all(instance$search_space$class %in% c("ParamDbl", "ParamInt"))
+    is_mixed_space = !all(instance$search_space$class %in% c("ParamDbl", "ParamInt")) || force_rf
     has_deps = nrow(instance$search_space$deps) > 0L
     learner = if (!is_mixed_space) {
       default_gp(noisy)
@@ -214,7 +216,7 @@ default_acqfunction = function(instance) {
   if (inherits(instance, "OptimInstanceBatchSingleCrit")) {
     AcqFunctionEI$new()
   } else if (inherits(instance, "OptimInstanceAsyncSingleCrit")) {
-    AcqFunctionCB$new()
+    AcqFunctionStochasticCB$new()
   } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
     AcqFunctionSmsEgo$new()
   }

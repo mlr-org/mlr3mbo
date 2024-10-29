@@ -2,6 +2,8 @@
 #'
 #' @description
 #' Surrogate model containing a single [mlr3::LearnerRegr].
+#' The surrogate model is updated on the [mlr3tuning::ArchiveAsyncTuning].
+#' Unevaluated points are imputed with the mean or random values.
 #'
 #' @section Parameters:
 #' \describe{

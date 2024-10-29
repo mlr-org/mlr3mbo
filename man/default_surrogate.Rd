@@ -4,7 +4,7 @@
 \alias{default_surrogate}
 \title{Default Surrogate}
 \usage{
-default_surrogate(instance, learner = NULL, n_learner = NULL)
+default_surrogate(instance, learner = NULL, n_learner = NULL, force_rf = FALSE)
 }
 \arguments{
 \item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance})\cr
@@ -16,6 +16,9 @@ If specified, this learner will be used instead of the defaults described above.
 \item{n_learner}{(\code{NULL} | \code{integer(1)}).
 Number of learners to be considered in the construction of the \link{SurrogateLearner} or \link{SurrogateLearnerCollection}.
 If not specified will be based on the number of objectives as stated by the instance.}
+
+\item{force_rf}{(\code{logical(1)}).
+If \code{TRUE}, a random forest is constructed even if the parameter space is numeric-only.}
 }
 \value{
 \link{Surrogate}

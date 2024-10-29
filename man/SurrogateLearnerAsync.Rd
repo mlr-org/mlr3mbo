@@ -5,6 +5,8 @@
 \title{Surrogate Model Containing a Single Learner}
 \description{
 Surrogate model containing a single \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
+The surrogate model is updated on the \link[mlr3tuning:ArchiveAsyncTuning]{mlr3tuning::ArchiveAsyncTuning}.
+Unevaluated points are imputed with the mean or random values.
 }
 \section{Parameters}{
 
