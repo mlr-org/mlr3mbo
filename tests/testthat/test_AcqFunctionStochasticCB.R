@@ -24,7 +24,7 @@ test_that("AcqFunctionStochasticCB works in defaults", {
   expect_rush_reset(instance$rush)
 })
 
-test("AcqFunctionStochasticCB works with uniform sampling", {
+test_that("AcqFunctionStochasticCB works with uniform sampling", {
   skip_on_cran()
   skip_if_not_installed("rush")
   flush_redis()
