@@ -9,7 +9,7 @@
 AMBO starts multiple sequential MBO runs on different workers.
 The worker communicate asynchronously through a shared archive.
 The optimizer follows a modular layout in which the surrogate model, acquisition function, and acquisition optimizer can be changed.
-The \link{SurrogateAsyncLearner} class is similar to \link{SurrogateLearner} but can impute results for ongoing evaluations.
+The \link{SurrogateLearnerAsync} class is similar to \link{SurrogateLearner} but can impute results for ongoing evaluations.
 The \verb{AcqFunctionStochastic*} classes create varying acquisition functions on each worker, promoting different exploration-exploitation balances.
 The \link{AcqOptimizer} classes remain consistent with those used in synchronous MBO.
 }
