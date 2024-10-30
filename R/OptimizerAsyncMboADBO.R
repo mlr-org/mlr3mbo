@@ -2,12 +2,15 @@
 #' @name mlr_optimizers_adbo
 #'
 #' @description
-#' Asynchronous Decentralized Bayesian Optimization (ADBO).
+#' `OptimizerAsyncMboADBO` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
+#' ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses [AcqFunctionStochasticCB] with exponential lambda decay.
 #'
 #' @note
-#' The \eqn{\lambda} parameter of the upper confidence bound acquisition function controls the trade-off between exploration and exploitation.
-#' A large \eqn{\lambda} value leads to more exploration, while a small \eqn{\lambda} value leads to more exploitation.
-#' ADBO can use periodic exponential decay to reduce \eqn{\lambda} periodically to the exploitation phase.
+#' The lambda parameter of the upper confidence bound acquisition function controls the trade-off between exploration and exploitation.
+#' A large lambda value leads to more exploration, while a small lambda value leads to more exploitation.
+#' The initial lambda value is drawn from an exponential distribution with rate `1 / lambda`.
+#' ADBO can use periodic exponential decay to reduce lambda periodically with the formula  `lambda * exp(-rate * (t %% period))`.
+#' The surrogate model is always a random forest and die acquisition optimizer is random search with a budget of 10,000 evaluations.
 #'
 #' @section Parameters:
 #' \describe{
