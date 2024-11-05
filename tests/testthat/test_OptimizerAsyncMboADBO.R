@@ -13,7 +13,7 @@ test_that("adbo works in defaults", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1)
   expect_data_table(instance$archive$data, min.rows = 20)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "lambda_0", "lambda"))
+  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
 
   expect_rush_reset(instance$rush)
 })

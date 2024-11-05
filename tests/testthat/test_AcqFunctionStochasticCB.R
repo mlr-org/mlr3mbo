@@ -19,7 +19,7 @@ test_that("AcqFunctionStochasticCB works in defaults", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1)
   expect_data_table(instance$archive$data, min.rows = 10)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "lambda_0", "lambda"))
+  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
 
   expect_rush_reset(instance$rush)
 })
@@ -45,8 +45,8 @@ test_that("AcqFunctionStochasticCB works with uniform sampling", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1)
   expect_data_table(instance$archive$data, min.rows = 10)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "lambda_0", "lambda"))
-  expect_numeric(instance$archive$data$lambda, lower = 1, upper = 3)
+  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
+  expect_numeric(instance$archive$data$acq_lambda, lower = 1, upper = 3)
 
   expect_rush_reset(instance$rush)
 })
@@ -72,8 +72,8 @@ test_that("AcqFunctionStochasticCB works with exponential sampling", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1)
   expect_data_table(instance$archive$data, min.rows = 10)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "lambda_0", "lambda"))
-  expect_numeric(unique(instance$archive$data$lambda), len = 3)
+  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
+  expect_numeric(unique(instance$archive$data$acq_lambda), len = 3)
 
   expect_rush_reset(instance$rush)
 })
@@ -100,9 +100,9 @@ test_that("AcqFunctionStochasticCB works with lambda decay", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1)
   expect_data_table(instance$archive$data, min.rows = 10)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "lambda_0", "lambda"))
+  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
 
-  expect_numeric(-instance$archive$data$lambda, sorted = TRUE)
+  expect_numeric(-instance$archive$data$acq_lambda, sorted = TRUE)
 
   expect_rush_reset(instance$rush)
 })
@@ -128,9 +128,9 @@ test_that("AcqFunctionStochasticCB works with periodic lambda decay", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1)
   expect_data_table(instance$archive$data, min.rows = 10)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "lambda_0", "lambda"))
+  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
 
-  expect_numeric(unique(instance$archive$data$lambda), len = 3)
+  expect_numeric(unique(instance$archive$data$acq_lambda), len = 3)
 
   expect_rush_reset(instance$rush)
 })

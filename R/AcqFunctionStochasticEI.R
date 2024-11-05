@@ -103,7 +103,7 @@ AcqFunctionStochasticEI = R6Class("AcqFunctionStochasticEI",
       d_norm = d / se
       ei = d * pnorm(d_norm) + se * dnorm(d_norm)
       ei = ifelse(se < 1e-20, 0, ei)
-      data.table(acq_ei = ei, epsilon = epsilon, epsilon_0 = private$.epsilon_0)
+      data.table(acq_ei = ei, acq_epsilon = epsilon, acq_epsilon_0 = private$.epsilon_0)
     }
   )
 )

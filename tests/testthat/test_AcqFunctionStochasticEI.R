@@ -19,8 +19,8 @@ test_that("AcqFunctionStochasticEI works in defaults", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1)
   expect_data_table(instance$archive$data, min.rows = 10)
-  expect_names(names(instance$archive$data), must.include = c(".already_evaluated", "acq_ei", "epsilon_0", "epsilon"))
-  expect_numeric(-instance$archive$data$epsilon, sorted = TRUE)
+  expect_names(names(instance$archive$data), must.include = c(".already_evaluated", "acq_ei", "acq_epsilon_0", "acq_epsilon"))
+  expect_numeric(-instance$archive$data$acq_epsilon, sorted = TRUE)
 
   expect_rush_reset(instance$rush)
 })
@@ -46,7 +46,7 @@ test_that("AcqFunctionStochasticEI works with multiple workers", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1)
   expect_data_table(instance$archive$data, min.rows = 10)
-  expect_names(names(instance$archive$data), must.include = c(".already_evaluated", "acq_ei", "epsilon_0", "epsilon"))
+  expect_names(names(instance$archive$data), must.include = c(".already_evaluated", "acq_ei", "acq_epsilon_0", "acq_epsilon"))
 
   expect_rush_reset(instance$rush)
 })
@@ -73,8 +73,8 @@ test_that("AcqFunctionStochasticEI works with periodic epsilon decay", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1)
   expect_data_table(instance$archive$data, min.rows = 10)
-  expect_names(names(instance$archive$data), must.include = c(".already_evaluated", "acq_ei", "epsilon_0", "epsilon"))
-  expect_numeric(unique(instance$archive$data$epsilon), len = 3)
+  expect_names(names(instance$archive$data), must.include = c(".already_evaluated", "acq_ei", "acq_epsilon_0", "acq_epsilon"))
+  expect_numeric(unique(instance$archive$data$acq_epsilon), len = 3)
 
   expect_rush_reset(instance$rush)
 })

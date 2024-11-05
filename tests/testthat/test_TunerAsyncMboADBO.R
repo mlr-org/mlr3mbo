@@ -22,7 +22,7 @@ test_that("async mbo tuner works", {
 
   expect_data_table(tuner$optimize(instance), nrows = 1)
   expect_data_table(instance$archive$data, min.rows = 10)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "lambda_0", "lambda"))
+  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
 
   expect_rush_reset(instance$rush)
 })

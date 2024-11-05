@@ -135,7 +135,7 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
     .fun = function(xdt, lambda) {
       p = self$surrogate$predict(xdt)
       cb = p$mean - self$surrogate_max_to_min * lambda * p$se
-      data.table(acq_cb = cb, lambda = lambda, lambda_0 = private$.lambda_0)
+      data.table(acq_cb = cb,  acq_lambda = lambda, acq_lambda_0 = private$.lambda_0)
     }
   )
 )
