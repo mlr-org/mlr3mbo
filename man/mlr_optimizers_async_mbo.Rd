@@ -94,7 +94,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
   acq_optimizer = NULL,
   param_set = NULL,
   param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
-  properties = c("dependencies", "single-crit"),
+  properties = c("dependencies", "single-crit", "async"),
   packages = c("mlr3mbo", "rush"),
   label = "Asynchronous Model Based Optimization",
   man = "mlr3mbo::OptimizerAsyncMbo"

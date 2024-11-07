@@ -18,3 +18,30 @@ test_that("async optimizer works in defaults", {
   expect_rush_reset(instance$rush)
 })
 
+test_that("async optimizer works with evaluations in archive", {
+  skip_on_cran()
+  skip_if_not_installed("rush")
+  flush_redis()
+
+  rush::rush_plan(n_workers = 2)
+  instance = oi_async(
+    objective = OBJ_2D,
+    search_space = PS_2D,
+    terminator = trm("evals", n_evals = 10),
+  )
+
+  optimizer = opt("async_random_search")
+  optimizer$optimize(instance)
+
+
+  instance$terminator$param_set$values$n_evals = 30
+
+  optimizer = opt("async_mbo")
+  optimizer$optimize(instance)
+
+  instance$archive
+  expect_data_table(instance$archive$data[is.na(get("acq_cb"))], min.rows = 10)
+  expect_data_table(instance$archive$data[!is.na(get("acq_cb"))], min.rows = 20)
+
+  expect_rush_reset(instance$rush)
+})

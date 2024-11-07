@@ -102,7 +102,10 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       pv = self$param_set$values
 
       # initial design
-      design = if (is.null(pv$initial_design)) {
+      design = if (inst$archive$n_evals) {
+        lg$debug("Using archive with %s evaluations as initial design", inst$archive$n_evals)
+        NULL
+      } else if (is.null(pv$initial_design)) {
         # generate initial design
         generate_design = switch(pv$design_function,
           "random" = generate_design_random,
