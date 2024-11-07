@@ -2,7 +2,7 @@
 #' @name mlr_tuners_adbo
 #'
 #' @description
-#' `TunerAsyncMboADBO` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
+#' `TunerADBO` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
 #' ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses [AcqFunctionStochasticCB] with exponential lambda decay.
 #'
 #' @note
@@ -42,14 +42,14 @@
 #' * `r format_bib("egele_2023")`
 #'
 #' @export
-TunerAsyncMboADBO = R6Class("TunerAsyncMboADBO",
+TunerADBO = R6Class("TunerADBO",
   inherit = mlr3tuning::TunerAsyncFromOptimizerAsync,
   public = list(
 
    #' @description
    #' Creates a new instance of this [R6][R6::R6Class] class.
    initialize = function() {
-    optimizer = OptimizerAsyncMboADBO$new()
+    optimizer = OptimizerADBO$new()
 
      super$initialize(
        optimizer = optimizer,
@@ -60,4 +60,4 @@ TunerAsyncMboADBO = R6Class("TunerAsyncMboADBO",
 )
 
 #' @include aaa.R
-tuners[["adbo"]] = TunerAsyncMboADBO
+tuners[["adbo"]] = TunerADBO

@@ -66,6 +66,8 @@ Suggests:
     rush,
     stringi,
     testthat (>= 3.0.0)
+Remotes:
+    mlr-org/bbotk
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
@@ -92,7 +94,7 @@ Collate:
     'AcqOptimizer.R'
     'aaa.R'
     'OptimizerAsyncMbo.R'
-    'OptimizerAsyncMboADBO.R'
+    'OptimizerADBO.R'
     'OptimizerMbo.R'
     'mlr_result_assigners.R'
     'ResultAssigner.R'
@@ -103,7 +105,7 @@ Collate:
     'SurrogateLearnerAsync.R'
     'SurrogateLearnerCollection.R'
     'TunerAsyncMbo.R'
-    'TunerAsyncMboADBO.R'
+    'TunerADBO.R'
     'TunerMbo.R'
     'mlr_loop_functions.R'
     'bayesopt_ego.R'

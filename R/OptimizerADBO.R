@@ -2,7 +2,7 @@
 #' @name mlr_optimizers_adbo
 #'
 #' @description
-#' `OptimizerAsyncMboADBO` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
+#' `OptimizerADBO` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
 #' ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses [AcqFunctionStochasticCB] with exponential lambda decay.
 #'
 #' @note
@@ -41,7 +41,7 @@
 #' * `r format_bib("egele_2023")`
 #'
 #' @export
-OptimizerAsyncMboADBO = R6Class("OptimizerAsyncMboADBO",
+OptimizerADBO = R6Class("OptimizerADBO",
   inherit = OptimizerAsyncMbo,
 
   public = list(
@@ -59,7 +59,7 @@ OptimizerAsyncMboADBO = R6Class("OptimizerAsyncMboADBO",
         id = "adbo",
         param_set = param_set,
         label = "Asynchronous Decentralized Bayesian Optimization",
-        man = "mlr3mbo::OptimizerAsyncMboADBO")
+        man = "mlr3mbo::OptimizerADBO")
 
       self$param_set$set_values(
         lambda = 1.96,
@@ -90,4 +90,4 @@ OptimizerAsyncMboADBO = R6Class("OptimizerAsyncMboADBO",
 )
 
 #' @include aaa.R
-optimizers[["adbo"]] = OptimizerAsyncMboADBO
+optimizers[["adbo"]] = OptimizerADBO
