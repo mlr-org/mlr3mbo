@@ -34,7 +34,7 @@ test_that("async optimizer works with evaluations in archive", {
   optimizer$optimize(instance)
 
 
-  instance$terminator$param_set$values$n_evals = 30
+  instance$terminator$param_set$values$n_evals = 40
 
   optimizer = opt("async_mbo")
   optimizer$optimize(instance)
