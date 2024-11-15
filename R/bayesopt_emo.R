@@ -15,7 +15,7 @@
 #'   The [bbotk::OptimInstanceBatchMultiCrit] to be optimized.
 #' @param init_design_size (`NULL` | `integer(1)`)\cr
 #'   Size of the initial design.
-#'   If `NULL` and the [bbotk::Archive] contains no evaluations, \code{4 * d} is used with \code{d} being the
+#'   If `NULL` and the [bbotk::ArchiveBatch] contains no evaluations, \code{4 * d} is used with \code{d} being the
 #'   dimensionality of the search space.
 #'   Points are generated via a Sobol sequence.
 #' @param surrogate ([SurrogateLearnerCollection])\cr
@@ -34,7 +34,7 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::Archive] of the [bbotk::OptimInstanceBatchMultiCrit].
+#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.

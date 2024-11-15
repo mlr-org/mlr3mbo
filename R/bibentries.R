@@ -111,7 +111,7 @@ bibentries = c(
     title       = "A Multicriteria Generalization of Bayesian Global Optimization",
     author      = "Emmerich, Michael and Yang, Kaifeng and Deutz, Andr{\\'e} and Wang, Hao and Fonseca, Carlos M.",
     editor      = "Pardalos, Panos M. and Zhigljavsky, Anatoly and {\\v{Z}}ilinskas, Julius",
-    bookTitle   = "Advances in Stochastic and Deterministic Global Optimization",
+    booktitle   = "Advances in Stochastic and Deterministic Global Optimization",
     year        = "2016",
     publisher   = "Springer International Publishing",
     address     = "Cham",
@@ -127,11 +127,11 @@ bibentries = c(
     pages     = "90--103"
   ),
 
-  egele_2023 = bibentry("article",
-    title    = "Asynchronous Decentralized Bayesian Optimization for Large Scale Hyperparameter Optimization",
-    author   = "Romain Egele and Isabelle Guyon and Venkatram Vishwanath and Prasanna Balaprakash",
-    year     = "2023",
-    journal  = "arXiv",
-    url      = "https://arxiv.org/abs/2207.00479"
+  egele_2023 = bibentry("inproceedings",
+    title     = "Asynchronous Decentralized Bayesian Optimization for Large Scale Hyperparameter Optimization",
+    author    = "Egel{\\'e}, Romain and Guyon, Isabelle and Vishwanath, Venkatram and Balaprakash, Prasanna",
+    booktitle = "2023 IEEE 19th International Conference on e-Science (e-Science)",
+    year      = "2023",
+    pages     = "1--10"
   )
 )

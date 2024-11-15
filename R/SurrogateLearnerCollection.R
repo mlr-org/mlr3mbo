@@ -28,6 +28,11 @@
 #'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 #'   Default is `TRUE`.
 #' }
+#' \item{`impute_method`}{`character(1)`\cr
+#'   Method to impute missing values in the case of updating on an asynchronous [bbotk::ArchiveAsync] with pending evaluations.
+#'   Can be `"mean"` to use mean imputation or `"random"` to sample values uniformly at random between the empirical minimum and maximum.
+#'   Default is `"random"`.
+#' }
 #' }
 #'
 #' @export
@@ -63,6 +68,8 @@
 #'   surrogate$update()
 #'
 #'   surrogate$learner
+#'
+#'   surrogate$learner[["y1"]]$model
 #'
 #'   surrogate$learner[["y2"]]$model
 #' }
@@ -100,9 +107,10 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
         assert_insample_perf = p_lgl(),
         perf_measures = p_uty(custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(learners))),  # FIXME: actually want check_measures
         perf_thresholds = p_uty(custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(learners))),
-        catch_errors = p_lgl()
+        catch_errors = p_lgl(),
+        impute_method = p_fct(c("mean", "random"), default = "random")
       )
-      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE)
+      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE, impute_method = "random")
       ps$add_dep("perf_measures", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_thresholds", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
@@ -256,6 +264,66 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
           }
         ), nm = map_chr(self$param_set$values$perf_measures, "id"))
         self$assert_insample_perf
+      }
+    },
+
+    # Train learner with new data.
+    # Operates on an asynchronous archive and performs imputation as needed.
+    # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
+    .update_async = function() {
+      assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
+      one_to_multiple = length(self$cols_y) == 1L
+
+      xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE]
+      if (self$param_set$values$impute_method == "mean") {
+        walk(self$cols_y, function(col) {
+          mean_y = mean(xydt[[col]], na.rm = TRUE)
+          xydt[c("queued", "running"), (col) := mean_y, on = "state"]
+        })
+      } else if (self$param_set$values$impute_method == "random") {
+        walk(self$cols_y, function(col) {
+          min_y = min(xydt[[col]], na.rm = TRUE)
+          max_y = max(xydt[[col]], na.rm = TRUE)
+          xydt[c("queued", "running"), (col) := runif(.N, min = min_y, max = max_y), on = "state"]
+        })
+      }
+      set(xydt, j = "state", value = NULL)
+
+      features = setdiff(names(xydt), self$cols_y)
+      tasks = lapply(self$cols_y, function(col_y) {
+        # if this turns out to be a bottleneck, we can also operate on a single task here
+        task = TaskRegr$new(id = paste0("surrogate_task_", col_y), backend = xydt[, c(features, col_y), with = FALSE], target = col_y)
+        task
+      })
+      if (one_to_multiple) {
+        tasks = replicate(length(self$learner), tasks[[1L]])
+      }
+      pmap(list(learner = self$learner, task = tasks), .f = function(learner, task) {
+        assert_learnable(task, learner = learner)
+        learner$train(task)
+        invisible(NULL)
+      })
+
+      if (one_to_multiple) {
+        names(self$learner) = rep(self$cols_y, length(self$learner))
+      } else {
+        names(self$learner) = self$cols_y
+      }
+
+      if (self$param_set$values$assert_insample_perf) {
+        private$.insample_perf = setNames(pmap_dbl(list(learner = self$learner, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),
+          .f = function(learner, task, perf_measure) {
+            assert_measure(perf_measure, task = task, learner = learner)
+            learner$predict(task)$score(perf_measure, task = task, learner = learner)
+          }
+        ), nm = map_chr(self$param_set$values$perf_measures, "id"))
+        self$assert_insample_perf
+      }
+    },
+
+    .reset = function() {
+      for (learner in self$learner) {
+        learner$reset()
       }
     },
 

@@ -26,6 +26,11 @@
 #'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 #'   Default is `TRUE`.
 #' }
+#' \item{`impute_method`}{`character(1)`\cr
+#'   Method to impute missing values in the case of updating on an asynchronous [bbotk::ArchiveAsync] with pending evaluations.
+#'   Can be `"mean"` to use mean imputation or `"random"` to sample values uniformly at random between the empirical minimum and maximum.
+#'   Default is `"random"`.
+#' }
 #' }
 #'
 #' @export
@@ -87,9 +92,10 @@ SurrogateLearner = R6Class("SurrogateLearner",
         assert_insample_perf = p_lgl(),
         perf_measure = p_uty(custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
         perf_threshold = p_dbl(lower = -Inf, upper = Inf),
-        catch_errors = p_lgl()
+        catch_errors = p_lgl(),
+        impute_method = p_fct(c("mean", "random"), default = "random")
       )
-      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE)
+      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE, impute_method = "random")
       ps$add_dep("perf_measure", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_threshold", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
 
@@ -224,6 +230,36 @@ SurrogateLearner = R6Class("SurrogateLearner",
         private$.insample_perf = self$learner$predict(task)$score(measure, task = task, learner = self$learner)
         self$assert_insample_perf
       }
+    },
+
+    # Train learner with new data.
+    # Operates on an asynchronous archive and performs imputation as needed.
+    # Also calculates the insample performance based on the `perf_measure` hyperparameter if `assert_insample_perf = TRUE`.
+    .update_async = function() {
+      xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE]
+      if (self$param_set$values$impute_method == "mean") {
+        mean_y = mean(xydt[[self$cols_y]], na.rm = TRUE)
+        xydt[c("queued", "running"), (self$cols_y) := mean_y, on = "state"]
+      } else if (self$param_set$values$impute_method == "random") {
+        min_y = min(xydt[[self$cols_y]], na.rm = TRUE)
+        max_y = max(xydt[[self$cols_y]], na.rm = TRUE)
+        xydt[c("queued", "running"), (self$cols_y) := runif(.N, min = min_y, max = max_y), on = "state"]
+      }
+      set(xydt, j = "state", value = NULL)
+
+      task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$cols_y)
+      assert_learnable(task, learner = self$learner)
+      self$learner$train(task)
+
+      if (self$param_set$values$assert_insample_perf) {
+        measure = assert_measure(self$param_set$values$perf_measure %??% mlr_measures$get("regr.rsq"), task = task, learner = self$learner)
+        private$.insample_perf = self$learner$predict(task)$score(measure, task = task, learner = self$learner)
+        self$assert_insample_perf
+      }
+    },
+
+    .reset = function() {
+      self$learner$reset()
     },
 
     deep_clone = function(name, value) {

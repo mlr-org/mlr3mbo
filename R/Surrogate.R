@@ -36,23 +36,46 @@ Surrogate = R6Class("Surrogate",
 
     #' @description
     #' Train learner with new data.
-    #' Subclasses must implement `$private.update()`.
+    #' Subclasses must implement `private.update()` and `private.update_async()`.
     #'
     #' @return `NULL`.
     update = function() {
       if (is.null(self$archive)) stop("Archive must be set during construction or manually prior before calling $update().")
       if (self$param_set$values$catch_errors) {
-        tryCatch(private$.update(),
-          error = function(error_condition) {
-            lg$warn(error_condition$message)
-            stop(set_class(list(message = error_condition$message, call = NULL),
-              classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
-          }
-        )
+        if (self$archive_is_async) {
+          tryCatch(private$.update_async(),
+            error = function(error_condition) {
+              lg$warn(error_condition$message)
+              stop(set_class(list(message = error_condition$message, call = NULL),
+                classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
+            }
+          )
+        } else {
+          tryCatch(private$.update(),
+            error = function(error_condition) {
+              lg$warn(error_condition$message)
+              stop(set_class(list(message = error_condition$message, call = NULL),
+                classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
+            }
+          )
+        }
       } else {
-        private$.update()
+        if (self$archive_is_async) {
+          private$.update_async()
+        } else {
+          private$.update()
+        }
       }
       invisible(NULL)
+    },
+
+    #' @description
+    #' Reset the surrogate model.
+    #' Subclasses must implement `private$.reset()`.
+    #'
+    #' @return `NULL`
+    reset = function() {
+      private$.reset()
     },
 
     #' @description
@@ -103,6 +126,15 @@ Surrogate = R6Class("Surrogate",
       } else {
         private$.archive = assert_archive(rhs, null_ok = TRUE)
         invisible(private$.archive)
+      }
+    },
+
+    #' @template field_archive_surrogate_is_async
+    archive_is_async = function(rhs) {
+      if (missing(rhs)) {
+        inherits(private$.archive, "ArchiveAsync")
+      } else {
+        stop("$archive_is_async is read-only.")
       }
     },
 
@@ -204,6 +236,10 @@ Surrogate = R6Class("Surrogate",
     .param_set = NULL,
 
     .update = function() {
+      stop("Abstract.")
+    },
+
+    .update_async = function() {
       stop("Abstract.")
     },
 

@@ -18,6 +18,11 @@
 #'   In the case of being `NULL`, an epsilon vector is maintained dynamically as
 #'   described in Horn et al. (2015).
 #'
+#' @section Note:
+#' * This acquisition function always also returns its current epsilon values in a list column (`acq_epsilon`).
+#'   This value will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch] of the [AcqOptimizer] and
+#'   therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
+#'
 #' @references
 #' * `r format_bib("ponweiser_2008")`
 #' * `r format_bib("horn_2015")`
@@ -78,7 +83,7 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
 
     #' @field progress (`numeric(1)`)\cr
     #'   Optimization progress (typically, the number of function evaluations left).
-    #'   Note that this requires the [bbotk::OptimInstance] to be terminated via a [bbotk::TerminatorEvals].
+    #'   Note that this requires the [bbotk::OptimInstanceBatch] to be terminated via a [bbotk::TerminatorEvals].
     progress = NULL,
 
     #' @description
@@ -94,7 +99,7 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
 
       constants = ps(
         lambda = p_dbl(lower = 0, default = 1),
-        epsilon = p_dbl(lower = 0, default = NULL, special_vals = list(NULL))  # for NULL, it will be calculated dynamically
+        epsilon = p_dbl(lower = 0, default = NULL, special_vals = list(NULL))  # if NULL, it will be calculated dynamically
       )
       constants$values$lambda = lambda
       constants$values$epsilon = epsilon
@@ -140,6 +145,13 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       } else {
         self$epsilon = self$constants$values$epsilon
       }
+    },
+
+    #' @description
+    #' Reset the acquisition function.
+    #' Resets `epsilon`.
+    reset = function() {
+      self$epsilon = NULL
     }
   ),
 
@@ -163,7 +175,7 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       # allocate memory for adding points to front for HV calculation in C
       front2 = t(rbind(self$ys_front, 0))
       sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$epsilon, self$ref_point)  # note that the negative indicator is returned from C
-      data.table(acq_smsego = sms)
+      data.table(acq_smsego = sms, acq_epsilon = list(self$epsilon))
     }
   )
 )
