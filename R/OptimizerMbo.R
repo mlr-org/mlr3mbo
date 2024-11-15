@@ -106,7 +106,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #'
     #' Even if already initialized, the `surrogate$archive` field will always be overwritten by the [bbotk::ArchiveBatch] of the current [bbotk::OptimInstanceBatch] to be optimized.
     #'
-    #' For more information on default values for `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner`, see `?mbo_defaults`.
+    #' For more information on default values for `loop_function`, `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner`, see `?mbo_defaults`.
     #'
     #' @template param_loop_function
     #' @template param_surrogate

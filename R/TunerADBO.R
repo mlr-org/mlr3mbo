@@ -7,6 +7,8 @@
 #' This is a minimal interface internally passing on to [OptimizerAsyncMbo].
 #' For additional information and documentation see [OptimizerAsyncMbo].
 #'
+#' Currently, only single-objective optimization is supported and `TunerADBO` is considered an experimental feature and API might be subject to changes.
+#'
 #' @section Parameters:
 #' \describe{
 #' \item{`initial_design`}{`data.table::data.table()`\cr

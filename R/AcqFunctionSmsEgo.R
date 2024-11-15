@@ -20,7 +20,7 @@
 #'
 #' @section Note:
 #' * This acquisition function always also returns its current epsilon values in a list column (`acq_epsilon`).
-#'   This value will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch] of the [AcqOptimizer] and
+#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch] of the [AcqOptimizer] and
 #'   therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
 #'
 #' @references
