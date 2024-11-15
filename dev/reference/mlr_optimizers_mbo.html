@@ -186,7 +186,7 @@ If <code>acq_function</code> is <code>NULL</code> and the <code>acq_optimizer$ac
 Otherwise <code>default_acqfunction(instance)</code> is used.
 If <code>acq_optimizer</code> is <code>NULL</code>, <code>default_acqoptimizer(instance)</code> is used.</p>
 <p>Even if already initialized, the <code>surrogate$archive</code> field will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the current <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> to be optimized.</p>
-<p>For more information on default values for <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code> and <code>result_assigner</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p><div class="section">
+<p>For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code> and <code>result_assigner</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/mlr_optimizers_mbo.html">OptimizerMbo</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  loop_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -356,8 +356,8 @@ The optimization result is returned but the complete optimization path is stored
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:18:41.442] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:18:41.443] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:20:51.648] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:20:51.649] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             x  x_domain        y1        y2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;    &lt;list&gt;     &lt;num&gt;     &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1:  1.5279770 &lt;list[1]&gt; 2.3347137 0.2228057</span>

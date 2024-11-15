@@ -137,7 +137,7 @@
 <span></span>
 <span><span class="va">acq_optimizer</span> <span class="op">=</span> <span class="fu"><a href="reference/acqo.html">acqo</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"local_search"</span>, n_initial_points <span class="op">=</span> <span class="fl">10</span>, initial_random_sample_size <span class="op">=</span> <span class="fl">1000</span>, neighbors_per_point <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
-<span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span></span>
+<span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"mbo"</span>,</span>
@@ -148,9 +148,9 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="do">##          x1       x2  x_domain         y</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">##       &lt;num&gt;    &lt;num&gt;    &lt;list&gt;     &lt;num&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## 1: 3.090821 2.299709 &lt;list[2]&gt; 0.4104925</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="do">##          x1       x2  x_domain        y</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">##       &lt;num&gt;    &lt;num&gt;    &lt;list&gt;    &lt;num&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## 1: 3.104516 2.396279 &lt;list[2]&gt; 0.412985</span></span></code></pre></div>
 <p>We can quickly visualize the contours of the objective function (on log scale) as well as the sampling behavior of our BO run (lighter blue colours indicating points that were evaluated in later stages of the optimization process; the first batch is given by the initial design).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
