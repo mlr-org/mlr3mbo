@@ -8,6 +8,8 @@
 \code{TunerAsyncMbo} class that implements Asynchronous Model Based Optimization (AMBO).
 This is a minimal interface internally passing on to \link{OptimizerAsyncMbo}.
 For additional information and documentation see \link{OptimizerAsyncMbo}.
+
+Currently, only single-objective optimization is supported and \code{TunerAsyncMbo} is considered an experimental feature and API might be subject to changes.
 }
 \section{Parameters}{
 
