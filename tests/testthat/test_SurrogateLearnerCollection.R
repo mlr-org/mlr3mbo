@@ -60,11 +60,12 @@ test_that("param_set", {
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
   surrogate = SurrogateLearnerCollection$new(learner = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
   expect_r6(surrogate$param_set, "ParamSet")
-  expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measures", "perf_thresholds", "catch_errors"))
+  expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measures", "perf_thresholds", "catch_errors", "impute_method"))
   expect_equal(surrogate$param_set$class[["assert_insample_perf"]], "ParamLgl")
   expect_equal(surrogate$param_set$class[["perf_measures"]], "ParamUty")
   expect_equal(surrogate$param_set$class[["perf_thresholds"]], "ParamUty")
   expect_equal(surrogate$param_set$class[["catch_errors"]], "ParamLgl")
+  expect_equal(surrogate$param_set$class[["impute_method"]], "ParamFct")
   expect_error({surrogate$param_set = list()}, regexp = "param_set is read-only.")
 })
 

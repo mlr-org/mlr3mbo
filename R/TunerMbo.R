@@ -1,5 +1,6 @@
 #' @title TunerBatch using Model Based Optimization
 #'
+#' @include OptimizerMbo.R
 #' @name mlr_tuners_mbo
 #'
 #' @description
@@ -55,7 +56,7 @@ TunerMbo = R6Class("TunerMbo",
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    #' For more information on default values for `loop_function`, `surrogate`, `acq_function` and `acq_optimizer`, see `?mbo_defaults`.
+    #' For more information on default values for `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`, see `?mbo_defaults`.
     #'
     #' Note that all the parameters below are simply passed to the [OptimizerMbo] and
     #' the respective fields are simply (settable) active bindings to the fields of the [OptimizerMbo].
@@ -67,7 +68,8 @@ TunerMbo = R6Class("TunerMbo",
     #' @template param_args
     #' @template param_result_assigner
     initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_assigner = NULL) {
-      super$initialize(optimizer = OptimizerMbo$new(loop_function = loop_function, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, args = args, result_assigner = result_assigner), man = "mlr3mbo::TunerMbo")
+      optimizer = OptimizerMbo$new(loop_function = loop_function, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, args = args, result_assigner = result_assigner)
+      super$initialize(optimizer = optimizer, man = "mlr3mbo::TunerMbo")
     },
 
     #' @description
@@ -84,6 +86,7 @@ TunerMbo = R6Class("TunerMbo",
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
       catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
+      catn(str_indent("* Result Assigner:", if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]))
     },
 
     #' @description

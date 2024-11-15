@@ -74,6 +74,14 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @description
+    #' Reset the acquisition function.
+    #'
+    #' Can be implemented by subclasses.
+    reset = function() {
+      # FIXME: at some point we may want to make this an AB to a private$.reset
+    },
+
+    #' @description
     #' Evaluates multiple input values on the objective function.
     #'
     #' @param xss (`list()`)\cr

@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Optimizer for [AcqFunction]s which performs the acquisition function optimization.
-#' Wraps an [bbotk::Optimizer] and [bbotk::Terminator].
+#' Wraps an [bbotk::OptimizerBatch] and [bbotk::Terminator].
 #'
 #' @section Parameters:
 #' \describe{
@@ -10,9 +10,9 @@
 #'   Number of candidate points to propose.
 #'   Note that this does not affect how the acquisition function itself is calculated (e.g., setting `n_candidates > 1` will not
 #'   result in computing the q- or multi-Expected Improvement) but rather the top `n_candidates` are selected from the
-#'   [bbotk::Archive] of the acquisition function [bbotk::OptimInstance].
+#'   [bbotk::ArchiveBatch] of the acquisition function [bbotk::OptimInstanceBatch].
 #'   Note that setting `n_candidates > 1` is usually not a sensible idea but it is still supported for experimental reasons.
-#'   Note that in the case of the acquisition function [bbotk::OptimInstance] being multi-criteria, due to using an [AcqFunctionMulti],
+#'   Note that in the case of the acquisition function [bbotk::OptimInstanceBatch] being multi-criteria, due to using an [AcqFunctionMulti],
 #'   selection of the best candidates is performed via non-dominated-sorting.
 #'   Default is `1`.
 #' }
@@ -89,7 +89,7 @@
 AcqOptimizer = R6Class("AcqOptimizer",
   public = list(
 
-    #' @field optimizer ([bbotk::Optimizer]).
+    #' @field optimizer ([bbotk::OptimizerBatch]).
     optimizer = NULL,
 
     #' @field terminator ([bbotk::Terminator]).
@@ -104,7 +104,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
-    #' @param optimizer ([bbotk::Optimizer]).
+    #' @param optimizer ([bbotk::OptimizerBatch]).
     #' @param terminator ([bbotk::Terminator]).
     #' @param acq_function (`NULL` | [AcqFunction]).
     #' @param callbacks (`NULL` | list of [mlr3misc::Callback])
@@ -150,10 +150,10 @@ AcqOptimizer = R6Class("AcqOptimizer",
     optimize = function() {
       is_multi_acq_function = self$acq_function$codomain$length > 1L
 
-      logger = lgr::get_logger("bbotk")
-      old_threshold = logger$threshold
-      logger$set_threshold(self$param_set$values$logging_level)
-      on.exit(logger$set_threshold(old_threshold))
+      lg = lgr::get_logger("bbotk")
+      old_threshold = lg$threshold
+      lg$set_threshold(self$param_set$values$logging_level)
+      on.exit(lg$set_threshold(old_threshold))
 
       if (is_multi_acq_function) {
         instance = OptimInstanceBatchMultiCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, callbacks = self$callbacks)
@@ -215,11 +215,18 @@ AcqOptimizer = R6Class("AcqOptimizer",
       #  setcolorder(xdt, c(instance$archive$cols_x, "x_domain", instance$objective$id))
       #}
       xdt[, -c("timestamp", "batch_nr")]  # drop timestamp and batch_nr information from the candidates
+    },
+
+    #' @description
+    #' Reset the acquisition function optimizer.
+    #'
+    #' Currently not used.
+    reset = function() {
+
     }
   ),
 
   active = list(
-
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
@@ -240,7 +247,6 @@ AcqOptimizer = R6Class("AcqOptimizer",
   ),
 
   private = list(
-
     .param_set = NULL,
 
     deep_clone = function(name, value) {

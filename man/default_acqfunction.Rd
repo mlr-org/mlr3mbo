@@ -7,15 +7,17 @@
 default_acqfunction(instance)
 }
 \arguments{
-\item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance}).}
+\item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance}).
+An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 }
 \value{
 \link{AcqFunction}
 }
 \description{
 Chooses a default acquisition function, i.e. the criterion used to propose future points.
-For single-objective optimization, defaults to \link{mlr_acqfunctions_ei}.
-For multi-objective optimization, defaults to \link{mlr_acqfunctions_smsego}.
+For synchronous single-objective optimization, defaults to \link{mlr_acqfunctions_ei}.
+For synchronous multi-objective optimization, defaults to \link{mlr_acqfunctions_smsego}.
+For asynchronous single-objective optimization, defaults to \link{mlr_acqfunctions_stochastic_cb}.
 }
 \seealso{
 Other mbo_defaults: 

@@ -68,7 +68,7 @@ Assigns the result, i.e., the final point(s) to the instance.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit})\cr
+\item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} |\link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} | \link[bbotk:OptimInstanceAsyncMultiCrit]{bbotk::OptimInstanceAsyncMultiCrit})\cr
 The \link[bbotk:OptimInstance]{bbotk::OptimInstance} the final result should be assigned to.}
 }
 \if{html}{\out{</div>}}

@@ -7,7 +7,7 @@
 #' Result assigner that chooses the final point(s) based on a surrogate mean prediction of all evaluated points in the [bbotk::Archive].
 #' This is especially useful in the case of noisy objective functions.
 #'
-#' In the case of operating on an [bbotk::OptimInstanceBatchMultiCrit] the [SurrogateLearnerCollection] must use as many learners as there are objective functions.
+#' In the case of operating on an [bbotk::OptimInstanceBatchMultiCrit] or [bbotk::OptimInstanceAsyncMultiCrit] the [SurrogateLearnerCollection] must use as many learners as there are objective functions.
 #'
 #' @family Result Assigner
 #' @export
@@ -32,15 +32,15 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
     #' Assigns the result, i.e., the final point(s) to the instance.
     #' If `$surrogate` is `NULL`, `default_surrogate(instance)` is used and also assigned to `$surrogate`.
     #'
-    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit])\cr
+    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit] |[bbotk::OptimInstanceAsyncSingleCrit] | [bbotk::OptimInstanceAsyncMultiCrit])\cr
     #'   The [bbotk::OptimInstance] the final result should be assigned to.
     assign_result = function(instance) {
       if (is.null(self$surrogate)) {
         self$surrogate = default_surrogate(instance)
       }
-      if (inherits(instance, "OptimInstanceBatchSingleCrit")) {
+      if (inherits(instance, c("OptimInstanceBatchSingleCrit", "OptimInstanceAsyncSingleCrit"))) {
         assert_r6(self$surrogate, classes = "SurrogateLearner")
-      } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
+      } else if (inherits(instance, c("OptimInstanceBatchMultiCrit", "OptimInstanceAsyncMultiCrit"))) {
         assert_r6(self$surrogate, classes = "SurrogateLearnerCollection")
         if (self$surrogate$n_learner != instance$objective$ydim) {
           stopf("Surrogate used within the result assigner uses %i learners but the optimization instance has %i objective functions", self$surrogate$n_learner, instance$objective$ydim)
@@ -60,16 +60,18 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
       archive_tmp = archive$clone(deep = TRUE)
       archive_tmp$data[, self$surrogate$cols_y := means]
       xydt = archive_tmp$best()
-      extra = xydt[, !c(archive_tmp$cols_x, archive_tmp$cols_y), with = FALSE]
-      best = xydt[, archive_tmp$cols_x, with = FALSE]
+      cols_x = archive_tmp$cols_x
+      cols_y = archive_tmp$cols_y
+      best = xydt[, cols_x, with = FALSE]
+      extra = xydt[, !c(cols_x, cols_y), with = FALSE]
 
       # ys are still the ones originally evaluated
-      best_y = if (inherits(instance, "OptimInstanceBatchSingleCrit")) {
-        unlist(archive$data[best, on = archive$cols_x][, archive$cols_y, with = FALSE])
-      } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
-        archive$data[best, on = archive$cols_x][, archive$cols_y, with = FALSE]
+      best_y = if (inherits(instance, c("OptimInstanceBatchSingleCrit", "OptimInstanceAsyncSingleCrit"))) {
+        unlist(archive$data[best, on = cols_x][, cols_y, with = FALSE])
+      } else if (inherits(instance, c("OptimInstanceBatchMultiCrit", "OptimInstanceAsyncMultiCrit"))) {
+        archive$data[best, on = cols_x][, cols_y, with = FALSE]
       }
-      instance$assign_result(xdt = best, best_y, extra = extra)
+      instance$assign_result(xdt = best, y = best_y, extra = extra)
     }
   ),
 

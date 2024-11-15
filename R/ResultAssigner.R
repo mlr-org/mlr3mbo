@@ -28,7 +28,7 @@ ResultAssigner = R6Class("ResultAssigner",
     #' @description
     #' Assigns the result, i.e., the final point(s) to the instance.
     #'
-    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit])\cr
+    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit] |[bbotk::OptimInstanceAsyncSingleCrit] | [bbotk::OptimInstanceAsyncMultiCrit])\cr
     #'   The [bbotk::OptimInstance] the final result should be assigned to.
     assign_result = function(instance) {
       stop("Abstract.")

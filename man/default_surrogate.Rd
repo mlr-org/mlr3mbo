@@ -4,7 +4,12 @@
 \alias{default_surrogate}
 \title{Default Surrogate}
 \usage{
-default_surrogate(instance, learner = NULL, n_learner = NULL)
+default_surrogate(
+  instance,
+  learner = NULL,
+  n_learner = NULL,
+  force_random_forest = FALSE
+)
 }
 \arguments{
 \item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance})\cr
@@ -14,8 +19,11 @@ An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 If specified, this learner will be used instead of the defaults described above.}
 
 \item{n_learner}{(\code{NULL} | \code{integer(1)}).
-Number of learners to be considered in the construction of the \link{SurrogateLearner} or \link{SurrogateLearnerCollection}.
+Number of learners to be considered in the construction of the \link{Surrogate}.
 If not specified will be based on the number of objectives as stated by the instance.}
+
+\item{force_random_forest}{(\code{logical(1)}).
+If \code{TRUE}, a random forest is constructed even if the parameter space is numeric-only.}
 }
 \value{
 \link{Surrogate}
@@ -44,11 +52,8 @@ Out of range imputation makes sense for tree-based methods and is usually hard t
 In the case of dependencies, the following learner is used as a fallback:
 \code{lrn("regr.featureless")}.
 
-If the instance is of class \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} the learner is wrapped as a
-\link{SurrogateLearner}.
-
-If the instance is of class \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} multiple deep clones of the learner are
-wrapped as a \link{SurrogateLearnerCollection}.
+If \code{n_learner} is \code{1}, the learner is wrapped as a \link{SurrogateLearner}.
+Otherwise, if \code{n_learner} is larger than \code{1}, multiple deep clones of the learner are wrapped as a \link{SurrogateLearnerCollection}.
 }
 \references{
 \itemize{

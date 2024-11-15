@@ -23,6 +23,15 @@ described in Horn et al. (2015).
 }
 }
 
+\section{Note}{
+
+\itemize{
+\item This acquisition function always also returns its current epsilon values in a list column (\code{acq_epsilon}).
+This value will be logged into the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} of the \link{AcqOptimizer} and
+therefore also in the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that is to be optimized.
+}
+}
+
 \examples{
 if (requireNamespace("mlr3learners") &
     requireNamespace("DiceKriging") &
@@ -80,7 +89,9 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_multi}},
 \code{\link{mlr_acqfunctions_pi}},
-\code{\link{mlr_acqfunctions_sd}}
+\code{\link{mlr_acqfunctions_sd}},
+\code{\link{mlr_acqfunctions_stochastic_cb}},
+\code{\link{mlr_acqfunctions_stochastic_ei}}
 }
 \concept{Acquisition Function}
 \section{Super classes}{
@@ -102,7 +113,7 @@ Epsilon used for the additive epsilon dominance.}
 
 \item{\code{progress}}{(\code{numeric(1)})\cr
 Optimization progress (typically, the number of function evaluations left).
-Note that this requires the \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be terminated via a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.}
+Note that this requires the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} to be terminated via a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -111,6 +122,7 @@ Note that this requires the \link[bbotk:OptimInstance]{bbotk::OptimInstance} to 
 \itemize{
 \item \href{#method-AcqFunctionSmsEgo-new}{\code{AcqFunctionSmsEgo$new()}}
 \item \href{#method-AcqFunctionSmsEgo-update}{\code{AcqFunctionSmsEgo$update()}}
+\item \href{#method-AcqFunctionSmsEgo-reset}{\code{AcqFunctionSmsEgo$reset()}}
 \item \href{#method-AcqFunctionSmsEgo-clone}{\code{AcqFunctionSmsEgo$clone()}}
 }
 }
@@ -154,6 +166,17 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 Update the acquisition function and set \code{ys_front}, \code{ref_point} and \code{epsilon}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionSmsEgo$update()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionSmsEgo-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionSmsEgo-reset}{}}}
+\subsection{Method \code{reset()}}{
+Reset the acquisition function.
+Resets \code{epsilon}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionSmsEgo$reset()}\if{html}{\out{</div>}}
 }
 
 }

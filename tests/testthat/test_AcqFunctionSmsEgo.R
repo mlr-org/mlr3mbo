@@ -25,7 +25,8 @@ test_that("AcqFunctionSmsEgo works", {
   acqf$progress = 1
   acqf$update()
   res = acqf$eval_dt(xdt)
-  expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
-  expect_named(res, acqf$id)
+  expect_data_table(res, ncols = 2L, nrows = 5L, any.missing = FALSE)
+  expect_named(res)
+  expect_setequal(colnames(res), c(acqf$id, "acq_epsilon"))
 })
 

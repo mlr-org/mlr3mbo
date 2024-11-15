@@ -32,7 +32,7 @@ The \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}
 
 \item{init_design_size}{(\code{NULL} | \code{integer(1)})\cr
 Size of the initial design.
-If \code{NULL} and the \link[bbotk:Archive]{bbotk::Archive} contains no evaluations, \code{4 * d} is used with \code{d} being the
+If \code{NULL} and the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} contains no evaluations, \code{4 * d} is used with \code{d} being the
 dimensionality of the search space.
 Points are generated via a Sobol sequence.}
 
@@ -72,9 +72,9 @@ these scalarized values and optimizing the acquisition function.
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
-\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
+\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
 \item The scalarizations of the objective function values are stored as the \code{y_scal} column in the
-\link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
+\link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
 \item To make use of parallel evaluations in the case of `q > 1, the objective
 function of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} must be implemented accordingly.
 }

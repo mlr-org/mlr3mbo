@@ -31,6 +31,8 @@ default_loop_function = function(instance) {
     bayesopt_ego
   } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
     bayesopt_smsego
+  } else {
+    stopf("There are no loop functions for %s.", class(instance)[1L])
   }
 }
 
@@ -127,11 +129,8 @@ default_rf = function(noisy = FALSE) {
 #' In the case of dependencies, the following learner is used as a fallback:
 #' \code{lrn("regr.featureless")}.
 #'
-#' If the instance is of class [bbotk::OptimInstanceBatchSingleCrit] the learner is wrapped as a
-#' [SurrogateLearner].
-#'
-#' If the instance is of class [bbotk::OptimInstanceBatchMultiCrit] multiple deep clones of the learner are
-#' wrapped as a [SurrogateLearnerCollection].
+#' If `n_learner` is `1`, the learner is wrapped as a [SurrogateLearner].
+#' Otherwise, if `n_learner` is larger than `1`, multiple deep clones of the learner are wrapped as a [SurrogateLearnerCollection].
 #'
 #' @references
 #' * `r format_bib("ding_2010")`
@@ -141,19 +140,21 @@ default_rf = function(noisy = FALSE) {
 #' @param learner (`NULL` | [mlr3::Learner]).
 #'   If specified, this learner will be used instead of the defaults described above.
 #' @param n_learner (`NULL` | `integer(1)`).
-#'  Number of learners to be considered in the construction of the [SurrogateLearner] or [SurrogateLearnerCollection].
+#'  Number of learners to be considered in the construction of the [Surrogate].
 #'  If not specified will be based on the number of objectives as stated by the instance.
+#' @param force_random_forest (`logical(1)`).
+#'  If `TRUE`, a random forest is constructed even if the parameter space is numeric-only.
 #' @return [Surrogate]
 #' @family mbo_defaults
 #' @export
-default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
-  assert_multi_class(instance, c("OptimInstance", "OptimInstanceAsync"))
+default_surrogate = function(instance, learner = NULL, n_learner = NULL, force_random_forest = FALSE) {
+  assert_multi_class(instance, c("OptimInstance", "OptimInstanceBatch", "OptimInstanceAsync"))
   assert_r6(learner, "Learner", null.ok = TRUE)
   assert_int(n_learner, lower = 1L, null.ok = TRUE)
   noisy = "noisy" %in% instance$objective$properties
 
   if (is.null(learner)) {
-    is_mixed_space = !all(instance$search_space$class %in% c("ParamDbl", "ParamInt"))
+    is_mixed_space = !all(instance$search_space$class %in% c("ParamDbl", "ParamInt")) || force_random_forest
     has_deps = nrow(instance$search_space$deps) > 0L
     learner = if (!is_mixed_space) {
       default_gp(noisy)
@@ -190,7 +191,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
   if (is.null(n_learner)) n_learner = length(instance$archive$cols_y)
   if (n_learner == 1L) {
     SurrogateLearner$new(learner)
-  } else  {
+  } else {
     learners = replicate(n_learner, learner$clone(deep = TRUE), simplify = FALSE)
     SurrogateLearnerCollection$new(learners)
   }
@@ -200,10 +201,12 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL) {
 #'
 #' @description
 #' Chooses a default acquisition function, i.e. the criterion used to propose future points.
-#' For single-objective optimization, defaults to [mlr_acqfunctions_ei].
-#' For multi-objective optimization, defaults to [mlr_acqfunctions_smsego].
+#' For synchronous single-objective optimization, defaults to [mlr_acqfunctions_ei].
+#' For synchronous multi-objective optimization, defaults to [mlr_acqfunctions_smsego].
+#' For asynchronous single-objective optimization, defaults to [mlr_acqfunctions_stochastic_cb].
 #'
 #' @param instance ([bbotk::OptimInstance]).
+#'   An object that inherits from [bbotk::OptimInstance].
 #' @return [AcqFunction]
 #' @family mbo_defaults
 #' @export
@@ -211,8 +214,12 @@ default_acqfunction = function(instance) {
   assert_r6(instance, classes = "OptimInstance")
   if (inherits(instance, "OptimInstanceBatchSingleCrit")) {
     AcqFunctionEI$new()
+  } else if (inherits(instance, "OptimInstanceAsyncSingleCrit")) {
+    AcqFunctionStochasticCB$new()
   } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
     AcqFunctionSmsEgo$new()
+  } else if (inherits(instance, "OptimInstanceAsyncMultiCrit")) {
+    stopf("Currently, there is no default acquisition function for %s.", class(instance)[1L])
   }
 }
 

@@ -5,7 +5,7 @@
 \title{Acquisition Function Optimizer}
 \description{
 Optimizer for \link{AcqFunction}s which performs the acquisition function optimization.
-Wraps an \link[bbotk:Optimizer]{bbotk::Optimizer} and \link[bbotk:Terminator]{bbotk::Terminator}.
+Wraps an \link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} and \link[bbotk:Terminator]{bbotk::Terminator}.
 }
 \section{Parameters}{
 
@@ -14,9 +14,9 @@ Wraps an \link[bbotk:Optimizer]{bbotk::Optimizer} and \link[bbotk:Terminator]{bb
 Number of candidate points to propose.
 Note that this does not affect how the acquisition function itself is calculated (e.g., setting \code{n_candidates > 1} will not
 result in computing the q- or multi-Expected Improvement) but rather the top \code{n_candidates} are selected from the
-\link[bbotk:Archive]{bbotk::Archive} of the acquisition function \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+\link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the acquisition function \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
 Note that setting \code{n_candidates > 1} is usually not a sensible idea but it is still supported for experimental reasons.
-Note that in the case of the acquisition function \link[bbotk:OptimInstance]{bbotk::OptimInstance} being multi-criteria, due to using an \link{AcqFunctionMulti},
+Note that in the case of the acquisition function \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} being multi-criteria, due to using an \link{AcqFunctionMulti},
 selection of the best candidates is performed via non-dominated-sorting.
 Default is \code{1}.
 }
@@ -94,7 +94,7 @@ if (requireNamespace("mlr3learners") &
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{optimizer}}{(\link[bbotk:Optimizer]{bbotk::Optimizer}).}
+\item{\code{optimizer}}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch}).}
 
 \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 
@@ -122,6 +122,7 @@ Set of hyperparameters.}
 \item \href{#method-AcqOptimizer-format}{\code{AcqOptimizer$format()}}
 \item \href{#method-AcqOptimizer-print}{\code{AcqOptimizer$print()}}
 \item \href{#method-AcqOptimizer-optimize}{\code{AcqOptimizer$optimize()}}
+\item \href{#method-AcqOptimizer-reset}{\code{AcqOptimizer$reset()}}
 \item \href{#method-AcqOptimizer-clone}{\code{AcqOptimizer$clone()}}
 }
 }
@@ -137,7 +138,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{optimizer}}{(\link[bbotk:Optimizer]{bbotk::Optimizer}).}
+\item{\code{optimizer}}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch}).}
 
 \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 
@@ -186,6 +187,18 @@ Optimize the acquisition function.
 \subsection{Returns}{
 \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqOptimizer-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-reset}{}}}
+\subsection{Method \code{reset()}}{
+Reset the acquisition function optimizer.
+
+Currently not used.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$reset()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizer-clone"></a>}}
