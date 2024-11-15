@@ -104,7 +104,7 @@ This corresponds to the values given by a <a href="https://paradox.mlr-org.com/r
 Set of properties of the optimizer.
 Must be a subset of <code><a href="https://bbotk.mlr-org.com/reference/bbotk_reflections.html" class="external-link">bbotk_reflections$optimizer_properties</a></code>.
 MBO in principle is very flexible and by default we assume that the optimizer has all properties.
-When fully initialized, properties are determined based on the <code>loop_function</code> and <code>surrogate</code>.</p></dd>
+When fully initialized, properties are determined based on the loop, e.g., the <code>loop_function</code>, and <code>surrogate</code>.</p></dd>
 
 
 <dt><code>packages</code></dt>
@@ -132,7 +132,7 @@ Required packages are determined based on the <code>acq_function</code>, <code>s
 </ul></details></p><hr><a id="method-TunerMbo-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.
-For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code> and <code>acq_optimizer</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p>
+For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>, and <code>result_assigner</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p>
 <p>Note that all the parameters below are simply passed to the <a href="mlr_optimizers_mbo.html">OptimizerMbo</a> and
 the respective fields are simply (settable) active bindings to the fields of the <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -265,16 +265,13 @@ Sets the following fields to <code>NULL</code>:
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://mlr3tuning.mlr-org.com/reference/tnr.html" class="external-link">tnr</a></span><span class="op">(</span><span class="st">"mbo"</span><span class="op">)</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:06:52.284] [mlr3] train: BFGS hit on best individual produced Out of Boundary individual.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:06:52.285] [mlr3] train: BFGS hit on best individual produced Out of Boundary individual.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:06:52.285] [mlr3] train: BFGS hit on best individual produced Out of Boundary individual.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              cp learner_param_vals  x_domain classif.acc selected_features</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;num&gt;             &lt;list&gt;    &lt;list&gt;       &lt;num&gt;             &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -3.599781453          &lt;list[2]&gt; &lt;list[1]&gt;   0.8309793          2.333333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -8.204951502          &lt;list[2]&gt; &lt;list[1]&gt;   0.8648776          2.666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -1.297196360          &lt;list[2]&gt; &lt;list[1]&gt;   0.7860640          2.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: -5.902366271          &lt;list[2]&gt; &lt;list[1]&gt;   0.8648776          2.666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: -0.000381697          &lt;list[2]&gt; &lt;list[1]&gt;   0.3989642          0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -0.326016159          &lt;list[2]&gt; &lt;list[1]&gt;   0.3986817          0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -4.931186071          &lt;list[2]&gt; &lt;list[1]&gt;   0.8707156          3.333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -7.233771301          &lt;list[2]&gt; &lt;list[1]&gt;   0.8707156          3.333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: -2.628601252          &lt;list[2]&gt; &lt;list[1]&gt;   0.8370056          2.333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: -0.000381697          &lt;list[2]&gt; &lt;list[1]&gt;   0.3986817          0.000000</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

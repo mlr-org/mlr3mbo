@@ -64,6 +64,14 @@ In the case of being <code>NULL</code>, an epsilon vector is maintained dynamica
 described in Horn et al. (2015).</p></li>
 </ul></div>
     <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+
+
+<ul><li><p>This acquisition function always also returns its current epsilon values in a list column (<code>acq_epsilon</code>).
+This value will be logged into the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> of the <a href="AcqOptimizer.html">AcqOptimizer</a> and
+therefore also in the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> that is to be optimized.</p></li>
+</ul></div>
+    <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
 
 <ul><li><p>Ponweiser, Wolfgang, Wagner, Tobias, Biermann, Dirk, Vincze, Markus (2008).
@@ -87,7 +95,9 @@ In <em>International Conference on Evolutionary Multi-Criterion Optimization</em
 <code><a href="mlr_acqfunctions_mean.html">mlr_acqfunctions_mean</a></code>,
 <code><a href="mlr_acqfunctions_multi.html">mlr_acqfunctions_multi</a></code>,
 <code><a href="mlr_acqfunctions_pi.html">mlr_acqfunctions_pi</a></code>,
-<code><a href="mlr_acqfunctions_sd.html">mlr_acqfunctions_sd</a></code></p></div>
+<code><a href="mlr_acqfunctions_sd.html">mlr_acqfunctions_sd</a></code>,
+<code><a href="mlr_acqfunctions_stochastic_cb.html">mlr_acqfunctions_stochastic_cb</a></code>,
+<code><a href="mlr_acqfunctions_stochastic_ei.html">mlr_acqfunctions_stochastic_ei</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="super-classes">Super classes<a class="anchor" aria-label="anchor" href="#super-classes"></a></h2>
@@ -115,7 +125,7 @@ Epsilon used for the additive epsilon dominance.</p></dd>
 <dt><code>progress</code></dt>
 <dd><p>(<code>numeric(1)</code>)<br>
 Optimization progress (typically, the number of function evaluations left).
-Note that this requires the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> to be terminated via a <a href="https://bbotk.mlr-org.com/reference/mlr_terminators_evals.html" class="external-link">bbotk::TerminatorEvals</a>.</p></dd>
+Note that this requires the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> to be terminated via a <a href="https://bbotk.mlr-org.com/reference/mlr_terminators_evals.html" class="external-link">bbotk::TerminatorEvals</a>.</p></dd>
 
 
 </dl><p></p></div>
@@ -128,6 +138,7 @@ Note that this requires the <a href="https://bbotk.mlr-org.com/reference/OptimIn
 
 <ul><li><p><a href="#method-AcqFunctionSmsEgo-new"><code>AcqFunctionSmsEgo$new()</code></a></p></li>
 <li><p><a href="#method-AcqFunctionSmsEgo-update"><code>AcqFunctionSmsEgo$update()</code></a></p></li>
+<li><p><a href="#method-AcqFunctionSmsEgo-reset"><code>AcqFunctionSmsEgo$reset()</code></a></p></li>
 <li><p><a href="#method-AcqFunctionSmsEgo-clone"><code>AcqFunctionSmsEgo$clone()</code></a></p></li>
 </ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-eval"><code>bbotk::Objective$eval()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></li>
@@ -167,10 +178,19 @@ Note that this requires the <a href="https://bbotk.mlr-org.com/reference/OptimIn
 </div>
 
 
+</div><p></p><hr><a id="method-AcqFunctionSmsEgo-reset"></a><div class="section">
+<h3 id="method-reset-">Method <code>reset()</code><a class="anchor" aria-label="anchor" href="#method-reset-"></a></h3>
+<p>Reset the acquisition function.
+Resets <code>epsilon</code>.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunctionSmsEgo</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-AcqFunctionSmsEgo-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunctionSmsEgo</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -208,7 +228,7 @@ Note that this requires the <a href="https://bbotk.mlr-org.com/reference/OptimIn
 <span class="r-in"><span>    objective <span class="op">=</span> <span class="va">objective</span>,</span></span>
 <span class="r-in"><span>    terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">6</span>, <span class="op">-</span><span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">9</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">6</span>, <span class="op">-</span><span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">9</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="default_gp.html">default_gp</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -219,13 +239,13 @@ Note that this requires the <a href="https://bbotk.mlr-org.com/reference/OptimIn
 <span class="r-in"><span>  <span class="va">acq_function</span><span class="op">$</span><span class="va">surrogate</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">acq_function</span><span class="op">$</span><span class="va">progress</span> <span class="op">=</span> <span class="fl">5</span> <span class="op">-</span> <span class="fl">4</span> <span class="co"># n_evals = 5 and 4 points already evaluated</span></span></span>
 <span class="r-in"><span>  <span class="va">acq_function</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">acq_function</span><span class="op">$</span><span class="fu">eval_dt</span><span class="op">(</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">acq_function</span><span class="op">$</span><span class="fu">eval_dt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    acq_smsego</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:  -581.3330</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  -730.5685</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -1132.3435</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    acq_smsego acq_epsilon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;      &lt;list&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:  -581.3330         0,0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  -730.5685         0,0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -1132.3435         0,0</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

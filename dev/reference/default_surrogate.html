@@ -18,10 +18,8 @@ Characters are always encoded as factors via po("colapply").
 Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
 In the case of dependencies, the following learner is used as a fallback:
 lrn("regr.featureless").
-If the instance is of class bbotk::OptimInstanceBatchSingleCrit the learner is wrapped as a
-SurrogateLearner.
-If the instance is of class bbotk::OptimInstanceBatchMultiCrit multiple deep clones of the learner are
-wrapped as a SurrogateLearnerCollection.'><meta property="og:description" content='This is a helper function that constructs a default Surrogate based on properties of the
+If n_learner is 1, the learner is wrapped as a SurrogateLearner.
+Otherwise, if n_learner is larger than 1, multiple deep clones of the learner are wrapped as a SurrogateLearnerCollection.'><meta property="og:description" content='This is a helper function that constructs a default Surrogate based on properties of the
 bbotk::OptimInstance.
 For numeric-only (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via
 default_gp().
@@ -40,10 +38,8 @@ Characters are always encoded as factors via po("colapply").
 Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
 In the case of dependencies, the following learner is used as a fallback:
 lrn("regr.featureless").
-If the instance is of class bbotk::OptimInstanceBatchSingleCrit the learner is wrapped as a
-SurrogateLearner.
-If the instance is of class bbotk::OptimInstanceBatchMultiCrit multiple deep clones of the learner are
-wrapped as a SurrogateLearnerCollection.'><meta name="robots" content="noindex"></head><body>
+If n_learner is 1, the learner is wrapped as a SurrogateLearner.
+Otherwise, if n_learner is larger than 1, multiple deep clones of the learner are wrapped as a SurrogateLearnerCollection.'><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -107,15 +103,18 @@ Characters are always encoded as factors via <code>po("colapply")</code>.
 Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
 In the case of dependencies, the following learner is used as a fallback:
 <code>lrn("regr.featureless")</code>.</p>
-<p>If the instance is of class <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchSingleCrit.html" class="external-link">bbotk::OptimInstanceBatchSingleCrit</a> the learner is wrapped as a
-<a href="SurrogateLearner.html">SurrogateLearner</a>.</p>
-<p>If the instance is of class <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html" class="external-link">bbotk::OptimInstanceBatchMultiCrit</a> multiple deep clones of the learner are
-wrapped as a <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>.</p>
+<p>If <code>n_learner</code> is <code>1</code>, the learner is wrapped as a <a href="SurrogateLearner.html">SurrogateLearner</a>.
+Otherwise, if <code>n_learner</code> is larger than <code>1</code>, multiple deep clones of the learner are wrapped as a <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">default_surrogate</span><span class="op">(</span><span class="va">instance</span>, learner <span class="op">=</span> <span class="cn">NULL</span>, n_learner <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">default_surrogate</span><span class="op">(</span></span>
+<span>  <span class="va">instance</span>,</span>
+<span>  learner <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n_learner <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  force_random_forest <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -134,8 +133,13 @@ If specified, this learner will be used instead of the defaults described above.
 
 <dt id="arg-n-learner">n_learner<a class="anchor" aria-label="anchor" href="#arg-n-learner"></a></dt>
 <dd><p>(<code>NULL</code> | <code>integer(1)</code>).
-Number of learners to be considered in the construction of the <a href="SurrogateLearner.html">SurrogateLearner</a> or <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>.
+Number of learners to be considered in the construction of the <a href="Surrogate.html">Surrogate</a>.
 If not specified will be based on the number of objectives as stated by the instance.</p></dd>
+
+
+<dt id="arg-force-random-forest">force_random_forest<a class="anchor" aria-label="anchor" href="#arg-force-random-forest"></a></dt>
+<dd><p>(<code>logical(1)</code>).
+If <code>TRUE</code>, a random forest is constructed even if the parameter space is numeric-only.</p></dd>
 
 </dl></div>
     <div class="section level2">

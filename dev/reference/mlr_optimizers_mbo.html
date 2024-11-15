@@ -6,26 +6,30 @@ Expected Improvement and an AcqOptimizer.
 MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built for the objective function.
 By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction, the next candidate is chosen for evaluation.
 Detailed descriptions of different MBO flavors are provided in the documentation of the respective loop_function.
-Termination is handled via a bbotk::Terminator part of the bbotk::OptimInstance to be optimized.
+Termination is handled via a bbotk::Terminator part of the bbotk::OptimInstanceBatch to be optimized.
 Note that in general the Surrogate is updated one final time on all available data after the optimization process has terminated.
 However, in certain scenarios this is not always possible or meaningful, e.g., when using bayesopt_parego() for multi-objective optimization
 which uses a surrogate that relies on a scalarization of the objectives.
 It is therefore recommended to manually inspect the Surrogate after optimization if it is to be used, e.g., for visualization purposes to make
 sure that it has been properly updated on all available data.
-If this final update of the Surrogate could not be performed successfully, a warning will be logged."><meta property="og:description" content="OptimizerMbo class that implements Model Based Optimization (MBO).
+If this final update of the Surrogate could not be performed successfully, a warning will be logged.
+By specifying a ResultAssigner, one can alter how the final result is determined after optimization, e.g.,
+simply based on the evaluations logged in the archive ResultAssignerArchive or based on the Surrogate via ResultAssignerSurrogate."><meta property="og:description" content="OptimizerMbo class that implements Model Based Optimization (MBO).
 The implementation follows a modular layout relying on a loop_function determining the MBO flavor to be used, e.g.,
 bayesopt_ego for sequential single-objective Bayesian Optimization, a Surrogate, an AcqFunction, e.g., mlr_acqfunctions_ei for
 Expected Improvement and an AcqOptimizer.
 MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built for the objective function.
 By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction, the next candidate is chosen for evaluation.
 Detailed descriptions of different MBO flavors are provided in the documentation of the respective loop_function.
-Termination is handled via a bbotk::Terminator part of the bbotk::OptimInstance to be optimized.
+Termination is handled via a bbotk::Terminator part of the bbotk::OptimInstanceBatch to be optimized.
 Note that in general the Surrogate is updated one final time on all available data after the optimization process has terminated.
 However, in certain scenarios this is not always possible or meaningful, e.g., when using bayesopt_parego() for multi-objective optimization
 which uses a surrogate that relies on a scalarization of the objectives.
 It is therefore recommended to manually inspect the Surrogate after optimization if it is to be used, e.g., for visualization purposes to make
 sure that it has been properly updated on all available data.
-If this final update of the Surrogate could not be performed successfully, a warning will be logged."><meta name="robots" content="noindex"></head><body>
+If this final update of the Surrogate could not be performed successfully, a warning will be logged.
+By specifying a ResultAssigner, one can alter how the final result is determined after optimization, e.g.,
+simply based on the evaluations logged in the archive ResultAssignerArchive or based on the Surrogate via ResultAssignerSurrogate."><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -77,13 +81,15 @@ Expected Improvement and an <a href="AcqOptimizer.html">AcqOptimizer</a>.</p>
 <p>MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built for the objective function.
 By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction, the next candidate is chosen for evaluation.</p>
 <p>Detailed descriptions of different MBO flavors are provided in the documentation of the respective <a href="loop_function.html">loop_function</a>.</p>
-<p>Termination is handled via a <a href="https://bbotk.mlr-org.com/reference/Terminator.html" class="external-link">bbotk::Terminator</a> part of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> to be optimized.</p>
+<p>Termination is handled via a <a href="https://bbotk.mlr-org.com/reference/Terminator.html" class="external-link">bbotk::Terminator</a> part of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> to be optimized.</p>
 <p>Note that in general the <a href="Surrogate.html">Surrogate</a> is updated one final time on all available data after the optimization process has terminated.
 However, in certain scenarios this is not always possible or meaningful, e.g., when using <code><a href="mlr_loop_functions_parego.html">bayesopt_parego()</a></code> for multi-objective optimization
 which uses a surrogate that relies on a scalarization of the objectives.
 It is therefore recommended to manually inspect the <a href="Surrogate.html">Surrogate</a> after optimization if it is to be used, e.g., for visualization purposes to make
 sure that it has been properly updated on all available data.
 If this final update of the <a href="Surrogate.html">Surrogate</a> could not be performed successfully, a warning will be logged.</p>
+<p>By specifying a <a href="ResultAssigner.html">ResultAssigner</a>, one can alter how the final result is determined after optimization, e.g.,
+simply based on the evaluations logged in the archive <a href="mlr_result_assigners_archive.html">ResultAssignerArchive</a> or based on the <a href="Surrogate.html">Surrogate</a> via <a href="mlr_result_assigners_surrogate.html">ResultAssignerSurrogate</a>.</p>
     </div>
 
 
@@ -91,9 +97,9 @@ If this final update of the <a href="Surrogate.html">Surrogate</a> could not be 
     <h2 id="archive">Archive<a class="anchor" aria-label="anchor" href="#archive"></a></h2>
 
 
-<p>The <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> holds the following additional columns that are specific to MBO algorithms:</p><ul><li><p><code>[acq_function$id]</code> (<code>numeric(1)</code>)<br>
+<p>The <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> holds the following additional columns that are specific to MBO algorithms:</p><ul><li><p><code>acq_function$id</code> (<code>numeric(1)</code>)<br>
 The value of the acquisition function.</p></li>
-<li><p><code>.already_evaluated</code> (<code>logical(1))</code><br>
+<li><p><code>".already_evaluated"</code> (<code>logical(1))</code><br>
 Whether this point was already evaluated. Depends on the <code>skip_already_evaluated</code> parameter of the <a href="AcqOptimizer.html">AcqOptimizer</a>.</p></li>
 </ul></div>
     <div class="section level2">
@@ -146,7 +152,7 @@ This corresponds to the values given by a <a href="https://paradox.mlr-org.com/r
 Set of properties of the optimizer.
 Must be a subset of <code><a href="https://bbotk.mlr-org.com/reference/bbotk_reflections.html" class="external-link">bbotk_reflections$optimizer_properties</a></code>.
 MBO in principle is very flexible and by default we assume that the optimizer has all properties.
-When fully initialized, properties are determined based on the <code>loop_function</code> and <code>surrogate</code>.</p></dd>
+When fully initialized, properties are determined based on the loop, e.g., the <code>loop_function</code>, and <code>surrogate</code>.</p></dd>
 
 
 <dt><code>packages</code></dt>
@@ -167,20 +173,20 @@ Required packages are determined based on the <code>acq_function</code>, <code>s
 <ul><li><p><a href="#method-OptimizerMbo-new"><code>OptimizerMbo$new()</code></a></p></li>
 <li><p><a href="#method-OptimizerMbo-print"><code>OptimizerMbo$print()</code></a></p></li>
 <li><p><a href="#method-OptimizerMbo-reset"><code>OptimizerMbo$reset()</code></a></p></li>
+<li><p><a href="#method-OptimizerMbo-optimize"><code>OptimizerMbo$optimize()</code></a></p></li>
 <li><p><a href="#method-OptimizerMbo-clone"><code>OptimizerMbo$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Optimizer.html#method-format"><code>bbotk::Optimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href="https://bbotk.mlr-org.com/reference/Optimizer.html#method-help"><code>bbotk::Optimizer$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="OptimizerBatch" data-id="optimize"><a href="https://bbotk.mlr-org.com/reference/OptimizerBatch.html#method-optimize"><code>bbotk::OptimizerBatch$optimize()</code></a></span></li>
 </ul></details></p><hr><a id="method-OptimizerMbo-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p>
 <p>If <code>surrogate</code> is <code>NULL</code> and the <code>acq_function$surrogate</code> field is populated, this <a href="Surrogate.html">Surrogate</a> is used.
 Otherwise, <code>default_surrogate(instance)</code> is used.
-If <code>acq_function</code> is NULL and the <code>acq_optimizer$acq_function</code> field is populated, this <a href="AcqFunction.html">AcqFunction</a> is used (and therefore its <code>$surrogate</code> if  populated; see above).
+If <code>acq_function</code> is <code>NULL</code> and the <code>acq_optimizer$acq_function</code> field is populated, this <a href="AcqFunction.html">AcqFunction</a> is used (and therefore its <code>$surrogate</code> if populated; see above).
 Otherwise <code>default_acqfunction(instance)</code> is used.
-If <code>acq_optimizer</code> is NULL, <code>default_acqoptimizer(instance)</code> is used.</p>
-<p>Even if already initialized, the <code>surrogate$archive</code> field will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the current <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> to be optimized.</p>
-<p>For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code> and <code>acq_optimizer</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p><div class="section">
+If <code>acq_optimizer</code> is <code>NULL</code>, <code>default_acqoptimizer(instance)</code> is used.</p>
+<p>Even if already initialized, the <code>surrogate$archive</code> field will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the current <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> to be optimized.</p>
+<p>For more information on default values for <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code> and <code>result_assigner</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/mlr_optimizers_mbo.html">OptimizerMbo</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  loop_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -250,15 +256,36 @@ Sets the following fields to <code>NULL</code>:
 </div>
 
 
-</div><p></p><hr><a id="method-OptimizerMbo-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
-<p>The objects of this class are cloneable with this method.</p><div class="section">
+</div><p></p><hr><a id="method-OptimizerMbo-optimize"></a><div class="section">
+<h3 id="method-optimize-">Method <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code><a class="anchor" aria-label="anchor" href="#method-optimize-"></a></h3>
+<p>Performs the optimization and writes optimization result into <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a>.
+The optimization result is returned but the complete optimization path is stored in <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a>.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">OptimizerMbo</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">OptimizerMbo</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">inst</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>inst</code></dt>
+<dd><p>(<a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a>).</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<p><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table</a>.</p>
+</div>
+
+</div><p></p><hr><a id="method-OptimizerMbo-clone"></a><div class="section">
+<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+<p>The objects of this class are cloneable with this method.</p><div class="section">
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">OptimizerMbo</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -329,12 +356,12 @@ Sets the following fields to <code>NULL</code>:
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:06:48.781] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:06:48.782] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           x  x_domain       y1         y2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;num&gt;    &lt;list&gt;    &lt;num&gt;      &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 2.120765 &lt;list[1]&gt; 4.497646 0.01458429</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 1.831341 &lt;list[1]&gt; 3.353811 0.02844571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:18:41.442] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:18:41.443] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             x  x_domain        y1        y2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;    &lt;list&gt;     &lt;num&gt;     &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:  1.5279770 &lt;list[1]&gt; 2.3347137 0.2228057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -0.1195738 &lt;list[1]&gt; 0.0142979 4.4925933</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
