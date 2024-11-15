@@ -30,14 +30,17 @@ ResultAssignerArchive = R6Class("ResultAssignerArchive",
     #'   The [bbotk::OptimInstance] the final result should be assigned to.
     assign_result = function(instance) {
       xydt = instance$archive$best()
-      xdt = xydt[, instance$search_space$ids(), with = FALSE]
+      cols_x = instance$archive$cols_x
+      cols_y = instance$archive$cols_y
+      xdt = xydt[, cols_x, with = FALSE]
+      extra = xydt[, !c(cols_x, cols_y), with = FALSE]
       if (inherits(instance, c("OptimInstanceBatchMultiCrit", "OptimInstanceAsyncMultiCrit"))) {
-        ydt = xydt[, instance$archive$cols_y, with = FALSE]
-        instance$assign_result(xdt, ydt, xydt = xydt)
+        ydt = xydt[, cols_y, with = FALSE]
+        instance$assign_result(xdt, ydt, extra = extra)
       }
       else {
-        y = unlist(xydt[, instance$archive$cols_y, with = FALSE])
-        instance$assign_result(xdt, y, xydt = xydt)
+        y = unlist(xydt[, cols_y, with = FALSE])
+        instance$assign_result(xdt = xdt, y = y, extra = extra)
       }
     }
   ),
