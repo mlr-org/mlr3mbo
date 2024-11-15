@@ -174,7 +174,7 @@ If \code{acq_optimizer} is \code{NULL}, \code{default_acqoptimizer(instance)} is
 
 Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the current \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} to be optimized.
 
-For more information on default values for \code{surrogate}, \code{acq_function}, \code{acq_optimizer} and \code{result_assigner}, see \code{?mbo_defaults}.
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer} and \code{result_assigner}, see \code{?mbo_defaults}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
   loop_function = NULL,
