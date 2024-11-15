@@ -6,8 +6,11 @@
 \title{Acquisition Function Stochastic Confidence Bound}
 \description{
 Lower / Upper Confidence Bound with lambda sampling and decay.
-The initial lambda value is drawn from an uniform distribution between \code{min_lambda} and \code{max_lambda} or from an exponential distribution with rate \code{1 / lambda}.
-The lambda value is updated after each evaluation by the formula \code{lambda * exp(-rate * (t \%\% period))}.
+The initial \eqn{\lambda} is drawn from an uniform distribution between \code{min_lambda} and \code{max_lambda} or from an exponential distribution with rate \code{1 / lambda}.
+\eqn{\lambda} is updated after each update by the formula \code{lambda * exp(-rate * (t \%\% period))}, where \code{t} is the number of times the acquisition function has been updated.
+
+While this acquisition function usually would be used within an asynchronous optimizer, e.g., \link{OptimizerAsyncMbo},
+it can in principle also be used in synchronous optimizers, e.g., \link{OptimizerMbo}.
 }
 \section{Dictionary}{
 
@@ -23,16 +26,16 @@ acqf("stochastic_cb")
 
 \itemize{
 \item \code{"lambda"} (\code{numeric(1)})\cr
-Lambda value for sampling from the exponential distribution.
+\eqn{\lambda} value for sampling from the exponential distribution.
 Defaults to \code{1.96}.
 \item \code{"min_lambda"} (\code{numeric(1)})\cr
-Minimum value of lambda for sampling from the uniform distribution.
+Minimum value of \eqn{\lambda}for sampling from the uniform distribution.
 Defaults to \code{0.01}.
 \item \code{"max_lambda"} (\code{numeric(1)})\cr
-Maximum value of lambda for sampling from the uniform distribution.
+Maximum value of \eqn{\lambda} for sampling from the uniform distribution.
 Defaults to \code{10}.
 \item \code{"distribution"} (\code{character(1)})\cr
-Distribution to sample lambda from.
+Distribution to sample \eqn{\lambda} from.
 One of \code{c("uniform", "exponential")}.
 Defaults to \code{uniform}.
 \item \code{"rate"} (\code{numeric(1)})\cr
@@ -40,19 +43,60 @@ Rate of the exponential decay.
 Defaults to \code{0} i.e. no decay.
 \item \code{"period"} (\code{integer(1)})\cr
 Period of the exponential decay.
-Defaults to \code{NULL} i.e. the decay has no period.
+Defaults to \code{NULL}, i.e., the decay has no period.
 }
 }
 
+\section{Note}{
+
+\itemize{
+\item This acquisition function always also returns its current (\code{acq_lambda}) and original (\code{acq_lambda_0}) \eqn{\lambda}.
+These values will be logged into the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} of the \link{AcqOptimizer} and
+therefore also in the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that is to be optimized.
+}
+}
+
+\examples{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+  library(data.table)
+
+  fun = function(xs) {
+    list(y = xs$x ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceBatchSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+
+  learner = default_gp()
+
+  surrogate = srlrn(learner, archive = instance$archive)
+
+  acq_function = acqf("stochastic_cb", surrogate = surrogate, lambda = 3)
+
+  acq_function$surrogate$update()
+  acq_function$update()
+  acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
+}
+}
 \references{
 \itemize{
 \item Snoek, Jasper, Larochelle, Hugo, Adams, P R (2012).
 \dQuote{Practical Bayesian Optimization of Machine Learning Algorithms.}
 In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neural Information Processing Systems}, volume 25, 2951--2959.
-\item Egele R, Guyon I, Vishwanath V, Balaprakash P (2023).
+\item Egelé, Romain, Guyon, Isabelle, Vishwanath, Venkatram, Balaprakash, Prasanna (2023).
 \dQuote{Asynchronous Decentralized Bayesian Optimization for Large Scale Hyperparameter Optimization.}
-\emph{arXiv}.
-\url{https://arxiv.org/abs/2207.00479}.
+In \emph{2023 IEEE 19th International Conference on e-Science (e-Science)}, 1--10.
 }
 }
 \seealso{
@@ -81,6 +125,7 @@ Other Acquisition Function:
 \itemize{
 \item \href{#method-AcqFunctionStochasticCB-new}{\code{AcqFunctionStochasticCB$new()}}
 \item \href{#method-AcqFunctionStochasticCB-update}{\code{AcqFunctionStochasticCB$update()}}
+\item \href{#method-AcqFunctionStochasticCB-reset}{\code{AcqFunctionStochasticCB$reset()}}
 \item \href{#method-AcqFunctionStochasticCB-clone}{\code{AcqFunctionStochasticCB$clone()}}
 }
 }
@@ -128,7 +173,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 \item{\code{rate}}{(\code{numeric(1)}).}
 
-\item{\code{period}}{(\code{integer(1)}).}
+\item{\code{period}}{(\code{NULL} | \code{integer(1)}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -141,6 +186,17 @@ Update the acquisition function.
 Samples and decays lambda.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticCB$update()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionStochasticCB-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionStochasticCB-reset}{}}}
+\subsection{Method \code{reset()}}{
+Reset the acquisition function.
+Resets the private update counter \code{.t} used within the epsilon decay.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticCB$reset()}\if{html}{\out{</div>}}
 }
 
 }

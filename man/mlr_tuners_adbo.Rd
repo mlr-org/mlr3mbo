@@ -3,60 +3,113 @@
 \name{mlr_tuners_adbo}
 \alias{mlr_tuners_adbo}
 \alias{TunerADBO}
-\title{Asynchronous Decentralized Bayesian Optimization}
+\title{TunerAsync using Asynchronous Decentralized Bayesian Optimization}
 \description{
 \code{TunerADBO} class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
 ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses \link{AcqFunctionStochasticCB} with exponential lambda decay.
-}
-\note{
-The lambda parameter of the upper confidence bound acquisition function controls the trade-off between exploration and exploitation.
-A large lambda value leads to more exploration, while a small lambda value leads to more exploitation.
-The initial lambda value is drawn from an exponential distribution with rate \code{1 / lambda}.
-ADBO can use periodic exponential decay to reduce lambda periodically with the formula  \code{lambda * exp(-rate * (t \%\% period))}.
-The surrogate model is always a random forest and die acquisition optimizer is random search with a budget of 10,000 evaluations.
+This is a minimal interface internally passing on to \link{OptimizerAsyncMbo}.
+For additional information and documentation see \link{OptimizerAsyncMbo}.
 }
 \section{Parameters}{
 
 \describe{
-\item{\code{lambda}}{\code{numeric(1)}\cr
-Lambda value for sampling from the exponential distribution.}
-\item{\code{rate}}{\code{numeric(1)}\cr
-Rate of the exponential decay.}
-\item{\code{period}}{\code{integer(1)}\cr
-Period of the exponential decay.}
-\item{\code{initial_design_size}}{\code{integer(1)}\cr
-Size of the initial design.
-Defaults to \code{100}.}
-
 \item{\code{initial_design}}{\code{data.table::data.table()}\cr
 Initial design of the optimization.
-If \code{NULL}, a design of size \code{design_size} is generated with \code{design_function}.}
+If \code{NULL}, a design of size \code{design_size} is generated with the specified \code{design_function}.
+Default is \code{NULL}.}
 \item{\code{design_size}}{\code{integer(1)}\cr
-Size of the initial design.}
+Size of the initial design if it is to be generated.
+Default is \code{100}.}
 \item{\code{design_function}}{\code{character(1)}\cr
-Function to generate the initial design.
-One of \code{c("random", "sobol", "lhs")}.}
+Sampling function to generate the initial design.
+Can be \code{random} \link[paradox:generate_design_random]{paradox::generate_design_random}, \code{lhs} \link[paradox:generate_design_lhs]{paradox::generate_design_lhs}, or \code{sobol} \link[paradox:generate_design_sobol]{paradox::generate_design_sobol}.
+Default is \code{sobol}.}
 \item{\code{n_workers}}{\code{integer(1)}\cr
 Number of parallel workers.
-If \code{NULL}, all rush workers set with \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.}
+If \code{NULL}, all rush workers specified via \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.
+Default is \code{NULL}.}
 }
 }
 
+\examples{
+\donttest{
+if (requireNamespace("rush") &
+    requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+
+  library(mlr3)
+  library(mlr3tuning)
+
+  # single-objective
+  task = tsk("wine")
+  learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
+  resampling = rsmp("cv", folds = 3)
+  measure = msr("classif.acc")
+
+  instance = TuningInstanceAsyncSingleCrit$new(
+    task = task,
+    learner = learner,
+    resampling = resampling,
+    measure = measure,
+    terminator = trm("evals", n_evals = 10))
+
+  rush::rush_plan(n_workers=2)
+
+  tnr("adbo", design_size = 4, n_workers = 2)$optimize(instance)
+}
+}
+}
 \references{
 \itemize{
-\item Egele R, Guyon I, Vishwanath V, Balaprakash P (2023).
+\item Egelé, Romain, Guyon, Isabelle, Vishwanath, Venkatram, Balaprakash, Prasanna (2023).
 \dQuote{Asynchronous Decentralized Bayesian Optimization for Large Scale Hyperparameter Optimization.}
-\emph{arXiv}.
-\url{https://arxiv.org/abs/2207.00479}.
+In \emph{2023 IEEE 19th International Conference on e-Science (e-Science)}, 1--10.
 }
 }
 \section{Super classes}{
 \code{\link[mlr3tuning:Tuner]{mlr3tuning::Tuner}} -> \code{\link[mlr3tuning:TunerAsync]{mlr3tuning::TunerAsync}} -> \code{\link[mlr3tuning:TunerAsyncFromOptimizerAsync]{mlr3tuning::TunerAsyncFromOptimizerAsync}} -> \code{TunerADBO}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+The surrogate.}
+
+\item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+The acquisition function.}
+
+\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+The acquisition function optimizer.}
+
+\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+The result assigner.}
+
+\item{\code{param_classes}}{(\code{character()})\cr
+Supported parameter classes that the optimizer can optimize.
+Determined based on the \code{surrogate} and the \code{acq_optimizer}.
+This corresponds to the values given by a \link[paradox:ParamSet]{paradox::ParamSet}'s
+\verb{$class} field.}
+
+\item{\code{properties}}{(\code{character()})\cr
+Set of properties of the optimizer.
+Must be a subset of \code{\link[bbotk:bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
+MBO in principle is very flexible and by default we assume that the optimizer has all properties.
+When fully initialized, properties are determined based on the loop, e.g., the \code{loop_function}, and \code{surrogate}.}
+
+\item{\code{packages}}{(\code{character()})\cr
+Set of required packages.
+A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.
+Required packages are determined based on the \code{acq_function}, \code{surrogate} and the \code{acq_optimizer}.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-TunerADBO-new}{\code{TunerADBO$new()}}
+\item \href{#method-TunerADBO-print}{\code{TunerADBO$print()}}
+\item \href{#method-TunerADBO-reset}{\code{TunerADBO$reset()}}
 \item \href{#method-TunerADBO-clone}{\code{TunerADBO$clone()}}
 }
 }
@@ -65,7 +118,6 @@ If \code{NULL}, all rush workers set with \code{\link[rush:rush_plan]{rush::rush
 <ul>
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-format'><code>mlr3tuning::Tuner$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-help'><code>mlr3tuning::Tuner$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="print"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-print'><code>mlr3tuning::Tuner$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerAsyncFromOptimizerAsync" data-id="optimize"><a href='../../mlr3tuning/html/TunerAsyncFromOptimizerAsync.html#method-TunerAsyncFromOptimizerAsync-optimize'><code>mlr3tuning::TunerAsyncFromOptimizerAsync$optimize()</code></a></span></li>
 </ul>
 </details>
@@ -77,6 +129,32 @@ If \code{NULL}, all rush workers set with \code{\link[rush:rush_plan]{rush::rush
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TunerADBO$new()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TunerADBO-print"></a>}}
+\if{latex}{\out{\hypertarget{method-TunerADBO-print}{}}}
+\subsection{Method \code{print()}}{
+Print method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TunerADBO$print()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character()}).
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TunerADBO-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-TunerADBO-reset}{}}}
+\subsection{Method \code{reset()}}{
+Reset the tuner.
+Sets the following fields to \code{NULL}:
+\code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{result_assigner}
+Resets parameter values \code{design_size} and \code{design_function} to their defaults.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TunerADBO$reset()}\if{html}{\out{</div>}}
 }
 
 }

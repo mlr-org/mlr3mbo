@@ -102,7 +102,6 @@ Collate:
     'ResultAssignerSurrogate.R'
     'Surrogate.R'
     'SurrogateLearner.R'
-    'SurrogateLearnerAsync.R'
     'SurrogateLearnerCollection.R'
     'TunerADBO.R'
     'TunerAsyncMbo.R'

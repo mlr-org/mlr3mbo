@@ -25,6 +25,9 @@ Id used when printing.}
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
+\item{\code{archive_is_async}}{(`bool(1)``)\cr
+Whether the \link[bbotk:Archive]{bbotk::Archive} is an asynchronous one.}
+
 \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of surrogate models.}
 
@@ -67,6 +70,7 @@ Retrieves the currently active predict type, e.g. \code{"response"}.}
 \itemize{
 \item \href{#method-Surrogate-new}{\code{Surrogate$new()}}
 \item \href{#method-Surrogate-update}{\code{Surrogate$update()}}
+\item \href{#method-Surrogate-reset}{\code{Surrogate$reset()}}
 \item \href{#method-Surrogate-predict}{\code{Surrogate$predict()}}
 \item \href{#method-Surrogate-format}{\code{Surrogate$format()}}
 \item \href{#method-Surrogate-print}{\code{Surrogate$print()}}
@@ -110,13 +114,27 @@ Parameter space description depending on the subclass.}
 \if{latex}{\out{\hypertarget{method-Surrogate-update}{}}}
 \subsection{Method \code{update()}}{
 Train learner with new data.
-Subclasses must implement \verb{$private.update()}.
+Subclasses must implement \code{private.update()} and \code{private.update_async()}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Surrogate$update()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
 \code{NULL}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Surrogate-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-Surrogate-reset}{}}}
+\subsection{Method \code{reset()}}{
+Reset the surrogate model.
+Subclasses must implement \code{private$.reset()}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Surrogate$reset()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

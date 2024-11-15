@@ -7,8 +7,8 @@
 acqo(optimizer, terminator, acq_function = NULL, callbacks = NULL, ...)
 }
 \arguments{
-\item{optimizer}{(\link[bbotk:Optimizer]{bbotk::Optimizer})\cr
-\link[bbotk:Optimizer]{bbotk::Optimizer} that is to be used.}
+\item{optimizer}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch})\cr
+\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} that is to be used.}
 
 \item{terminator}{(\link[bbotk:Terminator]{bbotk::Terminator})\cr
 \link[bbotk:Terminator]{bbotk::Terminator} that is to be used.}

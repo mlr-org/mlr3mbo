@@ -30,6 +30,11 @@ Should errors during updating the surrogate be caught and propagated to the \cod
 the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 Default is \code{TRUE}.
 }
+\item{\code{impute_method}}{\code{character(1)}\cr
+Method to impute missing values in the case of updating on an asynchronous \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} with pending evaluations.
+Can be \code{"mean"} to use mean imputation or \code{"random"} to sample values uniformly at random between the empirical minimum and maximum.
+Default is \code{"random"}.
+}
 }
 }
 
@@ -110,6 +115,7 @@ Retrieves the currently active predict type, e.g. \code{"response"}.}
 <ul>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="format"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-format'><code>mlr3mbo::Surrogate$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="print"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-print'><code>mlr3mbo::Surrogate$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="reset"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-reset'><code>mlr3mbo::Surrogate$reset()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-update'><code>mlr3mbo::Surrogate$update()</code></a></span></li>
 </ul>
 </details>

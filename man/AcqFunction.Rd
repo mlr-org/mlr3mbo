@@ -69,6 +69,7 @@ Set of required packages.}
 \itemize{
 \item \href{#method-AcqFunction-new}{\code{AcqFunction$new()}}
 \item \href{#method-AcqFunction-update}{\code{AcqFunction$update()}}
+\item \href{#method-AcqFunction-reset}{\code{AcqFunction$reset()}}
 \item \href{#method-AcqFunction-eval_many}{\code{AcqFunction$eval_many()}}
 \item \href{#method-AcqFunction-eval_dt}{\code{AcqFunction$eval_dt()}}
 \item \href{#method-AcqFunction-clone}{\code{AcqFunction$clone()}}
@@ -145,6 +146,18 @@ Update the acquisition function.
 Can be implemented by subclasses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$update()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunction-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunction-reset}{}}}
+\subsection{Method \code{reset()}}{
+Reset the acquisition function.
+
+Can be implemented by subclasses.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$reset()}\if{html}{\out{</div>}}
 }
 
 }

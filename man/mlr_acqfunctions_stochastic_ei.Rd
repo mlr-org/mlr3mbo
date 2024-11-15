@@ -6,6 +6,10 @@
 \title{Acquisition Function Stochastic Expected Improvement}
 \description{
 Expected Improvement with epsilon decay.
+\eqn{\epsilon} is updated after each update by the formula \code{epsilon * exp(-rate * (t \%\% period))} where \code{t} is the number of times the acquisition function has been updated.
+
+While this acquisition function usually would be used within an asynchronous optimizer, e.g., \link{OptimizerAsyncMbo},
+it can in principle also be used in synchronous optimizers, e.g., \link{OptimizerMbo}.
 }
 \section{Dictionary}{
 
@@ -29,10 +33,52 @@ Defaults to \code{0.1}.
 Defaults to \code{0.05}.
 \item \code{"period"} (\code{integer(1)})\cr
 Period of the exponential decay.
-Defaults to \code{NULL} i.e. the decay has no period.
+Defaults to \code{NULL}, i.e., the decay has no period.
 }
 }
 
+\section{Note}{
+
+\itemize{
+\item This acquisition function always also returns its current (\code{acq_epsilon}) and original (\code{acq_epsilon_0}) \eqn{\epsilon}.
+These values will be logged into the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} of the \link{AcqOptimizer} and
+therefore also in the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that is to be optimized.
+}
+}
+
+\examples{
+if (requireNamespace("mlr3learners") &
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
+  library(bbotk)
+  library(paradox)
+  library(mlr3learners)
+  library(data.table)
+
+  fun = function(xs) {
+    list(y = xs$x ^ 2)
+  }
+  domain = ps(x = p_dbl(lower = -10, upper = 10))
+  codomain = ps(y = p_dbl(tags = "minimize"))
+  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+  instance = OptimInstanceBatchSingleCrit$new(
+    objective = objective,
+    terminator = trm("evals", n_evals = 5))
+
+  instance$eval_batch(data.table(x = c(-6, -5, 3, 9)))
+
+  learner = default_gp()
+
+  surrogate = srlrn(learner, archive = instance$archive)
+
+  acq_function = acqf("stochastic_ei", surrogate = surrogate)
+
+  acq_function$surrogate$update()
+  acq_function$update()
+  acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
+}
+}
 \references{
 \itemize{
 \item Jones, R. D, Schonlau, Matthias, Welch, J. W (1998).
@@ -75,6 +121,7 @@ In the case of maximization, this already includes the necessary change of sign.
 \itemize{
 \item \href{#method-AcqFunctionStochasticEI-new}{\code{AcqFunctionStochasticEI$new()}}
 \item \href{#method-AcqFunctionStochasticEI-update}{\code{AcqFunctionStochasticEI$update()}}
+\item \href{#method-AcqFunctionStochasticEI-reset}{\code{AcqFunctionStochasticEI$reset()}}
 \item \href{#method-AcqFunctionStochasticEI-clone}{\code{AcqFunctionStochasticEI$clone()}}
 }
 }
@@ -113,7 +160,7 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 \item{\code{rate}}{(\code{numeric(1)}).}
 
-\item{\code{period}}{(\code{integer(1)}).}
+\item{\code{period}}{(\code{NULL} | \code{integer(1)}).}
 }
 \if{html}{\out{</div>}}
 }
@@ -127,6 +174,17 @@ Sets \code{y_best} to the best observed objective function value.
 Decays epsilon.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticEI$update()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionStochasticEI-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionStochasticEI-reset}{}}}
+\subsection{Method \code{reset()}}{
+Reset the acquisition function.
+Resets the private update counter \code{.t} used within the epsilon decay.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticEI$reset()}\if{html}{\out{</div>}}
 }
 
 }
