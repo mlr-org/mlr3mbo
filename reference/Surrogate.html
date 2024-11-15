@@ -9,7 +9,7 @@ A surrogate model is used to model the unknown objective function(s) based on al
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,6 +69,11 @@ Id used when printing.</p></dd>
 
 <dt><code>archive</code></dt>
 <dd><p>(<a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> | <code>NULL</code>)<br><a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.</p></dd>
+
+
+<dt><code>archive_is_async</code></dt>
+<dd><p>(`bool(1)“)<br>
+Whether the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> is an asynchronous one.</p></dd>
 
 
 <dt><code>n_learner</code></dt>
@@ -136,6 +141,7 @@ Retrieves the currently active predict type, e.g. <code>"response"</code>.</p></
 
 <ul><li><p><a href="#method-Surrogate-new"><code>Surrogate$new()</code></a></p></li>
 <li><p><a href="#method-Surrogate-update"><code>Surrogate$update()</code></a></p></li>
+<li><p><a href="#method-Surrogate-reset"><code>Surrogate$reset()</code></a></p></li>
 <li><p><a href="#method-Surrogate-predict"><code>Surrogate$predict()</code></a></p></li>
 <li><p><a href="#method-Surrogate-format"><code>Surrogate$format()</code></a></p></li>
 <li><p><a href="#method-Surrogate-print"><code>Surrogate$print()</code></a></p></li>
@@ -181,7 +187,7 @@ Parameter space description depending on the subclass.</p></dd>
 </div><p></p><hr><a id="method-Surrogate-update"></a><div class="section">
 <h3 id="method-update-">Method <code><a href="https://rdrr.io/r/stats/update.html" class="external-link">update()</a></code><a class="anchor" aria-label="anchor" href="#method-update-"></a></h3>
 <p>Train learner with new data.
-Subclasses must implement <code>$private.update()</code>.</p><div class="section">
+Subclasses must implement <code>private.update()</code> and <code>private.update_async()</code>.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Surrogate</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -191,56 +197,69 @@ Subclasses must implement <code>$private.update()</code>.</p><div class="section
 <p><code>NULL</code>.</p>
 </div>
 
+</div><p></p><hr><a id="method-Surrogate-reset"></a><div class="section">
+<h3 id="method-reset-">Method <code>reset()</code><a class="anchor" aria-label="anchor" href="#method-reset-"></a></h3>
+<p>Reset the surrogate model.
+Subclasses must implement <code>private$.reset()</code>.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Surrogate</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<p><code>NULL</code></p>
+</div>
+
 </div><p></p><hr><a id="method-Surrogate-predict"></a><div class="section">
 <h3 id="method-predict-">Method <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code><a class="anchor" aria-label="anchor" href="#method-predict-"></a></h3>
 <p>Predict mean response and standard error.
 Must be implemented by subclasses.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Surrogate</span><span class="op">$</span><span class="fu">predict</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>xdt</code></dt>
-<dd><p>(<code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
+<dd><p>(<code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
 New data. One row per observation.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p>Arbitrary prediction object.</p>
 </div>
 
 </div><p></p><hr><a id="method-Surrogate-format"></a><div class="section">
 <h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
 <p>Helper for print outputs.</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Surrogate</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
 <p>(<code>character(1)</code>).</p>
 </div>
 
 </div><p></p><hr><a id="method-Surrogate-print"></a><div class="section">
 <h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
 <p>Print method.</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Surrogate</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
+<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
 <p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>).</p>
 </div>
 
 </div><p></p><hr><a id="method-Surrogate-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Surrogate</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 

@@ -9,7 +9,7 @@ Based on the predictions of a Surrogate, the acquisition function encodes the pr
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,9 @@ Based on the predictions of a Surrogate, the acquisition function encodes the pr
 <code><a href="mlr_acqfunctions_multi.html">mlr_acqfunctions_multi</a></code>,
 <code><a href="mlr_acqfunctions_pi.html">mlr_acqfunctions_pi</a></code>,
 <code><a href="mlr_acqfunctions_sd.html">mlr_acqfunctions_sd</a></code>,
-<code><a href="mlr_acqfunctions_smsego.html">mlr_acqfunctions_smsego</a></code></p></div>
+<code><a href="mlr_acqfunctions_smsego.html">mlr_acqfunctions_smsego</a></code>,
+<code><a href="mlr_acqfunctions_stochastic_cb.html">mlr_acqfunctions_stochastic_cb</a></code>,
+<code><a href="mlr_acqfunctions_stochastic_ei.html">mlr_acqfunctions_stochastic_ei</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="super-class">Super class<a class="anchor" aria-label="anchor" href="#super-class"></a></h2>
@@ -131,6 +133,7 @@ Set of required packages.</p></dd>
 
 <ul><li><p><a href="#method-AcqFunction-new"><code>AcqFunction$new()</code></a></p></li>
 <li><p><a href="#method-AcqFunction-update"><code>AcqFunction$update()</code></a></p></li>
+<li><p><a href="#method-AcqFunction-reset"><code>AcqFunction$reset()</code></a></p></li>
 <li><p><a href="#method-AcqFunction-eval_many"><code>AcqFunction$eval_many()</code></a></p></li>
 <li><p><a href="#method-AcqFunction-eval_dt"><code>AcqFunction$eval_dt()</code></a></p></li>
 <li><p><a href="#method-AcqFunction-clone"><code>AcqFunction$clone()</code></a></p></li>
@@ -211,10 +214,19 @@ String in the format <code>[pkg]::[topic]</code> pointing to a manual page for t
 </div>
 
 
+</div><p></p><hr><a id="method-AcqFunction-reset"></a><div class="section">
+<h3 id="method-reset-">Method <code>reset()</code><a class="anchor" aria-label="anchor" href="#method-reset-"></a></h3>
+<p>Reset the acquisition function.</p>
+<p>Can be implemented by subclasses.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunction</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-AcqFunction-eval_many"></a><div class="section">
 <h3 id="method-eval-many-">Method <code>eval_many()</code><a class="anchor" aria-label="anchor" href="#method-eval-many-"></a></h3>
 <p>Evaluates multiple input values on the objective function.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunction</span><span class="op">$</span><span class="fu">eval_many</span><span class="op">(</span><span class="va">xss</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -238,14 +250,14 @@ e.g. <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</c
 </div><p></p><hr><a id="method-AcqFunction-eval_dt"></a><div class="section">
 <h3 id="method-eval-dt-">Method <code>eval_dt()</code><a class="anchor" aria-label="anchor" href="#method-eval-dt-"></a></h3>
 <p>Evaluates multiple input values on the objective function</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunction</span><span class="op">$</span><span class="fu">eval_dt</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>xdt</code></dt>
-<dd><p>(<code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
+<dd><p>(<code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
 One point per row, e.g. <code>data.table(x1 = c(1, 3), x2 = c(2, 4))</code>.</p></dd>
 
 
@@ -261,7 +273,7 @@ functions, e.g. <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y
 </div><p></p><hr><a id="method-AcqFunction-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunction</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 

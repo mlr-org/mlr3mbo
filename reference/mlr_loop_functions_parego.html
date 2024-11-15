@@ -15,7 +15,7 @@ these scalarized values and optimizing the acquisition function."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,7 @@ The <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.htm
 <dt id="arg-init-design-size">init_design_size<a class="anchor" aria-label="anchor" href="#arg-init-design-size"></a></dt>
 <dd><p>(<code>NULL</code> | <code>integer(1)</code>)<br>
 Size of the initial design.
-If <code>NULL</code> and the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> contains no evaluations, <code>4 * d</code> is used with <code>d</code> being the
+If <code>NULL</code> and the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> contains no evaluations, <code>4 * d</code> is used with <code>d</code> being the
 dimensionality of the search space.
 Points are generated via a Sobol sequence.</p></dd>
 
@@ -141,9 +141,9 @@ The original instance is modified in-place and returned invisible.</p>
 
 <ul><li><p>The <code>acq_function$surrogate</code>, even if already populated, will always be overwritten by the <code>surrogate</code>.</p></li>
 <li><p>The <code>acq_optimizer$acq_function</code>, even if already populated, will always be overwritten by <code>acq_function</code>.</p></li>
-<li><p>The <code>surrogate$archive</code>, even if already populated, will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html" class="external-link">bbotk::OptimInstanceBatchMultiCrit</a>.</p></li>
+<li><p>The <code>surrogate$archive</code>, even if already populated, will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html" class="external-link">bbotk::OptimInstanceBatchMultiCrit</a>.</p></li>
 <li><p>The scalarizations of the objective function values are stored as the <code>y_scal</code> column in the
-<a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html" class="external-link">bbotk::OptimInstanceBatchMultiCrit</a>.</p></li>
+<a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html" class="external-link">bbotk::OptimInstanceBatchMultiCrit</a>.</p></li>
 <li><p>To make use of parallel evaluations in the case of `q &gt; 1, the objective
 function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html" class="external-link">bbotk::OptimInstanceBatchMultiCrit</a> must be implemented accordingly.</p></li>
 </ul></div>
@@ -203,11 +203,11 @@ function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchM
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [07:47:09.369] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [07:47:09.395] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [16:53:02.893] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [16:53:02.918] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            x  x_domain        y1       y2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;num&gt;    &lt;list&gt;     &lt;num&gt;    &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.3766036 &lt;list[1]&gt; 0.1418303 2.635416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.7590663 &lt;list[1]&gt; 0.5761817 1.539916</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

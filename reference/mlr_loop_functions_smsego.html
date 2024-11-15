@@ -13,7 +13,7 @@ updated and the next candidate is chosen based on optimizing the acquisition fun
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,7 +92,7 @@ The <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.htm
 <dt id="arg-init-design-size">init_design_size<a class="anchor" aria-label="anchor" href="#arg-init-design-size"></a></dt>
 <dd><p>(<code>NULL</code> | <code>integer(1)</code>)<br>
 Size of the initial design.
-If <code>NULL</code> and the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> contains no evaluations, <code>4 * d</code> is used with <code>d</code> being the
+If <code>NULL</code> and the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> contains no evaluations, <code>4 * d</code> is used with <code>d</code> being the
 dimensionality of the search space.
 Points are generated via a Sobol sequence.</p></dd>
 
@@ -116,7 +116,7 @@ The original instance is modified in-place and returned invisible.</p>
 
 <ul><li><p>The <code>acq_function$surrogate</code>, even if already populated, will always be overwritten by the <code>surrogate</code>.</p></li>
 <li><p>The <code>acq_optimizer$acq_function</code>, even if already populated, will always be overwritten by <code>acq_function</code>.</p></li>
-<li><p>The <code>surrogate$archive</code>, even if already populated, will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html" class="external-link">bbotk::OptimInstanceBatchMultiCrit</a>.</p></li>
+<li><p>The <code>surrogate$archive</code>, even if already populated, will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html" class="external-link">bbotk::OptimInstanceBatchMultiCrit</a>.</p></li>
 <li><p>Due to the iterative computation of the epsilon within the <a href="mlr_acqfunctions_smsego.html">mlr_acqfunctions_smsego</a>, requires the <a href="https://bbotk.mlr-org.com/reference/Terminator.html" class="external-link">bbotk::Terminator</a> of
 the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html" class="external-link">bbotk::OptimInstanceBatchMultiCrit</a> to be a <a href="https://bbotk.mlr-org.com/reference/mlr_terminators_evals.html" class="external-link">bbotk::TerminatorEvals</a>.</p></li>
 </ul></div>
@@ -179,10 +179,10 @@ In <em>Proceedings of the 10th International Conference on Parallel Problem Solv
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            x  x_domain        y1        y2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;num&gt;    &lt;list&gt;     &lt;num&gt;     &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.7656336 &lt;list[1]&gt; 0.5861948 1.5236605</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 1.2089058 &lt;list[1]&gt; 1.4614532 0.6258301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              x  x_domain          y1          y2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;num&gt;    &lt;list&gt;       &lt;num&gt;       &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -0.08059442 &lt;list[1]&gt; 0.006495461 4.328873142</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  1.95018192 &lt;list[1]&gt; 3.803209514 0.002481841</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

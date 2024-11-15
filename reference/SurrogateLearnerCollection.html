@@ -11,7 +11,7 @@ Note that redundant mlr3::LearnerRegr must be deep clones."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,6 +83,12 @@ Should errors during updating the surrogate be caught and propagated to the <cod
 the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 Default is <code>TRUE</code>.</p></dd>
 
+<dt><code>impute_method</code></dt>
+<dd><p><code>character(1)</code><br>
+Method to impute missing values in the case of updating on an asynchronous <a href="https://bbotk.mlr-org.com/reference/ArchiveAsync.html" class="external-link">bbotk::ArchiveAsync</a> with pending evaluations.
+Can be <code>"mean"</code> to use mean imputation or <code>"random"</code> to sample values uniformly at random between the empirical minimum and maximum.
+Default is <code>"random"</code>.</p></dd>
+
 
 </dl></div>
     <div class="section level2">
@@ -142,6 +148,7 @@ Retrieves the currently active predict type, e.g. <code>"response"</code>.</p></
 <li><p><a href="#method-SurrogateLearnerCollection-clone"><code>SurrogateLearnerCollection$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="format"><a href="Surrogate.html#method-format"><code>mlr3mbo::Surrogate$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="print"><a href="Surrogate.html#method-print"><code>mlr3mbo::Surrogate$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="reset"><a href="Surrogate.html#method-reset"><code>mlr3mbo::Surrogate$reset()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href="Surrogate.html#method-update"><code>mlr3mbo::Surrogate$update()</code></a></span></li>
 </ul></details></p><hr><a id="method-SurrogateLearnerCollection-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
@@ -192,7 +199,7 @@ Each contains the mean response and standard error for one <code>col_y</code>.</
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>xdt</code></dt>
-<dd><p>(<code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
+<dd><p>(<code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
 New data. One row per observation.</p></dd>
 
 
@@ -200,7 +207,7 @@ New data. One row per observation.</p></dd>
 </div>
 <div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
-<p>list of <code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code>s with the columns <code>mean</code> and <code>se</code>.</p>
+<p>list of <code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>s with the columns <code>mean</code> and <code>se</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-SurrogateLearnerCollection-clone"></a><div class="section">
@@ -256,6 +263,8 @@ New data. One row per observation.</p></dd>
 <span class="r-in"><span>  <span class="va">surrogate</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">surrogate</span><span class="op">$</span><span class="va">learner</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">surrogate</span><span class="op">$</span><span class="va">learner</span><span class="op">[[</span><span class="st">"y1"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">model</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">surrogate</span><span class="op">$</span><span class="va">learner</span><span class="op">[[</span><span class="st">"y2"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">model</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>

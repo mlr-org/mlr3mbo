@@ -11,7 +11,7 @@ For a more convenient way to retrieve and construct an acquisition function, see
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,40 +82,46 @@ Each acquisition function has an associated help page, see <code>mlr_acqfunction
 <code><a href="mlr_acqfunctions_multi.html">mlr_acqfunctions_multi</a></code>,
 <code><a href="mlr_acqfunctions_pi.html">mlr_acqfunctions_pi</a></code>,
 <code><a href="mlr_acqfunctions_sd.html">mlr_acqfunctions_sd</a></code>,
-<code><a href="mlr_acqfunctions_smsego.html">mlr_acqfunctions_smsego</a></code></p></div>
+<code><a href="mlr_acqfunctions_smsego.html">mlr_acqfunctions_smsego</a></code>,
+<code><a href="mlr_acqfunctions_stochastic_cb.html">mlr_acqfunctions_stochastic_cb</a></code>,
+<code><a href="mlr_acqfunctions_stochastic_ei.html">mlr_acqfunctions_stochastic_ei</a></code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_acqfunctions</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_acqfunctions</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Key: &lt;key&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        key                                                        label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;char&gt;                                                       &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1:    aei                               Augmented Expected Improvement</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2:     cb                               Lower / Upper Confidence Bound</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3:   ehvi                             Expected Hypervolume Improvement</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4: ehvigh           Expected Hypervolume Improvement via GH Quadrature</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:     ei                                         Expected Improvement</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:   eips                              Expected Improvement Per Second</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7:   mean                                               Posterior Mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  multi Acquisition Function Wrapping Multiple Acquisition Functions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:     pi                                   Probability Of Improvement</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:     sd                                 Posterior Standard Deviation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11: smsego                                                      SMS-EGO</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                  man</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               &lt;char&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1:    mlr3mbo::mlr_acqfunctions_aei</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2:     mlr3mbo::mlr_acqfunctions_cb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3:   mlr3mbo::mlr_acqfunctions_ehvi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4: mlr3mbo::mlr_acqfunctions_ehvigh</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  5:     mlr3mbo::mlr_acqfunctions_ei</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  6:   mlr3mbo::mlr_acqfunctions_eips</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7:   mlr3mbo::mlr_acqfunctions_mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8:  mlr3mbo::mlr_acqfunctions_multi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9:     mlr3mbo::mlr_acqfunctions_pi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10:     mlr3mbo::mlr_acqfunctions_sd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11: mlr3mbo::mlr_acqfunctions_smsego</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               key                                                        label</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;char&gt;                                                       &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:           aei                               Augmented Expected Improvement</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:            cb                               Lower / Upper Confidence Bound</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:          ehvi                             Expected Hypervolume Improvement</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:        ehvigh           Expected Hypervolume Improvement via GH Quadrature</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:            ei                                         Expected Improvement</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:          eips                              Expected Improvement Per Second</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:          mean                                               Posterior Mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:         multi Acquisition Function Wrapping Multiple Acquisition Functions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:            pi                                   Probability Of Improvement</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:            sd                                 Posterior Standard Deviation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:        smsego                                                      SMS-EGO</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12: stochastic_cb                    Stochastic Lower / Upper Confidence Bound</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13: stochastic_ei                              Stochastic Expected Improvement</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                         man</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                      &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:           mlr3mbo::mlr_acqfunctions_aei</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:            mlr3mbo::mlr_acqfunctions_cb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:          mlr3mbo::mlr_acqfunctions_ehvi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:        mlr3mbo::mlr_acqfunctions_ehvigh</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:            mlr3mbo::mlr_acqfunctions_ei</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:          mlr3mbo::mlr_acqfunctions_eips</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:          mlr3mbo::mlr_acqfunctions_mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:         mlr3mbo::mlr_acqfunctions_multi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:            mlr3mbo::mlr_acqfunctions_pi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:            mlr3mbo::mlr_acqfunctions_sd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:        mlr3mbo::mlr_acqfunctions_smsego</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12: mlr3mbo::mlr_acqfunctions_stochastic_cb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13: mlr3mbo::mlr_acqfunctions_stochastic_ei</span>
 <span class="r-in"><span><span class="fu"><a href="acqf.html">acqf</a></span><span class="op">(</span><span class="st">"ei"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;AcqFunctionEI:acq_ei&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Domain:</span>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.6</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,14 @@
       <small>Source: <a href="https://github.com/mlr-org/mlr3mbo/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.7" id="mlr3mbo-027">mlr3mbo 0.2.7<a class="anchor" aria-label="anchor" href="#mlr3mbo-027"></a></h2><p class="text-muted">CRAN release: 2024-11-15</p>
+<ul><li>refactor: refactored <code>SurrogateLearner</code> and <code>SurrogateLearnerCollection</code> to allow updating on an asynchronous <code>Archive</code>.</li>
+<li>feat: added experimental <code>OptimizerAsyncMbo</code>, <code>OptimizerADBO</code>, <code>TunerAsyncMbo</code>, and <code>TunerADBO</code> that allow for asynchronous optimization.</li>
+<li>feat: added <code>AcqFunctionStochasticCB</code> and <code>AcqFunctionStochasticEI</code> that are useful for asynchronous optimization.</li>
+<li>doc: minor changes to highlight differences between batch and asynchronous objects related to asynchronous support.</li>
+<li>refactor: <code>AcqFunction</code>s and <code>AcqOptimizer</code> gained a <code>reset()</code> method.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.6" id="mlr3mbo-026">mlr3mbo 0.2.6<a class="anchor" aria-label="anchor" href="#mlr3mbo-026"></a></h2><p class="text-muted">CRAN release: 2024-10-16</p>
 <ul><li>refactor: Extract internal tuned values in instance.</li>
