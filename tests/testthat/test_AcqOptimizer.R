@@ -142,3 +142,34 @@ test_that("AcqOptimizer callbacks", {
   expect_number(attr(instance, "acq_opt_runtime"))
 })
 
+test_that("AcqOptimizer refinement", {
+  instance = OptimInstanceBatchSingleCrit$new(OBJ_1D_MIXED_DEPS, terminator = trm("evals", n_evals = 5L))
+  design = MAKE_DESIGN(instance)
+  instance$eval_batch(design)
+  acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_FEATURELESS, archive = instance$archive))
+  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 10L), trm("evals", n_evals = 10L), acq_function = acqfun)
+  acqopt$param_set$values$refine_on_numeric_subspace = TRUE
+  acqfun$surrogate$update()
+  acqfun$update()
+
+  # logging_level
+  console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
+  f = tempfile("bbotklog_", fileext = "log")
+  th1 = lg$threshold
+  th2 = console_appender$threshold
+
+  lg$set_threshold("debug")
+  lg$add_appender(lgr::AppenderFile$new(f, threshold = "debug"), name = "testappender")
+  console_appender$set_threshold("warn")
+
+  on.exit({
+    lg$remove_appender("testappender")
+    lg$set_threshold(th1)
+    console_appender$set_threshold(th2)
+  })
+  acqopt$param_set$values$logging_level = "info"
+  res = acqopt$optimize()
+  lines = readLines(f)
+  expect_true(any(grepl("Refining the acquisition function optimization result", x = lines)))
+})
+
