@@ -11,7 +11,7 @@ Wraps an \link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} and \link[bbotk:Term
 
 \describe{
 \item{\code{n_candidates}}{\code{integer(1)}\cr
-Number of candidate points to propose.
+Number of candidates to propose.
 Note that this does not affect how the acquisition function itself is calculated (e.g., setting \code{n_candidates > 1} will not
 result in computing the q- or multi-Expected Improvement) but rather the top \code{n_candidates} are selected from the
 \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the acquisition function \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
@@ -31,10 +31,11 @@ the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} (which is contained 
 This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 Default is \code{FALSE}.
 Note that in the case of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} being multi-criteria, selection of the best point(s) is performed via non-dominated-sorting.
+Note that this warm-starting step cannot be influenced by callbacks.
 }
 \item{\code{warmstart_size}}{\code{integer(1) | "all"}\cr
-Number of best points selected from the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that are to be used for warm starting.
-Can either be an integer or "all" to use all available points.
+Number of best points selected from the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that are to be used for warm-starting.
+Can either be an integer or "all" to use all available points currently logged into the \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 Only relevant if \code{warmstart = TRUE}.
 Default is \code{1}.
 }
@@ -43,9 +44,19 @@ It can happen that the candidate(s) resulting of the acquisition function optimi
 Should such candidate proposals be ignored and only candidates that were yet not evaluated be considered?
 Default is \code{TRUE}.
 }
+\item{\code{refine_on_numeric_subspace}}{\code{logical(1)}\cr
+After the acquisition function optimization has been performed, should the optimization result be refined on the purely numeric subspace of the acquisition function domain?
+If \code{TRUE}, L-BFGS-B will be run on the subspace of the acquisition function domain containing only numeric parameters, keeping all other parameters constant at the value of the best solution found yet.
+As a starting value, the current best solution will be used.
+Only sensible for single-criteria acquisition functions with a \code{ydim} of \code{1}.
+Uses \link[stats:optim]{stats::optim}'s L-BFGS-B implementation.
+Note that this is currently considered an experimental feature.
+Default is \code{FALSE}.
+Note that this refinement step cannot be influenced by callbacks.
+}
 \item{\code{catch_errors}}{\code{logical(1)}\cr
-Should errors during the acquisition function optimization be caught and propagated to the \code{loop_function} which can then handle
-the failed acquisition function optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
+Should errors during the acquisition function optimization be caught and propagated to the \code{loop_function} so that
+the failed acquisition function optimization can be handled appropriately by, e.g., proposing a randomly sampled point for evaluation?
 Setting this to \code{FALSE} can be helpful for debugging.
 Default is \code{TRUE}.
 }

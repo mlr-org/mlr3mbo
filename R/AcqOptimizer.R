@@ -7,7 +7,7 @@
 #' @section Parameters:
 #' \describe{
 #' \item{`n_candidates`}{`integer(1)`\cr
-#'   Number of candidate points to propose.
+#'   Number of candidates to propose.
 #'   Note that this does not affect how the acquisition function itself is calculated (e.g., setting `n_candidates > 1` will not
 #'   result in computing the q- or multi-Expected Improvement) but rather the top `n_candidates` are selected from the
 #'   [bbotk::ArchiveBatch] of the acquisition function [bbotk::OptimInstanceBatch].
@@ -27,10 +27,11 @@
 #'   This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 #'   Default is `FALSE`.
 #'   Note that in the case of the [bbotk::OptimInstance] being multi-criteria, selection of the best point(s) is performed via non-dominated-sorting.
+#'   Note that this warm-starting step cannot be influenced by callbacks.
 #' }
 #' \item{`warmstart_size`}{`integer(1) | "all"`\cr
-#'   Number of best points selected from the [bbotk::Archive] of the actual [bbotk::OptimInstance] that are to be used for warm starting.
-#'   Can either be an integer or "all" to use all available points.
+#'   Number of best points selected from the [bbotk::Archive] of the actual [bbotk::OptimInstance] that are to be used for warm-starting.
+#'   Can either be an integer or "all" to use all available points currently logged into the [bbotk::Archive] of the [bbotk::OptimInstance].
 #'   Only relevant if `warmstart = TRUE`.
 #'   Default is `1`.
 #' }
@@ -39,9 +40,19 @@
 #'   Should such candidate proposals be ignored and only candidates that were yet not evaluated be considered?
 #'   Default is `TRUE`.
 #' }
+#' \item{`refine_on_numeric_subspace`}{`logical(1)`\cr
+#'   After the acquisition function optimization has been performed, should the optimization result be refined on the purely numeric subspace of the acquisition function domain?
+#'   If `TRUE`, L-BFGS-B will be run on the subspace of the acquisition function domain containing only numeric parameters, keeping all other parameters constant at the value of the best solution found yet.
+#'   As a starting value, the current best solution will be used.
+#'   Only sensible for single-criteria acquisition functions with a `ydim` of `1`.
+#'   Uses [stats::optim]'s L-BFGS-B implementation.
+#'   Note that this is currently considered an experimental feature.
+#'   Default is `FALSE`.
+#'   Note that this refinement step cannot be influenced by callbacks.
+#' }
 #' \item{`catch_errors`}{`logical(1)`\cr
-#'   Should errors during the acquisition function optimization be caught and propagated to the `loop_function` which can then handle
-#'   the failed acquisition function optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   Should errors during the acquisition function optimization be caught and propagated to the `loop_function` so that
+#'   the failed acquisition function optimization can be handled appropriately by, e.g., proposing a randomly sampled point for evaluation?
 #'   Setting this to `FALSE` can be helpful for debugging.
 #'   Default is `TRUE`.
 #' }
@@ -119,9 +130,10 @@ AcqOptimizer = R6Class("AcqOptimizer",
         warmstart = p_lgl(default = FALSE),
         warmstart_size = p_int(lower = 1L, special_vals = list("all")),
         skip_already_evaluated = p_lgl(default = TRUE),
+        refine_on_numeric_subspace = p_lgl(default = FALSE),
         catch_errors = p_lgl(default = TRUE)
       )
-      ps$values = list(n_candidates = 1, logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, catch_errors = TRUE)
+      ps$values = list(n_candidates = 1, logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, refine_on_numeric_subspace = FALSE, catch_errors = TRUE)
       ps$add_dep("warmstart_size", on = "warmstart", cond = CondEqual$new(TRUE))
       private$.param_set = ps
     },
@@ -207,6 +219,29 @@ AcqOptimizer = R6Class("AcqOptimizer",
           get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = FALSE)
         }
       }
+
+      # refine
+      if (self$param_set$values$refine_on_numeric_subspace && !is_multi_acq_function && any(self$acq_function$domain$class == "ParamDbl")) {
+        lg$info("Refining the acquisition function optimization result on the purely numeric subspace of the acquisition function domain via L-BFGS-B")
+        instance$terminator = trm("none")  # allow for additionally running L-BFGS-B converging on its own
+        current_best = as.list(xdt[1L, instance$search_space$ids(), with = FALSE])  # not x_domain because acquisition functions are optimized on the search space and trafos have been nulled
+        ids = instance$search_space$ids()
+        assert_true(all(ids == names(current_best)))  # order matters below
+        params_to_refine = intersect(instance$search_space$ids(class = "ParamDbl"), ids[!map_lgl(current_best, is.na)])
+        params_constant = setdiff(ids, params_to_refine)
+        constants = current_best[params_constant]
+        lower = instance$search_space$lower[params_to_refine]
+        upper = instance$search_space$upper[params_to_refine]
+        # L-BFGS-B evaluations are logged as usual into the archive
+        lbfgsb = stats::optim(par = unlist(current_best[params_to_refine]),
+                         fn = wrap_acq_function_lbfgsb,
+                         acquisition_function_instance = instance,
+                         constants = constants,
+                         method = "L-BFGS-B",
+                         lower = lower,
+                         upper = upper)
+        xdt = get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = FALSE)
+      }
       #if (is_multi_acq_function) {
       #  set(xdt, j = instance$objective$id, value = apply(xdt[, instance$objective$acq_function_ids, with = FALSE], MARGIN = 1L, FUN = c, simplify = FALSE))
       #  for (acq_function_id in instance$objective$acq_function_ids) {
@@ -222,7 +257,6 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #'
     #' Currently not used.
     reset = function() {
-
     }
   ),
 

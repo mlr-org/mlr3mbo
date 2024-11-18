@@ -172,7 +172,13 @@ assert_xdt = function(xdt) {
 assert_learner_surrogate = function(x, .var.name = vname(x)) {
   # NOTE: this is buggy in checkmate; assert should always return x invisible not TRUE as is the case here
   assert(check_learner_surrogate(x), .var.name = .var.name)
-
   x
 }
 
+wrap_acq_function_lbfgsb = function(x, acquisition_function_instance, constants) {
+  xs = insert_named(as.list(x), constants)
+  xdt = as.data.table(xs)
+  res = acquisition_function_instance$eval_batch(xdt)
+  y = as.numeric(res[, acquisition_function_instance$objective$codomain$target_ids, with = FALSE])
+  y * mult_max_to_min(acquisition_function_instance$objective$codomain)[[acquisition_function_instance$objective$codomain$target_ids]]
+}
