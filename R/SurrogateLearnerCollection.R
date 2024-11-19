@@ -130,14 +130,31 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       assert_xdt(xdt)
       xdt = fix_xdt_missing(xdt, cols_x = self$cols_x, archive = self$archive)
 
+      # speeding up some checks by constructing the predict task directly instead of relying on predict_newdata
       preds = lapply(self$learner, function(learner) {
-        pred = learner$predict_newdata(newdata = xdt)
+        task = learner$state$train_task$clone()
+        set(xdt, j = task$target_names, value = NA_real_)  # tasks only have features and the target but we have to set the target to NA
+        newdata = as_data_backend(xdt)
+        task$backend = newdata
+        task$row_roles$use = task$backend$rownames
+        pred = learner$predict(task)
         if (learner$predict_type == "se") {
           data.table(mean = pred$response, se = pred$se)
         } else {
           data.table(mean = pred$response)
         }
       })
+
+      # slow
+      #preds = lapply(self$learner, function(learner) {
+      #  pred = learner$predict_newdata(newdata = xdt)
+      #  if (learner$predict_type == "se") {
+      #    data.table(mean = pred$response, se = pred$se)
+      #  } else {
+      #    data.table(mean = pred$response)
+      #  }
+      #})
+
       names(preds) = names(self$learner)
       preds
     }
