@@ -7,8 +7,8 @@
 Surrogate model containing a single Gaussian Process via \code{\link[DiceKriging:km]{DiceKriging::km()}} from package \CRANpkg{DiceKriging}.
 Update and predict methods are inspired from \link[mlr3learners:mlr_learners_regr.km]{mlr3learners::LearnerRegrKM} from package \CRANpkg{mlr3learners}.
 
-Compared to using \link[mlr3learners:mlr_learners_regr.km]{mlr3learners::LearnerRegrKM} within a \link{SurrogateLeaner} the update and predict methods of this class are much more efficient
-as they skip many assertions and checks naturally arising when using a \link{SurrogateLeaner} wrapping a \link[mlr3learners:mlr_learners_regr.km]{mlr3learners::LearnerRegrKM}.
+Compared to using \link[mlr3learners:mlr_learners_regr.km]{mlr3learners::LearnerRegrKM} within a \link{SurrogateLearner} the update and predict methods of this class are much more efficient
+as they skip many assertions and checks naturally arising when using a \link{SurrogateLearner} wrapping a \link[mlr3learners:mlr_learners_regr.km]{mlr3learners::LearnerRegrKM}.
 }
 \section{Parameters}{
 

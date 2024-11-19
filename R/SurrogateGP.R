@@ -4,8 +4,8 @@
 #' Surrogate model containing a single Gaussian Process via [DiceKriging::km()] from package \CRANpkg{DiceKriging}.
 #' Update and predict methods are inspired from [mlr3learners::LearnerRegrKM] from package \CRANpkg{mlr3learners}.
 #'
-#' Compared to using [mlr3learners::LearnerRegrKM] within a [SurrogateLeaner] the update and predict methods of this class are much more efficient
-#' as they skip many assertions and checks naturally arising when using a [SurrogateLeaner] wrapping a [mlr3learners::LearnerRegrKM].
+#' Compared to using [mlr3learners::LearnerRegrKM] within a [SurrogateLearner] the update and predict methods of this class are much more efficient
+#' as they skip many assertions and checks naturally arising when using a [SurrogateLearner] wrapping a [mlr3learners::LearnerRegrKM].
 #'
 #' @section Parameters:
 #' \describe{
