@@ -38,26 +38,31 @@
 #'     requireNamespace("mlr3learners") &
 #'     requireNamespace("DiceKriging") &
 #'     requireNamespace("rgenoud")) {
+#
+#'   if (redis_available()) {
 #'
-#'   library(mlr3)
-#'   library(mlr3tuning)
+#'     library(mlr3)
+#'     library(mlr3tuning)
 #'
-#'   # single-objective
-#'   task = tsk("wine")
-#'   learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
-#'   resampling = rsmp("cv", folds = 3)
-#'   measure = msr("classif.acc")
+#'     # single-objective
+#'     task = tsk("wine")
+#'     learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
+#'     resampling = rsmp("cv", folds = 3)
+#'     measure = msr("classif.acc")
 #'
-#'   instance = TuningInstanceAsyncSingleCrit$new(
-#'     task = task,
-#'     learner = learner,
-#'     resampling = resampling,
-#'     measure = measure,
-#'     terminator = trm("evals", n_evals = 10))
+#'     instance = TuningInstanceAsyncSingleCrit$new(
+#'       task = task,
+#'       learner = learner,
+#'       resampling = resampling,
+#'       measure = measure,
+#'       terminator = trm("evals", n_evals = 10))
 #'
-#'   rush::rush_plan(n_workers=2)
+#'     rush::rush_plan(n_workers=2)
 #'
-#'   tnr("adbo", design_size = 4, n_workers = 2)$optimize(instance)
+#'     tnr("adbo", design_size = 4, n_workers = 2)$optimize(instance)
+#'   } else {
+#'     message("Redis server is not available.\nPlease set up Redis prior to running the example.")
+#'   }
 #' }
 #' }
 TunerADBO = R6Class("TunerADBO",

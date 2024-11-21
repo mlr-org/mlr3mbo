@@ -7,7 +7,7 @@
 \description{
 \code{OptimizerAsyncMbo} class that implements Asynchronous Model Based Optimization (AMBO).
 AMBO starts multiple sequential MBO runs on different workers.
-The worker communicate asynchronously through a shared archive relying on the \pkg{rush} package.
+The worker communicate asynchronously through a shared archive relying on the \CRANpkg{rush} package.
 The optimizer follows a modular layout in which the surrogate model, acquisition function, and acquisition optimizer can be changed.
 The \link{SurrogateLearner} will impute missing values due to pending evaluations.
 A stochastic \link{AcqFunction}, e.g., \link{AcqFunctionStochasticEI} or \link{AcqFunctionStochasticCB} is used to create varying versions of the acquisition
@@ -72,26 +72,31 @@ if (requireNamespace("rush") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {
 
-  library(bbotk)
-  library(paradox)
-  library(mlr3learners)
+  if (redis_available()) {
 
-  fun = function(xs) {
-    list(y = xs$x ^ 2)
+    library(bbotk)
+    library(paradox)
+    library(mlr3learners)
+
+    fun = function(xs) {
+      list(y = xs$x ^ 2)
+    }
+    domain = ps(x = p_dbl(lower = -10, upper = 10))
+    codomain = ps(y = p_dbl(tags = "minimize"))
+    objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+    instance = OptimInstanceAsyncSingleCrit$new(
+      objective = objective,
+      terminator = trm("evals", n_evals = 10))
+
+    rush::rush_plan(n_workers=2)
+
+    optimizer = opt("async_mbo", design_size = 4, n_workers = 2)
+
+    optimizer$optimize(instance)
+  } else {
+    message("Redis server is not available.\nPlease set up Redis prior to running the example.")
   }
-  domain = ps(x = p_dbl(lower = -10, upper = 10))
-  codomain = ps(y = p_dbl(tags = "minimize"))
-  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
-
-  instance = OptimInstanceAsyncSingleCrit$new(
-    objective = objective,
-    terminator = trm("evals", n_evals = 10))
-
-  rush::rush_plan(n_workers=2)
-
-  optimizer = opt("async_mbo", design_size = 4, n_workers = 2)
-
-  optimizer$optimize(instance)
 }
 }
 }
