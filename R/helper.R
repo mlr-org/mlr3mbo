@@ -192,6 +192,7 @@ assert_learner_surrogate = function(x, .var.name = vname(x)) {
 #'   message("Redis server is not available.")
 #' }
 redis_available = function() {
+  requireNamespace("rush")
   tryCatch({
     rush::rsh()
     config = redux::redis_config()
