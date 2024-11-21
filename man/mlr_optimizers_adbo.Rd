@@ -51,26 +51,31 @@ if (requireNamespace("rush") &
     requireNamespace("DiceKriging") &
     requireNamespace("rgenoud")) {
 
-  library(bbotk)
-  library(paradox)
-  library(mlr3learners)
+  if (redis_available()) {
 
-  fun = function(xs) {
-    list(y = xs$x ^ 2)
+    library(bbotk)
+    library(paradox)
+    library(mlr3learners)
+
+    fun = function(xs) {
+      list(y = xs$x ^ 2)
+    }
+    domain = ps(x = p_dbl(lower = -10, upper = 10))
+    codomain = ps(y = p_dbl(tags = "minimize"))
+    objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
+
+    instance = OptimInstanceAsyncSingleCrit$new(
+      objective = objective,
+      terminator = trm("evals", n_evals = 10))
+
+    rush::rush_plan(n_workers=2)
+
+    optimizer = opt("adbo", design_size = 4, n_workers = 2)
+
+    optimizer$optimize(instance)
+  } else {
+    message("Redis server is not available.\nPlease set up Redis prior to running the example.")
   }
-  domain = ps(x = p_dbl(lower = -10, upper = 10))
-  codomain = ps(y = p_dbl(tags = "minimize"))
-  objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
-
-  instance = OptimInstanceAsyncSingleCrit$new(
-    objective = objective,
-    terminator = trm("evals", n_evals = 10))
-
-  rush::rush_plan(n_workers=2)
-
-  optimizer = opt("adbo", design_size = 4, n_workers = 2)
-
-  optimizer$optimize(instance)
 }
 }
 }
