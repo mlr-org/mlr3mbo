@@ -1,6 +1,7 @@
 test_that("TunerADBO works", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   learner = lrn("classif.rpart",
