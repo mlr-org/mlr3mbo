@@ -12,7 +12,7 @@
 #'   result in computing the q- or multi-Expected Improvement) but rather the top `n_candidates` are selected from the
 #'   [bbotk::ArchiveBatch] of the acquisition function [bbotk::OptimInstanceBatch].
 #'   Note that setting `n_candidates > 1` is usually not a sensible idea but it is still supported for experimental reasons.
-#'   Note that in the case of the acquisition function [bbotk::OptimInstanceBatch] being multi-criteria, due to using an [AcqFunctionMulti],
+#'   Note that in the case of the acquisition function [bbotk::OptimInstanceBatch] being multi-objective, due to using an [AcqFunctionMulti],
 #'   selection of the best candidates is performed via non-dominated-sorting.
 #'   Default is `1`.
 #' }
@@ -26,7 +26,7 @@
 #'   the actual [bbotk::OptimInstance] (which is contained in the archive of the [AcqFunction])?
 #'   This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 #'   Default is `FALSE`.
-#'   Note that in the case of the [bbotk::OptimInstance] being multi-criteria, selection of the best point(s) is performed via non-dominated-sorting.
+#'   Note that in the case of the [bbotk::OptimInstance] being multi-objective, selection of the best point(s) is performed via non-dominated-sorting.
 #' }
 #' \item{`warmstart_size`}{`integer(1) | "all"`\cr
 #'   Number of best points selected from the [bbotk::Archive] of the actual [bbotk::OptimInstance] that are to be used for warm starting.

@@ -82,15 +82,15 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @description
-    #' Evaluates multiple input values on the objective function.
+    #' Evaluates multiple input values on the acquisition function.
     #'
     #' @param xss (`list()`)\cr
     #'   A list of lists that contains multiple x values, e.g.
     #'   `list(list(x1 = 1, x2 = 2), list(x1 = 3, x2 = 4))`.
     #'
     #' @return data.table::data.table() that contains one y-column for
-    #' single-objective functions and multiple y-columns for multi-objective functions,
-    #' e.g. `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
+    #' single-objective acquisition functions and multiple y-columns for multi-objective
+    #' acquisition functions, e.g. `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
     eval_many = function(xss) {
       if (self$check_values) lapply(xss, self$domain$assert)
       res = invoke(private$.fun, rbindlist(xss, use.names = TRUE, fill = TRUE), .args = self$constants$values)
@@ -105,8 +105,8 @@ AcqFunction = R6Class("AcqFunction",
     #'   One point per row, e.g. `data.table(x1 = c(1, 3), x2 = c(2, 4))`.
     #'
     #' @return data.table::data.table() that contains one y-column for
-    #' single-objective functions and multiple y-columns for multi-objective
-    #' functions, e.g. `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
+    #' single-objective acquisition functions and multiple y-columns for multi-objective
+    #' acquisition functions, e.g. `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
     eval_dt = function(xdt) {
       if (self$check_values) self$domain$assert_dt(xdt)
       res = invoke(private$.fun, xdt, .args = self$constants$values)
@@ -118,7 +118,7 @@ AcqFunction = R6Class("AcqFunction",
   active = list(
     #' @field direction (`"same"` | `"minimize"` | `"maximize"`)\cr
     #'   Optimization direction of the acquisition function relative to the direction of the
-    #'   objective function of the [bbotk::OptimInstance].
+    #'   objective function of the [bbotk::OptimInstance] related to the passed [bbotk::Archive].
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
     direction = function(rhs) {
       if (missing(rhs)) {
