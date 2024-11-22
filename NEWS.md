@@ -1,11 +1,14 @@
-# mlr3mbo (development version)
+# mlr3mbo 0.2.8
+
+* docs: gracefully exit examples of `OptimizerAsyncMbo`, `OptimizerADBO`, `TunerAsyncMbo`, and `TunerADBO` if Redis is not available.
+* test: skip tests involving asynchronous logic if Redis is not available.
 
 # mlr3mbo 0.2.7
 
 * refactor: refactored `SurrogateLearner` and `SurrogateLearnerCollection` to allow updating on an asynchronous `Archive`.
 * feat: added experimental `OptimizerAsyncMbo`, `OptimizerADBO`, `TunerAsyncMbo`, and `TunerADBO` that allow for asynchronous optimization.
 * feat: added `AcqFunctionStochasticCB` and `AcqFunctionStochasticEI` that are useful for asynchronous optimization.
-* doc: minor changes to highlight differences between batch and asynchronous objects related to asynchronous support.
+* docs: minor changes to highlight differences between batch and asynchronous objects related to asynchronous support.
 * refactor: `AcqFunction`s and `AcqOptimizer` gained a `reset()` method.
 
 # mlr3mbo 0.2.6
