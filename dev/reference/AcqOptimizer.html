@@ -62,7 +62,7 @@ Note that this does not affect how the acquisition function itself is calculated
 result in computing the q- or multi-Expected Improvement) but rather the top <code>n_candidates</code> are selected from the
 <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the acquisition function <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a>.
 Note that setting <code>n_candidates &gt; 1</code> is usually not a sensible idea but it is still supported for experimental reasons.
-Note that in the case of the acquisition function <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> being multi-criteria, due to using an <a href="mlr_acqfunctions_multi.html">AcqFunctionMulti</a>,
+Note that in the case of the acquisition function <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> being multi-objective, due to using an <a href="mlr_acqfunctions_multi.html">AcqFunctionMulti</a>,
 selection of the best candidates is performed via non-dominated-sorting.
 Default is <code>1</code>.</p></dd>
 
@@ -78,7 +78,7 @@ Should the acquisition function optimization be warm-started by evaluating the b
 the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> (which is contained in the archive of the <a href="AcqFunction.html">AcqFunction</a>)?
 This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 Default is <code>FALSE</code>.
-Note that in the case of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> being multi-criteria, selection of the best point(s) is performed via non-dominated-sorting.</p></dd>
+Note that in the case of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> being multi-objective, selection of the best point(s) is performed via non-dominated-sorting.</p></dd>
 
 <dt><code>warmstart_size</code></dt>
 <dd><p><code>integer(1) | "all"</code><br>
