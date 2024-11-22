@@ -1,3 +1,5 @@
+# mlr3mbo (development version)
+
 # mlr3mbo 0.2.8
 
 * docs: gracefully exit examples of `OptimizerAsyncMbo`, `OptimizerADBO`, `TunerAsyncMbo`, and `TunerADBO` if Redis is not available.
