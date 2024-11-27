@@ -157,7 +157,7 @@ test_that("TunerMbo reset", {
   instance = TuningInstanceBatchSingleCrit$new(tsk("iris"), learner = learner, resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
   tuner$optimize(instance)
 
-  instance_mult = TuningInstanceBatchMultiCrit$new(tsk("iris"), learner = learner, resampling = rsmp("holdout"), measure = msrs(c("classif.ce", "classif.logloss")), terminator = trm("evals", n_evals = 5L))
+  instance_mult = TuningInstanceBatchMultiCrit$new(tsk("iris"), learner = learner, resampling = rsmp("holdout"), measures = msrs(c("classif.ce", "classif.logloss")), terminator = trm("evals", n_evals = 5L))
 
   expect_error(tuner$optimize(instance_mult), "does not support multi-crit objectives")
   expect_loop_function(tuner$loop_function)

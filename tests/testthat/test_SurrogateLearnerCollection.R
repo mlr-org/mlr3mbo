@@ -47,7 +47,7 @@ test_that("predict_types are recognized", {
   learner1$predict_type = "se"
   learner2 = lrn("regr.rpart")
   learner2$predict_type = "response"
-  surrogate = SurrogateLearnerCollection$new(learner = list(learner1, learner2), archive = inst$archive)
+  surrogate = SurrogateLearnerCollection$new(learners = list(learner1, learner2), archive = inst$archive)
   surrogate$update()
 
   xdt = data.table(x = seq(-1, 1, length.out = 5L))
@@ -58,7 +58,7 @@ test_that("predict_types are recognized", {
 
 test_that("param_set", {
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
-  surrogate = SurrogateLearnerCollection$new(learner = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
+  surrogate = SurrogateLearnerCollection$new(learners = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
   expect_r6(surrogate$param_set, "ParamSet")
   expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measures", "perf_thresholds", "catch_errors", "impute_method"))
   expect_equal(surrogate$param_set$class[["assert_insample_perf"]], "ParamLgl")
@@ -77,7 +77,7 @@ test_that("insample_perf", {
   design = MAKE_DESIGN(inst)
   inst$eval_batch(design)
 
-  surrogate = SurrogateLearnerCollection$new(learner = list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)), archive = inst$archive)
+  surrogate = SurrogateLearnerCollection$new(learners = list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)), archive = inst$archive)
   expect_error({surrogate$insample_perf = c(0, 0)}, regexp = "insample_perf is read-only.")
   expect_error({surrogate$assert_insample_perf = 0}, regexp = "assert_insample_perf is read-only.")
 
@@ -91,7 +91,7 @@ test_that("insample_perf", {
   expect_double(surrogate$insample_perf, lower = -Inf, upper = 1, any.missing = FALSE, len = 2L)
   expect_equal(names(surrogate$insample_perf), map_chr(surrogate$param_set$values$perf_measures, "id"))
 
-  surrogate_constant = SurrogateLearnerCollection$new(learner = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
+  surrogate_constant = SurrogateLearnerCollection$new(learners = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
   surrogate_constant$param_set$values$assert_insample_perf = TRUE
   surrogate_constant$param_set$values$perf_thresholds = c(0.5, 0.5)
   surrogate_constant$param_set$values$perf_measures = list(mlr_measures$get("regr.rsq"), mlr_measures$get("regr.rsq"))

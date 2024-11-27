@@ -68,10 +68,12 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
       # ys are still the ones originally evaluated
       best_y = if (inherits(instance, c("OptimInstanceBatchSingleCrit", "OptimInstanceAsyncSingleCrit"))) {
         unlist(archive$data[best, on = cols_x][, cols_y, with = FALSE])
+        instance$assign_result(xdt = best, y = best_y, extra = extra)
       } else if (inherits(instance, c("OptimInstanceBatchMultiCrit", "OptimInstanceAsyncMultiCrit"))) {
         archive$data[best, on = cols_x][, cols_y, with = FALSE]
+        instance$assign_result(xdt = best, ydt = best_y, extra = extra)
       }
-      instance$assign_result(xdt = best, y = best_y, extra = extra)
+
     }
   ),
 
