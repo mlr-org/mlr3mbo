@@ -13,7 +13,7 @@ test_that("TunerAsyncMbo works", {
     task = tsk("pima"),
     learner = learner,
     resampling = rsmp("cv", folds = 3L),
-    measure = msr("classif.ce"),
+    measures = msr("classif.ce"),
     terminator = trm("evals", n_evals = 20L),
     store_benchmark_result = FALSE
   )
