@@ -18,4 +18,3 @@ old_threshold_rush = lg_rush$threshold
 lg_mlr3$set_threshold(0)
 lg_bbotk$set_threshold(0)
 lg_rush$set_threshold(0)
-
