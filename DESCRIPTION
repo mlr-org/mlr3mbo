@@ -46,7 +46,7 @@ Imports:
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
-    mlr3 (>= 0.21.1),
+    mlr3 (>= 0.22.1),
     mlr3misc (>= 0.11.0),
     paradox (>= 1.0.1),
     spacefillr,
