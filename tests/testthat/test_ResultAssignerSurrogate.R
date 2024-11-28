@@ -46,7 +46,7 @@ test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_ego", {
 
   expect_r6(result_assigner$surrogate, classes = "SurrogateLearner")
   expect_r6(result_assigner$surrogate$learner, classes = "Learner")
-  expect_data_table(instance$result, nrow = 1L)
+  expect_data_table(instance$result, nrows = 1L)
 })
 
 test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_parego", {

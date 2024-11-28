@@ -23,7 +23,7 @@ test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_ego", {
   optimizer = opt("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
-  expect_data_table(instance$result, nrow = 1L)
+  expect_data_table(instance$result, nrows = 1L)
 })
 
 test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_parego", {
