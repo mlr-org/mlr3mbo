@@ -92,8 +92,8 @@ SurrogateLearner = R6Class("SurrogateLearner",
         assert_insample_perf = p_lgl(),
         perf_measure = p_uty(custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
         perf_threshold = p_dbl(lower = -Inf, upper = Inf),
-        catch_errors = p_lgl(),
-        impute_method = p_fct(c("mean", "random"), default = "random")
+        catch_errors = p_lgl(tags = "required"),
+        impute_method = p_fct(c("mean", "random"), tags = "required")
       )
       ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE, impute_method = "random")
       ps$add_dep("perf_measure", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
@@ -113,7 +113,17 @@ SurrogateLearner = R6Class("SurrogateLearner",
       assert_xdt(xdt)
       xdt = fix_xdt_missing(xdt, cols_x = self$cols_x, archive = self$archive)
 
-      pred = self$learner$predict_newdata(newdata = xdt)
+      # speeding up some checks by constructing the predict task directly instead of relying on predict_newdata
+      task = self$learner$state$train_task$clone()
+      set(xdt, j = task$target_names, value = NA_real_)  # tasks only have features and the target but we have to set the target to NA
+      newdata = as_data_backend(xdt)
+      task$backend = newdata
+      task$row_roles$use = task$backend$rownames
+      pred = self$learner$predict(task)
+
+      # slow
+      #pred = self$learner$predict_newdata(newdata = xdt)
+
       if (self$learner$predict_type == "se") {
         data.table(mean = pred$response, se = pred$se)
       } else {
