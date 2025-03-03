@@ -1,5 +1,9 @@
 # mlr3mbo (development version)
 
+* chore: silence rush logger and fixed some partial matches, depend on mlr3 >= 0.22.1.
+* test: fix `test_AcqFunctionMulti`, robustify helper and loading.
+* test: fix `test_ResultAssignerArchive` due to upcoming changes of internal tuned values in mlr3tuning 1.3.1
+
 # mlr3mbo 0.2.8
 
 * docs: gracefully exit examples of `OptimizerAsyncMbo`, `OptimizerADBO`, `TunerAsyncMbo`, and `TunerADBO` if Redis is not available.
@@ -15,22 +19,22 @@
 
 # mlr3mbo 0.2.6
 
-* refactor: Extract internal tuned values in instance.
+* refactor: extract internal tuned values in instance.
 
 # mlr3mbo 0.2.5
 
-* docs: Move vignette to mlr3book.
-* feat: Add `AcqFunctionMulti` that can wrap multiple acquisition functions resulting in a multi-objective acquisition function problem.
-* feat: Support callbacks in `AcqOptimizer`.
-* feat: Allow `AcqFunctionEI` to be adjusted by epsilon to strengthen exploration.
+* docs: move vignette to mlr3book.
+* feat: add `AcqFunctionMulti` that can wrap multiple acquisition functions resulting in a multi-objective acquisition function problem.
+* feat: support callbacks in `AcqOptimizer`.
+* feat: allow `AcqFunctionEI` to be adjusted by epsilon to strengthen exploration.
 
 # mlr3mbo 0.2.4
 
-* fix: Improve runtime of `AcqOptimizer` by setting `check_values = FALSE`.
+* fix: improve runtime of `AcqOptimizer` by setting `check_values = FALSE`.
 
 # mlr3mbo 0.2.3
 
-* compatibility: Work with new bbotk and mlr3tuning version 1.0.0.
+* compatibility: work with new bbotk and mlr3tuning version 1.0.0.
 
 # mlr3mbo 0.2.2
 
@@ -70,8 +74,8 @@
 # mlr3mbo 0.1.2
 
 * refactor: adapt to mlr3tuning 0.18.0.
-* feat: Acquisition functions now assert whether surrogates match their required predict type.
-* fix: Unloading `mlr3mbo` removes optimizers and tuners from the dictionaries.
+* feat: acquisition functions now assert whether surrogates match their required predict type.
+* fix: unloading `mlr3mbo` removes optimizers and tuners from the dictionaries.
 * docs: faster examples.
 * feat: characters in surrogate regression tasks are no longer automatically converted to factors.
         `default_surrogate` now respects this and gained an appropriate pipeline step.

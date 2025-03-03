@@ -61,14 +61,14 @@ test_that("ResultAssignerArchive passes internal tuned values", {
     validate = 0.2,
     early_stopping = TRUE,
     x = to_tune(0.2, 0.3),
-    iter = to_tune(upper = 1000, internal = TRUE, aggr = function(x) 99))
+    iter = to_tune(upper = 1000L, internal = TRUE, aggr = function(x) 99L))
 
   instance = ti(
     task = tsk("pima"),
     learner = learner,
-    resampling = rsmp("cv", folds = 3),
+    resampling = rsmp("cv", folds = 3L),
     measures = msr("classif.ce"),
-    terminator = trm("evals", n_evals = 20),
+    terminator = trm("evals", n_evals = 20L),
     store_benchmark_result = TRUE
   )
   surrogate = SurrogateLearner$new(REGR_KM_DETERM)
@@ -76,9 +76,9 @@ test_that("ResultAssignerArchive passes internal tuned values", {
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
   tuner = tnr("mbo", result_assigner = result_assigner)
-  expect_data_table(tuner$optimize(instance), nrows = 1)
-  expect_list(instance$archive$data$internal_tuned_values, len = 20, types = "list")
-  expect_equal(instance$archive$data$internal_tuned_values[[1]], list(iter = 99))
+  expect_data_table(tuner$optimize(instance), nrows = 1L)
+  expect_list(instance$archive$data$internal_tuned_values, len = 20L, types = "list")
+  expect_equal(instance$archive$data$internal_tuned_values[[1L]]$iter, 99L)
   expect_false(instance$result_learner_param_vals$early_stopping)
-  expect_equal(instance$result_learner_param_vals$iter, 99)
+  expect_equal(instance$result_learner_param_vals$iter, 99L)
 })
