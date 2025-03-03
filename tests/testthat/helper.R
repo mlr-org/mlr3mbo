@@ -1,5 +1,8 @@
-lapply(list.files(system.file("testthat", package = "mlr3"),
-  pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
+library(mlr3)
+library(checkmate)
+library(testthat)
+
+lapply(list.files(system.file("testthat", package = "mlr3"), pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
 # Simple 1D Functions
 PS_1D = ps(
@@ -170,6 +173,15 @@ LearnerRegrError = R6::R6Class("LearnerRegrError",
     }
   )
 )
+
+expect_man_exists = function(man) {
+  checkmate::expect_string(man, na.ok = TRUE, fixed = "::")
+  if (!is.na(man)) {
+    parts = strsplit(man, "::", fixed = TRUE)[[1L]]
+    matches = help.search(parts[2L], package = parts[1L], ignore.case = FALSE)
+    checkmate::expect_data_frame(matches$matches, min.rows = 1L, info = "man page lookup")
+  }
+}
 
 expect_dictionary_loop_function = function(d, contains = NA_character_, min_items = 0L) {
   expect_r6(d, "Dictionary")

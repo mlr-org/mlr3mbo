@@ -70,7 +70,7 @@ test_that("AcqFunctionMulti API works", {
   expect_true(acqf$requires_predict_type_se)
   expect_equal(acqf$packages, NULL)
   expect_true(grepl("Multi Acquisition Function of", x = acqf$label))
-  expect_true(grepl("mlr_acqfunctions_multi", x = acqf$man, "man"))
+  expect_true(grepl("mlr_acqfunctions_multi", x = acqf$man))
 })
 
 test_that("AcqFunctionMulti lazy initialization", {
