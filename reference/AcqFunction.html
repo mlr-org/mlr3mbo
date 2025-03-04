@@ -9,7 +9,7 @@ Based on the predictions of a Surrogate, the acquisition function encodes the pr
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.8</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@ Based on the predictions of a Surrogate, the acquisition function encodes the pr
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Acquisition Function Base Class</h1>
-      <small class="dont-index">Source: <a href="https://github.com/mlr-org/mlr3mbo/blob/v0.2.8/R/AcqFunction.R" class="external-link"><code>R/AcqFunction.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mlr-org/mlr3mbo/blob/main/R/AcqFunction.R" class="external-link"><code>R/AcqFunction.R</code></a></small>
       <div class="d-none name"><code>AcqFunction.Rd</code></div>
     </div>
 
@@ -78,7 +78,7 @@ Based on the predictions of a Surrogate, the acquisition function encodes the pr
     <p></p><div class="r6-active-bindings"><dl><dt><code>direction</code></dt>
 <dd><p>(<code>"same"</code> | <code>"minimize"</code> | <code>"maximize"</code>)<br>
 Optimization direction of the acquisition function relative to the direction of the
-objective function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.
+objective function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> related to the passed <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a>.
 Must be <code>"same"</code>, <code>"minimize"</code>, or <code>"maximize"</code>.</p></dd>
 
 
@@ -225,7 +225,7 @@ String in the format <code>[pkg]::[topic]</code> pointing to a manual page for t
 
 </div><p></p><hr><a id="method-AcqFunction-eval_many"></a><div class="section">
 <h3 id="method-eval-many-">Method <code>eval_many()</code><a class="anchor" aria-label="anchor" href="#method-eval-many-"></a></h3>
-<p>Evaluates multiple input values on the objective function.</p><div class="section">
+<p>Evaluates multiple input values on the acquisition function.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunction</span><span class="op">$</span><span class="fu">eval_many</span><span class="op">(</span><span class="va">xss</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -243,8 +243,8 @@ A list of lists that contains multiple x values, e.g.
 <div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
 <p>data.table::data.table() that contains one y-column for
-single-objective functions and multiple y-columns for multi-objective functions,
-e.g. <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
+single-objective acquisition functions and multiple y-columns for multi-objective
+acquisition functions, e.g. <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-AcqFunction-eval_dt"></a><div class="section">
@@ -257,7 +257,7 @@ e.g. <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</c
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>xdt</code></dt>
-<dd><p>(<code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
+<dd><p>(<code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
 One point per row, e.g. <code>data.table(x1 = c(1, 3), x2 = c(2, 4))</code>.</p></dd>
 
 
@@ -266,8 +266,8 @@ One point per row, e.g. <code>data.table(x1 = c(1, 3), x2 = c(2, 4))</code>.</p>
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p>data.table::data.table() that contains one y-column for
-single-objective functions and multiple y-columns for multi-objective
-functions, e.g. <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
+single-objective acquisition functions and multiple y-columns for multi-objective
+acquisition functions, e.g. <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-AcqFunction-clone"></a><div class="section">

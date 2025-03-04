@@ -9,7 +9,7 @@ Wraps an bbotk::OptimizerBatch and bbotk::Terminator."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.8</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@ Wraps an bbotk::OptimizerBatch and bbotk::Terminator."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Acquisition Function Optimizer</h1>
-      <small class="dont-index">Source: <a href="https://github.com/mlr-org/mlr3mbo/blob/v0.2.8/R/AcqOptimizer.R" class="external-link"><code>R/AcqOptimizer.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mlr-org/mlr3mbo/blob/main/R/AcqOptimizer.R" class="external-link"><code>R/AcqOptimizer.R</code></a></small>
       <div class="d-none name"><code>AcqOptimizer.Rd</code></div>
     </div>
 
@@ -62,7 +62,7 @@ Note that this does not affect how the acquisition function itself is calculated
 result in computing the q- or multi-Expected Improvement) but rather the top <code>n_candidates</code> are selected from the
 <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the acquisition function <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a>.
 Note that setting <code>n_candidates &gt; 1</code> is usually not a sensible idea but it is still supported for experimental reasons.
-Note that in the case of the acquisition function <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> being multi-criteria, due to using an <a href="mlr_acqfunctions_multi.html">AcqFunctionMulti</a>,
+Note that in the case of the acquisition function <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> being multi-objective, due to using an <a href="mlr_acqfunctions_multi.html">AcqFunctionMulti</a>,
 selection of the best candidates is performed via non-dominated-sorting.
 Default is <code>1</code>.</p></dd>
 
@@ -78,7 +78,7 @@ Should the acquisition function optimization be warm-started by evaluating the b
 the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> (which is contained in the archive of the <a href="AcqFunction.html">AcqFunction</a>)?
 This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 Default is <code>FALSE</code>.
-Note that in the case of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> being multi-criteria, selection of the best point(s) is performed via non-dominated-sorting.</p></dd>
+Note that in the case of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> being multi-objective, selection of the best point(s) is performed via non-dominated-sorting.</p></dd>
 
 <dt><code>warmstart_size</code></dt>
 <dd><p><code>integer(1) | "all"</code><br>
@@ -209,7 +209,7 @@ Set of hyperparameters.</p></dd>
 
 <div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
-<p><code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code> with 1 row per candidate.</p>
+<p><code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code> with 1 row per candidate.</p>
 </div>
 
 </div><p></p><hr><a id="method-AcqOptimizer-reset"></a><div class="section">
@@ -262,7 +262,7 @@ Set of hyperparameters.</p></dd>
 <span class="r-in"><span>    objective <span class="op">=</span> <span class="va">objective</span>,</span></span>
 <span class="r-in"><span>    terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">6</span>, <span class="op">-</span><span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">9</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">instance</span><span class="op">$</span><span class="fu">eval_batch</span><span class="op">(</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">6</span>, <span class="op">-</span><span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">9</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="default_gp.html">default_gp</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
