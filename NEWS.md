@@ -1,8 +1,8 @@
-# mlr3mbo (development version)
+# mlr3mbo 0.2.9
 
 * chore: silence rush logger and fixed some partial matches, depend on mlr3 >= 0.22.1.
 * test: fix `test_AcqFunctionMulti`, robustify helper and loading.
-* test: fix `test_ResultAssignerArchive` and `test_ResultAssignerSurrogate` due to upcoming changes of internal tuned values in mlr3tuning 1.3.1
+* test: fix `test_ResultAssignerArchive` and `test_ResultAssignerSurrogate` due to upcoming changes of internal tuned values in mlr3tuning 1.3.1.
 
 # mlr3mbo 0.2.8
 
