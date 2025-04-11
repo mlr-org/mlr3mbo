@@ -26,6 +26,13 @@ test_that("SurrogateLearner API works", {
   surrogate$learner$predict_type = "response"
   expect_equal(surrogate$predict_type, surrogate$learner$predict_type)
   expect_error({surrogate$predict_type = "response"}, "is read-only")
+
+  # unitcube input transformation for numeric and integer features
+  surrogate = SurrogateLearner$new(learner = REGR_FEATURELESS, archive = inst$archive)
+  surrogate$param_set$values$input_trafo = "unitcube"
+  surrogate$update()
+  expect_learner(surrogate$learner)
+  expect_data_table(surrogate$predict(xdt), col.names = "named", nrows = 5, ncols = 2, any.missing = FALSE)
 })
 
 test_that("predict_types are recognized", {
@@ -50,9 +57,10 @@ test_that("param_set", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(learner = REGR_FEATURELESS, archive = inst$archive)
   expect_r6(surrogate$param_set, "ParamSet")
-  expect_setequal(surrogate$param_set$ids(), c("catch_errors", "impute_method"))
+  expect_setequal(surrogate$param_set$ids(), c("catch_errors", "impute_method", "input_trafo"))
   expect_equal(surrogate$param_set$class[["catch_errors"]], "ParamLgl")
   expect_equal(surrogate$param_set$class[["impute_method"]], "ParamFct")
+  expect_equal(surrogate$param_set$class[["input_trafo"]], "ParamFct")
   expect_error({surrogate$param_set = list()}, regexp = "param_set is read-only.")
 })
 
