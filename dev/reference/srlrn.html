@@ -108,12 +108,10 @@ Named arguments passed to the constructor, to be set as parameters in the
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3.mlr-org.com" class="external-link">mlr3</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">srlrn</span><span class="op">(</span><span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.featureless"</span><span class="op">)</span>, catch_errors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;SurrogateLearner&gt;: LearnerRegrFeatureless</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * Parameters: assert_insample_perf=FALSE, catch_errors=FALSE,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   impute_method=random</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Parameters: catch_errors=FALSE, impute_method=random</span>
 <span class="r-in"><span><span class="fu">srlrn</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.featureless"</span><span class="op">)</span>, <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.featureless"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;SurrogateLearnerCollection&gt;: (LearnerRegrFeatureless | LearnerRegrFeatureless)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * Parameters: assert_insample_perf=FALSE, catch_errors=TRUE,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   impute_method=random</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Parameters: catch_errors=TRUE, impute_method=random</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

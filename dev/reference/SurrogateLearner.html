@@ -52,26 +52,7 @@
     <h2 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a></h2>
 
 
-<dl><dt><code>assert_insample_perf</code></dt>
-<dd><p><code>logical(1)</code><br>
-Should the insample performance of the <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a> be asserted after updating the surrogate?
-If the assertion fails (i.e., the insample performance based on the <code>perf_measure</code> does not meet the
-<code>perf_threshold</code>), an error is thrown.
-Default is <code>FALSE</code>.</p></dd>
-
-<dt><code>perf_measure</code></dt>
-<dd><p><a href="https://mlr3.mlr-org.com/reference/MeasureRegr.html" class="external-link">mlr3::MeasureRegr</a><br>
-Performance measure which should be use to assert the insample performance of the <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a>.
-Only relevant if <code>assert_insample_perf = TRUE</code>.
-Default is <a href="https://mlr3.mlr-org.com/reference/mlr_measures_regr.rsq.html" class="external-link">mlr3::mlr_measures_regr.rsq</a>.</p></dd>
-
-<dt><code>perf_threshold</code></dt>
-<dd><p><code>numeric(1)</code><br>
-Threshold the insample performance of the <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a> should be asserted against.
-Only relevant if <code>assert_insample_perf = TRUE</code>.
-Default is <code>0</code>.</p></dd>
-
-<dt><code>catch_errors</code></dt>
+<dl><dt><code>catch_errors</code></dt>
 <dd><p><code>logical(1)</code><br>
 Should errors during updating the surrogate be caught and propagated to the <code>loop_function</code> which can then handle
 the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
@@ -99,11 +80,6 @@ Id used when printing.</p></dd>
 <dt><code>n_learner</code></dt>
 <dd><p>(<code>integer(1)</code>)<br>
 Returns the number of surrogate models.</p></dd>
-
-
-<dt><code>assert_insample_perf</code></dt>
-<dd><p>(<code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric()</a></code>)<br>
-Asserts whether the current insample performance meets the performance threshold.</p></dd>
 
 
 <dt><code>packages</code></dt>
@@ -251,7 +227,7 @@ New data. One row per observation.</p></dd>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DiceKriging::km(design = data, response = task$truth(), covtype = "matern5_2", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DiceKriging::km(design = data, response = truth, covtype = "matern5_2", </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 2.83305750865222e-07, optim.method = "gen", control = pv$control)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Trend  coeff.:</span>
