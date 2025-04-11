@@ -17,7 +17,7 @@
 #' }
 #' \item{`input_trafo`}{`character(1)`\cr
 #'   Which input transformation should be applied to numeric and integer features?
-#'   Can be `"none"` for no transformation or `"unitcube"` to perform for each feature a min-max scaling to `[0, 1]` based on the boundaries of the search space.
+#'   Can be `"none"` for no transformation or `"unitcube"` to perform for each feature a min-max scaling to `\[0, 1\]` based on the boundaries of the search space.
 #'   Default is `"none"`.
 #' }
 #' }

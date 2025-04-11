@@ -23,7 +23,7 @@ Default is \code{"random"}.
 }
 \item{\code{input_trafo}}{\code{character(1)}\cr
 Which input transformation should be applied to numeric and integer features?
-Can be \code{"none"} for no transformation or \code{"unitcube"} to perform for each feature a min-max scaling to \link{0, 1} based on the boundaries of the search space.
+Can be \code{"none"} for no transformation or \code{"unitcube"} to perform for each feature a min-max scaling to \verb{\[0, 1\]} based on the boundaries of the search space.
 Default is \code{"none"}.
 }
 }
