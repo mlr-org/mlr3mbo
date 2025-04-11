@@ -70,6 +70,12 @@ Method to impute missing values in the case of updating on an asynchronous <a hr
 Can be <code>"mean"</code> to use mean imputation or <code>"random"</code> to sample values uniformly at random between the empirical minimum and maximum.
 Default is <code>"random"</code>.</p></dd>
 
+<dt><code>input_trafo</code></dt>
+<dd><p><code>character(1)</code><br>
+Which input transformation should be applied to numeric and integer features?
+Can be <code>"none"</code> for no transformation or <code>"unitcube"</code> to perform for each feature a min-max scaling to <code>\[0, 1\]</code> based on the boundaries of the search space.
+Default is <code>"none"</code>.</p></dd>
+
 
 </dl></div>
     <div class="section level2">
