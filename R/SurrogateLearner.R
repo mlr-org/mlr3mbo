@@ -15,6 +15,11 @@
 #'   Can be `"mean"` to use mean imputation or `"random"` to sample values uniformly at random between the empirical minimum and maximum.
 #'   Default is `"random"`.
 #' }
+#' \item{`input_trafo`}{`character(1)`\cr
+#'   Which input transformation should be applied to numeric and integer features?
+#'   Can be `"none"` for no transformation or `"unitcube"` to perform for each feature a min-max scaling to `\[0, 1\]` based on the boundaries of the search space.
+#'   Default is `"none"`.
+#' }
 #' }
 #'
 #' @export
@@ -74,9 +79,10 @@ SurrogateLearner = R6Class("SurrogateLearner",
 
       ps = ps(
         catch_errors = p_lgl(),
-        impute_method = p_fct(c("mean", "random"), default = "random")
+        impute_method = p_fct(c("mean", "random"), default = "random"),
+        input_trafo = p_fct(c("none", "unitcube"), default = "none")
       )
-      ps$values = list(catch_errors = TRUE, impute_method = "random")
+      ps$values = list(catch_errors = TRUE, impute_method = "random", input_trafo = "none")
 
       super$initialize(learner = learner, archive = archive, cols_x = cols_x, cols_y = col_y, param_set = ps)
     },
@@ -90,7 +96,10 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
-      xdt = fix_xdt_missing(xdt, cols_x = self$cols_x, archive = self$archive)
+      xdt = fix_xdt_missing(copy(xdt), cols_x = self$cols_x, archive = self$archive)
+      if (self$param_set$values$input_trafo == "unitcube") {
+        xdt = input_trafo_unitcube(xdt, search_space = self$archive$search_space)
+      }
 
       pred = self$learner$predict_newdata(newdata = xdt)
       if (self$learner$predict_type == "se") {
@@ -157,7 +166,10 @@ SurrogateLearner = R6Class("SurrogateLearner",
   private = list(
     # Train learner with new data.
     .update = function() {
-      xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
+      xydt = copy(self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE])
+      if (self$param_set$values$input_trafo == "unitcube") {
+        xydt = input_trafo_unitcube(xydt, search_space = self$archive$search_space)
+      }
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$cols_y)
       assert_learnable(task, learner = self$learner)
       self$learner$train(task)
@@ -166,7 +178,10 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Train learner with new data.
     # Operates on an asynchronous archive and performs imputation as needed.
     .update_async = function() {
-      xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE]
+      xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE])
+      if (self$param_set$values$input_trafo == "unitcube") {
+        xydt = input_trafo_unitcube(xydt, search_space = self$archive$search_space)
+      }
       if (self$param_set$values$impute_method == "mean") {
         mean_y = mean(xydt[[self$cols_y]], na.rm = TRUE)
         xydt[c("queued", "running"), (self$cols_y) := mean_y, on = "state"]

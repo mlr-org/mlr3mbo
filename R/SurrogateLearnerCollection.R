@@ -17,6 +17,11 @@
 #'   Can be `"mean"` to use mean imputation or `"random"` to sample values uniformly at random between the empirical minimum and maximum.
 #'   Default is `"random"`.
 #' }
+#' \item{`input_trafo`}{`character(1)`\cr
+#'   Which input transformation should be applied to numeric and integer features?
+#'   Can be `"none"` for no transformation or `"unitcube"` to perform for each feature a min-max scaling to `\[0, 1\]` based on the boundaries of the search space.
+#'   Default is `"none"`.
+#' }
 #' }
 #'
 #' @export
@@ -89,9 +94,10 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
       ps = ps(
         catch_errors = p_lgl(),
-        impute_method = p_fct(c("mean", "random"), default = "random")
+        impute_method = p_fct(c("mean", "random"), default = "random"),
+        input_trafo = p_fct(c("none", "unitcube"), default = "none")
       )
-      ps$values = list(catch_errors = TRUE, impute_method = "random")
+      ps$values = list(catch_errors = TRUE, impute_method = "random", input_trafo = "none")
 
       super$initialize(learner = learners, archive = archive, cols_x = cols_x, cols_y = cols_y, param_set = ps)
     },
@@ -107,7 +113,10 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @return list of [data.table::data.table()]s with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
-      xdt = fix_xdt_missing(xdt, cols_x = self$cols_x, archive = self$archive)
+      xdt = fix_xdt_missing(copy(xdt), cols_x = self$cols_x, archive = self$archive)
+      if (self$param_set$values$input_trafo == "unitcube") {
+        xdt = input_trafo_unitcube(xdt, search_space = self$archive$search_space)
+      }
 
       preds = lapply(self$learner, function(learner) {
         pred = learner$predict_newdata(newdata = xdt)
@@ -185,7 +194,10 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     .update = function() {
       assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
       one_to_multiple = length(self$cols_y) == 1L
-      xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
+      xydt = copy(self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE])
+      if (self$param_set$values$input_trafo == "unitcube") {
+        xydt = input_trafo_unitcube(xydt, search_space = self$archive$search_space)
+      }
       features = setdiff(names(xydt), self$cols_y)
       tasks = lapply(self$cols_y, function(col_y) {
         # if this turns out to be a bottleneck, we can also operate on a single task here
@@ -214,7 +226,10 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
       one_to_multiple = length(self$cols_y) == 1L
 
-      xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE]
+      xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE])
+      if (self$param_set$values$input_trafo == "unitcube") {
+        xydt = input_trafo_unitcube(xydt, search_space = self$archive$search_space)
+      }
       if (self$param_set$values$impute_method == "mean") {
         walk(self$cols_y, function(col) {
           mean_y = mean(xydt[[col]], na.rm = TRUE)

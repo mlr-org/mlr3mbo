@@ -172,8 +172,15 @@ assert_xdt = function(xdt) {
 assert_learner_surrogate = function(x, .var.name = vname(x)) {
   # NOTE: this is buggy in checkmate; assert should always return x invisible not TRUE as is the case here
   assert(check_learner_surrogate(x), .var.name = .var.name)
-
   x
+}
+
+input_trafo_unitcube = function(xydt, search_space) {
+  parameters = names(which(search_space$is_number))  # numeric or integer
+  for (parameter in parameters) {
+    set(xydt, j = parameter, value = (xydt[[parameter]] - search_space$lower[[parameter]]) / (search_space$upper[[parameter]] - search_space$lower[[parameter]]))
+  }
+  xydt
 }
 
 #' Check if Redis Server is Available
