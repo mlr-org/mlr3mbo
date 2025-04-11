@@ -161,16 +161,6 @@ Surrogate = R6Class("Surrogate",
       }
     },
 
-    #' @field insample_perf (`numeric()`)\cr
-    #'   Surrogate model's current insample performance.
-    insample_perf = function(rhs) {
-      if (missing(rhs)) {
-        private$.insample_perf %??% NaN
-      } else {
-        stop("$insample_perf is read-only.")
-      }
-    },
-
     #' @field param_set ([paradox::ParamSet])\cr
     #'   Set of hyperparameters.
     param_set = function(rhs) {
@@ -179,11 +169,6 @@ Surrogate = R6Class("Surrogate",
       } else {
         private$.param_set
       }
-    },
-
-    #' @template field_assert_insample_perf_surrogate
-    assert_insample_perf = function(rhs) {
-      stop("Abstract.")
     },
 
     #' @template field_packages_surrogate
@@ -230,8 +215,6 @@ Surrogate = R6Class("Surrogate",
     .cols_x = NULL,
 
     .cols_y = NULL,
-
-    .insample_perf = NULL,
 
     .param_set = NULL,
 

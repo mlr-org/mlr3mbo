@@ -39,14 +39,8 @@ By default, automatically inferred based on the archive.}
 Column id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 
-\item{\code{insample_perf}}{(\code{numeric()})\cr
-Surrogate model's current insample performance.}
-
 \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of hyperparameters.}
-
-\item{\code{assert_insample_perf}}{(\code{numeric()})\cr
-Asserts whether the current insample performance meets the performance threshold.}
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.

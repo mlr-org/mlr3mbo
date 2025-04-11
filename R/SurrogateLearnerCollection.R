@@ -7,22 +7,6 @@
 #'
 #' @section Parameters:
 #' \describe{
-#' \item{`assert_insample_perf`}{`logical(1)`\cr
-#'   Should the insample performance of the [mlr3::LearnerRegr] be asserted after updating the surrogate?
-#'   If the assertion fails (i.e., the insample performance based on the `perf_measure` does not meet the
-#'   `perf_threshold`), an error is thrown.
-#'   Default is `FALSE`.
-#' }
-#' \item{`perf_measure`}{List of [mlr3::MeasureRegr]\cr
-#'   Performance measures which should be use to assert the insample performance of the [mlr3::LearnerRegr].
-#'   Only relevant if `assert_insample_perf = TRUE`.
-#'   Default is [mlr3::mlr_measures_regr.rsq] for each learner.
-#' }
-#' \item{`perf_threshold`}{List of `numeric(1)`\cr
-#'   Thresholds the insample performance of the [mlr3::LearnerRegr] should be asserted against.
-#'   Only relevant if `assert_insample_perf = TRUE`.
-#'   Default is `0` for each learner.
-#' }
 #' \item{`catch_errors`}{`logical(1)`\cr
 #'   Should errors during updating the surrogate be caught and propagated to the `loop_function` which can then handle
 #'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
@@ -104,15 +88,10 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       assert_character(cols_y, len = length(learners), null.ok = TRUE)
 
       ps = ps(
-        assert_insample_perf = p_lgl(),
-        perf_measures = p_uty(custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(learners))),  # FIXME: actually want check_measures
-        perf_thresholds = p_uty(custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(learners))),
         catch_errors = p_lgl(),
         impute_method = p_fct(c("mean", "random"), default = "random")
       )
-      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE, impute_method = "random")
-      ps$add_dep("perf_measures", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
-      ps$add_dep("perf_thresholds", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
+      ps$values = list(catch_errors = TRUE, impute_method = "random")
 
       super$initialize(learner = learners, archive = archive, cols_x = cols_x, cols_y = cols_y, param_set = ps)
     },
@@ -159,33 +138,6 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       length(self$learner)
     },
 
-    #' @template field_assert_insample_perf_surrogate
-    assert_insample_perf = function(rhs) {
-      if (missing(rhs)) {
-        check = all(pmap_lgl(
-          list(
-            insample_perf = self$insample_perf,
-            perf_threshold = self$param_set$values$perf_thresholds %??% rep(0, self$n_learner),
-            perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)
-          ),
-          .f = function(insample_perf, perf_threshold, perf_measure) {
-            if (perf_measure$minimize) {
-              insample_perf < perf_threshold
-            } else {
-              insample_perf > perf_threshold
-            }
-          })
-        )
-
-        if (!check) {
-          stop("Current insample performance of the Surrogate Model does not meet the performance threshold.")
-        }
-        invisible(self$insample_perf)
-      } else {
-        stop("$assert_insample_perf is read-only.")
-      }
-    },
-
     #' @template field_packages_surrogate
     packages = function(rhs) {
       if (missing(rhs)) {
@@ -230,7 +182,6 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
   private = list(
 
     # Train learner with new data.
-    # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
       assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
       one_to_multiple = length(self$cols_y) == 1L
@@ -255,21 +206,10 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       } else {
         names(self$learner) = self$cols_y
       }
-
-      if (self$param_set$values$assert_insample_perf) {
-        private$.insample_perf = setNames(pmap_dbl(list(learner = self$learner, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),
-          .f = function(learner, task, perf_measure) {
-            assert_measure(perf_measure, task = task, learner = learner)
-            learner$predict(task)$score(perf_measure, task = task, learner = learner)
-          }
-        ), nm = map_chr(self$param_set$values$perf_measures, "id"))
-        self$assert_insample_perf
-      }
     },
 
     # Train learner with new data.
     # Operates on an asynchronous archive and performs imputation as needed.
-    # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
     .update_async = function() {
       assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
       one_to_multiple = length(self$cols_y) == 1L
@@ -308,16 +248,6 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
         names(self$learner) = rep(self$cols_y, length(self$learner))
       } else {
         names(self$learner) = self$cols_y
-      }
-
-      if (self$param_set$values$assert_insample_perf) {
-        private$.insample_perf = setNames(pmap_dbl(list(learner = self$learner, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),
-          .f = function(learner, task, perf_measure) {
-            assert_measure(perf_measure, task = task, learner = learner)
-            learner$predict(task)$score(perf_measure, task = task, learner = learner)
-          }
-        ), nm = map_chr(self$param_set$values$perf_measures, "id"))
-        self$assert_insample_perf
       }
     },
 
