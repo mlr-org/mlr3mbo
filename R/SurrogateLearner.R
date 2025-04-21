@@ -16,9 +16,19 @@
 #'   Default is `"random"`.
 #' }
 #' \item{`input_trafo`}{`character(1)`\cr
-#'   Which input transformation should be applied to numeric and integer features?
+#'   Which transformation should be applied to numeric and integer features?
 #'   Can be `"none"` for no transformation or `"unitcube"` to perform for each feature a min-max scaling to `\[0, 1\]` based on the boundaries of the search space.
 #'   Default is `"none"`.
+#' }
+#' \item{`output_trafo`}{`character(1)`\cr
+#'   Which transformation should be applied to the target variable?
+#'   Can be `"none"` for no transformation or `"stanardization"` to standardize the target to have zero mean and unit variance.
+#'   Default is `"none"`.
+#' }
+#' \item{`invert_output_trafo`}{`logical(1)`\cr
+#'   Should the target transformation be inverted after having trained the surrogate model?
+#'   If `TRUE`, the inverse transformation (if applicable) is applied to the posterior predictive distribution of the surrogate model.
+#'   Default is `TRUE`.
 #' }
 #' }
 #'
@@ -80,9 +90,11 @@ SurrogateLearner = R6Class("SurrogateLearner",
       ps = ps(
         catch_errors = p_lgl(),
         impute_method = p_fct(c("mean", "random"), default = "random"),
-        input_trafo = p_fct(c("none", "unitcube"), default = "none")
+        input_trafo = p_fct(c("none", "unitcube"), default = "none"),
+        output_trafo = p_fct(c("none", "standardize"), default = "none"),
+        invert_output_trafo = p_lgl(default = TRUE, depends = output_trafo %in% c("none", "standardize"))
       )
-      ps$values = list(catch_errors = TRUE, impute_method = "random", input_trafo = "none")
+      ps$values = list(catch_errors = TRUE, impute_method = "random", input_trafo = "none", output_trafo = "none", invert_output_trafo = TRUE)
 
       super$initialize(learner = learner, archive = archive, cols_x = cols_x, cols_y = col_y, param_set = ps)
     },
