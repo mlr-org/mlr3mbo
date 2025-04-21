@@ -35,6 +35,13 @@ test_that("SurrogateLearnerCollection API works", {
   expect_equal(surrogate$predict_type, surrogate$learner[[2L]]$predict_type)
   expect_error({surrogate$predict_type = "response"}, "is read-only")
 
+  # unitcube input transformation for numeric and integer features
+  surrogate = SurrogateLearnerCollection$new(learners = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
+  surrogate$param_set$values$input_trafo = "unitcube"
+  surrogate$update()
+  expect_learner(surrogate$learner[[1L]])
+  expect_learner(surrogate$learner[[2L]])
+  expect_list(surrogate$predict(xdt), len = 2L)
 })
 
 test_that("predict_types are recognized", {
@@ -47,7 +54,7 @@ test_that("predict_types are recognized", {
   learner1$predict_type = "se"
   learner2 = lrn("regr.rpart")
   learner2$predict_type = "response"
-  surrogate = SurrogateLearnerCollection$new(learner = list(learner1, learner2), archive = inst$archive)
+  surrogate = SurrogateLearnerCollection$new(learners = list(learner1, learner2), archive = inst$archive)
   surrogate$update()
 
   xdt = data.table(x = seq(-1, 1, length.out = 5L))
@@ -58,46 +65,13 @@ test_that("predict_types are recognized", {
 
 test_that("param_set", {
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
-  surrogate = SurrogateLearnerCollection$new(learner = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
+  surrogate = SurrogateLearnerCollection$new(learners = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
   expect_r6(surrogate$param_set, "ParamSet")
-  expect_setequal(surrogate$param_set$ids(), c("assert_insample_perf", "perf_measures", "perf_thresholds", "catch_errors"))
-  expect_equal(surrogate$param_set$class[["assert_insample_perf"]], "ParamLgl")
-  expect_equal(surrogate$param_set$class[["perf_measures"]], "ParamUty")
-  expect_equal(surrogate$param_set$class[["perf_thresholds"]], "ParamUty")
+  expect_setequal(surrogate$param_set$ids(), c("catch_errors", "impute_method", "input_trafo"))
   expect_equal(surrogate$param_set$class[["catch_errors"]], "ParamLgl")
+  expect_equal(surrogate$param_set$class[["impute_method"]], "ParamFct")
+  expect_equal(surrogate$param_set$class[["input_trafo"]], "ParamFct")
   expect_error({surrogate$param_set = list()}, regexp = "param_set is read-only.")
-})
-
-test_that("insample_perf", {
-  skip_if_not_installed("mlr3learners")
-  skip_if_not_installed("DiceKriging")
-  skip_if_not_installed("rgenoud")
-  inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
-  design = MAKE_DESIGN(inst)
-  inst$eval_batch(design)
-
-  surrogate = SurrogateLearnerCollection$new(learner = list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)), archive = inst$archive)
-  expect_error({surrogate$insample_perf = c(0, 0)}, regexp = "insample_perf is read-only.")
-  expect_error({surrogate$assert_insample_perf = 0}, regexp = "assert_insample_perf is read-only.")
-
-  surrogate$update()
-  expect_equal(surrogate$insample_perf, NaN)
-
-  surrogate$param_set$values$assert_insample_perf = TRUE
-  surrogate$param_set$values$perf_thresholds = c(0.5, 0.5)
-  surrogate$param_set$values$perf_measures = list(mlr_measures$get("regr.rsq"), mlr_measures$get("regr.rsq"))
-  surrogate$update()
-  expect_double(surrogate$insample_perf, lower = -Inf, upper = 1, any.missing = FALSE, len = 2L)
-  expect_equal(names(surrogate$insample_perf), map_chr(surrogate$param_set$values$perf_measures, "id"))
-
-  surrogate_constant = SurrogateLearnerCollection$new(learner = list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
-  surrogate_constant$param_set$values$assert_insample_perf = TRUE
-  surrogate_constant$param_set$values$perf_thresholds = c(0.5, 0.5)
-  surrogate_constant$param_set$values$perf_measures = list(mlr_measures$get("regr.rsq"), mlr_measures$get("regr.rsq"))
-  expect_error(surrogate_constant$update(), regexp = "Current insample performance of the Surrogate Model does not meet the performance threshold")
-  expect_double(surrogate_constant$insample_perf, lower = -Inf, upper = 1, any.missing = FALSE, len = 2L)
-  expect_true(all(surrogate_constant$insample_perf <= 1e-3))
-  expect_equal(names(surrogate_constant$insample_perf), map_chr(surrogate$param_set$values$perf_measures, "id"))
 })
 
 test_that("unique in memory", {

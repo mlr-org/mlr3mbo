@@ -36,23 +36,46 @@ Surrogate = R6Class("Surrogate",
 
     #' @description
     #' Train learner with new data.
-    #' Subclasses must implement `$private.update()`.
+    #' Subclasses must implement `private.update()` and `private.update_async()`.
     #'
     #' @return `NULL`.
     update = function() {
       if (is.null(self$archive)) stop("Archive must be set during construction or manually prior before calling $update().")
       if (self$param_set$values$catch_errors) {
-        tryCatch(private$.update(),
-          error = function(error_condition) {
-            lg$warn(error_condition$message)
-            stop(set_class(list(message = error_condition$message, call = NULL),
-              classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
-          }
-        )
+        if (self$archive_is_async) {
+          tryCatch(private$.update_async(),
+            error = function(error_condition) {
+              lg$warn(error_condition$message)
+              stop(set_class(list(message = error_condition$message, call = NULL),
+                classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
+            }
+          )
+        } else {
+          tryCatch(private$.update(),
+            error = function(error_condition) {
+              lg$warn(error_condition$message)
+              stop(set_class(list(message = error_condition$message, call = NULL),
+                classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
+            }
+          )
+        }
       } else {
-        private$.update()
+        if (self$archive_is_async) {
+          private$.update_async()
+        } else {
+          private$.update()
+        }
       }
       invisible(NULL)
+    },
+
+    #' @description
+    #' Reset the surrogate model.
+    #' Subclasses must implement `private$.reset()`.
+    #'
+    #' @return `NULL`
+    reset = function() {
+      private$.reset()
     },
 
     #' @description
@@ -106,6 +129,15 @@ Surrogate = R6Class("Surrogate",
       }
     },
 
+    #' @template field_archive_surrogate_is_async
+    archive_is_async = function(rhs) {
+      if (missing(rhs)) {
+        inherits(private$.archive, "ArchiveAsync")
+      } else {
+        stop("$archive_is_async is read-only.")
+      }
+    },
+
     #' @template field_n_learner_surrogate
     n_learner = function() {
       stop("Abstract.")
@@ -129,16 +161,6 @@ Surrogate = R6Class("Surrogate",
       }
     },
 
-    #' @field insample_perf (`numeric()`)\cr
-    #'   Surrogate model's current insample performance.
-    insample_perf = function(rhs) {
-      if (missing(rhs)) {
-        private$.insample_perf %??% NaN
-      } else {
-        stop("$insample_perf is read-only.")
-      }
-    },
-
     #' @field param_set ([paradox::ParamSet])\cr
     #'   Set of hyperparameters.
     param_set = function(rhs) {
@@ -147,11 +169,6 @@ Surrogate = R6Class("Surrogate",
       } else {
         private$.param_set
       }
-    },
-
-    #' @template field_assert_insample_perf_surrogate
-    assert_insample_perf = function(rhs) {
-      stop("Abstract.")
     },
 
     #' @template field_packages_surrogate
@@ -199,11 +216,13 @@ Surrogate = R6Class("Surrogate",
 
     .cols_y = NULL,
 
-    .insample_perf = NULL,
-
     .param_set = NULL,
 
     .update = function() {
+      stop("Abstract.")
+    },
+
+    .update_async = function() {
       stop("Abstract.")
     },
 

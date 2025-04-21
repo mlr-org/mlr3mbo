@@ -108,8 +108,8 @@ acqfs = function(.keys, ...) {
 #' @description
 #' This function allows to construct an [AcqOptimizer] in the spirit
 #' of `mlr_sugar` from \CRANpkg{mlr3}.
-#' @param optimizer ([bbotk::Optimizer])\cr
-#'   [bbotk::Optimizer] that is to be used.
+#' @param optimizer ([bbotk::OptimizerBatch])\cr
+#'   [bbotk::OptimizerBatch] that is to be used.
 #' @param terminator ([bbotk::Terminator])\cr
 #'   [bbotk::Terminator] that is to be used.
 #' @param acq_function (`NULL` | [AcqFunction])\cr

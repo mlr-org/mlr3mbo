@@ -81,7 +81,7 @@ acq_function = acqf("ei")
 
 acq_optimizer = acqo(
   opt("local_search", n_initial_points = 10, initial_random_sample_size = 1000, neighbors_per_point = 10),
-  terminator = trm("evals", n_evals = 3000)
+  terminator = trm("evals", n_evals = 2000)
 )
 
 optimizer = opt("mbo",

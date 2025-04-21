@@ -14,7 +14,7 @@ the surrogate is the same for all acquisition functions.
 If acquisition functions have not been initialized with a surrogate, the surrogate passed during construction or lazy initialization
 will be used for all acquisition functions.
 
-For optimization, \link{AcqOptimizer} can be used as for any other \link{AcqFunction}, however, the \link[bbotk:Optimizer]{bbotk::Optimizer} wrapped within the \link{AcqOptimizer}
+For optimization, \link{AcqOptimizer} can be used as for any other \link{AcqFunction}, however, the \link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} wrapped within the \link{AcqOptimizer}
 must support multi-objective optimization as indicated via the \code{multi-crit} property.
 }
 \section{Dictionary}{
@@ -73,10 +73,13 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_ehvigh}},
 \code{\link{mlr_acqfunctions_ei}},
 \code{\link{mlr_acqfunctions_eips}},
+\code{\link{mlr_acqfunctions_log_ei}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_pi}},
 \code{\link{mlr_acqfunctions_sd}},
-\code{\link{mlr_acqfunctions_smsego}}
+\code{\link{mlr_acqfunctions_smsego}},
+\code{\link{mlr_acqfunctions_stochastic_cb}},
+\code{\link{mlr_acqfunctions_stochastic_ei}}
 }
 \concept{Acquisition Function}
 \section{Super classes}{
@@ -113,6 +116,7 @@ Points to the ids of the individual acquisition functions.}
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-reset'><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
 </ul>
 </details>
 }}

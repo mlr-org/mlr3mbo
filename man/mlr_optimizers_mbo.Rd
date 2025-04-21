@@ -15,7 +15,7 @@ By optimizing a comparably cheap to evaluate acquisition function defined on the
 
 Detailed descriptions of different MBO flavors are provided in the documentation of the respective \link{loop_function}.
 
-Termination is handled via a \link[bbotk:Terminator]{bbotk::Terminator} part of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
+Termination is handled via a \link[bbotk:Terminator]{bbotk::Terminator} part of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} to be optimized.
 
 Note that in general the \link{Surrogate} is updated one final time on all available data after the optimization process has terminated.
 However, in certain scenarios this is not always possible or meaningful, e.g., when using \code{\link[=bayesopt_parego]{bayesopt_parego()}} for multi-objective optimization
@@ -23,14 +23,17 @@ which uses a surrogate that relies on a scalarization of the objectives.
 It is therefore recommended to manually inspect the \link{Surrogate} after optimization if it is to be used, e.g., for visualization purposes to make
 sure that it has been properly updated on all available data.
 If this final update of the \link{Surrogate} could not be performed successfully, a warning will be logged.
+
+By specifying a \link{ResultAssigner}, one can alter how the final result is determined after optimization, e.g.,
+simply based on the evaluations logged in the archive \link{ResultAssignerArchive} or based on the \link{Surrogate} via \link{ResultAssignerSurrogate}.
 }
 \section{Archive}{
 
-The \link[bbotk:Archive]{bbotk::Archive} holds the following additional columns that are specific to MBO algorithms:
+The \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} holds the following additional columns that are specific to MBO algorithms:
 \itemize{
-\item \verb{[acq_function$id]} (\code{numeric(1)})\cr
+\item \code{acq_function$id} (\code{numeric(1)})\cr
 The value of the acquisition function.
-\item \code{.already_evaluated} (\verb{logical(1))}\cr
+\item \code{".already_evaluated"} (\verb{logical(1))}\cr
 Whether this point was already evaluated. Depends on the \code{skip_already_evaluated} parameter of the \link{AcqOptimizer}.
 }
 }
@@ -130,7 +133,7 @@ This corresponds to the values given by a \link[paradox:ParamSet]{paradox::Param
 Set of properties of the optimizer.
 Must be a subset of \code{\link[bbotk:bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
 MBO in principle is very flexible and by default we assume that the optimizer has all properties.
-When fully initialized, properties are determined based on the \code{loop_function} and \code{surrogate}.}
+When fully initialized, properties are determined based on the loop, e.g., the \code{loop_function}, and \code{surrogate}.}
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
@@ -145,6 +148,7 @@ Required packages are determined based on the \code{acq_function}, \code{surroga
 \item \href{#method-OptimizerMbo-new}{\code{OptimizerMbo$new()}}
 \item \href{#method-OptimizerMbo-print}{\code{OptimizerMbo$print()}}
 \item \href{#method-OptimizerMbo-reset}{\code{OptimizerMbo$reset()}}
+\item \href{#method-OptimizerMbo-optimize}{\code{OptimizerMbo$optimize()}}
 \item \href{#method-OptimizerMbo-clone}{\code{OptimizerMbo$clone()}}
 }
 }
@@ -153,7 +157,6 @@ Required packages are determined based on the \code{acq_function}, \code{surroga
 <ul>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="OptimizerBatch" data-id="optimize"><a href='../../bbotk/html/OptimizerBatch.html#method-OptimizerBatch-optimize'><code>bbotk::OptimizerBatch$optimize()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -165,13 +168,13 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 If \code{surrogate} is \code{NULL} and the \code{acq_function$surrogate} field is populated, this \link{Surrogate} is used.
 Otherwise, \code{default_surrogate(instance)} is used.
-If \code{acq_function} is NULL and the \code{acq_optimizer$acq_function} field is populated, this \link{AcqFunction} is used (and therefore its \verb{$surrogate} if  populated; see above).
+If \code{acq_function} is \code{NULL} and the \code{acq_optimizer$acq_function} field is populated, this \link{AcqFunction} is used (and therefore its \verb{$surrogate} if populated; see above).
 Otherwise \code{default_acqfunction(instance)} is used.
-If \code{acq_optimizer} is NULL, \code{default_acqoptimizer(instance)} is used.
+If \code{acq_optimizer} is \code{NULL}, \code{default_acqoptimizer(instance)} is used.
 
-Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the \link[bbotk:Archive]{bbotk::Archive} of the current \link[bbotk:OptimInstance]{bbotk::OptimInstance} to be optimized.
+Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the current \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} to be optimized.
 
-For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer} and \code{result_assigner}, see \code{?mbo_defaults}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
   loop_function = NULL,
@@ -232,6 +235,27 @@ Sets the following fields to \code{NULL}:
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$reset()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-OptimizerMbo-optimize"></a>}}
+\if{latex}{\out{\hypertarget{method-OptimizerMbo-optimize}{}}}
+\subsection{Method \code{optimize()}}{
+Performs the optimization and writes optimization result into \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
+The optimization result is returned but the complete optimization path is stored in \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$optimize(inst)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{inst}}{(\link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\link[data.table:data.table]{data.table::data.table}.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerMbo-clone"></a>}}

@@ -1,5 +1,8 @@
-lapply(list.files(system.file("testthat", package = "mlr3"),
-  pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
+library(mlr3)
+library(checkmate)
+library(testthat)
+
+lapply(list.files(system.file("testthat", package = "mlr3"), pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
 # Simple 1D Functions
 PS_1D = ps(
@@ -9,24 +12,24 @@ FUN_1D = function(xs) {
   list(y = as.numeric(xs)^2)
 }
 FUN_1D_CODOMAIN = ps(y = p_dbl(tags = "minimize"))
-OBJ_1D = ObjectiveRFun$new(fun = FUN_1D, domain = PS_1D, codomain = FUN_1D_CODOMAIN, properties = "single-crit")
+OBJ_1D = bbotk::ObjectiveRFun$new(fun = FUN_1D, domain = PS_1D, codomain = FUN_1D_CODOMAIN, properties = "single-crit")
 
 FUN_1D_2 = function(xs) {
   list(y1 = as.numeric(xs)^2, y2 = - sqrt(abs(as.numeric(xs))))
 }
 FUN_1D_2_CODOMAIN = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
-OBJ_1D_2 = ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
+OBJ_1D_2 = bbotk::ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
 
 # Simple 1D Functions with noise
 FUN_1D_NOISY = function(xs) {
   list(y = as.numeric(xs)^2 + rnorm(1, sd = 0.5))
 }
-OBJ_1D_NOISY = ObjectiveRFun$new(fun = FUN_1D_NOISY, domain = PS_1D, codomain = FUN_1D_CODOMAIN, properties = c("single-crit", "noisy"))
+OBJ_1D_NOISY = bbotk::ObjectiveRFun$new(fun = FUN_1D_NOISY, domain = PS_1D, codomain = FUN_1D_CODOMAIN, properties = c("single-crit", "noisy"))
 
 FUN_1D_2_NOISY = function(xs) {
   list(y1 = as.numeric(xs)^2 + rnorm(1, sd = 0.5), y2 = sqrt(abs(as.numeric(xs))) + rnorm(1, sd = 0.5))
 }
-OBJ_1D_2_NOISY = ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = c("multi-crit", "noisy"))
+OBJ_1D_2_NOISY = bbotk::ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = c("multi-crit", "noisy"))
 
 # Mixed 1D Functions
 PS_1D_MIXED = ps(
@@ -44,8 +47,8 @@ FUN_1D_MIXED = function(xs) {
   }
   list(y = (xs$x1 - switch(xs$x2, "a" = 0, "b" = 1, "c" = 2)) %% xs$x3 + (if (xs$x4) xs$x1 else pi))
 }
-OBJ_1D_MIXED = ObjectiveRFun$new(fun = FUN_1D_MIXED, domain = PS_1D_MIXED, properties = "single-crit")
-OBJ_1D_MIXED_DEPS = ObjectiveRFun$new(fun = FUN_1D_MIXED, domain = PS_1D_MIXED_DEPS, properties = "single-crit")
+OBJ_1D_MIXED = bbotk::ObjectiveRFun$new(fun = FUN_1D_MIXED, domain = PS_1D_MIXED, properties = "single-crit")
+OBJ_1D_MIXED_DEPS = bbotk::ObjectiveRFun$new(fun = FUN_1D_MIXED, domain = PS_1D_MIXED_DEPS, properties = "single-crit")
 
 FUN_1D_2_MIXED = function(xs) {
   if (is.null(xs$x2)) {
@@ -53,7 +56,7 @@ FUN_1D_2_MIXED = function(xs) {
   }
   list(y1 = (xs$x1 - switch(xs$x2, "a" = 0, "b" = 1, "c" = 2)) %% xs$x3 + (if (xs$x4) xs$x1 else pi), y2 = xs$x1)
 }
-OBJ_1D_2_MIXED = ObjectiveRFun$new(fun = FUN_1D_2_MIXED, domain = PS_1D_MIXED, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
+OBJ_1D_2_MIXED = bbotk::ObjectiveRFun$new(fun = FUN_1D_2_MIXED, domain = PS_1D_MIXED, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
 
 # Simple 2D Functions
 PS_2D = ps(
@@ -69,14 +72,14 @@ FUN_2D = function(xs) {
   list(y = y)
 }
 FUN_2D_CODOMAIN = ps(y = p_dbl(tags = c("minimize", "random_tag")))
-OBJ_2D = ObjectiveRFun$new(fun = FUN_2D, domain = PS_2D, properties = "single-crit")
+OBJ_2D = bbotk::ObjectiveRFun$new(fun = FUN_2D, domain = PS_2D, properties = "single-crit")
 
 # Simple 2D Function with noise
 FUN_2D_NOISY = function(xs) {
   y = sum(as.numeric(xs)^2) + rnorm(1, sd = 0.5)
   list(y = y)
 }
-OBJ_2D_NOISY = ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D, properties = c("single-crit", "noisy"))
+OBJ_2D_NOISY = bbotk::ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D, properties = c("single-crit", "noisy"))
 
 # Instance helper
 MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 10L)) {
@@ -101,15 +104,15 @@ MAKE_DESIGN = function(instance, n = 4L) {
 
 if (requireNamespace("mlr3learners") && requireNamespace("DiceKriging") && requireNamespace("rgenoud")) {
   library(mlr3learners)
-  REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE, max.generations = 2), nugget.estim = TRUE, jitter = 1e-12)
-  REGR_KM_NOISY$encapsulate = c(train = "callr", predict = "callr")
-  REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE, max.generations = 2), nugget.stability = 10^-8)
-  REGR_KM_DETERM$encapsulate = c(train = "callr", predict = "callr")
+  REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.estim = TRUE, jitter = 1e-12)
+  REGR_KM_NOISY$encapsulate("callr", lrn("regr.featureless"))
+  REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 10^-8)
+  REGR_KM_DETERM$encapsulate("callr", lrn("regr.featureless"))
 }
 REGR_FEATURELESS = lrn("regr.featureless")
-REGR_FEATURELESS$encapsulate = c(train = "callr", predict = "callr")
+REGR_FEATURELESS$encapsulate("callr", lrn("regr.featureless"))
 
-OptimizerError = R6Class("OptimizerError",
+OptimizerError = R6::R6Class("OptimizerError",
   inherit = OptimizerBatch,
   public = list(
 
@@ -129,7 +132,7 @@ OptimizerError = R6Class("OptimizerError",
   )
 )
 
-LearnerRegrError = R6Class("LearnerRegrError",
+LearnerRegrError = R6::R6Class("LearnerRegrError",
   inherit = LearnerRegr,
   public = list(
 
@@ -171,6 +174,15 @@ LearnerRegrError = R6Class("LearnerRegrError",
   )
 )
 
+expect_man_exists = function(man) {
+  checkmate::expect_string(man, na.ok = TRUE, fixed = "::")
+  if (!is.na(man)) {
+    parts = strsplit(man, "::", fixed = TRUE)[[1L]]
+    matches = help.search(parts[2L], package = parts[1L], ignore.case = FALSE)
+    checkmate::expect_data_frame(matches$matches, min.rows = 1L, info = "man page lookup")
+  }
+}
+
 expect_dictionary_loop_function = function(d, contains = NA_character_, min_items = 0L) {
   expect_r6(d, "Dictionary")
   testthat::expect_output(print(d), "Dictionary")
@@ -199,6 +211,19 @@ expect_acqfunction = function(acqf) {
   expect_string(acqf$id, pattern = "acq")
   expect_string(acqf$label)
   expect_man_exists(acqf$man)
+}
+
+expect_rush_reset = function(rush, type = "kill") {
+  processes = rush$processes
+  rush$reset(type = type)
+  expect_list(rush$connector$command(c("KEYS", "*")), len = 0)
+  walk(processes, function(p) p$kill())
+}
+
+flush_redis = function() {
+  config = redux::redis_config()
+  r = redux::hiredis(config)
+  r$FLUSHDB()
 }
 
 sortnames = function(x) {

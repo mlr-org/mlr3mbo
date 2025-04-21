@@ -9,40 +9,34 @@ Surrogate model containing a single \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
 \section{Parameters}{
 
 \describe{
-\item{\code{assert_insample_perf}}{\code{logical(1)}\cr
-Should the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} be asserted after updating the surrogate?
-If the assertion fails (i.e., the insample performance based on the \code{perf_measure} does not meet the
-\code{perf_threshold}), an error is thrown.
-Default is \code{FALSE}.
-}
-\item{\code{perf_measure}}{\link[mlr3:MeasureRegr]{mlr3::MeasureRegr}\cr
-Performance measure which should be use to assert the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
-Only relevant if \code{assert_insample_perf = TRUE}.
-Default is \link[mlr3:mlr_measures_regr.rsq]{mlr3::mlr_measures_regr.rsq}.
-}
-\item{\code{perf_threshold}}{\code{numeric(1)}\cr
-Threshold the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} should be asserted against.
-Only relevant if \code{assert_insample_perf = TRUE}.
-Default is \code{0}.
-}
 \item{\code{catch_errors}}{\code{logical(1)}\cr
 Should errors during updating the surrogate be caught and propagated to the \code{loop_function} which can then handle
 the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
 Default is \code{TRUE}.
+}
+\item{\code{impute_method}}{\code{character(1)}\cr
+Method to impute missing values in the case of updating on an asynchronous \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} with pending evaluations.
+Can be \code{"mean"} to use mean imputation or \code{"random"} to sample values uniformly at random between the empirical minimum and maximum.
+Default is \code{"random"}.
+}
+\item{\code{input_trafo}}{\code{character(1)}\cr
+Which input transformation should be applied to numeric and integer features?
+Can be \code{"none"} for no transformation or \code{"unitcube"} to perform for each feature a min-max scaling to \verb{\[0, 1\]} based on the boundaries of the search space.
+Default is \code{"none"}.
 }
 }
 }
 
 \examples{
 if (requireNamespace("mlr3learners") &
-  requireNamespace("DiceKriging") &
-  requireNamespace("rgenoud")) {
+    requireNamespace("DiceKriging") &
+    requireNamespace("rgenoud")) {
   library(bbotk)
   library(paradox)
   library(mlr3learners)
 
   fun = function(xs) {
-    list(y = xs$x^2)
+    list(y = xs$x ^ 2)
   }
   domain = ps(x = p_dbl(lower = -10, upper = 10))
   codomain = ps(y = p_dbl(tags = "minimize"))
@@ -50,8 +44,7 @@ if (requireNamespace("mlr3learners") &
 
   instance = OptimInstanceBatchSingleCrit$new(
     objective = objective,
-    terminator = trm("evals", n_evals = 5)
-  )
+    terminator = trm("evals", n_evals = 5))
 
   xdt = generate_design_random(instance$search_space, n = 4)$data
 
@@ -77,9 +70,6 @@ Id used when printing.}
 
 \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of surrogate models.}
-
-\item{\code{assert_insample_perf}}{(\code{numeric()})\cr
-Asserts whether the current insample performance meets the performance threshold.}
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
@@ -111,6 +101,7 @@ Retrieves the currently active predict type, e.g. \code{"response"}.}
 <ul>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="format"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-format'><code>mlr3mbo::Surrogate$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="print"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-print'><code>mlr3mbo::Surrogate$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="reset"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-reset'><code>mlr3mbo::Surrogate$reset()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-update'><code>mlr3mbo::Surrogate$update()</code></a></span></li>
 </ul>
 </details>

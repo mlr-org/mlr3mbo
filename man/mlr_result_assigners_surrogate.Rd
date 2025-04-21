@@ -8,7 +8,7 @@
 Result assigner that chooses the final point(s) based on a surrogate mean prediction of all evaluated points in the \link[bbotk:Archive]{bbotk::Archive}.
 This is especially useful in the case of noisy objective functions.
 
-In the case of operating on an \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} the \link{SurrogateLearnerCollection} must use as many learners as there are objective functions.
+In the case of operating on an \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} or \link[bbotk:OptimInstanceAsyncMultiCrit]{bbotk::OptimInstanceAsyncMultiCrit} the \link{SurrogateLearnerCollection} must use as many learners as there are objective functions.
 }
 \examples{
 result_assigner = ras("surrogate")
@@ -82,7 +82,7 @@ If \verb{$surrogate} is \code{NULL}, \code{default_surrogate(instance)} is used 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit})\cr
+\item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} |\link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} | \link[bbotk:OptimInstanceAsyncMultiCrit]{bbotk::OptimInstanceAsyncMultiCrit})\cr
 The \link[bbotk:OptimInstance]{bbotk::OptimInstance} the final result should be assigned to.}
 }
 \if{html}{\out{</div>}}

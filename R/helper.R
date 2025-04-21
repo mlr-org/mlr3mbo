@@ -184,7 +184,41 @@ task_rm_backend = function(task) {
 assert_learner_surrogate = function(x, .var.name = vname(x)) {
   # NOTE: this is buggy in checkmate; assert should always return x invisible not TRUE as is the case here
   assert(check_learner_surrogate(x), .var.name = .var.name)
-
   x
 }
 
+input_trafo_unitcube = function(xydt, search_space) {
+  parameters = names(which(search_space$is_number))  # numeric or integer
+  for (parameter in parameters) {
+    set(xydt, j = parameter, value = (xydt[[parameter]] - search_space$lower[[parameter]]) / (search_space$upper[[parameter]] - search_space$lower[[parameter]]))
+  }
+  xydt
+}
+
+#' Check if Redis Server is Available
+#'
+#' Attempts to establish a connection to a Redis server using the \CRANpkg{redux} package
+#' and sends a `PING` command. Returns `TRUE` if the server is available and
+#' responds appropriately, `FALSE` otherwise.
+#'
+#' @return (`logical(1)`)
+#' @export
+#' @examples
+#' if (redis_available()) {
+#'   # Proceed with code that requires Redis
+#'   message("Redis server is available.")
+#' } else {
+#'   message("Redis server is not available.")
+#' }
+redis_available = function() {
+  requireNamespace("rush")
+  tryCatch({
+    rush::rsh()
+    config = redux::redis_config()
+    server = redux::hiredis(config)
+    ping = server$PING()
+    ping == "PONG"
+  }, error = function(e) {
+    FALSE
+  })
+}

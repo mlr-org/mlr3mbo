@@ -26,18 +26,21 @@ ResultAssignerArchive = R6Class("ResultAssignerArchive",
     #' @description
     #' Assigns the result, i.e., the final point(s) to the instance.
     #'
-    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit])\cr
+    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit] |[bbotk::OptimInstanceAsyncSingleCrit] | [bbotk::OptimInstanceAsyncMultiCrit])\cr
     #'   The [bbotk::OptimInstance] the final result should be assigned to.
     assign_result = function(instance) {
-      res = instance$archive$best()
-      xdt = res[, instance$search_space$ids(), with = FALSE]
-      if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
-        ydt = res[, instance$archive$cols_y, with = FALSE]
-        instance$assign_result(xdt, ydt)
+      xydt = instance$archive$best()
+      cols_x = instance$archive$cols_x
+      cols_y = instance$archive$cols_y
+      xdt = xydt[, cols_x, with = FALSE]
+      extra = xydt[, !c(cols_x, cols_y), with = FALSE]
+      if (inherits(instance, c("OptimInstanceBatchMultiCrit", "OptimInstanceAsyncMultiCrit"))) {
+        ydt = xydt[, cols_y, with = FALSE]
+        instance$assign_result(xdt, ydt, extra = extra)
       }
       else {
-        y = unlist(res[, instance$archive$cols_y, with = FALSE])
-        instance$assign_result(xdt, y)
+        y = unlist(xydt[, cols_y, with = FALSE])
+        instance$assign_result(xdt = xdt, y = y, extra = extra)
       }
     }
   ),

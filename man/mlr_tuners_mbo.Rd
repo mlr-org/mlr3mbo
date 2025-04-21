@@ -86,7 +86,7 @@ This corresponds to the values given by a \link[paradox:ParamSet]{paradox::Param
 Set of properties of the optimizer.
 Must be a subset of \code{\link[bbotk:bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
 MBO in principle is very flexible and by default we assume that the optimizer has all properties.
-When fully initialized, properties are determined based on the \code{loop_function} and \code{surrogate}.}
+When fully initialized, properties are determined based on the loop, e.g., the \code{loop_function}, and \code{surrogate}.}
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
@@ -118,7 +118,7 @@ Required packages are determined based on the \code{acq_function}, \code{surroga
 \if{latex}{\out{\hypertarget{method-TunerMbo-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
-For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function} and \code{acq_optimizer}, see \code{?mbo_defaults}.
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, and \code{result_assigner}, see \code{?mbo_defaults}.
 
 Note that all the parameters below are simply passed to the \link{OptimizerMbo} and
 the respective fields are simply (settable) active bindings to the fields of the \link{OptimizerMbo}.

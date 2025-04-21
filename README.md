@@ -87,7 +87,7 @@ acq_function = acqf("ei")
 
 acq_optimizer = acqo(
   opt("local_search", n_initial_points = 10, initial_random_sample_size = 1000, neighbors_per_point = 10),
-  terminator = trm("evals", n_evals = 3000)
+  terminator = trm("evals", n_evals = 2000)
 )
 
 optimizer = opt("mbo",
@@ -100,9 +100,9 @@ optimizer = opt("mbo",
 optimizer$optimize(instance)
 ```
 
-    ##          x1       x2  x_domain         y
-    ##       <num>    <num>    <list>     <num>
-    ## 1: 3.090821 2.299709 <list[2]> 0.4104925
+    ##          x1       x2  x_domain        y
+    ##       <num>    <num>    <list>    <num>
+    ## 1: 3.104516 2.396279 <list[2]> 0.412985
 
 We can quickly visualize the contours of the objective function (on log
 scale) as well as the sampling behavior of our BO run (lighter blue
