@@ -55,7 +55,8 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
     #'
     #' @param invert_posterior (`logical(1)`)\cr
     #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or [SurrogateLearnerCollection]?
-    initialize = function(invert_posterior = TRUE) {
+    #'  Default is `FALSE`.
+    initialize = function(invert_posterior = FALSE) {
       super$initialize(invert_posterior = invert_posterior, label = "Log", man = "mlr3mbo::mlr_output_trafos_log")
     },
 

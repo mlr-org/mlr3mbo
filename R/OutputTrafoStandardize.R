@@ -55,6 +55,7 @@ OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
     #'
     #' @param invert_posterior (`logical(1)`)\cr
     #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or [SurrogateLearnerCollection]?
+    #'  Default is `TRUE`.
     initialize = function(invert_posterior = TRUE) {
       super$initialize(invert_posterior = invert_posterior, label = "Standardize", man = "mlr3mbo::mlr_output_trafos_standardize")
     },
