@@ -158,11 +158,6 @@ SurrogateGP = R6Class("SurrogateGP",
       }
     },
 
-    #' @template field_assert_insample_perf_surrogate
-    assert_insample_perf = function(rhs) {
-      stopf("Not implemented.")
-    },
-
     #' @template field_n_learner_surrogate
     n_learner = function() {
       1L

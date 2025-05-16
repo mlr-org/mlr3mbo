@@ -79,9 +79,6 @@ if (requireNamespace("DiceKriging") &
 \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 
-\item{\code{assert_insample_perf}}{(\code{numeric()})\cr
-Asserts whether the current insample performance meets the performance threshold.}
-
 \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of surrogate models.}
 
