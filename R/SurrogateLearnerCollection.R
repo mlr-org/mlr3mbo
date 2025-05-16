@@ -165,11 +165,14 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @template field_packages_surrogate
     packages = function(rhs) {
       if (missing(rhs)) {
-        if (!is.null(self$output_trafo)) {
-          unique(c(self$output_trafo$packages, unlist(map(self$learner, "packages"))))
-        } else {
-          unique(unlist(map(self$learner, "packages")))
+        packages = character(0L)
+        if (!is.null(self$input_trafo)) {
+          packages = c(packages, self$input_trafo$packages)
         }
+        if (!is.null(self$output_trafo)) {
+          packages = c(packages, self$output_trafo$packages)
+        }
+        unique(c(packages, unlist(map(self$learner, "packages"))))
       } else {
         stop("$packages is read-only.")
       }
@@ -321,8 +324,8 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     deep_clone = function(name, value) {
       switch(name,
         learner = map(value, function(x) x$clone(deep = TRUE)),
-	      input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
-	      output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+	input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+	output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value
