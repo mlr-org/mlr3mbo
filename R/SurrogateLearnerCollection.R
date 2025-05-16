@@ -130,14 +130,32 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       if (!is.null(self$input_trafo)) {
         xdt = self$input_trafo$transform(xdt)
       }
+
+      # speeding up some checks by constructing the predict task directly instead of relying on predict_newdata
       preds = lapply(self$learner, function(learner) {
-        pred = learner$predict_newdata(newdata = xdt)
+        task = learner$state$train_task$clone()
+        set(xdt, j = task$target_names, value = NA_real_)  # tasks only have features and the target but we have to set the target to NA
+        newdata = as_data_backend(xdt)
+        task$backend = newdata
+        task$row_roles$use = task$backend$rownames
+        pred = learner$predict(task)
         if (learner$predict_type == "se") {
           data.table(mean = pred$response, se = pred$se)
         } else {
           data.table(mean = pred$response)
         }
       })
+
+      # slow
+      #preds = lapply(self$learner, function(learner) {
+      #  pred = learner$predict_newdata(newdata = xdt)
+      #  if (learner$predict_type == "se") {
+      #    data.table(mean = pred$response, se = pred$se)
+      #  } else {
+      #    data.table(mean = pred$response)
+      #  }
+      #})
+
       names(preds) = names(self$learner)
       if (!is.null(self$output_trafo) && self$output_trafo$invert_posterior) {
         preds = self$output_trafo$inverse_transform_posterior(preds)
