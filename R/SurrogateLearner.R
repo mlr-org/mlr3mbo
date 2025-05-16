@@ -15,11 +15,6 @@
 #'   Can be `"mean"` to use mean imputation or `"random"` to sample values uniformly at random between the empirical minimum and maximum.
 #'   Default is `"random"`.
 #' }
-#' \item{`input_trafo`}{`character(1)`\cr
-#'   Which input transformation should be applied to numeric and integer features?
-#'   Can be `"none"` for no transformation or `"unitcube"` to perform for each feature a min-max scaling to `\[0, 1\]` based on the boundaries of the search space.
-#'   Default is `"none"`.
-#' }
 #' }
 #'
 #' @export
@@ -59,18 +54,36 @@ SurrogateLearner = R6Class("SurrogateLearner",
 
   public = list(
 
+    #' @field learner ([mlr3::LearnerRegr])\cr
+    #'   [mlr3::LearnerRegr] wrapped as a surrogate model.
+    learner = NULL,
+
+    #' @field input_trafo ([InputTrafo])\cr
+    #'   Input transformation.
+    input_trafo = NULL,
+
+    #' @field output_trafo ([OutputTrafo])\cr
+    #'   Output transformation.
+    output_trafo = NULL,
+
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param learner ([mlr3::LearnerRegr]).
+    #' @template param_input_trafo_surrogate
+    #' @template param_output_trafo_surrogate
     #' @template param_archive_surrogate
     #' @template param_col_y_surrogate
     #' @template param_cols_x_surrogate
-    initialize = function(learner, archive = NULL, cols_x = NULL, col_y = NULL) {
+    initialize = function(learner, input_trafo = NULL, output_trafo = NULL, archive = NULL, cols_x = NULL, col_y = NULL) {
       assert_learner(learner)
       if (learner$predict_type != "se" && "se" %in% learner$predict_types) {
         learner$predict_type = "se"
       }
+
+      self$input_trafo = assert_r6(input_trafo, classes = "InputTrafo", null.ok = TRUE)
+
+      self$output_trafo = assert_r6(output_trafo, classes = "OutputTrafo", null.ok = TRUE)
 
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 
@@ -79,10 +92,9 @@ SurrogateLearner = R6Class("SurrogateLearner",
 
       ps = ps(
         catch_errors = p_lgl(),
-        impute_method = p_fct(c("mean", "random"), default = "random"),
-        input_trafo = p_fct(c("none", "unitcube"), default = "none")
+        impute_method = p_fct(c("mean", "random"), default = "random")
       )
-      ps$values = list(catch_errors = TRUE, impute_method = "random", input_trafo = "none")
+      ps$values = list(catch_errors = TRUE, impute_method = "random")
 
       super$initialize(learner = learner, archive = archive, cols_x = cols_x, cols_y = col_y, param_set = ps)
     },
@@ -97,16 +109,19 @@ SurrogateLearner = R6Class("SurrogateLearner",
     predict = function(xdt) {
       assert_xdt(xdt)
       xdt = fix_xdt_missing(copy(xdt), cols_x = self$cols_x, archive = self$archive)
-      if (self$param_set$values$input_trafo == "unitcube") {
-        xdt = input_trafo_unitcube(xdt, search_space = self$archive$search_space)
+      if (!is.null(self$input_trafo)) {
+        xdt = self$input_trafo$transform(xdt)
       }
-
       pred = self$learner$predict_newdata(newdata = xdt)
-      if (self$learner$predict_type == "se") {
+      pred = if (self$learner$predict_type == "se") {
         data.table(mean = pred$response, se = pred$se)
       } else {
         data.table(mean = pred$response)
       }
+      if (!is.null(self$output_trafo) && self$output_trafo$invert_posterior) {
+        pred = self$output_trafo$inverse_transform_posterior(pred)
+      }
+      pred
     }
   ),
 
@@ -129,7 +144,14 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #' @template field_packages_surrogate
     packages = function(rhs) {
       if (missing(rhs)) {
-        self$learner$packages
+        packages = character(0L)
+        if (!is.null(self$input_trafo)) {
+          packages = c(packages, self$input_trafo$packages)
+        }
+        if (!is.null(self$output_trafo)) {
+          packages = c(packages, self$output_trafo$packages)
+        }
+        unique(c(packages, self$learner$packages))
       } else {
         stop("$packages is read-only.")
       }
@@ -160,15 +182,34 @@ SurrogateLearner = R6Class("SurrogateLearner",
       } else {
         stop("$predict_type is read-only. To change it, modify $predict_type of the learner directly.")
       }
+    },
+
+    #' @template field_output_trafo_must_be_considered
+    output_trafo_must_be_considered = function(rhs) {
+      if (missing(rhs)) {
+        !is.null(self$output_trafo) && !self$output_trafo$invert_posterior
+      } else {
+        stop("$output_trafo_must_be_considered is read-only.")
+      }
     }
   ),
 
   private = list(
+
     # Train learner with new data.
     .update = function() {
       xydt = copy(self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE])
-      if (self$param_set$values$input_trafo == "unitcube") {
-        xydt = input_trafo_unitcube(xydt, search_space = self$archive$search_space)
+      if (!is.null(self$input_trafo)) {
+        self$input_trafo$cols_x = self$cols_x
+        self$input_trafo$search_space = self$archive$search_space
+        self$input_trafo$update(xydt)
+        xydt = self$input_trafo$transform(xydt)
+      }
+      if (!is.null(self$output_trafo)) {
+        self$output_trafo$cols_y = self$cols_y
+        self$output_trafo$max_to_min = surrogate_mult_max_to_min(self)
+        self$output_trafo$update(xydt)
+        xydt = self$output_trafo$transform(xydt)
       }
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$cols_y)
       assert_learnable(task, learner = self$learner)
@@ -179,8 +220,17 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Operates on an asynchronous archive and performs imputation as needed.
     .update_async = function() {
       xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE])
-      if (self$param_set$values$input_trafo == "unitcube") {
-        xydt = input_trafo_unitcube(xydt, search_space = self$archive$search_space)
+      if (!is.null(self$input_trafo)) {
+        self$input_trafo$cols_x = self$cols_x
+        self$input_trafo$search_space = self$archive$search_space
+        self$input_trafo$update(xydt)
+        xydt = self$input_trafo$transform(xydt)
+      }
+      if (!is.null(self$output_trafo)) {
+        self$output_trafo$cols_y = self$cols_y
+        self$output_trafo$max_to_min = surrogate_mult_max_to_min(self)
+        self$output_trafo$update(xydt)
+        xydt = self$output_trafo$transform(xydt)
       }
       if (self$param_set$values$impute_method == "mean") {
         mean_y = mean(xydt[[self$cols_y]], na.rm = TRUE)
@@ -204,6 +254,8 @@ SurrogateLearner = R6Class("SurrogateLearner",
     deep_clone = function(name, value) {
       switch(name,
         learner = value$clone(deep = TRUE),
+	input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+	output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value

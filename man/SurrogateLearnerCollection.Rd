@@ -21,11 +21,6 @@ Method to impute missing values in the case of updating on an asynchronous \link
 Can be \code{"mean"} to use mean imputation or \code{"random"} to sample values uniformly at random between the empirical minimum and maximum.
 Default is \code{"random"}.
 }
-\item{\code{input_trafo}}{\code{character(1)}\cr
-Which input transformation should be applied to numeric and integer features?
-Can be \code{"none"} for no transformation or \code{"unitcube"} to perform for each feature a min-max scaling to \verb{\[0, 1\]} based on the boundaries of the search space.
-Default is \code{"none"}.
-}
 }
 }
 
@@ -48,6 +43,7 @@ if (requireNamespace("mlr3learners") &
   instance = OptimInstanceBatchMultiCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
+
   xdt = generate_design_random(instance$search_space, n = 4)$data
 
   instance$eval_batch(xdt)
@@ -69,6 +65,20 @@ if (requireNamespace("mlr3learners") &
 }
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateLearnerCollection}
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{learner}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
+List of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} wrapped as surrogate models.}
+
+\item{\code{input_trafo}}{(\link{InputTrafo})\cr
+Input transformation.}
+
+\item{\code{output_trafo}}{(\link{OutputTrafo})\cr
+Output transformation.}
+}
+\if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -93,6 +103,9 @@ A complete list of candidate properties, grouped by task type, is stored in \cod
 
 \item{\code{predict_type}}{(\code{character(1)})\cr
 Retrieves the currently active predict type, e.g. \code{"response"}.}
+
+\item{\code{output_trafo_must_be_considered}}{(\code{logical(1)})\cr
+Whether a transformation has been applied to the target variable that has not been inverted during prediction.}
 }
 \if{html}{\out{</div>}}
 }
@@ -122,6 +135,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateLearnerCollection$new(
   learners,
+  input_trafo = NULL,
+  output_trafo = NULL,
   archive = NULL,
   cols_x = NULL,
   cols_y = NULL
@@ -132,6 +147,12 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
+
+\item{\code{input_trafo}}{(\link{InputTrafo} | \code{NULL}).
+\link{InputTrafo} to be applied.}
+
+\item{\code{output_trafo}}{(\link{OutputTrafo} | \code{NULL}).
+\link{OutputTrafo} to be applied.}
 
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
@@ -152,7 +173,7 @@ By default, automatically inferred based on the archive.}
 \if{latex}{\out{\hypertarget{method-SurrogateLearnerCollection-predict}{}}}
 \subsection{Method \code{predict()}}{
 Predict mean response and standard error.
-Returns a named list of data.tables.
+Returns a named list of \code{\link[data.table:data.table]{data.table::data.table()}}.
 Each contains the mean response and standard error for one \code{col_y}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateLearnerCollection$predict(xdt)}\if{html}{\out{</div>}}
@@ -167,7 +188,7 @@ New data. One row per observation.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-list of \code{\link[data.table:data.table]{data.table::data.table()}}s with the columns \code{mean} and \code{se}.
+named list of \code{\link[data.table:data.table]{data.table::data.table()}} with the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}
