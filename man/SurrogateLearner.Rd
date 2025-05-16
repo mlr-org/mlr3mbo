@@ -19,11 +19,6 @@ Method to impute missing values in the case of updating on an asynchronous \link
 Can be \code{"mean"} to use mean imputation or \code{"random"} to sample values uniformly at random between the empirical minimum and maximum.
 Default is \code{"random"}.
 }
-\item{\code{input_trafo}}{\code{character(1)}\cr
-Which input transformation should be applied to numeric and integer features?
-Can be \code{"none"} for no transformation or \code{"unitcube"} to perform for each feature a min-max scaling to \verb{\[0, 1\]} based on the boundaries of the search space.
-Default is \code{"none"}.
-}
 }
 }
 
@@ -62,6 +57,20 @@ if (requireNamespace("mlr3learners") &
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateLearner}
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{learner}}{(\link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
+\link[mlr3:LearnerRegr]{mlr3::LearnerRegr} wrapped as a surrogate model.}
+
+\item{\code{input_trafo}}{(\link{InputTrafo})\cr
+Input transformation.}
+
+\item{\code{output_trafo}}{(\link{OutputTrafo})\cr
+Output transformation.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
@@ -85,6 +94,9 @@ A complete list of candidate properties, grouped by task type, is stored in \cod
 
 \item{\code{predict_type}}{(\code{character(1)})\cr
 Retrieves the currently active predict type, e.g. \code{"response"}.}
+
+\item{\code{output_trafo_must_be_considered}}{(\code{logical(1)})\cr
+Whether a transformation has been applied to the target variable that has not been inverted during prediction.}
 }
 \if{html}{\out{</div>}}
 }
@@ -112,13 +124,26 @@ Retrieves the currently active predict type, e.g. \code{"response"}.}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearner$new(learner, archive = NULL, cols_x = NULL, col_y = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearner$new(
+  learner,
+  input_trafo = NULL,
+  output_trafo = NULL,
+  archive = NULL,
+  cols_x = NULL,
+  col_y = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{learner}}{(\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
+
+\item{\code{input_trafo}}{(\link{InputTrafo} | \code{NULL}).
+\link{InputTrafo} to be applied.}
+
+\item{\code{output_trafo}}{(\link{OutputTrafo} | \code{NULL}).
+\link{OutputTrafo} to be applied.}
 
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}

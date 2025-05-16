@@ -27,3 +27,13 @@ test_that("ResultAssigner sugar", {
   expect_r6(resultassigner, "ResultAssigner")
 })
 
+test_that("InputTrafo sugar", {
+  inputtrafo = it("unitcube")
+  expect_r6(inputtrafo, "InputTrafo")
+})
+
+test_that("OutputTrafo sugar", {
+  outputtrafo = ot("log")
+  expect_r6(outputtrafo, "OutputTrafo")
+})
+

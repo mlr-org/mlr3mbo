@@ -9,9 +9,9 @@
 }
 \description{
 A simple \link[mlr3misc:Dictionary]{mlr3misc::Dictionary} storing objects of class \link{ResultAssigner}.
-Each acquisition function has an associated help page, see \code{mlr_result_assigners_[id]}.
+Each result assigner has an associated help page, see \code{mlr_result_assigners_[id]}.
 
-For a more convenient way to retrieve and construct an acquisition function, see \code{\link[=ras]{ras()}}.
+For a more convenient way to retrieve and construct a result assigner, see \code{\link[=ras]{ras()}}.
 }
 \section{Methods}{
 
@@ -28,7 +28,9 @@ Sugar function: \code{\link[=ras]{ras()}}
 
 Other Dictionary: 
 \code{\link{mlr_acqfunctions}},
-\code{\link{mlr_loop_functions}}
+\code{\link{mlr_input_trafos}},
+\code{\link{mlr_loop_functions}},
+\code{\link{mlr_output_trafos}}
 
 Other Result Assigner: 
 \code{\link{ResultAssigner}},

@@ -83,6 +83,9 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
         stopf("'%s' only works for exactly two objectives.", format(self))
       }
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
+      if (self$surrogate$output_trafo_must_be_considered) {
+        ys = self$surrogate$output_trafo$transform(ys)
+      }
       for (column in self$archive$cols_y) {
         set(ys, j = column, value = ys[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
       }
@@ -155,3 +158,4 @@ mlr_acqfunctions$add("ehvi", AcqFunctionEHVI)
 psi_function = function(a, b, mu, sigma) {
   (sigma * dnorm((b - mu) / sigma) + ((a - mu) * pnorm((b - mu) / sigma)))
 }
+

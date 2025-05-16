@@ -32,11 +32,11 @@ Whether the \link[bbotk:Archive]{bbotk::Archive} is an asynchronous one.}
 Returns the number of surrogate models.}
 
 \item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
-Column id's of variables that should be used as features.
+Column ids of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
 \item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
-Column id's of variables that should be used as targets.
+Column ids of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 
 \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr

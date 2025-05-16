@@ -28,7 +28,7 @@ Surrogate = R6Class("Surrogate",
       self$learner = learner
       private$.archive = assert_r6(archive, classes = "Archive", null.ok = TRUE)
       private$.cols_x = assert_character(cols_x, min.len = 1L, null.ok = TRUE)
-      private$.cols_y = cols_y = assert_character(cols_y, min.len = 1L, null.ok = TRUE)
+      private$.cols_y = assert_character(cols_y, min.len = 1L, null.ok = TRUE)
       assert_r6(param_set, classes = "ParamSet")
       stopifnot(param_set$class[["catch_errors"]] == "ParamLgl")
       private$.param_set = param_set

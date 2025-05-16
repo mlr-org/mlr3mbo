@@ -175,14 +175,6 @@ assert_learner_surrogate = function(x, .var.name = vname(x)) {
   x
 }
 
-input_trafo_unitcube = function(xydt, search_space) {
-  parameters = names(which(search_space$is_number))  # numeric or integer
-  for (parameter in parameters) {
-    set(xydt, j = parameter, value = (xydt[[parameter]] - search_space$lower[[parameter]]) / (search_space$upper[[parameter]] - search_space$lower[[parameter]]))
-  }
-  xydt
-}
-
 #' Check if Redis Server is Available
 #'
 #' Attempts to establish a connection to a Redis server using the \CRANpkg{redux} package

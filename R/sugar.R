@@ -11,6 +11,12 @@
 #' @param learner ([mlr3::LearnerRegr] | List of [mlr3::LearnerRegr])\cr
 #'   [mlr3::LearnerRegr] that is to be used within the [SurrogateLearner] or a list of [mlr3::LearnerRegr] that are to
 #'   be used within the [SurrogateLearnerCollection].
+#' @param input_trafo (`NULL` | [InputTrafo])\cr
+#'   Input transformation.
+#'   Can also be `NULL`.'
+#' @param output_trafo (`NULL` | [OutputTrafo])\cr
+#'   Output transformation.
+#'   Can also be `NULL`.
 #' @param archive (`NULL` | [bbotk::Archive])\cr
 #'   [bbotk::Archive] of the [bbotk::OptimInstance] used.
 #'   Can also be `NULL`.
@@ -34,20 +40,20 @@
 #' srlrn(lrn("regr.featureless"), catch_errors = FALSE)
 #' srlrn(list(lrn("regr.featureless"), lrn("regr.featureless")))
 #' @export
-srlrn = function(learner, archive = NULL, cols_x = NULL, cols_y = NULL, ...) {
+srlrn = function(learner, input_trafo = NULL, output_trafo = NULL, archive = NULL, cols_x = NULL, cols_y = NULL, ...) {
   dots = list(...)
   assert_learner_surrogate(learner)
 
   surrogate = if (test_r6(learner, classes = "Learner")) {
-    SurrogateLearner$new(learner = learner, archive = archive, cols_x = cols_x, col_y = cols_y)
+    SurrogateLearner$new(learner = learner, input_trafo = input_trafo, output_trafo = output_trafo, archive = archive, cols_x = cols_x, col_y = cols_y)
   } else if (inherits(learner, what = "list")) {
     if (length(learner) == 1L) {
       learner = learner[1L]
       # if a single learner is provided in a list, we unlist it
-      SurrogateLearner$new(learner = learner, archive = archive, cols_x = cols_x, col_y = cols_y)
+      SurrogateLearner$new(learner = learner, input_trafo = input_trafo, output_trafo = output_trafo, archive = archive, cols_x = cols_x, col_y = cols_y)
     } else {
       assert_character(cols_y, len = length(learner), null.ok = TRUE)
-      SurrogateLearnerCollection$new(learners = learner, archive = archive, cols_x = cols_x, cols_y = cols_y)
+      SurrogateLearnerCollection$new(learners = learner, input_trafo = input_trafo, output_trafo = output_trafo, archive = archive, cols_x = cols_x, cols_y = cols_y)
     }
   }
   surrogate$param_set$values = insert_named(surrogate$param_set$values, dots)
@@ -157,5 +163,53 @@ acqo = function(optimizer, terminator, acq_function = NULL, callbacks = NULL, ..
 #' @export
 ras = function(.key, ...) {
   dictionary_sugar_get(mlr_result_assigners, .key, ...)
+}
+
+#' @title Syntactic Sugar Output Trafo Construction
+#'
+#' @description
+#' This function complements [mlr_output_trafos] with functions in the spirit
+#' of `mlr_sugar` from \CRANpkg{mlr3}.
+#'
+#' @param .key (`character(1)`)\cr
+#' Key passed to the respective [dictionary][mlr3misc::Dictionary] to retrieve
+#' the object.
+#' @param ... (named `list()`)\cr
+#' Named arguments passed to the constructor, to be set as parameters in the
+#' [paradox::ParamSet], or to be set as public field. See
+#' [mlr3misc::dictionary_sugar_get()] for more details.
+#'
+#' @return [OutputTrafo]
+#'
+#' @export
+#' @examples
+#' ot("standardize")
+#' @export
+ot = function(.key, ...) {
+  dictionary_sugar_get(mlr_output_trafos, .key, ...)
+}
+
+#' @title Syntactic Sugar Input Trafo Construction
+#'
+#' @description
+#' This function complements [mlr_input_trafos] with functions in the spirit
+#' of `mlr_sugar` from \CRANpkg{mlr3}.
+#'
+#' @param .key (`character(1)`)\cr
+#' Key passed to the respective [dictionary][mlr3misc::Dictionary] to retrieve
+#' the object.
+#' @param ... (named `list()`)\cr
+#' Named arguments passed to the constructor, to be set as parameters in the
+#' [paradox::ParamSet], or to be set as public field. See
+#' [mlr3misc::dictionary_sugar_get()] for more details.
+#'
+#' @return [InputTrafo]
+#'
+#' @export
+#' @examples
+#' it("unitcube")
+#' @export
+it = function(.key, ...) {
+  dictionary_sugar_get(mlr_input_trafos, .key, ...)
 }
 

@@ -20,6 +20,12 @@ FUN_1D_2 = function(xs) {
 FUN_1D_2_CODOMAIN = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 OBJ_1D_2 = bbotk::ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
 
+FUN_1D_MAXIMIZE = function(xs) {
+  list(y = - as.numeric(xs)^2)
+}
+FUN_1D_CODOMAIN_MAXIMIZE = ps(y = p_dbl(tags = "maximize"))
+OBJ_1D_MAXIMIZE = bbotk::ObjectiveRFun$new(fun = FUN_1D_MAXIMIZE, domain = PS_1D, codomain = FUN_1D_CODOMAIN_MAXIMIZE, properties = "single-crit")
+
 # Simple 1D Functions with noise
 FUN_1D_NOISY = function(xs) {
   list(y = as.numeric(xs)^2 + rnorm(1, sd = 0.5))
@@ -82,7 +88,7 @@ FUN_2D_NOISY = function(xs) {
 OBJ_2D_NOISY = bbotk::ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D, properties = c("single-crit", "noisy"))
 
 # Instance helper
-MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 10L)) {
+MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 5)) {
   if (objective$codomain$length == 1L) {
     OptimInstanceBatchSingleCrit$new(objective = objective, search_space = search_space, terminator = terminator)
   } else {

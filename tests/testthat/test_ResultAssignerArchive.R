@@ -1,15 +1,15 @@
 test_that("ResultAssignerArchive works", {
   ras = ResultAssignerArchive$new()
 
-  inst = MAKE_INST_1D()
-  design = generate_design_random(inst$search_space, n = 4L)$data
-  inst$eval_batch(design)
+  instance = MAKE_INST_1D()
+  design = generate_design_random(instance$search_space, n = 4L)$data
+  instance$eval_batch(design)
 
-  expect_null(inst$result)
-  ras$assign_result(inst)
-  expect_data_table(inst$result, nrows = 1L)
-  expect_equal(inst$result[[inst$archive$cols_x]], inst$archive$best()[[inst$archive$cols_x]])
-  expect_equal(inst$result[[inst$archive$cols_y]], inst$archive$best()[[inst$archive$cols_y]])
+  expect_null(instance$result)
+  ras$assign_result(instance)
+  expect_data_table(instance$result, nrows = 1L)
+  expect_equal(instance$result[[instance$archive$cols_x]], instance$archive$best()[[instance$archive$cols_x]])
+  expect_equal(instance$result[[instance$archive$cols_y]], instance$archive$best()[[instance$archive$cols_y]])
 })
 
 test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_ego", {

@@ -4,12 +4,28 @@
 \alias{srlrn}
 \title{Syntactic Sugar Surrogate Construction}
 \usage{
-srlrn(learner, archive = NULL, cols_x = NULL, cols_y = NULL, ...)
+srlrn(
+  learner,
+  input_trafo = NULL,
+  output_trafo = NULL,
+  archive = NULL,
+  cols_x = NULL,
+  cols_y = NULL,
+  ...
+)
 }
 \arguments{
 \item{learner}{(\link[mlr3:LearnerRegr]{mlr3::LearnerRegr} | List of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
 \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} that is to be used within the \link{SurrogateLearner} or a list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} that are to
 be used within the \link{SurrogateLearnerCollection}.}
+
+\item{input_trafo}{(\code{NULL} | \link{InputTrafo})\cr
+Input transformation.
+Can also be \code{NULL}.'}
+
+\item{output_trafo}{(\code{NULL} | \link{OutputTrafo})\cr
+Output transformation.
+Can also be \code{NULL}.}
 
 \item{archive}{(\code{NULL} | \link[bbotk:Archive]{bbotk::Archive})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} used.
