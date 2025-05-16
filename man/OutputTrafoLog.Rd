@@ -90,14 +90,15 @@ A warning is signaled if at least one of the packages is not installed, but load
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OutputTrafoLog$new(invert_posterior = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{OutputTrafoLog$new(invert_posterior = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{invert_posterior}}{(\code{logical(1)})\cr
-Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or \link{SurrogateLearnerCollection}?}
+Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or \link{SurrogateLearnerCollection}?
+Default is \code{FALSE}.}
 }
 \if{html}{\out{</div>}}
 }

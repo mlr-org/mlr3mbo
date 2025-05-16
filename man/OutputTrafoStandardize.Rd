@@ -97,7 +97,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{invert_posterior}}{(\code{logical(1)})\cr
-Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or \link{SurrogateLearnerCollection}?}
+Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or \link{SurrogateLearnerCollection}?
+Default is \code{TRUE}.}
 }
 \if{html}{\out{</div>}}
 }
