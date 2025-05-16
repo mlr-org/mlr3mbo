@@ -22,7 +22,7 @@ test_that("AcqFunctionEILog works", {
   xdt = data.table(x = seq(-1, 1, length.out = 5L))
   expect_error(acqf$eval_dt(xdt), "update")
   expect_error(acqf$update(), "Must be an R6 class")
-  ot = OutputTrafoLog$new()
+  ot = OutputTrafoLog$new(invert_posterior = TRUE)
   acqf$surrogate$output_trafo = ot
   expect_error(acqf$update(), "Must be FALSE")
   acqf$surrogate$output_trafo$invert_posterior = FALSE
