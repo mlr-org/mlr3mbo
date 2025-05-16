@@ -4,6 +4,11 @@
 <url><loc>https://mlr3mbo.mlr-org.com/dev/news/index.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/InputTrafo.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/InputTrafoUnitcube.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafoLog.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafoStandardize.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/ResultAssigner.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/SurrogateLearner.html</loc></url>
@@ -19,6 +24,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/default_rf.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/default_surrogate.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/index.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/it.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/loop_function.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mbo_defaults.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo-package.html</loc></url>
@@ -28,6 +34,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_ehvi.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_ehvigh.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_ei.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_ei_log.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_eips.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_mean.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_multi.html</loc></url>
@@ -36,6 +43,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_smsego.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_stochastic_cb.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_stochastic_ei.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_input_trafos.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_ego.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_emo.html</loc></url>
@@ -45,12 +53,14 @@
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_optimizers_adbo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_optimizers_async_mbo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_optimizers_mbo.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_output_trafos.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_result_assigners.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_result_assigners_archive.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_result_assigners_surrogate.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_tuners_adbo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_tuners_async_mbo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_tuners_mbo.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/ot.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/ras.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/redis_available.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/srlrn.html</loc></url>
