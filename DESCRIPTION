@@ -58,6 +58,7 @@ Suggests:
     lhs,
     mlr3learners (>= 0.5.4),
     mlr3pipelines (>= 0.4.2),
+    mlr3hyperband (>= 0.4.4),
     nloptr,
     ranger,
     rgenoud,
@@ -106,6 +107,7 @@ Collate:
     'ResultAssigner.R'
     'ResultAssignerArchive.R'
     'ResultAssignerSurrogate.R'
+    'SamplerMbo.R'
     'Surrogate.R'
     'SurrogateLearner.R'
     'SurrogateLearnerCollection.R'
