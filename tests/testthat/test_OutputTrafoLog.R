@@ -33,7 +33,7 @@ test_that("OutputTrafoLog works with SurrogateLearner", {
 
   surrogate = SurrogateLearner$new(REGR_KM_DETERM)
   surrogate$archive = instance$archive
-  ot = OutputTrafoLog$new()
+  ot = OutputTrafoLog$new(invert_posterior = TRUE)
   surrogate$output_trafo = ot
 
   surrogate$update()
@@ -54,7 +54,7 @@ test_that("OutputTrafoLog works with SurrogateLearnerCollection", {
 
   surrogate = SurrogateLearnerCollection$new(list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)))
   surrogate$archive = instance$archive
-  ot = OutputTrafoLog$new()
+  ot = OutputTrafoLog$new(invert_posterior = TRUE)
   surrogate$output_trafo = ot
 
   surrogate$update()
