@@ -76,6 +76,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_cb}},
 \code{\link{mlr_acqfunctions_ehvi}},
 \code{\link{mlr_acqfunctions_ehvigh}},
+\code{\link{mlr_acqfunctions_ei_log}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_multi}},

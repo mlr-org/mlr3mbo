@@ -95,8 +95,9 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     #' Update the acquisition function and set `y_effective_best` and `noise_var`.
     update = function() {
       xdt = self$archive$data[, self$archive$cols_x, with = FALSE]
-      p = self$surrogate$predict(xdt)
-      y_effective = p$mean + (self$surrogate_max_to_min * self$constants$values$c * p$se) # pessimistic prediction
+      pred = self$surrogate$predict(xdt)
+      # NOTE: output_trafo_must_be_considered is not relevant to y here because y_effective_best is determined from the predictions
+      y_effective = pred$mean + (self$surrogate_max_to_min * self$constants$values$c * pred$se) # pessimistic prediction
       self$y_effective_best = min(self$surrogate_max_to_min * y_effective)
 
       if (!is.null(self$surrogate$learner$model) && length(self$surrogate$learner$model@covariance@nugget) == 1L) {

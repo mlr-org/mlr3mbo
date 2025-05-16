@@ -16,7 +16,7 @@ Note that this does not affect how the acquisition function itself is calculated
 result in computing the q- or multi-Expected Improvement) but rather the top \code{n_candidates} are selected from the
 \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the acquisition function \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
 Note that setting \code{n_candidates > 1} is usually not a sensible idea but it is still supported for experimental reasons.
-Note that in the case of the acquisition function \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} being multi-criteria, due to using an \link{AcqFunctionMulti},
+Note that in the case of the acquisition function \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} being multi-objective, due to using an \link{AcqFunctionMulti},
 selection of the best candidates is performed via non-dominated-sorting.
 Default is \code{1}.
 }
@@ -30,7 +30,7 @@ Should the acquisition function optimization be warm-started by evaluating the b
 the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} (which is contained in the archive of the \link{AcqFunction})?
 This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 Default is \code{FALSE}.
-Note that in the case of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} being multi-criteria, selection of the best point(s) is performed via non-dominated-sorting.
+Note that in the case of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} being multi-objective, selection of the best point(s) is performed via non-dominated-sorting.
 }
 \item{\code{warmstart_size}}{\code{integer(1) | "all"}\cr
 Number of best points selected from the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that are to be used for warm starting.

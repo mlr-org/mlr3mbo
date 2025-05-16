@@ -1,6 +1,7 @@
 test_that("AcqFunctionStochasticCB works in defaults", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   rush::rush_plan(n_workers = 1L)
@@ -27,6 +28,7 @@ test_that("AcqFunctionStochasticCB works in defaults", {
 test_that("AcqFunctionStochasticCB works with uniform sampling", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   rush::rush_plan(n_workers = 2L)
@@ -54,6 +56,7 @@ test_that("AcqFunctionStochasticCB works with uniform sampling", {
 test_that("AcqFunctionStochasticCB works with exponential sampling", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   rush::rush_plan(n_workers = 2L)
@@ -82,6 +85,7 @@ test_that("AcqFunctionStochasticCB works with exponential sampling", {
 test_that("AcqFunctionStochasticCB works with lambda decay", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   rush::rush_plan(n_workers = 1L)
@@ -110,6 +114,7 @@ test_that("AcqFunctionStochasticCB works with lambda decay", {
 test_that("AcqFunctionStochasticCB works with periodic lambda decay", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   rush::rush_plan(n_workers = 1L)

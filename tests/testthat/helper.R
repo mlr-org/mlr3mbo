@@ -1,5 +1,8 @@
-lapply(list.files(system.file("testthat", package = "mlr3"),
-  pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
+library(mlr3)
+library(checkmate)
+library(testthat)
+
+lapply(list.files(system.file("testthat", package = "mlr3"), pattern = "^helper.*\\.[rR]", full.names = TRUE), source)
 
 # Simple 1D Functions
 PS_1D = ps(
@@ -16,6 +19,12 @@ FUN_1D_2 = function(xs) {
 }
 FUN_1D_2_CODOMAIN = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
 OBJ_1D_2 = bbotk::ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
+
+FUN_1D_MAXIMIZE = function(xs) {
+  list(y = - as.numeric(xs)^2)
+}
+FUN_1D_CODOMAIN_MAXIMIZE = ps(y = p_dbl(tags = "maximize"))
+OBJ_1D_MAXIMIZE = bbotk::ObjectiveRFun$new(fun = FUN_1D_MAXIMIZE, domain = PS_1D, codomain = FUN_1D_CODOMAIN_MAXIMIZE, properties = "single-crit")
 
 # Simple 1D Functions with noise
 FUN_1D_NOISY = function(xs) {
@@ -79,7 +88,7 @@ FUN_2D_NOISY = function(xs) {
 OBJ_2D_NOISY = bbotk::ObjectiveRFun$new(fun = FUN_2D_NOISY, domain = PS_2D, properties = c("single-crit", "noisy"))
 
 # Instance helper
-MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 10L)) {
+MAKE_INST = function(objective = OBJ_2D, search_space = PS_2D, terminator = trm("evals", n_evals = 5)) {
   if (objective$codomain$length == 1L) {
     OptimInstanceBatchSingleCrit$new(objective = objective, search_space = search_space, terminator = terminator)
   } else {
@@ -170,6 +179,15 @@ LearnerRegrError = R6::R6Class("LearnerRegrError",
     }
   )
 )
+
+expect_man_exists = function(man) {
+  checkmate::expect_string(man, na.ok = TRUE, fixed = "::")
+  if (!is.na(man)) {
+    parts = strsplit(man, "::", fixed = TRUE)[[1L]]
+    matches = help.search(parts[2L], package = parts[1L], ignore.case = FALSE)
+    checkmate::expect_data_frame(matches$matches, min.rows = 1L, info = "man page lookup")
+  }
+}
 
 expect_dictionary_loop_function = function(d, contains = NA_character_, min_items = 0L) {
   expect_r6(d, "Dictionary")

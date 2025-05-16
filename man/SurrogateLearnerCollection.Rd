@@ -11,22 +11,6 @@ Note that redundant \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} must be deep clon
 \section{Parameters}{
 
 \describe{
-\item{\code{assert_insample_perf}}{\code{logical(1)}\cr
-Should the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} be asserted after updating the surrogate?
-If the assertion fails (i.e., the insample performance based on the \code{perf_measure} does not meet the
-\code{perf_threshold}), an error is thrown.
-Default is \code{FALSE}.
-}
-\item{\code{perf_measure}}{List of \link[mlr3:MeasureRegr]{mlr3::MeasureRegr}\cr
-Performance measures which should be use to assert the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}.
-Only relevant if \code{assert_insample_perf = TRUE}.
-Default is \link[mlr3:mlr_measures_regr.rsq]{mlr3::mlr_measures_regr.rsq} for each learner.
-}
-\item{\code{perf_threshold}}{List of \code{numeric(1)}\cr
-Thresholds the insample performance of the \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} should be asserted against.
-Only relevant if \code{assert_insample_perf = TRUE}.
-Default is \code{0} for each learner.
-}
 \item{\code{catch_errors}}{\code{logical(1)}\cr
 Should errors during updating the surrogate be caught and propagated to the \code{loop_function} which can then handle
 the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
@@ -59,6 +43,7 @@ if (requireNamespace("mlr3learners") &
   instance = OptimInstanceBatchMultiCrit$new(
     objective = objective,
     terminator = trm("evals", n_evals = 5))
+
   xdt = generate_design_random(instance$search_space, n = 4)$data
 
   instance$eval_batch(xdt)
@@ -81,6 +66,20 @@ if (requireNamespace("mlr3learners") &
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateLearnerCollection}
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{learner}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
+List of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} wrapped as surrogate models.}
+
+\item{\code{input_trafo}}{(\link{InputTrafo})\cr
+Input transformation.}
+
+\item{\code{output_trafo}}{(\link{OutputTrafo})\cr
+Output transformation.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
@@ -89,9 +88,6 @@ Id used when printing.}
 
 \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of surrogate models.}
-
-\item{\code{assert_insample_perf}}{(\code{numeric()})\cr
-Asserts whether the current insample performance meets the performance threshold.}
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
@@ -107,6 +103,9 @@ A complete list of candidate properties, grouped by task type, is stored in \cod
 
 \item{\code{predict_type}}{(\code{character(1)})\cr
 Retrieves the currently active predict type, e.g. \code{"response"}.}
+
+\item{\code{output_trafo_must_be_considered}}{(\code{logical(1)})\cr
+Whether a transformation has been applied to the target variable that has not been inverted during prediction.}
 }
 \if{html}{\out{</div>}}
 }
@@ -136,6 +135,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateLearnerCollection$new(
   learners,
+  input_trafo = NULL,
+  output_trafo = NULL,
   archive = NULL,
   cols_x = NULL,
   cols_y = NULL
@@ -146,6 +147,12 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
+
+\item{\code{input_trafo}}{(\link{InputTrafo} | \code{NULL}).
+\link{InputTrafo} to be applied.}
+
+\item{\code{output_trafo}}{(\link{OutputTrafo} | \code{NULL}).
+\link{OutputTrafo} to be applied.}
 
 \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
@@ -166,7 +173,7 @@ By default, automatically inferred based on the archive.}
 \if{latex}{\out{\hypertarget{method-SurrogateLearnerCollection-predict}{}}}
 \subsection{Method \code{predict()}}{
 Predict mean response and standard error.
-Returns a named list of data.tables.
+Returns a named list of \code{\link[data.table:data.table]{data.table::data.table()}}.
 Each contains the mean response and standard error for one \code{col_y}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurrogateLearnerCollection$predict(xdt)}\if{html}{\out{</div>}}
@@ -181,7 +188,7 @@ New data. One row per observation.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-list of \code{\link[data.table:data.table]{data.table::data.table()}}s with the columns \code{mean} and \code{se}.
+named list of \code{\link[data.table:data.table]{data.table::data.table()}} with the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}

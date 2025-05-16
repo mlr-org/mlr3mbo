@@ -172,7 +172,33 @@ assert_xdt = function(xdt) {
 assert_learner_surrogate = function(x, .var.name = vname(x)) {
   # NOTE: this is buggy in checkmate; assert should always return x invisible not TRUE as is the case here
   assert(check_learner_surrogate(x), .var.name = .var.name)
-
   x
 }
 
+#' Check if Redis Server is Available
+#'
+#' Attempts to establish a connection to a Redis server using the \CRANpkg{redux} package
+#' and sends a `PING` command. Returns `TRUE` if the server is available and
+#' responds appropriately, `FALSE` otherwise.
+#'
+#' @return (`logical(1)`)
+#' @export
+#' @examples
+#' if (redis_available()) {
+#'   # Proceed with code that requires Redis
+#'   message("Redis server is available.")
+#' } else {
+#'   message("Redis server is not available.")
+#' }
+redis_available = function() {
+  requireNamespace("rush")
+  tryCatch({
+    rush::rsh()
+    config = redux::redis_config()
+    server = redux::hiredis(config)
+    ping = server$PING()
+    ping == "PONG"
+  }, error = function(e) {
+    FALSE
+  })
+}

@@ -1,6 +1,7 @@
 test_that("OptimizerAsyncMbo works in defaults", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   rush::rush_plan(n_workers = 2L)
@@ -21,6 +22,7 @@ test_that("OptimizerAsyncMbo works in defaults", {
 test_that("OptimizerAsyncMbo works with evaluations in archive", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   rush::rush_plan(n_workers = 2L)

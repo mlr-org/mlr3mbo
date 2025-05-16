@@ -1,6 +1,7 @@
 test_that("AcqFunctionStochasticEI works in defaults", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   rush::rush_plan(n_workers = 1L)
@@ -28,6 +29,7 @@ test_that("AcqFunctionStochasticEI works in defaults", {
 test_that("AcqFunctionStochasticEI works with multiple workers", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   rush::rush_plan(n_workers = 2L)
@@ -55,6 +57,7 @@ test_that("AcqFunctionStochasticEI works with multiple workers", {
 test_that("AcqFunctionStochasticEI works with periodic epsilon decay", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   rush::rush_plan(n_workers = 1L)

@@ -7,22 +7,6 @@
 #'
 #' @section Parameters:
 #' \describe{
-#' \item{`assert_insample_perf`}{`logical(1)`\cr
-#'   Should the insample performance of the [mlr3::LearnerRegr] be asserted after updating the surrogate?
-#'   If the assertion fails (i.e., the insample performance based on the `perf_measure` does not meet the
-#'   `perf_threshold`), an error is thrown.
-#'   Default is `FALSE`.
-#' }
-#' \item{`perf_measure`}{List of [mlr3::MeasureRegr]\cr
-#'   Performance measures which should be use to assert the insample performance of the [mlr3::LearnerRegr].
-#'   Only relevant if `assert_insample_perf = TRUE`.
-#'   Default is [mlr3::mlr_measures_regr.rsq] for each learner.
-#' }
-#' \item{`perf_threshold`}{List of `numeric(1)`\cr
-#'   Thresholds the insample performance of the [mlr3::LearnerRegr] should be asserted against.
-#'   Only relevant if `assert_insample_perf = TRUE`.
-#'   Default is `0` for each learner.
-#' }
 #' \item{`catch_errors`}{`logical(1)`\cr
 #'   Should errors during updating the surrogate be caught and propagated to the `loop_function` which can then handle
 #'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
@@ -55,6 +39,7 @@
 #'   instance = OptimInstanceBatchMultiCrit$new(
 #'     objective = objective,
 #'     terminator = trm("evals", n_evals = 5))
+#'
 #'   xdt = generate_design_random(instance$search_space, n = 4)$data
 #'
 #'   instance$eval_batch(xdt)
@@ -78,14 +63,28 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
 
   public = list(
 
+    #' @field learner (list of [mlr3::LearnerRegr])\cr
+    #'   List of [mlr3::LearnerRegr] wrapped as surrogate models.
+    learner = NULL,
+
+    #' @field input_trafo ([InputTrafo])\cr
+    #'   Input transformation.
+    input_trafo = NULL,
+
+    #' @field output_trafo ([OutputTrafo])\cr
+    #'   Output transformation.
+    output_trafo = NULL,
+
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param learners (list of [mlr3::LearnerRegr]).
+    #' @template param_input_trafo_surrogate
+    #' @template param_output_trafo_surrogate
     #' @template param_archive_surrogate
-    #' @template param_cols_x_surrogate
     #' @template param_cols_y_surrogate
-    initialize = function(learners, archive = NULL, cols_x = NULL, cols_y = NULL) {
+    #' @template param_cols_x_surrogate
+    initialize = function(learners, input_trafo = NULL, output_trafo = NULL, archive = NULL, cols_x = NULL, cols_y = NULL) {
       assert_learners(learners)
       addresses = map(learners, address)
       if (length(unique(addresses)) != length(addresses)) {
@@ -98,37 +97,39 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
         }
       }
 
+      self$input_trafo = assert_r6(input_trafo, classes = "InputTrafo", null.ok = TRUE)
+
+      self$output_trafo = assert_r6(output_trafo, classes = "OutputTrafo", null.ok = TRUE)
+
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 
       assert_character(cols_x, min.len = 1L, null.ok = TRUE)
       assert_character(cols_y, len = length(learners), null.ok = TRUE)
 
       ps = ps(
-        assert_insample_perf = p_lgl(),
-        perf_measures = p_uty(custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(learners))),  # FIXME: actually want check_measures
-        perf_thresholds = p_uty(custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(learners))),
-        catch_errors = p_lgl(tags = "required"),
-        impute_method = p_fct(c("mean", "random"), tags = "required")
+        catch_errors = p_lgl(),
+        impute_method = p_fct(c("mean", "random"), default = "random")
       )
-      ps$values = list(assert_insample_perf = FALSE, catch_errors = TRUE, impute_method = "random")
-      ps$add_dep("perf_measures", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
-      ps$add_dep("perf_thresholds", on = "assert_insample_perf", cond = CondEqual$new(TRUE))
+      ps$values = list(catch_errors = TRUE, impute_method = "random")
 
       super$initialize(learner = learners, archive = archive, cols_x = cols_x, cols_y = cols_y, param_set = ps)
     },
 
     #' @description
     #' Predict mean response and standard error.
-    #' Returns a named list of data.tables.
+    #' Returns a named list of [data.table::data.table()].
     #' Each contains the mean response and standard error for one `col_y`.
     #'
     #' @param xdt ([data.table::data.table()])\cr
     #'   New data. One row per observation.
     #'
-    #' @return list of [data.table::data.table()]s with the columns `mean` and `se`.
+    #' @return named list of [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
       assert_xdt(xdt)
-      xdt = fix_xdt_missing(xdt, cols_x = self$cols_x, archive = self$archive)
+      xdt = fix_xdt_missing(copy(xdt), cols_x = self$cols_x, archive = self$archive)
+      if (!is.null(self$input_trafo)) {
+        xdt = self$input_trafo$transform(xdt)
+      }
 
       # speeding up some checks by constructing the predict task directly instead of relying on predict_newdata
       preds = lapply(self$learner, function(learner) {
@@ -156,6 +157,9 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       #})
 
       names(preds) = names(self$learner)
+      if (!is.null(self$output_trafo) && self$output_trafo$invert_posterior) {
+        preds = self$output_trafo$inverse_transform_posterior(preds)
+      }
       preds
     }
   ),
@@ -176,37 +180,17 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       length(self$learner)
     },
 
-    #' @template field_assert_insample_perf_surrogate
-    assert_insample_perf = function(rhs) {
-      if (missing(rhs)) {
-        check = all(pmap_lgl(
-          list(
-            insample_perf = self$insample_perf,
-            perf_threshold = self$param_set$values$perf_thresholds %??% rep(0, self$n_learner),
-            perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)
-          ),
-          .f = function(insample_perf, perf_threshold, perf_measure) {
-            if (perf_measure$minimize) {
-              insample_perf < perf_threshold
-            } else {
-              insample_perf > perf_threshold
-            }
-          })
-        )
-
-        if (!check) {
-          stop("Current insample performance of the Surrogate Model does not meet the performance threshold.")
-        }
-        invisible(self$insample_perf)
-      } else {
-        stop("$assert_insample_perf is read-only.")
-      }
-    },
-
     #' @template field_packages_surrogate
     packages = function(rhs) {
       if (missing(rhs)) {
-        unique(unlist(map(self$learner, "packages")))
+        packages = character(0L)
+        if (!is.null(self$input_trafo)) {
+          packages = c(packages, self$input_trafo$packages)
+        }
+        if (!is.null(self$output_trafo)) {
+          packages = c(packages, self$output_trafo$packages)
+        }
+        unique(c(packages, unlist(map(self$learner, "packages"))))
       } else {
         stop("$packages is read-only.")
       }
@@ -241,17 +225,37 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       } else {
         stop("$predict_type is read-only. To change it, modify $predict_type of the learner directly.")
       }
+    },
+
+    #' @template field_output_trafo_must_be_considered
+    output_trafo_must_be_considered = function(rhs) {
+      if (missing(rhs)) {
+        !is.null(self$output_trafo) && !self$output_trafo$invert_posterior
+      } else {
+        stop("$output_trafo_must_be_considered is read-only.")
+      }
     }
   ),
 
   private = list(
 
     # Train learner with new data.
-    # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
     .update = function() {
       assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
       one_to_multiple = length(self$cols_y) == 1L
-      xydt = self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE]
+      xydt = copy(self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE])
+      if (!is.null(self$input_trafo)) {
+        self$input_trafo$cols_x = self$cols_x
+        self$input_trafo$search_space = self$archive$search_space
+        self$input_trafo$update(xydt)
+        xydt = self$input_trafo$transform(xydt)
+      }
+      if (!is.null(self$output_trafo)) {
+        self$output_trafo$cols_y = self$cols_y
+        self$output_trafo$max_to_min = surrogate_mult_max_to_min(self)
+        self$output_trafo$update(xydt)
+        xydt = self$output_trafo$transform(xydt)
+      }
       features = setdiff(names(xydt), self$cols_y)
       tasks = lapply(self$cols_y, function(col_y) {
         # if this turns out to be a bottleneck, we can also operate on a single task here
@@ -272,26 +276,27 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       } else {
         names(self$learner) = self$cols_y
       }
-
-      if (self$param_set$values$assert_insample_perf) {
-        private$.insample_perf = setNames(pmap_dbl(list(learner = self$learner, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),
-          .f = function(learner, task, perf_measure) {
-            assert_measure(perf_measure, task = task, learner = learner)
-            learner$predict(task)$score(perf_measure, task = task, learner = learner)
-          }
-        ), nm = map_chr(self$param_set$values$perf_measures, "id"))
-        self$assert_insample_perf
-      }
     },
 
     # Train learner with new data.
     # Operates on an asynchronous archive and performs imputation as needed.
-    # Also calculates the insample performance based on the `perf_measures` hyperparameter if `assert_insample_perf = TRUE`.
     .update_async = function() {
       assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
       one_to_multiple = length(self$cols_y) == 1L
 
-      xydt = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE]
+      xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE])
+      if (!is.null(self$input_trafo)) {
+        self$input_trafo$cols_x = self$cols_x
+        self$input_trafo$search_space = self$archive$search_space
+        self$input_trafo$update(xydt)
+        xydt = self$input_trafo$transform(xydt)
+      }
+      if (!is.null(self$output_trafo)) {
+        self$output_trafo$cols_y = self$cols_y
+        self$output_trafo$max_to_min = surrogate_mult_max_to_min(self)
+        self$output_trafo$update(xydt)
+        xydt = self$output_trafo$transform(xydt)
+      }
       if (self$param_set$values$impute_method == "mean") {
         walk(self$cols_y, function(col) {
           mean_y = mean(xydt[[col]], na.rm = TRUE)
@@ -326,16 +331,6 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       } else {
         names(self$learner) = self$cols_y
       }
-
-      if (self$param_set$values$assert_insample_perf) {
-        private$.insample_perf = setNames(pmap_dbl(list(learner = self$learner, task = tasks, perf_measure = self$param_set$values$perf_measures %??% replicate(self$n_learner, mlr_measures$get("regr.rsq"), simplify = FALSE)),
-          .f = function(learner, task, perf_measure) {
-            assert_measure(perf_measure, task = task, learner = learner)
-            learner$predict(task)$score(perf_measure, task = task, learner = learner)
-          }
-        ), nm = map_chr(self$param_set$values$perf_measures, "id"))
-        self$assert_insample_perf
-      }
     },
 
     .reset = function() {
@@ -347,6 +342,8 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     deep_clone = function(name, value) {
       switch(name,
         learner = map(value, function(x) x$clone(deep = TRUE)),
+	input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+	output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value

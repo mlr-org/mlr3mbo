@@ -1,6 +1,7 @@
 test_that("TunerADBO works", {
   skip_on_cran()
   skip_if_not_installed("rush")
+  skip_if_not(redis_available())
   flush_redis()
 
   learner = lrn("classif.rpart",
@@ -12,7 +13,7 @@ test_that("TunerADBO works", {
     task = tsk("pima"),
     learner = learner,
     resampling = rsmp("cv", folds = 3L),
-    measure = msr("classif.ce"),
+    measures = msr("classif.ce"),
     terminator = trm("evals", n_evals = 20L),
     store_benchmark_result = FALSE
   )

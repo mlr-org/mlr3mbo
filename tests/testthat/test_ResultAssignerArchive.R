@@ -1,15 +1,15 @@
 test_that("ResultAssignerArchive works", {
   ras = ResultAssignerArchive$new()
 
-  inst = MAKE_INST_1D()
-  design = generate_design_random(inst$search_space, n = 4L)$data
-  inst$eval_batch(design)
+  instance = MAKE_INST_1D()
+  design = generate_design_random(instance$search_space, n = 4L)$data
+  instance$eval_batch(design)
 
-  expect_null(inst$result)
-  ras$assign_result(inst)
-  expect_data_table(inst$result, nrows = 1L)
-  expect_equal(inst$result[[inst$archive$cols_x]], inst$archive$best()[[inst$archive$cols_x]])
-  expect_equal(inst$result[[inst$archive$cols_y]], inst$archive$best()[[inst$archive$cols_y]])
+  expect_null(instance$result)
+  ras$assign_result(instance)
+  expect_data_table(instance$result, nrows = 1L)
+  expect_equal(instance$result[[instance$archive$cols_x]], instance$archive$best()[[instance$archive$cols_x]])
+  expect_equal(instance$result[[instance$archive$cols_y]], instance$archive$best()[[instance$archive$cols_y]])
 })
 
 test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_ego", {
@@ -23,7 +23,7 @@ test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_ego", {
   optimizer = opt("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
-  expect_data_table(instance$result, nrow = 1L)
+  expect_data_table(instance$result, nrows = 1L)
 })
 
 test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_parego", {
@@ -61,14 +61,14 @@ test_that("ResultAssignerArchive passes internal tuned values", {
     validate = 0.2,
     early_stopping = TRUE,
     x = to_tune(0.2, 0.3),
-    iter = to_tune(upper = 1000, internal = TRUE, aggr = function(x) 99))
+    iter = to_tune(upper = 1000L, internal = TRUE, aggr = function(x) 99L))
 
   instance = ti(
     task = tsk("pima"),
     learner = learner,
-    resampling = rsmp("cv", folds = 3),
+    resampling = rsmp("cv", folds = 3L),
     measures = msr("classif.ce"),
-    terminator = trm("evals", n_evals = 20),
+    terminator = trm("evals", n_evals = 20L),
     store_benchmark_result = TRUE
   )
   surrogate = SurrogateLearner$new(REGR_KM_DETERM)
@@ -76,9 +76,9 @@ test_that("ResultAssignerArchive passes internal tuned values", {
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
   tuner = tnr("mbo", result_assigner = result_assigner)
-  expect_data_table(tuner$optimize(instance), nrows = 1)
-  expect_list(instance$archive$data$internal_tuned_values, len = 20, types = "list")
-  expect_equal(instance$archive$data$internal_tuned_values[[1]], list(iter = 99))
+  expect_data_table(tuner$optimize(instance), nrows = 1L)
+  expect_list(instance$archive$data$internal_tuned_values, len = 20L, types = "list")
+  expect_equal(instance$archive$data$internal_tuned_values[[1L]]$iter, 99L)
   expect_false(instance$result_learner_param_vals$early_stopping)
-  expect_equal(instance$result_learner_param_vals$iter, 99)
+  expect_equal(instance$result_learner_param_vals$iter, 99L)
 })

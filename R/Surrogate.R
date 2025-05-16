@@ -28,7 +28,7 @@ Surrogate = R6Class("Surrogate",
       self$learner = learner
       private$.archive = assert_r6(archive, classes = "Archive", null.ok = TRUE)
       private$.cols_x = assert_character(cols_x, min.len = 1L, null.ok = TRUE)
-      private$.cols_y = cols_y = assert_character(cols_y, min.len = 1L, null.ok = TRUE)
+      private$.cols_y = assert_character(cols_y, min.len = 1L, null.ok = TRUE)
       assert_r6(param_set, classes = "ParamSet")
       stopifnot(param_set$class[["catch_errors"]] == "ParamLgl")
       private$.param_set = param_set
@@ -161,16 +161,6 @@ Surrogate = R6Class("Surrogate",
       }
     },
 
-    #' @field insample_perf (`numeric()`)\cr
-    #'   Surrogate model's current insample performance.
-    insample_perf = function(rhs) {
-      if (missing(rhs)) {
-        private$.insample_perf %??% NaN
-      } else {
-        stop("$insample_perf is read-only.")
-      }
-    },
-
     #' @field param_set ([paradox::ParamSet])\cr
     #'   Set of hyperparameters.
     param_set = function(rhs) {
@@ -179,11 +169,6 @@ Surrogate = R6Class("Surrogate",
       } else {
         private$.param_set
       }
-    },
-
-    #' @template field_assert_insample_perf_surrogate
-    assert_insample_perf = function(rhs) {
-      stop("Abstract.")
     },
 
     #' @template field_packages_surrogate
@@ -230,8 +215,6 @@ Surrogate = R6Class("Surrogate",
     .cols_x = NULL,
 
     .cols_y = NULL,
-
-    .insample_perf = NULL,
 
     .param_set = NULL,
 

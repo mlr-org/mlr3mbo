@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 0.2.7.9000
+Version: 0.2.9.9000
 Authors@R: c(
     person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0003-4152-5308")),
@@ -46,7 +46,7 @@ Imports:
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
-    mlr3 (>= 0.21.1),
+    mlr3 (>= 0.22.1),
     mlr3misc (>= 0.11.0),
     paradox (>= 1.0.1),
     spacefillr,
@@ -81,6 +81,7 @@ Collate:
     'AcqFunctionEHVI.R'
     'AcqFunctionEHVIGH.R'
     'AcqFunctionEI.R'
+    'AcqFunctionEILog.R'
     'AcqFunctionEIPS.R'
     'AcqFunctionMean.R'
     'AcqFunctionMulti.R'
@@ -90,10 +91,17 @@ Collate:
     'AcqFunctionStochasticCB.R'
     'AcqFunctionStochasticEI.R'
     'AcqOptimizer.R'
+    'mlr_input_trafos.R'
+    'InputTrafo.R'
+    'InputTrafoUnitcube.R'
     'aaa.R'
     'OptimizerADBO.R'
     'OptimizerAsyncMbo.R'
     'OptimizerMbo.R'
+    'mlr_output_trafos.R'
+    'OutputTrafo.R'
+    'OutputTrafoLog.R'
+    'OutputTrafoStandardize.R'
     'mlr_result_assigners.R'
     'ResultAssigner.R'
     'ResultAssignerArchive.R'

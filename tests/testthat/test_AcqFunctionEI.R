@@ -3,7 +3,6 @@ test_that("AcqFunctionEI works", {
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
   acqf = AcqFunctionEI$new(surrogate = surrogate)
   expect_acqfunction(acqf)
-  expect_acqfunction(acqf)
 
   expect_r6(acqf$codomain, "ParamSet")
   expect_equal(acqf$codomain$ids(), acqf$id)

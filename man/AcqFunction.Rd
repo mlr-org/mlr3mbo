@@ -16,6 +16,7 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_ehvi}},
 \code{\link{mlr_acqfunctions_ehvigh}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_ei_log}},
 \code{\link{mlr_acqfunctions_eips}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_multi}},
@@ -34,7 +35,7 @@ Other Acquisition Function:
 \describe{
 \item{\code{direction}}{(\code{"same"} | \code{"minimize"} | \code{"maximize"})\cr
 Optimization direction of the acquisition function relative to the direction of the
-objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} related to the passed \link[bbotk:Archive]{bbotk::Archive}.
 Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 
 \item{\code{surrogate_max_to_min}}{(\code{-1} | \code{1})\cr
@@ -165,7 +166,7 @@ Can be implemented by subclasses.
 \if{html}{\out{<a id="method-AcqFunction-eval_many"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunction-eval_many}{}}}
 \subsection{Method \code{eval_many()}}{
-Evaluates multiple input values on the objective function.
+Evaluates multiple input values on the acquisition function.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$eval_many(xss)}\if{html}{\out{</div>}}
 }
@@ -181,8 +182,8 @@ A list of lists that contains multiple x values, e.g.
 }
 \subsection{Returns}{
 data.table::data.table() that contains one y-column for
-single-objective functions and multiple y-columns for multi-objective functions,
-e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 1:2, y2 = 3:4)}.
+single-objective acquisition functions and multiple y-columns for multi-objective
+acquisition functions, e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 1:2, y2 = 3:4)}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -204,8 +205,8 @@ One point per row, e.g. \code{data.table(x1 = c(1, 3), x2 = c(2, 4))}.}
 }
 \subsection{Returns}{
 data.table::data.table() that contains one y-column for
-single-objective functions and multiple y-columns for multi-objective
-functions, e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 1:2, y2 = 3:4)}.
+single-objective acquisition functions and multiple y-columns for multi-objective
+acquisition functions, e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 1:2, y2 = 3:4)}.
 }
 }
 \if{html}{\out{<hr>}}

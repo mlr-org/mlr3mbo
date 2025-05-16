@@ -5,9 +5,9 @@
 #'
 #' @description
 #' A simple [mlr3misc::Dictionary] storing objects of class [ResultAssigner].
-#' Each acquisition function has an associated help page, see `mlr_result_assigners_[id]`.
+#' Each result assigner has an associated help page, see `mlr_result_assigners_[id]`.
 #'
-#' For a more convenient way to retrieve and construct an acquisition function, see [ras()].
+#' For a more convenient way to retrieve and construct a result assigner, see [ras()].
 #'
 #' @section Methods:
 #' See [mlr3misc::Dictionary].
