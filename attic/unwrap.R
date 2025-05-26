@@ -2,7 +2,6 @@
 # taken (and adapted) from the R package batchtools by Michel Lang 03/15/2019
 unwrap = function(x) {
   cols = names(x)[vapply(x, is.list, logical(1))]
-  browser()
   res = data.table(.row = seq_len(nrow(x)), key = ".row")
   extra.cols = chsetdiff(names(x), cols)
   if (length(extra.cols))

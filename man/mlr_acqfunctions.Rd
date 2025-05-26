@@ -27,7 +27,9 @@ acqf("ei")
 Sugar functions: \code{\link[=acqf]{acqf()}}, \code{\link[=acqfs]{acqfs()}}
 
 Other Dictionary: 
+\code{\link{mlr_input_trafos}},
 \code{\link{mlr_loop_functions}},
+\code{\link{mlr_output_trafos}},
 \code{\link{mlr_result_assigners}}
 
 Other Acquisition Function: 
@@ -37,8 +39,8 @@ Other Acquisition Function:
 \code{\link{mlr_acqfunctions_ehvi}},
 \code{\link{mlr_acqfunctions_ehvigh}},
 \code{\link{mlr_acqfunctions_ei}},
+\code{\link{mlr_acqfunctions_ei_log}},
 \code{\link{mlr_acqfunctions_eips}},
-\code{\link{mlr_acqfunctions_log_ei}},
 \code{\link{mlr_acqfunctions_mean}},
 \code{\link{mlr_acqfunctions_multi}},
 \code{\link{mlr_acqfunctions_pi}},

@@ -116,6 +116,9 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
 
       n_obj = length(self$archive$cols_y)
       ys = self$archive$data[, self$archive$cols_y, with = FALSE]
+      if (self$surrogate$output_trafo_must_be_considered) {
+        ys = self$surrogate$output_trafo$transform(ys)
+      }
       for (column in self$archive$cols_y) {
         set(ys, j = column, value = ys[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
       }
