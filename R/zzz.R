@@ -19,12 +19,11 @@ register_bbotk = function() {
   iwalk(optimizers, function(obj, nm) x$add(nm, obj))
 } # nocov end
 
-#' @include aaa.R
 register_mlr3 = function() {
+  # nocov start
   x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
-
   iwalk(learners, function(obj, nm) x$add(nm, obj))
-}
+} # nocov end
 
 register_mlr3tuning = function() {
   # nocov start
