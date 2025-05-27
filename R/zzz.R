@@ -32,7 +32,7 @@ register_mlr3tuning = function() {
 
   #https://github.com/mlr-org/bbotk/blob/ae6cac60f71b3c44ce1bb29669f5d06cddeb95d4/R/zzz.R#L20
   if (requireNamespace("bbotk", quietly = TRUE)) {
-    if (packageVersion("bbotk") <= "1.5.0") {
+    if (utils::packageVersion("bbotk") <= "1.5.0") {
       lg = lgr::get_logger("bbotk")
     } else {
       lg = lgr::get_logger("mlr3/bbotk")
