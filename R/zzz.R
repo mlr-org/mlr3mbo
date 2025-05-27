@@ -19,6 +19,13 @@ register_bbotk = function() {
   iwalk(optimizers, function(obj, nm) x$add(nm, obj))
 } # nocov end
 
+#' @include aaa.R
+register_mlr3 = function() {
+  x = utils::getFromNamespace("mlr_learners", ns = "mlr3")
+
+  iwalk(learners, function(obj, nm) x$add(nm, obj))
+}
+
 register_mlr3tuning = function() {
   # nocov start
   x = utils::getFromNamespace("mlr_tuners", ns = "mlr3tuning")
@@ -29,8 +36,19 @@ register_mlr3tuning = function() {
   # nocov start
   register_namespace_callback(pkgname, "bbotk", register_bbotk)
   register_namespace_callback(pkgname, "mlr3tuning", register_mlr3tuning)
+  register_namespace_callback(pkgname, "mlr3", register_mlr3)
 
-  assign("lg", lgr::get_logger("bbotk"), envir = parent.env(environment()))
+  #https://github.com/mlr-org/bbotk/blob/ae6cac60f71b3c44ce1bb29669f5d06cddeb95d4/R/zzz.R#L20
+  if (requireNamespace("bbotk", quietly = TRUE)) {
+    if (packageVersion("bbotk") <= "1.5.0") {
+      lg = lgr::get_logger("bbotk")
+    } else {
+      lg = lgr::get_logger("mlr3/bbotk")
+    }
+  } else {
+      lg = lgr::get_logger("bbotk")
+  }
+  assign("lg", lg, envir = parent.env(environment()))
 
   if (Sys.getenv("IN_PKGDOWN") == "true") {
     lg$set_threshold("warn")
@@ -39,6 +57,7 @@ register_mlr3tuning = function() {
 
 .onUnload = function(libpaths) { # nolint
   # nocov start
+  walk(names(learners), function(id) mlr3::mlr_learners$remove(id))
   walk(names(optimizers), function(id) bbotk::mlr_optimizers$remove(id))
   walk(names(tuners), function(id) mlr3tuning::mlr_tuners$remove(id))
 } # nocov end
