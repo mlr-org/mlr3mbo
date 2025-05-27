@@ -29,7 +29,6 @@ register_mlr3tuning = function() {
   # nocov start
   register_namespace_callback(pkgname, "bbotk", register_bbotk)
   register_namespace_callback(pkgname, "mlr3tuning", register_mlr3tuning)
-  register_namespace_callback(pkgname, "mlr3", register_mlr3)
 
   #https://github.com/mlr-org/bbotk/blob/ae6cac60f71b3c44ce1bb29669f5d06cddeb95d4/R/zzz.R#L20
   if (requireNamespace("bbotk", quietly = TRUE)) {
