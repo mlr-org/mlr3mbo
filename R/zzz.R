@@ -27,19 +27,12 @@ register_mlr3tuning = function() {
 
 .onLoad = function(libname, pkgname) { # nolint
   # nocov start
+  browser()
   register_namespace_callback(pkgname, "bbotk", register_bbotk)
   register_namespace_callback(pkgname, "mlr3tuning", register_mlr3tuning)
 
   #https://github.com/mlr-org/bbotk/blob/ae6cac60f71b3c44ce1bb29669f5d06cddeb95d4/R/zzz.R#L20
-  if (requireNamespace("bbotk", quietly = TRUE)) {
-    if (utils::packageVersion("bbotk") <= "1.5.0") {
-      lg = lgr::get_logger("bbotk")
-    } else {
-      lg = lgr::get_logger("mlr3/bbotk")
-    }
-  } else {
-      lg = lgr::get_logger("bbotk")
-  }
+  lg = lgr::get_logger("mlr3/bbotk")
   assign("lg", lg, envir = parent.env(environment()))
 
   if (Sys.getenv("IN_PKGDOWN") == "true") {
