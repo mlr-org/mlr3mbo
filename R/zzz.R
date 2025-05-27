@@ -27,7 +27,6 @@ register_mlr3tuning = function() {
 
 .onLoad = function(libname, pkgname) { # nolint
   # nocov start
-  browser()
   register_namespace_callback(pkgname, "bbotk", register_bbotk)
   register_namespace_callback(pkgname, "mlr3tuning", register_mlr3tuning)
 
