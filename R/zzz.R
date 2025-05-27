@@ -50,7 +50,6 @@ register_mlr3tuning = function() {
 
 .onUnload = function(libpaths) { # nolint
   # nocov start
-  walk(names(learners), function(id) mlr3::mlr_learners$remove(id))
   walk(names(optimizers), function(id) bbotk::mlr_optimizers$remove(id))
   walk(names(tuners), function(id) mlr3tuning::mlr_tuners$remove(id))
 } # nocov end
