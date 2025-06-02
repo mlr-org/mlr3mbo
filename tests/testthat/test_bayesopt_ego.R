@@ -83,7 +83,7 @@ test_that("stable bayesopt_ego", {
   expect_true(nrow(instance$archive$data) == 5L)
 
   # KM surrogate but OptimizerError as Optimizer that will fail
-  # this again should trigger a mbo_error and log the appropriate error message
+  # this should trigger a mbo_error and log the appropriate error message
   instance$archive$clear()
   surrogate = SurrogateLearner$new(REGR_KM_DETERM)
   acq_optimizer = AcqOptimizer$new(OptimizerError$new(), terminator = trm("evals", n_evals = 2L))
@@ -95,7 +95,7 @@ test_that("stable bayesopt_ego", {
   expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
 
   # Surrogate using LearnerRegrError as Learner that will fail during train
-  # this again should trigger a mbo_error and log the appropriate error message
+  # this should trigger a mbo_error and log the appropriate error message
   instance$archive$clear()
   surrogate = SurrogateLearner$new(LearnerRegrError$new())
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
@@ -106,7 +106,7 @@ test_that("stable bayesopt_ego", {
   expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 2L)
 
   # Surrogate using LearnerRegrError as Learner that will fail during predict
-  # this again should trigger a mbo_error and log the appropriate error message
+  # this should trigger a mbo_error and log the appropriate error message
   instance$archive$clear()
   surrogate = SurrogateLearner$new(LearnerRegrError$new())
   surrogate$learner$param_set$values$error_train = FALSE
