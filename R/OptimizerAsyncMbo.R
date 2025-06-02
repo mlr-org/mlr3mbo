@@ -218,7 +218,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
 
       check_packages_installed(self$packages, msg = sprintf("Package '%%s' required but not installed for Optimizer '%s'", format(self)))
 
-      lg = lgr::get_logger("mlr3/bbotk")
+      lg = lgr::get_logger("bbotk")
       pv = self$param_set$values
 
       # initial design
@@ -331,7 +331,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
     .result_assigner = NULL,
 
     .optimize = function(inst) {
-      lg = lgr::get_logger("mlr3/bbotk")
+      lg = lgr::get_logger("bbotk")
       lg$debug("Optimizer '%s' evaluates the initial design", self$id)
       get_private(inst)$.eval_queue()
 

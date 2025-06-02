@@ -31,7 +31,7 @@ register_mlr3tuning = function() {
   register_namespace_callback(pkgname, "mlr3tuning", register_mlr3tuning)
 
   #https://github.com/mlr-org/bbotk/blob/ae6cac60f71b3c44ce1bb29669f5d06cddeb95d4/R/zzz.R#L20
-  lg = lgr::get_logger("mlr3/bbotk")
+  lg = lgr::get_logger("bbotk")
   assign("lg", lg, envir = parent.env(environment()))
 
   if (Sys.getenv("IN_PKGDOWN") == "true") {
