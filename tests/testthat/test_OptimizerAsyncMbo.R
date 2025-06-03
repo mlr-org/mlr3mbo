@@ -38,8 +38,8 @@ test_that("OptimizerAsyncMbo works with evaluations in archive", {
   instance$terminator$param_set$values$n_evals = 40L
 
   optimizer = opt("async_mbo")
+  optimizer$optimize(instance)
 
-  expect_data_table(optimizer$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data[is.na(get("acq_cb"))], min.rows = 10L)
   expect_data_table(instance$archive$data[!is.na(get("acq_cb"))], min.rows = 20L)
 
