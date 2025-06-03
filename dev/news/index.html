@@ -50,7 +50,12 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="mlr3mbo-development-version">mlr3mbo (development version)<a class="anchor" aria-label="anchor" href="#mlr3mbo-development-version"></a></h2>
-</div>
+<ul><li>fix: logger changes related to bbotk.</li>
+<li>fix: assure that candidates after acquisition function optimization are always within bounds.</li>
+<li>perf: minor changes to speed up predictions with <code>SurrogateLearner</code> and <code>SurrogateLearnerCollection</code>.</li>
+<li>feat: added supported for input and output transformations (see <code>InputTrafo</code>, <code>OutputTrafo</code> and the related classes).</li>
+<li>refactor: dropped functionality to assert insample performance of the surrogate model completely.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.9" id="mlr3mbo-029">mlr3mbo 0.2.9<a class="anchor" aria-label="anchor" href="#mlr3mbo-029"></a></h2><p class="text-muted">CRAN release: 2025-03-04</p>
 <ul><li>chore: silence rush logger and fixed some partial matches, depend on mlr3 &gt;= 0.22.1.</li>
