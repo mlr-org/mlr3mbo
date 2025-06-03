@@ -5,6 +5,11 @@
 <url><loc>https://mlr3mbo.mlr-org.com/news/index.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/AcqFunction.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/InputTrafo.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/InputTrafoUnitcube.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/OutputTrafo.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/OutputTrafoLog.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/OutputTrafoStandardize.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/ResultAssigner.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/Surrogate.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/SurrogateLearner.html</loc></url>
@@ -20,6 +25,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/reference/default_rf.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/default_surrogate.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/index.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/it.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/loop_function.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr3mbo-package.html</loc></url>
@@ -29,6 +35,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_ehvi.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_ehvigh.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_ei.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_ei_log.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_eips.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_mean.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_multi.html</loc></url>
@@ -37,6 +44,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_smsego.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_stochastic_cb.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_stochastic_ei.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_input_trafos.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions_ego.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions_emo.html</loc></url>
@@ -46,12 +54,14 @@
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_adbo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_async_mbo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_mbo.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_output_trafos.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_result_assigners.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_result_assigners_archive.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_result_assigners_surrogate.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_tuners_adbo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_tuners_async_mbo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_tuners_mbo.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/ot.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/ras.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/redis_available.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/srlrn.html</loc></url>
