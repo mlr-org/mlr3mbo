@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 0.2.9.9000
+Version: 0.3.0.9000
 Authors@R: c(
     person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0003-4152-5308")),
@@ -39,15 +39,15 @@ License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
-    mlr3tuning (>= 1.1.0),
+    mlr3tuning (>= 1.4.0),
     R (>= 3.1.0)
 Imports:
-    bbotk (>= 1.2.0),
+    bbotk (>= 1.6.0),
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
-    mlr3 (>= 0.22.1),
-    mlr3misc (>= 0.11.0),
+    mlr3 (>= 0.23.0),
+    mlr3misc (>= 0.15.1),
     paradox (>= 1.0.1),
     spacefillr,
     R6 (>= 2.4.1)
@@ -56,8 +56,8 @@ Suggests:
     emoa,
     fastGHQuad,
     lhs,
-    mlr3learners (>= 0.5.4),
-    mlr3pipelines (>= 0.4.2),
+    mlr3learners (>= 0.7.0),
+    mlr3pipelines (>= 0.5.2),
     nloptr,
     ranger,
     rgenoud,
