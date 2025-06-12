@@ -75,7 +75,7 @@ InputTrafoUnitcube= R6Class("InputTrafoUnitcube",
       }
       xdt = copy(xdt)
       parameters = names(which(self$search_space$is_number))  # numeric or integer
-      assert_set_equal(parameters, self$cols_x)
+      assert_subset(parameters, self$cols_x)
       for (parameter in parameters) {
         set(xdt, j = parameter, value = (xdt[[parameter]] - self$search_space$lower[[parameter]]) / (self$search_space$upper[[parameter]] - self$search_space$lower[[parameter]]))
       }
