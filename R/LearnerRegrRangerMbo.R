@@ -115,16 +115,9 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
         data = mlr3learners:::ordered_features(task, self)
         prediction_nodes = mlr3misc::invoke(predict, model, data = data, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
         y = task$data(cols = task$target_names)[[1L]]
-        observation_node_table = prediction_nodes$predictions
-        n_trees = NCOL(observation_node_table)
-        unique_nodes_per_tree = apply(observation_node_table, MARGIN = 2L, FUN = unique, simplify = FALSE)
-        mu_sigma2_per_node_per_tree = lapply(seq_len(n_trees), function(tree) {
-          nodes = unique_nodes_per_tree[[tree]]
-          setNames(lapply(nodes, function(node) {
-            y_tmp = y[observation_node_table[, tree] == node]
-            c(mu = mean(y_tmp), sigma2 = if (length(y_tmp) > 1L) var(y_tmp) else 0)
-          }), nm = nodes)
-        })
+        observation_node_table = as.matrix(prediction_nodes$predictions)
+        storage.mode(observation_node_table) = "integer"
+        mu_sigma2_per_node_per_tree = .Call("c_mu_sigma2_per_node_per_tree", observation_node_table, y)
         list(model = model, mu_sigma2_per_node_per_tree = mu_sigma2_per_node_per_tree)
       } else {
         list(model = model)
@@ -136,37 +129,14 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
 
       if (isTRUE(pv$se.method == "law_of_total_variance")) {
         prediction_nodes = mlr3misc::invoke(predict, self$model$model, data = newdata, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
-        n_observations = NROW(prediction_nodes$predictions)
-        n_trees = length(self$model$mu_sigma2_per_node_per_tree)
-        response = numeric(n_observations)
-        se = numeric(n_observations)
-        for (i in seq_len(n_observations)) {
-          mu_sigma2_per_tree = lapply(seq_len(n_trees), function(tree) {
-            self$model$mu_sigma2_per_node_per_tree[[tree]][[as.character(prediction_nodes$predictions[i, tree])]]
-          })
-          mus = sapply(mu_sigma2_per_tree, "[[", 1)
-          sigmas2 = sapply(mu_sigma2_per_tree, "[[", 2)
-          response[i] = mean(mus)
-          # law of total variance assuming a mixture of normal distributions for each tree
-          se[i] = sqrt(mean((mus ^ 2) + sigmas2) - (response[i] ^ 2))
-        }
-      se[se < .Machine$double.eps | is.na(se)] = 1e-8
-        list(response = response, se = se)
+        observation_node_table = as.matrix(prediction_nodes$predictions)
+        storage.mode(observation_node_table) = "integer"
+        .Call("c_tvl_var", observation_node_table, self$model$mu_sigma2_per_node_per_tree)
       } else if (isTRUE(pv$se.method == "simple")) {
         prediction_nodes = mlr3misc::invoke(predict, self$model$model, data = newdata, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
-        n_observations = NROW(prediction_nodes$predictions)
-        n_trees = length(self$model$mu_sigma2_per_node_per_tree)
-        response = numeric(n_observations)
-        se = numeric(n_observations)
-        for (i in seq_len(n_observations)) {
-          mu_sigma2_per_tree = lapply(seq_len(n_trees), function(tree) {
-            self$model$mu_sigma2_per_node_per_tree[[tree]][[as.character(prediction_nodes$predictions[i, tree])]]
-          })
-          mus = sapply(mu_sigma2_per_tree, "[[", 1)
-          response[i] = mean(mus)
-          se[i] = sqrt(var(mus))
-        }
-        list(response = response, se = se)
+        observation_node_table = as.matrix(prediction_nodes$predictions)
+        storage.mode(observation_node_table) = "integer"
+        .Call("c_simple_var", observation_node_table, self$model$mu_sigma2_per_node_per_tree)
       } else {
         prediction = mlr3misc::invoke(predict, self$model$model, data = newdata, type = self$predict_type, .args = pv)
         list(response = prediction$predictions, se = prediction$se)

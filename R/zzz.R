@@ -10,7 +10,7 @@
 #' @import mlr3
 #' @import mlr3tuning
 #' @importFrom stats setNames runif dnorm pnorm quantile rexp sd
-#' @useDynLib mlr3mbo c_sms_indicator c_eps_indicator
+#' @useDynLib mlr3mbo c_sms_indicator c_eps_indicator c_mu_sigma2_per_node_per_tree c_simple_var c_tvl_var
 "_PACKAGE"
 
 register_bbotk = function() {
