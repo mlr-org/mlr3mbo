@@ -131,7 +131,7 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
         prediction_nodes = mlr3misc::invoke(predict, self$model$model, data = newdata, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
         observation_node_table = as.matrix(prediction_nodes$predictions)
         storage.mode(observation_node_table) = "integer"
-        .Call("c_tvl_var", observation_node_table, self$model$mu_sigma2_per_node_per_tree)
+        .Call("c_ltv_var", observation_node_table, self$model$mu_sigma2_per_node_per_tree)
       } else if (isTRUE(pv$se.method == "simple")) {
         prediction_nodes = mlr3misc::invoke(predict, self$model$model, data = newdata, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
         observation_node_table = as.matrix(prediction_nodes$predictions)
