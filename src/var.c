@@ -153,6 +153,10 @@ SEXP c_simple_var(SEXP predictions, SEXP mu_list) {
 }
 
 SEXP c_tvl_var(SEXP predictions, SEXP mu_list) {
+    // Tree-based variance computation with overflow protection.
+    // Uses Kahan summation for numerical stability when accumulating
+    // large values of (mu^2 + sigma2) across many trees, preventing
+    // potential overflow that could occur with simple accumulation.
     if (!isInteger(predictions) || !isMatrix(predictions)) {
         error("predictions must be an integer matrix");
     }
@@ -176,7 +180,9 @@ SEXP c_tvl_var(SEXP predictions, SEXP mu_list) {
         double mean_mu = 0.0, mean_musq_plus_sigma2 = 0.0;
         // Welford's algorithm for mean_mu and mean(musq+sigma2):
         double welford_mean = 0.0;
+        // Use Kahan summation for numerical stability and overflow prevention
         double sum_musq_plus_sigma2 = 0.0;
+        double kahan_c = 0.0;  // Kahan summation compensation term
 
         for (int j = 0; j < n_trees; ++j) {
             int node = pred[i + j * n_obs]; // column-major
@@ -204,8 +210,11 @@ SEXP c_tvl_var(SEXP predictions, SEXP mu_list) {
             double delta = mu - welford_mean;
             welford_mean += delta / (j + 1);
 
-            // For mean(mu^2 + sigma2)
-            sum_musq_plus_sigma2 += mu * mu + sigma2;
+            // Kahan summation for mean(mu^2 + sigma2) to prevent overflow
+            double y = mu * mu + sigma2 - kahan_c;
+            double t = sum_musq_plus_sigma2 + y;
+            kahan_c = (t - sum_musq_plus_sigma2) - y;
+            sum_musq_plus_sigma2 = t;
         }
         mean_mu = welford_mean;
         mean_musq_plus_sigma2 = sum_musq_plus_sigma2 / n_trees;
