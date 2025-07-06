@@ -107,18 +107,16 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
       model = mlr3misc::invoke(ranger::ranger,
         dependent.variable.name = task$target_names,
         data = task$data(),
-        case.weights = task$weights$weight,
+        case.weights = task$weights_learner$weight,
         .args = pv
       )
 
       if (isTRUE(self$param_set$get_values()[["se.method"]] %in% c("simple", "law_of_total_variance"))) {
         data = mlr3learners:::ordered_features(task, self)
         prediction_nodes = mlr3misc::invoke(predict, model, data = data, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
-        y = task$data(cols = task$target_names)[[1L]]
-        observation_node_table = as.matrix(prediction_nodes$predictions)
-        storage.mode(observation_node_table) = "integer"
-        mu_sigma2_per_node_per_tree = .Call("c_mu_sigma2_per_node_per_tree", observation_node_table, y)
-        list(model = model, mu_sigma2_per_node_per_tree = mu_sigma2_per_node_per_tree)
+        storage.mode(prediction_nodes$predictions) = "integer"
+        mu_sigma = .Call("c_ranger_mu_sigma", model, prediction_nodes$predictions, task$truth())
+        list(model = model, mu_sigma = mu_sigma)
       } else {
         list(model = model)
       }
@@ -127,16 +125,11 @@ LearnerRegrRangerMbo = R6Class("LearnerRegrRangerMbo",
       pv = self$param_set$get_values(tags = "predict")
       newdata = mlr3learners:::ordered_features(task, self)
 
-      if (isTRUE(pv$se.method == "law_of_total_variance")) {
+      if (isTRUE(pv$se.method %in% c("simple", "law_of_total_variance"))) {
         prediction_nodes = mlr3misc::invoke(predict, self$model$model, data = newdata, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
-        observation_node_table = as.matrix(prediction_nodes$predictions)
-        storage.mode(observation_node_table) = "integer"
-        .Call("c_ltv_var", observation_node_table, self$model$mu_sigma2_per_node_per_tree)
-      } else if (isTRUE(pv$se.method == "simple")) {
-        prediction_nodes = mlr3misc::invoke(predict, self$model$model, data = newdata, type = "terminalNodes", .args = pv[setdiff(names(pv), "se.method")], predict.all = TRUE)
-        observation_node_table = as.matrix(prediction_nodes$predictions)
-        storage.mode(observation_node_table) = "integer"
-        .Call("c_simple_var", observation_node_table, self$model$mu_sigma2_per_node_per_tree)
+        storage.mode(prediction_nodes$predictions) = "integer"
+        method = ifelse(pv$se.method == "simple", 0, 1)
+        .Call("c_ranger_var", prediction_nodes$predictions, self$model$mu_sigma, method)
       } else {
         prediction = mlr3misc::invoke(predict, self$model$model, data = newdata, type = self$predict_type, .args = pv)
         list(response = prediction$predictions, se = prediction$se)
