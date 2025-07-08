@@ -150,7 +150,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     optimize = function() {
       is_multi_acq_function = self$acq_function$codomain$length > 1L
 
-      lg = lgr::get_logger("bbotk")
+      lg = lgr::get_logger("mlr3/bbotk")
       old_threshold = lg$threshold
       lg$set_threshold(self$param_set$values$logging_level)
       on.exit(lg$set_threshold(old_threshold))
