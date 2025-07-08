@@ -1,5 +1,5 @@
 #' @export
-AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
+AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
   inherit = AcqOptimizer,
   public = list(
 
@@ -10,13 +10,26 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       ps = ps(
-        stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
-        xtol_rel = p_dbl(default = 1e-06, lower = 0, upper = Inf, special_vals = list(-1)),
-        xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        maxeval = p_int(lower = 1, default = 1000L, special_vals = list(-1)),
-        ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        minf_max = p_dbl(default = -Inf)
+        fnscale       = p_dbl(default = 1),
+        maxit         = p_int(lower  = 1L),
+        stopfitness   = p_dbl(default = -Inf),
+        keep.best     = p_lgl(default = TRUE),
+        sigma         = p_uty(default = 0.5),
+        mu            = p_int(lower = 1L),
+        lambda        = p_int(lower = 1L),
+        weights       = p_uty(),
+        damps         = p_dbl(),
+        cs            = p_dbl(),
+        ccum          = p_dbl(),
+        ccov.1        = p_dbl(lower = 0),
+        ccov.mu       = p_dbl(lower = 0),
+        diag.sigma    = p_lgl(default = FALSE),
+        diag.eigen    = p_lgl(default = FALSE),
+        diag.pop      = p_lgl(default = FALSE),
+        diag.value    = p_lgl(default = FALSE),
+        stop.tolx     = p_dbl() # undocumented stop criterion
+        # start_values  = p_fct(default = "random", levels = c("random", "center", "custom")),
+        # start         = p_uty(default = NULL, depends = start_values == "custom"),
         # n_candidates = p_int(lower = 1, default = 1L),
         # logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
         # warmstart = p_lgl(default = FALSE),
@@ -35,10 +48,11 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
       pv = self$param_set$values
-      x0 = as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
+      pv$vectorized = TRUE
+      par = set_names(as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE][[1]]), self$acq_function$domain$ids())
 
-      wrapper = function(x, fun, constants, direction) {
-        xdt = as.data.table(as.list(set_names(x, self$acq_function$domain$ids())))
+      wrapper = function(xmat, fun, constants, direction) {
+        xdt = as.data.table(t(xmat))
         res = mlr3misc::invoke(fun, xdt = xdt, .args = constants)[[1]]
         res * direction
       }
@@ -47,18 +61,17 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
       constants = self$acq_function$constants$values
       direction = self$acq_function$codomain$direction
 
-      res = invoke(nloptr::nloptr,
-        eval_f = wrapper,
-        lb = self$acq_function$domain$lower,
-        ub = self$acq_function$domain$upper,
-        opts = c(pv, list(algorithm = "NLOPT_GN_DIRECT_L")),
-        eval_grad_f = NULL,
-        x0 = x0,
+      res = invoke(cmaes::cma_es,
+        par = par,
+        fn = wrapper,
+        lower = self$acq_function$domain$lower,
+        upper = self$acq_function$domain$upper,
+        control = pv,
         fun = fun,
         constants = constants,
         direction = direction)
 
-      as.data.table(as.list(set_names(c(res$solution, res$objective), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+      as.data.table(as.list(set_names(c(res$par, res$value), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },
 
     #' @description
