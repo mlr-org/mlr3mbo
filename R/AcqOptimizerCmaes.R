@@ -49,7 +49,7 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     optimize = function() {
       pv = self$param_set$values
       pv$vectorized = TRUE
-      par = set_names(as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE][[1]]), self$acq_function$domain$ids())
+      par = set_names(as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE]), self$acq_function$domain$ids())
 
       wrapper = function(xmat, fun, constants, direction) {
         xdt = as.data.table(t(xmat))
