@@ -1,5 +1,13 @@
 # mlr3mbo (development version)
 
+# mlr3mbo 0.3.0
+
+* fix: logger changes related to bbotk.
+* fix: assure that candidates after acquisition function optimization are always within bounds.
+* perf: minor changes to speed up predictions with `SurrogateLearner` and `SurrogateLearnerCollection`.
+* feat: added supported for input and output transformations (see `InputTrafo`, `OutputTrafo` and the related classes).
+* refactor: dropped functionality to assert insample performance of the surrogate model completely.
+
 # mlr3mbo 0.2.9
 
 * chore: silence rush logger and fixed some partial matches, depend on mlr3 >= 0.22.1.
