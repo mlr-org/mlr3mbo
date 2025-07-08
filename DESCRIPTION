@@ -65,7 +65,10 @@ Suggests:
     redux,
     rush,
     stringi,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+Remotes:
+    mlr-org/mlr3@predict_newdata_fast,
+    mlr-org/mlr3learners@ranger_se
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
