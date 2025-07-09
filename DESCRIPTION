@@ -113,6 +113,7 @@ Collate:
     'ResultAssignerArchive.R'
     'ResultAssignerSurrogate.R'
     'Surrogate.R'
+    'SurrogateGP.R'
     'SurrogateLearner.R'
     'SurrogateLearnerCollection.R'
     'TunerADBO.R'
