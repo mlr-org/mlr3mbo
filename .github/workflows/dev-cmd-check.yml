@@ -1,7 +1,14 @@
-# dev cmd check workflow of the mlr3 ecosystem v0.2.0
+# dev cmd check workflow of the mlr3 ecosystem v0.4.0
 # https://github.com/mlr-org/actions
+# modified to use supercharge/redis-github-action@1.7.0
 on:
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled'
+        required: false
+        default: false
   push:
     branches:
       - main
@@ -26,8 +33,7 @@ jobs:
         config:
           - {os: ubuntu-latest, r: 'release', dev-package: 'mlr-org/bbotk'}
           - {os: ubuntu-latest, r: 'release', dev-package: 'mlr-org/mlr3'}
-          - {os: ubuntu-latest, r: 'release', dev-package: 'mlr-org/mlr3tuning'}
-          - {os: ubuntu-latest, r: 'release', dev-package: "mlr-org/mlr3tuning', 'mlr-org/mlr3learners', 'mlr-org/mlr3pipelines', 'mlr-org/bbotk', 'mlr-org/paradox"}
+          - {os: ubuntu-latest, r: 'release', dev-package: 'mlr-org/mlr3misc'}
 
     steps:
       - uses: actions/checkout@v3
@@ -46,12 +52,17 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+          error-on: '"note"'
 
       - name: Install dev versions
-        run: pak::pkg_install(c('${{ matrix.config.dev-package }}'))
+        run: pak::pkg_install('${{ matrix.config.dev-package }}')
         shell: Rscript {0}
+      
+      - uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        with:
+          limit-access-to-actor: true
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          args: 'c("--no-manual")' # "--as-cran" prevents to start external processes
-
+          args: 'c("--no-manual", "--as-cran")'

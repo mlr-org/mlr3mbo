@@ -4,7 +4,8 @@ test_that("AcqFunctionStochasticCB works in defaults", {
   skip_if_not(redis_available())
   flush_redis()
 
-  rush::rush_plan(n_workers = 1L)
+  mirai::daemons(1L)
+  rush::rush_plan(n_workers = 1L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
@@ -31,7 +32,8 @@ test_that("AcqFunctionStochasticCB works with uniform sampling", {
   skip_if_not(redis_available())
   flush_redis()
 
-  rush::rush_plan(n_workers = 2L)
+  mirai::daemons(2L)
+  rush::rush_plan(n_workers = 2L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
@@ -59,7 +61,8 @@ test_that("AcqFunctionStochasticCB works with exponential sampling", {
   skip_if_not(redis_available())
   flush_redis()
 
-  rush::rush_plan(n_workers = 2L)
+  mirai::daemons(2L)
+  rush::rush_plan(n_workers = 2L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
@@ -88,7 +91,8 @@ test_that("AcqFunctionStochasticCB works with lambda decay", {
   skip_if_not(redis_available())
   flush_redis()
 
-  rush::rush_plan(n_workers = 1L)
+  mirai::daemons(1L)
+  rush::rush_plan(n_workers = 1L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
@@ -117,7 +121,8 @@ test_that("AcqFunctionStochasticCB works with periodic lambda decay", {
   skip_if_not(redis_available())
   flush_redis()
 
-  rush::rush_plan(n_workers = 1L)
+  mirai::daemons(2L)
+  rush::rush_plan(n_workers = 2L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,

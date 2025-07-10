@@ -4,7 +4,8 @@ test_that("OptimizerAsyncMbo works in defaults", {
   skip_if_not(redis_available())
   flush_redis()
 
-  rush::rush_plan(n_workers = 2L)
+  mirai::daemons(2L)
+  rush::rush_plan(n_workers = 2L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
@@ -25,7 +26,8 @@ test_that("OptimizerAsyncMbo works with evaluations in archive", {
   skip_if_not(redis_available())
   flush_redis()
 
-  rush::rush_plan(n_workers = 2L)
+  mirai::daemons(2L)
+  rush::rush_plan(n_workers = 2L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
