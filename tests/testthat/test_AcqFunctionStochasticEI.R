@@ -4,7 +4,8 @@ test_that("AcqFunctionStochasticEI works in defaults", {
   skip_if_not(redis_available())
   flush_redis()
 
-  rush::rush_plan(n_workers = 1L)
+  mirai::daemons(1L)
+  rush::rush_plan(n_workers = 1L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
@@ -32,7 +33,8 @@ test_that("AcqFunctionStochasticEI works with multiple workers", {
   skip_if_not(redis_available())
   flush_redis()
 
-  rush::rush_plan(n_workers = 2L)
+  mirai::daemons(2L)
+  rush::rush_plan(n_workers = 2L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
@@ -60,7 +62,8 @@ test_that("AcqFunctionStochasticEI works with periodic epsilon decay", {
   skip_if_not(redis_available())
   flush_redis()
 
-  rush::rush_plan(n_workers = 1L)
+  mirai::daemons(2L)
+  rush::rush_plan(n_workers = 2L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
