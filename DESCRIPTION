@@ -56,6 +56,7 @@ Suggests:
     emoa,
     fastGHQuad,
     lhs,
+    mirai,
     mlr3learners (>= 0.7.0),
     mlr3pipelines (>= 0.5.2),
     nloptr,
