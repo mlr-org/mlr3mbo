@@ -1,5 +1,5 @@
 #' @export
-AcqOptimizerLbfgsb2 = R6Class("AcqOptimizerLbfgsb2",
+AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
   inherit = AcqOptimizer,
   public = list(
 
