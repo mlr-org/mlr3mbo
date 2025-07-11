@@ -58,7 +58,7 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
         constants = constants,
         direction = direction)
 
-      as.data.table(as.list(set_names(c(res$solution, res$objective), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+      as.data.table(as.list(set_names(c(res$solution, res$objective * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },
 
     #' @description

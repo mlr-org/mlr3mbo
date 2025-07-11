@@ -1,5 +1,5 @@
 #' @export
-AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
+AcqOptimizerDirect2 = R6Class("AcqOptimizerDirect2",
   inherit = AcqOptimizer,
   public = list(
 
@@ -10,29 +10,15 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       ps = ps(
-        fnscale          = p_dbl(default = 1),
-        maxit            = p_int(lower  = 1L),
-        stopfitness      = p_dbl(default = -Inf),
-        keep.best        = p_lgl(default = TRUE),
-        sigma            = p_uty(default = 0.5),
-        mu               = p_int(lower = 1L),
-        lambda           = p_int(lower = 1L),
-        weights          = p_uty(),
-        damps            = p_dbl(),
-        cs               = p_dbl(),
-        ccum             = p_dbl(),
-        ccov.1           = p_dbl(lower = 0),
-        ccov.mu          = p_dbl(lower = 0),
-        diag.sigma       = p_lgl(default = FALSE),
-        diag.eigen       = p_lgl(default = FALSE),
-        diag.pop         = p_lgl(default = FALSE),
-        diag.value       = p_lgl(default = FALSE),
-        stop.tolx        = p_dbl(), # undocumented stop criterion
-        restart_strategy = p_fct(levels = c("none", "ipop"), init = "none"),
-        n_restarts       = p_int(lower = 1L),
-        population_multiplier = p_int(lower = 1)
-        # start_values  = p_fct(default = "random", levels = c("random", "center", "custom")),
-        # start         = p_uty(default = NULL, depends = start_values == "custom"),
+        stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
+        xtol_rel = p_dbl(default = 1e-06, lower = 0, upper = Inf, special_vals = list(-1)),
+        xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
+        maxeval = p_int(lower = 1, default = 1000L, special_vals = list(-1)),
+        ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
+        ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
+        minf_max = p_dbl(default = -Inf),
+        random_restart_size = p_int(),
+        n_random_restarts = p_int()
         # n_candidates = p_int(lower = 1, default = 1L),
         # logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
         # warmstart = p_lgl(default = FALSE),
@@ -51,17 +37,10 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
       pv = self$param_set$values
-      pv$vectorized = TRUE
-      par = set_names(as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE]), self$acq_function$domain$ids())
-      n_restarts = if (pv$restart_strategy == "ipop") pv$n_restarts else 1L
 
-      # set package defaults if not set by user
-      # restarts needs lambda and mu to be set
-      if (is.null(pv$lambda)) pv$lambda = 4 + floor(3 * log(length(par)))
-      if (is.null(pv$mu)) pv$mu = floor(pv$lambda / 2)
 
-      wrapper = function(xmat, fun, constants, direction) {
-        xdt = as.data.table(t(xmat))
+      wrapper = function(x, fun, constants, direction) {
+        xdt = as.data.table(as.list(set_names(x, self$acq_function$domain$ids())))
         res = mlr3misc::invoke(fun, xdt = xdt, .args = constants)[[1]]
         res * direction
       }
@@ -71,29 +50,31 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       direction = self$acq_function$codomain$direction
 
       y = Inf
-      for (n in seq_len(n_restarts)) {
-        res = invoke(cmaes::cma_es,
-          par = par,
-          fn = wrapper,
-          lower = self$acq_function$domain$lower,
-          upper = self$acq_function$domain$upper,
-          control = pv,
+      for (n in seq_len(pv$n_random_restarts)) {
+        # random restart
+        design = generate_design_random(self$acq_function$domain, n = pv$random_restart_size)$data
+        res = mlr3misc::invoke(fun, xdt = design, .args = constants)[[1]] * direction
+        i = which.min(res)
+        x0 = as.numeric(design[i, self$acq_function$domain$ids(), with = FALSE])
+
+        # optimize with nloptr
+        res = invoke(nloptr::nloptr,
+          eval_f = wrapper,
+          lb = self$acq_function$domain$lower,
+          ub = self$acq_function$domain$upper,
+          opts = c(pv, list(algorithm = "NLOPT_GN_DIRECT_L")),
+          eval_grad_f = NULL,
+          x0 = x0,
           fun = fun,
           constants = constants,
           direction = direction)
 
-        if (res$value < y) {
-          y = res$value
-          par = set_names(res$par, self$acq_function$domain$ids())
-        }
-
-        if (n < n_restarts) {
-          pv$mu = pv$mu * pv$population_multiplier
-          pv$lambda = pv$lambda * pv$population_multiplier
+        if (res$objective < y) {
+          y = res$objective
+          x = res$solution
         }
       }
-
-      as.data.table(as.list(set_names(c(par, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+      as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },
 
     #' @description
