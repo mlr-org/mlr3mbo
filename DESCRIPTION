@@ -97,6 +97,7 @@ Collate:
     'AcqOptimizerCmaes.R'
     'AcqOptimizerDirect.R'
     'AcqOptimizerDirect2.R'
+    'AcqOptimizerLbfgsb2.R'
     'mlr_input_trafos.R'
     'InputTrafo.R'
     'InputTrafoUnitcube.R'
