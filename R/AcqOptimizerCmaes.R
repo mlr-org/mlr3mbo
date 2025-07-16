@@ -1,7 +1,19 @@
+#' @title CMA-ES Acquisition Function Optimizer
+#'
+#' @description
+#' IPOP CMA-ES runs for `n_iterations` iterations.
+#' The population size is increased by `population_multiplier` after each iteration.
+#' In the first iteration, the start point is the best point in the archive.
+#' In the subsequent iterations, the start point is a random point in the search space.
+#'
 #' @export
 AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
   inherit = AcqOptimizer,
   public = list(
+
+    #' @field state (`list()`)\cr
+    #' List of [cmaes::cma_es()] results.
+    state = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -10,24 +22,27 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       ps = ps(
-        fnscale       = p_dbl(default = 1),
-        maxit         = p_int(lower  = 1L),
-        stopfitness   = p_dbl(default = -Inf),
-        keep.best     = p_lgl(default = TRUE),
-        sigma         = p_uty(default = 0.5),
-        mu            = p_int(lower = 1L),
-        lambda        = p_int(lower = 1L),
-        weights       = p_uty(),
-        damps         = p_dbl(),
-        cs            = p_dbl(),
-        ccum          = p_dbl(),
-        ccov.1        = p_dbl(lower = 0),
-        ccov.mu       = p_dbl(lower = 0),
-        diag.sigma    = p_lgl(default = FALSE),
-        diag.eigen    = p_lgl(default = FALSE),
-        diag.pop      = p_lgl(default = FALSE),
-        diag.value    = p_lgl(default = FALSE),
-        stop.tolx     = p_dbl() # undocumented stop criterion
+        fnscale          = p_dbl(default = 1),
+        maxit            = p_int(lower  = 1L),
+        stopfitness      = p_dbl(default = -Inf),
+        keep.best        = p_lgl(default = TRUE),
+        sigma            = p_uty(default = 0.5),
+        mu               = p_int(lower = 1L),
+        lambda           = p_int(lower = 1L),
+        weights          = p_uty(),
+        damps            = p_dbl(),
+        cs               = p_dbl(),
+        ccum             = p_dbl(),
+        ccov.1           = p_dbl(lower = 0),
+        ccov.mu          = p_dbl(lower = 0),
+        diag.sigma       = p_lgl(default = FALSE),
+        diag.eigen       = p_lgl(default = FALSE),
+        diag.pop         = p_lgl(default = FALSE),
+        diag.value       = p_lgl(default = FALSE),
+        stop.tolx        = p_dbl(), # undocumented stop criterion
+        restart_strategy = p_fct(levels = c("none", "ipop"), init = "none"),
+        n_iterations     = p_int(lower = 1L, init = 1L),
+        population_multiplier = p_int(lower = 1, init = 2L)
         # start_values  = p_fct(default = "random", levels = c("random", "center", "custom")),
         # start         = p_uty(default = NULL, depends = start_values == "custom"),
         # n_candidates = p_int(lower = 1, default = 1L),
@@ -49,7 +64,13 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     optimize = function() {
       pv = self$param_set$values
       pv$vectorized = TRUE
-      par = set_names(as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE]), self$acq_function$domain$ids())
+      x = par = set_names(as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE]), self$acq_function$domain$ids())
+      n_iterations = if (pv$restart_strategy == "ipop") pv$n_iterations else 1L
+
+      # set package defaults if not set by user
+      # restarts needs lambda and mu to be set
+      if (is.null(pv$lambda)) pv$lambda = 4 + floor(3 * log(length(par)))
+      if (is.null(pv$mu)) pv$mu = floor(pv$lambda / 2)
 
       wrapper = function(xmat, fun, constants, direction) {
         xdt = as.data.table(t(xmat))
@@ -61,17 +82,32 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       constants = self$acq_function$constants$values
       direction = self$acq_function$codomain$direction
 
-      res = invoke(cmaes::cma_es,
-        par = par,
-        fn = wrapper,
-        lower = self$acq_function$domain$lower,
-        upper = self$acq_function$domain$upper,
-        control = pv,
-        fun = fun,
-        constants = constants,
-        direction = direction)
+      y = Inf
+      for (n in seq_len(n_iterations)) {
+        res = invoke(cmaes::cma_es,
+          par = par,
+          fn = wrapper,
+          lower = self$acq_function$domain$lower,
+          upper = self$acq_function$domain$upper,
+          control = pv,
+          fun = fun,
+          constants = constants,
+          direction = direction)
 
-      as.data.table(as.list(set_names(c(res$par, res$value), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+        # set best
+        if (res$value < y) {
+          y = res$value
+          x = set_names(res$par, self$acq_function$domain$ids())
+        }
+
+        pv$mu = pv$mu * pv$population_multiplier
+        pv$lambda = pv$lambda * pv$population_multiplier
+        par = unlist(generate_design_random(self$acq_function$domain, 1)$data[1, ])
+
+        self$state = c(self$state, set_names(list(res), paste0("iteration_", n)))
+      }
+
+      as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },
 
     #' @description

@@ -1,15 +1,16 @@
-#' @title Direct Optimization Acquisition Function Optimizer
+#' @title L-BFGS-B Acquisition Function Optimizer
 #'
 #' @description
 #' If `restart_strategy` is `"random"`, the optimizer runs for `n_iterations` iterations.
 #' Each iteration starts with a random search of size `random_restart_size`.
-#' The best point is used as the start point for the direct optimization.
+#' The best point is used as the start point for the L-BFGS-B optimization.
 #'
-#' If `restart_strategy` is `"none"`, the only the direct optimization is performed.
+#' If `restart_strategy` is `"none"`, the only the L-BFGS-B optimization is performed.
 #' The start point is the best point in the archive.
 #'
 #' @export
-AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
+#' @export
+AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
   inherit = AcqOptimizer,
   public = list(
 
@@ -34,7 +35,6 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
         restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
         n_iterations = p_int(lower = 1, init = 1L),
         random_restart_size = p_int(lower = 1, init = 100L)
-
         # n_candidates = p_int(lower = 1, default = 1L),
         # logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
         # warmstart = p_lgl(default = FALSE),
@@ -79,13 +79,18 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
           as.numeric(design[i, self$acq_function$domain$ids(), with = FALSE])
         }
 
+        eval_grad_f = function(x, fun, constants, direction) {
+          invoke(nloptr::nl.grad, x0 = x, fn = wrapper, fun = fun, constants = constants, direction = direction)
+        }
+        saveguard_epsilon = 1e-5
+
         # optimize with nloptr
         res = invoke(nloptr::nloptr,
           eval_f = wrapper,
-          lb = self$acq_function$domain$lower,
-          ub = self$acq_function$domain$upper,
-          opts = c(pv, list(algorithm = "NLOPT_GN_DIRECT_L")),
-          eval_grad_f = NULL,
+          lb = self$acq_function$domain$lower + saveguard_epsilon,
+          ub = self$acq_function$domain$upper - saveguard_epsilon,
+          opts = c(pv, list(algorithm = "NLOPT_LD_LBFGS")),
+          eval_grad_f = eval_grad_f,
           x0 = x0,
           fun = fun,
           constants = constants,
