@@ -6,10 +6,13 @@ test_that("AcqOptimizerCmaes works", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerCmaes$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxit = 10L)
+  acqopt$param_set$set_values(maxit = 1000L)
   acqfun$surrogate$update()
   acqfun$update()
   expect_data_table(acqopt$optimize(), nrows = 1L)
+  expect_list(acqopt$state)
+  expect_names(names(acqopt$state), must.include = "iteration_1")
+  expect_class(acqopt$state$iteration_1, "cma_es.result")
 })
 
 test_that("AcqOptimizerCmaes works with 2D", {
@@ -24,6 +27,9 @@ test_that("AcqOptimizerCmaes works with 2D", {
   acqfun$surrogate$update()
   acqfun$update()
   expect_data_table(acqopt$optimize(), nrows = 1L)
+  expect_list(acqopt$state)
+  expect_names(names(acqopt$state), must.include = "iteration_1")
+  expect_class(acqopt$state$iteration_1, "cma_es.result")
 })
 
 test_that("AcqOptimizerCmaes works with instance", {
@@ -37,9 +43,7 @@ test_that("AcqOptimizerCmaes works with instance", {
   acqopt$param_set$set_values(maxit = 10L)
 
   optimizer = opt("mbo", acq_optimizer = acqopt, acq_function = acqfun, surrogate = surrogate)
-  optimizer$optimize(instance)
-
-  instance$archive$data
+  expect_data_table(optimizer$optimize(instance), nrow = 1L)
 })
 
 test_that("AcqOptimizerCmaes works with ipop restart", {
@@ -50,8 +54,12 @@ test_that("AcqOptimizerCmaes works with ipop restart", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerCmaes$new(acq_function = acqfun)
-   acqopt$param_set$set_values(maxit = 10L, restart_strategy = "ipop", n_restarts = 3L, population_multiplier = 2L)
+   acqopt$param_set$set_values(maxit = 10L, restart_strategy = "ipop", n_iterations = 3L, population_multiplier = 2L)
   acqfun$surrogate$update()
   acqfun$update()
+
   expect_data_table(acqopt$optimize(), nrows = 1L)
+  expect_list(acqopt$state, len = 3L)
+  expect_names(names(acqopt$state), identical.to = c("iteration_1", "iteration_2", "iteration_3"))
+  walk(acqopt$state, function(x) expect_class(x, "cma_es.result"))
 })

@@ -1,7 +1,22 @@
+#' @title L-BFGS-B Acquisition Function Optimizer
+#'
+#' @description
+#' If `restart_strategy` is `"random"`, the optimizer runs for `n_iterations` iterations.
+#' Each iteration starts with a random search of size `random_restart_size`.
+#' The best point is used as the start point for the L-BFGS-B optimization.
+#'
+#' If `restart_strategy` is `"none"`, the only the L-BFGS-B optimization is performed.
+#' The start point is the best point in the archive.
+#'
 #' @export
-AcqOptimizerDirect2 = R6Class("AcqOptimizerDirect2",
+#' @export
+AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
   inherit = AcqOptimizer,
   public = list(
+
+    #' @field state (`list()`)\cr
+    #' List of [nloptr::nloptr()] results.
+    state = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -17,8 +32,9 @@ AcqOptimizerDirect2 = R6Class("AcqOptimizerDirect2",
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         minf_max = p_dbl(default = -Inf),
-        random_restart_size = p_int(),
-        n_random_restarts = p_int()
+        restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
+        n_iterations = p_int(lower = 1, init = 1L),
+        random_restart_size = p_int(lower = 1, init = 100L)
         # n_candidates = p_int(lower = 1, default = 1L),
         # logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
         # warmstart = p_lgl(default = FALSE),
@@ -37,6 +53,7 @@ AcqOptimizerDirect2 = R6Class("AcqOptimizerDirect2",
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
       pv = self$param_set$values
+      n_iterations = if (pv$restart_strategy == "random") pv$n_iterations else 1L
 
 
       wrapper = function(x, fun, constants, direction) {
@@ -50,20 +67,30 @@ AcqOptimizerDirect2 = R6Class("AcqOptimizerDirect2",
       direction = self$acq_function$codomain$direction
 
       y = Inf
-      for (n in seq_len(pv$n_random_restarts)) {
-        # random restart
-        design = generate_design_random(self$acq_function$domain, n = pv$random_restart_size)$data
-        res = mlr3misc::invoke(fun, xdt = design, .args = constants)[[1]] * direction
-        i = which.min(res)
-        x0 = as.numeric(design[i, self$acq_function$domain$ids(), with = FALSE])
+      for (n in seq_len(n_iterations)) {
+
+        x0 =  if (pv$restart_strategy == "none") {
+          as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
+        } else {
+          # random restart
+          design = generate_design_random(self$acq_function$domain, n = pv$random_restart_size)$data
+          res = mlr3misc::invoke(fun, xdt = design, .args = constants)[[1]] * direction
+          i = which.min(res)
+          as.numeric(design[i, self$acq_function$domain$ids(), with = FALSE])
+        }
+
+        eval_grad_f = function(x, fun, constants, direction) {
+          invoke(nloptr::nl.grad, x0 = x, fn = wrapper, fun = fun, constants = constants, direction = direction)
+        }
+        saveguard_epsilon = 1e-5
 
         # optimize with nloptr
         res = invoke(nloptr::nloptr,
           eval_f = wrapper,
-          lb = self$acq_function$domain$lower,
-          ub = self$acq_function$domain$upper,
-          opts = c(pv, list(algorithm = "NLOPT_GN_DIRECT_L")),
-          eval_grad_f = NULL,
+          lb = self$acq_function$domain$lower + saveguard_epsilon,
+          ub = self$acq_function$domain$upper - saveguard_epsilon,
+          opts = c(pv, list(algorithm = "NLOPT_LD_LBFGS")),
+          eval_grad_f = eval_grad_f,
           x0 = x0,
           fun = fun,
           constants = constants,
@@ -73,6 +100,8 @@ AcqOptimizerDirect2 = R6Class("AcqOptimizerDirect2",
           y = res$objective
           x = res$solution
         }
+
+        self$state = c(self$state, set_names(list(res), paste0("iteration_", n)))
       }
       as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },

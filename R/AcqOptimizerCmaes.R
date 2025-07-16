@@ -1,7 +1,19 @@
+#' @title CMA-ES Acquisition Function Optimizer
+#'
+#' @description
+#' IPOP CMA-ES runs for `n_iterations` iterations.
+#' The population size is increased by `population_multiplier` after each iteration.
+#' In the first iteration, the start point is the best point in the archive.
+#' In the subsequent iterations, the start point is a random point in the search space.
+#'
 #' @export
 AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
   inherit = AcqOptimizer,
   public = list(
+
+    #' @field state (`list()`)\cr
+    #' List of [cmaes::cma_es()] results.
+    state = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -29,8 +41,8 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
         diag.value       = p_lgl(default = FALSE),
         stop.tolx        = p_dbl(), # undocumented stop criterion
         restart_strategy = p_fct(levels = c("none", "ipop"), init = "none"),
-        n_restarts       = p_int(lower = 1L),
-        population_multiplier = p_int(lower = 1)
+        n_iterations     = p_int(lower = 1L, init = 1L),
+        population_multiplier = p_int(lower = 1, init = 2L)
         # start_values  = p_fct(default = "random", levels = c("random", "center", "custom")),
         # start         = p_uty(default = NULL, depends = start_values == "custom"),
         # n_candidates = p_int(lower = 1, default = 1L),
@@ -52,8 +64,8 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     optimize = function() {
       pv = self$param_set$values
       pv$vectorized = TRUE
-      par = set_names(as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE]), self$acq_function$domain$ids())
-      n_restarts = if (pv$restart_strategy == "ipop") pv$n_restarts else 1L
+      x = par = set_names(as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE]), self$acq_function$domain$ids())
+      n_iterations = if (pv$restart_strategy == "ipop") pv$n_iterations else 1L
 
       # set package defaults if not set by user
       # restarts needs lambda and mu to be set
@@ -71,7 +83,7 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       direction = self$acq_function$codomain$direction
 
       y = Inf
-      for (n in seq_len(n_restarts)) {
+      for (n in seq_len(n_iterations)) {
         res = invoke(cmaes::cma_es,
           par = par,
           fn = wrapper,
@@ -82,18 +94,20 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
           constants = constants,
           direction = direction)
 
+        # set best
         if (res$value < y) {
           y = res$value
-          par = set_names(res$par, self$acq_function$domain$ids())
+          x = set_names(res$par, self$acq_function$domain$ids())
         }
 
-        if (n < n_restarts) {
-          pv$mu = pv$mu * pv$population_multiplier
-          pv$lambda = pv$lambda * pv$population_multiplier
-        }
+        pv$mu = pv$mu * pv$population_multiplier
+        pv$lambda = pv$lambda * pv$population_multiplier
+        par = unlist(generate_design_random(self$acq_function$domain, 1)$data[1, ])
+
+        self$state = c(self$state, set_names(list(res), paste0("iteration_", n)))
       }
 
-      as.data.table(as.list(set_names(c(par, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+      as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },
 
     #' @description

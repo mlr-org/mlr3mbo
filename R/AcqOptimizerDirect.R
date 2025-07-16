@@ -1,7 +1,21 @@
+#' @title Direct Optimization Acquisition Function Optimizer
+#'
+#' @description
+#' If `restart_strategy` is `"random"`, the optimizer runs for `n_iterations` iterations.
+#' Each iteration starts with a random search of size `random_restart_size`.
+#' The best point is used as the start point for the direct optimization.
+#'
+#' If `restart_strategy` is `"none"`, the only the direct optimization is performed.
+#' The start point is the best point in the archive.
+#'
 #' @export
 AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
   inherit = AcqOptimizer,
   public = list(
+
+    #' @field state (`list()`)\cr
+    #' List of [nloptr::nloptr()] results.
+    state = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -16,7 +30,11 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
         maxeval = p_int(lower = 1, default = 1000L, special_vals = list(-1)),
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        minf_max = p_dbl(default = -Inf)
+        minf_max = p_dbl(default = -Inf),
+        restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
+        n_iterations = p_int(lower = 1, init = 1L),
+        random_restart_size = p_int(lower = 1, init = 100L)
+
         # n_candidates = p_int(lower = 1, default = 1L),
         # logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
         # warmstart = p_lgl(default = FALSE),
@@ -35,7 +53,8 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
       pv = self$param_set$values
-      x0 = as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
+      n_iterations = if (pv$restart_strategy == "random") pv$n_iterations else 1L
+
 
       wrapper = function(x, fun, constants, direction) {
         xdt = as.data.table(as.list(set_names(x, self$acq_function$domain$ids())))
@@ -47,18 +66,39 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
       constants = self$acq_function$constants$values
       direction = self$acq_function$codomain$direction
 
-      res = invoke(nloptr::nloptr,
-        eval_f = wrapper,
-        lb = self$acq_function$domain$lower,
-        ub = self$acq_function$domain$upper,
-        opts = c(pv, list(algorithm = "NLOPT_GN_DIRECT_L")),
-        eval_grad_f = NULL,
-        x0 = x0,
-        fun = fun,
-        constants = constants,
-        direction = direction)
+      y = Inf
+      for (n in seq_len(n_iterations)) {
 
-      as.data.table(as.list(set_names(c(res$solution, res$objective * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+        x0 =  if (pv$restart_strategy == "none") {
+          as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
+        } else {
+          # random restart
+          design = generate_design_random(self$acq_function$domain, n = pv$random_restart_size)$data
+          res = mlr3misc::invoke(fun, xdt = design, .args = constants)[[1]] * direction
+          i = which.min(res)
+          as.numeric(design[i, self$acq_function$domain$ids(), with = FALSE])
+        }
+
+        # optimize with nloptr
+        res = invoke(nloptr::nloptr,
+          eval_f = wrapper,
+          lb = self$acq_function$domain$lower,
+          ub = self$acq_function$domain$upper,
+          opts = c(pv, list(algorithm = "NLOPT_GN_DIRECT_L")),
+          eval_grad_f = NULL,
+          x0 = x0,
+          fun = fun,
+          constants = constants,
+          direction = direction)
+
+        if (res$objective < y) {
+          y = res$objective
+          x = res$solution
+        }
+
+        self$state = c(self$state, set_names(list(res), paste0("iteration_", n)))
+      }
+      as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },
 
     #' @description
