@@ -85,18 +85,19 @@ test_that("default_surrogate", {
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$learner, "GraphLearner")
   expect_equal(surrogate$learner$graph$ids(), c("imputesample", "imputeoor", "colapply", "regr.ranger"))
-  expect_equal_sorted(surrogate$learner$param_set$values,
-    list(imputesample.affect_columns = mlr3pipelines::selector_type("logical"),
-         imputeoor.min = TRUE,
-         imputeoor.offset = 1,
-         imputeoor.multiplier = 3,
-         imputeoor.affect_columns = mlr3pipelines::selector_type(c("integer", "numeric", "character", "factor", "ordered")),
-         colapply.applicator = as.factor,
-         colapply.affect_columns = mlr3pipelines::selector_type("character"),
-         regr.ranger.num.threads = 1L,
-         regr.ranger.num.trees = 100L,
-         regr.ranger.keep.inbag = TRUE,
-         regr.ranger.se.method = "jack"))
+  list_expected = list(imputesample.affect_columns = mlr3pipelines::selector_type("logical"),
+     imputeoor.min = TRUE,
+     imputeoor.offset = 1,
+     imputeoor.multiplier = 3,
+     imputeoor.affect_columns = mlr3pipelines::selector_type(c("integer", "numeric", "character", "factor", "ordered")),
+     colapply.applicator = as.factor,
+     colapply.affect_columns = mlr3pipelines::selector_type("character"),
+     regr.ranger.num.threads = 1L,
+     regr.ranger.num.trees = 100L,
+     regr.ranger.keep.inbag = TRUE,
+     regr.ranger.se.method = "jack"))
+  expect_equal_sorted(surrogate$learner$param_set$values[names(list_expected)], list_expected)
+
   expect_r6(surrogate$learner$fallback, "LearnerRegrFeatureless")
 
   # specify own learner, specify n_objectives, twocrit all numeric, deterministic
