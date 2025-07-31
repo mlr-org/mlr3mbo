@@ -95,7 +95,7 @@ test_that("default_surrogate", {
      regr.ranger.num.threads = 1L,
      regr.ranger.num.trees = 100L,
      regr.ranger.keep.inbag = TRUE,
-     regr.ranger.se.method = "jack"))
+     regr.ranger.se.method = "jack")
   expect_equal_sorted(surrogate$learner$param_set$values[names(list_expected)], list_expected)
 
   expect_r6(surrogate$learner$fallback, "LearnerRegrFeatureless")
