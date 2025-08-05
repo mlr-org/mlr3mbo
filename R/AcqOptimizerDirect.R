@@ -27,14 +27,13 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
         stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
         xtol_rel = p_dbl(default = 1e-06, lower = 0, upper = Inf, special_vals = list(-1)),
         xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        maxeval = p_int(lower = 1, default = 1000L, special_vals = list(-1)),
+        #maxeval = p_int(lower = 1, default = 1000L, special_vals = list(-1)),
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         minf_max = p_dbl(default = -Inf),
         restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
         n_iterations = p_int(lower = 1, init = 1L),
-        random_restart_size = p_int(lower = 1, init = 100L)
-
+        n_evals = p_int(lower = 1, init = 1L)
         # n_candidates = p_int(lower = 1, default = 1L),
         # logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
         # warmstart = p_lgl(default = FALSE),
@@ -55,7 +54,6 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
       pv = self$param_set$values
       n_iterations = if (pv$restart_strategy == "random") pv$n_iterations else 1L
 
-
       wrapper = function(x, fun, constants, direction) {
         xdt = as.data.table(as.list(set_names(x, self$acq_function$domain$ids())))
         res = mlr3misc::invoke(fun, xdt = xdt, .args = constants)[[1]]
@@ -67,16 +65,17 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
       direction = self$acq_function$codomain$direction
 
       y = Inf
-      for (n in seq_len(n_iterations)) {
+      n = 0L
+      i = 0L
+      maxeval = ceiling(pv$n_evals / n_iterations)
+      while (n < pv$n_evals) {
+        i = i + 1L
 
-        x0 =  if (pv$restart_strategy == "none") {
+        x0 = if (i == 1L) {
           as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
         } else {
           # random restart
-          design = generate_design_random(self$acq_function$domain, n = pv$random_restart_size)$data
-          res = mlr3misc::invoke(fun, xdt = design, .args = constants)[[1]] * direction
-          i = which.min(res)
-          as.numeric(design[i, self$acq_function$domain$ids(), with = FALSE])
+          as.numeric(generate_design_random(self$acq_function$domain, n = 1)$data)
         }
 
         # optimize with nloptr
@@ -84,7 +83,7 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
           eval_f = wrapper,
           lb = self$acq_function$domain$lower,
           ub = self$acq_function$domain$upper,
-          opts = c(pv, list(algorithm = "NLOPT_GN_DIRECT_L")),
+          opts = c(pv, list(algorithm = "NLOPT_GN_DIRECT_L", maxeval = min(maxeval, pv$n_evals - n))),
           eval_grad_f = NULL,
           x0 = x0,
           fun = fun,
@@ -96,7 +95,9 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
           x = res$solution
         }
 
-        self$state = c(self$state, set_names(list(res), paste0("iteration_", n)))
+        n = n + res$iterations
+
+        self$state = c(self$state, set_names(list(res), paste0("iteration_", i)))
       }
       as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },

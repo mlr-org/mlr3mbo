@@ -6,7 +6,7 @@ test_that("AcqOptimizerDirect works", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerDirect$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "none")
+  acqopt$param_set$set_values(n_evals = 200L, restart_strategy = "none")
   acqfun$surrogate$update()
   acqfun$update()
 
@@ -14,6 +14,7 @@ test_that("AcqOptimizerDirect works", {
   expect_list(acqopt$state)
   expect_names(names(acqopt$state), must.include = "iteration_1")
   expect_class(acqopt$state$iteration_1, "nloptr")
+  expect_true(acqopt$state$iteration_1$iterations <= 200L)
 })
 
 test_that("AcqOptimizerDirect works with 2D", {
@@ -24,7 +25,7 @@ test_that("AcqOptimizerDirect works with 2D", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerDirect$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxeval = 200L)
+  acqopt$param_set$set_values(n_evals = 200L)
   acqfun$surrogate$update()
   acqfun$update()
 
@@ -32,6 +33,7 @@ test_that("AcqOptimizerDirect works with 2D", {
   expect_list(acqopt$state)
   expect_names(names(acqopt$state), must.include = "iteration_1")
   expect_class(acqopt$state$iteration_1, "nloptr")
+  expect_true(acqopt$state$iteration_1$iterations <= 200L)
 })
 
 test_that("AcqOptimizerDirect works with instance", {
@@ -42,7 +44,7 @@ test_that("AcqOptimizerDirect works with instance", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerDirect$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxeval = 10L)
+  acqopt$param_set$set_values(n_evals = 10L)
 
   optimizer = opt("mbo", acq_optimizer = acqopt, acq_function = acqfun, surrogate = surrogate)
   expect_data_table(optimizer$optimize(instance), nrow = 1L)
@@ -56,12 +58,13 @@ test_that("AcqOptimizerDirect works with random restart", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerDirect$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "random", n_restarts = 3L, random_restart_size = 20L)
+  acqopt$param_set$set_values(n_evals = 200L, restart_strategy = "random", n_iterations = 4L)
   acqfun$surrogate$update()
   acqfun$update()
 
   expect_data_table(acqopt$optimize(), nrows = 1L)
-  expect_list(acqopt$state, len = 3L)
-  expect_names(names(acqopt$state), identical.to = c("iteration_1", "iteration_2", "iteration_3"))
+  expect_list(acqopt$state, len = 4L)
+  expect_names(names(acqopt$state), identical.to = c("iteration_1", "iteration_2", "iteration_3", "iteration_4"))
   walk(acqopt$state, function(x) expect_class(x, "nloptr"))
+  expect_true(all(sapply(acqopt$state, function(x) x$iterations) <= 50L))
 })

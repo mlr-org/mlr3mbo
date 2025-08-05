@@ -39,6 +39,7 @@ License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
+    mlr3 (>= 1.1.0),
     mlr3tuning (>= 1.4.0),
     R (>= 3.1.0)
 Imports:
@@ -67,7 +68,6 @@ Suggests:
     stringi,
     testthat (>= 3.0.0),
 Remotes:
-    mlr-org/mlr3@predict_newdata_fast,
     mlr-org/mlr3learners@ranger_se
 ByteCompile: no
 Encoding: UTF-8
