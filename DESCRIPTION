@@ -69,6 +69,7 @@ Suggests:
     testthat (>= 3.0.0),
 Remotes:
     mlr-org/mlr3learners@ranger_se
+    mlr-org/bbotk@ls-in-c
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
