@@ -6,7 +6,7 @@ test_that("AcqOptimizerDirect works", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerDirect$new(acq_function = acqfun)
-  acqopt$param_set$set_values(n_evals = 200L, restart_strategy = "none")
+  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "none")
   acqfun$surrogate$update()
   acqfun$update()
 
@@ -25,7 +25,7 @@ test_that("AcqOptimizerDirect works with 2D", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerDirect$new(acq_function = acqfun)
-  acqopt$param_set$set_values(n_evals = 200L)
+  acqopt$param_set$set_values(maxeval = 200L)
   acqfun$surrogate$update()
   acqfun$update()
 
@@ -44,7 +44,7 @@ test_that("AcqOptimizerDirect works with instance", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerDirect$new(acq_function = acqfun)
-  acqopt$param_set$set_values(n_evals = 10L)
+  acqopt$param_set$set_values(maxeval = 10L)
 
   optimizer = opt("mbo", acq_optimizer = acqopt, acq_function = acqfun, surrogate = surrogate)
   expect_data_table(optimizer$optimize(instance), nrow = 1L)
@@ -58,7 +58,7 @@ test_that("AcqOptimizerDirect works with random restart", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerDirect$new(acq_function = acqfun)
-  acqopt$param_set$set_values(n_evals = 200L, restart_strategy = "random", n_iterations = 4L)
+  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "random", n_restarts = 3L)
   acqfun$surrogate$update()
   acqfun$update()
 

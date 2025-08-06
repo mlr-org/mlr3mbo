@@ -21,9 +21,10 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     #' @param acq_function (`NULL` | [AcqFunction]).
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
-      ps = ps(
+      param_set = ps(
+        maxeval          = p_int(lower = 1, init = 1000L, special_vals = list(-1)),
         fnscale          = p_dbl(default = 1),
-        maxit            = p_int(lower  = 1L),
+        #maxit            = p_int(lower  = 1L),
         stopfitness      = p_dbl(default = -Inf),
         keep.best        = p_lgl(default = TRUE),
         sigma            = p_uty(default = 0.5),
@@ -41,7 +42,7 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
         diag.value       = p_lgl(default = FALSE),
         stop.tolx        = p_dbl(), # undocumented stop criterion
         restart_strategy = p_fct(levels = c("none", "ipop"), init = "none"),
-        n_iterations     = p_int(lower = 1L, init = 1L),
+        n_restarts       = p_int(lower = 0L, init = 0L),
         population_multiplier = p_int(lower = 1, init = 2L)
         # start_values  = p_fct(default = "random", levels = c("random", "center", "custom")),
         # start         = p_uty(default = NULL, depends = start_values == "custom"),
@@ -54,7 +55,7 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       )
       # ps$values = list(n_candidates = 1, logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, catch_errors = TRUE)
       # ps$add_dep("warmstart_size", on = "warmstart", cond = CondEqual$new(TRUE))
-      private$.param_set = ps
+      private$.param_set = param_set
     },
 
     #' @description
@@ -63,14 +64,16 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
       pv = self$param_set$values
+      min_iterations = if (pv$restart_strategy == "ipop") pv$n_restarts + 1L else 1L
+      pv$n_restarts = NULL
+      pv$restart_strategy = NULL
       pv$vectorized = TRUE
-      x = par = set_names(as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE]), self$acq_function$domain$ids())
-      n_iterations = if (pv$restart_strategy == "ipop") pv$n_iterations else 1L
 
       # set package defaults if not set by user
       # restarts needs lambda and mu to be set
       if (is.null(pv$lambda)) pv$lambda = 4 + floor(3 * log(length(par)))
       if (is.null(pv$mu)) pv$mu = floor(pv$lambda / 2)
+      if (is.null(pv$maxit)) pv$maxit = 100 * length(par)^2 * min_iterations
 
       wrapper = function(xmat, fun, constants, direction) {
         xdt = as.data.table(t(xmat))
@@ -83,13 +86,25 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       direction = self$acq_function$codomain$direction
 
       y = Inf
-      for (n in seq_len(n_iterations)) {
+      n = 0L
+      i = 0L
+      maxeval_i = floor(pv$maxeval / min_iterations)
+      while (n < pv$maxeval) {
+        i = i + 1L
+
+        par = if (i == 1L) {
+          set_names(as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE]), self$acq_function$domain$ids())
+        } else {
+          # random restart
+          set_names(as.numeric(generate_design_random(self$acq_function$domain, n = 1)$data), self$acq_function$domain$ids())
+        }
+
         res = invoke(cmaes::cma_es,
           par = par,
           fn = wrapper,
           lower = self$acq_function$domain$lower,
           upper = self$acq_function$domain$upper,
-          control = pv,
+          control = insert_named(pv, list(maxit = ceiling(min(maxeval_i / pv$lambda, (pv$maxeval - n) / pv$lambda)))),
           fun = fun,
           constants = constants,
           direction = direction)
@@ -102,9 +117,10 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
 
         pv$mu = pv$mu * pv$population_multiplier
         pv$lambda = pv$lambda * pv$population_multiplier
-        par = unlist(generate_design_random(self$acq_function$domain, 1)$data[1, ])
 
-        self$state = c(self$state, set_names(list(res), paste0("iteration_", n)))
+        n = n + res$counts[1]
+
+        self$state = c(self$state, set_names(list(res), paste0("iteration_", i)))
       }
 
       as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))

@@ -24,17 +24,16 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
     #' @param acq_function (`NULL` | [AcqFunction]).
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
-      ps = ps(
+      param_set = ps(
+        maxeval = p_int(lower = 1, init = 1000L, special_vals = list(-1)),
         stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
-        xtol_rel = p_dbl(default = 1e-06, lower = 0, upper = Inf, special_vals = list(-1)),
+        xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1)),
         xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        maxeval = p_int(lower = 1, default = 1000L, special_vals = list(-1)),
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         minf_max = p_dbl(default = -Inf),
         restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
-        n_iterations = p_int(lower = 1, init = 1L),
-        random_restart_size = p_int(lower = 1, init = 100L)
+        n_restarts = p_int(lower = 0L, init = 0L)
         # n_candidates = p_int(lower = 1, default = 1L),
         # logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
         # warmstart = p_lgl(default = FALSE),
@@ -44,7 +43,7 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
       )
       # ps$values = list(n_candidates = 1, logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, catch_errors = TRUE)
       # ps$add_dep("warmstart_size", on = "warmstart", cond = CondEqual$new(TRUE))
-      private$.param_set = ps
+      private$.param_set = param_set
     },
 
     #' @description
@@ -53,8 +52,9 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
       pv = self$param_set$values
-      n_iterations = if (pv$restart_strategy == "random") pv$n_iterations else 1L
-
+      min_iterations = if (pv$restart_strategy == "random") pv$n_restarts + 1L else 1L
+      pv$n_restarts = NULL
+      pv$restart_strategy = NULL
 
       wrapper = function(x, fun, constants, direction) {
         xdt = as.data.table(as.list(set_names(x, self$acq_function$domain$ids())))
@@ -67,16 +67,17 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
       direction = self$acq_function$codomain$direction
 
       y = Inf
-      for (n in seq_len(n_iterations)) {
+      n = 0L
+      i = 0L
+      maxeval_i = ceiling(pv$maxeval / min_iterations)
+      while (n < pv$maxeval) {
+        i = i + 1L
 
-        x0 =  if (pv$restart_strategy == "none") {
+        x0 = if (i == 1L) {
           as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
         } else {
           # random restart
-          design = generate_design_random(self$acq_function$domain, n = pv$random_restart_size)$data
-          res = mlr3misc::invoke(fun, xdt = design, .args = constants)[[1]] * direction
-          i = which.min(res)
-          as.numeric(design[i, self$acq_function$domain$ids(), with = FALSE])
+          as.numeric(generate_design_random(self$acq_function$domain, n = 1)$data)
         }
 
         eval_grad_f = function(x, fun, constants, direction) {
@@ -89,7 +90,7 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
           eval_f = wrapper,
           lb = self$acq_function$domain$lower + saveguard_epsilon,
           ub = self$acq_function$domain$upper - saveguard_epsilon,
-          opts = c(pv, list(algorithm = "NLOPT_LD_LBFGS")),
+          opts = insert_named(pv, list(algorithm = "NLOPT_LD_LBFGS", maxeval = min(maxeval_i, pv$maxeval - n))),
           eval_grad_f = eval_grad_f,
           x0 = x0,
           fun = fun,
