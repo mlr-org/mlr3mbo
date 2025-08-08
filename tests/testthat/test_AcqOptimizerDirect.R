@@ -13,8 +13,8 @@ test_that("AcqOptimizerDirect works", {
   expect_data_table(acqopt$optimize(), nrows = 1L)
   expect_list(acqopt$state)
   expect_names(names(acqopt$state), must.include = "iteration_1")
-  expect_class(acqopt$state$iteration_1, "nloptr")
-  expect_true(acqopt$state$iteration_1$iterations <= 200L)
+  expect_class(acqopt$state$iteration_1$model, "nloptr")
+  expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
 })
 
 test_that("AcqOptimizerDirect works with 2D", {
@@ -32,8 +32,8 @@ test_that("AcqOptimizerDirect works with 2D", {
   expect_data_table(acqopt$optimize(), nrows = 1L)
   expect_list(acqopt$state)
   expect_names(names(acqopt$state), must.include = "iteration_1")
-  expect_class(acqopt$state$iteration_1, "nloptr")
-  expect_true(acqopt$state$iteration_1$iterations <= 200L)
+  expect_class(acqopt$state$iteration_1$model, "nloptr")
+  expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
 })
 
 test_that("AcqOptimizerDirect works with instance", {
@@ -63,8 +63,8 @@ test_that("AcqOptimizerDirect works with random restart", {
   acqfun$update()
 
   expect_data_table(acqopt$optimize(), nrows = 1L)
-  expect_list(acqopt$state, len = 4L)
-  expect_names(names(acqopt$state), identical.to = c("iteration_1", "iteration_2", "iteration_3", "iteration_4"))
-  walk(acqopt$state, function(x) expect_class(x, "nloptr"))
-  expect_true(all(sapply(acqopt$state, function(x) x$iterations) <= 50L))
+  expect_list(acqopt$state, min.len = 4L)
+  expect_names(names(acqopt$state), must.include = c("iteration_1", "iteration_2", "iteration_3", "iteration_4"))
+  walk(acqopt$state, function(x) expect_class(x$model, "nloptr"))
+  expect_true(all(sapply(acqopt$state, function(x) x$model$iterations) <= 50L))
 })

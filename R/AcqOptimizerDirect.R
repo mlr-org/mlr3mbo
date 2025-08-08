@@ -52,6 +52,7 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
     optimize = function() {
       pv = self$param_set$values
       min_iterations = if (pv$restart_strategy == "random") pv$n_restarts + 1L else 1L
+      restart_strategy = pv$restart_strategy
       pv$n_restarts = NULL
       pv$restart_strategy = NULL
 
@@ -98,7 +99,9 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
 
         n = n + res$iterations
 
-        self$state = c(self$state, set_names(list(res), paste0("iteration_", i)))
+        self$state = c(self$state, set_names(list(list(model = res, start = x0)), paste0("iteration_", i)))
+
+        if (restart_strategy == "none") break
       }
       as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },
