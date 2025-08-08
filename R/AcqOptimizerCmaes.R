@@ -17,7 +17,8 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
         maxEvals = p_int(lower = 1, init = 1000L),
-        xtol = p_dbl(init = 1e-3)
+        xtol = p_dbl(init = 1e-12),
+        ftol = p_dbl(init = 1e-12)
         # maxeval          = p_int(lower = 1, init = 1000L, special_vals = list(-1)),
         # fnscale          = p_dbl(default = 1),
         # #maxit            = p_int(lower  = 1L),
@@ -91,6 +92,9 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
         lambda = -1,
         maxEvals = pv$maxEvals,
         xtol = pv$xtol,
+        ftol = pv$ftol,
+        quiet = TRUE,
+        trace = pv$maxEvals + 1L
       )
 
       y = wrapper(res)
