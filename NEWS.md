@@ -1,4 +1,4 @@
-# mlr3mbo (development version)
+# mlr3mbo 0.3.1
 
 * chore: maintainer change.
 * chore: work with new mlr3pipelines version 0.9.0 (fix for tests only).
