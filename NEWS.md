@@ -1,5 +1,10 @@
 # mlr3mbo (development version)
 
+* chore: maintainer change.
+* chore: work with new mlr3pipelines version 0.9.0 (fix for tests only).
+* test: `expect_rush_reset` changes related to rush developments.
+* fix: allow `InputTrafoUnitcube` to work in mixed spaces.
+
 # mlr3mbo 0.3.0
 
 * fix: logger changes related to bbotk.
