@@ -6,7 +6,7 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
   public = list(
 
     #' @field state (`list()`)\cr
-    #' List of [cmaes::cma_es()] results.
+    #' [libcmaesr::cmaes()] results.
     state = NULL,
 
     #' @description
@@ -16,9 +16,7 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        maxEvals = p_int(lower = 1, init = 1000L),
-        xtol = p_dbl(init = 1e-12),
-        ftol = p_dbl(init = 1e-12)
+        max_fevals = p_int(lower = 1, init = 1000L)
         # maxeval          = p_int(lower = 1, init = 1000L, special_vals = list(-1)),
         # fnscale          = p_dbl(default = 1),
         # #maxit            = p_int(lower  = 1L),
@@ -66,40 +64,33 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       constants = self$acq_function$constants$values
       direction = self$acq_function$codomain$direction
 
+      control = libcmaesr::cmaes_control(
+        maximize = direction == -1L,
+        algo = "abipop",
+        max_fevals = pv$max_fevals
+      )
+
+
       wrapper = function(xmat) {
         xdt = set_names(as.data.table(t(xmat)), self$acq_function$domain$ids())
         res = mlr3misc::invoke(fun, xdt = xdt, .args = constants)[[1]]
         res * direction
       }
 
-      optimFunBlock = function(x) {
-        wrapper(x)
-      }
-
       lower = self$acq_function$domain$lower
       upper = self$acq_function$domain$upper
-
       x0 = as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
 
-      res = Rlibcmaes::cmaesOptim(
+      res = libcmaesr::cmaes(
+        objective = wrapper,
         x0 = x0,
-        sigma = median(upper - lower) / 4,
-        optimFun = wrapper,
-        optimFunBlock = optimFunBlock,
         lower = lower,
         upper = upper,
-        cmaAlgo = as.integer(Rlibcmaes::cmaEsAlgo()$IPOP_CMAES),
-        lambda = -1,
-        maxEvals = pv$maxEvals,
-        xtol = pv$xtol,
-        ftol = pv$ftol,
-        quiet = TRUE,
-        trace = pv$maxEvals + 1L
-      )
+        control = control)
 
-      y = wrapper(res)
+      self$state = res
 
-      as.data.table(as.list(set_names(c(res, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+      as.data.table(as.list(set_names(c(res$x, res$y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },
 
     #' @description

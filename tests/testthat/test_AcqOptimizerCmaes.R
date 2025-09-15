@@ -6,17 +6,15 @@ test_that("AcqOptimizerCmaes works", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerCmaes$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxEvals = 100L)
+  acqopt$param_set$set_values(max_fevals = 100L)
   acqfun$surrogate$update()
   acqfun$update()
   expect_data_table(acqopt$optimize(), nrows = 1L)
-  # expect_list(acqopt$state)
-  # expect_names(names(acqopt$state), must.include = "iteration_1")
-  # expect_class(acqopt$state$iteration_1, "cma_es.result")
+  expect_list(acqopt$state)
 })
 
 test_that("AcqOptimizerCmaes works with 2D", {
-  instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))
+  instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))^
   design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
 

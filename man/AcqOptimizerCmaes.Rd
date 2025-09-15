@@ -4,10 +4,9 @@
 \alias{AcqOptimizerCmaes}
 \title{CMA-ES Acquisition Function Optimizer}
 \description{
-IPOP CMA-ES runs for \code{n_iterations} iterations.
-The population size is increased by \code{population_multiplier} after each iteration.
-In the first iteration, the start point is the best point in the archive.
-In the subsequent iterations, the start point is a random point in the search space.
+CMA-ES Acquisition Function Optimizer
+
+CMA-ES Acquisition Function Optimizer
 }
 \section{Super class}{
 \code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerCmaes}
@@ -16,7 +15,7 @@ In the subsequent iterations, the start point is a random point in the search sp
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{state}}{(\code{list()})\cr
-List of \code{\link[cmaes:cma_es]{cmaes::cma_es()}} results.}
+\code{\link[libcmaesr:cmaes]{libcmaesr::cmaes()}} results.}
 }
 \if{html}{\out{</div>}}
 }

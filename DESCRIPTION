@@ -57,6 +57,7 @@ Suggests:
     emoa,
     fastGHQuad,
     lhs,
+    libcmaesr,
     mlr3learners (>= 0.7.0),
     mlr3pipelines (>= 0.5.2),
     nloptr,
@@ -68,15 +69,16 @@ Suggests:
     stringi,
     testthat (>= 3.0.0),
 Remotes:
-    mlr-org/mlr3learners@ranger_se,
-    mlr-org/bbotk@ls-in-c
+    mlr-org/mlr3learners,
+    mlr-org/bbotk@ls-in-c,
+    mlr-org/libcmaesr
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE, r6 = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Collate:
     'mlr_acqfunctions.R'
     'AcqFunction.R'
