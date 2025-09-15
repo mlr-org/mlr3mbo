@@ -70,7 +70,6 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
         max_fevals = pv$max_fevals
       )
 
-
       wrapper = function(xmat) {
         xdt = set_names(as.data.table(t(xmat)), self$acq_function$domain$ids())
         res = mlr3misc::invoke(fun, xdt = xdt, .args = constants)[[1]]
