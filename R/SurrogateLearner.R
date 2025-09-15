@@ -115,7 +115,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
         xdt = self$input_trafo$transform(xdt)
       }
 
-
       pred = self$learner$predict_newdata_fast(xdt)
       pred = set_names(pred, c("mean", "se"))
 

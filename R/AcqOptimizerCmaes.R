@@ -71,9 +71,8 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       )
 
       wrapper = function(xmat) {
-        xdt = set_names(as.data.table(t(xmat)), self$acq_function$domain$ids())
-        res = mlr3misc::invoke(fun, xdt = xdt, .args = constants)[[1]]
-        res * direction
+        xdt = set_names(as.data.table(xmat), self$acq_function$domain$ids())
+        mlr3misc::invoke(fun, xdt = xdt, .args = constants)[[1]]
       }
 
       lower = self$acq_function$domain$lower
@@ -85,6 +84,7 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
         x0 = x0,
         lower = lower,
         upper = upper,
+        batch = TRUE,
         control = control)
 
       self$state = res
