@@ -39,7 +39,7 @@ License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
-    mlr3 (>= 1.1.0),
+    mlr3 (>= 1.2.0),
     mlr3tuning (>= 1.4.0),
     R (>= 3.1.0)
 Imports:
@@ -58,7 +58,7 @@ Suggests:
     fastGHQuad,
     lhs,
     libcmaesr,
-    mlr3learners (>= 0.7.0),
+    mlr3learners (>= 0.12.0),
     mlr3pipelines (>= 0.5.2),
     nloptr,
     ranger,
@@ -69,8 +69,7 @@ Suggests:
     stringi,
     testthat (>= 3.0.0),
 Remotes:
-    mlr-org/mlr3learners,
-    mlr-org/bbotk@ls-in-c,
+    mlr-org/bbotk@benchmark,
     mlr-org/libcmaesr
 ByteCompile: no
 Encoding: UTF-8
