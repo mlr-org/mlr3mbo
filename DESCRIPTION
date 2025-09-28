@@ -100,6 +100,7 @@ Collate:
     'AcqOptimizerDirect.R'
     'AcqOptimizerLbfgsb.R'
     'AcqOptimizerLocalSearch.R'
+    'AcqOptimzerRandomSearch.R'
     'mlr_input_trafos.R'
     'InputTrafo.R'
     'InputTrafoUnitcube.R'
