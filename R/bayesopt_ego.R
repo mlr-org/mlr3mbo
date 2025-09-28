@@ -145,14 +145,22 @@ bayesopt_ego = function(
       if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
         stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
       }
-      acq_function$surrogate$update()
+
+      runtime_train_surrogate = system.time({
+        acq_function$surrogate$update()
+      })
       acq_function$update()
-      acq_optimizer$optimize()
+      runtime_acq_optimizer = system.time({
+        res = acq_optimizer$optimize()
+      })
+      res
     }, mbo_error = function(mbo_error_condition) {
       lg$info(paste0(class(mbo_error_condition), collapse = " / "))
       lg$info("Proposing a randomly sampled point")
       generate_design_random(search_space, n = 1L)$data
     })
+    set(xdt, j = "runtime_train_surrogate", value = runtime_train_surrogate["elapsed"])
+    set(xdt, j = "runtime_acq_optimizer", value = runtime_acq_optimizer["elapsed"])
 
     instance$eval_batch(xdt)
     if (instance$is_terminated) break
