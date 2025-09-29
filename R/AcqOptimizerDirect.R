@@ -93,8 +93,6 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
           constants = constants,
           direction = direction)
 
-        browser()
-
         if (res$objective < y) {
           y = res$objective
           x = res$solution
