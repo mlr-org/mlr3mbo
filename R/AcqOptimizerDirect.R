@@ -32,7 +32,7 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         minf_max = p_dbl(default = -Inf),
         restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
-        n_restarts = p_int(lower = 0L, init = 0L)
+        max_restarts = p_int(lower = 0L, init = 0L)
         # n_candidates = p_int(lower = 1, default = 1L),
         # logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
         # warmstart = p_lgl(default = FALSE),
@@ -51,9 +51,10 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
       pv = self$param_set$values
-      min_iterations = if (pv$restart_strategy == "random") pv$n_restarts + 1L else 1L
+      #min_iterations = if (pv$restart_strategy == "random") pv$n_restarts + 1L else 1L
       restart_strategy = pv$restart_strategy
-      pv$n_restarts = NULL
+      max_restarts = pv$max_restarts
+      pv$max_restarts = NULL
       pv$restart_strategy = NULL
 
       wrapper = function(x, fun, constants, direction) {
@@ -69,8 +70,8 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
       y = Inf
       n = 0L
       i = 0L
-      maxeval_i = ceiling(pv$maxeval / min_iterations)
-      while (n < pv$maxeval) {
+      maxeval = if (pv$maxeval == -1) Inf else pv$maxeval
+      while (n < maxeval && i <= max_restarts) {
         i = i + 1L
 
         x0 = if (i == 1L) {
@@ -85,12 +86,14 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
           eval_f = wrapper,
           lb = self$acq_function$domain$lower,
           ub = self$acq_function$domain$upper,
-          opts = insert_named(pv, list(algorithm = "NLOPT_GN_DIRECT_L", maxeval = min(maxeval_i, pv$maxeval - n))),
+          opts = insert_named(pv, list(algorithm = "NLOPT_GN_DIRECT_L", maxeval = maxeval - n)),
           eval_grad_f = NULL,
           x0 = x0,
           fun = fun,
           constants = constants,
           direction = direction)
+
+        browser()
 
         if (res$objective < y) {
           y = res$objective
