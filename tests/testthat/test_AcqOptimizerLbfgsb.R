@@ -58,7 +58,7 @@ test_that("AcqOptimizerLbfgsb works with random restart", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerLbfgsb$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "random", n_restarts = 3L)
+  acqopt$param_set$set_values(maxeval = -1, ftol_rel = 1e-6, restart_strategy = "random", max_restarts = 3L)
   acqfun$surrogate$update()
   acqfun$update()
 

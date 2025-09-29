@@ -51,7 +51,6 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
       pv = self$param_set$values
-      #min_iterations = if (pv$restart_strategy == "random") pv$n_restarts + 1L else 1L
       restart_strategy = pv$restart_strategy
       max_restarts = pv$max_restarts
       pv$max_restarts = NULL
@@ -150,4 +149,3 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
     }
   )
 )
-
