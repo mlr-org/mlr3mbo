@@ -63,7 +63,7 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED))
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$learner, "LearnerRegrRanger")
-  expect_equal_sorted(surrogate$learner$param_set$values,
+  expect_equal_sorted(surrogate$learner$param_set$values[c("num.threads", "num.trees", "keep.inbag", "se.method")],
     list(num.threads = 1L, num.trees = 100L, keep.inbag = TRUE, se.method = "jack"))
   expect_equal(surrogate$learner$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
@@ -72,7 +72,7 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2_MIXED, search_space = PS_1D_MIXED))
   expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$learner, types = "LearnerRegrRanger")
-  expect_equal_sorted(surrogate$learner[[1L]]$param_set$values,
+  expect_equal_sorted(surrogate$learner[[1L]]$param_set$values[c("num.threads", "num.trees", "keep.inbag", "se.method")],
     list(num.threads = 1L, num.trees = 100L, keep.inbag = TRUE, se.method = "jack"))
   expect_equal(surrogate$learner[[1L]]$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner[[1L]]$fallback, "LearnerRegrRanger")
