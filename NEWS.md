@@ -1,4 +1,4 @@
-# mlr3mbo (development version)
+# mlr3mbo 0.3.2
 
 # mlr3mbo 0.3.1
 
