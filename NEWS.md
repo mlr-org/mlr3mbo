@@ -1,5 +1,7 @@
 # mlr3mbo 0.3.2
 
+* compatibility: mlr3learners 0.13.0
+
 # mlr3mbo 0.3.1
 
 * chore: maintainer change.
