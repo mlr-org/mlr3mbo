@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 0.3.2
+Version: 0.3.2.9000
 Authors@R: c(
     person("Marc", "Becker", , "marcbecker@posteo.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-8115-0400")),
