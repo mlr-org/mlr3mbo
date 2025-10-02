@@ -16,7 +16,8 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        max_fevals = p_int(lower = 1, init = 1000L)
+        max_fevals = p_int(lower = 1, init = 1000L),
+        max_restarts = p_int(lower = 0, init = 1000L)
         # maxeval          = p_int(lower = 1, init = 1000L, special_vals = list(-1)),
         # fnscale          = p_dbl(default = 1),
         # #maxit            = p_int(lower  = 1L),
@@ -67,7 +68,8 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       control = libcmaesr::cmaes_control(
         maximize = direction == -1L,
         algo = "abipop",
-        max_fevals = pv$max_fevals
+        max_fevals = pv$max_fevals,
+        max_restarts = pv$max_restarts
       )
 
       wrapper = function(xmat) {
