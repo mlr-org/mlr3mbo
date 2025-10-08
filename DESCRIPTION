@@ -1,14 +1,14 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 0.3.0.9002
+Version: 0.3.0.9003
 Authors@R: c(
-    person("Lennart", "Schneider", , "lennart.sch@web.de", role = c("cre", "aut"),
+    person("Marc", "Becker", , "marcbecker@posteo.de", role = c("cre", "aut"),
+           comment = c(ORCID = "0000-0002-8115-0400")),
+    person("Lennart", "Schneider", , "lennart.sch@web.de", role = "aut",
            comment = c(ORCID = "0000-0003-4152-5308")),
     person("Jakob", "Richter", , "jakob1richter@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0003-4481-5554")),
-    person("Marc", "Becker", , "marcbecker@posteo.de", role = "aut",
-           comment = c(ORCID = "0000-0002-8115-0400")),
     person("Michel", "Lang", , "michellang@gmail.com", role = "aut",
            comment = c(ORCID = "0000-0001-9754-0393")),
     person("Bernd", "Bischl", , "bernd_bischl@gmx.net", role = "aut",
@@ -59,6 +59,7 @@ Suggests:
     lhs,
     libcmaesr,
     mlr3learners (>= 0.12.0),
+    mirai,
     mlr3pipelines (>= 0.5.2),
     nloptr,
     ranger,
@@ -69,7 +70,7 @@ Suggests:
     stringi,
     testthat (>= 3.0.0),
 Remotes:
-    mlr-org/bbotk@benchmark,
+    mlr-org/bbotk,
     mlr-org/libcmaesr
 ByteCompile: no
 Encoding: UTF-8

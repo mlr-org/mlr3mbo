@@ -55,9 +55,11 @@
 #'       measure = measure,
 #'       terminator = trm("evals", n_evals = 10))
 #'
-#'     rush::rush_plan(n_workers=2)
+#'     mirai::daemons(2)
+#'     rush::rush_plan(n_workers=2, worker_type = "remote")
 #'
 #'     tnr("async_mbo", design_size = 4, n_workers = 2)$optimize(instance)
+#'     mirai::daemons(0)
 #'   } else {
 #'     message("Redis server is not available.\nPlease set up Redis prior to running the example.")
 #'   }

@@ -8,7 +8,8 @@ test_that("TunerAsyncMbo works", {
     minsplit  = to_tune(2L, 128L),
     cp        = to_tune(1e-04, 1e-1))
 
-  rush::rush_plan(n_workers = 4L)
+  mirai::daemons(4L)
+  rush::rush_plan(n_workers = 4L, worker_type = "remote")
   instance = ti_async(
     task = tsk("pima"),
     learner = learner,

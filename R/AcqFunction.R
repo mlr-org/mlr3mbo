@@ -47,7 +47,6 @@ AcqFunction = R6Class("AcqFunction",
         check_packages_installed(packages, msg = sprintf("Package '%%s' required but not installed for acquisition function '%s'", sprintf("<%s:%s>", "AcqFunction", id)))
       }
       private$.requires_predict_type_se = assert_flag(requires_predict_type_se)
-      private$.packages = packages
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
       if (is.null(surrogate)) {
         domain = ParamSet$new()
@@ -63,6 +62,9 @@ AcqFunction = R6Class("AcqFunction",
         domain = generate_acq_domain(surrogate)
       }
       super$initialize(id = id, domain = domain, codomain = codomain, constants = constants, check_values = FALSE, label = label, man = man)
+      # workaround for bbotk
+      # move to initialize after bbotk CRAN update
+      private$.packages = packages
     },
 
     #' @description
