@@ -1,13 +1,39 @@
 #' @title CMA-ES Acquisition Function Optimizer
 #'
+#' @include AcqOptimizer.R
+#'
+#' @description
+#' CMA-ES acquisition function optimizer.
+#' Calls `cmaes()` from \CRANpkg{libcmaesr}.
+#' The default algorithm is `"abipop"` with unlimited restarts and a budget of `100 * D^2` function evaluations, where `D` is the dimension of the search space.
+#' For the meaning of the control parameters, see `libcmaesr::cmaes_control()`.
+#'
+#' @section Termination Parameters:
+#' The following termination parameters can be used.
+#'
+#' \describe{
+#' \item{`max_fevals`}{`integer(1)`\cr
+#'   Maximum number of function evaluations.
+#'   Deactivate with `NA`.
+#'   Default is `100 * D^2`, where `D` is the dimension of the search space.}
+#' \item{`max_iter`}{`integer(1)`\cr
+#'   Maximum number of iterations.
+#'   Deactivate with `NA`.}
+#' \item{`ftarget`}{`numeric(1)`\cr
+#'   Target function value.
+#'   Deactivate with `NA`.}
+#' \item{`f_tolerance`}{`numeric(1)`\cr
+#'   Function tolerance.
+#'   Deactivate with `NA`.}
+#' \item{`x_tolerance`}{`numeric(1)`\cr
+#'   Parameter tolerance.
+#'   Deactivate with `NA`.}
+#' }
+#'
 #' @export
 AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
   inherit = AcqOptimizer,
   public = list(
-
-    #' @field state (`list()`)\cr
-    #' [libcmaesr::cmaes()] results.
-    state = NULL,
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -16,41 +42,37 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        max_fevals = p_int(lower = 1, init = 1000L),
-        max_restarts = p_int(lower = 0, init = 1000L)
-        # maxeval          = p_int(lower = 1, init = 1000L, special_vals = list(-1)),
-        # fnscale          = p_dbl(default = 1),
-        # #maxit            = p_int(lower  = 1L),
-        # stopfitness      = p_dbl(default = -Inf),
-        # keep.best        = p_lgl(default = TRUE),
-        # sigma            = p_uty(default = 0.5),
-        # mu               = p_int(lower = 1L),
-        # lambda           = p_int(lower = 1L),
-        # weights          = p_uty(),
-        # damps            = p_dbl(),
-        # cs               = p_dbl(),
-        # ccum             = p_dbl(),
-        # ccov.1           = p_dbl(lower = 0),
-        # ccov.mu          = p_dbl(lower = 0),
-        # diag.sigma       = p_lgl(default = FALSE),
-        # diag.eigen       = p_lgl(default = FALSE),
-        # diag.pop         = p_lgl(default = FALSE),
-        # diag.value       = p_lgl(default = FALSE),
-        # stop.tolx        = p_dbl(), # undocumented stop criterion
-        # restart_strategy = p_fct(levels = c("none", "ipop"), init = "none"),
-        # n_restarts       = p_int(lower = 0L, init = 0L),
-        # population_multiplier = p_int(lower = 1, init = 2L)
-        # start_values  = p_fct(default = "random", levels = c("random", "center", "custom")),
-        # start         = p_uty(default = NULL, depends = start_values == "custom"),
-        # n_candidates = p_int(lower = 1, default = 1L),
-        # logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
-        # warmstart = p_lgl(default = FALSE),
-        # warmstart_size = p_int(lower = 1L, special_vals = list("all")),
-        # skip_already_evaluated = p_lgl(default = TRUE),
-        # catch_errors = p_lgl(default = TRUE)
+        algo          = p_fct(init = "abipop", levels = c(
+          "cmaes",
+          "ipop",
+          "bipop",
+          "acmaes",
+          "aipop",
+          "abipop",
+          "sepcmaes",
+          "sepipop",
+          "sepbipop",
+          "sepacmaes",
+          "sepaipop",
+          "sepabipop",
+          "vdcma",
+          "vdipopcma",
+          "vdbipopcma")),
+        lambda        = p_int(lower = 1L, default = NA_integer_, special_vals = list(NA_integer_)),
+        sigma         = p_dbl(default = NA_real_, special_vals = list(NA_real_)),
+        max_restarts  = p_int(lower = 1L, special_vals = list(NA), init = 1e5L),
+        tpa           = p_int(default = NA_integer_, special_vals = list(NA_integer_)),
+        tpa_dsigma    = p_dbl(default = NA_real_, special_vals = list(NA_real_)),
+        seed          = p_int(default = NA_integer_, special_vals = list(NA_integer_)),
+        quiet         = p_lgl(default = FALSE),
+        # internal termination criteria
+        max_fevals    = p_int(lower = 1L, special_vals = list(NA_integer_)),
+        max_iter      = p_int(lower = 1L, default = NA_integer_, special_vals = list(NA_integer_)),
+        ftarget       = p_dbl(default = NA_real_, special_vals = list(NA_real_)),
+        f_tolerance   = p_dbl(default = NA_real_, special_vals = list(NA_real_)),
+        x_tolerance   = p_dbl(default = NA_real_, special_vals = list(NA_real_)),
+        catch_errors = p_lgl(init = TRUE)
       )
-      # ps$values = list(n_candidates = 1, logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, catch_errors = TRUE)
-      # ps$add_dep("warmstart_size", on = "warmstart", cond = CondEqual$new(TRUE))
       private$.param_set = param_set
     },
 
@@ -61,16 +83,15 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
     optimize = function() {
       pv = self$param_set$values
 
+      if (is.null(pv$max_fevals)) {
+        pv$max_fevals = 100 * self$acq_function$domain$length^2
+      }
+
       fun = get_private(self$acq_function)$.fun
       constants = self$acq_function$constants$values
       direction = self$acq_function$codomain$direction
 
-      control = libcmaesr::cmaes_control(
-        maximize = direction == -1L,
-        algo = "abipop",
-        max_fevals = pv$max_fevals,
-        max_restarts = pv$max_restarts
-      )
+      control = invoke(libcmaesr::cmaes_control, maximize = direction == -1L, .args = pv)
 
       wrapper = function(xmat) {
         xdt = set_names(as.data.table(xmat), self$acq_function$domain$ids())
@@ -81,59 +102,35 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       upper = self$acq_function$domain$upper
       x0 = as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
 
-      res = libcmaesr::cmaes(
-        objective = wrapper,
-        x0 = x0,
-        lower = lower,
-        upper = upper,
-        batch = TRUE,
-        control = control)
+      optimize = function() {
+        libcmaesr::cmaes(
+          objective = wrapper,
+          x0 = x0,
+          lower = lower,
+          upper = upper,
+          batch = TRUE,
+          control = control)
+      }
 
-      self$state = res
-
+      if (pv$catch_errors) {
+        tryCatch({
+          res = optimize()
+        }, error = function(error_condition) {
+          lg$warn(error_condition$message)
+          stop(set_class(list(message = error_condition$message, call = NULL), classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
+        })
+      } else {
+        res = optimize()
+      }
       as.data.table(as.list(set_names(c(res$x, res$y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
-    },
-
-    #' @description
-    #' Reset the acquisition function optimizer.
-    #'
-    #' Currently not used.
-    reset = function() {
-
     }
   ),
 
   active = list(
     #' @template field_print_id
     print_id = function(rhs) {
-      if (missing(rhs)) {
-        paste0("(", class(self$optimizer)[1L], " | ", class(self$terminator)[1L], ")")
-      } else {
-        stop("$print_id is read-only.")
-      }
-    },
-
-    #' @field param_set ([paradox::ParamSet])\cr
-    #'   Set of hyperparameters.
-    param_set = function(rhs) {
-      if (!missing(rhs) && !identical(rhs, private$.param_set)) {
-        stop("$param_set is read-only.")
-      }
-      private$.param_set
-    }
-  ),
-
-  private = list(
-    .param_set = NULL,
-
-    deep_clone = function(name, value) {
-      switch(name,
-        optimizer = value$clone(deep = TRUE),
-        terminator = value$clone(deep = TRUE),
-        acq_function = if (!is.null(value)) value$clone(deep = TRUE) else NULL,
-        .param_set = value$clone(deep = TRUE),
-        value
-      )
+      assert_ro_binding(rhs)
+      "(OptimizerBatchCmaes)"
     }
   )
 )
