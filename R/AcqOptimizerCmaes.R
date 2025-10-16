@@ -102,6 +102,11 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       upper = self$acq_function$domain$upper
       x0 = as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
 
+      # add saveguard_epsilon to x0
+      saveguard_epsilon = 1e-5
+      x0[x0 < lower] = x0[x0 < lower] + saveguard_epsilon
+      x0[x0 > upper] = x0[x0 > upper] - saveguard_epsilon
+
       optimize = function() {
         libcmaesr::cmaes(
           objective = wrapper,
