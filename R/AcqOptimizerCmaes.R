@@ -91,7 +91,7 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
       constants = self$acq_function$constants$values
       direction = self$acq_function$codomain$direction
 
-      control = invoke(libcmaesr::cmaes_control, maximize = direction == -1L, .args = pv)
+      control = invoke(libcmaesr::cmaes_control, maximize = direction == -1L, .args = pv[names(pv) %in% formalArgs(libcmaesr::cmaes_control)])
 
       wrapper = function(xmat) {
         xdt = set_names(as.data.table(xmat), self$acq_function$domain$ids())
