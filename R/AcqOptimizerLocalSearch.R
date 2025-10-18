@@ -32,16 +32,16 @@ AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
     optimize = function() {
       pv = self$param_set$get_values()
 
-      local_search_control = invoke(local_search_control, minimize = self$acq_function$direction == "minimize", .args = pv)
+      control = invoke(bbotk::local_search_control, minimize = self$acq_function$direction == "minimize", .args = pv)
 
       wrapper = function(xdt) {
         mlr3misc::invoke(self$acq_function$fun, xdt = xdt, .args = self$acq_function$constants$values)[[1]]
       }
 
-      res = invoke(local_search,
+      res = invoke(bbotk::local_search,
         objective = wrapper,
         search_space = self$acq_function$domain,
-        control = local_search_control
+        control = control
       )
 
       as.data.table(as.list(set_names(c(res$x, res$y), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
