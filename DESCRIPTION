@@ -107,7 +107,6 @@ Collate:
     'InputTrafo.R'
     'InputTrafoUnitcube.R'
     'aaa.R'
-    'LearnerRegrRangerMbo.R'
     'OptimizerADBO.R'
     'OptimizerAsyncMbo.R'
     'OptimizerMbo.R'

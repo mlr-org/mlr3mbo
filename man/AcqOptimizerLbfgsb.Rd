@@ -30,6 +30,7 @@ Default is \code{"none"}.
 Maximum number of restarts.
 Default is \code{5 * D} (Default).}
 }
+}
 
 \section{Termination Parameters}{
 

@@ -19,6 +19,7 @@
 #' \item{`max_restarts`}{`integer(1)`\cr
 #'   Maximum number of restarts.
 #'   Default is `5 * D` (Default).}
+#' }
 #'
 #' @note
 #' If the restart strategy is `"none"`, the optimizer starts with the best point in the archive.
