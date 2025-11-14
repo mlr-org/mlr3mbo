@@ -7,8 +7,8 @@
 acqo(optimizer, terminator, acq_function = NULL, callbacks = NULL, ...)
 }
 \arguments{
-\item{optimizer}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch})\cr
-\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} that is to be used.}
+\item{optimizer}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} | \code{character(1)})\cr
+\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} that is to be used or the name of the optimizer in \link{mlr_acqoptimizers}.}
 
 \item{terminator}{(\link[bbotk:Terminator]{bbotk::Terminator})\cr
 \link[bbotk:Terminator]{bbotk::Terminator} that is to be used.}
@@ -21,8 +21,7 @@ Can also be \code{NULL}.}
 Callbacks used during acquisition function optimization.}
 
 \item{...}{(named \code{list()})\cr
-Named arguments passed to the constructor, to be set as parameters in the
-\link[paradox:ParamSet]{paradox::ParamSet}.}
+Named arguments passed to the constructor, to be set as parameters in the \link[paradox:ParamSet]{paradox::ParamSet}.}
 }
 \value{
 \link{AcqOptimizer}
