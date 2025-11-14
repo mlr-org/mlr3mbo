@@ -33,6 +33,11 @@ Deactivate with \code{NA}.}
 }
 }
 
+\examples{
+if (requireNamespace("libcmaesr")) {
+  acqo("cmaes")
+}
+}
 \section{Super class}{
 \code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerCmaes}
 }

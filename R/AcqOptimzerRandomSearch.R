@@ -14,6 +14,8 @@
 #'   Default is `100 * D^2`, where `D` is the dimension of the search space.}
 #' }
 #' @export
+#' @examples
+#' acqo("random_search")
 AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
   inherit = AcqOptimizer,
   public = list(

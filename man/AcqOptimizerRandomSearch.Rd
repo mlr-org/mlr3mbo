@@ -17,6 +17,9 @@ Default is \code{100 * D^2}, where \code{D} is the dimension of the search space
 }
 }
 
+\examples{
+acqo("random_search")
+}
 \section{Super class}{
 \code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerRandomSearch}
 }

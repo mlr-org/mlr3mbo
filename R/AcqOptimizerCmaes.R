@@ -31,6 +31,10 @@
 #' }
 #'
 #' @export
+#' @examples
+#' if (requireNamespace("libcmaesr")) {
+#'   acqo("cmaes")
+#' }
 AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
   inherit = AcqOptimizer,
   public = list(

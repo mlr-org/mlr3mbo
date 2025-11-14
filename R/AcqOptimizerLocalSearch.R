@@ -9,6 +9,8 @@
 #' The termination stops when the budget defined by the `n_searches`, `n_steps`, and `n_neighs` parameters is exhausted.
 #'
 #' @export
+#' @examples
+#' acqo("local_search")
 AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
   inherit = AcqOptimizer,
   public = list(

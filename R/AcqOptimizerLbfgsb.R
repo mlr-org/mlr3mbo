@@ -56,6 +56,10 @@
 #' }
 #'
 #' @export
+#' @examples
+#' if (requireNamespace("nloptr")) {
+#'   acqo("lbfgsb")
+#' }
 #' @export
 AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
   inherit = AcqOptimizer,

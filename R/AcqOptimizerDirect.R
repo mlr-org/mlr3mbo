@@ -56,6 +56,10 @@
 #' }
 #'
 #' @export
+#' @examples
+#' if (requireNamespace("nloptr")) {
+#'   acqo("direct")
+#' }
 AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
   inherit = AcqOptimizer,
   public = list(

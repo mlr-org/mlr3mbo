@@ -60,6 +60,11 @@ Deactivate with \code{-1} (Default).}
 }
 }
 
+\examples{
+if (requireNamespace("nloptr")) {
+  acqo("lbfgsb")
+}
+}
 \section{Super class}{
 \code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerLbfgsb}
 }

@@ -9,6 +9,9 @@ Calls \code{\link[bbotk:local_search]{bbotk::local_search()}}.
 For the meaning of the control parameters, see \code{\link[bbotk:local_search_control]{bbotk::local_search_control()}}.
 The termination stops when the budget defined by the \code{n_searches}, \code{n_steps}, and \code{n_neighs} parameters is exhausted.
 }
+\examples{
+acqo("local_search")
+}
 \section{Super class}{
 \code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerLocalSearch}
 }
