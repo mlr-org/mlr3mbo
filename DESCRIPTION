@@ -43,7 +43,7 @@ Depends:
     mlr3tuning (>= 1.4.0),
     R (>= 3.1.0)
 Imports:
-    bbotk (>= 1.6.0),
+    bbotk (>= 1.8.0),
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
@@ -57,7 +57,6 @@ Suggests:
     emoa,
     fastGHQuad,
     lhs,
-    libcmaesr,
     mlr3learners (>= 0.12.0),
     mirai,
     mlr3pipelines (>= 0.5.2),
@@ -69,9 +68,6 @@ Suggests:
     rush,
     stringi,
     testthat (>= 3.0.0),
-Remotes:
-    mlr-org/bbotk,
-    mlr-org/libcmaesr
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
@@ -98,7 +94,6 @@ Collate:
     'AcqFunctionStochasticEI.R'
     'AcqOptimizer.R'
     'mlr_acqoptimizers.R'
-    'AcqOptimizerCmaes.R'
     'AcqOptimizerDirect.R'
     'AcqOptimizerLbfgsb.R'
     'AcqOptimizerLocalSearch.R'
