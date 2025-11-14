@@ -35,6 +35,7 @@ as.data.table(mlr_loop_functions)
 \seealso{
 Other Dictionary: 
 \code{\link{mlr_acqfunctions}},
+\code{\link{mlr_acqoptimizers}},
 \code{\link{mlr_input_trafos}},
 \code{\link{mlr_output_trafos}},
 \code{\link{mlr_result_assigners}}

@@ -2,15 +2,63 @@
 % Please edit documentation in R/AcqOptimizerDirect.R
 \name{AcqOptimizerDirect}
 \alias{AcqOptimizerDirect}
-\title{Direct Optimization Acquisition Function Optimizer}
+\title{Direct Acquisition Function Optimizer}
 \description{
+Direct acquisition function optimizer.
+Calls \code{nloptr()} from \CRANpkg{nloptr}.
+In its default setting, the algorithm restarts \code{5 * D} times and runs at most for \code{100 * D^2} function evaluations, where \code{D} is the dimension of the search space.
+Each run stops when the relative tolerance of the parameters is less than \code{10^-4}.
+The first iteration starts with the best point in the archive and the next iterations start from a random point.
+}
+\note{
 If the restart strategy is \code{"none"}, the optimizer starts with the best point in the archive.
 The optimization stops when one of the stopping criteria is met.
 
-If \code{restart_strategy} is \code{"random"}, the optimizer runs at least for \code{maxeval / n_restarts} iterations.
-The first iteration starts with the best point in the archive.
+If \code{restart_strategy} is \code{"random"}, the optimizer runs at least for \code{maxeval} iterations.
+The first iteration starts with the best point in the archive and stops when one of the stopping criteria is met.
 The next iterations start from a random point.
 }
+\section{Parameters}{
+
+\describe{
+\item{\code{restart_strategy}}{\code{character(1)}\cr
+Restart strategy.
+Can be \code{"none"} or \code{"random"}.
+Default is \code{"none"}.
+}
+\item{\code{max_restarts}}{\code{integer(1)}\cr
+Maximum number of restarts.
+Default is \code{5 * D} (Default).}
+}
+
+\section{Termination Parameters}{
+
+The following termination parameters can be used.
+
+\describe{
+\item{\code{stopval}}{\code{numeric(1)}\cr
+Stop value.
+Deactivate with \code{-Inf} (Default).}
+\item{\code{maxeval}}{\code{integer(1)}\cr
+Maximum number of evaluations.
+Default is \code{100 * D^2}, where \code{D} is the dimension of the search space.
+Deactivate with \code{-1L}.}
+\item{\code{xtol_rel}}{\code{numeric(1)}\cr
+Relative tolerance of the parameters.
+Default is \code{10^-4}.
+Deactivate with \code{-1}.}
+\item{\code{xtol_abs}}{\code{numeric(1)}\cr
+Absolute tolerance of the parameters.
+Deactivate with \code{-1} (Default).}
+\item{\code{ftol_rel}}{\code{numeric(1)}\cr
+Relative tolerance of the objective function.
+Deactivate with \code{-1}. (Default).}
+\item{\code{ftol_abs}}{\code{numeric(1)}\cr
+Absolute tolerance of the objective function.
+Deactivate with \code{-1} (Default).}
+}
+}
+
 \section{Super class}{
 \code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerDirect}
 }
@@ -27,9 +75,6 @@ List of \code{\link[nloptr:nloptr]{nloptr::nloptr()}} results.}
 \describe{
 \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
-
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
-Set of hyperparameters.}
 }
 \if{html}{\out{</div>}}
 }
@@ -38,7 +83,6 @@ Set of hyperparameters.}
 \itemize{
 \item \href{#method-AcqOptimizerDirect-new}{\code{AcqOptimizerDirect$new()}}
 \item \href{#method-AcqOptimizerDirect-optimize}{\code{AcqOptimizerDirect$optimize()}}
-\item \href{#method-AcqOptimizerDirect-reset}{\code{AcqOptimizerDirect$reset()}}
 \item \href{#method-AcqOptimizerDirect-clone}{\code{AcqOptimizerDirect$clone()}}
 }
 }
@@ -47,6 +91,7 @@ Set of hyperparameters.}
 <ul>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>mlr3mbo::AcqOptimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>mlr3mbo::AcqOptimizer$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>mlr3mbo::AcqOptimizer$reset()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -79,18 +124,6 @@ Optimize the acquisition function.
 \subsection{Returns}{
 \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqOptimizerDirect-reset"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqOptimizerDirect-reset}{}}}
-\subsection{Method \code{reset()}}{
-Reset the acquisition function optimizer.
-
-Currently not used.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizerDirect$reset()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizerDirect-clone"></a>}}

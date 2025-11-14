@@ -4,10 +4,19 @@
 \alias{AcqOptimizerRandomSearch}
 \title{Random Search Acquisition Function Optimizer}
 \description{
-Random Search Acquisition Function Optimizer
-
-Random Search Acquisition Function Optimizer
+Random search acquisition function optimizer.
+By default, it samples \code{100 * D^2} random points in the search space, where \code{D} is the dimension of the search space.
+The point with the highest acquisition value is returned.
 }
+\section{Parameters}{
+
+\describe{
+\item{\code{n_evals}}{\code{integer(1)}\cr
+Number of random points to sample.
+Default is \code{100 * D^2}, where \code{D} is the dimension of the search space.}
+}
+}
+
 \section{Super class}{
 \code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerRandomSearch}
 }
@@ -16,9 +25,6 @@ Random Search Acquisition Function Optimizer
 \describe{
 \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
-
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
-Set of hyperparameters.}
 }
 \if{html}{\out{</div>}}
 }
@@ -27,7 +33,6 @@ Set of hyperparameters.}
 \itemize{
 \item \href{#method-AcqOptimizerRandomSearch-new}{\code{AcqOptimizerRandomSearch$new()}}
 \item \href{#method-AcqOptimizerRandomSearch-optimize}{\code{AcqOptimizerRandomSearch$optimize()}}
-\item \href{#method-AcqOptimizerRandomSearch-reset}{\code{AcqOptimizerRandomSearch$reset()}}
 \item \href{#method-AcqOptimizerRandomSearch-clone}{\code{AcqOptimizerRandomSearch$clone()}}
 }
 }
@@ -36,6 +41,7 @@ Set of hyperparameters.}
 <ul>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>mlr3mbo::AcqOptimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>mlr3mbo::AcqOptimizer$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>mlr3mbo::AcqOptimizer$reset()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -68,18 +74,6 @@ Optimize the acquisition function.
 \subsection{Returns}{
 \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqOptimizerRandomSearch-reset"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqOptimizerRandomSearch-reset}{}}}
-\subsection{Method \code{reset()}}{
-Reset the acquisition function optimizer.
-
-Currently not used.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizerRandomSearch$reset()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizerRandomSearch-clone"></a>}}

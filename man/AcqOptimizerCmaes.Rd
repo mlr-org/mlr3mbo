@@ -4,29 +4,43 @@
 \alias{AcqOptimizerCmaes}
 \title{CMA-ES Acquisition Function Optimizer}
 \description{
-CMA-ES Acquisition Function Optimizer
-
-CMA-ES Acquisition Function Optimizer
+CMA-ES acquisition function optimizer.
+Calls \code{cmaes()} from \CRANpkg{libcmaesr}.
+The default algorithm is \code{"abipop"} with unlimited restarts and a budget of \code{100 * D^2} function evaluations, where \code{D} is the dimension of the search space.
+For the meaning of the control parameters, see \code{libcmaesr::cmaes_control()}.
 }
+\section{Termination Parameters}{
+
+The following termination parameters can be used.
+
+\describe{
+\item{\code{max_fevals}}{\code{integer(1)}\cr
+Maximum number of function evaluations.
+Deactivate with \code{NA}.
+Default is \code{100 * D^2}, where \code{D} is the dimension of the search space.}
+\item{\code{max_iter}}{\code{integer(1)}\cr
+Maximum number of iterations.
+Deactivate with \code{NA}.}
+\item{\code{ftarget}}{\code{numeric(1)}\cr
+Target function value.
+Deactivate with \code{NA}.}
+\item{\code{f_tolerance}}{\code{numeric(1)}\cr
+Function tolerance.
+Deactivate with \code{NA}.}
+\item{\code{x_tolerance}}{\code{numeric(1)}\cr
+Parameter tolerance.
+Deactivate with \code{NA}.}
+}
+}
+
 \section{Super class}{
 \code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerCmaes}
-}
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{state}}{(\code{list()})\cr
-\code{\link[libcmaesr:cmaes]{libcmaesr::cmaes()}} results.}
-}
-\if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
-
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
-Set of hyperparameters.}
 }
 \if{html}{\out{</div>}}
 }
@@ -35,7 +49,6 @@ Set of hyperparameters.}
 \itemize{
 \item \href{#method-AcqOptimizerCmaes-new}{\code{AcqOptimizerCmaes$new()}}
 \item \href{#method-AcqOptimizerCmaes-optimize}{\code{AcqOptimizerCmaes$optimize()}}
-\item \href{#method-AcqOptimizerCmaes-reset}{\code{AcqOptimizerCmaes$reset()}}
 \item \href{#method-AcqOptimizerCmaes-clone}{\code{AcqOptimizerCmaes$clone()}}
 }
 }
@@ -44,6 +57,7 @@ Set of hyperparameters.}
 <ul>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>mlr3mbo::AcqOptimizer$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>mlr3mbo::AcqOptimizer$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>mlr3mbo::AcqOptimizer$reset()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -76,18 +90,6 @@ Optimize the acquisition function.
 \subsection{Returns}{
 \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqOptimizerCmaes-reset"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqOptimizerCmaes-reset}{}}}
-\subsection{Method \code{reset()}}{
-Reset the acquisition function optimizer.
-
-Currently not used.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizerCmaes$reset()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizerCmaes-clone"></a>}}

@@ -1,6 +1,6 @@
 #' @title Direct Acquisition Function Optimizer
 #'
-#' @include AcqOptimizer.R
+#' @include AcqOptimizer.R mlr_acqoptimizers.R
 #'
 #' @description
 #' Direct acquisition function optimizer.
@@ -35,9 +35,6 @@
 #' \item{`stopval`}{`numeric(1)`\cr
 #'   Stop value.
 #'   Deactivate with `-Inf` (Default).}
-#' \item{`maxtime`}{`integer(1)`\cr
-#'   Maximum time.
-#'   Deactivate with `-1L` (Default).}
 #' \item{`maxeval`}{`integer(1)`\cr
 #'   Maximum number of evaluations.
 #'   Default is `100 * D^2`, where `D` is the dimension of the search space.
@@ -169,3 +166,5 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
     }
   )
 )
+
+mlr_acqoptimizers$add("direct", AcqOptimizerDirect)

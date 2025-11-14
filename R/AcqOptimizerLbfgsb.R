@@ -1,12 +1,58 @@
 #' @title L-BFGS-B Acquisition Function Optimizer
 #'
-#' @description
-#' If `restart_strategy` is `"random"`, the optimizer runs for `n_iterations` iterations.
-#' Each iteration starts with a random search of size `random_restart_size`.
-#' The best point is used as the start point for the L-BFGS-B optimization.
+#' @include AcqOptimizer.R mlr_acqoptimizers.R
 #'
-#' If `restart_strategy` is `"none"`, the only the L-BFGS-B optimization is performed.
-#' The start point is the best point in the archive.
+#' @description
+#' L-BFGS-B acquisition function optimizer.
+#' Calls `nloptr()` from \CRANpkg{nloptr}.
+#' In its default setting, the algorithm restarts `5 * D` times and runs at most for `100 * D^2` function evaluations, where `D` is the dimension of the search space.
+#' Each run stops when the relative tolerance of the parameters is less than `10^-4`.
+#' The first iteration starts with the best point in the archive and the next iterations start from a random point.
+#'
+#' @section Parameters:
+#' \describe{
+#' \item{`restart_strategy`}{`character(1)`\cr
+#'   Restart strategy.
+#'   Can be `"none"` or `"random"`.
+#'   Default is `"none"`.
+#' }
+#' \item{`max_restarts`}{`integer(1)`\cr
+#'   Maximum number of restarts.
+#'   Default is `5 * D` (Default).}
+#'
+#' @note
+#' If the restart strategy is `"none"`, the optimizer starts with the best point in the archive.
+#' The optimization stops when one of the stopping criteria is met.
+#'
+#' If `restart_strategy` is `"random"`, the optimizer runs at least for `maxeval` iterations.
+#' The first iteration starts with the best point in the archive and stops when one of the stopping criteria is met.
+#' The next iterations start from a random point.
+#'
+#' @section Termination Parameters:
+#' The following termination parameters can be used.
+#'
+#' \describe{
+#' \item{`stopval`}{`numeric(1)`\cr
+#'   Stop value.
+#'   Deactivate with `-Inf` (Default).}
+#' \item{`maxeval`}{`integer(1)`\cr
+#'   Maximum number of evaluations.
+#'   Default is `100 * D^2`, where `D` is the dimension of the search space.
+#'   Deactivate with `-1L`.}
+#' \item{`xtol_rel`}{`numeric(1)`\cr
+#'   Relative tolerance of the parameters.
+#'   Default is `10^-4`.
+#'   Deactivate with `-1`.}
+#' \item{`xtol_abs`}{`numeric(1)`\cr
+#'   Absolute tolerance of the parameters.
+#'   Deactivate with `-1` (Default).}
+#' \item{`ftol_rel`}{`numeric(1)`\cr
+#'   Relative tolerance of the objective function.
+#'   Deactivate with `-1`. (Default).}
+#' \item{`ftol_abs`}{`numeric(1)`\cr
+#'   Absolute tolerance of the objective function.
+#'   Deactivate with `-1` (Default).}
+#' }
 #'
 #' @export
 #' @export
@@ -34,16 +80,9 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
         minf_max = p_dbl(default = -Inf),
         restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
         n_restarts = p_int(lower = 0L, init = 0L),
-        max_restarts = p_int(lower = 0L, init = 0L)
-        # n_candidates = p_int(lower = 1, default = 1L),
-        # logging_level = p_fct(levels = c("fatal", "error", "warn", "info", "debug", "trace"), default = "warn"),
-        # warmstart = p_lgl(default = FALSE),
-        # warmstart_size = p_int(lower = 1L, special_vals = list("all")),
-        # skip_already_evaluated = p_lgl(default = TRUE),
-        # catch_errors = p_lgl(default = TRUE)
+        max_restarts = p_int(lower = 0L, init = 0L),
+        catch_errors = p_lgl(init = TRUE)
       )
-      # ps$values = list(n_candidates = 1, logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, catch_errors = TRUE)
-      # ps$add_dep("warmstart_size", on = "warmstart", cond = CondEqual$new(TRUE))
       private$.param_set = param_set
     },
 
@@ -87,17 +126,29 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
         }
         saveguard_epsilon = 1e-5
 
-        # optimize with nloptr
-        res = invoke(nloptr::nloptr,
-          eval_f = wrapper,
-          lb = self$acq_function$domain$lower + saveguard_epsilon,
-          ub = self$acq_function$domain$upper - saveguard_epsilon,
-          opts = insert_named(pv, list(algorithm = "NLOPT_LD_LBFGS", maxeval = maxeval - n)),
-          eval_grad_f = eval_grad_f,
-          x0 = x0,
-          fun = fun,
-          constants = constants,
-          direction = direction)
+        optimize = function() {
+          invoke(nloptr::nloptr,
+            eval_f = wrapper,
+            lb = self$acq_function$domain$lower + saveguard_epsilon,
+            ub = self$acq_function$domain$upper - saveguard_epsilon,
+            opts = insert_named(pv, list(algorithm = "NLOPT_LD_LBFGS", maxeval = maxeval - n)),
+            eval_grad_f = eval_grad_f,
+            x0 = x0,
+            fun = fun,
+            constants = constants,
+            direction = direction)
+        }
+
+        if (pv$catch_errors) {
+          tryCatch({
+            res = optimize()
+          }, error = function(error_condition) {
+            lg$warn(error_condition$message)
+            stop(set_class(list(message = error_condition$message, call = NULL), classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
+          })
+        } else {
+          res = optimize()
+        }
 
         if (res$objective < y) {
           y = res$objective
@@ -111,34 +162,14 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
         if (restart_strategy == "none") break
       }
       as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
-    },
-
-    #' @description
-    #' Reset the acquisition function optimizer.
-    #'
-    #' Currently not used.
-    reset = function() {
-
     }
   ),
 
   active = list(
     #' @template field_print_id
     print_id = function(rhs) {
-      if (missing(rhs)) {
-        paste0("(", class(self$optimizer)[1L], " | ", class(self$terminator)[1L], ")")
-      } else {
-        stop("$print_id is read-only.")
-      }
-    },
-
-    #' @field param_set ([paradox::ParamSet])\cr
-    #'   Set of hyperparameters.
-    param_set = function(rhs) {
-      if (!missing(rhs) && !identical(rhs, private$.param_set)) {
-        stop("$param_set is read-only.")
-      }
-      private$.param_set
+      assert_ro_binding(rhs)
+      "(OptimizerLbfgsb)"
     }
   ),
 
@@ -157,3 +188,4 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
   )
 )
 
+mlr_acqoptimizers$add("lbfgsb", AcqOptimizerLbfgsb)

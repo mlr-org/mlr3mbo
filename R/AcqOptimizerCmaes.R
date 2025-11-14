@@ -1,6 +1,6 @@
 #' @title CMA-ES Acquisition Function Optimizer
 #'
-#' @include AcqOptimizer.R
+#' @include AcqOptimizer.R mlr_acqoptimizers.R
 #'
 #' @description
 #' CMA-ES acquisition function optimizer.
@@ -140,3 +140,4 @@ AcqOptimizerCmaes = R6Class("AcqOptimizerCmaes",
   )
 )
 
+mlr_acqoptimizers$add("cmaes", AcqOptimizerCmaes)

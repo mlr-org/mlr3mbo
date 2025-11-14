@@ -1,5 +1,8 @@
 # mlr3mbo (development version)
 
+* feat: Added `mlr_acqoptimizers` dictionary.
+* feat: Added `AcqOptimizerCmaes`, `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch`.
+
 # mlr3mbo 0.3.3
 
 * compatibility: bbotk 1.7.0

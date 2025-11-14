@@ -4,9 +4,10 @@
 \alias{AcqOptimizerLocalSearch}
 \title{Local Search Acquisition Function Optimizer}
 \description{
-Local Search Acquisition Function Optimizer
-
-Local Search Acquisition Function Optimizer
+Local search acquisition function optimizer.
+Calls \code{\link[bbotk:local_search]{bbotk::local_search()}}.
+For the meaning of the control parameters, see \code{\link[bbotk:local_search_control]{bbotk::local_search_control()}}.
+The termination stops when the budget defined by the \code{n_searches}, \code{n_steps}, and \code{n_neighs} parameters is exhausted.
 }
 \section{Super class}{
 \code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerLocalSearch}
@@ -24,9 +25,6 @@ List of \code{\link[cmaes:cma_es]{cmaes::cma_es()}} results.}
 \describe{
 \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
-
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
-Set of hyperparameters.}
 }
 \if{html}{\out{</div>}}
 }

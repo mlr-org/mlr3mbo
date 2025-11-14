@@ -243,9 +243,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
     #' @field param_set ([paradox::ParamSet])\cr
     #'   Set of hyperparameters.
     param_set = function(rhs) {
-      if (!missing(rhs) && !identical(rhs, private$.param_set)) {
-        stop("$param_set is read-only.")
-      }
+      assert_ro_binding(rhs)
       private$.param_set
     }
   ),

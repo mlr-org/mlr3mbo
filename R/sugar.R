@@ -136,6 +136,11 @@ acqfs = function(.keys, ...) {
 #' @export
 acqo = function(optimizer, terminator, acq_function = NULL, callbacks = NULL, ...) {
   dots = list(...)
+
+  if (is.character(optimizer)) {
+    return(dictionary_sugar_get(mlr_acqoptimizers, optimizer, ...))
+  }
+
   acqopt = AcqOptimizer$new(optimizer = optimizer, terminator = terminator, acq_function = acq_function, callbacks = callbacks)
   acqopt$param_set$values = insert_named(acqopt$param_set$values, dots)
   acqopt

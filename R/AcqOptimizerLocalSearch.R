@@ -1,5 +1,13 @@
 #' @title Local Search Acquisition Function Optimizer
 #'
+#' @include AcqOptimizer.R mlr_acqoptimizers.R
+#'
+#' @description
+#' Local search acquisition function optimizer.
+#' Calls [bbotk::local_search()].
+#' For the meaning of the control parameters, see [bbotk::local_search_control()].
+#' The termination stops when the budget defined by the `n_searches`, `n_steps`, and `n_neighs` parameters is exhausted.
+#'
 #' @export
 AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
   inherit = AcqOptimizer,
@@ -20,7 +28,8 @@ AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
         n_steps = p_int(lower = 0L, default = 5L),
         n_neighs = p_int(lower = 1L, default = 10L),
         mut_sd = p_dbl(lower = 0, default = 0.1),
-        stagnate_max = p_int(lower = 1L, default = 10L)
+        stagnate_max = p_int(lower = 1L, default = 10L),
+        catch_errors = p_lgl(init = TRUE)
       )
       private$.param_set = param_set
     },
@@ -37,12 +46,23 @@ AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
         mlr3misc::invoke(self$acq_function$fun, xdt = xdt, .args = self$acq_function$constants$values)[[1]]
       }
 
-      res = invoke(bbotk::local_search,
-        objective = wrapper,
-        search_space = self$acq_function$domain,
-        control = control
-      )
+      optimize = function() {
+        invoke(bbotk::local_search,
+          objective = wrapper,
+          search_space = self$acq_function$domain,
+          control = control)
+      }
 
+      if (pv$catch_errors) {
+        tryCatch({
+          res = optimize()
+        }, error = function(error_condition) {
+          lg$warn(error_condition$message)
+          stop(set_class(list(message = error_condition$message, call = NULL), classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
+        })
+      } else {
+        res = optimize()
+      }
       as.data.table(as.list(set_names(c(res$x, res$y), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
     },
 
@@ -58,20 +78,8 @@ AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
   active = list(
     #' @template field_print_id
     print_id = function(rhs) {
-      if (missing(rhs)) {
-        paste0("(", class(self$optimizer)[1L], " | ", class(self$terminator)[1L], ")")
-      } else {
-        stop("$print_id is read-only.")
-      }
-    },
-
-    #' @field param_set ([paradox::ParamSet])\cr
-    #'   Set of hyperparameters.
-    param_set = function(rhs) {
-      if (!missing(rhs) && !identical(rhs, private$.param_set)) {
-        stop("$param_set is read-only.")
-      }
-      private$.param_set
+      assert_ro_binding(rhs)
+      "(OptimizerLocalSearch)"
     }
   ),
 
@@ -90,3 +98,4 @@ AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
   )
 )
 
+mlr_acqoptimizers$add("local_search", AcqOptimizerLocalSearch)
