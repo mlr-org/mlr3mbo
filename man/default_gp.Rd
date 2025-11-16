@@ -7,25 +7,21 @@
 default_gp(noisy = FALSE)
 }
 \arguments{
-\item{noisy}{(logical(1))\cr
+\item{noisy}{(\code{logical(1)})\cr
 Whether the learner will be used in a noisy objective function scenario.
 See above.}
 }
 \value{
-\link[mlr3:LearnerRegr]{mlr3::LearnerRegr}
+\link[mlr3learners:mlr_learners_regr.km]{mlr3learners::LearnerRegrKM}
 }
 \description{
-This is a helper function that constructs a default Gaussian Process \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} which is for example used in
-\link{default_surrogate}.
+This is a helper function that constructs a default Gaussian Process \link[mlr3learners:mlr_learners_regr.km]{mlr3learners::LearnerRegrKM} which is for example used in \code{\link[=default_surrogate]{default_surrogate()}}.
 
-Constructs a Kriging learner \dQuote{"regr.km"} with kernel \dQuote{"matern5_2"}.
-If \code{noisy = FALSE} (default) a small nugget effect is added \code{nugget.stability = 10^-8} to increase
-numerical stability to hopefully prevent crashes of \CRANpkg{DiceKriging}.
+Constructs a Kriging learner \code{"regr.km"} with kernel \code{"matern5_2"}.
+If \code{noisy = FALSE} (default) a small nugget effect is added \code{nugget.stability = 10^-8} to increase numerical stability to hopefully prevent crashes of \code{DiceKriging}.
 If \code{noisy = TRUE} the nugget effect will be estimated with \code{nugget.estim = TRUE}.
-If \code{noisy = TRUE} \code{jitter} is set to \code{TRUE} to circumvent a problem with \CRANpkg{DiceKriging} where
-already trained input values produce the exact trained output.
-In general, instead of the default \code{"BFGS"} optimization method we use rgenoud (\code{"gen"}), which is a hybrid
-algorithm, to combine global search based on genetic algorithms and local search based on gradients.
+If \code{noisy = TRUE} \code{jitter} is set to \code{TRUE} to circumvent a problem with \code{DiceKriging} where already trained input values produce the exact trained output.
+In general, instead of the default \code{"BFGS"} optimization method we use rgenoud (\code{"gen"}), which is a hybrid algorithm, to combine global search based on genetic algorithms and local search based on gradients.
 This may improve the model fit and will less frequently produce a constant model prediction.
 }
 \seealso{

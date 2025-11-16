@@ -197,6 +197,7 @@ default_acqfunction = function(instance) {
 #' Defaults to wrapping [AcqOptimizerLocalSearch] with `n_searches = 10`, `n_steps = ceiling(100 * D^2 / 300)`, and `n_neighs = 30`, where `D` is the dimension of the search space.
 #'
 #' @param acq_function ([AcqFunction]).
+#' @param instance ([bbotk::OptimInstance]).
 #' @return [AcqOptimizer]
 #' @family mbo_defaults
 #' @export

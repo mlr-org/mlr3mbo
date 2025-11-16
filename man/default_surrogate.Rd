@@ -23,44 +23,25 @@ Number of learners to be considered in the construction of the \link{Surrogate}.
 If not specified will be based on the number of objectives as stated by the instance.}
 
 \item{force_random_forest}{(\code{logical(1)}).
-If \code{TRUE}, a random forest is constructed even if the parameter space is numeric-only.}
+If \code{TRUE}, a random forest is constructed even if the parameter space is purely numeric.}
 }
 \value{
 \link{Surrogate}
 }
 \description{
-This is a helper function that constructs a default \link{Surrogate} based on properties of the
-\link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+This is a helper function that constructs a default \link{Surrogate} based on properties of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 
-For numeric-only (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via
-\code{\link[=default_gp]{default_gp()}}.
-For mixed numeric-categorical parameter spaces, or spaces with conditional parameters a random forest is constructed via
-\code{\link[=default_rf]{default_rf()}}.
+For purely numeric (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via \code{\link[=default_gp]{default_gp()}}.
+For mixed numeric-categorical parameter spaces, or spaces with conditional parameters a random forest is constructed via \code{\link[=default_rf]{default_rf()}}.
 
-In any case, learners are encapsulated using \dQuote{"evaluate"}, and a fallback learner is set,
-in cases where the surrogate learner errors.
-Currently, the following learner is used as a fallback:
-\code{lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")}.
+In any case, learners are encapsulated using \code{"evaluate"}, and a fallback learner is set, in cases where the surrogate learner errors.
+Currently, the following learner is used as a fallback: \code{lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")}.
 
-If additionally dependencies are present in the parameter space, inactive conditional parameters
-are represented by missing \code{NA} values in the training design data.
-We simply handle those with an imputation method, added to the random forest, more
-concretely we use \code{po("imputesample")} (for logicals) and \code{po("imputeoor")} (for anything else) from
-package \CRANpkg{mlr3pipelines}.
-Characters are always encoded as factors via \code{po("colapply")}.
-Out of range imputation makes sense for tree-based methods and is usually hard to beat, see Ding et al. (2010).
-In the case of dependencies, the following learner is used as a fallback:
-\code{lrn("regr.featureless")}.
+If additionally dependencies are present in the parameter space, inactive conditional parameters are represented by missing \code{NA} values in the training design data.
+We simply handle those with the internal \code{NA} handling method \verb{na.action = "na_learn} of \CRANpkg{ranger}.
 
 If \code{n_learner} is \code{1}, the learner is wrapped as a \link{SurrogateLearner}.
 Otherwise, if \code{n_learner} is larger than \code{1}, multiple deep clones of the learner are wrapped as a \link{SurrogateLearnerCollection}.
-}
-\references{
-\itemize{
-\item Ding, Yufeng, Simonoff, S J (2010).
-\dQuote{An Investigation of Missing Data Methods for Classification Trees Applied to Binary Response Data.}
-\emph{Journal of Machine Learning Research}, \bold{11}(1), 131--170.
-}
 }
 \seealso{
 Other mbo_defaults: 

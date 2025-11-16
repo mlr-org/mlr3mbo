@@ -4,8 +4,7 @@
 \alias{mbo_defaults}
 \title{Defaults for OptimizerMbo}
 \description{
-The following defaults are set for \link{OptimizerMbo} during optimization if the
-respective fields are not set during initialization.
+The following defaults are set for \link{OptimizerMbo} during optimization if the respective fields are not set during initialization.
 \itemize{
 \item Optimization Loop: \link{default_loop_function}\cr
 \item Surrogate: \link{default_surrogate}\cr
