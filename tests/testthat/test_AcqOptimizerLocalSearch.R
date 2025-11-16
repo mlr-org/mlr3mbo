@@ -40,6 +40,6 @@ test_that("AcqOptimizerLocalSearch works with instance", {
   acqopt = AcqOptimizerLocalSearch$new(acq_function = acqfun)
 
   optimizer = opt("mbo", acq_optimizer = acqopt, acq_function = acqfun, surrogate = surrogate)
-  expect_data_table(optimizer$optimize(instance), nrow = 1L)
+  expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
 

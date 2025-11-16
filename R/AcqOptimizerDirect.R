@@ -75,12 +75,12 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        maxeval = p_int(lower = 1, init = 1000L, special_vals = list(-1)),
+        maxeval = p_int(),
         stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
-        xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1)),
-        xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
+        xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1L)),
+        xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1L)),
+        ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1L)),
+        ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1L)),
         minf_max = p_dbl(default = -Inf),
         restart_strategy = p_fct(levels = c("none", "random"), init = "random"),
         max_restarts = p_int(lower = 0L),
@@ -97,8 +97,20 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
       pv = self$param_set$values
       restart_strategy = pv$restart_strategy
       max_restarts = pv$max_restarts
+      maxeval = pv$maxeval
       pv$max_restarts = NULL
       pv$restart_strategy = NULL
+      pv$maxeval = NULL
+
+      if (restart_strategy == "none") {
+        max_restarts = 0L
+      } else if (restart_strategy == "random" && is.null(max_restarts)) {
+        max_restarts = 5 * self$acq_function$domain$length
+      }
+
+      if (is.null(maxeval)) {
+        maxeval = 100 * self$acq_function$domain$length^2
+      }
 
       wrapper = function(x, fun, constants, direction) {
         xdt = as.data.table(as.list(set_names(x, self$acq_function$domain$ids())))
@@ -111,13 +123,12 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
       direction = self$acq_function$codomain$direction
 
       y = Inf
-      n = 0L
-      i = 0L
-      maxeval = if (pv$maxeval == -1) Inf else pv$maxeval
-      while (n < maxeval && i <= max_restarts) {
-        i = i + 1L
+      n_evals = 0L
+      n_restarts = 0L
+      while (n_evals < maxeval || maxeval < 0 && n_restarts <= max_restarts) {
+        n_restarts = n_restarts + 1L
 
-        x0 = if (i == 1L) {
+        x0 = if (n_restarts == 1L) {
           as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
         } else {
           # random restart
@@ -129,7 +140,7 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
             eval_f = wrapper,
             lb = self$acq_function$domain$lower,
             ub = self$acq_function$domain$upper,
-            opts = insert_named(pv, list(algorithm = "NLOPT_GN_DIRECT_L", maxeval = maxeval - n)),
+            opts = insert_named(pv, list(algorithm = "NLOPT_GN_DIRECT_L", maxeval = maxeval - n_evals)),
             eval_grad_f = NULL,
             x0 = x0,
             fun = fun,
@@ -153,9 +164,9 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
           x = res$solution
         }
 
-        n = n + res$iterations
+        n_evals = n_evals + res$iterations
 
-        self$state = c(self$state, set_names(list(list(model = res, start = x0)), paste0("iteration_", i)))
+        self$state = c(self$state, set_names(list(list(model = res, start = x0)), paste0("iteration_", n_restarts)))
 
         if (restart_strategy == "none") break
       }

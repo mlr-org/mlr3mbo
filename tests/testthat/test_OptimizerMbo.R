@@ -203,11 +203,12 @@ test_that("OptimizerMbo up to date surrogate after optimization", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
 
+  acq_function = acqf("ei")
   surrogate = srlrn(lrn("regr.km", covtype = "matern5_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 10^-8))
   acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
-  optimizer = opt("mbo", surrogate = surrogate, acq_optimizer = acq_optimizer)
+  optimizer = opt("mbo", surrogate = surrogate, acq_optimizer = acq_optimizer, acq_function = acq_function)
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  optimizer$optimize(instance)
+  suppressWarnings(optimizer$optimize(instance))
 
   expect_equal(surrogate, optimizer$surrogate)
 

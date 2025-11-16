@@ -47,7 +47,7 @@ test_that("AcqOptimizerLbfgsb works with instance", {
   acqopt$param_set$set_values(maxeval = 10L)
 
   optimizer = opt("mbo", acq_optimizer = acqopt, acq_function = acqfun, surrogate = surrogate)
-  expect_data_table(optimizer$optimize(instance), nrow = 1L)
+  expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
 
 test_that("AcqOptimizerLbfgsb works with random restart", {

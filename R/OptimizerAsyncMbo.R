@@ -201,7 +201,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       }
 
       if (is.null(self$acq_optimizer)) {
-        self$acq_optimizer = default_acqoptimizer(self$acq_function)
+        self$acq_optimizer = default_acqoptimizer(self$acq_function, inst)
       }
 
       if (is.null(self$result_assigner)) {

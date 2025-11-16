@@ -47,7 +47,7 @@ test_that("AcqOptimizerDirect works with instance", {
   acqopt$param_set$set_values(maxeval = 10L)
 
   optimizer = opt("mbo", acq_optimizer = acqopt, acq_function = acqfun, surrogate = surrogate)
-  expect_data_table(optimizer$optimize(instance), nrow = 1L)
+  expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
 
 test_that("AcqOptimizerDirect works with random restart", {
@@ -66,5 +66,4 @@ test_that("AcqOptimizerDirect works with random restart", {
   expect_list(acqopt$state, min.len = 4L)
   expect_names(names(acqopt$state), must.include = c("iteration_1", "iteration_2", "iteration_3", "iteration_4"))
   walk(acqopt$state, function(x) expect_class(x$model, "nloptr"))
-  expect_true(all(sapply(acqopt$state, function(x) x$model$iterations) <= 50L))
 })

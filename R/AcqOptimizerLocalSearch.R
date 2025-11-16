@@ -42,7 +42,7 @@ AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
       pv = self$param_set$get_values()
-      control = invoke(bbotk::local_search_control, minimize = self$acq_function$codomain$direction == 1L, .args = pv)
+      control = invoke(bbotk::local_search_control, minimize = self$acq_function$codomain$direction == 1L, .args = pv[names(pv) != "catch_errors"])
 
       wrapper = function(xdt) {
         mlr3misc::invoke(self$acq_function$fun, xdt = xdt, .args = self$acq_function$constants$values)[[1]]

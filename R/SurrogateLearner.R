@@ -96,6 +96,11 @@ SurrogateLearner = R6Class("SurrogateLearner",
       )
       ps$values = list(catch_errors = TRUE, impute_method = "random")
 
+      private$.predict_names = if (learner$predict_type == "se") {
+        c("mean", "se")
+      } else {
+        "mean"
+      }
       super$initialize(learner = learner, archive = archive, cols_x = cols_x, cols_y = col_y, param_set = ps)
     },
 
@@ -117,7 +122,7 @@ SurrogateLearner = R6Class("SurrogateLearner",
 
       if (!inherits(self$learner, "GraphLearner")) {
         pred = self$learner$predict_newdata_fast(xdt)
-        pred = set_names(pred, c("mean", "se"))
+        pred = set_names(pred, private$.predict_names)
       } else {
         # speeding up some checks by constructing the predict task directly instead of relying on predict_newdata
         task = self$learner$state$train_task$clone()
@@ -133,12 +138,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
           list(mean = pred$response)
         }
       }
-      # slow
-      #pred = self$learner$predict_newdata(newdata = xdt)
-
-
-
-
 
       if (!is.null(self$output_trafo) && self$output_trafo$invert_posterior) {
         pred = self$output_trafo$inverse_transform_posterior(as.data.table(pred))
@@ -276,13 +275,15 @@ SurrogateLearner = R6Class("SurrogateLearner",
     deep_clone = function(name, value) {
       switch(name,
         learner = value$clone(deep = TRUE),
-	input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
-	output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+        input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+        output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value
       )
-    }
+    },
+
+    .predict_names = NULL
   )
 )
 

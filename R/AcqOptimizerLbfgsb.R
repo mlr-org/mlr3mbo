@@ -99,8 +99,20 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
       pv = self$param_set$values
       restart_strategy = pv$restart_strategy
       max_restarts = pv$max_restarts
+      maxeval = pv$maxeval
       pv$max_restarts = NULL
       pv$restart_strategy = NULL
+      pv$maxeval = NULL
+
+      if (restart_strategy == "none") {
+        max_restarts = 0L
+      } else if (restart_strategy == "random" && is.null(max_restarts)) {
+        max_restarts = 5 * self$acq_function$domain$length
+      }
+
+      if (is.null(maxeval)) {
+        maxeval = 100 * self$acq_function$domain$length^2
+      }
 
       wrapper = function(x, fun, constants, direction) {
         xdt = as.data.table(as.list(set_names(x, self$acq_function$domain$ids())))
@@ -113,13 +125,12 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
       direction = self$acq_function$codomain$direction
 
       y = Inf
-      n = 0L
-      i = 0L
-      maxeval = if (pv$maxeval == -1) Inf else pv$maxeval
-      while (n < maxeval && i <= max_restarts) {
-        i = i + 1L
+      n_evals = 0L
+      n_restarts = 0L
+      while (n_evals < maxeval || maxeval < 0 && n_restarts <= max_restarts) {
+        n_restarts = n_restarts + 1L
 
-        x0 = if (i == 1L) {
+        x0 = if (n_restarts == 1L) {
           as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
         } else {
           # random restart
@@ -136,7 +147,7 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
             eval_f = wrapper,
             lb = self$acq_function$domain$lower + saveguard_epsilon,
             ub = self$acq_function$domain$upper - saveguard_epsilon,
-            opts = insert_named(pv, list(algorithm = "NLOPT_LD_LBFGS", maxeval = maxeval - n)),
+            opts = insert_named(pv, list(algorithm = "NLOPT_LD_LBFGS", maxeval = maxeval - n_evals)),
             eval_grad_f = eval_grad_f,
             x0 = x0,
             fun = fun,
@@ -160,9 +171,9 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
           x = res$solution
         }
 
-        n = n + res$iterations
+        n_evals = n_evals + res$iterations
 
-        self$state = c(self$state, set_names(list(list(model = res, start = x0)), paste0("iteration_", i)))
+        self$state = c(self$state, set_names(list(list(model = res, start = x0)), paste0("iteration_", n_restarts)))
 
         if (restart_strategy == "none") break
       }
@@ -175,20 +186,6 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
     print_id = function(rhs) {
       assert_ro_binding(rhs)
       "(OptimizerLbfgsb)"
-    }
-  ),
-
-  private = list(
-    .param_set = NULL,
-
-    deep_clone = function(name, value) {
-      switch(name,
-        optimizer = value$clone(deep = TRUE),
-        terminator = value$clone(deep = TRUE),
-        acq_function = if (!is.null(value)) value$clone(deep = TRUE) else NULL,
-        .param_set = value$clone(deep = TRUE),
-        value
-      )
     }
   )
 )
