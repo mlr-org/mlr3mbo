@@ -90,7 +90,7 @@ test_that("AcqFunctionStochasticCB works with exponential sampling", {
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data, min.rows = 10L)
   expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
-  expect_numeric(unique(instance$archive$data$acq_lambda), len = 3L)
+  expect_numeric(unique(instance$archive$data$acq_lambda), len = 3L) # NA + 2
 
   expect_rush_reset(instance$rush)
 })
