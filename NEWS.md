@@ -1,8 +1,8 @@
 # mlr3mbo (development version)
 
-* feat: Added `mlr_acqoptimizers` dictionary.
+* feat: Added `mlr_acqoptimizers` dictionary with predefined acquisition function optimizers.
 * perf: Added `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch`.
-* feat: Added
+* feat: `default_*` helpers return new default values.
 
 # mlr3mbo 0.3.3
 
