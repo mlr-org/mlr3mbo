@@ -174,13 +174,16 @@ test_that("OptimizerMbo reset", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
 
-  optimizer = opt("mbo", acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L)))
+  optimizer = opt("mbo",
+    acq_optimizer = acqo(opt("random_search", batch_size = 2L),
+    terminator = trm("evals", n_evals = 2L),
+    acq_function = acqf("ei")))
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   optimizer$optimize(instance)
 
   instance_mult = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
 
-  expect_error(optimizer$optimize(instance_mult), "Acquisition function 'acq_cb' requires the surrogate to have exactly one objective")
+  expect_error(optimizer$optimize(instance_mult), "does not support multi-crit objectives")
   expect_loop_function(optimizer$loop_function)
   expect_r6(optimizer$surrogate, "Surrogate")
   expect_r6(optimizer$acq_function, "AcqFunction")
