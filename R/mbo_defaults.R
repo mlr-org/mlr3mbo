@@ -167,7 +167,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL, force_r
 #'
 #' @description
 #' Chooses a default acquisition function, i.e. the criterion used to propose future points.
-#' For synchronous single-objective optimization and a purely numeric parameter space, defaults to [mlr_acqfunctions_ei].
+#' For synchronous single-objective optimization and a purely numeric parameter space, defaults to [mlr_acqfunctions_cb] with `lambda = 3`.
 #' For synchronous single-objective optimization and a mixed numeric-categorical parameter space, defaults to [mlr_acqfunctions_cb] with `lambda = 1`.
 #' For synchronous multi-objective optimization, defaults to [mlr_acqfunctions_smsego].
 #' For asynchronous single-objective optimization, defaults to [mlr_acqfunctions_stochastic_cb].
@@ -196,7 +196,7 @@ default_acqfunction = function(instance) {
 #'
 #' @description
 #' Chooses a default acquisition function optimizer.
-#' Defaults to wrapping [AcqOptimizerLocalSearch] with `n_searches = 10`, `n_steps = ceiling(100 * D^2 / 300)`, and `n_neighs = 30`, where `D` is the dimension of the search space.
+#' Defaults to [AcqOptimizerLocalSearch] with `n_searches = 10`, `n_steps = ceiling(100 * D^2 / 300)`, and `n_neighs = 30`, where `D` is the dimension of the search space.
 #'
 #' @param acq_function ([AcqFunction]).
 #' @param instance ([bbotk::OptimInstance]).

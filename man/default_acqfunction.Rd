@@ -15,7 +15,7 @@ An object that inherits from \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 }
 \description{
 Chooses a default acquisition function, i.e. the criterion used to propose future points.
-For synchronous single-objective optimization and a purely numeric parameter space, defaults to \link{mlr_acqfunctions_ei}.
+For synchronous single-objective optimization and a purely numeric parameter space, defaults to \link{mlr_acqfunctions_cb} with \code{lambda = 3}.
 For synchronous single-objective optimization and a mixed numeric-categorical parameter space, defaults to \link{mlr_acqfunctions_cb} with \code{lambda = 1}.
 For synchronous multi-objective optimization, defaults to \link{mlr_acqfunctions_smsego}.
 For asynchronous single-objective optimization, defaults to \link{mlr_acqfunctions_stochastic_cb}.
