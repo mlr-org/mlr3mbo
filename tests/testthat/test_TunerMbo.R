@@ -159,7 +159,7 @@ test_that("TunerMbo reset", {
 
   instance_mult = TuningInstanceBatchMultiCrit$new(tsk("iris"), learner = learner, resampling = rsmp("holdout"), measures = msrs(c("classif.ce", "classif.logloss")), terminator = trm("evals", n_evals = 5L))
 
-  expect_error(tuner$optimize(instance_mult), "does not support multi-crit objectives")
+  expect_error(tuner$optimize(instance_mult), "Acquisition function 'acq_cb' requires the surrogate to have exactly one objective")
   expect_loop_function(tuner$loop_function)
   expect_r6(tuner$surrogate, "Surrogate")
   expect_r6(tuner$acq_function, "AcqFunction")

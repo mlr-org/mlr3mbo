@@ -3,7 +3,9 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
   assert_string(id)
   assert_choice(direction, choices = c("same", "minimize", "maximize"))
   if (direction == "same") {
-    assert(surrogate$archive$codomain$length == 1L)
+    if (surrogate$archive$codomain$length != 1L) {
+      stopf("Acquisition function '%s' requires the surrogate to have exactly one objective.", id)
+    }
     tags = surrogate$archive$codomain$tags[[1L]]
     tag = tags[tags %in% c("minimize", "maximize")]  # only filter out the relevant one
   } else {

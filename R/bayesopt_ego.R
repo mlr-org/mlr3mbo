@@ -129,7 +129,7 @@ bayesopt_ego = function(
     init_design_size = 4L * search_space$length
   }
   if (!is.null(init_design_size) && instance$archive$n_evals == 0L) {
-    design = generate_design_sobol(search_space, n = init_design_size)$data
+    design = generate_design_random(search_space, n = init_design_size)$data
     instance$eval_batch(design)
   }
 

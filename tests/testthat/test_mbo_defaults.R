@@ -88,7 +88,7 @@ test_that("default_surrogate", {
   expect_equal_sorted(surrogate$learner$param_set$values, list(
     num.threads = 1L,
     num.trees = 500L,
-    se.method = "jack",
+    se.method = "law_of_total_variance",
     splitrule = "variance",
     keep.inbag = TRUE,
     sample.fraction = 1,
@@ -98,7 +98,7 @@ test_that("default_surrogate", {
     sigma2.threshold = 1e-2))
   expect_equal(surrogate$learner$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
-  expect_null(surrogate$output_trafo)
+  expect_r6(surrogate$output_trafo, "OutputTrafoLog")
 
   # twocrit mixed input
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2_MIXED, search_space = PS_1D_MIXED))
@@ -107,7 +107,7 @@ test_that("default_surrogate", {
   expect_equal_sorted(surrogate$learner[[1]]$param_set$values, list(
     num.threads = 1L,
     num.trees = 500L,
-    se.method = "jack",
+    se.method = "law_of_total_variance",
     splitrule = "variance",
     keep.inbag = TRUE,
     sample.fraction = 1,
@@ -120,7 +120,7 @@ test_that("default_surrogate", {
   expect_equal(surrogate$learner[[1L]]$param_set$values, surrogate$learner[[2L]]$param_set$values)
   expect_equal(surrogate$learner[[1L]]$encapsulation, surrogate$learner[[2L]]$encapsulation)
   expect_equal(surrogate$learner[[1L]]$fallback, surrogate$learner[[2L]]$fallback)
-  expect_null(surrogate$output_trafo)
+  expect_r6(surrogate$output_trafo, "OutputTrafoLog")
 
   # singlecrit mixed input deps
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED_DEPS))
@@ -129,7 +129,7 @@ test_that("default_surrogate", {
   expect_equal_sorted(surrogate$learner$param_set$values, list(
     num.threads = 1L,
     num.trees = 500L,
-    se.method = "jack",
+    se.method = "law_of_total_variance",
     splitrule = "variance",
     keep.inbag = TRUE,
     sample.fraction = 1,
@@ -139,7 +139,7 @@ test_that("default_surrogate", {
     sigma2.threshold = 1e-2))
   expect_equal(surrogate$learner$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
-  expect_null(surrogate$output_trafo)
+  expect_r6(surrogate$output_trafo, "OutputTrafoLog")
 
   # specify own learner, specify n_objectives, twocrit all numeric, deterministic
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2, search_space = PS_1D), learner = lrn("regr.featureless"), n_learner = 1L)
@@ -154,7 +154,7 @@ test_that("default_surrogate", {
 test_that("default_acqfunction", {
   instance = MAKE_INST_1D()
   acq_function = default_acqfunction(instance)
-  expect_r6(acq_function, "AcqFunctionEILog")
+  expect_r6(acq_function, "AcqFunctionCB")
 
   instance = MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED)
   acq_function = default_acqfunction(instance)
@@ -210,7 +210,7 @@ test_that("stability and defaults", {
   expect_equal(surrogate$learner$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
   acq_function = default_acqfunction(instance)
-  expect_r6(acq_function, "AcqFunctionEILog")
+  expect_r6(acq_function, "AcqFunctionCB")
   acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   acq_optimizer$param_set$values$logging_level = "info"
   expect_r6(acq_optimizer, "AcqOptimizer")

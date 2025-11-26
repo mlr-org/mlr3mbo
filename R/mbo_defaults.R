@@ -93,7 +93,7 @@ default_rf = function(noisy = FALSE) {
   require_namespaces("ranger")
   lrn("regr.ranger",
     num.trees = 500L,
-    se.method = "jack",
+    se.method = "law_of_total_variance",
     splitrule = "variance",
     predict_type = "se",
     keep.inbag = TRUE,
@@ -144,7 +144,6 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL, force_r
     require_namespaces(c("ranger", "mlr3learners"))
 
     learner = if (instance$search_space$all_numeric && !instance$search_space$has_deps && !force_random_forest) {
-      output_trafo = OutputTrafoLog$new(invert_posterior = FALSE)
       default_gp(noisy)
     } else {
       default_rf(noisy)
@@ -157,10 +156,10 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL, force_r
   if (is.null(n_learner)) n_learner = length(instance$archive$cols_y)
 
   if (n_learner == 1L) {
-    SurrogateLearner$new(learner, output_trafo = output_trafo)
+    SurrogateLearner$new(learner, output_trafo = OutputTrafoLog$new(invert_posterior = FALSE))
   } else {
     learners = replicate(n_learner, learner$clone(deep = TRUE), simplify = FALSE)
-    SurrogateLearnerCollection$new(learners, output_trafo = output_trafo)
+    SurrogateLearnerCollection$new(learners, output_trafo = OutputTrafoLog$new(invert_posterior = FALSE))
   }
 }
 
@@ -181,7 +180,7 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL, force_r
 default_acqfunction = function(instance) {
   assert_r6(instance, classes = "OptimInstance")
   if (inherits(instance, "OptimInstanceBatchSingleCrit") && instance$search_space$all_numeric) {
-    AcqFunctionEILog$new()
+    AcqFunctionCB$new(lambda = 3)
   } else if (inherits(instance, "OptimInstanceBatchSingleCrit") && !instance$search_space$all_numeric) {
     AcqFunctionCB$new(lambda = 1)
   } else if (inherits(instance, "OptimInstanceAsyncSingleCrit")) {
