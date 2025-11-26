@@ -6,6 +6,11 @@
 \usage{
 default_rf(noisy = FALSE)
 }
+\arguments{
+\item{noisy}{(\code{logical(1)})\cr
+Whether the learner will be used in a noisy objective function scenario.
+See \code{\link[=default_surrogate]{default_surrogate()}}.}
+}
 \value{
 \link[mlr3learners:mlr_learners_regr.ranger]{mlr3learners::LearnerRegrRanger}
 }

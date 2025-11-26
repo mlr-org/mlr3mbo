@@ -81,6 +81,9 @@ default_gp = function(noisy = FALSE) {
 #' @description
 #' This is a helper function that constructs a default random forest [mlr3learners::LearnerRegrRanger] which is for example used in [default_surrogate()].
 #'
+#' @param noisy (`logical(1)`)\cr
+#'   Whether the learner will be used in a noisy objective function scenario.
+#'   See [default_surrogate()].
 #' @return [mlr3learners::LearnerRegrRanger]
 #' @family mbo_defaults
 #' @export

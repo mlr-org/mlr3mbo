@@ -75,10 +75,10 @@ test_that("TunerMbo sugar", {
     learner = learner,
     measures = msr("classif.ce"),
     resampling = rsmp("holdout"),
-    term_evals = 5L
+    term_evals = 10L
   )
 
-  expect_true(NROW(instance$archive$data) == 5L)
+  expect_true(NROW(instance$archive$data) == 10L)
   expect_true("acq_cb" %in% colnames(instance$archive$data))
 })
 
