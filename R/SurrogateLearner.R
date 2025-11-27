@@ -96,6 +96,11 @@ SurrogateLearner = R6Class("SurrogateLearner",
       )
       ps$values = list(catch_errors = TRUE, impute_method = "random")
 
+      private$.predict_names = if (learner$predict_type == "se") {
+        c("mean", "se")
+      } else {
+        "mean"
+      }
       super$initialize(learner = learner, archive = archive, cols_x = cols_x, cols_y = col_y, param_set = ps)
     },
 
@@ -107,30 +112,35 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #'
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
-      assert_xdt(xdt)
-      xdt = fix_xdt_missing(copy(xdt), cols_x = self$cols_x, archive = self$archive)
+      # assert_xdt(xdt)
+
+      # xdt = fix_xdt_missing(copy(xdt), cols_x = self$cols_x, archive = self$archive)
+
       if (!is.null(self$input_trafo)) {
         xdt = self$input_trafo$transform(xdt)
       }
 
-      # speeding up some checks by constructing the predict task directly instead of relying on predict_newdata
-      task = self$learner$state$train_task$clone()
-      set(xdt, j = task$target_names, value = NA_real_)  # tasks only have features and the target but we have to set the target to NA
-      newdata = as_data_backend(xdt)
-      task$backend = newdata
-      task$row_roles$use = task$backend$rownames
-      pred = self$learner$predict(task)
-
-      # slow
-      #pred = self$learner$predict_newdata(newdata = xdt)
-
-      pred = if (self$learner$predict_type == "se") {
-        data.table(mean = pred$response, se = pred$se)
+      if (!inherits(self$learner, "GraphLearner")) {
+        pred = self$learner$predict_newdata_fast(xdt)
+        pred = set_names(pred, private$.predict_names)
       } else {
-        data.table(mean = pred$response)
+        # speeding up some checks by constructing the predict task directly instead of relying on predict_newdata
+        task = self$learner$state$train_task$clone()
+        set(xdt, j = task$target_names, value = NA_real_)  # tasks only have features and the target but we have to set the target to NA
+        newdata = as_data_backend(xdt)
+        task$backend = newdata
+        task$row_roles$use = task$backend$rownames
+        pred = self$learner$predict(task)
+
+        pred = if (self$learner$predict_type == "se") {
+          list(mean = pred$response, se = pred$se)
+        } else {
+          list(mean = pred$response)
+        }
       }
+
       if (!is.null(self$output_trafo) && self$output_trafo$invert_posterior) {
-        pred = self$output_trafo$inverse_transform_posterior(pred)
+        pred = self$output_trafo$inverse_transform_posterior(as.data.table(pred))
       }
       pred
     }
@@ -265,13 +275,15 @@ SurrogateLearner = R6Class("SurrogateLearner",
     deep_clone = function(name, value) {
       switch(name,
         learner = value$clone(deep = TRUE),
-	input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
-	output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+        input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+        output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value
       )
-    }
+    },
+
+    .predict_names = NULL
   )
 )
 

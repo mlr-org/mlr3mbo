@@ -4,17 +4,19 @@
 \alias{default_acqoptimizer}
 \title{Default Acquisition Function Optimizer}
 \usage{
-default_acqoptimizer(acq_function)
+default_acqoptimizer(acq_function, instance)
 }
 \arguments{
 \item{acq_function}{(\link{AcqFunction}).}
+
+\item{instance}{(\link[bbotk:OptimInstance]{bbotk::OptimInstance}).}
 }
 \value{
 \link{AcqOptimizer}
 }
 \description{
 Chooses a default acquisition function optimizer.
-Defaults to wrapping \link[bbotk:mlr_optimizers_random_search]{bbotk::OptimizerBatchRandomSearch} allowing 10000 function evaluations (with a batch size of 1000) via a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
+Defaults to \link{AcqOptimizerLocalSearch} with \code{n_searches = 10}, \code{n_steps = ceiling(100 * D^2 / 300)}, and \code{n_neighs = 30}, where \code{D} is the dimension of the search space.
 }
 \seealso{
 Other mbo_defaults: 

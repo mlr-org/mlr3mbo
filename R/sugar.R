@@ -114,8 +114,8 @@ acqfs = function(.keys, ...) {
 #' @description
 #' This function allows to construct an [AcqOptimizer] in the spirit
 #' of `mlr_sugar` from \CRANpkg{mlr3}.
-#' @param optimizer ([bbotk::OptimizerBatch])\cr
-#'   [bbotk::OptimizerBatch] that is to be used.
+#' @param optimizer ([bbotk::OptimizerBatch] | `character(1)`)\cr
+#'   [bbotk::OptimizerBatch] that is to be used or the name of the optimizer in [mlr_acqoptimizers].
 #' @param terminator ([bbotk::Terminator])\cr
 #'   [bbotk::Terminator] that is to be used.
 #' @param acq_function (`NULL` | [AcqFunction])\cr
@@ -124,8 +124,7 @@ acqfs = function(.keys, ...) {
 #' @param callbacks (`NULL` | list of [mlr3misc::Callback])
 #'   Callbacks used during acquisition function optimization.
 #' @param ... (named `list()`)\cr
-#' Named arguments passed to the constructor, to be set as parameters in the
-#' [paradox::ParamSet].
+#' Named arguments passed to the constructor, to be set as parameters in the [paradox::ParamSet].
 #'
 #' @return [AcqOptimizer]
 #'
@@ -136,6 +135,11 @@ acqfs = function(.keys, ...) {
 #' @export
 acqo = function(optimizer, terminator, acq_function = NULL, callbacks = NULL, ...) {
   dots = list(...)
+
+  if (is.character(optimizer)) {
+    return(dictionary_sugar_get(mlr_acqoptimizers, optimizer, ...))
+  }
+
   acqopt = AcqOptimizer$new(optimizer = optimizer, terminator = terminator, acq_function = acq_function, callbacks = callbacks)
   acqopt$param_set$values = insert_named(acqopt$param_set$values, dots)
   acqopt

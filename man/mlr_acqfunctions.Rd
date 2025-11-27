@@ -27,6 +27,7 @@ acqf("ei")
 Sugar functions: \code{\link[=acqf]{acqf()}}, \code{\link[=acqfs]{acqfs()}}
 
 Other Dictionary: 
+\code{\link{mlr_acqoptimizers}},
 \code{\link{mlr_input_trafos}},
 \code{\link{mlr_loop_functions}},
 \code{\link{mlr_output_trafos}},

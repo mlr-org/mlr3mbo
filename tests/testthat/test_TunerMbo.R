@@ -75,10 +75,10 @@ test_that("TunerMbo sugar", {
     learner = learner,
     measures = msr("classif.ce"),
     resampling = rsmp("holdout"),
-    term_evals = 5L
+    term_evals = 10L
   )
 
-  expect_true(NROW(instance$archive$data) == 5L)
+  expect_true(NROW(instance$archive$data) == 10L)
   expect_true("acq_cb" %in% colnames(instance$archive$data))
 })
 
@@ -149,7 +149,7 @@ test_that("TunerMbo reset", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
 
-  tuner = tnr("mbo", acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L)))
+  tuner = tnr("mbo", acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acqf("ei")))
 
   learner = lrn("classif.debug", x = to_tune())
   learner$predict_type = "prob"

@@ -39,14 +39,14 @@ License: LGPL-3
 URL: https://mlr3mbo.mlr-org.com, https://github.com/mlr-org/mlr3mbo
 BugReports: https://github.com/mlr-org/mlr3mbo/issues
 Depends:
+    mlr3 (>= 1.2.0),
     mlr3tuning (>= 1.4.0),
     R (>= 3.1.0)
 Imports:
-    bbotk (>= 1.6.0),
+    bbotk (>= 1.8.0),
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
-    mlr3 (>= 0.23.0),
     mlr3misc (>= 0.15.1),
     paradox (>= 1.0.1),
     spacefillr,
@@ -56,8 +56,8 @@ Suggests:
     emoa,
     fastGHQuad,
     lhs,
+    mlr3learners (>= 0.12.0),
     mirai,
-    mlr3learners (>= 0.7.0),
     mlr3pipelines (>= 0.5.2),
     nloptr,
     ranger,
@@ -66,14 +66,14 @@ Suggests:
     redux,
     rush,
     stringi,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE, r6 = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Collate:
     'mlr_acqfunctions.R'
     'AcqFunction.R'
@@ -92,6 +92,11 @@ Collate:
     'AcqFunctionStochasticCB.R'
     'AcqFunctionStochasticEI.R'
     'AcqOptimizer.R'
+    'mlr_acqoptimizers.R'
+    'AcqOptimizerDirect.R'
+    'AcqOptimizerLbfgsb.R'
+    'AcqOptimizerLocalSearch.R'
+    'AcqOptimzerRandomSearch.R'
     'mlr_input_trafos.R'
     'InputTrafo.R'
     'InputTrafoUnitcube.R'
