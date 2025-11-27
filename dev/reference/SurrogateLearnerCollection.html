@@ -292,18 +292,2020 @@ New data. One row per observation.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Ranger result</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ranger::ranger(dependent.variable.name = task$target_names, data = data,      keep.inbag = TRUE, num.threads = 1L, num.trees = 100L) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ranger::ranger(dependent.variable.name = task$target_names, data = data,      keep.inbag = TRUE, min.bucket = 3L, min.node.size = 3L, num.threads = 1L,      num.trees = 500L, sample.fraction = 1, splitrule = "variance",      mtry = 1) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Type:                             Regression </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of trees:                  100 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of trees:                  500 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sample size:                      4 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of independent variables:  1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mtry:                             1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Target node size:                 5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Target node size:                 3 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variable importance mode:         none </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Splitrule:                        variance </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OOB prediction error (MSE):       2928.716 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R squared (OOB):                  -0.2645901 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OOB prediction error (MSE):       50.63955 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R squared (OOB):                  -0.3238282 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[8]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[9]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[10]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[11]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[12]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[13]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[14]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[15]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[16]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[17]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[18]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[19]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[20]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[21]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[22]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[23]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[24]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[25]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[26]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[27]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[28]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[29]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[30]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[31]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[32]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[33]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[34]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[35]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[36]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[37]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[38]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[39]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[40]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[41]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[42]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[43]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[44]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[45]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[46]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[47]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[48]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[49]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[50]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[51]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[52]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[53]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[54]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[55]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[56]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[57]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[58]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[59]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[60]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[61]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[62]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[63]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[64]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[65]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[66]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[67]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[68]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[69]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[70]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[71]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[72]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[73]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[74]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[75]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[76]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[77]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[78]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[79]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[80]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[81]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[82]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[83]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[84]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[85]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[86]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[87]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[88]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[89]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[90]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[91]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[92]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[93]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[94]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[95]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[96]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[97]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[98]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[99]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[100]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[101]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[102]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[103]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[104]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[105]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[106]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[107]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[108]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[109]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[110]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[111]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[112]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[113]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[114]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[115]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[116]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[117]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[118]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[119]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[120]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[121]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[122]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[123]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[124]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[125]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[126]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[127]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[128]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[129]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[130]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[131]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[132]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[133]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[134]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[135]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[136]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[137]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[138]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[139]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[140]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[141]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[142]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[143]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[144]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[145]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[146]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[147]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[148]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[149]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[150]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[151]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[152]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[153]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[154]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[155]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[156]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[157]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[158]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[159]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[160]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[161]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[162]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[163]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[164]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[165]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[166]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[167]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[168]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[169]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[170]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[171]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[172]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[173]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[174]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[175]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[176]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[177]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[178]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[179]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[180]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[181]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[182]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[183]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[184]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[185]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[186]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[187]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[188]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[189]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[190]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[191]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[192]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[193]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[194]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[195]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[196]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[197]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[198]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[199]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[200]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[201]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[202]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[203]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[204]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[205]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[206]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[207]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[208]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[209]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[210]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[211]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[212]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[213]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[214]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[215]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[216]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[217]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[218]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[219]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[220]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[221]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[222]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[223]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[224]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[225]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[226]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[227]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[228]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[229]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[230]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[231]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[232]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[233]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[234]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[235]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[236]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[237]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[238]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[239]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[240]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[241]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[242]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[243]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[244]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[245]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[246]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[247]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[248]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[249]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[250]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[251]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[252]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[253]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[254]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[255]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[256]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[257]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[258]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[259]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[260]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[261]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[262]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[263]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[264]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[265]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[266]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[267]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[268]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[269]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[270]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[271]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[272]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[273]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[274]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[275]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[276]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[277]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[278]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[279]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[280]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[281]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[282]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[283]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[284]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[285]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[286]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[287]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[288]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[289]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[290]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[291]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[292]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[293]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[294]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[295]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[296]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[297]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[298]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[299]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[300]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[301]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[302]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[303]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[304]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[305]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[306]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[307]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[308]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[309]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[310]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[311]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[312]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[313]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[314]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[315]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[316]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[317]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[318]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[319]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[320]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[321]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[322]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[323]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[324]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[325]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[326]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[327]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[328]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[329]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[330]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[331]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[332]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[333]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[334]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[335]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[336]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[337]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[338]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[339]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[340]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[341]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[342]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[343]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[344]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[345]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[346]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[347]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[348]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[349]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[350]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[351]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[352]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[353]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[354]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[355]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[356]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[357]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[358]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[359]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[360]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[361]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[362]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[363]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[364]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[365]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[366]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[367]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[368]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[369]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[370]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[371]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[372]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[373]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[374]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[375]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[376]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[377]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[378]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[379]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[380]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[381]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[382]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[383]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[384]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[385]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[386]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[387]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[388]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[389]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[390]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[391]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[392]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[393]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[394]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[395]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[396]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[397]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[398]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[399]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[400]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[401]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[402]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[403]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[404]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[405]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[406]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[407]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[408]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[409]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[410]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[411]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[412]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[413]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[414]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[415]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[416]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[417]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[418]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[419]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[420]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[421]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[422]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[423]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[424]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[425]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[426]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[427]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[428]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[429]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[430]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[431]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[432]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[433]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[434]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[435]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[436]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[437]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[438]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[439]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[440]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[441]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[442]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[443]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[444]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[445]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[446]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[447]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[448]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[449]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[450]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[451]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[452]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[453]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[454]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[455]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[456]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[457]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[458]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[459]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[460]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[461]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[462]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[463]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[464]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[465]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[466]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[467]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[468]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[469]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[470]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[471]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[472]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[473]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[474]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[475]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[476]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[477]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[478]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[479]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[480]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[481]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[482]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[483]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[484]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[485]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[486]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[487]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[488]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[489]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[490]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[491]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[492]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[493]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[494]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[495]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[496]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[497]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[498]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[499]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mu_sigma[[500]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            mu   sigma2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4.031222 38.25236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
@@ -316,7 +2318,7 @@ New data. One row per observation.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

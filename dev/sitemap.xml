@@ -4,6 +4,10 @@
 <url><loc>https://mlr3mbo.mlr-org.com/dev/news/index.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizerDirect.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizerLbfgsb.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizerLocalSearch.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizerRandomSearch.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/InputTrafo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/InputTrafoUnitcube.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.html</loc></url>
@@ -43,6 +47,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_smsego.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_stochastic_cb.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_stochastic_ei.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqoptimizers.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_input_trafos.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_ego.html</loc></url>
