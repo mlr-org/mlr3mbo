@@ -1,4 +1,6 @@
 test_that("ResultAssignerSurrogate works", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("ranger")
   result_assigner = ResultAssignerSurrogate$new()
   expect_null(result_assigner$surrogate)
 
@@ -32,6 +34,7 @@ test_that("ResultAssignerSurrogate result and best can be different", {
 })
 
 test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_ego", {
+  skip_if_missing_regr_km()
   result_assigner = ResultAssignerSurrogate$new()
   expect_null(result_assigner$surrogate)
 
@@ -50,6 +53,7 @@ test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_ego", {
 })
 
 test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_parego", {
+  skip_if_missing_regr_km()
   result_assigner = ResultAssignerSurrogate$new()
   expect_null(result_assigner$surrogate)
 
@@ -68,6 +72,7 @@ test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_parego",
 })
 
 test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_smsego", {
+  skip_if_missing_regr_km()
   result_assigner = ResultAssignerSurrogate$new()
   expect_null(result_assigner$surrogate)
 
@@ -86,6 +91,7 @@ test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_smsego",
 })
 
 test_that("ResultAssignerSurrogate passes internal tuned values", {
+  skip_if_missing_regr_km()
   result_assigner = ResultAssignerSurrogate$new()
 
   learner = lrn("classif.debug",

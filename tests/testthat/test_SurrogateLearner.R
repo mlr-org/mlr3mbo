@@ -70,15 +70,13 @@ test_that("deep clone", {
 })
 
 test_that("packages", {
-  skip_if_not_installed("mlr3learners")
-  skip_if_not_installed("DiceKriging")
+  skip_if_missing_regr_km()
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
   expect_equal(surrogate$packages, surrogate$learner$packages)
 })
 
 test_that("feature types", {
-  skip_if_not_installed("mlr3learners")
-  skip_if_not_installed("DiceKriging")
+  skip_if_missing_regr_km()
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
   expect_equal(surrogate$feature_types, surrogate$learner$feature_types)
 })

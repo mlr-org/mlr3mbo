@@ -1,4 +1,5 @@
 test_that("AcqOptimizerDirect works", {
+  skip_if_missing_regr_km()
   instance = oi(OBJ_1D, terminator = trm("evals", n_evals = 5L))
   design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
@@ -18,6 +19,7 @@ test_that("AcqOptimizerDirect works", {
 })
 
 test_that("AcqOptimizerDirect works with 2D", {
+  skip_if_missing_regr_km()
   instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))
   design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
@@ -37,6 +39,7 @@ test_that("AcqOptimizerDirect works with 2D", {
 })
 
 test_that("AcqOptimizerDirect works with instance", {
+  skip_if_missing_regr_km()
   instance = oi(OBJ_1D, terminator = trm("evals", n_evals = 10L))
   design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
@@ -51,6 +54,7 @@ test_that("AcqOptimizerDirect works with instance", {
 })
 
 test_that("AcqOptimizerDirect works with random restart", {
+  skip_if_missing_regr_km()
   instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))
   design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
