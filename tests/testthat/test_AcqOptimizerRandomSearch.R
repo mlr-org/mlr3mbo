@@ -1,4 +1,5 @@
 test_that("AcqOptimizerRandomSearch works", {
+  skip_if_missing_regr_km()
   instance = oi(OBJ_1D, terminator = trm("evals", n_evals = 5L))
   design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
@@ -14,6 +15,7 @@ test_that("AcqOptimizerRandomSearch works", {
 })
 
 test_that("AcqOptimizerRandomSearch works with 2D", {
+  skip_if_missing_regr_km()
   instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))
   design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
@@ -29,6 +31,7 @@ test_that("AcqOptimizerRandomSearch works with 2D", {
 })
 
 test_that("AcqOptimizerRandomSearch works with instance", {
+  skip_if_missing_regr_km()
   instance = oi(OBJ_1D, terminator = trm("evals", n_evals = 10L))
   design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)

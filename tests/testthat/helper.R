@@ -108,6 +108,12 @@ MAKE_DESIGN = function(instance, n = 4L) {
   generate_design_random(instance$search_space, n)$data
 }
 
+skip_if_missing_regr_km = function() {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+}
+
 if (requireNamespace("mlr3learners") && requireNamespace("DiceKriging") && requireNamespace("rgenoud")) {
   library(mlr3learners)
   REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.estim = TRUE, jitter = 1e-12)

@@ -137,7 +137,7 @@ acqo = function(optimizer, terminator, acq_function = NULL, callbacks = NULL, ..
   dots = list(...)
 
   if (is.character(optimizer)) {
-    return(dictionary_sugar_get(mlr_acqoptimizers, optimizer, ...))
+    return(dictionary_sugar_get(mlr_acqoptimizers, optimizer, acq_function = acq_function, ...))
   }
 
   acqopt = AcqOptimizer$new(optimizer = optimizer, terminator = terminator, acq_function = acq_function, callbacks = callbacks)

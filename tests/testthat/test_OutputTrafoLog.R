@@ -27,6 +27,7 @@ test_that("OutputTrafoLogworks", {
 })
 
 test_that("OutputTrafoLog works with SurrogateLearner", {
+  skip_if_missing_regr_km()
   instance = MAKE_INST_1D()
   design = generate_design_random(instance$search_space, n = 4L)$data
   instance$eval_batch(design)
@@ -48,6 +49,7 @@ test_that("OutputTrafoLog works with SurrogateLearner", {
 })
 
 test_that("OutputTrafoLog works with SurrogateLearnerCollection", {
+  skip_if_missing_regr_km()
   instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
   design = generate_design_random(instance$search_space, n = 4L)$data
   instance$eval_batch(design)
@@ -69,6 +71,7 @@ test_that("OutputTrafoLog works with SurrogateLearnerCollection", {
 })
 
 test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_ego", {
+  skip_if_missing_regr_km()
   instance = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(REGR_KM_DETERM)
   ot = OutputTrafoLog$new()
@@ -83,6 +86,7 @@ test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_ego", {
 })
 
 test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_ego for maximization and EI on log scale", {
+  skip_if_missing_regr_km()
   instance = MAKE_INST(OBJ_1D_MAXIMIZE, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
   surrogate = SurrogateLearner$new(REGR_KM_DETERM)
   ot = OutputTrafoLog$new(invert_posterior = FALSE)
@@ -97,6 +101,7 @@ test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_ego for maximizat
 })
 
 test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_parego", {
+  skip_if_missing_regr_km()
   instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
   surrogate = SurrogateLearner$new(REGR_KM_DETERM)
   ot = OutputTrafoLog$new()
@@ -112,6 +117,7 @@ test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_parego", {
 })
 
 test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_smsego", {
+  skip_if_missing_regr_km()
   instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
   surrogate = SurrogateLearnerCollection$new(list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)))
   ot = OutputTrafoLog$new()

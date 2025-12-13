@@ -26,6 +26,8 @@ test_that("AcqFunctionMulti works for single-objective instances", {
 })
 
 test_that("AcqFunctionMulti works for multi-objective instances", {
+  skip_if_not_installed("emoa")
+  skip_if_not_installed("fastGHQuad")
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
   surrogate = SurrogateLearnerCollection$new(list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
   acqfs = list(AcqFunctionEHVI$new(), AcqFunctionEHVIGH$new())

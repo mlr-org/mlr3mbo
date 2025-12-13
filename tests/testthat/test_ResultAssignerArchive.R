@@ -13,6 +13,7 @@ test_that("ResultAssignerArchive works", {
 })
 
 test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_ego", {
+  skip_if_missing_regr_km()
   result_assigner = ResultAssignerArchive$new()
 
   instance = MAKE_INST_1D()
@@ -27,6 +28,7 @@ test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_ego", {
 })
 
 test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_parego", {
+  skip_if_missing_regr_km()
   result_assigner = ResultAssignerArchive$new()
 
   instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
@@ -41,6 +43,7 @@ test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_parego", {
 })
 
 test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_smsego", {
+  skip_if_missing_regr_km()
   result_assigner = ResultAssignerArchive$new()
 
   instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 5L))
@@ -55,6 +58,7 @@ test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_smsego", {
 })
 
 test_that("ResultAssignerArchive passes internal tuned values", {
+  skip_if_missing_regr_km()
   result_assigner = ResultAssignerArchive$new()
 
   learner = lrn("classif.debug",
