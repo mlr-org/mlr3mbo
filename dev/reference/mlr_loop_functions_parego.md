@@ -176,8 +176,12 @@ if (requireNamespace("mlr3learners") &
 
   optimizer$optimize(instance)
 }
-#> WARN  [09:05:31.524] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this
-#> WARN  [09:05:31.553] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
+#> WARN  [10:07:16.717] [bbotk] 
+#> ✖ Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner
+#>   'regr.km' does not support this
+#> → Class: Mlr3ErrorInput
+#> 
+#> WARN  [10:07:16.746] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
 #>             x  x_domain           y1       y2
 #>         <num>    <list>        <num>    <num>
 #> 1: -0.0181669 <list[1]> 0.0003300362 4.072998
