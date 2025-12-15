@@ -106,7 +106,7 @@ bayesopt_mpcl = function(
   ) {
 
   # assertions
-  assert_r6(instance, "OptimInstanceBatchSingleCrit")
+  assert_r6(instance, "EvalInstance")
   assert_r6(surrogate, classes = "Surrogate")  # cannot be SurrogateLearner due to EIPS
   assert_r6(acq_function, classes = "AcqFunction")
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
