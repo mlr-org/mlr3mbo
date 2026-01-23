@@ -241,6 +241,19 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Operates on an asynchronous archive and performs imputation as needed.
     .update_async = function() {
       xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE])
+
+      if (self$param_set$values$impute_method == "mean") {
+        mean_y = mean(xydt[[self$cols_y]], na.rm = TRUE)
+        xydt[c("queued", "running"), (self$cols_y) := mean_y, on = "state"]
+      } else if (self$param_set$values$impute_method == "random") {
+        min_y = min(xydt[[self$cols_y]], na.rm = TRUE)
+        max_y = max(xydt[[self$cols_y]], na.rm = TRUE)
+        print(min_y)
+        print(max_y)
+        xydt[c("queued", "running"), (self$cols_y) := runif(.N, min = min_y, max = max_y), on = "state"]
+      }
+      set(xydt, j = "state", value = NULL)
+
       if (!is.null(self$input_trafo)) {
         self$input_trafo$cols_x = self$cols_x
         self$input_trafo$search_space = self$archive$search_space
@@ -253,15 +266,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
         self$output_trafo$update(xydt)
         xydt = self$output_trafo$transform(xydt)
       }
-      if (self$param_set$values$impute_method == "mean") {
-        mean_y = mean(xydt[[self$cols_y]], na.rm = TRUE)
-        xydt[c("queued", "running"), (self$cols_y) := mean_y, on = "state"]
-      } else if (self$param_set$values$impute_method == "random") {
-        min_y = min(xydt[[self$cols_y]], na.rm = TRUE)
-        max_y = max(xydt[[self$cols_y]], na.rm = TRUE)
-        xydt[c("queued", "running"), (self$cols_y) := runif(.N, min = min_y, max = max_y), on = "state"]
-      }
-      set(xydt, j = "state", value = NULL)
 
       task = TaskRegr$new(id = "surrogate_task", backend = xydt, target = self$cols_y)
       assert_learnable(task, learner = self$learner)
