@@ -365,18 +365,23 @@ OptimizerAsyncMboCentral = R6Class("OptimizerAsyncMboCentral",
                 start_time = Sys.time()
                 xdt = self$acq_optimizer$optimize()
                 time_acq_optimizer = Sys.time() - start_time
+                set(xdt, j = "time_surrogate", value = time_surrogate)
+                set(xdt, j = "time_acq_optimizer", value = time_acq_optimizer)
                 xdt
               }, mbo_error = function(mbo_error_condition) {
                 lg$info(paste0(class(mbo_error_condition), collapse = " / "))
                 lg$info("Proposing a randomly sampled point")
                 xdt = generate_design_random(inst$search_space, n = 1L)$data
-                time_surrogate = 0
-                time_acq_optimizer = 0
+                set(xdt, j = "time_surrogate", value = difftime(0, 0))
+                set(xdt, j = "time_acq_optimizer", value = difftime(0, 0))
                 xdt
               })
               # push the new point to the queue
-              xs = transpose_list(xdt)[[1]][inst$archive$cols_x]
-              inst$archive$push_points(list(xs), extra = list(list(time_surrogate = time_surrogate, time_acq_optimizer = time_acq_optimizer)))
+              xs = transpose_list(xdt)[[1]]
+              extra = xs[names(xs) %nin% inst$archive$cols_x]
+              xs = xs[inst$archive$cols_x]
+
+              inst$archive$push_points(list(xs), extra = list(extra))
               lg$debug("Proposed new point and pushed to queue")
             }
           }

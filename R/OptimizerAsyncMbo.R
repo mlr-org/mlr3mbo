@@ -357,7 +357,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
           lg$info("Proposing a randomly sampled point")
           xdt = generate_design_random(inst$search_space, n = 1L)$data
           xs = transpose_list(xdt)[[1L]]
-          c(xs, list(time_surrogate = 0, time_acq_optimizer = 0))
+          c(xs, list(time_surrogate = difftime(0, 0), time_acq_optimizer = difftime(0, 0)))
         })
 
         # eval

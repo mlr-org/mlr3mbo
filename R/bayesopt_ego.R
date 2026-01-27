@@ -160,8 +160,8 @@ bayesopt_ego = function(
       lg$info(paste0(class(mbo_error_condition), collapse = " / "))
       lg$info("Proposing a randomly sampled point")
       xdt = generate_design_random(search_space, n = 1L)$data
-      set(xdt, j = "time_surrogate", value = 0)
-      set(xdt, j = "time_acq_optimizer", value = 0)
+      set(xdt, j = "time_surrogate", value = difftime(0, 0))
+      set(xdt, j = "time_acq_optimizer", value = difftime(0, 0))
       xdt
     })
     instance$eval_batch(xdt)
