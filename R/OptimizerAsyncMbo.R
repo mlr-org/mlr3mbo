@@ -343,16 +343,22 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       while (!inst$is_terminated) {
         # sample
         xs = tryCatch({
+          start_time = Sys.time()
           self$acq_function$surrogate$update()
+          time_surrogate = Sys.time() - start_time
           self$acq_function$update()
+          start_time = Sys.time()
           xdt = self$acq_optimizer$optimize()
-          transpose_list(xdt)[[1L]]
+          time_acq_optimizer = Sys.time() - start_time
+          xs = transpose_list(xdt)[[1L]]
+          c(xs, list(time_surrogate = time_surrogate, time_acq_optimizer = time_acq_optimizer))
         }, mbo_error = function(mbo_error_condition) {
-            lg$info(paste0(class(mbo_error_condition), collapse = " / "))
-            lg$info("Proposing a randomly sampled point")
-            xdt = generate_design_random(inst$search_space, n = 1L)$data
-            transpose_list(xdt)[[1L]]
-          })
+          lg$info(paste0(class(mbo_error_condition), collapse = " / "))
+          lg$info("Proposing a randomly sampled point")
+          xdt = generate_design_random(inst$search_space, n = 1L)$data
+          xs = transpose_list(xdt)[[1L]]
+          c(xs, list(time_surrogate = 0, time_acq_optimizer = 0))
+        })
 
         # eval
         get_private(inst)$.eval_point(xs)

@@ -358,18 +358,25 @@ OptimizerAsyncMboCentral = R6Class("OptimizerAsyncMboCentral",
               # propose a new point using MBO
               # update surrogate on each iteration to account for newly queued points
               xdt = tryCatch({
+                start_time = Sys.time()
                 self$acq_function$surrogate$update()
+                time_surrogate = Sys.time() - start_time
                 self$acq_function$update()
-                self$acq_optimizer$optimize()
+                start_time = Sys.time()
+                xdt = self$acq_optimizer$optimize()
+                time_acq_optimizer = Sys.time() - start_time
+                xdt
               }, mbo_error = function(mbo_error_condition) {
                 lg$info(paste0(class(mbo_error_condition), collapse = " / "))
                 lg$info("Proposing a randomly sampled point")
-                generate_design_random(inst$search_space, n = 1L)$data
+                xdt = generate_design_random(inst$search_space, n = 1L)$data
+                time_surrogate = 0
+                time_acq_optimizer = 0
+                xdt
               })
-
               # push the new point to the queue
               xs = transpose_list(xdt)[[1]][inst$archive$cols_x]
-              inst$archive$push_points(list(xs))
+              inst$archive$push_points(list(xs), extra = list(list(time_surrogate = time_surrogate, time_acq_optimizer = time_acq_optimizer)))
               lg$debug("Proposed new point and pushed to queue")
             }
           }
