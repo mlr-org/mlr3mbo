@@ -180,7 +180,7 @@ bayesopt_mpcl = function(
         set(xdt_new, j = "time_acq_optimizer", value = difftime(0, 0))
         xdt_new
       })
-      xdt = rbind(xdt, xdt_new)
+      xdt = rbindlist(list(xdt, xdt_new), use.names = TRUE, fill = TRUE)
     }
 
     acq_function$surrogate$archive = instance$archive
