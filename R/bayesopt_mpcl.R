@@ -162,13 +162,23 @@ bayesopt_mpcl = function(
         }
 
         # update all objects with lie
+        start_time = Sys.time()
         acq_function$surrogate$update()
+        time_surrogate = Sys.time() - start_time
         acq_function$update()
-        acq_optimizer$optimize()
+        start_time = Sys.time()
+        xdt_new = acq_optimizer$optimize()
+        time_acq_optimizer = Sys.time() - start_time
+        set(xdt_new, j = "time_surrogate", value = time_surrogate)
+        set(xdt_new, j = "time_acq_optimizer", value = time_acq_optimizer)
+        xdt_new
       }, mbo_error = function(mbo_error_condition) {
         lg$info(paste0(class(mbo_error_condition), collapse = " / "))
         lg$info("Proposing a randomly sampled point")
-        generate_design_random(search_space, n = 1L)$data
+        xdt_new = generate_design_random(search_space, n = 1L)$data
+        set(xdt_new, j = "time_surrogate", value = difftime(0, 0))
+        set(xdt_new, j = "time_acq_optimizer", value = difftime(0, 0))
+        xdt_new
       })
       xdt = rbind(xdt, xdt_new)
     }
