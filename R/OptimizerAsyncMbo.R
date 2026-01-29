@@ -363,10 +363,10 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
           xdt = generate_design_random(inst$search_space, n = 1L)$data
           xs = transpose_list(xdt)[[1L]]
           c(xs, list(
-            timestamp_surrogate = difftime(NA, NA),
-            timestamp_acq_function = difftime(NA, NA),
-            timestamp_acq_optimizer = difftime(NA, NA),
-            timestamp_loop = difftime(NA, NA)
+            timestamp_surrogate = NA,
+            timestamp_acq_function = NA,
+            timestamp_acq_optimizer = NA,
+            timestamp_loop = NA
           ))
         })
 

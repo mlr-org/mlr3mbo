@@ -178,10 +178,10 @@ bayesopt_mpcl = function(
         lg$info(paste0(class(mbo_error_condition), collapse = " / "))
         lg$info("Proposing a randomly sampled point")
         xdt_new = generate_design_random(search_space, n = 1L)$data
-        set(xdt_new, j = "timestamp_surrogate", value = difftime(NA, NA))
-        set(xdt_new, j = "timestamp_acq_function", value = difftime(NA, NA))
-        set(xdt_new, j = "timestamp_acq_optimizer", value = difftime(NA, NA))
-        set(xdt_new, j = "timestamp_loop", value = difftime(NA, NA))
+        set(xdt_new, j = "timestamp_surrogate", value = NA)
+        set(xdt_new, j = "timestamp_acq_function", value = NA)
+        set(xdt_new, j = "timestamp_acq_optimizer", value = NA)
+        set(xdt_new, j = "timestamp_loop", value = NA)
         xdt_new
       })
       xdt = rbindlist(list(xdt, xdt_new), use.names = TRUE, fill = TRUE)

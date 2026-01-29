@@ -374,10 +374,10 @@ OptimizerAsyncMboCentral = R6Class("OptimizerAsyncMboCentral",
                 lg$info(paste0(class(mbo_error_condition), collapse = " / "))
                 lg$info("Proposing a randomly sampled point")
                 xdt = generate_design_random(inst$search_space, n = 1L)$data
-                set(xdt, j = "timestamp_surrogate", value = difftime(NA, NA))
-                set(xdt, j = "timestamp_acq_function", value = difftime(NA, NA))
-                set(xdt, j = "timestamp_acq_optimizer", value = difftime(NA, NA))
-                set(xdt, j = "timestamp_loop", value = difftime(NA, NA))
+                set(xdt, j = "timestamp_surrogate", value = NA)
+                set(xdt, j = "timestamp_acq_function", value = NA)
+                set(xdt, j = "timestamp_acq_optimizer", value = NA)
+                set(xdt, j = "timestamp_loop", value = NA)
                 xdt
               })
               # push the new point to the queue
