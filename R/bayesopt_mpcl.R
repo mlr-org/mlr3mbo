@@ -162,22 +162,26 @@ bayesopt_mpcl = function(
         }
 
         # update all objects with lie
-        start_time = Sys.time()
+        timestamp_surrogate = Sys.time()
         acq_function$surrogate$update()
-        time_surrogate = Sys.time() - start_time
+        timestamp_acq_function = Sys.time()
         acq_function$update()
-        start_time = Sys.time()
+        timestamp_acq_optimizer = Sys.time()
         xdt_new = acq_optimizer$optimize()
-        time_acq_optimizer = Sys.time() - start_time
-        set(xdt_new, j = "time_surrogate", value = time_surrogate)
-        set(xdt_new, j = "time_acq_optimizer", value = time_acq_optimizer)
+        timestamp_loop = Sys.time()
+        set(xdt_new, j = "timestamp_surrogate", value = timestamp_surrogate)
+        set(xdt_new, j = "timestamp_acq_function", value = timestamp_acq_function)
+        set(xdt_new, j = "timestamp_acq_optimizer", value = timestamp_acq_optimizer)
+        set(xdt_new, j = "timestamp_loop", value = timestamp_loop)
         xdt_new
       }, mbo_error = function(mbo_error_condition) {
         lg$info(paste0(class(mbo_error_condition), collapse = " / "))
         lg$info("Proposing a randomly sampled point")
         xdt_new = generate_design_random(search_space, n = 1L)$data
-        set(xdt_new, j = "time_surrogate", value = difftime(0, 0))
-        set(xdt_new, j = "time_acq_optimizer", value = difftime(0, 0))
+        set(xdt_new, j = "timestamp_surrogate", value = difftime(NA, NA))
+        set(xdt_new, j = "timestamp_acq_function", value = difftime(NA, NA))
+        set(xdt_new, j = "timestamp_acq_optimizer", value = difftime(NA, NA))
+        set(xdt_new, j = "timestamp_loop", value = difftime(NA, NA))
         xdt_new
       })
       xdt = rbindlist(list(xdt, xdt_new), use.names = TRUE, fill = TRUE)

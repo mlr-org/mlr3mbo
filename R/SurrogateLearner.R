@@ -248,8 +248,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
       } else if (self$param_set$values$impute_method == "random") {
         min_y = min(xydt[[self$cols_y]], na.rm = TRUE)
         max_y = max(xydt[[self$cols_y]], na.rm = TRUE)
-        print(min_y)
-        print(max_y)
         xydt[c("queued", "running"), (self$cols_y) := runif(.N, min = min_y, max = max_y), on = "state"]
       }
       set(xydt, j = "state", value = NULL)

@@ -343,21 +343,31 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       while (!inst$is_terminated) {
         # sample
         xs = tryCatch({
-          start_time = Sys.time()
+          timestamp_surrogate = Sys.time()
           self$acq_function$surrogate$update()
-          time_surrogate = Sys.time() - start_time
+          timestamp_acq_function = Sys.time()
           self$acq_function$update()
-          start_time = Sys.time()
+          timestamp_acq_optimizer = Sys.time()
           xdt = self$acq_optimizer$optimize()
-          time_acq_optimizer = Sys.time() - start_time
           xs = transpose_list(xdt)[[1L]]
-          c(xs, list(time_surrogate = time_surrogate, time_acq_optimizer = time_acq_optimizer))
+          timestamp_loop = Sys.time()
+          c(xs, list(
+            timestamp_surrogate = timestamp_surrogate,
+            timestamp_acq_function = timestamp_acq_function,
+            timestamp_acq_optimizer = timestamp_acq_optimizer,
+            timestamp_loop = timestamp_loop
+          ))
         }, mbo_error = function(mbo_error_condition) {
           lg$info(paste0(class(mbo_error_condition), collapse = " / "))
           lg$info("Proposing a randomly sampled point")
           xdt = generate_design_random(inst$search_space, n = 1L)$data
           xs = transpose_list(xdt)[[1L]]
-          c(xs, list(time_surrogate = difftime(0, 0), time_acq_optimizer = difftime(0, 0)))
+          c(xs, list(
+            timestamp_surrogate = difftime(NA, NA),
+            timestamp_acq_function = difftime(NA, NA),
+            timestamp_acq_optimizer = difftime(NA, NA),
+            timestamp_loop = difftime(NA, NA)
+          ))
         })
 
         # eval

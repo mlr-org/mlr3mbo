@@ -358,22 +358,26 @@ OptimizerAsyncMboCentral = R6Class("OptimizerAsyncMboCentral",
               # propose a new point using MBO
               # update surrogate on each iteration to account for newly queued points
               xdt = tryCatch({
-                start_time = Sys.time()
+                timestamp_surrogate = Sys.time()
                 self$acq_function$surrogate$update()
-                time_surrogate = Sys.time() - start_time
+                timestamp_acq_function = Sys.time()
                 self$acq_function$update()
-                start_time = Sys.time()
+                timestamp_acq_optimizer = Sys.time()
                 xdt = self$acq_optimizer$optimize()
-                time_acq_optimizer = Sys.time() - start_time
-                set(xdt, j = "time_surrogate", value = time_surrogate)
-                set(xdt, j = "time_acq_optimizer", value = time_acq_optimizer)
+                timestamp_loop = Sys.time()
+                set(xdt, j = "timestamp_surrogate", value = timestamp_surrogate)
+                set(xdt, j = "timestamp_acq_function", value = timestamp_acq_function)
+                set(xdt, j = "timestamp_acq_optimizer", value = timestamp_acq_optimizer)
+                set(xdt, j = "timestamp_loop", value = timestamp_loop)
                 xdt
               }, mbo_error = function(mbo_error_condition) {
                 lg$info(paste0(class(mbo_error_condition), collapse = " / "))
                 lg$info("Proposing a randomly sampled point")
                 xdt = generate_design_random(inst$search_space, n = 1L)$data
-                set(xdt, j = "time_surrogate", value = difftime(0, 0))
-                set(xdt, j = "time_acq_optimizer", value = difftime(0, 0))
+                set(xdt, j = "timestamp_surrogate", value = difftime(NA, NA))
+                set(xdt, j = "timestamp_acq_function", value = difftime(NA, NA))
+                set(xdt, j = "timestamp_acq_optimizer", value = difftime(NA, NA))
+                set(xdt, j = "timestamp_loop", value = difftime(NA, NA))
                 xdt
               })
               # push the new point to the queue
@@ -387,6 +391,7 @@ OptimizerAsyncMboCentral = R6Class("OptimizerAsyncMboCentral",
           }
         }
       }
+
 
       # move queued and running tasks to failed
       failed_tasks = unlist(rush$tasks_with_state(states = c("queued", "running")))
