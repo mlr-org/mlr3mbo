@@ -35,6 +35,7 @@ test_that("OptimizerAsyncMboCentral works with initial design", {
   )
   initial_design = generate_design_sobol(PS_2D, n = 5L)$data
   initial_design[, y := OBJ_2D$eval_many(transpose_list(initial_design))]
+  initial_design[, extra := "test"]
 
   optimizer = opt("async_mbo_central", initial_design = initial_design)
   expect_data_table(optimizer$optimize(instance), nrows = 1L)

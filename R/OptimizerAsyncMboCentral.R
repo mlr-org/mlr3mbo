@@ -240,10 +240,10 @@ OptimizerAsyncMboCentral = R6Class("OptimizerAsyncMboCentral",
         timestamp_xs = Sys.time()
         timestamp_ys = Sys.time()
         xss = transpose_list(pv$initial_design[, inst$archive$cols_x, with = FALSE])
-        xss = map(xss, function(xs) c(xs, list(timestamp_xs = timestamp_xs)))
         yss = transpose_list(pv$initial_design[, inst$archive$cols_y, with = FALSE])
-        yss = map(yss, function(ys) c(ys, list(timestamp_ys = timestamp_ys)))
-        inst$rush$push_finished_tasks(xss, yss)
+        extras = transpose_list(pv$initial_design[, setdiff(colnames(pv$initial_design), c(inst$archive$cols_x, inst$archive$cols_y)), with = FALSE])
+        extras =map(extras, function(extra) c(extra, list(timestamp_xs = timestamp_xs, timestamp_ys = timestamp_ys)))
+        inst$rush$push_finished_tasks(xss, yss, extras)
         NULL
       }
 
