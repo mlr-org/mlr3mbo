@@ -141,7 +141,7 @@ bayesopt_mpcl = function(
       timestamp_acq_function = Sys.time()
       acq_function$update()
       timestamp_acq_optimizer = Sys.time()
-      acq_optimizer$optimize()
+      xdt = acq_optimizer$optimize()
       timestamp_loop = Sys.time()
       set(xdt, j = "timestamp_surrogate", value = timestamp_surrogate)
       set(xdt, j = "timestamp_acq_function", value = timestamp_acq_function)
