@@ -240,13 +240,9 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         # use provided initial design
         lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
 
-        timestamp_xs = Sys.time()
-        timestamp_ys = Sys.time()
         xss = transpose_list(pv$initial_design[, inst$archive$cols_x, with = FALSE])
         yss = transpose_list(pv$initial_design[, inst$archive$cols_y, with = FALSE])
-        extras = transpose_list(pv$initial_design[, setdiff(colnames(pv$initial_design), c(inst$archive$cols_x, inst$archive$cols_y)), with = FALSE])
-        extras =map(extras, function(extra) c(extra, list(timestamp_xs = timestamp_xs, timestamp_ys = timestamp_ys)))
-        inst$rush$push_finished_tasks(xss, yss, extras)
+        inst$archive$push_finished_points(xss, yss)
         NULL
       }
       optimize_async_default(inst, self, design, n_workers = pv$n_workers)

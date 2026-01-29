@@ -66,7 +66,11 @@ Suggests:
     redux,
     rush,
     stringi,
-    testthat (>= 3.0.0),
+    testthat (>= 3.0.0)
+Remotes:
+    mlr-org/mlr3tuning,
+    mlr-org/bbotk@push_point_extra,
+    mlr-org/rush@push
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
