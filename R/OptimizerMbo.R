@@ -115,7 +115,9 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template param_args
     #' @template param_result_assigner
     initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_assigner = NULL) {
-      param_set = ParamSet$new()
+      param_set = ps(
+        initial_design = p_uty()
+      )
       super$initialize("mbo",
                        param_set = param_set,
                        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),  # is replaced with dynamic AB after construction
@@ -328,6 +330,12 @@ OptimizerMbo = R6Class("OptimizerMbo",
     .result_assigner = NULL,
 
     .optimize = function(inst) {
+
+      if (!is.null(self$param_set$values$initial_design)) {
+        xydt = self$param_set$values$initial_design
+        inst$archive$add_evals(xdt = xydt[, inst$archive$cols_x, with = FALSE], ydt = xydt[, inst$archive$cols_y, with = FALSE])
+      }
+
       invoke(self$loop_function, instance = inst, surrogate = self$surrogate, acq_function = self$acq_function, acq_optimizer = self$acq_optimizer, .args = self$args)
 
       on.exit({

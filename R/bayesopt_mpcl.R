@@ -136,12 +136,26 @@ bayesopt_mpcl = function(
   repeat {
     # normal ego proposal with error catching
     xdt = tryCatch({
+      timestamp_surrogate = Sys.time()
       acq_function$surrogate$update()
+      timestamp_acq_function = Sys.time()
       acq_function$update()
+      timestamp_acq_optimizer = Sys.time()
       acq_optimizer$optimize()
+      timestamp_loop = Sys.time()
+      set(xdt, j = "timestamp_surrogate", value = timestamp_surrogate)
+      set(xdt, j = "timestamp_acq_function", value = timestamp_acq_function)
+      set(xdt, j = "timestamp_acq_optimizer", value = timestamp_acq_optimizer)
+      set(xdt, j = "timestamp_loop", value = timestamp_loop)
+      xdt
     }, mbo_error = function(mbo_error_condition) {
       #lg$info("Proposing a randomly sampled point") no logging because we do not evaluate this point
-      generate_design_random(search_space, n = 1L)$data
+      xdt = generate_design_random(search_space, n = 1L)$data
+      set(xdt, j = "timestamp_surrogate", value = NA)
+      set(xdt, j = "timestamp_acq_function", value = NA)
+      set(xdt, j = "timestamp_acq_optimizer", value = NA)
+      set(xdt, j = "timestamp_loop", value = NA)
+      xdt
     })
 
     # prepare lie objects
