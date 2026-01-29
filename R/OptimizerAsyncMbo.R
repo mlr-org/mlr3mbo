@@ -237,9 +237,16 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         lg$debug("Generating sobol design with size %s", pv$design_size)
         generate_design(inst$search_space, n = pv$design_size)$data
       } else {
-        # use provided initial design
         lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
-        pv$initial_design
+
+        timestamp_xs = Sys.time()
+        timestamp_ys = Sys.time()
+        xss = transpose_list(pv$initial_design[, inst$archive$cols_x, with = FALSE])
+        xss = map(xss, function(xs) c(xs, list(timestamp_xs = timestamp_xs)))
+        yss = transpose_list(pv$initial_design[, inst$archive$cols_y, with = FALSE])
+        yss = map(yss, function(ys) c(ys, list(timestamp_ys = timestamp_ys)))
+        inst$rush$push_finished_tasks(xss, yss)
+        NULL
       }
       optimize_async_default(inst, self, design, n_workers = pv$n_workers)
     }

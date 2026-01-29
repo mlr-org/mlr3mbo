@@ -20,6 +20,28 @@ test_that("OptimizerAsyncMboCentral works in defaults", {
   expect_rush_reset(instance$rush)
 })
 
+test_that("OptimizerAsyncMboCentral works with initial design", {
+  skip_on_cran()
+  skip_if_not_installed("rush")
+  skip_if_not(redis_available())
+  flush_redis()
+
+  mirai::daemons(2L)
+  rush::rush_plan(n_workers = 2L, worker_type = "remote")
+  instance = oi_async(
+    objective = OBJ_2D,
+    search_space = PS_2D,
+    terminator = trm("evals", n_evals = 10L),
+  )
+  initial_design = generate_design_sobol(PS_2D, n = 5L)$data
+  initial_design[, y := OBJ_2D$eval_many(transpose_list(initial_design))]
+
+  optimizer = opt("async_mbo_central", initial_design = initial_design)
+  expect_data_table(optimizer$optimize(instance), nrows = 1L)
+})
+
+
+
 test_that("OptimizerAsyncMboCentral works with evaluations in archive", {
   skip_on_cran()
   skip_if_not_installed("rush")
