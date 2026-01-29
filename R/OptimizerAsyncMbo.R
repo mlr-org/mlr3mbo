@@ -238,7 +238,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         generate_design(inst$search_space, n = pv$design_size)$data
       } else {
         # use provided initial design
-        lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
+        lg$info("Using provided initial design with size %s", nrow(pv$initial_design))
 
         xss = transpose_list(pv$initial_design[, inst$archive$cols_x, with = FALSE])
         yss = transpose_list(pv$initial_design[, inst$archive$cols_y, with = FALSE])

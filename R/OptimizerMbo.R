@@ -332,6 +332,7 @@ OptimizerMbo = R6Class("OptimizerMbo",
     .optimize = function(inst) {
 
       if (!is.null(self$param_set$values$initial_design)) {
+        lg$info("Using provided initial design with size %s", nrow(self$param_set$values$initial_design))
         xydt = self$param_set$values$initial_design
         inst$archive$add_evals(xdt = xydt[, inst$archive$cols_x, with = FALSE], ydt = xydt[, inst$archive$cols_y, with = FALSE])
       }
