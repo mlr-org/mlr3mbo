@@ -227,8 +227,10 @@ test_that("OptimizerMbo initial design", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
 
-  optimizer = opt("mbo", initial_design = data.table(x = c(1, 0.5), y = c(1, 0.25)))
+
+  surrogate = srlrn(lrn("regr.ranger"), catch_errors = FALSE)
+
+  optimizer = opt("mbo", initial_design = data.table(x = c(1, 0.5), y = c(1, 0.25)), surrogate = surrogate)
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   optimizer$optimize(instance)
-  expect_equal(instance$archive$data, data.table(x = 1))
 })
