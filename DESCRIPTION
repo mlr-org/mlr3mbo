@@ -68,7 +68,6 @@ Suggests:
     stringi,
     testthat (>= 3.0.0)
 Remotes:
-    mlr-org/mlr3,
     mlr-org/mlr3misc@parent
 ByteCompile: no
 Encoding: UTF-8
