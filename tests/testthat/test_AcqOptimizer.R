@@ -21,7 +21,6 @@ test_that("AcqOptimizer API works", {
   expect_error(acqopt$optimize(), class = "simpleError")
 
   # logging_level
-  lg_bbotk = lgr::get_logger("mlr3/bbotk")
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg_bbotk$inherited_appenders$console else lg_bbotk$inherited_appenders$appenders.console
   f = tempfile("bbotklog_", fileext = "log")
   th1 = lg_bbotk$threshold

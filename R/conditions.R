@@ -11,6 +11,8 @@
 #'   Additional class(es).
 #' @param signal (`logical(1)`)\cr
 #'   If `FALSE`, the condition object is returned instead of being signaled.
+#' @param parent (`condition`)\cr
+#'   Parent condition.
 #'
 #' @section Errors:
 #' * `error_random_interleave()` for the `Mlr3ErrorMboRandomInterleave` class,
