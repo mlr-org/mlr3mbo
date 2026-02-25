@@ -58,7 +58,7 @@ AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
         tryCatch({
           ys = optimize()
         }, error = function(error_condition) {
-          lg$warn("Catched the following error: %s", error_condition$message)
+          lg$warn("Caught the following error: %s", error_condition$message)
           error_acq_optimizer("Acquisition function optimization failed.")
         })
       } else {

@@ -348,7 +348,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
           xdt = self$acq_optimizer$optimize()
           transpose_list(xdt)[[1L]]
         }, Mlr3ErrorMbo = function(cond) {
-          lg$warn("Catched the following error: %s", cond$message)
+          lg$warn("Caught the following error: %s", cond$message)
           lg$info("Proposing a randomly sampled point")
           xdt = generate_design_random(inst$search_space, n = 1L)$data
           transpose_list(xdt)[[1L]]

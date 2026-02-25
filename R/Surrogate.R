@@ -45,14 +45,14 @@ Surrogate = R6Class("Surrogate",
         if (self$archive_is_async) {
           tryCatch(private$.update_async(),
             error = function(error_condition) {
-              lg$warn("Catched the following error: %s", error_condition$message)
+              lg$warn("Caught the following error: %s", error_condition$message)
               error_surrogate_update("Surrogate update failed.")
             }
           )
         } else {
           tryCatch(private$.update(),
             error = function(error_condition) {
-              lg$warn("Catched the following error: %s", error_condition$message)
+              lg$warn("Caught the following error: %s", error_condition$message)
               error_surrogate_update("Surrogate update failed.")
             }
           )
