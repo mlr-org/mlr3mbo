@@ -202,7 +202,8 @@ test_that("stability and defaults", {
   # this should trigger a mbo_error
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   learner = LearnerRegrError$new()
-  learner$encapsulate("evaluate", lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack"))
+  learner$predict_type = "se"
+  learner$encapsulate("evaluate", lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack", predict_type = "se"))
   surrogate = default_surrogate(instance, learner = learner, n_learner = 1L)
   surrogate$output_trafo = OutputTrafoLog$new(invert_posterior = FALSE)
   expect_r6(surrogate, "SurrogateLearner")
@@ -211,14 +212,14 @@ test_that("stability and defaults", {
   expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
   acq_function = default_acqfunction(instance)
   expect_r6(acq_function, "AcqFunctionCB")
-  acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  acq_optimizer = acqo(opt("random_search", batch_size = 10L), terminator = trm("evals", n_evals = 10L))
   acq_optimizer$param_set$values$logging_level = "info"
   expect_r6(acq_optimizer, "AcqOptimizer")
   expect_r6(acq_optimizer$optimizer, "OptimizerBatchRandomSearch")
 
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
-  if (packageVersion("mlr3") >= "1.4.0") { # FIXME: remove this once mlr3 1.4.0 is on CRAN
+  if (packageVersion("mlr3") > "1.4.0") { # FIXME: remove this once mlr3 1.4.0 is on CRAN
     expect_class(acq_function$surrogate$learner$errors[[1]], "Mlr3ErrorLearnerTrain")
   }
   lines = readLines(f)

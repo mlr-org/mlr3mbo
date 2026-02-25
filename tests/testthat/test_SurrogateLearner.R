@@ -18,7 +18,7 @@ test_that("SurrogateLearner API works", {
 
   # upgrading error class works
   surrogate = SurrogateLearner$new(LearnerRegrError$new(), archive = inst$archive)
-  expect_error(surrogate$update(), class = "surrogate_update_error")
+  expect_error(surrogate$update(), class = "Mlr3ErrorMboSurrogateUpdate")
 
   surrogate$param_set$values$catch_errors = FALSE
   expect_error(surrogate$optimize(), class = "simpleError")

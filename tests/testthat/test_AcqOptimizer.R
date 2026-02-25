@@ -15,7 +15,7 @@ test_that("AcqOptimizer API works", {
 
   # upgrading error class works - catch_errors
   acqopt = AcqOptimizer$new(OptimizerError$new(), trm("evals", n_evals = 2L), acq_function = acqfun)
-  expect_error(acqopt$optimize(), class = "acq_optimizer_error")
+  expect_error(acqopt$optimize(), class = "Mlr3ErrorMboAcqOptimizer")
 
   acqopt$param_set$values$catch_errors = FALSE
   expect_error(acqopt$optimize(), class = "simpleError")
