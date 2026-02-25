@@ -1,4 +1,4 @@
-#' @title Error Classes for mlr3mbo
+#' @title Condition Classes for mlr3mbo
 #'
 #' @description
 #' Condition classes for mlr3mbo.

@@ -220,9 +220,7 @@ test_that("stability and defaults", {
 
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
-  if (packageVersion("mlr3") > "1.4.0") { # FIXME: remove this once mlr3 1.4.0 is on CRAN
-    expect_class(acq_function$surrogate$learner$errors[[1]], "Mlr3ErrorLearnerTrain")
-  }
+  expect_class(acq_function$surrogate$learner$errors[[1]], "Mlr3ErrorLearnerTrain")
   lines = readLines(f)
   # Nothing should happen here due to the fallback learner
   expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)

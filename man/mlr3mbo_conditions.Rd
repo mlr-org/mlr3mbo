@@ -5,7 +5,7 @@
 \alias{error_random_interleave}
 \alias{error_surrogate_update}
 \alias{error_acq_optimizer}
-\title{Error Classes for mlr3mbo}
+\title{Condition Classes for mlr3mbo}
 \usage{
 error_random_interleave(msg, ..., class = NULL, signal = TRUE, parent = NULL)
 
