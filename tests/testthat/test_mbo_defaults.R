@@ -189,6 +189,7 @@ test_that("stability and defaults", {
   th2 = console_appender$threshold
 
   lg$set_threshold("debug")
+  lgr::get_logger("mlr3/core")$set_threshold(0)
   lg$add_appender(lgr::AppenderFile$new(f, threshold = "debug"), name = "testappender")
   console_appender$set_threshold("warn")
 
