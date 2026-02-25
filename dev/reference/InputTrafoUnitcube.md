@@ -69,7 +69,7 @@ Learn the transformation based on observed data and update parameters in
 
 - `xdt`:
 
-  ([`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html))  
+  ([`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html))  
   Data. One row per observation with at least columns `$cols_x`.
 
 ------------------------------------------------------------------------
@@ -86,12 +86,12 @@ Perform the transformation.
 
 - `xdt`:
 
-  ([`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html))  
+  ([`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html))  
   Data. One row per observation with at least columns `$cols_x`.
 
 #### Returns
 
-[`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html)
+[`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)
 with the transformation applied to the columns `$cols_x` (if applicable)
 or a subset thereof.
 

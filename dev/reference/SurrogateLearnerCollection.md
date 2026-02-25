@@ -181,7 +181,7 @@ Creates a new instance of this
 ### Method [`predict()`](https://rdrr.io/r/stats/predict.html)
 
 Predict mean response and standard error. Returns a named list of
-[`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html).
+[`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html).
 Each contains the mean response and standard error for one `col_y`.
 
 #### Usage
@@ -192,13 +192,13 @@ Each contains the mean response and standard error for one `col_y`.
 
 - `xdt`:
 
-  ([`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html))  
+  ([`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html))  
   New data. One row per observation.
 
 #### Returns
 
 named list of
-[`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html)
+[`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)
 with the columns `mean` and `se`.
 
 ------------------------------------------------------------------------

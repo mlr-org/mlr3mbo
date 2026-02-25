@@ -46,7 +46,7 @@ evaluations.
 
 - `initial_design`:
 
-  [`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html)  
+  [`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)  
   Initial design of the optimization. If `NULL`, a design of size
   `design_size` is generated with the specified `design_function`.
   Default is `NULL`.
@@ -140,7 +140,7 @@ The result will be written into the instance object.
 
 #### Returns
 
-[`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html)
+[`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)
 
 ------------------------------------------------------------------------
 

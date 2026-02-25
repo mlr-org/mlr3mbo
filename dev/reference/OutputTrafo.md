@@ -125,7 +125,7 @@ Learn the transformation based on observed data and update parameters in
 
 - `ydt`:
 
-  ([`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html))  
+  ([`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html))  
   Data. One row per observation with at least columns `$cols_y`.
 
 ------------------------------------------------------------------------
@@ -142,12 +142,12 @@ Perform the transformation. Must be implemented by subclasses.
 
 - `ydt`:
 
-  ([`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html))  
+  ([`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html))  
   Data. One row per observation with at least columns `$cols_y`.
 
 #### Returns
 
-[`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html)
+[`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)
 with the transformation applied to the columns `$cols_y`.
 
 ------------------------------------------------------------------------
@@ -166,13 +166,13 @@ implemented by subclasses.
 
 - `pred`:
 
-  ([`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html))  
+  ([`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html))  
   Data. One row per observation characterizing a posterior predictive
   distribution with the columns `mean` and `se`.
 
 #### Returns
 
-[`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html)
+[`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)
 with the inverse transformation applied to the columns `mean` and `se`.
 
 ------------------------------------------------------------------------
@@ -189,12 +189,12 @@ Perform the inverse transformation. Must be implemented by subclasses.
 
 - `ydt`:
 
-  ([`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html))  
+  ([`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html))  
   Data. One row per observation with at least columns `$cols_y`.
 
 #### Returns
 
-[`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html)
+[`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)
 with the inverse transformation applied to the columns `$cols_y`.
 
 ------------------------------------------------------------------------

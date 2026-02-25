@@ -247,7 +247,7 @@ Evaluates multiple input values on the objective function
 
 - `xdt`:
 
-  ([`data.table::data.table()`](https://rdatatable.gitlab.io/data.table/reference/data.table.html))  
+  ([`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html))  
   One point per row, e.g. `data.table(x1 = c(1, 3), x2 = c(2, 4))`.
 
 #### Returns
