@@ -20,66 +20,64 @@ test_that("AcqOptimizer API works", {
   acqopt$param_set$values$catch_errors = FALSE
   expect_error(acqopt$optimize(), class = "simpleError")
 
-  # FIXME: uncomment after CRAN mess with loggers resolved
-
   # logging_level
-  #console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
-  #f = tempfile("bbotklog_", fileext = "log")
-  #th1 = lg$threshold
-  #th2 = console_appender$threshold
+  console_appender = if (packageVersion("lgr") >= "0.4.0") lg_bbotk$inherited_appenders$console else lg_bbotk$inherited_appenders$appenders.console
+  f = tempfile("bbotklog_", fileext = "log")
+  th1 = lg_bbotk$threshold
+  th2 = console_appender$threshold
 
-  #lg$set_threshold("debug")
-  #lg$add_appender(lgr::AppenderFile$new(f, threshold = "debug"), name = "testappender")
-  #console_appender$set_threshold("warn")
+  lg_bbotk$set_threshold("debug")
+  lg_bbotk$add_appender(lgr::AppenderFile$new(f, threshold = "debug"), name = "testappender")
+  console_appender$set_threshold("warn")
 
-  #on.exit({
-  #  lg$remove_appender("testappender")
-  #  lg$set_threshold(th1)
-  #  console_appender$set_threshold(th2)
-  #})
+  on.exit({
+    lg_bbotk$remove_appender("testappender")
+    lg_bbotk$set_threshold(th1)
+    console_appender$set_threshold(th2)
+  })
 
-  #acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
-  #acqopt$param_set$values$logging_level = "warn"
-  #acqopt$optimize()
-  #lines = readLines(f)
-  #expect_equal(lines, character(0))
+  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 2L), trm("evals", n_evals = 2L), acq_function = acqfun)
+  acqopt$param_set$values$logging_level = "warn"
+  acqopt$optimize()
+  lines = readLines(f)
+  expect_equal(lines, character(0))
 
-  #acqopt$param_set$values$logging_level = "info"
-  #acqopt$optimize()
-  #lines = readLines(f)
-  #expect_character(lines, min.len = 1L)
+  acqopt$param_set$values$logging_level = "info"
+  acqopt$optimize()
+  lines = readLines(f)
+  expect_character(lines, min.len = 1L)
 
-  ## n_candidates | warmstart | warmstart_size | skip_already_evaluated
-  #acqopt = AcqOptimizer$new(opt("design_points", batch_size = 1L, design = data.table(x = c(-1, -0.5, 0, 0.5, 1))), trm("evals", n_evals = 5L), acq_function = acqfun)
-  #acqopt$param_set$values$n_candidates = 3L
-  #xdt = acqopt$optimize()
-  #expect_true(nrow(xdt) == 3L)
-  #expect_setequal(xdt[["x"]], c(-0.5, 0, 0.5))
+  # n_candidates | warmstart | warmstart_size | skip_already_evaluated
+  acqopt = AcqOptimizer$new(opt("design_points", batch_size = 1L, design = data.table(x = c(-1, -0.5, 0, 0.5, 1))), trm("evals", n_evals = 5L), acq_function = acqfun)
+  acqopt$param_set$values$n_candidates = 3L
+  xdt = acqopt$optimize()
+  expect_true(nrow(xdt) == 3L)
+  expect_setequal(xdt[["x"]], c(-0.5, 0, 0.5))
 
-  #acqopt = AcqOptimizer$new(opt("design_points", batch_size = 1L, design = data.table(x = 0)), trm("evals", n_evals = 5L), acq_function = acqfun)
-  #acqopt$param_set$values$warmstart = TRUE
-  #xdt = acqopt$optimize()
-  #expect_true(xdt[["x"]] == 0)
-  #expect_false(xdt[[".already_evaluated"]])
+  acqopt = AcqOptimizer$new(opt("design_points", batch_size = 1L, design = data.table(x = 0)), trm("evals", n_evals = 5L), acq_function = acqfun)
+  acqopt$param_set$values$warmstart = TRUE
+  xdt = acqopt$optimize()
+  expect_true(xdt[["x"]] == 0)
+  expect_false(xdt[[".already_evaluated"]])
 
-  #acqopt$param_set$values$warmstart_size = 1L
-  #xdt = acqopt$optimize()
-  #expect_true(xdt[["x"]] == 0)
-  #expect_false(xdt[[".already_evaluated"]])
+  acqopt$param_set$values$warmstart_size = 1L
+  xdt = acqopt$optimize()
+  expect_true(xdt[["x"]] == 0)
+  expect_false(xdt[[".already_evaluated"]])
 
-  #acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
-  #acqopt$param_set$values$warmstart = TRUE
-  #acqopt$param_set$values$warmstart_size = "all"
-  #expect_error(acqopt$optimize(), "Less then `n_select` \\(1\\) candidate points found during acquisition function optimization were not already evaluated.")
+  acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
+  acqopt$param_set$values$warmstart = TRUE
+  acqopt$param_set$values$warmstart_size = "all"
+  expect_error(acqopt$optimize(), "Less then `n_select` \\(1\\) candidate points found during acquisition function optimization were not already evaluated.")
 
-  #acqopt$param_set$values$skip_already_evaluated = FALSE
-  #xdt = acqopt$optimize()
-  #expect_true((xdt[[".already_evaluated"]]))
+  acqopt$param_set$values$skip_already_evaluated = FALSE
+  xdt = acqopt$optimize()
+  expect_true((xdt[[".already_evaluated"]]))
 
-  #acqopt$param_set$values$warmstart_size = NULL
-  #acqopt$param_set$values$warmstart = FALSE
-  #xdt = acqopt$optimize()
-  #expect_true((xdt[[".already_evaluated"]]))
+  acqopt$param_set$values$warmstart_size = NULL
+  acqopt$param_set$values$warmstart = FALSE
+  xdt = acqopt$optimize()
+  expect_true((xdt[[".already_evaluated"]]))
 })
 
 test_that("AcqOptimizer param_set", {
