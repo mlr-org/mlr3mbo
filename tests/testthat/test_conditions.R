@@ -1,13 +1,9 @@
 test_that("conditions work", {
-
   old_threshold_mlr3 = lgr::get_logger("mlr3/core")$threshold
   old_threshold_bbotk = lgr::get_logger("mlr3/bbotk")$threshold
   old_layout = lgr$appenders$console$layout
-
-
   lgr::get_logger("mlr3/core")$set_threshold(0)
   lgr::get_logger("mlr3/bbotk")$set_threshold("warn")
-
   # remove time for snapshots
   lgr$appenders$console$set_layout(
     LayoutFormat$new(fmt = "%L %m %f")

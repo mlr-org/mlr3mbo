@@ -159,7 +159,6 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
           tryCatch({
             res = optimize()
           }, error = function(error_condition) {
-            lg$warn("Acquisition function optimization failed.")
             error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
           })
         } else {
