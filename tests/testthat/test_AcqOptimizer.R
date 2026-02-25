@@ -21,6 +21,7 @@ test_that("AcqOptimizer API works", {
   expect_error(acqopt$optimize(), class = "simpleError")
 
   # logging_level
+  lg_bbotk = lgr::get_logger("mlr3/bbotk")
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg_bbotk$inherited_appenders$console else lg_bbotk$inherited_appenders$appenders.console
   f = tempfile("bbotklog_", fileext = "log")
   th1 = lg_bbotk$threshold
@@ -68,8 +69,7 @@ test_that("AcqOptimizer API works", {
   acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
   acqopt$param_set$values$warmstart = TRUE
   acqopt$param_set$values$warmstart_size = "all"
-  output = capture.output(try({acqopt$optimize()})) # throws an Mlr3ErrorMboAcqOptimizer
-  expect_match(output, "Less then")
+  expect_error(acqopt$optimize(), regexp = "Less then", class = "Mlr3ErrorMboAcqOptimizer")
 
   acqopt$param_set$values$skip_already_evaluated = FALSE
   xdt = acqopt$optimize()

@@ -59,8 +59,8 @@ AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
         tryCatch({
           res = optimize()
         }, error = function(error_condition) {
-          lg$warn("Caught the following error: %s", error_condition$message)
-          error_acq_optimizer("Acquisition function optimization failed.")
+          lg$warn("Acquisition function optimization failed.")
+          error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
         })
       } else {
         res = optimize()
