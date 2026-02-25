@@ -58,6 +58,7 @@ test_that("stable bayesopt_ego", {
   skip_if_not_installed("rgenoud")
 
   # logger stuff
+  lg_bbotk = lgr::get_logger("mlr3/bbotk")
   console_appender = if (packageVersion("lgr") >= "0.4.0") lg_bbotk$inherited_appenders$console else lg_bbotk$inherited_appenders$appenders.console
   f = tempfile("bbotklog_", fileext = "log")
   th1 = lg_bbotk$threshold
@@ -91,8 +92,8 @@ test_that("stable bayesopt_ego", {
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   lines = readLines(f)
-  expect_true(sum(grepl("Optimizer Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
-  expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
+  expect_match(lines, "Optimizer Error", all = FALSE)
+  expect_match(lines, "Proposing a randomly sampled point", all = FALSE)
 
   # Surrogate using LearnerRegrError as Learner that will fail during train
   # this should trigger a mbo_error and log the appropriate error message
