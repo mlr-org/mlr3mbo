@@ -1,5 +1,6 @@
 #' @title Asynchronous Model Based Optimization
 #'
+#' @include OptimizerMbo.R
 #' @name mlr_optimizers_async_mbo
 #'
 #' @description
@@ -37,6 +38,8 @@
 #' If the `initial_design` parameter is specified to be a `data.table`, this data will be used.
 #' Otherwise, if it is `NULL`, an initial design of size `design_size` will be generated based on the `generate_design` sampling function.
 #' See also the parameters below.
+#'
+#' @inheritSection mlr_optimizers_mbo Conditions
 #'
 #' @section Parameters:
 #' \describe{

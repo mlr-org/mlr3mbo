@@ -40,7 +40,7 @@ Whether this point was already evaluated. Depends on the \code{skip_already_eval
 
 \section{Conditions}{
 
-During optimization, errors are caught and converted into structured conditions that inherit from \code{Mlr3ErrorMbo} and \code{Mlr3Error} (defined in \CRANpkg{mlr3misc}).
+During optimization, errors are caught and re-thrown as structured conditions that inherit from \code{Mlr3ErrorMbo} and \code{Mlr3Error} (defined in \CRANpkg{mlr3misc}).
 Loop functions catch \code{Mlr3ErrorMbo} conditions and fall back to proposing a randomly sampled point.
 
 The following condition classes are used:
@@ -50,8 +50,8 @@ The following condition classes are used:
 \item{\code{Mlr3ErrorMboAcqOptimizer}}{Raised by \link{AcqOptimizer}\verb{$optimize()} when the acquisition function optimization fails (requires \code{catch_errors = TRUE}).}
 \item{\code{Mlr3ErrorMboRandomInterleave}}{Raised by loop functions to trigger random interleaving.}
 }
-Caught conditions are logged at the \code{"warn"} level.
-All conditions can be constructed with the corresponding helper functions \code{error_surrogate_update()}, \code{error_acq_optimizer()}, and \code{error_random_interleave()}.
+\code{Mlr3ErrorMboSurrogateUpdate} and \code{Mlr3ErrorMboAcqOptimizer} conditions are logged at the \code{"warn"} level and include the original error as a parent condition.
+All conditions can be constructed directly via the helper functions \code{error_surrogate_update()}, \code{error_acq_optimizer()}, and \code{error_random_interleave()}.
 }
 
 \examples{
