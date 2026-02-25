@@ -174,5 +174,9 @@ test_that("bayesopt_ego random interleave", {
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = 2L)
   expect_true(nrow(instance$archive$data) == 10L)
   expect_identical(is.na(instance$archive$data$acq_ei), c(rep(TRUE, 4L), FALSE, TRUE, FALSE, TRUE, FALSE, TRUE))
+  cond = error_random_interleave("Random interleave", signal = FALSE)
+  expect_true(inherits(cond, "Mlr3ErrorMboRandomInterleave"))
+  expect_true(inherits(cond, "Mlr3ErrorMbo"))
+  expect_true(inherits(cond, "Mlr3Error"))
 })
 

@@ -1,3 +1,15 @@
+error_random_interleave = function(msg, ..., class = NULL, signal = TRUE) {
+  error_mlr3(msg, ..., class = c(class, "Mlr3ErrorMboRandomInterleave", "Mlr3ErrorMbo"), signal = signal)
+}
+
+error_surrogate_update = function(msg, ..., class = NULL, signal = TRUE) {
+  error_mlr3(msg, ..., class = c(class, "Mlr3ErrorMboSurrogateUpdate", "Mlr3ErrorMbo"), signal = signal)
+}
+
+error_acq_optimizer = function(msg, ..., class = NULL, signal = TRUE) {
+  error_mlr3(msg, ..., class = c(class, "Mlr3ErrorMboAcqOptimizer", "Mlr3ErrorMbo"), signal = signal)
+}
+
 generate_acq_codomain = function(surrogate, id, direction = "same") {
   assert_r6(surrogate$archive, "Archive")
   assert_string(id)

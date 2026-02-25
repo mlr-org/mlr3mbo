@@ -347,12 +347,12 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
           self$acq_function$update()
           xdt = self$acq_optimizer$optimize()
           transpose_list(xdt)[[1L]]
-        }, mbo_error = function(mbo_error_condition) {
-            lg$info(paste0(class(mbo_error_condition), collapse = " / "))
-            lg$info("Proposing a randomly sampled point")
-            xdt = generate_design_random(inst$search_space, n = 1L)$data
-            transpose_list(xdt)[[1L]]
-          })
+        }, Mlr3ErrorMbo = function(cond) {
+          lg$warn("Catched the following error: %s", cond$message)
+          lg$info("Proposing a randomly sampled point")
+          xdt = generate_design_random(inst$search_space, n = 1L)$data
+          transpose_list(xdt)[[1L]]
+        })
 
         # eval
         get_private(inst)$.eval_point(xs)
@@ -362,7 +362,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         tryCatch(
           {
             self$surrogate$update()
-          }, surrogate_update_error = function(error_condition) {
+          }, Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
             lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
           }
         )
