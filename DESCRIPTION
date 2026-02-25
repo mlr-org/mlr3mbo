@@ -125,6 +125,7 @@ Collate:
     'bayesopt_parego.R'
     'bayesopt_smsego.R'
     'bibentries.R'
+    'conditions.R'
     'helper.R'
     'loop_function.R'
     'mbo_defaults.R'
