@@ -66,7 +66,6 @@
       bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function,
         acq_optimizer = acq_optimizer)
     Output
-      WARN  [bbotk] Acquisition function optimization failed.
       WARN  [bbotk] Caught the following error: 
       x Acquisition function optimization failed.
       > Class: Mlr3ErrorMboAcqOptimizer
@@ -74,7 +73,6 @@
         x Surrogate Predict Error.
         > Class: Mlr3ErrorLearnerPredict
       
-      WARN  [bbotk] Acquisition function optimization failed.
       WARN  [bbotk] Caught the following error: 
       x Acquisition function optimization failed.
       > Class: Mlr3ErrorMboAcqOptimizer
@@ -82,7 +80,6 @@
         x Surrogate Predict Error.
         > Class: Mlr3ErrorLearnerPredict
       
-      WARN  [bbotk] Acquisition function optimization failed.
       WARN  [bbotk] Caught the following error: 
       x Acquisition function optimization failed.
       > Class: Mlr3ErrorMboAcqOptimizer
@@ -90,7 +87,6 @@
         x Surrogate Predict Error.
         > Class: Mlr3ErrorLearnerPredict
       
-      WARN  [bbotk] Acquisition function optimization failed.
       WARN  [bbotk] Caught the following error: 
       x Acquisition function optimization failed.
       > Class: Mlr3ErrorMboAcqOptimizer
@@ -98,7 +94,6 @@
         x Surrogate Predict Error.
         > Class: Mlr3ErrorLearnerPredict
       
-      WARN  [bbotk] Acquisition function optimization failed.
       WARN  [bbotk] Caught the following error: 
       x Acquisition function optimization failed.
       > Class: Mlr3ErrorMboAcqOptimizer
@@ -106,7 +101,6 @@
         x Surrogate Predict Error.
         > Class: Mlr3ErrorLearnerPredict
       
-      WARN  [bbotk] Acquisition function optimization failed.
       WARN  [bbotk] Caught the following error: 
       x Acquisition function optimization failed.
       > Class: Mlr3ErrorMboAcqOptimizer
