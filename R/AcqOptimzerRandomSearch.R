@@ -54,13 +54,11 @@ AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
       optimize = function() {
         mlr3misc::invoke(fun, xdt = xdt, .args = constants)[[1]]
       }
-
       if (pv$catch_errors) {
         tryCatch({
           ys = optimize()
         }, error = function(error_condition) {
-          lg$warn(error_condition$message)
-          stop(set_class(list(message = error_condition$message, call = NULL), classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
+          error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
         })
       } else {
         ys = optimize()

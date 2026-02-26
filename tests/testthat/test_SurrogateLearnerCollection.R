@@ -20,7 +20,7 @@ test_that("SurrogateLearnerCollection API works", {
 
   # upgrading error class works
   surrogate = SurrogateLearnerCollection$new(learners = list(LearnerRegrError$new(), LearnerRegrError$new()), archive = inst$archive)
-  expect_error(surrogate$update(), class = "surrogate_update_error")
+  expect_error(surrogate$update(), class = "Mlr3ErrorMboSurrogateUpdate")
 
   surrogate$param_set$values$catch_errors = FALSE
   expect_error(surrogate$optimize(), class = "simpleError")

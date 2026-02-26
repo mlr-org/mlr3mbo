@@ -139,7 +139,7 @@ bayesopt_mpcl = function(
       acq_function$surrogate$update()
       acq_function$update()
       acq_optimizer$optimize()
-    }, mbo_error = function(mbo_error_condition) {
+    }, Mlr3ErrorMbo = function(cond) {
       #lg$info("Proposing a randomly sampled point") no logging because we do not evaluate this point
       generate_design_random(search_space, n = 1L)$data
     })
@@ -158,15 +158,18 @@ bayesopt_mpcl = function(
 
         # random interleaving is handled here
         if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-          stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
+          error_random_interleave("Random interleaving")
         }
 
         # update all objects with lie
         acq_function$surrogate$update()
         acq_function$update()
         acq_optimizer$optimize()
-      }, mbo_error = function(mbo_error_condition) {
-        lg$info(paste0(class(mbo_error_condition), collapse = " / "))
+      }, Mlr3ErrorMboRandomInterleave = function(cond) {
+        lg$info("Random interleaving triggered, proposing a randomly sampled point")
+        generate_design_random(search_space, n = 1L)$data
+      }, Mlr3ErrorMbo = function(cond) {
+        lg$warn("Caught the following error: %s", cond$message)
         lg$info("Proposing a randomly sampled point")
         generate_design_random(search_space, n = 1L)$data
       })

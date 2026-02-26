@@ -163,7 +163,7 @@ LearnerRegrError = R6::R6Class("LearnerRegrError",
   private = list(
     .train = function(task) {
       if (self$param_set$values$error_train) {
-        stop("Surrogate Train Error.")
+        mlr3misc::error_learner_train("Surrogate Train Error.")
       } else {
         mu = mean(task$data(cols = task$target_names)[[1L]])
         sigma = sd(task$data(cols = task$target_names)[[1L]])
@@ -173,7 +173,7 @@ LearnerRegrError = R6::R6Class("LearnerRegrError",
 
     .predict = function(task) {
       if (self$param_set$values$error_predict) {
-        stop("Surrogate Predict Error.")
+        mlr3misc::error_learner_predict("Surrogate Predict Error.")
       } else {
         n = task$nrow
         if (self$predict_type == "se") {

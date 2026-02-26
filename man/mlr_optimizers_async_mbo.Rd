@@ -65,6 +65,22 @@ Default is \code{NULL}.}
 }
 }
 
+\section{Conditions}{
+
+During optimization, errors are caught and re-thrown as structured conditions that inherit from \code{Mlr3ErrorMbo} and \code{Mlr3Error} (defined in \CRANpkg{mlr3misc}).
+Loop functions catch \code{Mlr3ErrorMbo} conditions and fall back to proposing a randomly sampled point.
+
+The following condition classes are used:
+\describe{
+\item{\code{Mlr3ErrorMbo}}{Base class for all MBO-specific error conditions.}
+\item{\code{Mlr3ErrorMboSurrogateUpdate}}{Raised by \link{Surrogate}\verb{$update()} when the surrogate model fails to update (requires \code{catch_errors = TRUE}).}
+\item{\code{Mlr3ErrorMboAcqOptimizer}}{Raised by \link{AcqOptimizer}\verb{$optimize()} when the acquisition function optimization fails (requires \code{catch_errors = TRUE}).}
+\item{\code{Mlr3ErrorMboRandomInterleave}}{Raised by loop functions to trigger random interleaving.}
+}
+\code{Mlr3ErrorMboSurrogateUpdate} and \code{Mlr3ErrorMboAcqOptimizer} conditions are logged at the \code{"warn"} level and include the original error as a parent condition.
+All conditions can be constructed directly via the helper functions \code{error_surrogate_update()}, \code{error_acq_optimizer()}, and \code{error_random_interleave()}.
+}
+
 \examples{
 \donttest{
 if (requireNamespace("rush") &

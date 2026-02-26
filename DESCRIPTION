@@ -66,7 +66,9 @@ Suggests:
     redux,
     rush,
     stringi,
-    testthat (>= 3.0.0),
+    testthat (>= 3.0.0)
+Remotes:
+    mlr-org/mlr3misc
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
@@ -102,8 +104,8 @@ Collate:
     'InputTrafoUnitcube.R'
     'aaa.R'
     'OptimizerADBO.R'
-    'OptimizerAsyncMbo.R'
     'OptimizerMbo.R'
+    'OptimizerAsyncMbo.R'
     'mlr_output_trafos.R'
     'OutputTrafo.R'
     'OutputTrafoLog.R'
@@ -125,6 +127,7 @@ Collate:
     'bayesopt_parego.R'
     'bayesopt_smsego.R'
     'bibentries.R'
+    'conditions.R'
     'helper.R'
     'loop_function.R'
     'mbo_defaults.R'
