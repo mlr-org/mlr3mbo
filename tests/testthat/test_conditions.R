@@ -1,3 +1,7 @@
+skip_if_not_installed("mlr3learners")
+skip_if_not_installed("DiceKriging")
+skip_if_not_installed("rgenoud")
+
 test_that("conditions work", {
   old_threshold_mlr3 = lgr::get_logger("mlr3/core")$threshold
   old_threshold_bbotk = lgr::get_logger("mlr3/bbotk")$threshold
