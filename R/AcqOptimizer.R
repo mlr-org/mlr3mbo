@@ -181,9 +181,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
               self$optimizer$optimize(instance)
               get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = TRUE)
             }, error = function(error_condition) {
-              lg$warn(error_condition$message)
-              stop(set_class(list(message = error_condition$message, call = NULL),
-                classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
+              error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
             }
           )
         } else {
@@ -197,9 +195,7 @@ AcqOptimizer = R6Class("AcqOptimizer",
               self$optimizer$optimize(instance)
               get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = FALSE)
             }, error = function(error_condition) {
-              lg$warn(error_condition$message)
-              stop(set_class(list(message = error_condition$message, call = NULL),
-                classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
+              error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
             }
           )
         } else {

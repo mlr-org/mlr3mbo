@@ -15,7 +15,7 @@ test_that("AcqOptimizer API works", {
 
   # upgrading error class works - catch_errors
   acqopt = AcqOptimizer$new(OptimizerError$new(), trm("evals", n_evals = 2L), acq_function = acqfun)
-  expect_error(acqopt$optimize(), class = "acq_optimizer_error")
+  expect_error(acqopt$optimize(), class = "Mlr3ErrorMboAcqOptimizer")
 
   acqopt$param_set$values$catch_errors = FALSE
   expect_error(acqopt$optimize(), class = "simpleError")
@@ -68,7 +68,7 @@ test_that("AcqOptimizer API works", {
   acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
   acqopt$param_set$values$warmstart = TRUE
   acqopt$param_set$values$warmstart_size = "all"
-  expect_error(acqopt$optimize(), "Less then `n_select` \\(1\\) candidate points found during acquisition function optimization were not already evaluated.")
+  expect_error(acqopt$optimize(), regexp = "Less then", class = "Mlr3ErrorMboAcqOptimizer")
 
   acqopt$param_set$values$skip_already_evaluated = FALSE
   xdt = acqopt$optimize()

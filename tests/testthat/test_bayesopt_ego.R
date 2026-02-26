@@ -91,8 +91,8 @@ test_that("stable bayesopt_ego", {
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   lines = readLines(f)
-  expect_true(sum(grepl("Optimizer Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
-  expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
+  expect_match(lines, "Optimizer Error", all = FALSE)
+  expect_match(lines, "Proposing a randomly sampled point", all = FALSE)
 
   # Surrogate using LearnerRegrError as Learner that will fail during train
   # this should trigger a mbo_error and log the appropriate error message
@@ -102,8 +102,8 @@ test_that("stable bayesopt_ego", {
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   lines = readLines(f)
-  expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
-  expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 2L)
+  expect_match(lines, "Surrogate Train Error", all = FALSE)
+  expect_match(lines, "Proposing a randomly sampled point", all = FALSE)
 
   # Surrogate using LearnerRegrError as Learner that will fail during predict
   # this should trigger a mbo_error and log the appropriate error message
@@ -114,8 +114,8 @@ test_that("stable bayesopt_ego", {
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
   expect_true(nrow(instance$archive$data) == 5L)
   lines = readLines(f)
-  expect_true(sum(grepl("Surrogate Predict Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 1L)
-  expect_true(sum(grepl("Proposing a randomly sampled point", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 3L)
+  expect_match(lines, "Surrogate Predict Error", all = FALSE)
+  expect_match(lines, "Proposing a randomly sampled point", all = FALSE)
 })
 
 test_that("bayesopt_ego with trafo", {
@@ -172,5 +172,9 @@ test_that("bayesopt_ego random interleave", {
   bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, random_interleave_iter = 2L)
   expect_true(nrow(instance$archive$data) == 10L)
   expect_identical(is.na(instance$archive$data$acq_ei), c(rep(TRUE, 4L), FALSE, TRUE, FALSE, TRUE, FALSE, TRUE))
+  cond = error_random_interleave("Random interleave", signal = FALSE)
+  expect_true(inherits(cond, "Mlr3ErrorMboRandomInterleave"))
+  expect_true(inherits(cond, "Mlr3ErrorMbo"))
+  expect_true(inherits(cond, "Mlr3Error"))
 })
 

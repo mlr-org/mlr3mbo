@@ -40,22 +40,18 @@ Surrogate = R6Class("Surrogate",
     #'
     #' @return `NULL`.
     update = function() {
-      if (is.null(self$archive)) stop("Archive must be set during construction or manually prior before calling $update().")
+      if (is.null(self$archive)) error_config("Archive must be set during construction or manually prior before calling $update().")
       if (self$param_set$values$catch_errors) {
         if (self$archive_is_async) {
           tryCatch(private$.update_async(),
             error = function(error_condition) {
-              lg$warn(error_condition$message)
-              stop(set_class(list(message = error_condition$message, call = NULL),
-                classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
+              error_surrogate_update("Surrogate update failed.", parent = error_condition)
             }
           )
         } else {
           tryCatch(private$.update(),
             error = function(error_condition) {
-              lg$warn(error_condition$message)
-              stop(set_class(list(message = error_condition$message, call = NULL),
-                classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
+              error_surrogate_update("Surrogate update failed.", parent = error_condition)
             }
           )
         }
