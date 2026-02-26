@@ -47,7 +47,7 @@ Imports:
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
-    mlr3misc (>= 0.15.1),
+    mlr3misc (>= 0.21.0),
     paradox (>= 1.0.1),
     spacefillr,
     R6 (>= 2.4.1)
@@ -67,8 +67,6 @@ Suggests:
     rush,
     stringi,
     testthat (>= 3.0.0)
-Remotes:
-    mlr-org/mlr3misc
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
