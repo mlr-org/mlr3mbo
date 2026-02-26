@@ -108,6 +108,47 @@ initial design of size `design_size` will be generated based on the
   [`rush::rush_plan()`](https://rush.mlr-org.com/reference/rush_plan.html)
   are used. Default is `NULL`.
 
+## Conditions
+
+During optimization, errors are caught and re-thrown as structured
+conditions that inherit from `Mlr3ErrorMbo` and `Mlr3Error` (defined in
+[mlr3misc](https://CRAN.R-project.org/package=mlr3misc)). Loop functions
+catch `Mlr3ErrorMbo` conditions and fall back to proposing a randomly
+sampled point.
+
+The following condition classes are used:
+
+- `Mlr3ErrorMbo`:
+
+  Base class for all MBO-specific error conditions.
+
+- `Mlr3ErrorMboSurrogateUpdate`:
+
+  Raised by
+  [Surrogate](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.md)`$update()`
+  when the surrogate model fails to update (requires
+  `catch_errors = TRUE`).
+
+- `Mlr3ErrorMboAcqOptimizer`:
+
+  Raised by
+  [AcqOptimizer](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)`$optimize()`
+  when the acquisition function optimization fails (requires
+  `catch_errors = TRUE`).
+
+- `Mlr3ErrorMboRandomInterleave`:
+
+  Raised by loop functions to trigger random interleaving.
+
+`Mlr3ErrorMboSurrogateUpdate` and `Mlr3ErrorMboAcqOptimizer` conditions
+are logged at the `"warn"` level and include the original error as a
+parent condition. All conditions can be constructed directly via the
+helper functions
+[`error_surrogate_update()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo_conditions.md),
+[`error_acq_optimizer()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo_conditions.md),
+and
+[`error_random_interleave()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo_conditions.md).
+
 ## Super classes
 
 [`bbotk::Optimizer`](https://bbotk.mlr-org.com/reference/Optimizer.html)

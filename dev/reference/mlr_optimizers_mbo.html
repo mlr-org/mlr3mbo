@@ -109,6 +109,28 @@ The value of the acquisition function.</p></li>
 Whether this point was already evaluated. Depends on the <code>skip_already_evaluated</code> parameter of the <a href="AcqOptimizer.html">AcqOptimizer</a>.</p></li>
 </ul></div>
     <div class="section level2">
+    <h2 id="conditions">Conditions<a class="anchor" aria-label="anchor" href="#conditions"></a></h2>
+
+
+<p>During optimization, errors are caught and re-thrown as structured conditions that inherit from <code>Mlr3ErrorMbo</code> and <code>Mlr3Error</code> (defined in <a href="https://CRAN.R-project.org/package=mlr3misc" class="external-link"><span class="pkg">mlr3misc</span></a>).
+Loop functions catch <code>Mlr3ErrorMbo</code> conditions and fall back to proposing a randomly sampled point.</p>
+<p>The following condition classes are used:</p><dl><dt><code>Mlr3ErrorMbo</code></dt>
+<dd><p>Base class for all MBO-specific error conditions.</p></dd>
+
+<dt><code>Mlr3ErrorMboSurrogateUpdate</code></dt>
+<dd><p>Raised by <a href="Surrogate.html">Surrogate</a><code>$update()</code> when the surrogate model fails to update (requires <code>catch_errors = TRUE</code>).</p></dd>
+
+<dt><code>Mlr3ErrorMboAcqOptimizer</code></dt>
+<dd><p>Raised by <a href="AcqOptimizer.html">AcqOptimizer</a><code>$optimize()</code> when the acquisition function optimization fails (requires <code>catch_errors = TRUE</code>).</p></dd>
+
+<dt><code>Mlr3ErrorMboRandomInterleave</code></dt>
+<dd><p>Raised by loop functions to trigger random interleaving.</p></dd>
+
+
+</dl><p><code>Mlr3ErrorMboSurrogateUpdate</code> and <code>Mlr3ErrorMboAcqOptimizer</code> conditions are logged at the <code>"warn"</code> level and include the original error as a parent condition.
+All conditions can be constructed directly via the helper functions <code><a href="mlr3mbo_conditions.html">error_surrogate_update()</a></code>, <code><a href="mlr3mbo_conditions.html">error_acq_optimizer()</a></code>, and <code><a href="mlr3mbo_conditions.html">error_random_interleave()</a></code>.</p>
+    </div>
+    <div class="section level2">
     <h2 id="super-classes">Super classes<a class="anchor" aria-label="anchor" href="#super-classes"></a></h2>
     <p><code><a href="https://bbotk.mlr-org.com/reference/Optimizer.html" class="external-link">bbotk::Optimizer</a></code> -&gt; <code><a href="https://bbotk.mlr-org.com/reference/OptimizerBatch.html" class="external-link">bbotk::OptimizerBatch</a></code> -&gt; <code>OptimizerMbo</code></p>
     </div>
@@ -362,12 +384,7 @@ The optimization result is returned but the complete optimization path is stored
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:17:53.645] [bbotk] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   'regr.km' does not support this</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> → Class: Mlr3ErrorInput</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [11:17:53.646] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [10:16:46.301] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             x  x_domain         y1       y2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;    &lt;list&gt;      &lt;num&gt;    &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1: -0.9576857 &lt;list[1]&gt;  0.9171619 8.747905</span>

@@ -212,6 +212,10 @@ instance$result
 - [`mlr3mbo`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo-package.md)
   [`mlr3mbo-package`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo-package.md)
   : mlr3mbo: Flexible Bayesian Optimization
+- [`error_random_interleave()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo_conditions.md)
+  [`error_surrogate_update()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo_conditions.md)
+  [`error_acq_optimizer()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo_conditions.md)
+  : Condition Classes for mlr3mbo
 - [`mlr_acqfunctions`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions.md)
   : Dictionary of Acquisition Functions
 - [`mlr_acqfunctions_aei`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_acqfunctions_aei.md)

@@ -69,6 +69,47 @@ algorithms:
   `skip_already_evaluated` parameter of the
   [AcqOptimizer](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md).
 
+## Conditions
+
+During optimization, errors are caught and re-thrown as structured
+conditions that inherit from `Mlr3ErrorMbo` and `Mlr3Error` (defined in
+[mlr3misc](https://CRAN.R-project.org/package=mlr3misc)). Loop functions
+catch `Mlr3ErrorMbo` conditions and fall back to proposing a randomly
+sampled point.
+
+The following condition classes are used:
+
+- `Mlr3ErrorMbo`:
+
+  Base class for all MBO-specific error conditions.
+
+- `Mlr3ErrorMboSurrogateUpdate`:
+
+  Raised by
+  [Surrogate](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.md)`$update()`
+  when the surrogate model fails to update (requires
+  `catch_errors = TRUE`).
+
+- `Mlr3ErrorMboAcqOptimizer`:
+
+  Raised by
+  [AcqOptimizer](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)`$optimize()`
+  when the acquisition function optimization fails (requires
+  `catch_errors = TRUE`).
+
+- `Mlr3ErrorMboRandomInterleave`:
+
+  Raised by loop functions to trigger random interleaving.
+
+`Mlr3ErrorMboSurrogateUpdate` and `Mlr3ErrorMboAcqOptimizer` conditions
+are logged at the `"warn"` level and include the original error as a
+parent condition. All conditions can be constructed directly via the
+helper functions
+[`error_surrogate_update()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo_conditions.md),
+[`error_acq_optimizer()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo_conditions.md),
+and
+[`error_random_interleave()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr3mbo_conditions.md).
+
 ## Super classes
 
 [`bbotk::Optimizer`](https://bbotk.mlr-org.com/reference/Optimizer.html)
@@ -368,12 +409,7 @@ if (requireNamespace("mlr3learners") &
 
   optimizer$optimize(instance)
 }
-#> WARN  [11:17:53.645] [bbotk] 
-#> ✖ Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner
-#>   'regr.km' does not support this
-#> → Class: Mlr3ErrorInput
-#> 
-#> WARN  [11:17:53.646] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
+#> WARN  [10:16:46.301] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
 #>             x  x_domain         y1       y2
 #>         <num>    <list>      <num>    <num>
 #> 1: -0.9576857 <list[1]>  0.9171619 8.747905

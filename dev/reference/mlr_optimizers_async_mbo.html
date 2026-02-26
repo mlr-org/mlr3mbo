@@ -148,6 +148,28 @@ Default is <code>NULL</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="conditions">Conditions<a class="anchor" aria-label="anchor" href="#conditions"></a></h2>
+
+
+<p>During optimization, errors are caught and re-thrown as structured conditions that inherit from <code>Mlr3ErrorMbo</code> and <code>Mlr3Error</code> (defined in <a href="https://CRAN.R-project.org/package=mlr3misc" class="external-link"><span class="pkg">mlr3misc</span></a>).
+Loop functions catch <code>Mlr3ErrorMbo</code> conditions and fall back to proposing a randomly sampled point.</p>
+<p>The following condition classes are used:</p><dl><dt><code>Mlr3ErrorMbo</code></dt>
+<dd><p>Base class for all MBO-specific error conditions.</p></dd>
+
+<dt><code>Mlr3ErrorMboSurrogateUpdate</code></dt>
+<dd><p>Raised by <a href="Surrogate.html">Surrogate</a><code>$update()</code> when the surrogate model fails to update (requires <code>catch_errors = TRUE</code>).</p></dd>
+
+<dt><code>Mlr3ErrorMboAcqOptimizer</code></dt>
+<dd><p>Raised by <a href="AcqOptimizer.html">AcqOptimizer</a><code>$optimize()</code> when the acquisition function optimization fails (requires <code>catch_errors = TRUE</code>).</p></dd>
+
+<dt><code>Mlr3ErrorMboRandomInterleave</code></dt>
+<dd><p>Raised by loop functions to trigger random interleaving.</p></dd>
+
+
+</dl><p><code>Mlr3ErrorMboSurrogateUpdate</code> and <code>Mlr3ErrorMboAcqOptimizer</code> conditions are logged at the <code>"warn"</code> level and include the original error as a parent condition.
+All conditions can be constructed directly via the helper functions <code><a href="mlr3mbo_conditions.html">error_surrogate_update()</a></code>, <code><a href="mlr3mbo_conditions.html">error_acq_optimizer()</a></code>, and <code><a href="mlr3mbo_conditions.html">error_random_interleave()</a></code>.</p>
+    </div>
+    <div class="section level2">
     <h2 id="super-classes">Super classes<a class="anchor" aria-label="anchor" href="#super-classes"></a></h2>
     <p><code><a href="https://bbotk.mlr-org.com/reference/Optimizer.html" class="external-link">bbotk::Optimizer</a></code> -&gt; <code><a href="https://bbotk.mlr-org.com/reference/OptimizerAsync.html" class="external-link">bbotk::OptimizerAsync</a></code> -&gt; <code>OptimizerAsyncMbo</code></p>
     </div>
