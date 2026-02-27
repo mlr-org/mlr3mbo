@@ -39,12 +39,12 @@ Source:
 
 Becker M, Schneider L, Richter J, Lang M, Bischl B, Pfisterer F, Binder
 M, Fischer S (2026). *mlr3mbo: Flexible Bayesian Optimization*. R
-package version 0.3.3.9000, <https://mlr3mbo.mlr-org.com>.
+package version 1.0.0.9000, <https://mlr3mbo.mlr-org.com>.
 
     @Manual{,
       title = {mlr3mbo: Flexible Bayesian Optimization},
       author = {Marc Becker and Lennart Schneider and Jakob Richter and Michel Lang and Bernd Bischl and Florian Pfisterer and Martin Binder and Sebastian Fischer},
       year = {2026},
-      note = {R package version 0.3.3.9000},
+      note = {R package version 1.0.0.9000},
       url = {https://mlr3mbo.mlr-org.com},
     }

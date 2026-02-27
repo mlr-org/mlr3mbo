@@ -2,11 +2,19 @@
 
 ## mlr3mbo (development version)
 
-- feat: Added `mlr_acqoptimizers` dictionary with predefined acquisition
-  function optimizers.
-- perf: Added `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`,
-  `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch`.
-- feat: `default_*` helpers return new empirical based default values.
+## mlr3mbo 1.0.0
+
+CRAN release: 2026-02-27
+
+- feat: Added `mlr_acqoptimizers` dictionary with pre-defined
+  acquisition function optimizers (`AcqOptimizerDirect`,
+  `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`,
+  `AcqOptimizerRandomSearch`).
+- perf: Default surrogate model, acquisition function, optimizer, and
+  further settings of `OptimizerMbo` are now empirically derived from a
+  large-scale benchmark study, significantly improving out-of-the-box
+  optimization performance.
+- feat: Added `Mlr3ErrorMbo*` condition classes.
 
 ## mlr3mbo 0.3.3
 
