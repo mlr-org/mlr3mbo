@@ -19,3 +19,4 @@
 ^\.ignore$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
+^attic_local$
