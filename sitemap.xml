@@ -5,6 +5,10 @@
 <url><loc>https://mlr3mbo.mlr-org.com/news/index.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/AcqFunction.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerDirect.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerLbfgsb.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerLocalSearch.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerRandomSearch.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/InputTrafo.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/InputTrafoUnitcube.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/OutputTrafo.html</loc></url>
@@ -29,6 +33,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/reference/loop_function.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr3mbo-package.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/mlr3mbo_conditions.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_aei.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_cb.html</loc></url>
@@ -44,6 +49,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_smsego.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_stochastic_cb.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqfunctions_stochastic_ei.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_acqoptimizers.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_input_trafos.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/mlr_loop_functions_ego.html</loc></url>

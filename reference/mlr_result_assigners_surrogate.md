@@ -1,0 +1,124 @@
+# Result Assigner Based on a Surrogate Mean Prediction
+
+Result assigner that chooses the final point(s) based on a surrogate
+mean prediction of all evaluated points in the
+[bbotk::Archive](https://bbotk.mlr-org.com/reference/Archive.html). This
+is especially useful in the case of noisy objective functions.
+
+In the case of operating on an
+[bbotk::OptimInstanceBatchMultiCrit](https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html)
+or
+[bbotk::OptimInstanceAsyncMultiCrit](https://bbotk.mlr-org.com/reference/OptimInstanceAsyncMultiCrit.html)
+the
+[SurrogateLearnerCollection](https://mlr3mbo.mlr-org.com/reference/SurrogateLearnerCollection.md)
+must use as many learners as there are objective functions.
+
+## See also
+
+Other Result Assigner:
+[`ResultAssigner`](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.md),
+[`mlr_result_assigners`](https://mlr3mbo.mlr-org.com/reference/mlr_result_assigners.md),
+[`mlr_result_assigners_archive`](https://mlr3mbo.mlr-org.com/reference/mlr_result_assigners_archive.md)
+
+## Super class
+
+[`mlr3mbo::ResultAssigner`](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.md)
+-\> `ResultAssignerSurrogate`
+
+## Active bindings
+
+- `surrogate`:
+
+  ([Surrogate](https://mlr3mbo.mlr-org.com/reference/Surrogate.md) \|
+  `NULL`)  
+  The surrogate.
+
+- `packages`:
+
+  ([`character()`](https://rdrr.io/r/base/character.html))  
+  Set of required packages. A warning is signaled if at least one of the
+  packages is not installed, but loaded (not attached) later on-demand
+  via [`requireNamespace()`](https://rdrr.io/r/base/ns-load.html).
+
+## Methods
+
+### Public methods
+
+- [`ResultAssignerSurrogate$new()`](#method-ResultAssignerSurrogate-new)
+
+- [`ResultAssignerSurrogate$assign_result()`](#method-ResultAssignerSurrogate-assign_result)
+
+- [`ResultAssignerSurrogate$clone()`](#method-ResultAssignerSurrogate-clone)
+
+Inherited methods
+
+- [`mlr3mbo::ResultAssigner$format()`](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.html#method-format)
+- [`mlr3mbo::ResultAssigner$print()`](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.html#method-print)
+
+------------------------------------------------------------------------
+
+### Method `new()`
+
+Creates a new instance of this
+[R6](https://r6.r-lib.org/reference/R6Class.html) class.
+
+#### Usage
+
+    ResultAssignerSurrogate$new(surrogate = NULL)
+
+#### Arguments
+
+- `surrogate`:
+
+  ([Surrogate](https://mlr3mbo.mlr-org.com/reference/Surrogate.md) \|
+  `NULL`)  
+  The surrogate that is used to predict the mean of all evaluated
+  points.
+
+------------------------------------------------------------------------
+
+### Method `assign_result()`
+
+Assigns the result, i.e., the final point(s) to the instance. If
+`$surrogate` is `NULL`, `default_surrogate(instance)` is used and also
+assigned to `$surrogate`.
+
+#### Usage
+
+    ResultAssignerSurrogate$assign_result(instance)
+
+#### Arguments
+
+- `instance`:
+
+  ([bbotk::OptimInstanceBatchSingleCrit](https://bbotk.mlr-org.com/reference/OptimInstanceBatchSingleCrit.html)
+  \|
+  [bbotk::OptimInstanceBatchMultiCrit](https://bbotk.mlr-org.com/reference/OptimInstanceBatchMultiCrit.html)
+  \|[bbotk::OptimInstanceAsyncSingleCrit](https://bbotk.mlr-org.com/reference/OptimInstanceAsyncSingleCrit.html)
+  \|
+  [bbotk::OptimInstanceAsyncMultiCrit](https://bbotk.mlr-org.com/reference/OptimInstanceAsyncMultiCrit.html))  
+  The
+  [bbotk::OptimInstance](https://bbotk.mlr-org.com/reference/OptimInstance.html)
+  the final result should be assigned to.
+
+------------------------------------------------------------------------
+
+### Method `clone()`
+
+The objects of this class are cloneable with this method.
+
+#### Usage
+
+    ResultAssignerSurrogate$clone(deep = FALSE)
+
+#### Arguments
+
+- `deep`:
+
+  Whether to make a deep clone.
+
+## Examples
+
+``` r
+result_assigner = ras("surrogate")
+```

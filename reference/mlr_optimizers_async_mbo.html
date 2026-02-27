@@ -47,7 +47,7 @@ simply based on the evaluations logged in the archive ResultAssignerArchive or b
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.3</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -123,7 +123,7 @@ See also the parameters below.</p>
 
 
 <dl><dt><code>initial_design</code></dt>
-<dd><p><code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code><br>
+<dd><p><code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code><br>
 Initial design of the optimization.
 If <code>NULL</code>, a design of size <code>design_size</code> is generated with the specified <code>design_function</code>.
 Default is <code>NULL</code>.</p></dd>
@@ -147,6 +147,28 @@ Default is <code>NULL</code>.</p></dd>
 
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="conditions">Conditions<a class="anchor" aria-label="anchor" href="#conditions"></a></h2>
+
+
+<p>During optimization, errors are caught and re-thrown as structured conditions that inherit from <code>Mlr3ErrorMbo</code> and <code>Mlr3Error</code> (defined in <a href="https://CRAN.R-project.org/package=mlr3misc" class="external-link"><span class="pkg">mlr3misc</span></a>).
+Loop functions catch <code>Mlr3ErrorMbo</code> conditions and fall back to proposing a randomly sampled point.</p>
+<p>The following condition classes are used:</p><dl><dt><code>Mlr3ErrorMbo</code></dt>
+<dd><p>Base class for all MBO-specific error conditions.</p></dd>
+
+<dt><code>Mlr3ErrorMboSurrogateUpdate</code></dt>
+<dd><p>Raised by <a href="Surrogate.html">Surrogate</a><code>$update()</code> when the surrogate model fails to update (requires <code>catch_errors = TRUE</code>).</p></dd>
+
+<dt><code>Mlr3ErrorMboAcqOptimizer</code></dt>
+<dd><p>Raised by <a href="AcqOptimizer.html">AcqOptimizer</a><code>$optimize()</code> when the acquisition function optimization fails (requires <code>catch_errors = TRUE</code>).</p></dd>
+
+<dt><code>Mlr3ErrorMboRandomInterleave</code></dt>
+<dd><p>Raised by loop functions to trigger random interleaving.</p></dd>
+
+
+</dl><p><code>Mlr3ErrorMboSurrogateUpdate</code> and <code>Mlr3ErrorMboAcqOptimizer</code> conditions are logged at the <code>"warn"</code> level and include the original error as a parent condition.
+All conditions can be constructed directly via the helper functions <code><a href="mlr3mbo_conditions.html">error_surrogate_update()</a></code>, <code><a href="mlr3mbo_conditions.html">error_acq_optimizer()</a></code>, and <code><a href="mlr3mbo_conditions.html">error_random_interleave()</a></code>.</p>
+    </div>
     <div class="section level2">
     <h2 id="super-classes">Super classes<a class="anchor" aria-label="anchor" href="#super-classes"></a></h2>
     <p><code><a href="https://bbotk.mlr-org.com/reference/Optimizer.html" class="external-link">bbotk::Optimizer</a></code> -&gt; <code><a href="https://bbotk.mlr-org.com/reference/OptimizerAsync.html" class="external-link">bbotk::OptimizerAsync</a></code> -&gt; <code>OptimizerAsyncMbo</code></p>
@@ -323,7 +345,7 @@ The result will be written into the instance object.</p><div class="section">
 </div>
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p><code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code></p>
+<p><code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code></p>
 </div>
 
 </div><p></p><hr><a id="method-OptimizerAsyncMbo-clone"></a><div class="section">
@@ -396,7 +418,7 @@ The result will be written into the instance object.</p><div class="section">
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

@@ -43,7 +43,7 @@ simply based on the evaluations logged in the archive ResultAssignerArchive or b
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.3</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,6 +108,28 @@ The value of the acquisition function.</p></li>
 <li><p><code>".already_evaluated"</code> (<code>logical(1))</code><br>
 Whether this point was already evaluated. Depends on the <code>skip_already_evaluated</code> parameter of the <a href="AcqOptimizer.html">AcqOptimizer</a>.</p></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="conditions">Conditions<a class="anchor" aria-label="anchor" href="#conditions"></a></h2>
+
+
+<p>During optimization, errors are caught and re-thrown as structured conditions that inherit from <code>Mlr3ErrorMbo</code> and <code>Mlr3Error</code> (defined in <a href="https://CRAN.R-project.org/package=mlr3misc" class="external-link"><span class="pkg">mlr3misc</span></a>).
+Loop functions catch <code>Mlr3ErrorMbo</code> conditions and fall back to proposing a randomly sampled point.</p>
+<p>The following condition classes are used:</p><dl><dt><code>Mlr3ErrorMbo</code></dt>
+<dd><p>Base class for all MBO-specific error conditions.</p></dd>
+
+<dt><code>Mlr3ErrorMboSurrogateUpdate</code></dt>
+<dd><p>Raised by <a href="Surrogate.html">Surrogate</a><code>$update()</code> when the surrogate model fails to update (requires <code>catch_errors = TRUE</code>).</p></dd>
+
+<dt><code>Mlr3ErrorMboAcqOptimizer</code></dt>
+<dd><p>Raised by <a href="AcqOptimizer.html">AcqOptimizer</a><code>$optimize()</code> when the acquisition function optimization fails (requires <code>catch_errors = TRUE</code>).</p></dd>
+
+<dt><code>Mlr3ErrorMboRandomInterleave</code></dt>
+<dd><p>Raised by loop functions to trigger random interleaving.</p></dd>
+
+
+</dl><p><code>Mlr3ErrorMboSurrogateUpdate</code> and <code>Mlr3ErrorMboAcqOptimizer</code> conditions are logged at the <code>"warn"</code> level and include the original error as a parent condition.
+All conditions can be constructed directly via the helper functions <code><a href="mlr3mbo_conditions.html">error_surrogate_update()</a></code>, <code><a href="mlr3mbo_conditions.html">error_acq_optimizer()</a></code>, and <code><a href="mlr3mbo_conditions.html">error_random_interleave()</a></code>.</p>
+    </div>
     <div class="section level2">
     <h2 id="super-classes">Super classes<a class="anchor" aria-label="anchor" href="#super-classes"></a></h2>
     <p><code><a href="https://bbotk.mlr-org.com/reference/Optimizer.html" class="external-link">bbotk::Optimizer</a></code> -&gt; <code><a href="https://bbotk.mlr-org.com/reference/OptimizerBatch.html" class="external-link">bbotk::OptimizerBatch</a></code> -&gt; <code>OptimizerMbo</code></p>
@@ -280,7 +302,7 @@ The optimization result is returned but the complete optimization path is stored
 </div>
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table</a>.</p>
+<p><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table</a>.</p>
 </div>
 
 </div><p></p><hr><a id="method-OptimizerMbo-clone"></a><div class="section">
@@ -362,11 +384,11 @@ The optimization result is returned but the complete optimization path is stored
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [07:56:55.502] [bbotk] Task 'surrogate_task' has missing values in column(s) 'y_scal', but learner 'regr.km' does not support this</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [07:56:55.503] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            x  x_domain        y1       y2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;num&gt;    &lt;list&gt;     &lt;num&gt;    &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.6314588 &lt;list[1]&gt; 0.3987402 1.872905</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> WARN  [12:23:29.223] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             x  x_domain         y1       y2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;    &lt;list&gt;      &lt;num&gt;    &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -0.9576857 &lt;list[1]&gt;  0.9171619 8.747905</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:  4.0423143 &lt;list[1]&gt; 16.3403048 4.171048</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
@@ -379,7 +401,7 @@ The optimization result is returned but the complete optimization path is stored
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

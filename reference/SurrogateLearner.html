@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.3</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -208,7 +208,7 @@ By default, automatically inferred based on the archive.</p></dd>
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>xdt</code></dt>
-<dd><p>(<code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
+<dd><p>(<code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
 New data. One row per observation.</p></dd>
 
 
@@ -216,7 +216,7 @@ New data. One row per observation.</p></dd>
 </div>
 <div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
-<p><code><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table()</a></code> with the columns <code>mean</code> and <code>se</code>.</p>
+<p><code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code> with the columns <code>mean</code> and <code>se</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-SurrogateLearner-clone"></a><div class="section">
@@ -274,20 +274,21 @@ New data. One row per observation.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DiceKriging::km(design = data, response = truth, covtype = "matern5_2", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 6.3046404296605e-07, optim.method = "gen", control = pv$control)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 4.09039649859895e-06, optim.method = "gen", control = pv$control, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     scaling = FALSE)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Trend  coeff.:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)    21.6710</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)    55.3437</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Covar. type  : matern5_2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Covar. coeff.:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     1.7935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     4.1085</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 76.88645</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 592.1794</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 6.30464e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 4.090396e-06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
@@ -300,7 +301,7 @@ New data. One row per observation.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
