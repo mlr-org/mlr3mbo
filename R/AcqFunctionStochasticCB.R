@@ -102,7 +102,6 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
       rate = 0,
       period = NULL
       ) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       private$.lambda = assert_number(lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
       private$.min_lambda = assert_number(min_lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
       private$.max_lambda = assert_number(max_lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
@@ -164,6 +163,21 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
     #' Resets the private update counter `.t` used within the epsilon decay.
     reset = function() {
       private$.t = 0L
+    },
+
+    #' @description
+    #' Validate that the surrogate is a [SurrogateLearner] compatible with this acquisition function.
+    #'
+    #' @param surrogate ([SurrogateLearner])\cr
+    #'   Surrogate to validate.
+    #'
+    #' @return The validated [SurrogateLearner].
+    check_surrogate = function(surrogate) {
+      assert_r6(surrogate, classes = "SurrogateLearner")
+      if (self$requires_predict_type_se && surrogate$predict_type != "se") {
+        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
+      }
+      surrogate
     }
   ),
 

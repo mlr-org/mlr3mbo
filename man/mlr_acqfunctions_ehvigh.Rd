@@ -114,6 +114,7 @@ Nodes are scaled by a factor of \code{sqrt(2)} and weights are normalized under 
 \itemize{
 \item \href{#method-AcqFunctionEHVIGH-new}{\code{AcqFunctionEHVIGH$new()}}
 \item \href{#method-AcqFunctionEHVIGH-update}{\code{AcqFunctionEHVIGH$update()}}
+\item \href{#method-AcqFunctionEHVIGH-check_surrogate}{\code{AcqFunctionEHVIGH$check_surrogate()}}
 \item \href{#method-AcqFunctionEHVIGH-clone}{\code{AcqFunctionEHVIGH$clone()}}
 }
 }
@@ -160,6 +161,27 @@ Update the acquisition function and set \code{ys_front}, \code{ref_point}, \code
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVIGH$update()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionEHVIGH-check_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionEHVIGH-check_surrogate}{}}}
+\subsection{Method \code{check_surrogate()}}{
+Validate that the surrogate is a \link{SurrogateLearnerCollection} compatible with this acquisition function.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVIGH$check_surrogate(surrogate)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{surrogate}}{(\link{SurrogateLearnerCollection})\cr
+Surrogate to validate.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The validated \link{SurrogateLearnerCollection}.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionEHVIGH-clone"></a>}}

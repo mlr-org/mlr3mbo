@@ -101,9 +101,7 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
         domain = ParamSet$new()
         codomain = ParamSet$new()
       } else {
-        if (requires_predict_type_se && surrogate$predict_type != "se") {
-          stopf("Acquisition function '%s' requires the surrogate to have `\"se\"` as `$predict_type`.", sprintf("<%s:%s>", "AcqFunction", id))
-        }
+        self$check_surrogate(surrogate)
         private$.surrogate = surrogate
         private$.archive = assert_archive(surrogate$archive)
         for (acq_function in private$.acq_functions) {
@@ -149,10 +147,7 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
       if (missing(rhs)) {
         private$.surrogate
       } else {
-        assert_r6(rhs, classes = "Surrogate")
-        if (self$requires_predict_type_se && rhs$predict_type != "se") {
-          stopf("Acquisition function '%s' requires the surrogate to have `\"se\"` as `$predict_type`.", format(self))
-        }
+        self$check_surrogate(rhs)
         private$.surrogate = rhs
         private$.archive = assert_archive(rhs$archive)
         for (acq_function in self$acq_functions) {

@@ -21,11 +21,17 @@ test_that("AcqFunction requires_predict_type_se works", {
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
   surrogate$learner$predict_type = "response"
 
-  expect_error(AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = TRUE, direction = "same"), 'requires the surrogate to have `"se"`')
+  expect_error(
+    AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = TRUE, direction = "same"),
+    class = "Mlr3ErrorConfig", regexp = "requires the surrogate to have")
   surrogate$learner$predict_type = "se"
   acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = TRUE, direction = "same")
-  expect_error({acqf$surrogate$learner$predict_type = "response"}, 'requires the surrogate to have `"se"`')
-  expect_error({acqf$requires_predict_type_se = FALSE}, "is read-only")
+  expect_error({
+    acqf$surrogate$learner$predict_type = "response"
+  }, class = "Mlr3ErrorConfig", regexp = "requires the surrogate to have")
+  expect_error({
+    acqf$requires_predict_type_se = FALSE
+  }, class = "Mlr3ErrorConfig", regexp = "is read-only")
 })
 
 test_that("AcqFunction packages works", {

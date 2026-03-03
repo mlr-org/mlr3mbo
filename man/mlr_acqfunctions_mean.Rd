@@ -76,6 +76,7 @@ Other Acquisition Function:
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-AcqFunctionMean-new}{\code{AcqFunctionMean$new()}}
+\item \href{#method-AcqFunctionMean-check_surrogate}{\code{AcqFunctionMean$check_surrogate()}}
 \item \href{#method-AcqFunctionMean-clone}{\code{AcqFunctionMean$clone()}}
 }
 }
@@ -108,6 +109,27 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearner}).}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionMean-check_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionMean-check_surrogate}{}}}
+\subsection{Method \code{check_surrogate()}}{
+Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionMean$check_surrogate(surrogate)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
+Surrogate to validate.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The validated \link{SurrogateLearner}.
 }
 }
 \if{html}{\out{<hr>}}

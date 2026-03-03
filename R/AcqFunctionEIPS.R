@@ -69,7 +69,6 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #'
     #' @param surrogate (`NULL` | [SurrogateLearnerCollection]).
     initialize = function(surrogate = NULL) {
-      assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       # FIXME: check that col_y, col_time is the same as surrogate$cols_y?
 
       super$initialize("acq_eips", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Improvement Per Second", man = "mlr3mbo::mlr_acqfunctions_eips")
@@ -83,6 +82,21 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
         ys = self$surrogate$output_trafo$transform(ys)
       }
       self$y_best = min(self$surrogate_max_to_min[[self$col_y]] * ys[[self$col_y]])
+    },
+
+    #' @description
+    #' Validate that the surrogate is a [SurrogateLearnerCollection] compatible with this acquisition function.
+    #'
+    #' @param surrogate ([SurrogateLearnerCollection])\cr
+    #'   Surrogate to validate.
+    #'
+    #' @return The validated [SurrogateLearnerCollection].
+    check_surrogate = function(surrogate) {
+      assert_r6(surrogate, classes = "SurrogateLearnerCollection")
+      if (self$requires_predict_type_se && surrogate$predict_type != "se") {
+        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
+      }
+      surrogate
     }
   ),
 

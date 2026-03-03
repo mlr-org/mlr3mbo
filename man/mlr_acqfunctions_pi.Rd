@@ -93,6 +93,7 @@ In the case of maximization, this already includes the necessary change of sign.
 \itemize{
 \item \href{#method-AcqFunctionPI-new}{\code{AcqFunctionPI$new()}}
 \item \href{#method-AcqFunctionPI-update}{\code{AcqFunctionPI$update()}}
+\item \href{#method-AcqFunctionPI-check_surrogate}{\code{AcqFunctionPI$check_surrogate()}}
 \item \href{#method-AcqFunctionPI-clone}{\code{AcqFunctionPI$clone()}}
 }
 }
@@ -135,6 +136,27 @@ Update the acquisition function and set \code{y_best}.
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionPI$update()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionPI-check_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionPI-check_surrogate}{}}}
+\subsection{Method \code{check_surrogate()}}{
+Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionPI$check_surrogate(surrogate)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
+Surrogate to validate.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The validated \link{SurrogateLearner}.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionPI-clone"></a>}}

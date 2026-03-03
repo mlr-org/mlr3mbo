@@ -101,6 +101,7 @@ In the case of maximization, this already includes the necessary change of sign.
 \itemize{
 \item \href{#method-AcqFunctionEILog-new}{\code{AcqFunctionEILog$new()}}
 \item \href{#method-AcqFunctionEILog-update}{\code{AcqFunctionEILog$update()}}
+\item \href{#method-AcqFunctionEILog-check_surrogate}{\code{AcqFunctionEILog$check_surrogate()}}
 \item \href{#method-AcqFunctionEILog-clone}{\code{AcqFunctionEILog$clone()}}
 }
 }
@@ -145,6 +146,27 @@ Update the acquisition function and set \code{y_best}.
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEILog$update()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionEILog-check_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionEILog-check_surrogate}{}}}
+\subsection{Method \code{check_surrogate()}}{
+Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEILog$check_surrogate(surrogate)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
+Surrogate to validate.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The validated \link{SurrogateLearner}.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionEILog-clone"></a>}}

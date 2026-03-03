@@ -71,7 +71,6 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
     #'
     #' @param surrogate (`NULL` | [SurrogateLearnerCollection]).
     initialize = function(surrogate = NULL) {
-      assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       super$initialize("acq_ehvi", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Hypervolume Improvement", man = "mlr3mbo::mlr_acqfunctions_ehvi")
     },
 
@@ -104,6 +103,21 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
       self$ys_front = as.matrix(self$ys_front)
 
       self$ys_front_augmented = as.matrix(ys_front_augmented)
+    },
+
+    #' @description
+    #' Validate that the surrogate is a [SurrogateLearnerCollection] compatible with this acquisition function.
+    #'
+    #' @param surrogate ([SurrogateLearnerCollection])\cr
+    #'   Surrogate to validate.
+    #'
+    #' @return The validated [SurrogateLearnerCollection].
+    check_surrogate = function(surrogate) {
+      assert_r6(surrogate, classes = "SurrogateLearnerCollection")
+      if (self$requires_predict_type_se && surrogate$predict_type != "se") {
+        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
+      }
+      surrogate
     }
   ),
 

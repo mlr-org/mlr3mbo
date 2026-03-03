@@ -116,6 +116,7 @@ This corresponds to the \code{nugget} estimate when using a \link[mlr3learners:m
 \itemize{
 \item \href{#method-AcqFunctionAEI-new}{\code{AcqFunctionAEI$new()}}
 \item \href{#method-AcqFunctionAEI-update}{\code{AcqFunctionAEI$update()}}
+\item \href{#method-AcqFunctionAEI-check_surrogate}{\code{AcqFunctionAEI$check_surrogate()}}
 \item \href{#method-AcqFunctionAEI-clone}{\code{AcqFunctionAEI$clone()}}
 }
 }
@@ -160,6 +161,27 @@ Update the acquisition function and set \code{y_effective_best} and \code{noise_
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionAEI$update()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionAEI-check_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionAEI-check_surrogate}{}}}
+\subsection{Method \code{check_surrogate()}}{
+Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionAEI$check_surrogate(surrogate)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
+Surrogate to validate.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The validated \link{SurrogateLearner}.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionAEI-clone"></a>}}

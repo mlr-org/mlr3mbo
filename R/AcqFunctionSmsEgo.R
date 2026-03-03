@@ -93,7 +93,6 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     #' @param lambda (`numeric(1)`).
     #' @param epsilon (`NULL` | `numeric(1)`).
     initialize = function(surrogate = NULL, lambda = 1, epsilon = NULL) {
-      assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       assert_number(lambda, lower = 1, finite = TRUE)
       assert_number(epsilon, lower = 0, finite = TRUE, null.ok = TRUE)
 
@@ -155,6 +154,21 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     #' Resets `epsilon`.
     reset = function() {
       self$epsilon = NULL
+    },
+
+    #' @description
+    #' Validate that the surrogate is a [SurrogateLearnerCollection] compatible with this acquisition function.
+    #'
+    #' @param surrogate ([SurrogateLearnerCollection])\cr
+    #'   Surrogate to validate.
+    #'
+    #' @return The validated [SurrogateLearnerCollection].
+    check_surrogate = function(surrogate) {
+      assert_r6(surrogate, classes = "SurrogateLearnerCollection")
+      if (self$requires_predict_type_se && surrogate$predict_type != "se") {
+        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
+      }
+      surrogate
     }
   ),
 

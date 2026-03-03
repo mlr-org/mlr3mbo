@@ -91,6 +91,7 @@ Other Acquisition Function:
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-AcqFunctionCB-new}{\code{AcqFunctionCB$new()}}
+\item \href{#method-AcqFunctionCB-check_surrogate}{\code{AcqFunctionCB$check_surrogate()}}
 \item \href{#method-AcqFunctionCB-clone}{\code{AcqFunctionCB$clone()}}
 }
 }
@@ -125,6 +126,27 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{lambda}}{(\code{numeric(1)}).}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionCB-check_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionCB-check_surrogate}{}}}
+\subsection{Method \code{check_surrogate()}}{
+Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionCB$check_surrogate(surrogate)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
+Surrogate to validate.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The validated \link{SurrogateLearner}.
 }
 }
 \if{html}{\out{<hr>}}

@@ -123,6 +123,7 @@ In the case of maximization, this already includes the necessary change of sign.
 \item \href{#method-AcqFunctionStochasticEI-new}{\code{AcqFunctionStochasticEI$new()}}
 \item \href{#method-AcqFunctionStochasticEI-update}{\code{AcqFunctionStochasticEI$update()}}
 \item \href{#method-AcqFunctionStochasticEI-reset}{\code{AcqFunctionStochasticEI$reset()}}
+\item \href{#method-AcqFunctionStochasticEI-check_surrogate}{\code{AcqFunctionStochasticEI$check_surrogate()}}
 \item \href{#method-AcqFunctionStochasticEI-clone}{\code{AcqFunctionStochasticEI$clone()}}
 }
 }
@@ -188,6 +189,27 @@ Resets the private update counter \code{.t} used within the epsilon decay.
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticEI$reset()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionStochasticEI-check_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionStochasticEI-check_surrogate}{}}}
+\subsection{Method \code{check_surrogate()}}{
+Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticEI$check_surrogate(surrogate)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
+Surrogate to validate.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The validated \link{SurrogateLearner}.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionStochasticEI-clone"></a>}}

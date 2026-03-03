@@ -82,7 +82,6 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     #' @param c (`numeric(1)`).
     initialize = function(surrogate = NULL, c = 1) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       assert_number(c, lower = 0, finite = TRUE)
 
       constants = ps(c = p_dbl(lower = 0, default = 1))
@@ -107,6 +106,21 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
         self$noise_var = 0
       }
 
+    },
+
+    #' @description
+    #' Validate that the surrogate is a [SurrogateLearner] compatible with this acquisition function.
+    #'
+    #' @param surrogate ([SurrogateLearner])\cr
+    #'   Surrogate to validate.
+    #'
+    #' @return The validated [SurrogateLearner].
+    check_surrogate = function(surrogate) {
+      assert_r6(surrogate, classes = "SurrogateLearner")
+      if (self$requires_predict_type_se && surrogate$predict_type != "se") {
+        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
+      }
+      surrogate
     }
   ),
 

@@ -95,6 +95,7 @@ Signs are corrected with respect to assuming minimization of objectives.}
 \itemize{
 \item \href{#method-AcqFunctionEHVI-new}{\code{AcqFunctionEHVI$new()}}
 \item \href{#method-AcqFunctionEHVI-update}{\code{AcqFunctionEHVI$update()}}
+\item \href{#method-AcqFunctionEHVI-check_surrogate}{\code{AcqFunctionEHVI$check_surrogate()}}
 \item \href{#method-AcqFunctionEHVI-clone}{\code{AcqFunctionEHVI$clone()}}
 }
 }
@@ -137,6 +138,27 @@ Update the acquisition function and set \code{ys_front} and \code{ref_point}.
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVI$update()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqFunctionEHVI-check_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionEHVI-check_surrogate}{}}}
+\subsection{Method \code{check_surrogate()}}{
+Validate that the surrogate is a \link{SurrogateLearnerCollection} compatible with this acquisition function.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVI$check_surrogate(surrogate)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{surrogate}}{(\link{SurrogateLearnerCollection})\cr
+Surrogate to validate.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The validated \link{SurrogateLearnerCollection}.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionEHVI-clone"></a>}}
