@@ -20,3 +20,7 @@
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
 ^attic_local$
+^air.toml$
+^AGENTS.md$
+^CLAUDE.md$
+^\.claude$
