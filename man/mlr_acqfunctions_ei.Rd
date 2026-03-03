@@ -104,7 +104,6 @@ In the case of maximization, this already includes the necessary change of sign.
 \itemize{
 \item \href{#method-AcqFunctionEI-new}{\code{AcqFunctionEI$new()}}
 \item \href{#method-AcqFunctionEI-update}{\code{AcqFunctionEI$update()}}
-\item \href{#method-AcqFunctionEI-check_surrogate}{\code{AcqFunctionEI$check_surrogate()}}
 \item \href{#method-AcqFunctionEI-clone}{\code{AcqFunctionEI$clone()}}
 }
 }
@@ -115,6 +114,7 @@ In the case of maximization, this already includes the necessary change of sign.
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="check_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-check_surrogate'><code>mlr3mbo::AcqFunction$check_surrogate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-reset'><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
@@ -149,27 +149,6 @@ Update the acquisition function and set \code{y_best}.
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEI$update()}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionEI-check_surrogate"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionEI-check_surrogate}{}}}
-\subsection{Method \code{check_surrogate()}}{
-Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEI$check_surrogate(surrogate)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
-Surrogate to validate.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The validated \link{SurrogateLearner}.
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionEI-clone"></a>}}

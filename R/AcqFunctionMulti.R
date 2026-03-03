@@ -129,6 +129,21 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
     },
 
     #' @description
+    #' Validate that the surrogate is a [Surrogate] compatible with this acquisition function.
+    #'
+    #' @param surrogate ([Surrogate])\cr
+    #'   Surrogate to validate.
+    #'
+    #' @return The validated [Surrogate].
+    check_surrogate = function(surrogate) {
+      assert_r6(surrogate, classes = "Surrogate")
+      if (self$requires_predict_type_se && surrogate$predict_type != "se") {
+        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
+      }
+      surrogate
+    },
+
+    #' @description
     #' Update each of the wrapped acquisition functions.
     update = function() {
       if (length(unique(map_chr(self$acq_functions, function(acq_function) address(acq_function$surrogate)))) > 1L) {

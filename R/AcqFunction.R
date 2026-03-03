@@ -114,17 +114,16 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @description
-    #' Validate that the surrogate is compatible with this acquisition function.
-    #' Asserts the surrogate class and checks that the `$predict_type` is `"se"` if required.
-    #' Subclasses override this method to assert a more specific surrogate class
-    #' (e.g., [SurrogateLearner] or [SurrogateLearnerCollection]).
+    #' Validate that the surrogate is a [SurrogateLearner] compatible with this acquisition function.
+    #' Checks the surrogate class and that `$predict_type` is `"se"` if required.
+    #' Subclasses with additional requirements must override this method.
     #'
-    #' @param surrogate ([Surrogate])\cr
+    #' @param surrogate ([SurrogateLearner])\cr
     #'   Surrogate to validate.
     #'
-    #' @return The validated [Surrogate], invisibly useful for chaining.
+    #' @return The validated [SurrogateLearner].
     check_surrogate = function(surrogate) {
-      assert_r6(surrogate, classes = "Surrogate")
+      assert_r6(surrogate, classes = "SurrogateLearner")
       if (self$requires_predict_type_se && surrogate$predict_type != "se") {
         error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
       }
@@ -188,7 +187,7 @@ AcqFunction = R6Class("AcqFunction",
       private$.fun
     },
 
-    #' @field surrogate ([Surrogate])\cr
+    #' @field surrogate ([SurrogateLearner])\cr
     #'  Surrogate.
     surrogate = function(rhs) {
       if (missing(rhs)) {

@@ -116,7 +116,6 @@ This corresponds to the \code{nugget} estimate when using a \link[mlr3learners:m
 \itemize{
 \item \href{#method-AcqFunctionAEI-new}{\code{AcqFunctionAEI$new()}}
 \item \href{#method-AcqFunctionAEI-update}{\code{AcqFunctionAEI$update()}}
-\item \href{#method-AcqFunctionAEI-check_surrogate}{\code{AcqFunctionAEI$check_surrogate()}}
 \item \href{#method-AcqFunctionAEI-clone}{\code{AcqFunctionAEI$clone()}}
 }
 }
@@ -127,6 +126,7 @@ This corresponds to the \code{nugget} estimate when using a \link[mlr3learners:m
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="check_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-check_surrogate'><code>mlr3mbo::AcqFunction$check_surrogate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-reset'><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
@@ -161,27 +161,6 @@ Update the acquisition function and set \code{y_effective_best} and \code{noise_
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionAEI$update()}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionAEI-check_surrogate"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionAEI-check_surrogate}{}}}
-\subsection{Method \code{check_surrogate()}}{
-Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionAEI$check_surrogate(surrogate)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
-Surrogate to validate.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The validated \link{SurrogateLearner}.
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionAEI-clone"></a>}}

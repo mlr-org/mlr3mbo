@@ -85,21 +85,6 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
         y = self$surrogate$output_trafo$transform(y)
       }
       self$y_best = min(self$surrogate_max_to_min * y)
-    },
-
-    #' @description
-    #' Validate that the surrogate is a [SurrogateLearner] compatible with this acquisition function.
-    #'
-    #' @param surrogate ([SurrogateLearner])\cr
-    #'   Surrogate to validate.
-    #'
-    #' @return The validated [SurrogateLearner].
-    check_surrogate = function(surrogate) {
-      assert_r6(surrogate, classes = "SurrogateLearner")
-      if (self$requires_predict_type_se && surrogate$predict_type != "se") {
-        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
-      }
-      surrogate
     }
   ),
 

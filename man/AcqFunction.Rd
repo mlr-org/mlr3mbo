@@ -54,7 +54,7 @@ Points to the \link[bbotk:Archive]{bbotk::Archive} of the surrogate.}
 \item{\code{fun}}{(\code{function})\cr
 Points to the private acquisition function to be implemented by subclasses.}
 
-\item{\code{surrogate}}{(\link{Surrogate})\cr
+\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
 Surrogate.}
 
 \item{\code{requires_predict_type_se}}{(\code{logical(1)})\cr
@@ -214,10 +214,9 @@ acquisition functions, e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 
 \if{html}{\out{<a id="method-AcqFunction-check_surrogate"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunction-check_surrogate}{}}}
 \subsection{Method \code{check_surrogate()}}{
-Validate that the surrogate is compatible with this acquisition function.
-Asserts the surrogate class and checks that the \verb{$predict_type} is \code{"se"} if required.
-Subclasses override this method to assert a more specific surrogate class
-(e.g., \link{SurrogateLearner} or \link{SurrogateLearnerCollection}).
+Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
+Checks the surrogate class and that \verb{$predict_type} is \code{"se"} if required.
+Subclasses with additional requirements must override this method.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$check_surrogate(surrogate)}\if{html}{\out{</div>}}
 }
@@ -225,13 +224,13 @@ Subclasses override this method to assert a more specific surrogate class
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{surrogate}}{(\link{Surrogate})\cr
+\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
 Surrogate to validate.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-The validated \link{Surrogate}, invisibly useful for chaining.
+The validated \link{SurrogateLearner}.
 }
 }
 \if{html}{\out{<hr>}}

@@ -76,7 +76,6 @@ Other Acquisition Function:
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-AcqFunctionSD-new}{\code{AcqFunctionSD$new()}}
-\item \href{#method-AcqFunctionSD-check_surrogate}{\code{AcqFunctionSD$check_surrogate()}}
 \item \href{#method-AcqFunctionSD-clone}{\code{AcqFunctionSD$clone()}}
 }
 }
@@ -87,6 +86,7 @@ Other Acquisition Function:
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="check_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-check_surrogate'><code>mlr3mbo::AcqFunction$check_surrogate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-reset'><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
@@ -109,27 +109,6 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearner}).}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionSD-check_surrogate"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionSD-check_surrogate}{}}}
-\subsection{Method \code{check_surrogate()}}{
-Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionSD$check_surrogate(surrogate)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
-Surrogate to validate.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The validated \link{SurrogateLearner}.
 }
 }
 \if{html}{\out{<hr>}}

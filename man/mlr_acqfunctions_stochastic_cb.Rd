@@ -127,7 +127,6 @@ Other Acquisition Function:
 \item \href{#method-AcqFunctionStochasticCB-new}{\code{AcqFunctionStochasticCB$new()}}
 \item \href{#method-AcqFunctionStochasticCB-update}{\code{AcqFunctionStochasticCB$update()}}
 \item \href{#method-AcqFunctionStochasticCB-reset}{\code{AcqFunctionStochasticCB$reset()}}
-\item \href{#method-AcqFunctionStochasticCB-check_surrogate}{\code{AcqFunctionStochasticCB$check_surrogate()}}
 \item \href{#method-AcqFunctionStochasticCB-clone}{\code{AcqFunctionStochasticCB$clone()}}
 }
 }
@@ -138,6 +137,7 @@ Other Acquisition Function:
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="check_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-check_surrogate'><code>mlr3mbo::AcqFunction$check_surrogate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
 </ul>
@@ -201,27 +201,6 @@ Resets the private update counter \code{.t} used within the epsilon decay.
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticCB$reset()}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionStochasticCB-check_surrogate"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionStochasticCB-check_surrogate}{}}}
-\subsection{Method \code{check_surrogate()}}{
-Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticCB$check_surrogate(surrogate)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
-Surrogate to validate.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The validated \link{SurrogateLearner}.
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionStochasticCB-clone"></a>}}
