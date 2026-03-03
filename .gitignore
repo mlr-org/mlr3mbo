@@ -115,3 +115,6 @@ attic/so_config_old
 /Meta/
 README.html
 revdep/
+AGENTS.md
+CLAUDE.md
+.claude/
