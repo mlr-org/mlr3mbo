@@ -61,13 +61,19 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     #' @param lambda (`numeric(1)`).
     initialize = function(surrogate = NULL, lambda = 2) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       assert_number(lambda, lower = 0, finite = TRUE)
 
       constants = ps(lambda = p_dbl(lower = 0, default = 2))
       constants$values$lambda = lambda
 
-      super$initialize("acq_cb", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "same", label = "Lower / Upper Confidence Bound", man = "mlr3mbo::mlr_acqfunctions_cb")
+      super$initialize("acq_cb",
+        constants = constants,
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
+        direction = "same",
+        label = "Lower / Upper Confidence Bound",
+        man = "mlr3mbo::mlr_acqfunctions_cb")
     }
   ),
 

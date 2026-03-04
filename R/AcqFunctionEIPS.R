@@ -69,10 +69,15 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #'
     #' @param surrogate (`NULL` | [SurrogateLearnerCollection]).
     initialize = function(surrogate = NULL) {
-      assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       # FIXME: check that col_y, col_time is the same as surrogate$cols_y?
 
-      super$initialize("acq_eips", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Improvement Per Second", man = "mlr3mbo::mlr_acqfunctions_eips")
+      super$initialize("acq_eips",
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearnerCollection",
+        direction = "maximize",
+        label = "Expected Improvement Per Second",
+        man = "mlr3mbo::mlr_acqfunctions_eips")
     },
 
     #' @description

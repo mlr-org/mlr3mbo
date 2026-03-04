@@ -102,7 +102,6 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
       rate = 0,
       period = NULL
       ) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       private$.lambda = assert_number(lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
       private$.min_lambda = assert_number(min_lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
       private$.max_lambda = assert_number(max_lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
@@ -125,6 +124,7 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
         constants = constants,
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
         direction = "same",
         label = "Stochastic Lower / Upper Confidence Bound",
         man = "mlr3mbo::mlr_acqfunctions_stochastic_cb")

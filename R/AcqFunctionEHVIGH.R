@@ -90,7 +90,6 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
     #' @param k (`integer(1)`).
     #' @param r (`numeric(1)`).
     initialize = function(surrogate = NULL, k = 15L, r = 0.2) {
-      assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       assert_int(k, lower = 2L)
 
       constants = ps(
@@ -100,7 +99,15 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
       constants$values$k = k
       constants$values$r = r
 
-      super$initialize("acq_ehvigh", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", packages = c("emoa", "fastGHQuad"), label = "Expected Hypervolume Improvement via GH Quadrature", man = "mlr3mbo::mlr_acqfunctions_ehvigh")
+      super$initialize("acq_ehvigh",
+        constants = constants,
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearnerCollection",
+        direction = "maximize",
+        packages = c("emoa", "fastGHQuad"),
+        label = "Expected Hypervolume Improvement via GH Quadrature",
+        man = "mlr3mbo::mlr_acqfunctions_ehvigh")
     },
 
     #' @description

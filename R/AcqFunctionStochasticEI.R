@@ -91,7 +91,6 @@ AcqFunctionStochasticEI = R6Class("AcqFunctionStochasticEI",
       rate = 0.05,
       period = NULL
       ) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       private$.epsilon_0 = assert_number(epsilon, lower = 0, finite = TRUE)
       private$.rate = assert_number(rate, lower = 0, finite = TRUE)
       private$.period = assert_int(period, lower = 1, null.ok = TRUE)
@@ -102,6 +101,7 @@ AcqFunctionStochasticEI = R6Class("AcqFunctionStochasticEI",
         constants = constants,
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
         direction = "maximize",
         label = "Stochastic Expected Improvement",
         man = "mlr3mbo::mlr_acqfunctions_stochastic_ei")

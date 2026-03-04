@@ -82,13 +82,19 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     #' @param c (`numeric(1)`).
     initialize = function(surrogate = NULL, c = 1) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       assert_number(c, lower = 0, finite = TRUE)
 
       constants = ps(c = p_dbl(lower = 0, default = 1))
       constants$values$c = c
 
-      super$initialize("acq_aei", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Augmented Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_aei")
+      super$initialize("acq_aei",
+        constants = constants,
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
+        direction = "maximize",
+        label = "Augmented Expected Improvement",
+        man = "mlr3mbo::mlr_acqfunctions_aei")
     },
 
     #' @description

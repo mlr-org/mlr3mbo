@@ -93,7 +93,6 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     #' @param lambda (`numeric(1)`).
     #' @param epsilon (`NULL` | `numeric(1)`).
     initialize = function(surrogate = NULL, lambda = 1, epsilon = NULL) {
-      assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       assert_number(lambda, lower = 1, finite = TRUE)
       assert_number(epsilon, lower = 0, finite = TRUE, null.ok = TRUE)
 
@@ -104,7 +103,14 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       constants$values$lambda = lambda
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_smsego", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "minimize", label = "SMS-EGO", man = "mlr3mbo::mlr_acqfunctions_smsego")  # indeed, we minimize, see comments below about C code
+      super$initialize("acq_smsego",
+        constants = constants,
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearnerCollection",
+        direction = "minimize",
+        label = "SMS-EGO",
+        man = "mlr3mbo::mlr_acqfunctions_smsego")
     },
 
     #' @description
