@@ -72,9 +72,12 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
       # FIXME: check that col_y, col_time is the same as surrogate$cols_y?
 
       super$initialize("acq_eips",
-        surrogate = surrogate, requires_predict_type_se = TRUE,
-        surrogate_class = "SurrogateLearnerCollection", direction = "maximize",
-        label = "Expected Improvement Per Second", man = "mlr3mbo::mlr_acqfunctions_eips")
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearnerCollection",
+        direction = "maximize",
+        label = "Expected Improvement Per Second",
+        man = "mlr3mbo::mlr_acqfunctions_eips")
     },
 
     #' @description

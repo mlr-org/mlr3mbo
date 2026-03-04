@@ -75,9 +75,13 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
       constants$values$epsilon = epsilon
 
       super$initialize("acq_ei",
-        constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE,
-        surrogate_class = "SurrogateLearner", direction = "maximize",
-        label = "Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_ei")
+        constants = constants,
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
+        direction = "maximize",
+        label = "Expected Improvement",
+        man = "mlr3mbo::mlr_acqfunctions_ei")
     },
 
     #' @description

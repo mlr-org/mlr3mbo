@@ -67,9 +67,13 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
       constants$values$lambda = lambda
 
       super$initialize("acq_cb",
-        constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE,
-        surrogate_class = "SurrogateLearner", direction = "same",
-        label = "Lower / Upper Confidence Bound", man = "mlr3mbo::mlr_acqfunctions_cb")
+        constants = constants,
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
+        direction = "same",
+        label = "Lower / Upper Confidence Bound",
+        man = "mlr3mbo::mlr_acqfunctions_cb")
     }
   ),
 
