@@ -53,7 +53,10 @@ AcqFunctionMean = R6Class("AcqFunctionMean",
     #'
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     initialize = function(surrogate = NULL) {
-      super$initialize("acq_mean", surrogate = surrogate, requires_predict_type_se = FALSE, direction = "same", label = "Posterior Mean", man = "mlr3mbo::mlr_acqfunctions_mean")
+      super$initialize("acq_mean",
+        surrogate = surrogate, requires_predict_type_se = FALSE,
+        surrogate_class = "SurrogateLearner", direction = "same",
+        label = "Posterior Mean", man = "mlr3mbo::mlr_acqfunctions_mean")
     }
   ),
 

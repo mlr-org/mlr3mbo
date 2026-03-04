@@ -95,6 +95,7 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
       man = "mlr3mbo::mlr_acqfunctions_multi"
 
       private$.requires_predict_type_se = requires_predict_type_se
+      private$.surrogate_class = "Surrogate"
       private$.packages = packages
       self$direction = "maximize"
       if (is.null(surrogate)) {
@@ -126,21 +127,6 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
       self$check_values = assert_flag(check_values)
       private$.label = assert_string(label, na.ok = TRUE)
       private$.man = assert_string(man, na.ok = TRUE)
-    },
-
-    #' @description
-    #' Validate that the surrogate is a [Surrogate] compatible with this acquisition function.
-    #'
-    #' @param surrogate ([Surrogate])\cr
-    #'   Surrogate to validate.
-    #'
-    #' @return The validated [Surrogate].
-    check_surrogate = function(surrogate) {
-      assert_r6(surrogate, classes = "Surrogate")
-      if (self$requires_predict_type_se && surrogate$predict_type != "se") {
-        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
-      }
-      surrogate
     },
 
     #' @description

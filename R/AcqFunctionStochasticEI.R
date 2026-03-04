@@ -101,6 +101,7 @@ AcqFunctionStochasticEI = R6Class("AcqFunctionStochasticEI",
         constants = constants,
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
         direction = "maximize",
         label = "Stochastic Expected Improvement",
         man = "mlr3mbo::mlr_acqfunctions_stochastic_ei")

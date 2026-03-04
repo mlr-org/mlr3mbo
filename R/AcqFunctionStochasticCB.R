@@ -124,6 +124,7 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
         constants = constants,
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
         direction = "same",
         label = "Stochastic Lower / Upper Confidence Bound",
         man = "mlr3mbo::mlr_acqfunctions_stochastic_cb")

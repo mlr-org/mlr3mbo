@@ -99,7 +99,11 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
       constants$values$k = k
       constants$values$r = r
 
-      super$initialize("acq_ehvigh", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", packages = c("emoa", "fastGHQuad"), label = "Expected Hypervolume Improvement via GH Quadrature", man = "mlr3mbo::mlr_acqfunctions_ehvigh")
+      super$initialize("acq_ehvigh",
+        constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearnerCollection", direction = "maximize",
+        packages = c("emoa", "fastGHQuad"),
+        label = "Expected Hypervolume Improvement via GH Quadrature", man = "mlr3mbo::mlr_acqfunctions_ehvigh")
     },
 
     #' @description
@@ -129,21 +133,6 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
       self$gh_data$x = self$gh_data$x * sqrt(2)
       self$gh_data$w = self$gh_data$w / sum(self$gh_data$w)
       self$gh_data = do.call(cbind, self$gh_data)
-    },
-
-    #' @description
-    #' Validate that the surrogate is a [SurrogateLearnerCollection] compatible with this acquisition function.
-    #'
-    #' @param surrogate ([SurrogateLearnerCollection])\cr
-    #'   Surrogate to validate.
-    #'
-    #' @return The validated [SurrogateLearnerCollection].
-    check_surrogate = function(surrogate) {
-      assert_r6(surrogate, classes = "SurrogateLearnerCollection")
-      if (self$requires_predict_type_se && surrogate$predict_type != "se") {
-        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
-      }
-      surrogate
     }
   ),
 

@@ -103,7 +103,10 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       constants$values$lambda = lambda
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_smsego", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "minimize", label = "SMS-EGO", man = "mlr3mbo::mlr_acqfunctions_smsego")  # indeed, we minimize, see comments below about C code
+      super$initialize("acq_smsego",
+        constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearnerCollection", direction = "minimize",
+        label = "SMS-EGO", man = "mlr3mbo::mlr_acqfunctions_smsego")
     },
 
     #' @description
@@ -154,21 +157,6 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     #' Resets `epsilon`.
     reset = function() {
       self$epsilon = NULL
-    },
-
-    #' @description
-    #' Validate that the surrogate is a [SurrogateLearnerCollection] compatible with this acquisition function.
-    #'
-    #' @param surrogate ([SurrogateLearnerCollection])\cr
-    #'   Surrogate to validate.
-    #'
-    #' @return The validated [SurrogateLearnerCollection].
-    check_surrogate = function(surrogate) {
-      assert_r6(surrogate, classes = "SurrogateLearnerCollection")
-      if (self$requires_predict_type_se && surrogate$predict_type != "se") {
-        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
-      }
-      surrogate
     }
   ),
 

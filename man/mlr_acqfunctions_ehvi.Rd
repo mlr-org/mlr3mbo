@@ -95,7 +95,6 @@ Signs are corrected with respect to assuming minimization of objectives.}
 \itemize{
 \item \href{#method-AcqFunctionEHVI-new}{\code{AcqFunctionEHVI$new()}}
 \item \href{#method-AcqFunctionEHVI-update}{\code{AcqFunctionEHVI$update()}}
-\item \href{#method-AcqFunctionEHVI-check_surrogate}{\code{AcqFunctionEHVI$check_surrogate()}}
 \item \href{#method-AcqFunctionEHVI-clone}{\code{AcqFunctionEHVI$clone()}}
 }
 }
@@ -106,6 +105,7 @@ Signs are corrected with respect to assuming minimization of objectives.}
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="check_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-check_surrogate'><code>mlr3mbo::AcqFunction$check_surrogate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-reset'><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
@@ -138,27 +138,6 @@ Update the acquisition function and set \code{ys_front} and \code{ref_point}.
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVI$update()}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionEHVI-check_surrogate"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionEHVI-check_surrogate}{}}}
-\subsection{Method \code{check_surrogate()}}{
-Validate that the surrogate is a \link{SurrogateLearnerCollection} compatible with this acquisition function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVI$check_surrogate(surrogate)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\link{SurrogateLearnerCollection})\cr
-Surrogate to validate.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The validated \link{SurrogateLearnerCollection}.
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionEHVI-clone"></a>}}

@@ -54,7 +54,7 @@ Points to the \link[bbotk:Archive]{bbotk::Archive} of the surrogate.}
 \item{\code{fun}}{(\code{function})\cr
 Points to the private acquisition function to be implemented by subclasses.}
 
-\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
+\item{\code{surrogate}}{(\link{Surrogate})\cr
 Surrogate.}
 
 \item{\code{requires_predict_type_se}}{(\code{logical(1)})\cr
@@ -100,6 +100,7 @@ Note that the surrogate can be initialized lazy and can later be set via the act
   constants = ParamSet$new(),
   surrogate = NULL,
   requires_predict_type_se,
+  surrogate_class,
   direction,
   packages = NULL,
   label = NA_character_,
@@ -120,6 +121,9 @@ Surrogate whose predictions are used in the acquisition function.}
 
 \item{\code{requires_predict_type_se}}{(\code{logical(1)})\cr
 Whether the acquisition function requires the surrogate to have \code{"se"} as \verb{$predict_type}.}
+
+\item{\code{surrogate_class}}{(\code{character(1)})\cr
+Allowed classes of the surrogate.}
 
 \item{\code{direction}}{(\code{"same"} | \code{"minimize"} | \code{"maximize"}).
 Optimization direction of the acquisition function relative to the direction of the
@@ -214,8 +218,8 @@ acquisition functions, e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 
 \if{html}{\out{<a id="method-AcqFunction-check_surrogate"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunction-check_surrogate}{}}}
 \subsection{Method \code{check_surrogate()}}{
-Validate that the surrogate is a \link{SurrogateLearner} compatible with this acquisition function.
-Checks the surrogate class and that \verb{$predict_type} is \code{"se"} if required.
+Validate that the surrogate is compatible with this acquisition function.
+Asserts the surrogate class and that \verb{$predict_type} is \code{"se"} if required.
 Subclasses with additional requirements must override this method.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunction$check_surrogate(surrogate)}\if{html}{\out{</div>}}
@@ -224,13 +228,13 @@ Subclasses with additional requirements must override this method.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{surrogate}}{(\link{SurrogateLearner})\cr
+\item{\code{surrogate}}{(\link{Surrogate})\cr
 Surrogate to validate.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-The validated \link{SurrogateLearner}.
+The validated \link{Surrogate}.
 }
 }
 \if{html}{\out{<hr>}}

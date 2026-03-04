@@ -114,7 +114,6 @@ Nodes are scaled by a factor of \code{sqrt(2)} and weights are normalized under 
 \itemize{
 \item \href{#method-AcqFunctionEHVIGH-new}{\code{AcqFunctionEHVIGH$new()}}
 \item \href{#method-AcqFunctionEHVIGH-update}{\code{AcqFunctionEHVIGH$update()}}
-\item \href{#method-AcqFunctionEHVIGH-check_surrogate}{\code{AcqFunctionEHVIGH$check_surrogate()}}
 \item \href{#method-AcqFunctionEHVIGH-clone}{\code{AcqFunctionEHVIGH$clone()}}
 }
 }
@@ -125,6 +124,7 @@ Nodes are scaled by a factor of \code{sqrt(2)} and weights are normalized under 
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="check_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-check_surrogate'><code>mlr3mbo::AcqFunction$check_surrogate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-reset'><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
@@ -161,27 +161,6 @@ Update the acquisition function and set \code{ys_front}, \code{ref_point}, \code
 \if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVIGH$update()}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionEHVIGH-check_surrogate"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionEHVIGH-check_surrogate}{}}}
-\subsection{Method \code{check_surrogate()}}{
-Validate that the surrogate is a \link{SurrogateLearnerCollection} compatible with this acquisition function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVIGH$check_surrogate(surrogate)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\link{SurrogateLearnerCollection})\cr
-Surrogate to validate.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The validated \link{SurrogateLearnerCollection}.
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionEHVIGH-clone"></a>}}

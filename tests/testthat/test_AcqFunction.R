@@ -2,7 +2,7 @@ test_that("AcqFunction API works", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
 
-  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = FALSE, direction = "same", packages = "mlr3mbo", label = "label", man = "man")
+  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = FALSE, surrogate_class = "SurrogateLearner", direction = "same", packages = "mlr3mbo", label = "label", man = "man")
 
   expect_r6(acqf$codomain, "ParamSet")
   expect_equal(acqf$codomain$ids(), "acqf")
@@ -22,10 +22,10 @@ test_that("AcqFunction requires_predict_type_se works", {
   surrogate$learner$predict_type = "response"
 
   expect_error(
-    AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = TRUE, direction = "same"),
+    AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = TRUE, surrogate_class = "SurrogateLearner", direction = "same"),
     class = "Mlr3ErrorConfig", regexp = "requires the surrogate to have")
   surrogate$learner$predict_type = "se"
-  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = TRUE, direction = "same")
+  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = TRUE, surrogate_class = "SurrogateLearner", direction = "same")
   expect_error({
     acqf$surrogate$learner$predict_type = "response"
   }, class = "Mlr3ErrorConfig", regexp = "requires the surrogate to have")
@@ -38,8 +38,8 @@ test_that("AcqFunction packages works", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
 
-  expect_warning(AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, packages = "TestPackageThatDoesNotExist", requires_predict_type_se = FALSE, direction = "same"), "required but not installed for acquisition function")
-  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, packages = "mlr3mbo", requires_predict_type_se = FALSE, direction = "same")
+  expect_warning(AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, packages = "TestPackageThatDoesNotExist", requires_predict_type_se = FALSE, surrogate_class = "SurrogateLearner", direction = "same"), "required but not installed for acquisition function")
+  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, packages = "mlr3mbo", requires_predict_type_se = FALSE, surrogate_class = "SurrogateLearner", direction = "same")
   expect_equal(acqf$packages, "mlr3mbo")
 })
 

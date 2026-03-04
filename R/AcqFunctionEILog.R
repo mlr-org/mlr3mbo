@@ -75,7 +75,10 @@ AcqFunctionEILog = R6Class("AcqFunctionEILog",
       constants = ps(epsilon = p_dbl(lower = 0, default = 0))
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_ei_log", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Improvement on Log Scale", man = "mlr3mbo::mlr_acqfunctions_ei_log")
+      super$initialize("acq_ei_log",
+        constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner", direction = "maximize",
+        label = "Expected Improvement on Log Scale", man = "mlr3mbo::mlr_acqfunctions_ei_log")
     },
 
     #' @description

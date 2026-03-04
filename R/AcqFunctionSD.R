@@ -53,7 +53,10 @@ AcqFunctionSD = R6Class("AcqFunctionSD",
     #'
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     initialize = function(surrogate = NULL) {
-      super$initialize("acq_sd", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Posterior Standard Deviation", man = "mlr3mbo::mlr_acqfunctions_sd")
+      super$initialize("acq_sd",
+        surrogate = surrogate, requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner", direction = "maximize",
+        label = "Posterior Standard Deviation", man = "mlr3mbo::mlr_acqfunctions_sd")
     }
   ),
 

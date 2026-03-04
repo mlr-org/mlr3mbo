@@ -26,6 +26,8 @@ AcqFunction = R6Class("AcqFunction",
     #'   Surrogate whose predictions are used in the acquisition function.
     #' @param requires_predict_type_se (`logical(1)`)\cr
     #'   Whether the acquisition function requires the surrogate to have `"se"` as `$predict_type`.
+    #' @param surrogate_class (`character(1)`)\cr
+    #'   Allowed classes of the surrogate.
     #' @param direction (`"same"` | `"minimize"` | `"maximize"`).
     #'   Optimization direction of the acquisition function relative to the direction of the
     #'   objective function of the [bbotk::OptimInstance].
@@ -37,7 +39,7 @@ AcqFunction = R6Class("AcqFunction",
     #'   Label for this object.
     #' @param man (`character(1)`)\cr
     #'   String in the format `[pkg]::[topic]` pointing to a manual page for this object.
-    initialize = function(id, constants = ParamSet$new(), surrogate = NULL, requires_predict_type_se, direction, packages = NULL, label = NA_character_, man = NA_character_) {
+    initialize = function(id, constants = ParamSet$new(), surrogate = NULL, requires_predict_type_se, surrogate_class, direction, packages = NULL, label = NA_character_, man = NA_character_) {
       # FIXME: Should we allow alternative search_space as additional argument?
       # If we do, we need to trafo values before updating the surrogate and predicting?
       assert_string(id)
@@ -46,6 +48,7 @@ AcqFunction = R6Class("AcqFunction",
         check_packages_installed(packages, msg = sprintf("Package '%%s' required but not installed for acquisition function '%s'", sprintf("<%s:%s>", "AcqFunction", id)))
       }
       private$.requires_predict_type_se = assert_flag(requires_predict_type_se)
+      private$.surrogate_class = assert_choice(surrogate_class, choices = c("Surrogate", "SurrogateLearner", "SurrogateLearnerCollection"))
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
       if (is.null(surrogate)) {
         domain = ParamSet$new()
@@ -114,16 +117,16 @@ AcqFunction = R6Class("AcqFunction",
     },
 
     #' @description
-    #' Validate that the surrogate is a [SurrogateLearner] compatible with this acquisition function.
-    #' Checks the surrogate class and that `$predict_type` is `"se"` if required.
+    #' Validate that the surrogate is compatible with this acquisition function.
+    #' Asserts the surrogate class and that `$predict_type` is `"se"` if required.
     #' Subclasses with additional requirements must override this method.
     #'
-    #' @param surrogate ([SurrogateLearner])\cr
+    #' @param surrogate ([Surrogate])\cr
     #'   Surrogate to validate.
     #'
-    #' @return The validated [SurrogateLearner].
+    #' @return The validated [Surrogate].
     check_surrogate = function(surrogate) {
-      assert_r6(surrogate, classes = "SurrogateLearner")
+      assert_r6(surrogate, classes = private$.surrogate_class)
       if (self$requires_predict_type_se && surrogate$predict_type != "se") {
         error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
       }
@@ -187,7 +190,7 @@ AcqFunction = R6Class("AcqFunction",
       private$.fun
     },
 
-    #' @field surrogate ([SurrogateLearner])\cr
+    #' @field surrogate ([Surrogate])\cr
     #'  Surrogate.
     surrogate = function(rhs) {
       if (missing(rhs)) {
@@ -243,6 +246,8 @@ AcqFunction = R6Class("AcqFunction",
     .surrogate = NULL,
 
     .requires_predict_type_se = NULL,
+
+    .surrogate_class = NULL,
 
     .packages = NULL
   )
