@@ -14,12 +14,6 @@
 ^air.toml$
 ^attic$
 ^attic_local$
-<<<<<<< HEAD
-^air.toml$
-^AGENTS.md$
-^CLAUDE.md$
-^\.claude$
-=======
 ^CITATION.cff$
 ^CLAUDE.md$
 ^CONTRIBUTING.md$
@@ -36,4 +30,3 @@
 ^README.html$
 ^revdep$
 ^tests/testthat/_object_snapshots$
->>>>>>> main

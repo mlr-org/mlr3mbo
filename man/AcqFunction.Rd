@@ -73,7 +73,7 @@ Set of required packages.}
 \item \href{#method-AcqFunction-reset}{\code{AcqFunction$reset()}}
 \item \href{#method-AcqFunction-eval_many}{\code{AcqFunction$eval_many()}}
 \item \href{#method-AcqFunction-eval_dt}{\code{AcqFunction$eval_dt()}}
-\item \href{#method-AcqFunction-check_surrogate}{\code{AcqFunction$check_surrogate()}}
+\item \href{#method-AcqFunction-assert_surrogate}{\code{AcqFunction$assert_surrogate()}}
 \item \href{#method-AcqFunction-clone}{\code{AcqFunction$clone()}}
 }
 }
@@ -123,7 +123,7 @@ Surrogate whose predictions are used in the acquisition function.}
 Whether the acquisition function requires the surrogate to have \code{"se"} as \verb{$predict_type}.}
 
 \item{\code{surrogate_class}}{(\code{character(1)})\cr
-Allowed classes of the surrogate.}
+Allowed class of the surrogate.}
 
 \item{\code{direction}}{(\code{"same"} | \code{"minimize"} | \code{"maximize"}).
 Optimization direction of the acquisition function relative to the direction of the
@@ -215,14 +215,14 @@ acquisition functions, e.g. \code{data.table(y = 1:2)} or \code{data.table(y1 = 
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunction-check_surrogate"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunction-check_surrogate}{}}}
-\subsection{Method \code{check_surrogate()}}{
+\if{html}{\out{<a id="method-AcqFunction-assert_surrogate"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunction-assert_surrogate}{}}}
+\subsection{Method \code{assert_surrogate()}}{
 Validate that the surrogate is compatible with this acquisition function.
 Asserts the surrogate class and that \verb{$predict_type} is \code{"se"} if required.
 Subclasses with additional requirements must override this method.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$check_surrogate(surrogate)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AcqFunction$assert_surrogate(surrogate)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

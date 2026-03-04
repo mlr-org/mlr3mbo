@@ -43,6 +43,31 @@ test_that("AcqFunction packages works", {
   expect_equal(acqf$packages, "mlr3mbo")
 })
 
+test_that("AcqFunction assert_surrogate rejects wrong surrogate class", {
+  inst = MAKE_INST_1D()
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
+
+  expect_error(
+    AcqFunction$new(id = "acqf", surrogate = surrogate, requires_predict_type_se = FALSE, surrogate_class = "SurrogateLearnerCollection", direction = "same"),
+    "SurrogateLearnerCollection")
+
+  acqf = AcqFunction$new(id = "acqf", surrogate = surrogate, requires_predict_type_se = FALSE, surrogate_class = "SurrogateLearner", direction = "same")
+  inst2 = MAKE_INST(OBJ_1D_2, search_space = PS_1D)
+  surrogate_collection = srlrn(list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst2$archive)
+  expect_error({acqf$surrogate = surrogate_collection}, "SurrogateLearner")
+})
+
+test_that("AcqFunction assert_surrogate rejects wrong surrogate class in subclasses", {
+  inst = MAKE_INST_1D()
+  inst2 = MAKE_INST(OBJ_1D_2, search_space = PS_1D)
+  surrogate_single = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
+  surrogate_collection = srlrn(list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst2$archive)
+
+  expect_error(AcqFunctionEI$new(surrogate = surrogate_collection), "SurrogateLearner")
+  expect_error(AcqFunctionCB$new(surrogate = surrogate_collection), "SurrogateLearner")
+  expect_error(AcqFunctionEHVI$new(surrogate = surrogate_single), "SurrogateLearnerCollection")
+})
+
 test_that("AcqFunction generate_acq_codomain works", {
   inst = MAKE_INST(OBJ_2D, search_space = PS_2D)
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)

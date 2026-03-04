@@ -27,7 +27,7 @@ AcqFunction = R6Class("AcqFunction",
     #' @param requires_predict_type_se (`logical(1)`)\cr
     #'   Whether the acquisition function requires the surrogate to have `"se"` as `$predict_type`.
     #' @param surrogate_class (`character(1)`)\cr
-    #'   Allowed classes of the surrogate.
+    #'   Allowed class of the surrogate.
     #' @param direction (`"same"` | `"minimize"` | `"maximize"`).
     #'   Optimization direction of the acquisition function relative to the direction of the
     #'   objective function of the [bbotk::OptimInstance].
@@ -48,13 +48,13 @@ AcqFunction = R6Class("AcqFunction",
         check_packages_installed(packages, msg = sprintf("Package '%%s' required but not installed for acquisition function '%s'", sprintf("<%s:%s>", "AcqFunction", id)))
       }
       private$.requires_predict_type_se = assert_flag(requires_predict_type_se)
-      private$.surrogate_class = assert_choice(surrogate_class, choices = c("Surrogate", "SurrogateLearner", "SurrogateLearnerCollection"))
+      private$.surrogate_class = assert_string(surrogate_class)
       self$direction = assert_choice(direction, c("same", "minimize", "maximize"))
       if (is.null(surrogate)) {
         domain = ParamSet$new()
         codomain = ParamSet$new()
       } else {
-        self$check_surrogate(surrogate)
+        self$assert_surrogate(surrogate)
         private$.surrogate = surrogate
         private$.archive = assert_archive(surrogate$archive)
         codomain = generate_acq_codomain(surrogate, id = id, direction = direction)
@@ -125,7 +125,7 @@ AcqFunction = R6Class("AcqFunction",
     #'   Surrogate to validate.
     #'
     #' @return The validated [Surrogate].
-    check_surrogate = function(surrogate) {
+    assert_surrogate = function(surrogate) {
       assert_r6(surrogate, classes = private$.surrogate_class)
       if (self$requires_predict_type_se && surrogate$predict_type != "se") {
         error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
@@ -196,7 +196,7 @@ AcqFunction = R6Class("AcqFunction",
       if (missing(rhs)) {
         private$.surrogate
       } else {
-        self$check_surrogate(rhs)
+        self$assert_surrogate(rhs)
         private$.surrogate = rhs
         private$.archive = assert_archive(rhs$archive)
         codomain = generate_acq_codomain(rhs, id = self$id, direction = self$direction)

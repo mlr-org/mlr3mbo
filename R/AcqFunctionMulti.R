@@ -102,7 +102,7 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
         domain = ParamSet$new()
         codomain = ParamSet$new()
       } else {
-        self$check_surrogate(surrogate)
+        self$assert_surrogate(surrogate)
         private$.surrogate = surrogate
         private$.archive = assert_archive(surrogate$archive)
         for (acq_function in private$.acq_functions) {
@@ -148,7 +148,7 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
       if (missing(rhs)) {
         private$.surrogate
       } else {
-        self$check_surrogate(rhs)
+        self$assert_surrogate(rhs)
         private$.surrogate = rhs
         private$.archive = assert_archive(rhs$archive)
         for (acq_function in self$acq_functions) {
