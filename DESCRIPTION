@@ -60,6 +60,7 @@ Suggests:
     mirai,
     mlr3pipelines (>= 0.5.2),
     nloptr,
+    processx,
     ranger,
     rgenoud,
     rpart,
@@ -67,6 +68,8 @@ Suggests:
     rush,
     stringi,
     testthat (>= 3.0.0)
+Remotes:
+    mlr-org/bbotk
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3

@@ -50,15 +50,16 @@
 #'     resampling = rsmp("cv", folds = 3)
 #'     measure = msr("classif.acc")
 #'
+#'     mirai::daemons(2)
+#'     rush = rush::rsh(config = redux::redis_config())
+#'
 #'     instance = TuningInstanceAsyncSingleCrit$new(
 #'       task = task,
 #'       learner = learner,
 #'       resampling = resampling,
 #'       measure = measure,
-#'       terminator = trm("evals", n_evals = 10))
-#'
-#'     mirai::daemons(2)
-#'     rush::rush_plan(n_workers=2, worker_type = "remote")
+#'       terminator = trm("evals", n_evals = 10),
+#'       rush = rush)
 #'
 #'     tnr("adbo", design_size = 4, n_workers = 2)$optimize(instance)
 #'     mirai::daemons(0)

@@ -193,7 +193,6 @@ assert_learner_surrogate = function(x, .var.name = vname(x)) {
 redis_available = function() {
   requireNamespace("rush")
   tryCatch({
-    rush::rsh()
     config = redux::redis_config()
     server = redux::hiredis(config)
     ping = server$PING()

@@ -63,12 +63,13 @@
 #'     codomain = ps(y = p_dbl(tags = "minimize"))
 #'     objective = ObjectiveRFun$new(fun = fun, domain = domain, codomain = codomain)
 #'
+#'     mirai::daemons(2)
+#'     rush = rush::rsh(config = redux::redis_config())
+#'
 #'     instance = OptimInstanceAsyncSingleCrit$new(
 #'       objective = objective,
-#'       terminator = trm("evals", n_evals = 10))
-#'
-#'     mirai::daemons(2)
-#'     rush::rush_plan(n_workers=2, worker_type = "remote")
+#'       terminator = trm("evals", n_evals = 10),
+#'       rush = rush)
 #'
 #'     optimizer = opt("adbo", design_size = 4, n_workers = 2)
 #'

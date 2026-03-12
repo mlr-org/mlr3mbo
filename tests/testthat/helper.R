@@ -225,20 +225,24 @@ expect_acqfunction = function(acqf) {
   expect_man_exists(acqf$man)
 }
 
-flush_redis = function() {
+skip_if_no_redis = function() {
+  skip_if_not_installed("rush")
+  skip_if_not_installed("redux")
+  skip_if_not(redis_available())
+}
+
+redis_configuration = function() {
   config = redux::redis_config()
   r = redux::hiredis(config)
   r$FLUSHDB()
+  config
 }
 
-expect_rush_reset = function(rush, type = "kill") {
-  rush$reset(type = type)
-  Sys.sleep(1)
-  keys = rush$connector$command(c("KEYS", "*"))
-  if (!test_list(keys, len = 0)) {
-    stopf("Found keys in redis after reset: %s", keys)
-  }
-  mirai::daemons(0)
+start_rush = function(n_workers = 2L) {
+  config = redis_configuration()
+  rush = rush::rsh(config = config)
+  mirai::daemons(n_workers)
+  rush
 }
 
 sortnames = function(x) {
@@ -251,4 +255,3 @@ sortnames = function(x) {
 expect_equal_sorted = function(x, y, ...) {
   expect_equal(sortnames(x), sortnames(y), ...)
 }
-
