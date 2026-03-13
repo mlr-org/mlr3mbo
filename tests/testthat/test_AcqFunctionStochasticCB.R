@@ -1,12 +1,9 @@
-skip_on_cran()
 skip_if_not_installed("rush")
 skip_if_no_redis()
 
 test_that("AcqFunctionStochasticCB works in defaults", {
   rush = start_rush(n_workers = 1L)
   on.exit({rush$reset(); mirai::daemons(0)})
-
-  options(bbotk.debug = TRUE)
 
   instance = oi_async(
     objective = OBJ_2D,
