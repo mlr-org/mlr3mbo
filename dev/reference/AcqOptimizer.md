@@ -275,5 +275,5 @@ if (requireNamespace("mlr3learners") &
 #> Loading required namespace: rgenoud
 #>           x   acq_ei  x_domain .already_evaluated
 #>       <num>    <num>    <list>             <lgcl>
-#> 1: 1.187665 5.305187 <list[1]>              FALSE
+#> 1: 1.187665 5.305171 <list[1]>              FALSE
 ```

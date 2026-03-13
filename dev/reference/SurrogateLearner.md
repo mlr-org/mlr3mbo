@@ -241,20 +241,20 @@ if (requireNamespace("mlr3learners") &
 #> 
 #> Call:
 #> DiceKriging::km(design = data, response = truth, covtype = "matern5_2", 
-#>     nugget = 4.09039649859895e-06, optim.method = "gen", control = pv$control, 
+#>     nugget = 1.08402239693444e-05, optim.method = "gen", control = pv$control, 
 #>     scaling = FALSE)
 #> 
 #> Trend  coeff.:
 #>                Estimate
-#>  (Intercept)    55.3437
+#>  (Intercept)    55.8573
 #> 
 #> Covar. type  : matern5_2 
 #> Covar. coeff.:
 #>                Estimate
-#>     theta(x)     4.1085
+#>     theta(x)     2.9298
 #> 
-#> Variance estimate: 592.1794
+#> Variance estimate: 1051.988
 #> 
-#> Nugget effect : 4.090396e-06
+#> Nugget effect : 1.084022e-05
 #> 
 ```
