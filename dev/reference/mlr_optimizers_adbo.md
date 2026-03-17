@@ -196,7 +196,5 @@ if (requireNamespace("rush") &
   }
 }
 #> Loading required namespace: rush
-#> Redis server is not available.
-#> Please set up Redis prior to running the example.
 # }
 ```

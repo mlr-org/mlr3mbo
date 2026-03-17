@@ -253,7 +253,5 @@ if (requireNamespace("rush") &
     message("Redis server is not available.\nPlease set up Redis prior to running the example.")
   }
 }
-#> Redis server is not available.
-#> Please set up Redis prior to running the example.
 # }
 ```

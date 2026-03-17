@@ -24,5 +24,5 @@ if (redis_available()) {
 } else {
   message("Redis server is not available.")
 }
-#> Redis server is not available.
+#> Redis server is available.
 ```
