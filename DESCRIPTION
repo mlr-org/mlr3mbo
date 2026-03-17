@@ -60,6 +60,7 @@ Suggests:
     mirai,
     mlr3pipelines (>= 0.5.2),
     nloptr,
+    processx,
     ranger,
     rgenoud,
     rpart,
