@@ -21,7 +21,12 @@ test_that("AcqOptimizer API works", {
   expect_error(acqopt$optimize(), class = "simpleError")
 
   # logging_level
-  console_appender = if (packageVersion("lgr") >= "0.4.0") lg_bbotk$inherited_appenders$console else lg_bbotk$inherited_appenders$appenders.console
+  lg_bbotk = lgr::get_logger("mlr3/bbotk")
+  console_appender = if (packageVersion("lgr") >= "0.4.0") {
+    lg_bbotk$inherited_appenders$console
+  } else {
+    lg_bbotk$inherited_appenders$appenders.console
+  }
   f = tempfile("bbotklog_", fileext = "log")
   th1 = lg_bbotk$threshold
   th2 = console_appender$threshold
@@ -48,13 +53,21 @@ test_that("AcqOptimizer API works", {
   expect_character(lines, min.len = 1L)
 
   # n_candidates | warmstart | warmstart_size | skip_already_evaluated
-  acqopt = AcqOptimizer$new(opt("design_points", batch_size = 1L, design = data.table(x = c(-1, -0.5, 0, 0.5, 1))), trm("evals", n_evals = 5L), acq_function = acqfun)
+  acqopt = AcqOptimizer$new(
+    opt("design_points", batch_size = 1L, design = data.table(x = c(-1, -0.5, 0, 0.5, 1))),
+    trm("evals", n_evals = 5L),
+    acq_function = acqfun
+  )
   acqopt$param_set$values$n_candidates = 3L
   xdt = acqopt$optimize()
   expect_true(nrow(xdt) == 3L)
   expect_setequal(xdt[["x"]], c(-0.5, 0, 0.5))
 
-  acqopt = AcqOptimizer$new(opt("design_points", batch_size = 1L, design = data.table(x = 0)), trm("evals", n_evals = 5L), acq_function = acqfun)
+  acqopt = AcqOptimizer$new(
+    opt("design_points", batch_size = 1L, design = data.table(x = 0)),
+    trm("evals", n_evals = 5L),
+    acq_function = acqfun
+  )
   acqopt$param_set$values$warmstart = TRUE
   xdt = acqopt$optimize()
   expect_true(xdt[["x"]] == 0)
@@ -65,7 +78,11 @@ test_that("AcqOptimizer API works", {
   expect_true(xdt[["x"]] == 0)
   expect_false(xdt[[".already_evaluated"]])
 
-  acqopt = AcqOptimizer$new(opt("grid_search", resolution = 4L, batch_size = 1L), trm("evals", n_evals = 8L), acq_function = acqfun)
+  acqopt = AcqOptimizer$new(
+    opt("grid_search", resolution = 4L, batch_size = 1L),
+    trm("evals", n_evals = 8L),
+    acq_function = acqfun
+  )
   acqopt$param_set$values$warmstart = TRUE
   acqopt$param_set$values$warmstart_size = "all"
   expect_error(acqopt$optimize(), regexp = "Less then", class = "Mlr3ErrorMboAcqOptimizer")
@@ -83,20 +100,28 @@ test_that("AcqOptimizer API works", {
 test_that("AcqOptimizer param_set", {
   acqopt = AcqOptimizer$new(opt("random_search", batch_size = 1L), trm("evals", n_evals = 1L))
   expect_r6(acqopt$param_set, "ParamSet")
-  expect_setequal(acqopt$param_set$ids(), c("n_candidates", "logging_level", "warmstart", "warmstart_size", "skip_already_evaluated", "catch_errors"))
+  expect_setequal(
+    acqopt$param_set$ids(),
+    c("n_candidates", "logging_level", "warmstart", "warmstart_size", "skip_already_evaluated", "catch_errors")
+  )
   expect_equal(acqopt$param_set$class[["n_candidates"]], "ParamInt")
   expect_equal(acqopt$param_set$class[["logging_level"]], "ParamFct")
   expect_equal(acqopt$param_set$class[["warmstart"]], "ParamLgl")
   expect_equal(acqopt$param_set$class[["warmstart_size"]], "ParamInt")
   expect_equal(acqopt$param_set$class[["skip_already_evaluated"]], "ParamLgl")
   expect_equal(acqopt$param_set$class[["catch_errors"]], "ParamLgl")
-  expect_error({acqopt$param_set = list()}, regexp = "param_set is read-only.")
+  expect_error(
+    {
+      acqopt$param_set = list()
+    },
+    regexp = "param_set is read-only."
+  )
 })
 
 test_that("AcqOptimizer trafo", {
   domain = ps(x = p_dbl(lower = 10, upper = 20, trafo = function(x) x - 15))
   objective = ObjectiveRFunDt$new(
-    fun = function(xdt) data.table(y = xdt$x ^ 2),
+    fun = function(xdt) data.table(y = xdt$x^2),
     domain = domain,
     codomain = ps(y = p_dbl(tags = "minimize")),
     check_values = FALSE
@@ -124,7 +149,8 @@ test_that("AcqOptimizer callbacks", {
   instance = OptimInstanceBatchSingleCrit$new(OBJ_1D, terminator = trm("evals", n_evals = 5L))
   design = MAKE_DESIGN(instance)
   instance$eval_batch(design)
-  callback = callback_batch("mlr3mbo.acqopt_time",
+  callback = callback_batch(
+    "mlr3mbo.acqopt_time",
     on_optimization_begin = function(callback, context) {
       callback$state$begin = Sys.time()
     },
@@ -135,10 +161,14 @@ test_that("AcqOptimizer callbacks", {
   )
   callback$state$outer_instance = instance
   acqfun = AcqFunctionEI$new(SurrogateLearner$new(REGR_FEATURELESS, archive = instance$archive))
-  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 10L), trm("evals", n_evals = 10L), acq_function = acqfun, callbacks = callback)
+  acqopt = AcqOptimizer$new(
+    opt("random_search", batch_size = 10L),
+    trm("evals", n_evals = 10L),
+    acq_function = acqfun,
+    callbacks = callback
+  )
   acqfun$surrogate$update()
   acqfun$update()
   res = acqopt$optimize()
   expect_number(attr(instance, "acq_opt_runtime"))
 })
-
