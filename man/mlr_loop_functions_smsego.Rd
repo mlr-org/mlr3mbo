@@ -48,16 +48,19 @@ The original instance is modified in-place and returned invisible.
 Loop function for sequential multi-objective Bayesian Optimization via SMS-EGO.
 Normally used inside an \link{OptimizerMbo}.
 
-In each iteration after the initial design, the surrogate and acquisition function (\link{mlr_acqfunctions_smsego}) are
-updated and the next candidate is chosen based on optimizing the acquisition function.
+In each iteration after the initial design,
+the surrogate and acquisition function (\link{mlr_acqfunctions_smsego}) are updated
+and the next candidate is chosen based on optimizing the acquisition function.
 }
 \note{
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
-\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
-\item Due to the iterative computation of the epsilon within the \link{mlr_acqfunctions_smsego}, requires the \link[bbotk:Terminator]{bbotk::Terminator} of
-the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} to be a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
+\item The \code{surrogate$archive}, even if already populated,
+will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
+\item Due to the iterative computation of the epsilon within the \link{mlr_acqfunctions_smsego},
+requires the \link[bbotk:Terminator]{bbotk::Terminator} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}
+to be a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
 }
 }
 \examples{

@@ -7,36 +7,45 @@
 #' `OptimizerAsyncMbo` class that implements Asynchronous Model Based Optimization (AMBO).
 #' AMBO starts multiple sequential MBO runs on different workers.
 #' The worker communicate asynchronously through a shared archive relying on the \CRANpkg{rush} package.
-#' The optimizer follows a modular layout in which the surrogate model, acquisition function, and acquisition optimizer can be changed.
+#' The optimizer follows a modular layout in which the surrogate model, acquisition function,
+#' and acquisition optimizer can be changed.
 #' The [SurrogateLearner] will impute missing values due to pending evaluations.
-#' A stochastic [AcqFunction], e.g., [AcqFunctionStochasticEI] or [AcqFunctionStochasticCB] is used to create varying versions of the acquisition
-#' function on each worker, promoting different exploration-exploitation trade-offs.
+#' A stochastic [AcqFunction], e.g., [AcqFunctionStochasticEI] or [AcqFunctionStochasticCB] is used
+#' to create varying versions of the acquisition function on each worker,
+#' promoting different exploration-exploitation trade-offs.
 #' The [AcqOptimizer] class remains consistent with the one used in synchronous MBO.
 #'
-#' In contrast to [OptimizerMbo], no [loop_function] can be specified that determines the AMBO flavor as `OptimizerAsyncMbo` simply relies on
-#' a surrogate update, acquisition function update and acquisition function optimization step as an internal loop.
+#' In contrast to [OptimizerMbo], no [loop_function] can be specified that determines the AMBO flavor as
+#' `OptimizerAsyncMbo` simply relies on a surrogate update, acquisition function update and
+#' acquisition function optimization step as an internal loop.
 #'
-#' Currently, only single-objective optimization is supported and `OptimizerAsyncMbo` is considered an experimental feature and API might be subject to changes.
+#' Currently, only single-objective optimization is supported and
+#' `OptimizerAsyncMbo` is considered an experimental feature and API might be subject to changes.
 #'
-#' Note that in general the [SurrogateLearner] is updated one final time on all available data after the optimization process has terminated.
+#' Note that in general the [SurrogateLearner] is updated one final time on all available data
+#' after the optimization process has terminated.
 #' However, in certain scenarios this is not always possible or meaningful.
-#' It is therefore recommended to manually inspect the [SurrogateLearner] after optimization if it is to be used, e.g., for visualization purposes to make
-#' sure that it has been properly updated on all available data.
+#' It is therefore recommended to manually inspect the [SurrogateLearner] after optimization if it is to be used,
+#' e.g., for visualization purposes to make sure that it has been properly updated on all available data.
 #' If this final update of the [SurrogateLearner] could not be performed successfully, a warning will be logged.
 #'
 #' By specifying a [ResultAssigner], one can alter how the final result is determined after optimization, e.g.,
-#' simply based on the evaluations logged in the archive [ResultAssignerArchive] or based on the [Surrogate] via [ResultAssignerSurrogate].
+#' simply based on the evaluations logged in the archive [ResultAssignerArchive] or based on the [Surrogate] via
+#' [ResultAssignerSurrogate].
 #'
 #' @section Archive:
 #' The [bbotk::ArchiveAsync] holds the following additional columns that are specific to AMBO algorithms:
 #'   * `acq_function$id` (`numeric(1)`)\cr
 #'     The value of the acquisition function.
 #'   * `".already_evaluated"` (`logical(1))`\cr
-#'     Whether this point was already evaluated. Depends on the `skip_already_evaluated` parameter of the [AcqOptimizer].
+#'     Whether this point was already evaluated.
+#'     Depends on the `skip_already_evaluated` parameter of the [AcqOptimizer].
 #'
-#' If the [bbotk::ArchiveAsync] does not contain any evaluations prior to optimization, an initial design is needed.
+#' If the [bbotk::ArchiveAsync] does not contain any evaluations prior to optimization,
+#' an initial design is needed.
 #' If the `initial_design` parameter is specified to be a `data.table`, this data will be used.
-#' Otherwise, if it is `NULL`, an initial design of size `design_size` will be generated based on the `generate_design` sampling function.
+#' Otherwise, if it is `NULL`, an initial design of size `design_size` will be generated based on the
+#' `generate_design` sampling function.
 #' See also the parameters below.
 #'
 #' @inheritSection mlr_optimizers_mbo Conditions
@@ -52,7 +61,8 @@
 #'   Default is `100`.}
 #' \item{`design_function`}{`character(1)`\cr
 #'   Sampling function to generate the initial design.
-#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs], or `sobol` [paradox::generate_design_sobol].
+#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs],
+#'   or `sobol` [paradox::generate_design_sobol].
 #'   Default is `sobol`.}
 #' \item{`n_workers`}{`integer(1)`\cr
 #'   Number of parallel workers.
@@ -107,13 +117,16 @@ OptimizerAsyncMbo = R6Class(
     #'
     #' If `surrogate` is `NULL` and the `acq_function$surrogate` field is populated, this [SurrogateLearner] is used.
     #' Otherwise, `default_surrogate(instance)` is used.
-    #' If `acq_function` is `NULL` and the `acq_optimizer$acq_function` field is populated, this [AcqFunction] is used (and therefore its `$surrogate` if populated; see above).
+    #' If `acq_function` is `NULL` and the `acq_optimizer$acq_function` field is populated,
+    #' this [AcqFunction] is used (and therefore its `$surrogate` if populated; see above).
     #' Otherwise `default_acqfunction(instance)` is used.
     #' If `acq_optimizer` is `NULL`, `default_acqoptimizer(instance)` is used.
     #'
-    #' Even if already initialized, the `surrogate$archive` field will always be overwritten by the [bbotk::ArchiveAsync] of the current [bbotk::OptimInstanceAsyncSingleCrit] to be optimized.
+    #' Even if already initialized, the `surrogate$archive` field will always be overwritten by the
+    #' [bbotk::ArchiveAsync] of the current [bbotk::OptimInstanceAsyncSingleCrit] to be optimized.
     #'
-    #' For more information on default values for `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner`, see `?mbo_defaults`.
+    #' For more information on default values for `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner`,
+    #' see `?mbo_defaults`.
     #'
     #' @template param_id
     #' @template param_surrogate
@@ -147,9 +160,12 @@ OptimizerAsyncMbo = R6Class(
       super$initialize(
         "async_mbo",
         param_set = param_set,
-        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"), # is replaced with dynamic AB after construction
-        properties = c("dependencies", "single-crit"), # is replaced with dynamic AB after construction
-        packages = c("mlr3mbo", "rush"), # is replaced with dynamic AB after construction
+        # is replaced with dynamic AB after construction
+        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
+        # is replaced with dynamic AB after construction
+        properties = c("dependencies", "single-crit"),
+        # is replaced with dynamic AB after construction
+        packages = c("mlr3mbo", "rush"),
         label = label,
         man = man
       )

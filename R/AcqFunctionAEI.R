@@ -73,7 +73,8 @@ AcqFunctionAEI = R6Class(
 
     #' @field noise_var (`numeric(1)`)\cr
     #'   Estimate of the variance of the noise.
-    #'   This corresponds to the `nugget` estimate when using a [mlr3learners][mlr3learners::mlr_learners_regr.km] as surrogate model.
+    #'   This corresponds to the `nugget` estimate
+    #'   when using a [mlr3learners][mlr3learners::mlr_learners_regr.km] as surrogate model.
     noise_var = NULL, # noise of the function
 
     #' @description
@@ -104,15 +105,21 @@ AcqFunctionAEI = R6Class(
     update = function() {
       xdt = self$archive$data[, self$archive$cols_x, with = FALSE]
       pred = self$surrogate$predict(xdt)
-      # NOTE: output_trafo_must_be_considered is not relevant to y here because y_effective_best is determined from the predictions
+      # NOTE: output_trafo_must_be_considered is not relevant to y here because y_effective_best is
+      # determined from the predictions
       y_effective = pred$mean + (self$surrogate_max_to_min * self$constants$values$c * pred$se) # pessimistic prediction
       self$y_effective_best = min(self$surrogate_max_to_min * y_effective)
 
-      if (!is.null(self$surrogate$learner$model) && length(self$surrogate$learner$model@covariance@nugget) == 1L) {
-        self$noise_var = self$surrogate$learner$model@covariance@nugget # FIXME: check that this value really exists (otherwise calculate residual variance?)
+      if (!is.null(self$surrogate$learner$model) &&
+          length(self$surrogate$learner$model@covariance@nugget) == 1L) {
+        # FIXME: check that this value really exists (otherwise calculate residual variance?)
+        self$noise_var = self$surrogate$learner$model@covariance@nugget
       } else {
         lgr$warn(
-          'AcqFunctionAEI currently only works correctly with `"regr.km"` as surrogate model and `nugget.estim = TRUE` or given.'
+          paste0(
+            'AcqFunctionAEI currently only works correctly with `"regr.km"` as surrogate ',
+            "model and `nugget.estim = TRUE` or given."
+          )
         )
         self$noise_var = 0
       }

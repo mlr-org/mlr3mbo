@@ -8,7 +8,8 @@
 #'
 #' @description
 #' Expected Improvement with epsilon decay.
-#' \eqn{\epsilon} is updated after each update by the formula `epsilon * exp(-rate * (t %% period))` where `t` is the number of times the acquisition function has been updated.
+#' \eqn{\epsilon} is updated after each update by the formula `epsilon * exp(-rate * (t %% period))`
+#' where `t` is the number of times the acquisition function has been updated.
 #'
 #' While this acquisition function usually would be used within an asynchronous optimizer, e.g., [OptimizerAsyncMbo],
 #' it can in principle also be used in synchronous optimizers, e.g., [OptimizerMbo].
@@ -20,16 +21,18 @@
 #'   decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
 #'   Defaults to `0.1`.
 #' * `"rate"` (`numeric(1)`)\cr
-#    Rate of the exponential decay.
+#'   Rate of the exponential decay.
 #'   Defaults to `0.05`.
 #' * `"period"` (`integer(1)`)\cr
 #'   Period of the exponential decay.
 #'   Defaults to `NULL`, i.e., the decay has no period.
 #'
 #' @section Note:
-#' * This acquisition function always also returns its current (`acq_epsilon`) and original (`acq_epsilon_0`) \eqn{\epsilon}.
-#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch] of the [AcqOptimizer] and
-#'   therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
+#' * This acquisition function always also returns its current (`acq_epsilon`) and original (`acq_epsilon_0`)
+#'   \eqn{\epsilon}.
+#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch]
+#'   of the [AcqOptimizer]
+#'   and therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
 #'
 #' @references
 #' * `r format_bib("jones_1998")`

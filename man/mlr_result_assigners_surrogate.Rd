@@ -5,10 +5,13 @@
 \alias{ResultAssignerSurrogate}
 \title{Result Assigner Based on a Surrogate Mean Prediction}
 \description{
-Result assigner that chooses the final point(s) based on a surrogate mean prediction of all evaluated points in the \link[bbotk:Archive]{bbotk::Archive}.
+Result assigner that chooses the final point(s) based on a surrogate mean prediction of all evaluated points
+in the \link[bbotk:Archive]{bbotk::Archive}.
 This is especially useful in the case of noisy objective functions.
 
-In the case of operating on an \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} or \link[bbotk:OptimInstanceAsyncMultiCrit]{bbotk::OptimInstanceAsyncMultiCrit} the \link{SurrogateLearnerCollection} must use as many learners as there are objective functions.
+In the case of operating on an \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} or
+\link[bbotk:OptimInstanceAsyncMultiCrit]{bbotk::OptimInstanceAsyncMultiCrit} the \link{SurrogateLearnerCollection} must use as many learners as there are
+objective functions.
 }
 \examples{
 result_assigner = ras("surrogate")
@@ -31,7 +34,8 @@ The surrogate.}
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
-A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
+A warning is signaled if at least one of the packages is not installed,
+but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -82,7 +86,8 @@ If \verb{$surrogate} is \code{NULL}, \code{default_surrogate(instance)} is used 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} |\link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} | \link[bbotk:OptimInstanceAsyncMultiCrit]{bbotk::OptimInstanceAsyncMultiCrit})\cr
+\item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} |
+\link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} | \link[bbotk:OptimInstanceAsyncMultiCrit]{bbotk::OptimInstanceAsyncMultiCrit})\cr
 The \link[bbotk:OptimInstance]{bbotk::OptimInstance} the final result should be assigned to.}
 }
 \if{html}{\out{</div>}}

@@ -7,12 +7,15 @@
 #' \describe{
 #' \item{`catch_errors`}{`logical(1)`\cr
 #'   Should errors during updating the surrogate be caught and propagated to the `loop_function` which can then handle
-#'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by,
+#'   e.g., proposing a randomly sampled point for evaluation?
 #'   Default is `TRUE`.
 #' }
 #' \item{`impute_method`}{`character(1)`\cr
-#'   Method to impute missing values in the case of updating on an asynchronous [bbotk::ArchiveAsync] with pending evaluations.
-#'   Can be `"mean"` to use mean imputation or `"random"` to sample values uniformly at random between the empirical minimum and maximum.
+#'   Method to impute missing values in the case of updating on an asynchronous [bbotk::ArchiveAsync]
+#'   with pending evaluations.
+#'   Can be `"mean"` to use mean imputation or
+#'   `"random"` to sample values uniformly at random between the empirical minimum and maximum.
 #'   Default is `"random"`.
 #' }
 #' }
@@ -133,7 +136,8 @@ SurrogateLearner = R6Class(
       } else {
         # speeding up some checks by constructing the predict task directly instead of relying on predict_newdata
         task = self$learner$state$train_task$clone()
-        set(xdt, j = task$target_names, value = NA_real_) # tasks only have features and the target but we have to set the target to NA
+        # tasks only have features and the target but we have to set the target to NA
+        set(xdt, j = task$target_names, value = NA_real_)
         newdata = as_data_backend(xdt)
         task$backend = newdata
         task$row_roles$use = task$backend$rownames
@@ -246,9 +250,9 @@ SurrogateLearner = R6Class(
     # Operates on an asynchronous archive and performs imputation as needed.
     .update_async = function() {
       xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[,
-        c(self$cols_x, self$cols_y, "state"),
-        with = FALSE
-      ])
+          c(self$cols_x, self$cols_y, "state"),
+          with = FALSE
+        ])
       if (!is.null(self$input_trafo)) {
         self$input_trafo$cols_x = self$cols_x
         self$input_trafo$search_space = self$archive$search_space

@@ -6,7 +6,8 @@
 \title{Acquisition Function Expected Improvement on Log Scale}
 \description{
 Expected Improvement assuming that the target variable has been modeled on log scale.
-In general only sensible if the \link{SurrogateLearner} uses an \link{OutputTrafoLog} without inverting the posterior predictive distribution (\code{invert_posterior = FALSE}).
+In general only sensible if the \link{SurrogateLearner} uses an \link{OutputTrafoLog}
+without inverting the posterior predictive distribution (\code{invert_posterior = FALSE}).
 See also the example below.
 }
 \section{Dictionary}{
@@ -24,8 +25,8 @@ acqf("ei_log")
 \itemize{
 \item \code{"epsilon"} (\code{numeric(1)})\cr
 \eqn{\epsilon} value used to determine the amount of exploration.
-Higher values result in the importance of improvements predicted by the posterior mean
-decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
+Higher values result in the importance of improvements predicted by the posterior mean decreasing
+relative to the importance of potential improvements in regions of high predictive uncertainty.
 Defaults to \code{0} (standard Expected Improvement).
 }
 }

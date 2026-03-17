@@ -16,7 +16,8 @@ OutputTrafo = R6Class(
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param invert_posterior (`logical(1)`)\cr
-    #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or [SurrogateLearnerCollection]?
+    #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or
+    #'  [SurrogateLearnerCollection]?
     #' @param label (`character(1)`)\cr
     #'   Label for this object.
     #' @param man (`character(1)`)\cr
@@ -50,11 +51,13 @@ OutputTrafo = R6Class(
     },
 
     #' @description
-    #' Perform the inverse transformation on a posterior predictive distribution characterized by the first and second moment.
+    #' Perform the inverse transformation on a posterior predictive distribution characterized by the first and
+    #' second moment.
     #' Must be implemented by subclasses.
     #'
     #' @param pred ([data.table::data.table()])\cr
-    #'   Data. One row per observation characterizing a posterior predictive distribution with the columns `mean` and `se`.
+    #'   Data. One row per observation characterizing a posterior predictive distribution with the columns
+    #'   `mean` and `se`.
     #'
     #' @return [data.table::data.table()] with the inverse transformation applied to the columns `mean` and `se`.
     inverse_transform_posterior = function(pred) {
@@ -111,7 +114,8 @@ OutputTrafo = R6Class(
 
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     packages = function(rhs) {
       if (missing(rhs)) {
         stop("Abstract.")
@@ -150,7 +154,8 @@ OutputTrafo = R6Class(
     },
 
     #' @field invert_posterior (`logical(1)`)\cr
-    #'   Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or [SurrogateLearnerCollection]?
+    #'   Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or
+    #'   [SurrogateLearnerCollection]?
     invert_posterior = function(rhs) {
       if (missing(rhs)) {
         private$.invert_posterior

@@ -16,7 +16,9 @@
 #'   For example, if two objectives are to be optimized, the total number of nodes will therefore be 225 per default.
 #'   Changing this value after construction requires a call to `$update()` to update the `$gh_data` field.
 #' * `"r"` (`numeric(1)`)\cr
-#'   Pruning rate between 0 and 1 that determines the fraction of nodes of the Gauss-Hermite quadrature rule that are ignored based on their weight value (the nodes with the lowest weights being ignored).
+#'   Pruning rate between 0 and 1
+#'   that determines the fraction of nodes of the Gauss-Hermite quadrature rule that are ignored
+#'   based on their weight value (the nodes with the lowest weights being ignored).
 #'   Default is `0.2`.
 #'   Changing this value after construction does not require a call to `$update()`.
 #'
@@ -129,13 +131,15 @@ AcqFunctionEHVIGH = R6Class(
 
       self$ys_front = self$archive$best()[, self$archive$cols_y, with = FALSE]
       for (column in self$archive$cols_y) {
-        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]]) # assume minimization
+        # assume minimization
+        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]])
       }
       self$ys_front = as.matrix(self$ys_front)
 
       self$hypervolume = invoke(emoa::dominated_hypervolume, points = t(self$ys_front), ref = t(self$ref_point))
 
-      self$gh_data = invoke(fastGHQuad::gaussHermiteData, n = self$constants$values$k) # k because the multi-dimensional grid is created within adjust_gh_data
+      # k because the multi-dimensional grid is created within adjust_gh_data
+      self$gh_data = invoke(fastGHQuad::gaussHermiteData, n = self$constants$values$k)
       self$gh_data$x = self$gh_data$x * sqrt(2)
       self$gh_data$w = self$gh_data$w / sum(self$gh_data$w)
       self$gh_data = do.call(cbind, self$gh_data)

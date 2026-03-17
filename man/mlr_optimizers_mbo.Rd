@@ -6,26 +6,31 @@
 \title{Model Based Optimization}
 \description{
 \code{OptimizerMbo} class that implements Model Based Optimization (MBO).
-The implementation follows a modular layout relying on a \link{loop_function} determining the MBO flavor to be used, e.g.,
-\link{bayesopt_ego} for sequential single-objective Bayesian Optimization, a \link{Surrogate}, an \link{AcqFunction}, e.g., \link{mlr_acqfunctions_ei} for
-Expected Improvement and an \link{AcqOptimizer}.
+The implementation follows a modular layout relying on a \link{loop_function} determining the MBO flavor to be used,
+e.g., \link{bayesopt_ego} for sequential single-objective Bayesian Optimization, a \link{Surrogate},
+an \link{AcqFunction}, e.g., \link{mlr_acqfunctions_ei} for Expected Improvement and an \link{AcqOptimizer}.
 
-MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built for the objective function.
-By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction, the next candidate is chosen for evaluation.
+MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model
+built for the objective function.
+By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction,
+the next candidate is chosen for evaluation.
 
 Detailed descriptions of different MBO flavors are provided in the documentation of the respective \link{loop_function}.
 
 Termination is handled via a \link[bbotk:Terminator]{bbotk::Terminator} part of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} to be optimized.
 
-Note that in general the \link{Surrogate} is updated one final time on all available data after the optimization process has terminated.
-However, in certain scenarios this is not always possible or meaningful, e.g., when using \code{\link[=bayesopt_parego]{bayesopt_parego()}} for multi-objective optimization
+Note that in general the \link{Surrogate} is updated one final time on all available data
+after the optimization process has terminated.
+However, in certain scenarios this is not always possible or meaningful,
+e.g., when using \code{\link[=bayesopt_parego]{bayesopt_parego()}} for multi-objective optimization
 which uses a surrogate that relies on a scalarization of the objectives.
-It is therefore recommended to manually inspect the \link{Surrogate} after optimization if it is to be used, e.g., for visualization purposes to make
-sure that it has been properly updated on all available data.
+It is therefore recommended to manually inspect the \link{Surrogate} after optimization if it is to be used,
+e.g., for visualization purposes to make sure that it has been properly updated on all available data.
 If this final update of the \link{Surrogate} could not be performed successfully, a warning will be logged.
 
 By specifying a \link{ResultAssigner}, one can alter how the final result is determined after optimization, e.g.,
-simply based on the evaluations logged in the archive \link{ResultAssignerArchive} or based on the \link{Surrogate} via \link{ResultAssignerSurrogate}.
+simply based on the evaluations logged in the archive \link{ResultAssignerArchive} or based on the \link{Surrogate} via
+\link{ResultAssignerSurrogate}.
 }
 \section{Archive}{
 
@@ -34,24 +39,30 @@ The \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} holds the following additiona
 \item \code{acq_function$id} (\code{numeric(1)})\cr
 The value of the acquisition function.
 \item \code{".already_evaluated"} (\verb{logical(1))}\cr
-Whether this point was already evaluated. Depends on the \code{skip_already_evaluated} parameter of the \link{AcqOptimizer}.
+Whether this point was already evaluated.
+Depends on the \code{skip_already_evaluated} parameter of the \link{AcqOptimizer}.
 }
 }
 
 \section{Conditions}{
 
-During optimization, errors are caught and re-thrown as structured conditions that inherit from \code{Mlr3ErrorMbo} and \code{Mlr3Error} (defined in \CRANpkg{mlr3misc}).
+During optimization, errors are caught and re-thrown as structured conditions that inherit from \code{Mlr3ErrorMbo} and
+\code{Mlr3Error} (defined in \CRANpkg{mlr3misc}).
 Loop functions catch \code{Mlr3ErrorMbo} conditions and fall back to proposing a randomly sampled point.
 
 The following condition classes are used:
 \describe{
 \item{\code{Mlr3ErrorMbo}}{Base class for all MBO-specific error conditions.}
-\item{\code{Mlr3ErrorMboSurrogateUpdate}}{Raised by \link{Surrogate}\verb{$update()} when the surrogate model fails to update (requires \code{catch_errors = TRUE}).}
-\item{\code{Mlr3ErrorMboAcqOptimizer}}{Raised by \link{AcqOptimizer}\verb{$optimize()} when the acquisition function optimization fails (requires \code{catch_errors = TRUE}).}
+\item{\code{Mlr3ErrorMboSurrogateUpdate}}{Raised by \link{Surrogate}\verb{$update()} when the surrogate model fails to update
+(requires \code{catch_errors = TRUE}).}
+\item{\code{Mlr3ErrorMboAcqOptimizer}}{Raised by \link{AcqOptimizer}\verb{$optimize()} when
+the acquisition function optimization fails (requires \code{catch_errors = TRUE}).}
 \item{\code{Mlr3ErrorMboRandomInterleave}}{Raised by loop functions to trigger random interleaving.}
 }
-\code{Mlr3ErrorMboSurrogateUpdate} and \code{Mlr3ErrorMboAcqOptimizer} conditions are logged at the \code{"warn"} level and include the original error as a parent condition.
-All conditions can be constructed directly via the helper functions \code{error_surrogate_update()}, \code{error_acq_optimizer()}, and \code{error_random_interleave()}.
+\code{Mlr3ErrorMboSurrogateUpdate} and \code{Mlr3ErrorMboAcqOptimizer} conditions are logged at the \code{"warn"} level and
+include the original error as a parent condition.
+All conditions can be constructed directly via the helper functions \code{error_surrogate_update()},
+\code{error_acq_optimizer()}, and \code{error_random_interleave()}.
 }
 
 \examples{
@@ -184,13 +195,16 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 If \code{surrogate} is \code{NULL} and the \code{acq_function$surrogate} field is populated, this \link{Surrogate} is used.
 Otherwise, \code{default_surrogate(instance)} is used.
-If \code{acq_function} is \code{NULL} and the \code{acq_optimizer$acq_function} field is populated, this \link{AcqFunction} is used (and therefore its \verb{$surrogate} if populated; see above).
+If \code{acq_function} is \code{NULL} and the \code{acq_optimizer$acq_function} field is populated,
+this \link{AcqFunction} is used (and therefore its \verb{$surrogate} if populated; see above).
 Otherwise \code{default_acqfunction(instance)} is used.
 If \code{acq_optimizer} is \code{NULL}, \code{default_acqoptimizer(instance)} is used.
 
-Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the current \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} to be optimized.
+Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the
+\link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the current \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} to be optimized.
 
-For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer} and \code{result_assigner}, see \code{?mbo_defaults}.
+For more information on default values for \code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer} and
+\code{result_assigner}, see \code{?mbo_defaults}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
   loop_function = NULL,
@@ -257,7 +271,8 @@ Sets the following fields to \code{NULL}:
 \if{latex}{\out{\hypertarget{method-OptimizerMbo-optimize}{}}}
 \subsection{Method \code{optimize()}}{
 Performs the optimization and writes optimization result into \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
-The optimization result is returned but the complete optimization path is stored in \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
+The optimization result is returned but the complete optimization path is stored in \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of
+\link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$optimize(inst)}\if{html}{\out{</div>}}
 }

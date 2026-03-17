@@ -8,25 +8,31 @@
 \code{OptimizerAsyncMbo} class that implements Asynchronous Model Based Optimization (AMBO).
 AMBO starts multiple sequential MBO runs on different workers.
 The worker communicate asynchronously through a shared archive relying on the \CRANpkg{rush} package.
-The optimizer follows a modular layout in which the surrogate model, acquisition function, and acquisition optimizer can be changed.
+The optimizer follows a modular layout in which the surrogate model, acquisition function,
+and acquisition optimizer can be changed.
 The \link{SurrogateLearner} will impute missing values due to pending evaluations.
-A stochastic \link{AcqFunction}, e.g., \link{AcqFunctionStochasticEI} or \link{AcqFunctionStochasticCB} is used to create varying versions of the acquisition
-function on each worker, promoting different exploration-exploitation trade-offs.
+A stochastic \link{AcqFunction}, e.g., \link{AcqFunctionStochasticEI} or \link{AcqFunctionStochasticCB} is used
+to create varying versions of the acquisition function on each worker,
+promoting different exploration-exploitation trade-offs.
 The \link{AcqOptimizer} class remains consistent with the one used in synchronous MBO.
 
-In contrast to \link{OptimizerMbo}, no \link{loop_function} can be specified that determines the AMBO flavor as \code{OptimizerAsyncMbo} simply relies on
-a surrogate update, acquisition function update and acquisition function optimization step as an internal loop.
+In contrast to \link{OptimizerMbo}, no \link{loop_function} can be specified that determines the AMBO flavor as
+\code{OptimizerAsyncMbo} simply relies on a surrogate update, acquisition function update and
+acquisition function optimization step as an internal loop.
 
-Currently, only single-objective optimization is supported and \code{OptimizerAsyncMbo} is considered an experimental feature and API might be subject to changes.
+Currently, only single-objective optimization is supported and
+\code{OptimizerAsyncMbo} is considered an experimental feature and API might be subject to changes.
 
-Note that in general the \link{SurrogateLearner} is updated one final time on all available data after the optimization process has terminated.
+Note that in general the \link{SurrogateLearner} is updated one final time on all available data
+after the optimization process has terminated.
 However, in certain scenarios this is not always possible or meaningful.
-It is therefore recommended to manually inspect the \link{SurrogateLearner} after optimization if it is to be used, e.g., for visualization purposes to make
-sure that it has been properly updated on all available data.
+It is therefore recommended to manually inspect the \link{SurrogateLearner} after optimization if it is to be used,
+e.g., for visualization purposes to make sure that it has been properly updated on all available data.
 If this final update of the \link{SurrogateLearner} could not be performed successfully, a warning will be logged.
 
 By specifying a \link{ResultAssigner}, one can alter how the final result is determined after optimization, e.g.,
-simply based on the evaluations logged in the archive \link{ResultAssignerArchive} or based on the \link{Surrogate} via \link{ResultAssignerSurrogate}.
+simply based on the evaluations logged in the archive \link{ResultAssignerArchive} or based on the \link{Surrogate} via
+\link{ResultAssignerSurrogate}.
 }
 \section{Archive}{
 
@@ -35,12 +41,15 @@ The \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} holds the following additiona
 \item \code{acq_function$id} (\code{numeric(1)})\cr
 The value of the acquisition function.
 \item \code{".already_evaluated"} (\verb{logical(1))}\cr
-Whether this point was already evaluated. Depends on the \code{skip_already_evaluated} parameter of the \link{AcqOptimizer}.
+Whether this point was already evaluated.
+Depends on the \code{skip_already_evaluated} parameter of the \link{AcqOptimizer}.
 }
 
-If the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} does not contain any evaluations prior to optimization, an initial design is needed.
+If the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} does not contain any evaluations prior to optimization,
+an initial design is needed.
 If the \code{initial_design} parameter is specified to be a \code{data.table}, this data will be used.
-Otherwise, if it is \code{NULL}, an initial design of size \code{design_size} will be generated based on the \code{generate_design} sampling function.
+Otherwise, if it is \code{NULL}, an initial design of size \code{design_size} will be generated based on the
+\code{generate_design} sampling function.
 See also the parameters below.
 }
 
@@ -56,7 +65,8 @@ Size of the initial design if it is to be generated.
 Default is \code{100}.}
 \item{\code{design_function}}{\code{character(1)}\cr
 Sampling function to generate the initial design.
-Can be \code{random} \link[paradox:generate_design_random]{paradox::generate_design_random}, \code{lhs} \link[paradox:generate_design_lhs]{paradox::generate_design_lhs}, or \code{sobol} \link[paradox:generate_design_sobol]{paradox::generate_design_sobol}.
+Can be \code{random} \link[paradox:generate_design_random]{paradox::generate_design_random}, \code{lhs} \link[paradox:generate_design_lhs]{paradox::generate_design_lhs},
+or \code{sobol} \link[paradox:generate_design_sobol]{paradox::generate_design_sobol}.
 Default is \code{sobol}.}
 \item{\code{n_workers}}{\code{integer(1)}\cr
 Number of parallel workers.
@@ -67,18 +77,23 @@ Default is \code{NULL}.}
 
 \section{Conditions}{
 
-During optimization, errors are caught and re-thrown as structured conditions that inherit from \code{Mlr3ErrorMbo} and \code{Mlr3Error} (defined in \CRANpkg{mlr3misc}).
+During optimization, errors are caught and re-thrown as structured conditions that inherit from \code{Mlr3ErrorMbo} and
+\code{Mlr3Error} (defined in \CRANpkg{mlr3misc}).
 Loop functions catch \code{Mlr3ErrorMbo} conditions and fall back to proposing a randomly sampled point.
 
 The following condition classes are used:
 \describe{
 \item{\code{Mlr3ErrorMbo}}{Base class for all MBO-specific error conditions.}
-\item{\code{Mlr3ErrorMboSurrogateUpdate}}{Raised by \link{Surrogate}\verb{$update()} when the surrogate model fails to update (requires \code{catch_errors = TRUE}).}
-\item{\code{Mlr3ErrorMboAcqOptimizer}}{Raised by \link{AcqOptimizer}\verb{$optimize()} when the acquisition function optimization fails (requires \code{catch_errors = TRUE}).}
+\item{\code{Mlr3ErrorMboSurrogateUpdate}}{Raised by \link{Surrogate}\verb{$update()} when the surrogate model fails to update
+(requires \code{catch_errors = TRUE}).}
+\item{\code{Mlr3ErrorMboAcqOptimizer}}{Raised by \link{AcqOptimizer}\verb{$optimize()} when
+the acquisition function optimization fails (requires \code{catch_errors = TRUE}).}
 \item{\code{Mlr3ErrorMboRandomInterleave}}{Raised by loop functions to trigger random interleaving.}
 }
-\code{Mlr3ErrorMboSurrogateUpdate} and \code{Mlr3ErrorMboAcqOptimizer} conditions are logged at the \code{"warn"} level and include the original error as a parent condition.
-All conditions can be constructed directly via the helper functions \code{error_surrogate_update()}, \code{error_acq_optimizer()}, and \code{error_random_interleave()}.
+\code{Mlr3ErrorMboSurrogateUpdate} and \code{Mlr3ErrorMboAcqOptimizer} conditions are logged at the \code{"warn"} level and
+include the original error as a parent condition.
+All conditions can be constructed directly via the helper functions \code{error_surrogate_update()},
+\code{error_acq_optimizer()}, and \code{error_random_interleave()}.
 }
 
 \examples{
@@ -181,13 +196,16 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 If \code{surrogate} is \code{NULL} and the \code{acq_function$surrogate} field is populated, this \link{SurrogateLearner} is used.
 Otherwise, \code{default_surrogate(instance)} is used.
-If \code{acq_function} is \code{NULL} and the \code{acq_optimizer$acq_function} field is populated, this \link{AcqFunction} is used (and therefore its \verb{$surrogate} if populated; see above).
+If \code{acq_function} is \code{NULL} and the \code{acq_optimizer$acq_function} field is populated,
+this \link{AcqFunction} is used (and therefore its \verb{$surrogate} if populated; see above).
 Otherwise \code{default_acqfunction(instance)} is used.
 If \code{acq_optimizer} is \code{NULL}, \code{default_acqoptimizer(instance)} is used.
 
-Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} of the current \link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} to be optimized.
+Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the
+\link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} of the current \link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} to be optimized.
 
-For more information on default values for \code{surrogate}, \code{acq_function}, \code{acq_optimizer} and \code{result_assigner}, see \code{?mbo_defaults}.
+For more information on default values for \code{surrogate}, \code{acq_function}, \code{acq_optimizer} and \code{result_assigner},
+see \code{?mbo_defaults}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OptimizerAsyncMbo$new(
   id = "async_mbo",

@@ -43,6 +43,7 @@ dictionary_loop_function_get = function(self, key, ...) {
   obj$value
 }
 
+# nolint next: object_length_linter
 dictionary_loop_function_retrieve_item = function(self, key) {
   obj = get0(key, envir = self$items, inherits = FALSE, ifnotfound = NULL)
   if (is.null(obj)) {

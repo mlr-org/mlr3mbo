@@ -8,14 +8,15 @@
 #'
 #' @description
 #' Expected Improvement assuming that the target variable has been modeled on log scale.
-#' In general only sensible if the [SurrogateLearner] uses an [OutputTrafoLog] without inverting the posterior predictive distribution (`invert_posterior = FALSE`).
+#' In general only sensible if the [SurrogateLearner] uses an [OutputTrafoLog]
+#' without inverting the posterior predictive distribution (`invert_posterior = FALSE`).
 #' See also the example below.
 #'
 #' @section Parameters:
 #' * `"epsilon"` (`numeric(1)`)\cr
 #'   \eqn{\epsilon} value used to determine the amount of exploration.
-#'   Higher values result in the importance of improvements predicted by the posterior mean
-#'   decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
+#'   Higher values result in the importance of improvements predicted by the posterior mean decreasing
+#'   relative to the importance of potential improvements in regions of high predictive uncertainty.
 #'   Defaults to `0` (standard Expected Improvement).
 #'
 #' @family Acquisition Function
@@ -121,15 +122,16 @@ AcqFunctionEILog = R6Class(
         d = (y_best - mu) - epsilon
         d_norm = d / se
         multiplicative_factor = (self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$max -
-          self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
-        ei_log = multiplicative_factor * ((exp(y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) + mu)) * pnorm(d_norm - se))
+            self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
+        ei_log = multiplicative_factor *
+          ((exp(y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) + mu)) * pnorm(d_norm - se))
       } else {
         # y is to be maximized and the OutputTrafoLog performed the transformation accordingly
         y_best = -self$y_best
         d = (mu - y_best) - epsilon
         d_norm = d / se
         multiplicative_factor = (self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$max -
-          self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
+            self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
         ei_log = multiplicative_factor *
           ((exp(-y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) - mu) * pnorm(d_norm - se)))
       }

@@ -3,7 +3,8 @@
 #' @include mlr_input_trafos.R
 #'
 #' @description
-#' Input transformation that performs for each numeric and integer feature min-max scaling to `[\0, 1\]` based on the boundaries of the search space.
+#' Input transformation that performs for each numeric and integer feature min-max scaling to `[\0, 1\]`
+#' based on the boundaries of the search space.
 #'
 #' @family Input Transformation
 #' @export
@@ -69,7 +70,8 @@ InputTrafoUnitcube = R6Class(
     #' @param xdt ([data.table::data.table()])\cr
     #'   Data. One row per observation with at least columns `$cols_x`.
     #'
-    #' @return [data.table::data.table()] with the transformation applied to the columns `$cols_x` (if applicable) or a subset thereof.
+    #' @return [data.table::data.table()] with the transformation applied to the columns `$cols_x` (if applicable)
+    #'   or a subset thereof.
     transform = function(xdt) {
       if (is.null(self$state)) {
         stop("$state is not set. Missed to call $update()?")
@@ -92,7 +94,8 @@ InputTrafoUnitcube = R6Class(
   active = list(
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     packages = function(rhs) {
       if (missing(rhs)) {
         character(0)

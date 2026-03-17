@@ -25,7 +25,8 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
-A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
+A warning is signaled if at least one of the packages is not installed,
+but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 
 \item{\code{state}}{(named \code{list()} | \code{NULL})\cr
 List of meta information regarding the parameters and their state.}
@@ -108,7 +109,8 @@ Data. One row per observation with at least columns \verb{$cols_x}.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} with the transformation applied to the columns \verb{$cols_x} (if applicable) or a subset thereof.
+\code{\link[data.table:data.table]{data.table::data.table()}} with the transformation applied to the columns \verb{$cols_x} (if applicable)
+or a subset thereof.
 }
 }
 \if{html}{\out{<hr>}}
