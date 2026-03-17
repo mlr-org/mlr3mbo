@@ -8,8 +8,6 @@ test_that("AcqFunctionStochasticCB works in defaults", {
     mirai::daemons(0)
   })
 
-  options(bbotk.debug = TRUE)
-
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
@@ -21,15 +19,20 @@ test_that("AcqFunctionStochasticCB works in defaults", {
 
   acq_optimizer = acqo(opt("random_search"), trm("evals", n_evals = 10L), acq_function = acq_function)
 
-  optimizer = opt("async_mbo",
+  optimizer = opt(
+    "async_mbo",
     design_function = "sobol",
     design_size = 5,
     acq_function = acq_function,
-    acq_optimizer = acq_optimizer)
+    acq_optimizer = acq_optimizer
+  )
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data, min.rows = 10L)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
+  expect_names(
+    names(instance$archive$data),
+    must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda")
+  )
 })
 
 test_that("AcqFunctionStochasticCB works with uniform sampling", {
@@ -50,15 +53,20 @@ test_that("AcqFunctionStochasticCB works with uniform sampling", {
 
   acq_optimizer = acqo(opt("random_search"), trm("evals", n_evals = 10L), acq_function = acq_function)
 
-  optimizer = opt("async_mbo",
+  optimizer = opt(
+    "async_mbo",
     design_function = "sobol",
     design_size = 5L,
     acq_function = acq_function,
-    acq_optimizer = acq_optimizer)
+    acq_optimizer = acq_optimizer
+  )
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data, min.rows = 10L)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
+  expect_names(
+    names(instance$archive$data),
+    must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda")
+  )
   expect_numeric(instance$archive$data$acq_lambda, lower = 1, upper = 3)
 })
 
@@ -80,15 +88,20 @@ test_that("AcqFunctionStochasticCB works with exponential sampling", {
 
   acq_optimizer = acqo(opt("random_search"), trm("evals", n_evals = 10L), acq_function = acq_function)
 
-  optimizer = opt("async_mbo",
+  optimizer = opt(
+    "async_mbo",
     design_function = "sobol",
     design_size = 5,
     acq_function = acq_function,
-    acq_optimizer = acq_optimizer)
+    acq_optimizer = acq_optimizer
+  )
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data, min.rows = 10L)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
+  expect_names(
+    names(instance$archive$data),
+    must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda")
+  )
 })
 
 
@@ -110,15 +123,20 @@ test_that("AcqFunctionStochasticCB works with lambda decay", {
 
   acq_optimizer = acqo(opt("random_search"), trm("evals", n_evals = 10L), acq_function = acq_function)
 
-  optimizer = opt("async_mbo",
+  optimizer = opt(
+    "async_mbo",
     design_function = "sobol",
     design_size = 5L,
     acq_function = acq_function,
-    acq_optimizer = acq_optimizer)
+    acq_optimizer = acq_optimizer
+  )
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data, min.rows = 10L)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
+  expect_names(
+    names(instance$archive$data),
+    must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda")
+  )
 
   expect_numeric(-instance$archive$data$acq_lambda, sorted = TRUE)
 })
@@ -141,13 +159,18 @@ test_that("AcqFunctionStochasticCB works with periodic lambda decay", {
 
   acq_optimizer = acqo(opt("random_search"), trm("evals", n_evals = 10L), acq_function = acq_function)
 
-  optimizer = opt("async_mbo",
+  optimizer = opt(
+    "async_mbo",
     design_function = "sobol",
     design_size = 5L,
     acq_function = acq_function,
-    acq_optimizer = acq_optimizer)
+    acq_optimizer = acq_optimizer
+  )
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data, min.rows = 10L)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
+  expect_names(
+    names(instance$archive$data),
+    must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda")
+  )
 })
