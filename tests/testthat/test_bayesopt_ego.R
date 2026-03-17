@@ -79,6 +79,7 @@ test_that("stable bayesopt_ego", {
   skip_if_not_installed("rgenoud")
 
   # logger stuff
+  lg_bbotk = lgr::get_logger("mlr3/bbotk")
   console_appender = if (packageVersion("lgr") >= "0.4.0") {
     lg_bbotk$inherited_appenders$console
   } else {

@@ -64,10 +64,14 @@ test_that("AcqFunctionStochasticEI works with multiple workers", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data, min.rows = 10L)
+<<<<<<< HEAD
   expect_names(
     names(instance$archive$data),
     must.include = c("acq_ei", ".already_evaluated", "acq_epsilon_0", "acq_epsilon")
   )
+=======
+  expect_names(names(instance$archive$data), must.include = c("acq_ei", ".already_evaluated", "acq_epsilon_0", "acq_epsilon"))
+>>>>>>> main
 })
 
 
