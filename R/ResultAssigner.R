@@ -10,9 +10,9 @@
 #'
 #' @family Result Assigner
 #' @export
-ResultAssigner = R6Class("ResultAssigner",
+ResultAssigner = R6Class(
+  "ResultAssigner",
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -88,4 +88,3 @@ ResultAssigner = R6Class("ResultAssigner",
     .man = NULL
   )
 )
-

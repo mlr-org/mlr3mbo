@@ -2,7 +2,17 @@ test_that("AcqFunction API works", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
 
-  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = FALSE, surrogate_class = "SurrogateLearner", direction = "same", packages = "mlr3mbo", label = "label", man = "man")
+  acqf = AcqFunction$new(
+    id = "acqf",
+    constants = ParamSet$new(),
+    surrogate = surrogate,
+    requires_predict_type_se = FALSE,
+    surrogate_class = "SurrogateLearner",
+    direction = "same",
+    packages = "mlr3mbo",
+    label = "label",
+    man = "man"
+  )
 
   expect_r6(acqf$codomain, "ParamSet")
   expect_equal(acqf$codomain$ids(), "acqf")
@@ -22,24 +32,67 @@ test_that("AcqFunction requires_predict_type_se works", {
   surrogate$learner$predict_type = "response"
 
   expect_error(
-    AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = TRUE, surrogate_class = "SurrogateLearner", direction = "same"),
-    class = "Mlr3ErrorConfig", regexp = "requires the surrogate to have")
+    AcqFunction$new(
+      id = "acqf",
+      constants = ParamSet$new(),
+      surrogate = surrogate,
+      requires_predict_type_se = TRUE,
+      surrogate_class = "SurrogateLearner",
+      direction = "same"
+    ),
+    class = "Mlr3ErrorConfig",
+    regexp = "requires the surrogate to have"
+  )
   surrogate$learner$predict_type = "se"
-  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, requires_predict_type_se = TRUE, surrogate_class = "SurrogateLearner", direction = "same")
-  expect_error({
-    acqf$surrogate$learner$predict_type = "response"
-  }, class = "Mlr3ErrorConfig", regexp = "requires the surrogate to have")
-  expect_error({
-    acqf$requires_predict_type_se = FALSE
-  }, class = "Mlr3ErrorConfig", regexp = "is read-only")
+  acqf = AcqFunction$new(
+    id = "acqf",
+    constants = ParamSet$new(),
+    surrogate = surrogate,
+    requires_predict_type_se = TRUE,
+    surrogate_class = "SurrogateLearner",
+    direction = "same"
+  )
+  expect_error(
+    {
+      acqf$surrogate$learner$predict_type = "response"
+    },
+    class = "Mlr3ErrorConfig",
+    regexp = "requires the surrogate to have"
+  )
+  expect_error(
+    {
+      acqf$requires_predict_type_se = FALSE
+    },
+    class = "Mlr3ErrorConfig",
+    regexp = "is read-only"
+  )
 })
 
 test_that("AcqFunction packages works", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
 
-  expect_warning(AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, packages = "TestPackageThatDoesNotExist", requires_predict_type_se = FALSE, surrogate_class = "SurrogateLearner", direction = "same"), "required but not installed for acquisition function")
-  acqf = AcqFunction$new(id = "acqf", constants = ParamSet$new(), surrogate = surrogate, packages = "mlr3mbo", requires_predict_type_se = FALSE, surrogate_class = "SurrogateLearner", direction = "same")
+  expect_warning(
+    AcqFunction$new(
+      id = "acqf",
+      constants = ParamSet$new(),
+      surrogate = surrogate,
+      packages = "TestPackageThatDoesNotExist",
+      requires_predict_type_se = FALSE,
+      surrogate_class = "SurrogateLearner",
+      direction = "same"
+    ),
+    "required but not installed for acquisition function"
+  )
+  acqf = AcqFunction$new(
+    id = "acqf",
+    constants = ParamSet$new(),
+    surrogate = surrogate,
+    packages = "mlr3mbo",
+    requires_predict_type_se = FALSE,
+    surrogate_class = "SurrogateLearner",
+    direction = "same"
+  )
   expect_equal(acqf$packages, "mlr3mbo")
 })
 
@@ -48,13 +101,31 @@ test_that("AcqFunction assert_surrogate rejects wrong surrogate class", {
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
 
   expect_error(
-    AcqFunction$new(id = "acqf", surrogate = surrogate, requires_predict_type_se = FALSE, surrogate_class = "SurrogateLearnerCollection", direction = "same"),
-    "SurrogateLearnerCollection")
+    AcqFunction$new(
+      id = "acqf",
+      surrogate = surrogate,
+      requires_predict_type_se = FALSE,
+      surrogate_class = "SurrogateLearnerCollection",
+      direction = "same"
+    ),
+    "SurrogateLearnerCollection"
+  )
 
-  acqf = AcqFunction$new(id = "acqf", surrogate = surrogate, requires_predict_type_se = FALSE, surrogate_class = "SurrogateLearner", direction = "same")
+  acqf = AcqFunction$new(
+    id = "acqf",
+    surrogate = surrogate,
+    requires_predict_type_se = FALSE,
+    surrogate_class = "SurrogateLearner",
+    direction = "same"
+  )
   inst2 = MAKE_INST(OBJ_1D_2, search_space = PS_1D)
   surrogate_collection = srlrn(list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst2$archive)
-  expect_error({acqf$surrogate = surrogate_collection}, "SurrogateLearner")
+  expect_error(
+    {
+      acqf$surrogate = surrogate_collection
+    },
+    "SurrogateLearner"
+  )
 })
 
 test_that("AcqFunction assert_surrogate rejects wrong surrogate class in subclasses", {
@@ -100,4 +171,3 @@ test_that("AcqFunction generate_acq_domain works", {
   surrogate = SurrogateLearner$new(REGR_FEATURELESS)
   expect_error(generate_acq_domain(surrogate), "Must be an R6 class, not 'NULL'")
 })
-

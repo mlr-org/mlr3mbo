@@ -43,23 +43,25 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionMean = R6Class("AcqFunctionMean",
+AcqFunctionMean = R6Class(
+  "AcqFunctionMean",
   inherit = AcqFunction,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     initialize = function(surrogate = NULL) {
-      super$initialize("acq_mean",
+      super$initialize(
+        "acq_mean",
         surrogate = surrogate,
         requires_predict_type_se = FALSE,
         surrogate_class = "SurrogateLearner",
         direction = "same",
         label = "Posterior Mean",
-        man = "mlr3mbo::mlr_acqfunctions_mean")
+        man = "mlr3mbo::mlr_acqfunctions_mean"
+      )
     }
   ),
 
@@ -72,4 +74,3 @@ AcqFunctionMean = R6Class("AcqFunctionMean",
 )
 
 mlr_acqfunctions$add("mean", AcqFunctionMean)
-

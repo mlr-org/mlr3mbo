@@ -16,7 +16,10 @@
 #' @examples
 #' library(data.table)
 #' as.data.table(mlr_loop_functions)
-mlr_loop_functions = R6Class("DictionaryLoopFunction", inherit = Dictionary, cloneable = FALSE,
+mlr_loop_functions = R6Class(
+  "DictionaryLoopFunction",
+  inherit = Dictionary,
+  cloneable = FALSE,
   public = list(
     #' @description
     #' Retrieves object with key `key` from the dictionary.
@@ -52,12 +55,18 @@ dictionary_loop_function_retrieve_item = function(self, key) {
 as.data.table.DictionaryLoopFunction = function(x, ..., objects = FALSE) {
   assert_flag(objects)
 
-  setkeyv(map_dtr(x$keys(), function(key) {
-    lpf = x$get(key)
-    insert_named(
-      list(key = key, label = attr(lpf, "label"), instance = attr(lpf, "instance"), man = attr(lpf, "man")),
-      if (objects) list(object = list(lpf))
-    )
-  }, .fill = TRUE), "key")[]
+  setkeyv(
+    map_dtr(
+      x$keys(),
+      function(key) {
+        lpf = x$get(key)
+        insert_named(
+          list(key = key, label = attr(lpf, "label"), instance = attr(lpf, "instance"), man = attr(lpf, "man")),
+          if (objects) list(object = list(lpf))
+        )
+      },
+      .fill = TRUE
+    ),
+    "key"
+  )[]
 }
-

@@ -18,7 +18,5 @@ OptIteratorBO = R6Class(
       y = opt_state$opt_problem$target_fun$eval(new_point)
       opt_state$surrogate_model$add(cbind(new_point, y = y))
     }
-
-
   )
 )

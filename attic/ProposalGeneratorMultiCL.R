@@ -1,13 +1,13 @@
 ProposalGeneratorMultiCL = R6Class(
   "ProposalGeneratorMultiCL",
   inherit = ProposalGeneratorMulti,
-  
+
   public = list(
     # public member
     acq_function = NULL,
     acq_optimizer = NULL,
     lie = NULL,
-    
+
     # constructor
     initialize = function(acq_function, acq_optimizer, n = 1, lie = "min") {
       super$initialize(n = n)
@@ -15,7 +15,7 @@ ProposalGeneratorMultiCL = R6Class(
       self$acq_optimizer = acq_optimizer
       self$lie = assert_choice(lie, c("min", "max", "mean"))
     },
-    
+
     # public methods
     # value: data.table with column x (plus additional stuff in additional columns?)
     generate = function(opt_state) {
@@ -32,5 +32,4 @@ ProposalGeneratorMultiCL = R6Class(
       rbindlist(proposals)
     }
   )
-  
 )

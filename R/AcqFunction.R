@@ -9,11 +9,11 @@
 #'
 #' @family Acquisition Function
 #' @export
-AcqFunction = R6Class("AcqFunction",
+AcqFunction = R6Class(
+  "AcqFunction",
   inherit = bbotk::Objective,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -39,13 +39,29 @@ AcqFunction = R6Class("AcqFunction",
     #'   Label for this object.
     #' @param man (`character(1)`)\cr
     #'   String in the format `[pkg]::[topic]` pointing to a manual page for this object.
-    initialize = function(id, constants = ParamSet$new(), surrogate = NULL, requires_predict_type_se, surrogate_class, direction, packages = NULL, label = NA_character_, man = NA_character_) {
+    initialize = function(
+      id,
+      constants = ParamSet$new(),
+      surrogate = NULL,
+      requires_predict_type_se,
+      surrogate_class,
+      direction,
+      packages = NULL,
+      label = NA_character_,
+      man = NA_character_
+    ) {
       # FIXME: Should we allow alternative search_space as additional argument?
       # If we do, we need to trafo values before updating the surrogate and predicting?
       assert_string(id)
       assert_character(packages, null.ok = TRUE)
       if (!is.null(packages)) {
-        check_packages_installed(packages, msg = sprintf("Package '%%s' required but not installed for acquisition function '%s'", sprintf("<%s:%s>", "AcqFunction", id)))
+        check_packages_installed(
+          packages,
+          msg = sprintf(
+            "Package '%%s' required but not installed for acquisition function '%s'",
+            sprintf("<%s:%s>", "AcqFunction", id)
+          )
+        )
       }
       private$.requires_predict_type_se = assert_flag(requires_predict_type_se)
       private$.surrogate_class = assert_string(surrogate_class)
@@ -61,7 +77,15 @@ AcqFunction = R6Class("AcqFunction",
         self$surrogate_max_to_min = surrogate_mult_max_to_min(surrogate)
         domain = generate_acq_domain(surrogate)
       }
-      super$initialize(id = id, domain = domain, codomain = codomain, constants = constants, check_values = FALSE, label = label, man = man)
+      super$initialize(
+        id = id,
+        domain = domain,
+        codomain = codomain,
+        constants = constants,
+        check_values = FALSE,
+        label = label,
+        man = man
+      )
       # workaround for bbotk
       # move to initialize after bbotk CRAN update
       private$.packages = packages
@@ -94,9 +118,13 @@ AcqFunction = R6Class("AcqFunction",
     #' single-objective acquisition functions and multiple y-columns for multi-objective
     #' acquisition functions, e.g. `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
     eval_many = function(xss) {
-      if (self$check_values) lapply(xss, self$domain$assert)
+      if (self$check_values) {
+        lapply(xss, self$domain$assert)
+      }
       res = invoke(private$.fun, rbindlist(xss, use.names = TRUE, fill = TRUE), .args = self$constants$values)
-      if (self$check_values) self$codomain$assert_dt(res[, self$codomain$ids(), with = FALSE])
+      if (self$check_values) {
+        self$codomain$assert_dt(res[, self$codomain$ids(), with = FALSE])
+      }
       res
     },
 
@@ -110,9 +138,13 @@ AcqFunction = R6Class("AcqFunction",
     #' single-objective acquisition functions and multiple y-columns for multi-objective
     #' acquisition functions, e.g. `data.table(y = 1:2)` or `data.table(y1 = 1:2, y2 = 3:4)`.
     eval_dt = function(xdt) {
-      if (self$check_values) self$domain$assert_dt(xdt)
+      if (self$check_values) {
+        self$domain$assert_dt(xdt)
+      }
       res = invoke(private$.fun, xdt, .args = self$constants$values)
-      if (self$check_values) self$codomain$assert_dt(res[, self$codomain$ids(), with = FALSE])
+      if (self$check_values) {
+        self$codomain$assert_dt(res[, self$codomain$ids(), with = FALSE])
+      }
       res
     },
 
@@ -128,7 +160,10 @@ AcqFunction = R6Class("AcqFunction",
     assert_surrogate = function(surrogate) {
       assert_r6(surrogate, classes = private$.surrogate_class)
       if (self$requires_predict_type_se && surrogate$predict_type != "se") {
-        error_config("Acquisition function '%s' requires the surrogate to have 'se' as predict_type.", class(self)[[1L]])
+        error_config(
+          "Acquisition function '%s' requires the surrogate to have 'se' as predict_type.",
+          class(self)[[1L]]
+        )
       }
       surrogate
     }
@@ -179,14 +214,18 @@ AcqFunction = R6Class("AcqFunction",
     #' @field archive ([bbotk::Archive])\cr
     #'   Points to the [bbotk::Archive] of the surrogate.
     archive = function(rhs) {
-      if (!missing(rhs) && !identical(rhs, private$.archive)) stop("$archive is read-only.")
+      if (!missing(rhs) && !identical(rhs, private$.archive)) {
+        stop("$archive is read-only.")
+      }
       private$.archive
     },
 
     #' @field fun (`function`)\cr
     #'   Points to the private acquisition function to be implemented by subclasses.
     fun = function(lhs) {
-      if (!missing(lhs) && !identical(lhs, private$.fun)) stop("$fun is read-only.")
+      if (!missing(lhs) && !identical(lhs, private$.fun)) {
+        stop("$fun is read-only.")
+      }
       private$.fun
     },
 
@@ -203,7 +242,7 @@ AcqFunction = R6Class("AcqFunction",
         self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs)
         domain = generate_acq_domain(rhs)
         # lazy initialization requires this:
-        self$codomain = Codomain$new(get0("domains", codomain, ifnotfound = codomain$params))  # get0 for old paradox
+        self$codomain = Codomain$new(get0("domains", codomain, ifnotfound = codomain$params)) # get0 for old paradox
         self$domain = domain
       }
     },

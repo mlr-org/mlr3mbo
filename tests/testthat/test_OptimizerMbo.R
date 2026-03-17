@@ -17,7 +17,7 @@ test_that("OptimizerMbo works", {
 
   opdf = instance$archive$data
   expect_data_table(opdf, any.missing = TRUE, nrows = 5L)
-  expect_data_table(tail(opdf, - nrow(design)), any.missing = FALSE, nrows = 5L - nrow(design))
+  expect_data_table(tail(opdf, -nrow(design)), any.missing = FALSE, nrows = 5L - nrow(design))
   #expect_equal(instance$result$y, 0, tolerance = 0.1)
 
   optimizer$optimize(instance)
@@ -45,11 +45,14 @@ test_that("OptimizerMbo works with different settings - singlecrit", {
     rs = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   )
 
-  combinations = cross_join(list(
-    loop_function = loop_functions,
-    acq_function = acq_functions,
-    acq_optimizer = acq_optimizers
-  ), sorted = FALSE)
+  combinations = cross_join(
+    list(
+      loop_function = loop_functions,
+      acq_function = acq_functions,
+      acq_optimizer = acq_optimizers
+    ),
+    sorted = FALSE
+  )
 
   for (i in seq_row(combinations)) {
     mbofun = combinations[i, "loop_function"][[1L]][[1L]]$fun
@@ -73,7 +76,7 @@ test_that("OptimizerMbo works for noisy problems", {
   skip_if_not_installed("DiceKriging")
   skip_if_not_installed("rgenoud")
 
- instance = MAKE_INST_1D_NOISY(terminator = trm("evals", n_evals = 5L))
+  instance = MAKE_INST_1D_NOISY(terminator = trm("evals", n_evals = 5L))
 
   optimizer = OptimizerMbo$new(
     loop_function = bayesopt_ego,
@@ -99,7 +102,11 @@ test_that("OptimizerMbo sugar", {
 
   result = bb_optimize(
     OBJ_1D,
-    method = opt("mbo", acq_function = acqf("cb"), acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))),
+    method = opt(
+      "mbo",
+      acq_function = acqf("cb"),
+      acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+    ),
     max_evals = 5L
   )
 
@@ -160,9 +167,15 @@ test_that("OptimizerMbo args", {
   optimizer = opt("mbo", args = list(test = 1))
   expect_equal(optimizer$args, list(test = 1))
   optimizer$loop_function = bayesopt_ego
-  expect_error(optimizer$args, "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}.")
+  expect_error(
+    optimizer$args,
+    "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}."
+  )
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
-  expect_error(optimizer$optimize(instance), "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}.")
+  expect_error(
+    optimizer$optimize(instance),
+    "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}."
+  )
   expect_equal(instance$archive$data, data.table())
   optimizer$args = list(random_interleave_iter = 1L)
   optimizer$optimize(instance)
@@ -174,10 +187,14 @@ test_that("OptimizerMbo reset", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
 
-  optimizer = opt("mbo",
-    acq_optimizer = acqo(opt("random_search", batch_size = 2L),
-    terminator = trm("evals", n_evals = 2L),
-    acq_function = acqf("ei")))
+  optimizer = opt(
+    "mbo",
+    acq_optimizer = acqo(
+      opt("random_search", batch_size = 2L),
+      terminator = trm("evals", n_evals = 2L),
+      acq_function = acqf("ei")
+    )
+  )
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   optimizer$optimize(instance)
 
@@ -207,7 +224,13 @@ test_that("OptimizerMbo up to date surrogate after optimization", {
   skip_if_not_installed("DiceKriging")
 
   acq_function = acqf("ei")
-  surrogate = srlrn(lrn("regr.km", covtype = "matern5_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 10^-8))
+  surrogate = srlrn(lrn(
+    "regr.km",
+    covtype = "matern5_2",
+    optim.method = "gen",
+    control = list(trace = FALSE),
+    nugget.stability = 10^-8
+  ))
   acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   optimizer = opt("mbo", surrogate = surrogate, acq_optimizer = acq_optimizer, acq_function = acq_function)
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
@@ -218,7 +241,6 @@ test_that("OptimizerMbo up to date surrogate after optimization", {
   expect_true(surrogate$learner$state$train_task$nrow == 5L)
 
   predictions = surrogate$predict(instance$archive$data[, instance$archive$cols_x, with = FALSE])
-  expect_true(all(sqrt((predictions$mean - instance$archive$data$y) ^ 2) < 1e-4))
+  expect_true(all(sqrt((predictions$mean - instance$archive$data$y)^2) < 1e-4))
   expect_true(all(predictions$se < 1e-4))
 })
-

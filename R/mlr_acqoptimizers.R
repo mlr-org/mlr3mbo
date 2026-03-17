@@ -24,15 +24,21 @@
 mlr_acqoptimizers = R6Class("DictionaryAcqOptimizer", inherit = Dictionary, cloneable = FALSE)$new()
 
 #' @export
-as.data.table.DictionaryAcqOptimizer= function(x, ..., objects = FALSE) {
+as.data.table.DictionaryAcqOptimizer = function(x, ..., objects = FALSE) {
   assert_flag(objects)
 
-  setkeyv(map_dtr(x$keys(), function(key) {
-    acqopt = withCallingHandlers(x$get(key), packageNotFoundWarning = function(w) invokeRestart("muffleWarning"))
-    insert_named(
-      list(key = key, label = acqopt$label, man = acqopt$man),
-      if (objects) list(object = list(acqopt))
-    )
-  }, .fill = TRUE), "key")[]
+  setkeyv(
+    map_dtr(
+      x$keys(),
+      function(key) {
+        acqopt = withCallingHandlers(x$get(key), packageNotFoundWarning = function(w) invokeRestart("muffleWarning"))
+        insert_named(
+          list(key = key, label = acqopt$label, man = acqopt$man),
+          if (objects) list(object = list(acqopt))
+        )
+      },
+      .fill = TRUE
+    ),
+    "key"
+  )[]
 }
-

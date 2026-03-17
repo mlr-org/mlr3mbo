@@ -95,19 +95,18 @@
 #' }
 #' }
 bayesopt_mpcl = function(
-    instance,
-    surrogate,
-    acq_function,
-    acq_optimizer,
-    init_design_size = NULL,
-    q = 2L,
-    liar = mean,
-    random_interleave_iter = 0L
-  ) {
-
+  instance,
+  surrogate,
+  acq_function,
+  acq_optimizer,
+  init_design_size = NULL,
+  q = 2L,
+  liar = mean,
+  random_interleave_iter = 0L
+) {
   # assertions
   assert_r6(instance, "OptimInstanceBatchSingleCrit")
-  assert_r6(surrogate, classes = "Surrogate")  # cannot be SurrogateLearner due to EIPS
+  assert_r6(surrogate, classes = "Surrogate") # cannot be SurrogateLearner due to EIPS
   assert_r6(acq_function, classes = "AcqFunction")
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
@@ -135,44 +134,56 @@ bayesopt_mpcl = function(
   # actual loop
   repeat {
     # normal ego proposal with error catching
-    xdt = tryCatch({
-      acq_function$surrogate$update()
-      acq_function$update()
-      acq_optimizer$optimize()
-    }, Mlr3ErrorMbo = function(cond) {
-      #lg$info("Proposing a randomly sampled point") no logging because we do not evaluate this point
-      generate_design_random(search_space, n = 1L)$data
-    })
+    xdt = tryCatch(
+      {
+        acq_function$surrogate$update()
+        acq_function$update()
+        acq_optimizer$optimize()
+      },
+      Mlr3ErrorMbo = function(cond) {
+        #lg$info("Proposing a randomly sampled point") no logging because we do not evaluate this point
+        generate_design_random(search_space, n = 1L)$data
+      }
+    )
 
     # prepare lie objects
     tmp_archive = instance$archive$clone(deep = TRUE)
     acq_function$surrogate$archive = tmp_archive
-    lie[, instance$archive$cols_y := liar(instance$archive$data[[instance$archive$cols_y]])]  # FIXME: assert output of liar
+    lie[, instance$archive$cols_y := liar(instance$archive$data[[instance$archive$cols_y]])] # FIXME: assert output of liar
     xdt_new = xdt
 
     # obtain proposals using fake archive with lie, also with error catching
-    for (i in seq_len(q)[-1L]) { # this is save because q is asserted >= 2
-      xdt_new = tryCatch({
-        # add lie instead of true eval
-        tmp_archive$add_evals(xdt = xdt_new, xss_trafoed = transform_xdt_to_xss(xdt_new, tmp_archive$search_space), ydt = lie)
+    for (i in seq_len(q)[-1L]) {
+      # this is save because q is asserted >= 2
+      xdt_new = tryCatch(
+        {
+          # add lie instead of true eval
+          tmp_archive$add_evals(
+            xdt = xdt_new,
+            xss_trafoed = transform_xdt_to_xss(xdt_new, tmp_archive$search_space),
+            ydt = lie
+          )
 
-        # random interleaving is handled here
-        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-          error_random_interleave("Random interleaving")
+          # random interleaving is handled here
+          if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+            error_random_interleave("Random interleaving")
+          }
+
+          # update all objects with lie
+          acq_function$surrogate$update()
+          acq_function$update()
+          acq_optimizer$optimize()
+        },
+        Mlr3ErrorMboRandomInterleave = function(cond) {
+          lg$info("Random interleaving triggered, proposing a randomly sampled point")
+          generate_design_random(search_space, n = 1L)$data
+        },
+        Mlr3ErrorMbo = function(cond) {
+          lg$warn("Caught the following error: %s", cond$message)
+          lg$info("Proposing a randomly sampled point")
+          generate_design_random(search_space, n = 1L)$data
         }
-
-        # update all objects with lie
-        acq_function$surrogate$update()
-        acq_function$update()
-        acq_optimizer$optimize()
-      }, Mlr3ErrorMboRandomInterleave = function(cond) {
-        lg$info("Random interleaving triggered, proposing a randomly sampled point")
-        generate_design_random(search_space, n = 1L)$data
-      }, Mlr3ErrorMbo = function(cond) {
-        lg$warn("Caught the following error: %s", cond$message)
-        lg$info("Proposing a randomly sampled point")
-        generate_design_random(search_space, n = 1L)$data
-      })
+      )
       xdt = rbind(xdt, xdt_new)
     }
 
@@ -193,4 +204,3 @@ attr(bayesopt_mpcl, "instance") = "single-crit"
 attr(bayesopt_mpcl, "man") = "mlr3mbo::mlr_loop_functions_mpcl"
 
 mlr_loop_functions$add("bayesopt_mpcl", bayesopt_mpcl)
-

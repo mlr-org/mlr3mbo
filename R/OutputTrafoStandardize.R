@@ -46,7 +46,8 @@
 #'
 #'   surrogate$predict(data.table(x = c(-1, 0, 1)))
 #' }
-OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
+OutputTrafoStandardize = R6Class(
+  "OutputTrafoStandardize",
   inherit = OutputTrafo,
 
   public = list(
@@ -57,7 +58,11 @@ OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
     #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or [SurrogateLearnerCollection]?
     #'  Default is `TRUE`.
     initialize = function(invert_posterior = TRUE) {
-      super$initialize(invert_posterior = invert_posterior, label = "Standardize", man = "mlr3mbo::mlr_output_trafos_standardize")
+      super$initialize(
+        invert_posterior = invert_posterior,
+        label = "Standardize",
+        man = "mlr3mbo::mlr_output_trafos_standardize"
+      )
     },
 
     #' @description
@@ -117,10 +122,10 @@ OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
         }
       }
       for (col_y in self$cols_y) {
-      	mean = pred[[col_y]]$mean * self$state[[col_y]]$sigma + self$state[[col_y]]$mu
-      	se = pred[[col_y]]$se * self$state[[col_y]]$sigma
-      	set(pred[[col_y]], j = "mean", value = mean)
-      	set(pred[[col_y]], j = "se", value = se)
+        mean = pred[[col_y]]$mean * self$state[[col_y]]$sigma + self$state[[col_y]]$mu
+        se = pred[[col_y]]$se * self$state[[col_y]]$sigma
+        set(pred[[col_y]], j = "mean", value = mean)
+        set(pred[[col_y]], j = "se", value = se)
       }
       if (length(self$cols_y) == 1L) {
         pred[[self$cols_y]]
@@ -163,4 +168,3 @@ OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
 )
 
 mlr_output_trafos$add("standardize", OutputTrafoStandardize)
-

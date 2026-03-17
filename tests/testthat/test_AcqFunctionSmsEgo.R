@@ -1,6 +1,9 @@
 test_that("AcqFunctionSmsEgo works", {
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
-  surrogate = SurrogateLearnerCollection$new(list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
+  surrogate = SurrogateLearnerCollection$new(
+    list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)),
+    archive = inst$archive
+  )
   acqf = AcqFunctionSmsEgo$new(surrogate = surrogate)
   expect_acqfunction(acqf)
 
@@ -29,4 +32,3 @@ test_that("AcqFunctionSmsEgo works", {
   expect_named(res)
   expect_setequal(colnames(res), c(acqf$id, "acq_epsilon"))
 })
-

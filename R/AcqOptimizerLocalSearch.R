@@ -11,10 +11,10 @@
 #' @export
 #' @examples
 #' acqo("local_search")
-AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
+AcqOptimizerLocalSearch = R6Class(
+  "AcqOptimizerLocalSearch",
   inherit = AcqOptimizer,
   public = list(
-
     #' @field state (`list()`)\cr
     #' List of [cmaes::cma_es()] results.
     state = NULL,
@@ -42,38 +42,43 @@ AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
       pv = self$param_set$get_values()
-      control = invoke(bbotk::local_search_control, minimize = self$acq_function$codomain$direction == 1L, .args = pv[names(pv) != "catch_errors"])
+      control = invoke(
+        bbotk::local_search_control,
+        minimize = self$acq_function$codomain$direction == 1L,
+        .args = pv[names(pv) != "catch_errors"]
+      )
 
       wrapper = function(xdt) {
         mlr3misc::invoke(self$acq_function$fun, xdt = xdt, .args = self$acq_function$constants$values)[[1]]
       }
 
       optimize = function() {
-        invoke(bbotk::local_search,
-          objective = wrapper,
-          search_space = self$acq_function$domain,
-          control = control)
+        invoke(bbotk::local_search, objective = wrapper, search_space = self$acq_function$domain, control = control)
       }
 
       if (pv$catch_errors) {
-        tryCatch({
-          res = optimize()
-        }, error = function(error_condition) {
-          error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
-        })
+        tryCatch(
+          {
+            res = optimize()
+          },
+          error = function(error_condition) {
+            error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
+          }
+        )
       } else {
         res = optimize()
       }
-      as.data.table(as.list(set_names(c(res$x, res$y), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+      as.data.table(as.list(set_names(
+        c(res$x, res$y),
+        c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
+      )))
     },
 
     #' @description
     #' Reset the acquisition function optimizer.
     #'
     #' Currently not used.
-    reset = function() {
-
-    }
+    reset = function() {}
   ),
 
   active = list(
@@ -88,7 +93,8 @@ AcqOptimizerLocalSearch = R6Class("AcqOptimizerLocalSearch",
     .param_set = NULL,
 
     deep_clone = function(name, value) {
-      switch(name,
+      switch(
+        name,
         optimizer = value$clone(deep = TRUE),
         terminator = value$clone(deep = TRUE),
         acq_function = if (!is.null(value)) value$clone(deep = TRUE) else NULL,

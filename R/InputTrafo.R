@@ -9,9 +9,9 @@
 #'
 #' @family Input Transformation
 #' @export
-InputTrafo = R6Class("InputTrafo",
+InputTrafo = R6Class(
+  "InputTrafo",
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -135,4 +135,3 @@ InputTrafo = R6Class("InputTrafo",
     .cols_x = NULL
   )
 )
-

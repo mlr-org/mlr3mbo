@@ -97,7 +97,8 @@
 #'   }
 #' }
 #' }
-OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
+OptimizerAsyncMbo = R6Class(
+  "OptimizerAsyncMbo",
   inherit = bbotk::OptimizerAsync,
 
   public = list(
@@ -132,8 +133,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       param_set = NULL,
       label = "Asynchronous Model Based Optimization",
       man = "mlr3mbo::OptimizerAsyncMbo"
-      ) {
-
+    ) {
       default_param_set = ps(
         initial_design = p_uty(),
         design_size = p_int(lower = 1, default = 100L),
@@ -144,13 +144,15 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
 
       param_set$set_values(design_size = 100L, design_function = "sobol")
 
-      super$initialize("async_mbo",
+      super$initialize(
+        "async_mbo",
         param_set = param_set,
-        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),  # is replaced with dynamic AB after construction
-        properties = c("dependencies", "single-crit"),  # is replaced with dynamic AB after construction
-        packages = c("mlr3mbo", "rush"),  # is replaced with dynamic AB after construction
+        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"), # is replaced with dynamic AB after construction
+        properties = c("dependencies", "single-crit"), # is replaced with dynamic AB after construction
+        packages = c("mlr3mbo", "rush"), # is replaced with dynamic AB after construction
         label = label,
-        man = man)
+        man = man
+      )
 
       self$surrogate = assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
       self$acq_function = assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
@@ -170,8 +172,14 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       catn(str_indent("* Packages:", self$packages))
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
-      catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
-      catn(str_indent("* Result Assigner:", if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]))
+      catn(str_indent(
+        "* Acquisition Function Optimizer:",
+        if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id
+      ))
+      catn(str_indent(
+        "* Result Assigner:",
+        if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]
+      ))
     },
 
     #' @description
@@ -199,7 +207,8 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         self$acq_function = self$acq_optimizer$acq_function %??% default_acqfunction(inst)
       }
 
-      if (is.null(self$surrogate)) {  # acq_function$surrogate has precedence
+      if (is.null(self$surrogate)) {
+        # acq_function$surrogate has precedence
         self$surrogate = self$acq_function$surrogate %??% default_surrogate(inst)
       }
 
@@ -221,7 +230,10 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
 
       # FIXME: if result_assigner is for example ResultAssignerSurrogate the surrogate won't be set automatically
 
-      check_packages_installed(self$packages, msg = sprintf("Package '%%s' required but not installed for Optimizer '%s'", format(self)))
+      check_packages_installed(
+        self$packages,
+        msg = sprintf("Package '%%s' required but not installed for Optimizer '%s'", format(self))
+      )
 
       lg = lgr::get_logger("mlr3/bbotk")
       pv = self$param_set$values
@@ -232,10 +244,12 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         NULL
       } else if (is.null(pv$initial_design)) {
         # generate initial design
-        generate_design = switch(pv$design_function,
+        generate_design = switch(
+          pv$design_function,
           "random" = generate_design_random,
           "sobol" = generate_design_sobol,
-          "lhs" = generate_design_lhs)
+          "lhs" = generate_design_lhs
+        )
 
         lg$debug("Generating sobol design with size %s", pv$design_size)
         generate_design(inst$search_space, n = pv$design_size)$data
@@ -288,9 +302,16 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
     #' @template field_param_classes
     param_classes = function(rhs) {
       if (missing(rhs)) {
-        param_classes_surrogate = c("logical" = "ParamLgl", "integer" = "ParamInt", "numeric" = "ParamDbl", "factor" = "ParamFct")
+        param_classes_surrogate = c(
+          "logical" = "ParamLgl",
+          "integer" = "ParamInt",
+          "numeric" = "ParamDbl",
+          "factor" = "ParamFct"
+        )
         if (!is.null(self$surrogate)) {
-          param_classes_surrogate = param_classes_surrogate[c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types] # surrogate has precedence over acq_function$surrogate
+          param_classes_surrogate = param_classes_surrogate[
+            c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types
+          ] # surrogate has precedence over acq_function$surrogate
         }
         param_classes_acq_opt = if (!is.null(self$acq_optimizer)) {
           self$acq_optimizer$optimizer$param_classes
@@ -322,7 +343,15 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
     #' @template field_packages
     packages = function(rhs) {
       if (missing(rhs)) {
-        union(c("mlr3mbo", "rush"), c(self$acq_function$packages, self$surrogate$packages, self$acq_optimizer$optimizer$packages, self$result_assigner$packages))
+        union(
+          c("mlr3mbo", "rush"),
+          c(
+            self$acq_function$packages,
+            self$surrogate$packages,
+            self$acq_optimizer$optimizer$packages,
+            self$result_assigner$packages
+          )
+        )
       } else {
         stop("$packages is read-only.")
       }
@@ -345,17 +374,20 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       # actual loop
       while (!inst$is_terminated) {
         # sample
-        xs = tryCatch({
-          self$acq_function$surrogate$update()
-          self$acq_function$update()
-          xdt = self$acq_optimizer$optimize()
-          transpose_list(xdt)[[1L]]
-        }, Mlr3ErrorMbo = function(cond) {
-          lg$warn("Caught the following error: %s", cond$message)
-          lg$info("Proposing a randomly sampled point")
-          xdt = generate_design_random(inst$search_space, n = 1L)$data
-          transpose_list(xdt)[[1L]]
-        })
+        xs = tryCatch(
+          {
+            self$acq_function$surrogate$update()
+            self$acq_function$update()
+            xdt = self$acq_optimizer$optimize()
+            transpose_list(xdt)[[1L]]
+          },
+          Mlr3ErrorMbo = function(cond) {
+            lg$warn("Caught the following error: %s", cond$message)
+            lg$info("Proposing a randomly sampled point")
+            xdt = generate_design_random(inst$search_space, n = 1L)$data
+            transpose_list(xdt)[[1L]]
+          }
+        )
 
         # eval
         get_private(inst)$.eval_point(xs)
@@ -365,7 +397,8 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         tryCatch(
           {
             self$surrogate$update()
-          }, Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
+          },
+          Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
             lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
           }
         )

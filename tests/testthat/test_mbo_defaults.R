@@ -21,12 +21,16 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST_1D())
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$learner, "LearnerRegrKM")
-  expect_equal_sorted(surrogate$learner$param_set$values, list(
-    scaling = FALSE,
-    covtype = "matern5_2",
-    optim.method = "gen",
-    control = list(trace = FALSE),
-    nugget.stability = 1e-08))
+  expect_equal_sorted(
+    surrogate$learner$param_set$values,
+    list(
+      scaling = FALSE,
+      covtype = "matern5_2",
+      optim.method = "gen",
+      control = list(trace = FALSE),
+      nugget.stability = 1e-08
+    )
+  )
   expect_equal(surrogate$learner$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
   expect_r6(surrogate$output_trafo, "OutputTrafoLog")
@@ -35,13 +39,17 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST_1D_NOISY())
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$learner, "LearnerRegrKM")
-  expect_equal_sorted(surrogate$learner$param_set$values, list(
-    scaling = FALSE,
-    covtype = "matern5_2",
-    optim.method = "gen",
-    control = list(trace = FALSE),
-    nugget.estim = TRUE,
-    jitter = 1e-12))
+  expect_equal_sorted(
+    surrogate$learner$param_set$values,
+    list(
+      scaling = FALSE,
+      covtype = "matern5_2",
+      optim.method = "gen",
+      control = list(trace = FALSE),
+      nugget.estim = TRUE,
+      jitter = 1e-12
+    )
+  )
   expect_equal(surrogate$learner$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
   expect_r6(surrogate$output_trafo, "OutputTrafoLog")
@@ -50,12 +58,16 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2, search_space = PS_1D))
   expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$learner, types = "LearnerRegrKM")
-  expect_equal_sorted(surrogate$learner[[1L]]$param_set$values, list(
-    scaling = FALSE,
-    covtype = "matern5_2",
-    optim.method = "gen",
-    control = list(trace = FALSE),
-    nugget.stability = 1e-08))
+  expect_equal_sorted(
+    surrogate$learner[[1L]]$param_set$values,
+    list(
+      scaling = FALSE,
+      covtype = "matern5_2",
+      optim.method = "gen",
+      control = list(trace = FALSE),
+      nugget.stability = 1e-08
+    )
+  )
   expect_equal(surrogate$learner[[1L]]$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner[[1L]]$fallback, "LearnerRegrRanger")
   expect_equal(surrogate$learner[[1L]]$param_set$values, surrogate$learner[[2L]]$param_set$values)
@@ -67,13 +79,17 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2_NOISY, search_space = PS_1D))
   expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$learner, types = "LearnerRegrKM")
-  expect_equal_sorted(surrogate$learner[[1L]]$param_set$values, list(
-    scaling = FALSE,
-    covtype = "matern5_2",
-    optim.method = "gen",
-    control = list(trace = FALSE),
-    nugget.estim = TRUE,
-    jitter = 1e-12))
+  expect_equal_sorted(
+    surrogate$learner[[1L]]$param_set$values,
+    list(
+      scaling = FALSE,
+      covtype = "matern5_2",
+      optim.method = "gen",
+      control = list(trace = FALSE),
+      nugget.estim = TRUE,
+      jitter = 1e-12
+    )
+  )
   expect_equal(surrogate$learner[[1L]]$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner[[1L]]$fallback, "LearnerRegrRanger")
   expect_equal(surrogate$learner[[1L]]$param_set$values, surrogate$learner[[2L]]$param_set$values)
@@ -85,17 +101,21 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED))
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$learner, "LearnerRegrRanger")
-  expect_equal_sorted(surrogate$learner$param_set$values, list(
-    num.threads = 1L,
-    num.trees = 500L,
-    se.method = "law_of_total_variance",
-    splitrule = "variance",
-    keep.inbag = TRUE,
-    sample.fraction = 1,
-    min.node.size = 3,
-    min.bucket = 3,
-    mtry.ratio = 5 / 6,
-    sigma2.threshold = 1e-2))
+  expect_equal_sorted(
+    surrogate$learner$param_set$values,
+    list(
+      num.threads = 1L,
+      num.trees = 500L,
+      se.method = "law_of_total_variance",
+      splitrule = "variance",
+      keep.inbag = TRUE,
+      sample.fraction = 1,
+      min.node.size = 3,
+      min.bucket = 3,
+      mtry.ratio = 5 / 6,
+      sigma2.threshold = 1e-2
+    )
+  )
   expect_equal(surrogate$learner$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
   expect_r6(surrogate$output_trafo, "OutputTrafoLog")
@@ -104,17 +124,21 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_2_MIXED, search_space = PS_1D_MIXED))
   expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$learner, types = "LearnerRegrRanger")
-  expect_equal_sorted(surrogate$learner[[1]]$param_set$values, list(
-    num.threads = 1L,
-    num.trees = 500L,
-    se.method = "law_of_total_variance",
-    splitrule = "variance",
-    keep.inbag = TRUE,
-    sample.fraction = 1,
-    min.node.size = 3,
-    min.bucket = 3,
-    mtry.ratio = 5 / 6,
-    sigma2.threshold = 1e-2))
+  expect_equal_sorted(
+    surrogate$learner[[1]]$param_set$values,
+    list(
+      num.threads = 1L,
+      num.trees = 500L,
+      se.method = "law_of_total_variance",
+      splitrule = "variance",
+      keep.inbag = TRUE,
+      sample.fraction = 1,
+      min.node.size = 3,
+      min.bucket = 3,
+      mtry.ratio = 5 / 6,
+      sigma2.threshold = 1e-2
+    )
+  )
   expect_equal(surrogate$learner[[1L]]$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner[[1L]]$fallback, "LearnerRegrRanger")
   expect_equal(surrogate$learner[[1L]]$param_set$values, surrogate$learner[[2L]]$param_set$values)
@@ -126,27 +150,39 @@ test_that("default_surrogate", {
   surrogate = default_surrogate(MAKE_INST(OBJ_1D_MIXED, search_space = PS_1D_MIXED_DEPS))
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$learner, "LearnerRegrRanger")
-  expect_equal_sorted(surrogate$learner$param_set$values, list(
-    num.threads = 1L,
-    num.trees = 500L,
-    se.method = "law_of_total_variance",
-    splitrule = "variance",
-    keep.inbag = TRUE,
-    sample.fraction = 1,
-    min.node.size = 3,
-    min.bucket = 3,
-    mtry.ratio = 5 / 6,
-    sigma2.threshold = 1e-2))
+  expect_equal_sorted(
+    surrogate$learner$param_set$values,
+    list(
+      num.threads = 1L,
+      num.trees = 500L,
+      se.method = "law_of_total_variance",
+      splitrule = "variance",
+      keep.inbag = TRUE,
+      sample.fraction = 1,
+      min.node.size = 3,
+      min.bucket = 3,
+      mtry.ratio = 5 / 6,
+      sigma2.threshold = 1e-2
+    )
+  )
   expect_equal(surrogate$learner$encapsulation, c(train = "evaluate", predict = "evaluate"))
   expect_r6(surrogate$learner$fallback, "LearnerRegrRanger")
   expect_r6(surrogate$output_trafo, "OutputTrafoLog")
 
   # specify own learner, specify n_objectives, twocrit all numeric, deterministic
-  surrogate = default_surrogate(MAKE_INST(OBJ_1D_2, search_space = PS_1D), learner = lrn("regr.featureless"), n_learner = 1L)
+  surrogate = default_surrogate(
+    MAKE_INST(OBJ_1D_2, search_space = PS_1D),
+    learner = lrn("regr.featureless"),
+    n_learner = 1L
+  )
   expect_r6(surrogate, "SurrogateLearner")
   expect_r6(surrogate$learner, "LearnerRegrFeatureless")
 
-  surrogate = default_surrogate(MAKE_INST(OBJ_1D_2, search_space = PS_1D), learner = lrn("regr.featureless"), n_learner = 3L)
+  surrogate = default_surrogate(
+    MAKE_INST(OBJ_1D_2, search_space = PS_1D),
+    learner = lrn("regr.featureless"),
+    n_learner = 3L
+  )
   expect_r6(surrogate, "SurrogateLearnerCollection")
   expect_list(surrogate$learner, types = "LearnerRegrFeatureless")
 })
@@ -183,7 +219,11 @@ test_that("stability and defaults", {
   skip_if_not_installed("rgenoud")
   skip_if_not_installed("ranger")
 
-  console_appender = if (packageVersion("lgr") >= "0.4.0") lg$inherited_appenders$console else lg$inherited_appenders$appenders.console
+  console_appender = if (packageVersion("lgr") >= "0.4.0") {
+    lg$inherited_appenders$console
+  } else {
+    lg$inherited_appenders$appenders.console
+  }
   f = tempfile("bbotklog_", fileext = "log")
   th1 = lg$threshold
   th2 = console_appender$threshold
@@ -204,7 +244,10 @@ test_that("stability and defaults", {
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
   learner = LearnerRegrError$new()
   learner$predict_type = "se"
-  learner$encapsulate("evaluate", lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack", predict_type = "se"))
+  learner$encapsulate(
+    "evaluate",
+    lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack", predict_type = "se")
+  )
   surrogate = default_surrogate(instance, learner = learner, n_learner = 1L)
   surrogate$output_trafo = OutputTrafoLog$new(invert_posterior = FALSE)
   expect_r6(surrogate, "SurrogateLearner")
@@ -225,4 +268,3 @@ test_that("stability and defaults", {
   # Nothing should happen here due to the fallback learner
   expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)
 })
-

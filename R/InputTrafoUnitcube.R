@@ -42,7 +42,8 @@
 #'
 #'   surrogate$predict(data.table(x = c(-1, 0, 1)))
 #' }
-InputTrafoUnitcube= R6Class("InputTrafoUnitcube",
+InputTrafoUnitcube = R6Class(
+  "InputTrafoUnitcube",
   inherit = InputTrafo,
 
   public = list(
@@ -74,10 +75,15 @@ InputTrafoUnitcube= R6Class("InputTrafoUnitcube",
         stop("$state is not set. Missed to call $update()?")
       }
       xdt = copy(xdt)
-      parameters = names(which(self$search_space$is_number))  # numeric or integer
+      parameters = names(which(self$search_space$is_number)) # numeric or integer
       assert_subset(parameters, self$cols_x)
       for (parameter in parameters) {
-        set(xdt, j = parameter, value = (xdt[[parameter]] - self$search_space$lower[[parameter]]) / (self$search_space$upper[[parameter]] - self$search_space$lower[[parameter]]))
+        set(
+          xdt,
+          j = parameter,
+          value = (xdt[[parameter]] - self$search_space$lower[[parameter]]) /
+            (self$search_space$upper[[parameter]] - self$search_space$lower[[parameter]])
+        )
       }
       xdt
     }
@@ -98,4 +104,3 @@ InputTrafoUnitcube= R6Class("InputTrafoUnitcube",
 )
 
 mlr_input_trafos$add("unitcube", InputTrafoUnitcube)
-

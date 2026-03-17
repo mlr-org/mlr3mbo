@@ -6,7 +6,6 @@
 # - the design?
 # - the optimizer?
 
-
 #' @title Single Objective Bayesian Optimization
 #'
 #' @description
@@ -22,7 +21,13 @@
 #' `r format_bib("jones_1998")`
 #'
 #' @export
-bayesopt_soo = function(instance, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, n_design = 4 * instance$search_space$length) {
+bayesopt_soo = function(
+  instance,
+  surrogate = NULL,
+  acq_function = NULL,
+  acq_optimizer = NULL,
+  n_design = 4 * instance$search_space$length
+) {
   assert_r6(instance, "OptimInstance")
   if (is.null(acq_function)) {
     surrogate = default_surrogate(instance)
@@ -38,14 +43,17 @@ bayesopt_soo = function(instance, surrogate = NULL, acq_function = NULL, acq_opt
   archive = instance$archive
 
   repeat {
-    xdt = tryCatch({
-    surrogate(archive)
-      acq_function$update()
-      acq_optimizer$optimize(acq_function, archive = archive)  # archive need for fix_xdt_distance()
-    }, leads_to_exploration_error = function(leads_to_exploration_error_condition) {
-      lg$info("Proposing a randomly sampled point")  # FIXME: logging?
-      SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
-    })
+    xdt = tryCatch(
+      {
+        surrogate(archive)
+        acq_function$update()
+        acq_optimizer$optimize(acq_function, archive = archive) # archive need for fix_xdt_distance()
+      },
+      leads_to_exploration_error = function(leads_to_exploration_error_condition) {
+        lg$info("Proposing a randomly sampled point") # FIXME: logging?
+        SamplerUnif$new(instance$search_space)$sample(1L)$data # FIXME: also think about augmented lhs
+      }
+    )
 
     instance$eval_batch(xdt)
     if (instance$is_terminated || instance$terminator$is_terminated(archive)) break

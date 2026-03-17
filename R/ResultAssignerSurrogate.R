@@ -13,11 +13,11 @@
 #' @export
 #' @examples
 #' result_assigner = ras("surrogate")
-ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
+ResultAssignerSurrogate = R6Class(
+  "ResultAssignerSurrogate",
   inherit = ResultAssigner,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -43,7 +43,11 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
       } else if (inherits(instance, c("OptimInstanceBatchMultiCrit", "OptimInstanceAsyncMultiCrit"))) {
         assert_r6(self$surrogate, classes = "SurrogateLearnerCollection")
         if (self$surrogate$n_learner != instance$objective$ydim) {
-          stopf("Surrogate used within the result assigner uses %i learners but the optimization instance has %i objective functions", self$surrogate$n_learner, instance$objective$ydim)
+          stopf(
+            "Surrogate used within the result assigner uses %i learners but the optimization instance has %i objective functions",
+            self$surrogate$n_learner,
+            instance$objective$ydim
+          )
         }
       }
 
@@ -73,7 +77,6 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
         best_y = archive$data[best, on = cols_x][, cols_y, with = FALSE]
         instance$assign_result(xdt = best, ydt = best_y, extra = extra)
       }
-
     }
   ),
 
@@ -103,8 +106,11 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
     .surrogate = NULL,
 
     deep_clone = function(name, value) {
-      switch(name,
-        .surrogate = {if (!is.null(value)) value$clone(deep = TRUE) else value},
+      switch(
+        name,
+        .surrogate = {
+          if (!is.null(value)) value$clone(deep = TRUE) else value
+        },
         value
       )
     }
@@ -112,4 +118,3 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
 )
 
 mlr_result_assigners$add("surrogate", ResultAssignerSurrogate)
-

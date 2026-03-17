@@ -60,7 +60,8 @@ default_gp = function(noisy = FALSE) {
   require_namespaces("DiceKriging")
   require_namespaces("rgenoud")
 
-  learner = lrn("regr.km",
+  learner = lrn(
+    "regr.km",
     predict_type = "se",
     control = list(trace = FALSE),
     optim.method = "gen",
@@ -91,7 +92,8 @@ default_rf = function(noisy = FALSE) {
   assert_flag(noisy)
   require_namespaces("mlr3learners")
   require_namespaces("ranger")
-  lrn("regr.ranger",
+  lrn(
+    "regr.ranger",
     num.trees = 500L,
     se.method = "law_of_total_variance",
     splitrule = "variance",
@@ -153,7 +155,9 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL, force_r
     learner$encapsulate("evaluate", fallback)
   }
 
-  if (is.null(n_learner)) n_learner = length(instance$archive$cols_y)
+  if (is.null(n_learner)) {
+    n_learner = length(instance$archive$cols_y)
+  }
 
   if (n_learner == 1L) {
     SurrogateLearner$new(learner, output_trafo = OutputTrafoLog$new(invert_posterior = FALSE))
@@ -227,4 +231,3 @@ default_result_assigner = function(instance) {
   assert_r6(instance, classes = "OptimInstance")
   ResultAssignerArchive$new()
 }
-

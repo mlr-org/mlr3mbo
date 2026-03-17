@@ -4,7 +4,8 @@
 #' Surrogate model for single criteria response surfaces.
 #'
 #' @export
-SurrogateSingleCrit = R6Class("SurrogateSingleCrit",
+SurrogateSingleCrit = R6Class(
+  "SurrogateSingleCrit",
   inherit = Surrogate,
 
   public = list(

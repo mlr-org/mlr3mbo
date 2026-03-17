@@ -25,12 +25,20 @@ test_that("conditions work", {
   acq_function = AcqFunctionEI$new()
   acq_optimizer = AcqOptimizer$new(OptimizerError$new(), terminator = trm("evals", n_evals = 2L))
   # catches simple error wrapped in Mlr3ErrorMboAcqOptimizer
-  expect_snapshot(bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer))
+  expect_snapshot(bayesopt_ego(
+    instance,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer
+  ))
 
   # uncaught acq optimizer error
   acq_optimizer$param_set$set_values(catch_errors = FALSE)
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
-  expect_error(bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer), regexp = "Optimizer Error")
+  expect_error(
+    bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer),
+    regexp = "Optimizer Error"
+  )
 
   # surrogate update error
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
@@ -41,11 +49,20 @@ test_that("conditions work", {
   surrogate = SurrogateLearner$new(learner)
   acq_function = AcqFunctionEI$new()
   acq_optimizer = acqo("random_search", terminator = trm("evals", n_evals = 2L))
-  expect_snapshot(bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer))
+  expect_snapshot(bayesopt_ego(
+    instance,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer
+  ))
 
   # uncaught surrogate update error
   surrogate$param_set$set_values(catch_errors = FALSE)
-  expect_error(bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer), class = "Mlr3ErrorLearnerTrain", regexp = "Surrogate Train Error")
+  expect_error(
+    bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer),
+    class = "Mlr3ErrorLearnerTrain",
+    regexp = "Surrogate Train Error"
+  )
 
   # surrogate predict error
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
@@ -56,10 +73,19 @@ test_that("conditions work", {
   surrogate = SurrogateLearner$new(learner)
   acq_function = AcqFunctionEI$new()
   acq_optimizer = acqo("random_search", terminator = trm("evals", n_evals = 2L))
-  expect_snapshot(bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer))
+  expect_snapshot(bayesopt_ego(
+    instance,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer
+  ))
 
   # uncaught surrogate predict error
   acq_optimizer$param_set$set_values(catch_errors = FALSE)
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
-  expect_error(bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer), class = "Mlr3ErrorLearnerPredict", regexp = "Surrogate Predict Error")
+  expect_error(
+    bayesopt_ego(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer),
+    class = "Mlr3ErrorLearnerPredict",
+    regexp = "Surrogate Predict Error"
+  )
 })

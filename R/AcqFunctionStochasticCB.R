@@ -78,11 +78,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
+AcqFunctionStochasticCB = R6Class(
+  "AcqFunctionStochasticCB",
   inherit = AcqFunction,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -101,7 +101,7 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
       distribution = "uniform",
       rate = 0,
       period = NULL
-      ) {
+    ) {
       private$.lambda = assert_number(lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
       private$.min_lambda = assert_number(min_lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
       private$.max_lambda = assert_number(max_lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
@@ -120,14 +120,16 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
 
       constants = ps(lambda = p_dbl(lower = 0))
 
-      super$initialize("acq_cb",
+      super$initialize(
+        "acq_cb",
         constants = constants,
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
         surrogate_class = "SurrogateLearner",
         direction = "same",
         label = "Stochastic Lower / Upper Confidence Bound",
-        man = "mlr3mbo::mlr_acqfunctions_stochastic_cb")
+        man = "mlr3mbo::mlr_acqfunctions_stochastic_cb"
+      )
     },
 
     #' @description
@@ -136,7 +138,6 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
     update = function() {
       # sample lambda
       if (is.null(self$constants$values$lambda)) {
-
         if (private$.distribution == "uniform") {
           lambda = runif(1, private$.min_lambda, private$.max_lambda)
         } else {
@@ -179,10 +180,9 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
     .fun = function(xdt, lambda) {
       p = self$surrogate$predict(xdt)
       cb = p$mean - self$surrogate_max_to_min * lambda * p$se
-      data.table(acq_cb = cb,  acq_lambda = lambda, acq_lambda_0 = private$.lambda_0)
+      data.table(acq_cb = cb, acq_lambda = lambda, acq_lambda_0 = private$.lambda_0)
     }
   )
 )
 
 mlr_acqfunctions$add("stochastic_cb", AcqFunctionStochasticCB)
-

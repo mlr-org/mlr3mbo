@@ -86,9 +86,9 @@
 #'
 #'   acq_optimizer$optimize()
 #' }
-AcqOptimizer = R6Class("AcqOptimizer",
+AcqOptimizer = R6Class(
+  "AcqOptimizer",
   public = list(
-
     #' @field optimizer ([bbotk::OptimizerBatch]).
     optimizer = NULL,
 
@@ -121,7 +121,13 @@ AcqOptimizer = R6Class("AcqOptimizer",
         skip_already_evaluated = p_lgl(default = TRUE),
         catch_errors = p_lgl(default = TRUE)
       )
-      ps$values = list(n_candidates = 1, logging_level = "warn", warmstart = FALSE, skip_already_evaluated = TRUE, catch_errors = TRUE)
+      ps$values = list(
+        n_candidates = 1,
+        logging_level = "warn",
+        warmstart = FALSE,
+        skip_already_evaluated = TRUE,
+        catch_errors = TRUE
+      )
       ps$add_dep("warmstart_size", on = "warmstart", cond = CondEqual$new(TRUE))
       private$.param_set = ps
     },
@@ -156,14 +162,30 @@ AcqOptimizer = R6Class("AcqOptimizer",
       on.exit(lg$set_threshold(old_threshold))
 
       if (is_multi_acq_function) {
-        instance = OptimInstanceBatchMultiCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, callbacks = self$callbacks)
+        instance = OptimInstanceBatchMultiCrit$new(
+          objective = self$acq_function,
+          search_space = self$acq_function$domain,
+          terminator = self$terminator,
+          check_values = FALSE,
+          callbacks = self$callbacks
+        )
       } else {
-        instance = OptimInstanceBatchSingleCrit$new(objective = self$acq_function, search_space = self$acq_function$domain, terminator = self$terminator, check_values = FALSE, callbacks = self$callbacks)
+        instance = OptimInstanceBatchSingleCrit$new(
+          objective = self$acq_function,
+          search_space = self$acq_function$domain,
+          terminator = self$terminator,
+          check_values = FALSE,
+          callbacks = self$callbacks
+        )
       }
 
       # warmstart
       if (self$param_set$values$warmstart) {
-        warmstart_size = if (isTRUE(self$param_set$values$warmstart_size == "all")) Inf else self$param_set$values$warmstart_size %??% 1L  # default is 1L
+        warmstart_size = if (isTRUE(self$param_set$values$warmstart_size == "all")) {
+          Inf
+        } else {
+          self$param_set$values$warmstart_size %??% 1L
+        } # default is 1L
         n_select = min(nrow(self$acq_function$archive$data), warmstart_size)
         warmstart_xdt = if (is_multi_acq_function) {
           self$acq_function$archive$nds_selection(n_select = n_select)[, instance$search_space$ids(), with = FALSE]
@@ -179,33 +201,63 @@ AcqOptimizer = R6Class("AcqOptimizer",
           tryCatch(
             {
               self$optimizer$optimize(instance)
-              get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = TRUE)
-            }, error = function(error_condition) {
+              get_best(
+                instance,
+                is_multi_acq_function = is_multi_acq_function,
+                evaluated = self$acq_function$archive$data,
+                n_select = self$param_set$values$n_candidates,
+                not_already_evaluated = TRUE
+              )
+            },
+            error = function(error_condition) {
               error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
             }
           )
         } else {
           self$optimizer$optimize(instance)
-          get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = TRUE)
+          get_best(
+            instance,
+            is_multi_acq_function = is_multi_acq_function,
+            evaluated = self$acq_function$archive$data,
+            n_select = self$param_set$values$n_candidates,
+            not_already_evaluated = TRUE
+          )
         }
       } else {
         if (self$param_set$values$catch_errors) {
           tryCatch(
             {
               self$optimizer$optimize(instance)
-              get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = FALSE)
-            }, error = function(error_condition) {
+              get_best(
+                instance,
+                is_multi_acq_function = is_multi_acq_function,
+                evaluated = self$acq_function$archive$data,
+                n_select = self$param_set$values$n_candidates,
+                not_already_evaluated = FALSE
+              )
+            },
+            error = function(error_condition) {
               error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
             }
           )
         } else {
           self$optimizer$optimize(instance)
-          get_best(instance, is_multi_acq_function = is_multi_acq_function, evaluated = self$acq_function$archive$data, n_select = self$param_set$values$n_candidates, not_already_evaluated = FALSE)
+          get_best(
+            instance,
+            is_multi_acq_function = is_multi_acq_function,
+            evaluated = self$acq_function$archive$data,
+            n_select = self$param_set$values$n_candidates,
+            not_already_evaluated = FALSE
+          )
         }
       }
       # the following is required to assure that evaluations of numerical gradient based methods that potentially evaluated out of bounds are not returned as out of bound but clipped to bounds
       for (param in names(which(instance$search_space$is_number))) {
-        set(xdt, j = param, value = pmax(pmin(xdt[[param]], instance$search_space$upper[[param]]), instance$search_space$lower[[param]]))
+        set(
+          xdt,
+          j = param,
+          value = pmax(pmin(xdt[[param]], instance$search_space$upper[[param]]), instance$search_space$lower[[param]])
+        )
       }
       #if (is_multi_acq_function) {
       #  set(xdt, j = instance$objective$id, value = apply(xdt[, instance$objective$acq_function_ids, with = FALSE], MARGIN = 1L, FUN = c, simplify = FALSE))
@@ -214,16 +266,14 @@ AcqOptimizer = R6Class("AcqOptimizer",
       #  }
       #  setcolorder(xdt, c(instance$archive$cols_x, "x_domain", instance$objective$id))
       #}
-      xdt[, -c("timestamp", "batch_nr")]  # drop timestamp and batch_nr information from the candidates
+      xdt[, -c("timestamp", "batch_nr")] # drop timestamp and batch_nr information from the candidates
     },
 
     #' @description
     #' Reset the acquisition function optimizer.
     #'
     #' Currently not used.
-    reset = function() {
-
-    }
+    reset = function() {}
   ),
 
   active = list(
@@ -250,7 +300,8 @@ AcqOptimizer = R6Class("AcqOptimizer",
     .param_set = NULL,
 
     deep_clone = function(name, value) {
-      switch(name,
+      switch(
+        name,
         optimizer = value$clone(deep = TRUE),
         terminator = value$clone(deep = TRUE),
         acq_function = if (!is.null(value)) value$clone(deep = TRUE) else NULL,
@@ -260,4 +311,3 @@ AcqOptimizer = R6Class("AcqOptimizer",
     }
   )
 )
-

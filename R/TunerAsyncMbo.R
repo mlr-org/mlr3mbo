@@ -65,7 +65,8 @@
 #'   }
 #' }
 #' }
-TunerAsyncMbo = R6Class("TunerAsyncMbo",
+TunerAsyncMbo = R6Class(
+  "TunerAsyncMbo",
   inherit = mlr3tuning::TunerAsyncFromOptimizerAsync,
 
   public = list(
@@ -83,7 +84,12 @@ TunerAsyncMbo = R6Class("TunerAsyncMbo",
     #' @param param_set ([paradox::ParamSet])\cr
     #'  Set of control parameters.
     initialize = function(surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, param_set = NULL) {
-      optimizer = OptimizerAsyncMbo$new(surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, param_set = param_set)
+      optimizer = OptimizerAsyncMbo$new(
+        surrogate = surrogate,
+        acq_function = acq_function,
+        acq_optimizer = acq_optimizer,
+        param_set = param_set
+      )
 
       super$initialize(optimizer = optimizer, man = "mlr3mbo::TunerAsyncMbo")
     },
@@ -100,8 +106,14 @@ TunerAsyncMbo = R6Class("TunerAsyncMbo",
       catn(str_indent("* Packages:", self$packages))
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
-      catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
-      catn(str_indent("* Result Assigner:", if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]))
+      catn(str_indent(
+        "* Acquisition Function Optimizer:",
+        if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id
+      ))
+      catn(str_indent(
+        "* Result Assigner:",
+        if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]
+      ))
     },
 
     #' @description

@@ -5,7 +5,7 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
   if (direction == "same") {
     assert(surrogate$archive$codomain$length == 1L)
     tags = surrogate$archive$codomain$tags[[1L]]
-    tag = tags[tags %in% c("minimize", "maximize")]  # only filter out the relevant one
+    tag = tags[tags %in% c("minimize", "maximize")] # only filter out the relevant one
   } else {
     tag = direction
   }
@@ -14,12 +14,15 @@ generate_acq_codomain = function(surrogate, id, direction = "same") {
 }
 
 generate_acq_multi_codomain = function(surrogate, acq_functions) {
-  acq_functions = unname(acq_functions)  # needed for c of ParamSets to keep original ids
+  acq_functions = unname(acq_functions) # needed for c of ParamSets to keep original ids
   codomain = do.call(c, map(acq_functions, function(acq_function) acq_function$codomain))
   if (any(codomain$tags == "same")) {
     assert(surrogate$archive$codomain$length == 1L)
   }
-  codomain$tags = structure(as.list(rep("maximize", length(acq_functions))), names = map_chr(acq_functions, function(acq_function) acq_function$id))
+  codomain$tags = structure(
+    as.list(rep("maximize", length(acq_functions))),
+    names = map_chr(acq_functions, function(acq_function) acq_function$id)
+  )
   codomain
 }
 
@@ -63,10 +66,11 @@ fix_xdt_missing = function(xdt, cols_x, archive) {
 # calculate all possible weights (lambdas) for given s parameter and dimensionality k taken von mlrMBO
 calculate_parego_weights = function(s, k) {
   fun = function(s, k) {
-    if (k == 1L)
+    if (k == 1L) {
       list(s)
-    else
+    } else {
       unlist(lapply(0:s, function(i) Map(c, i, fun(s - i, k - 1L))), recursive = FALSE)
+    }
   }
   matrix(unlist(fun(s, k)), ncol = k, byrow = TRUE) / s
 }
@@ -93,7 +97,7 @@ mult_max_to_min = function(codomain) {
 }
 
 # used in AcqOptimizer
-get_best= function(instance, is_multi_acq_function, evaluated, n_select, not_already_evaluated = TRUE) {
+get_best = function(instance, is_multi_acq_function, evaluated, n_select, not_already_evaluated = TRUE) {
   data = copy(instance$archive$data[, c(instance$archive$cols_x, "x_domain", instance$archive$cols_y), with = FALSE])
   evaluated = copy(evaluated)
   already_evaluated_id = ".already_evaluated"
@@ -103,7 +107,10 @@ get_best= function(instance, is_multi_acq_function, evaluated, n_select, not_alr
   if (not_already_evaluated) {
     not_already_evaluated = which(data[[already_evaluated_id]] == FALSE)
     if (length(not_already_evaluated) < n_select) {
-      stopf("Less then `n_select` (%i) candidate points found during acquisition function optimization were not already evaluated.", n_select)
+      stopf(
+        "Less then `n_select` (%i) candidate points found during acquisition function optimization were not already evaluated.",
+        n_select
+      )
     }
     instance$archive$data = instance$archive$data[not_already_evaluated, ]
   }
@@ -128,14 +135,22 @@ set_collapse = function(x) {
 check_attributes = function(x, attribute_names) {
   qassert(attribute_names, rules = "a")
   if (any(attribute_names %nin% names(attributes(x)))) {
-    return(sprintf("Attributes must include '%s' but is '%s'", set_collapse(attribute_names), set_collapse(names(attributes(x)))))
+    return(sprintf(
+      "Attributes must include '%s' but is '%s'",
+      set_collapse(attribute_names),
+      set_collapse(names(attributes(x)))
+    ))
   }
   TRUE
 }
 
 check_instance_attribute = function(x) {
   if (length(intersect(c("single-crit", "multi-crit"), attr(x, "instance"))) == 0L) {
-    return(sprintf("'instance' attribute must be a subset of '%s' but is '%s'", set_collapse(c("single-crit", "multi-crit")), set_collapse(attr(x, "instance"))))
+    return(sprintf(
+      "'instance' attribute must be a subset of '%s' but is '%s'",
+      set_collapse(c("single-crit", "multi-crit")),
+      set_collapse(attr(x, "instance"))
+    ))
   }
   TRUE
 }
@@ -156,11 +171,13 @@ assert_loop_function = function(x, .var.name = vname(x)) {
     return(x)
   }
   # NOTE: this is buggy in checkmate; assert should always return x invisible not TRUE as is the case here
-  assert(check_class(x, classes = "loop_function"),
+  assert(
+    check_class(x, classes = "loop_function"),
     check_function(x, args = c("instance", "surrogate", "acq_function", "acq_optimizer")),
     check_attributes(x, attribute_names = c("id", "label", "instance", "man")),
     check_instance_attribute(x),
-    combine = "and", .var.name = .var.name
+    combine = "and",
+    .var.name = .var.name
   )
   x
 }
@@ -192,13 +209,16 @@ assert_learner_surrogate = function(x, .var.name = vname(x)) {
 #' }
 redis_available = function() {
   requireNamespace("rush")
-  tryCatch({
-    rush::rsh()
-    config = redux::redis_config()
-    server = redux::hiredis(config)
-    ping = server$PING()
-    ping == "PONG"
-  }, error = function(e) {
-    FALSE
-  })
+  tryCatch(
+    {
+      rush::rsh()
+      config = redux::redis_config()
+      server = redux::hiredis(config)
+      ping = server$PING()
+      ping == "PONG"
+    },
+    error = function(e) {
+      FALSE
+    }
+  )
 }

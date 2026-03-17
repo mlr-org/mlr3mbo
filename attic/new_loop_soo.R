@@ -25,19 +25,29 @@ random = generate_design_random(domain, n = 4L * d)$data
 instance$eval_batch(design)
 
 repeat {
-  xdt = tryCatch({
-    surrogate$update()
-    acq_function$update()
-    acq_optimizer$optimize()
-  }, mbo_error = function(mbo_error_condition) {
-    SamplerUnif$new(domain)$sample(1L)$data
-  })
+  xdt = tryCatch(
+    {
+      surrogate$update()
+      acq_function$update()
+      acq_optimizer$optimize()
+    },
+    mbo_error = function(mbo_error_condition) {
+      SamplerUnif$new(domain)$sample(1L)$data
+    }
+  )
 
   instance$eval_batch(xdt)
   if (instance$is_terminated) break
 }
 
 
-bayesopt_soo = function(objective, terminator, init_design_size, learner, acq_id, acq_params, acq_optimizer, acq_terminator) {
-}
-
+bayesopt_soo = function(
+  objective,
+  terminator,
+  init_design_size,
+  learner,
+  acq_id,
+  acq_params,
+  acq_optimizer,
+  acq_terminator
+) {}
