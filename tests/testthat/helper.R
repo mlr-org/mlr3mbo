@@ -15,27 +15,47 @@ FUN_1D_CODOMAIN = ps(y = p_dbl(tags = "minimize"))
 OBJ_1D = bbotk::ObjectiveRFun$new(fun = FUN_1D, domain = PS_1D, codomain = FUN_1D_CODOMAIN, properties = "single-crit")
 
 FUN_1D_2 = function(xs) {
-  list(y1 = as.numeric(xs)^2, y2 = - sqrt(abs(as.numeric(xs))))
+  list(y1 = as.numeric(xs)^2, y2 = -sqrt(abs(as.numeric(xs))))
 }
 FUN_1D_2_CODOMAIN = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize"))
-OBJ_1D_2 = bbotk::ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
+OBJ_1D_2 = bbotk::ObjectiveRFun$new(
+  fun = FUN_1D_2,
+  domain = PS_1D,
+  codomain = FUN_1D_2_CODOMAIN,
+  properties = "multi-crit"
+)
 
 FUN_1D_MAXIMIZE = function(xs) {
-  list(y = - as.numeric(xs)^2)
+  list(y = -as.numeric(xs)^2)
 }
 FUN_1D_CODOMAIN_MAXIMIZE = ps(y = p_dbl(tags = "maximize"))
-OBJ_1D_MAXIMIZE = bbotk::ObjectiveRFun$new(fun = FUN_1D_MAXIMIZE, domain = PS_1D, codomain = FUN_1D_CODOMAIN_MAXIMIZE, properties = "single-crit")
+OBJ_1D_MAXIMIZE = bbotk::ObjectiveRFun$new(
+  fun = FUN_1D_MAXIMIZE,
+  domain = PS_1D,
+  codomain = FUN_1D_CODOMAIN_MAXIMIZE,
+  properties = "single-crit"
+)
 
 # Simple 1D Functions with noise
 FUN_1D_NOISY = function(xs) {
   list(y = as.numeric(xs)^2 + rnorm(1, sd = 0.5))
 }
-OBJ_1D_NOISY = bbotk::ObjectiveRFun$new(fun = FUN_1D_NOISY, domain = PS_1D, codomain = FUN_1D_CODOMAIN, properties = c("single-crit", "noisy"))
+OBJ_1D_NOISY = bbotk::ObjectiveRFun$new(
+  fun = FUN_1D_NOISY,
+  domain = PS_1D,
+  codomain = FUN_1D_CODOMAIN,
+  properties = c("single-crit", "noisy")
+)
 
 FUN_1D_2_NOISY = function(xs) {
   list(y1 = as.numeric(xs)^2 + rnorm(1, sd = 0.5), y2 = sqrt(abs(as.numeric(xs))) + rnorm(1, sd = 0.5))
 }
-OBJ_1D_2_NOISY = bbotk::ObjectiveRFun$new(fun = FUN_1D_2, domain = PS_1D, codomain = FUN_1D_2_CODOMAIN, properties = c("multi-crit", "noisy"))
+OBJ_1D_2_NOISY = bbotk::ObjectiveRFun$new(
+  fun = FUN_1D_2,
+  domain = PS_1D,
+  codomain = FUN_1D_2_CODOMAIN,
+  properties = c("multi-crit", "noisy")
+)
 
 # Mixed 1D Functions
 PS_1D_MIXED = ps(
@@ -62,7 +82,12 @@ FUN_1D_2_MIXED = function(xs) {
   }
   list(y1 = (xs$x1 - switch(xs$x2, "a" = 0, "b" = 1, "c" = 2)) %% xs$x3 + (if (xs$x4) xs$x1 else pi), y2 = xs$x1)
 }
-OBJ_1D_2_MIXED = bbotk::ObjectiveRFun$new(fun = FUN_1D_2_MIXED, domain = PS_1D_MIXED, codomain = FUN_1D_2_CODOMAIN, properties = "multi-crit")
+OBJ_1D_2_MIXED = bbotk::ObjectiveRFun$new(
+  fun = FUN_1D_2_MIXED,
+  domain = PS_1D_MIXED,
+  codomain = FUN_1D_2_CODOMAIN,
+  properties = "multi-crit"
+)
 
 # Simple 2D Functions
 PS_2D = ps(
@@ -116,18 +141,31 @@ skip_if_missing_regr_km = function() {
 
 if (requireNamespace("mlr3learners") && requireNamespace("DiceKriging") && requireNamespace("rgenoud")) {
   library(mlr3learners)
-  REGR_KM_NOISY = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.estim = TRUE, jitter = 1e-12)
+  REGR_KM_NOISY = lrn(
+    "regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    control = list(trace = FALSE),
+    nugget.estim = TRUE,
+    jitter = 1e-12
+  )
   REGR_KM_NOISY$encapsulate("callr", lrn("regr.featureless"))
-  REGR_KM_DETERM = lrn("regr.km", covtype = "matern3_2", optim.method = "gen", control = list(trace = FALSE), nugget.stability = 10^-8)
+  REGR_KM_DETERM = lrn(
+    "regr.km",
+    covtype = "matern3_2",
+    optim.method = "gen",
+    control = list(trace = FALSE),
+    nugget.stability = 10^-8
+  )
   REGR_KM_DETERM$encapsulate("callr", lrn("regr.featureless"))
 }
 REGR_FEATURELESS = lrn("regr.featureless")
 REGR_FEATURELESS$encapsulate("callr", lrn("regr.featureless"))
 
-OptimizerError = R6::R6Class("OptimizerError",
+OptimizerError = R6::R6Class(
+  "OptimizerError",
   inherit = OptimizerBatch,
   public = list(
-
     initialize = function() {
       super$initialize(
         param_set = ps(),
@@ -144,12 +182,15 @@ OptimizerError = R6::R6Class("OptimizerError",
   )
 )
 
-LearnerRegrError = R6::R6Class("LearnerRegrError",
+LearnerRegrError = R6::R6Class(
+  "LearnerRegrError",
   inherit = LearnerRegr,
   public = list(
-
     initialize = function() {
-      ps = ps(error_train = p_lgl(default = TRUE, tags = "train"), error_predict = p_lgl(default = TRUE, tags = "predict"))
+      ps = ps(
+        error_train = p_lgl(default = TRUE, tags = "train"),
+        error_predict = p_lgl(default = TRUE, tags = "predict")
+      )
       ps$values = list(error_train = TRUE, error_predict = TRUE)
       super$initialize(
         id = "regr.error",
@@ -210,7 +251,10 @@ expect_dictionary_loop_function = function(d, contains = NA_character_, min_item
 
 expect_loop_function = function(lpf) {
   expect_class(lpf, "loop_function")
-  expect_subset(c("instance", "surrogate", "acq_function", "acq_optimizer", "init_design_size", "random_interleave_iter"), names(formals(lpf)),)
+  expect_subset(
+    c("instance", "surrogate", "acq_function", "acq_optimizer", "init_design_size", "random_interleave_iter"),
+    names(formals(lpf)),
+  )
   expect_subset(c("id", "label", "instance", "man"), names(attributes(lpf)))
   expect_string(attr(lpf, "id"), pattern = "bayesopt")
   expect_string(attr(lpf, "label"))
@@ -235,4 +279,3 @@ sortnames = function(x) {
 expect_equal_sorted = function(x, y, ...) {
   expect_equal(sortnames(x), sortnames(y), ...)
 }
-

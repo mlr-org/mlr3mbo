@@ -1,11 +1,11 @@
 #' @title Multipoint Constant Liar Proposals
 #' @export
 #'
-ProposalGeneratorMpCL = R6Class("ProposalGeneratorMpCL",
+ProposalGeneratorMpCL = R6Class(
+  "ProposalGeneratorMpCL",
   inherit = ProposalGenerator,
 
   public = list(
-
     acq_function = NULL,
     acq_optimizer = NULL,
     q = NULL,
@@ -45,7 +45,5 @@ ProposalGeneratorMpCL = R6Class("ProposalGeneratorMpCL",
       self$acq_function$update(self$archive)
       #self$acq_optimizer$update()
     }
-
-
   )
 )

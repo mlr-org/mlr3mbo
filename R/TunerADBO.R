@@ -67,7 +67,8 @@
 #'   }
 #' }
 #' }
-TunerADBO = R6Class("TunerADBO",
+TunerADBO = R6Class(
+  "TunerADBO",
   inherit = mlr3tuning::TunerAsyncFromOptimizerAsync,
 
   public = list(
@@ -91,8 +92,14 @@ TunerADBO = R6Class("TunerADBO",
       catn(str_indent("* Packages:", self$packages))
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
-      catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
-      catn(str_indent("* Result Assigner:", if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]))
+      catn(str_indent(
+        "* Acquisition Function Optimizer:",
+        if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id
+      ))
+      catn(str_indent(
+        "* Result Assigner:",
+        if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]
+      ))
     },
 
     #' @description

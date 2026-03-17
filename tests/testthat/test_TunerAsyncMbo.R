@@ -8,9 +8,7 @@ test_that("TunerAsyncMbo works", {
     mirai::daemons(0)
   })
 
-  learner = lrn("classif.rpart",
-    minsplit  = to_tune(2L, 128L),
-    cp        = to_tune(1e-04, 1e-1))
+  learner = lrn("classif.rpart", minsplit = to_tune(2L, 128L), cp = to_tune(1e-04, 1e-1))
 
   instance = ti_async(
     task = tsk("pima"),

@@ -61,11 +61,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionAEI = R6Class("AcqFunctionAEI",
+AcqFunctionAEI = R6Class(
+  "AcqFunctionAEI",
   inherit = AcqFunction,
 
   public = list(
-
     #' @field y_effective_best (`numeric(1)`)\cr
     #'   Best effective objective value observed so far.
     #'   In the case of maximization, this already includes the necessary change of sign.
@@ -74,7 +74,7 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
     #' @field noise_var (`numeric(1)`)\cr
     #'   Estimate of the variance of the noise.
     #'   This corresponds to the `nugget` estimate when using a [mlr3learners][mlr3learners::mlr_learners_regr.km] as surrogate model.
-    noise_var = NULL,  # noise of the function
+    noise_var = NULL, # noise of the function
 
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
@@ -87,14 +87,16 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       constants = ps(c = p_dbl(lower = 0, default = 1))
       constants$values$c = c
 
-      super$initialize("acq_aei",
+      super$initialize(
+        "acq_aei",
         constants = constants,
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
         surrogate_class = "SurrogateLearner",
         direction = "maximize",
         label = "Augmented Expected Improvement",
-        man = "mlr3mbo::mlr_acqfunctions_aei")
+        man = "mlr3mbo::mlr_acqfunctions_aei"
+      )
     },
 
     #' @description
@@ -107,12 +109,13 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
       self$y_effective_best = min(self$surrogate_max_to_min * y_effective)
 
       if (!is.null(self$surrogate$learner$model) && length(self$surrogate$learner$model@covariance@nugget) == 1L) {
-        self$noise_var = self$surrogate$learner$model@covariance@nugget  # FIXME: check that this value really exists (otherwise calculate residual variance?)
+        self$noise_var = self$surrogate$learner$model@covariance@nugget # FIXME: check that this value really exists (otherwise calculate residual variance?)
       } else {
-        lgr$warn('AcqFunctionAEI currently only works correctly with `"regr.km"` as surrogate model and `nugget.estim = TRUE` or given.')
+        lgr$warn(
+          'AcqFunctionAEI currently only works correctly with `"regr.km"` as surrogate model and `nugget.estim = TRUE` or given.'
+        )
         self$noise_var = 0
       }
-
     }
   ),
 
@@ -137,4 +140,3 @@ AcqFunctionAEI = R6Class("AcqFunctionAEI",
 )
 
 mlr_acqfunctions$add("aei", AcqFunctionAEI)
-

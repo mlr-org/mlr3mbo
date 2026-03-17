@@ -79,7 +79,8 @@
 #'   }
 #' }
 #' }
-OptimizerADBO = R6Class("OptimizerADBO",
+OptimizerADBO = R6Class(
+  "OptimizerADBO",
   inherit = OptimizerAsyncMbo,
 
   public = list(
@@ -96,12 +97,14 @@ OptimizerADBO = R6Class("OptimizerADBO",
         id = "adbo",
         param_set = param_set,
         label = "Asynchronous Decentralized Bayesian Optimization",
-        man = "mlr3mbo::OptimizerADBO")
+        man = "mlr3mbo::OptimizerADBO"
+      )
 
       self$param_set$set_values(
         lambda = 1.96,
         rate = 0.1,
-        period = 25L)
+        period = 25L
+      )
     },
 
     #' @description
@@ -122,7 +125,8 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
       self$acq_optimizer = AcqOptimizer$new(
         optimizer = opt("random_search", batch_size = 1000L),
-        terminator = trm("evals", n_evals = 10000L))
+        terminator = trm("evals", n_evals = 10000L)
+      )
 
       super$optimize(inst)
     }

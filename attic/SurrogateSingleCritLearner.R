@@ -4,10 +4,10 @@
 #' Surrogate model for single criteria response surfaces based on regression [mlr3::Learner] objects.
 #'
 #' @export
-SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
+SurrogateSingleCritLearner = R6Class(
+  "SurrogateSingleCritLearner",
   inherit = SurrogateSingleCrit,
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -19,9 +19,9 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
       }
       ps = ParamSet$new(list(
         ParamLgl$new("calc_insample_perf"),
-        ParamUty$new("perf_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")),  # FIXME: actually want check_measure
-        ParamDbl$new("perf_threshold", lower = -Inf, upper = Inf))
-      )
+        ParamUty$new("perf_measure", custom_check = function(x) check_r6(x, classes = "MeasureRegr")), # FIXME: actually want check_measure
+        ParamDbl$new("perf_threshold", lower = -Inf, upper = Inf)
+      ))
       ps$values = list(calc_insample_perf = FALSE, perf_measure = msr("regr.rsq"), perf_threshold = 0)
       ps$add_dep("perf_measure", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_threshold", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
@@ -48,7 +48,6 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
   ),
 
   active = list(
-
     #' @field assert_insample_perf (`numeric(1)`)\cr
     #'   Asserts whether the current insample performance meets the performance threshold.
     assert_insample_perf = function(rhs) {
@@ -74,7 +73,6 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
   ),
 
   private = list(
-
     # Train model with new data
     # Also calculates the insample performance based on the `perf_measure` hyperparameter if `calc_insample_perf = TRUE`
     .update = function(xydt, y_cols) {
@@ -85,17 +83,17 @@ SurrogateSingleCritLearner = R6Class("SurrogateSingleCritLearner",
 
       if (self$param_set$values$calc_insample_perf) {
         assert_measure(self$param_set$values$perf_measure, task = task, learner = self$model)
-        private$.insample_perf = self$model$predict(task)$score(self$param_set$values$perf_measure, task = task, learner = self$model)
+        private$.insample_perf = self$model$predict(task)$score(
+          self$param_set$values$perf_measure,
+          task = task,
+          learner = self$model
+        )
         self$assert_insample_perf
       }
     },
 
     deep_clone = function(name, value) {
-      switch(name,
-        model = value$clone(deep = TRUE),
-        .param_set = value$clone(deep = TRUE),
-        value
-      )
+      switch(name, model = value$clone(deep = TRUE), .param_set = value$clone(deep = TRUE), value)
     }
   )
 )

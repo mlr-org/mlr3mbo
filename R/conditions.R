@@ -25,13 +25,25 @@
 #' @export
 #' @name mlr3mbo_conditions
 error_random_interleave = function(msg, ..., class = NULL, signal = TRUE, parent = NULL) {
-  error_mlr3(msg, ..., class = c(class, "Mlr3ErrorMboRandomInterleave", "Mlr3ErrorMbo"), signal = signal, parent = parent)
+  error_mlr3(
+    msg,
+    ...,
+    class = c(class, "Mlr3ErrorMboRandomInterleave", "Mlr3ErrorMbo"),
+    signal = signal,
+    parent = parent
+  )
 }
 
 #' @export
 #' @rdname mlr3mbo_conditions
 error_surrogate_update = function(msg, ..., class = NULL, signal = TRUE, parent = NULL) {
-  error_mlr3(msg, ..., class = c(class, "Mlr3ErrorMboSurrogateUpdate", "Mlr3ErrorMbo"), signal = signal, parent = parent)
+  error_mlr3(
+    msg,
+    ...,
+    class = c(class, "Mlr3ErrorMboSurrogateUpdate", "Mlr3ErrorMbo"),
+    signal = signal,
+    parent = parent
+  )
 }
 
 #' @export

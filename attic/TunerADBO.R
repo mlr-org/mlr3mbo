@@ -27,18 +27,18 @@
 #' }
 #'
 #' @export
-TunerADBO = R6Class("TunerADBO",
+TunerADBO = R6Class(
+  "TunerADBO",
   inherit = mlr3tuning::TunerAsyncFromOptimizerAsync,
   public = list(
-
-   #' @description
-   #' Creates a new instance of this [R6][R6::R6Class] class.
-   initialize = function() {
-     super$initialize(
-       optimizer = OptimizerADBO$new(),
-       man = "mlr3tuning::mlr_tuners_adbo"
-     )
-   }
+    #' @description
+    #' Creates a new instance of this [R6][R6::R6Class] class.
+    initialize = function() {
+      super$initialize(
+        optimizer = OptimizerADBO$new(),
+        man = "mlr3tuning::mlr_tuners_adbo"
+      )
+    }
   )
 )
 

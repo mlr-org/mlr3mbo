@@ -55,13 +55,12 @@
 #' bayesopt_eips(instance)
 #' instance
 bayesopt_eips = function(
-    instance,
-    init_design_size = NULL,
-    surrogate = NULL,
-    acq_function = NULL,
-    acq_optimizer = NULL
-  ) {
-
+  instance,
+  init_design_size = NULL,
+  surrogate = NULL,
+  acq_function = NULL,
+  acq_optimizer = NULL
+) {
   # assertions and defaults
   assert_r6(instance, "OptimInstanceSingleCrit")
   if (length(instance$archive$codomain$ids(tags = "time")) != 1L) {
@@ -78,15 +77,22 @@ bayesopt_eips = function(
   domain = instance$search_space
   d = domain$length
   y_cols = c(archive$cols_y, instance$archive$codomain$ids(tags = "time"))
-  if (is.null(init_design_size) && instance$archive$n_evals == 0L) init_design_size = 4 * d
-  if (is.null(surrogate)) surrogate = default_surrogate(instance, n_learner = 2L)
-  if (is.null(acq_function)) acq_function = AcqFunctionEIPS$new()
-  if (is.null(acq_optimizer)) acq_optimizer = default_acqopt(acq_function)
+  if (is.null(init_design_size) && instance$archive$n_evals == 0L) {
+    init_design_size = 4 * d
+  }
+  if (is.null(surrogate)) {
+    surrogate = default_surrogate(instance, n_learner = 2L)
+  }
+  if (is.null(acq_function)) {
+    acq_function = AcqFunctionEIPS$new()
+  }
+  if (is.null(acq_optimizer)) {
+    acq_optimizer = default_acqopt(acq_function)
+  }
   surrogate$archive = archive
   surrogate$y_cols = y_cols
   acq_function$surrogate = surrogate
   acq_optimizer$acq_function = acq_function
-
 
   # initial design
   if (isTRUE(init_design_size > 0L)) {
@@ -96,14 +102,17 @@ bayesopt_eips = function(
 
   # loop
   repeat {
-    xdt = tryCatch({
-      acq_function$surrogate$update()
-      acq_function$update()
-      acq_optimizer$optimize()
-    }, mbo_error = function(mbo_error_condition) {
-      lg$info("Proposing a randomly sampled point")
-      SamplerUnif$new(domain)$sample(1L)$data
-    })
+    xdt = tryCatch(
+      {
+        acq_function$surrogate$update()
+        acq_function$update()
+        acq_optimizer$optimize()
+      },
+      mbo_error = function(mbo_error_condition) {
+        lg$info("Proposing a randomly sampled point")
+        SamplerUnif$new(domain)$sample(1L)$data
+      }
+    )
 
     instance$eval_batch(xdt)
     if (instance$is_terminated) break
@@ -111,4 +120,3 @@ bayesopt_eips = function(
 
   return(invisible(instance))
 }
-

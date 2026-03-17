@@ -9,9 +9,9 @@
 #'
 #' @family Output Transformation
 #' @export
-OutputTrafo = R6Class("OutputTrafo",
+OutputTrafo = R6Class(
+  "OutputTrafo",
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -174,4 +174,3 @@ OutputTrafo = R6Class("OutputTrafo",
     .invert_posterior = NULL
   )
 )
-

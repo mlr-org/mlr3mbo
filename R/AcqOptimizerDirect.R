@@ -60,10 +60,10 @@
 #' if (requireNamespace("nloptr")) {
 #'   acqo("direct")
 #' }
-AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
+AcqOptimizerDirect = R6Class(
+  "AcqOptimizerDirect",
   inherit = AcqOptimizer,
   public = list(
-
     #' @field state (`list()`)\cr
     #' List of [nloptr::nloptr()] results.
     state = NULL,
@@ -136,7 +136,8 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
         }
 
         optimize = function() {
-          invoke(nloptr::nloptr,
+          invoke(
+            nloptr::nloptr,
             eval_f = wrapper,
             lb = self$acq_function$domain$lower,
             ub = self$acq_function$domain$upper,
@@ -145,15 +146,19 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
             x0 = x0,
             fun = fun,
             constants = constants,
-            direction = direction)
+            direction = direction
+          )
         }
 
         if (pv$catch_errors) {
-          tryCatch({
-            res = optimize()
-          }, error = function(error_condition) {
-            error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
-          })
+          tryCatch(
+            {
+              res = optimize()
+            },
+            error = function(error_condition) {
+              error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
+            }
+          )
         } else {
           res = optimize()
         }
@@ -169,7 +174,10 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
 
         if (restart_strategy == "none") break
       }
-      as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+      as.data.table(as.list(set_names(
+        c(x, y * direction),
+        c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
+      )))
     }
   ),
 

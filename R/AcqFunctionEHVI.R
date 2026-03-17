@@ -46,11 +46,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
+AcqFunctionEHVI = R6Class(
+  "AcqFunctionEHVI",
   inherit = AcqFunction,
 
   public = list(
-
     #' @field ys_front (`matrix()`)\cr
     #'   Approximated Pareto front. Sorted by the first objective.
     #'   Signs are corrected with respect to assuming minimization of objectives.
@@ -71,13 +71,15 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
     #'
     #' @param surrogate (`NULL` | [SurrogateLearnerCollection]).
     initialize = function(surrogate = NULL) {
-      super$initialize("acq_ehvi",
+      super$initialize(
+        "acq_ehvi",
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
         surrogate_class = "SurrogateLearnerCollection",
         direction = "maximize",
         label = "Expected Hypervolume Improvement",
-        man = "mlr3mbo::mlr_acqfunctions_ehvi")
+        man = "mlr3mbo::mlr_acqfunctions_ehvi"
+      )
     },
 
     #' @description
@@ -92,19 +94,23 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
         ys = self$surrogate$output_trafo$transform(ys)
       }
       for (column in self$archive$cols_y) {
-        set(ys, j = column, value = ys[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
+        set(ys, j = column, value = ys[[column]] * self$surrogate_max_to_min[[column]]) # assume minimization
       }
       ys = as.matrix(ys)
 
-      self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1  # offset = 1 like in mlrMBO
+      self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1 # offset = 1 like in mlrMBO
 
       self$ys_front = self$archive$best()[, self$archive$cols_y, with = FALSE]
       for (column in self$archive$cols_y) {
-        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
+        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]]) # assume minimization
       }
       setorderv(self$ys_front, cols = self$archive$cols_y[1L], order = -1L)
 
-      ys_front_augmented = rbind(t(setNames(c(self$ref_point[1L], - Inf), nm = self$archive$cols_y)), self$ys_front, t(setNames(c(- Inf, self$ref_point[2L]), nm = self$archive$cols_y)))
+      ys_front_augmented = rbind(
+        t(setNames(c(self$ref_point[1L], -Inf), nm = self$archive$cols_y)),
+        self$ys_front,
+        t(setNames(c(-Inf, self$ref_point[2L]), nm = self$archive$cols_y))
+      )
 
       self$ys_front = as.matrix(self$ys_front)
 
@@ -138,15 +144,35 @@ AcqFunctionEHVI = R6Class("AcqFunctionEHVI",
       first_summands = map(seq_len(nrow(self$ys_front_augmented))[-1L], function(i) {
         tmp = (self$ys_front_augmented[i - 1L, ][[columns[1L]]] - self$ys_front_augmented[i, ][[columns[1L]]]) *
           pnorm(self$ys_front_augmented[i, ][[columns[1L]]], mean = means[[columns[1L]]], sd = ses[[columns[1L]]]) *
-          psi_function(a = self$ys_front_augmented[i, ][[columns[2L]]], b = self$ys_front_augmented[i, ][[columns[2L]]], mu = means[[columns[2L]]], sigma = ses[[columns[2L]]])
-        tmp[is.na(tmp)] = 0  # NA is 0
+          psi_function(
+            a = self$ys_front_augmented[i, ][[columns[2L]]],
+            b = self$ys_front_augmented[i, ][[columns[2L]]],
+            mu = means[[columns[2L]]],
+            sigma = ses[[columns[2L]]]
+          )
+        tmp[is.na(tmp)] = 0 # NA is 0
         tmp
       })
       second_summands = map(seq_len(nrow(self$ys_front_augmented))[-1L], function(i) {
-        tmp = (psi_function(a = self$ys_front_augmented[i - 1L, ][[columns[1L]]], b = self$ys_front_augmented[i - 1L, ][[columns[1L]]], mu = means[[columns[1L]]], sigma = ses[[columns[1L]]]) -
-         psi_function(a = self$ys_front_augmented[i - 1L, ][[columns[1L]]], b = self$ys_front_augmented[i, ][[columns[1L]]], mu = means[[columns[1L]]], sigma = ses[[columns[1L]]])) *
-         psi_function(a = self$ys_front_augmented[i, ][[columns[2L]]], b = self$ys_front_augmented[i, ][[columns[2L]]], mu = means[[columns[2L]]], sigma = ses[[columns[2L]]])
-        tmp[is.na(tmp)] = 0  # NA is 0
+        tmp = (psi_function(
+          a = self$ys_front_augmented[i - 1L, ][[columns[1L]]],
+          b = self$ys_front_augmented[i - 1L, ][[columns[1L]]],
+          mu = means[[columns[1L]]],
+          sigma = ses[[columns[1L]]]
+        ) -
+          psi_function(
+            a = self$ys_front_augmented[i - 1L, ][[columns[1L]]],
+            b = self$ys_front_augmented[i, ][[columns[1L]]],
+            mu = means[[columns[1L]]],
+            sigma = ses[[columns[1L]]]
+          )) *
+          psi_function(
+            a = self$ys_front_augmented[i, ][[columns[2L]]],
+            b = self$ys_front_augmented[i, ][[columns[2L]]],
+            mu = means[[columns[2L]]],
+            sigma = ses[[columns[2L]]]
+          )
+        tmp[is.na(tmp)] = 0 # NA is 0
         tmp
       })
 
@@ -163,4 +189,3 @@ mlr_acqfunctions$add("ehvi", AcqFunctionEHVI)
 psi_function = function(a, b, mu, sigma) {
   (sigma * dnorm((b - mu) / sigma) + ((a - mu) * pnorm((b - mu) / sigma)))
 }
-

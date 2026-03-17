@@ -106,7 +106,8 @@
 #'   optimizer$optimize(instance)
 #' }
 #' }
-OptimizerMbo = R6Class("OptimizerMbo",
+OptimizerMbo = R6Class(
+  "OptimizerMbo",
   inherit = bbotk::OptimizerBatch,
 
   public = list(
@@ -129,22 +130,38 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template param_acq_optimizer
     #' @template param_args
     #' @template param_result_assigner
-    initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_assigner = NULL) {
+    initialize = function(
+      loop_function = NULL,
+      surrogate = NULL,
+      acq_function = NULL,
+      acq_optimizer = NULL,
+      args = NULL,
+      result_assigner = NULL
+    ) {
       param_set = ParamSet$new()
-      super$initialize("mbo",
-                       param_set = param_set,
-                       param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),  # is replaced with dynamic AB after construction
-                       properties = c("dependencies", "multi-crit", "single-crit"),  # is replaced with dynamic AB after construction
-                       packages = "mlr3mbo",  # is replaced with dynamic AB after construction
-                       label = "Model Based Optimization",
-                       man = "mlr3mbo::OptimizerMbo")
+      super$initialize(
+        "mbo",
+        param_set = param_set,
+        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"), # is replaced with dynamic AB after construction
+        properties = c("dependencies", "multi-crit", "single-crit"), # is replaced with dynamic AB after construction
+        packages = "mlr3mbo", # is replaced with dynamic AB after construction
+        label = "Model Based Optimization",
+        man = "mlr3mbo::OptimizerMbo"
+      )
       self$loop_function = assert_loop_function(loop_function)
       self$surrogate = assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
       self$acq_function = assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
       self$acq_optimizer = assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
       assert_list(args, names = "named", null.ok = TRUE)
       if (!is.null(self$loop_function)) {
-        assert_subset(names(args), choices = setdiff(names(formals(self$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)
+        assert_subset(
+          names(args),
+          choices = setdiff(
+            names(formals(self$loop_function)),
+            c("instance", "surrogate", "acq_function", "acq_optimizer")
+          ),
+          empty.ok = TRUE
+        )
       }
       self$args = args
       self$result_assigner = assert_r6(result_assigner, classes = "ResultAssigner", null.ok = TRUE)
@@ -163,8 +180,14 @@ OptimizerMbo = R6Class("OptimizerMbo",
       catn(str_indent("* Loop function:", if (is.null(self$loop_function)) "-" else attr(self$loop_function, "id")))
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
-      catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
-      catn(str_indent("* Result Assigner:", if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]))
+      catn(str_indent(
+        "* Acquisition Function Optimizer:",
+        if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id
+      ))
+      catn(str_indent(
+        "* Result Assigner:",
+        if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]
+      ))
     },
 
     #' @description
@@ -193,11 +216,13 @@ OptimizerMbo = R6Class("OptimizerMbo",
         self$loop_function = default_loop_function(inst)
       }
 
-      if (is.null(self$acq_function)) {  # acq_optimizer$acq_function has precedence
+      if (is.null(self$acq_function)) {
+        # acq_optimizer$acq_function has precedence
         self$acq_function = self$acq_optimizer$acq_function %??% default_acqfunction(inst)
       }
 
-      if (is.null(self$surrogate)) {  # acq_function$surrogate has precedence
+      if (is.null(self$surrogate)) {
+        # acq_function$surrogate has precedence
         self$surrogate = self$acq_function$surrogate %??% default_surrogate(inst)
       }
 
@@ -219,7 +244,10 @@ OptimizerMbo = R6Class("OptimizerMbo",
 
       # FIXME: if result_assigner is for example ResultAssignerSurrogate the surrogate won't be set automatically
 
-      check_packages_installed(self$packages, msg = sprintf("Package '%%s' required but not installed for Optimizer '%s'", format(self)))
+      check_packages_installed(
+        self$packages,
+        msg = sprintf("Package '%%s' required but not installed for Optimizer '%s'", format(self))
+      )
 
       optimize_batch_default(inst, self)
     }
@@ -266,13 +294,27 @@ OptimizerMbo = R6Class("OptimizerMbo",
     args = function(rhs) {
       if (missing(rhs)) {
         if (!is.null(self$loop_function)) {
-          assert_subset(names(private$.args), choices = setdiff(names(formals(self$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)  # args could have been set prior to a loop_function
+          assert_subset(
+            names(private$.args),
+            choices = setdiff(
+              names(formals(self$loop_function)),
+              c("instance", "surrogate", "acq_function", "acq_optimizer")
+            ),
+            empty.ok = TRUE
+          ) # args could have been set prior to a loop_function
         }
         private$.args
       } else {
         assert_list(rhs, names = "named", null.ok = TRUE)
         if (!is.null(self$loop_function)) {
-          assert_subset(names(rhs), choices = setdiff(names(formals(self$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)
+          assert_subset(
+            names(rhs),
+            choices = setdiff(
+              names(formals(self$loop_function)),
+              c("instance", "surrogate", "acq_function", "acq_optimizer")
+            ),
+            empty.ok = TRUE
+          )
         }
         private$.args = rhs
       }
@@ -290,9 +332,16 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template field_param_classes
     param_classes = function(rhs) {
       if (missing(rhs)) {
-        param_classes_surrogate = c("logical" = "ParamLgl", "integer" = "ParamInt", "numeric" = "ParamDbl", "factor" = "ParamFct")
+        param_classes_surrogate = c(
+          "logical" = "ParamLgl",
+          "integer" = "ParamInt",
+          "numeric" = "ParamDbl",
+          "factor" = "ParamFct"
+        )
         if (!is.null(self$surrogate)) {
-          param_classes_surrogate = param_classes_surrogate[c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types] # surrogate has precedence over acq_function$surrogate
+          param_classes_surrogate = param_classes_surrogate[
+            c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types
+          ] # surrogate has precedence over acq_function$surrogate
         }
         param_classes_acq_opt = if (!is.null(self$acq_optimizer)) {
           self$acq_optimizer$optimizer$param_classes
@@ -327,7 +376,15 @@ OptimizerMbo = R6Class("OptimizerMbo",
     #' @template field_packages
     packages = function(rhs) {
       if (missing(rhs)) {
-        union("mlr3mbo", c(self$acq_function$packages, self$surrogate$packages, self$acq_optimizer$optimizer$packages, self$result_assigner$packages))
+        union(
+          "mlr3mbo",
+          c(
+            self$acq_function$packages,
+            self$surrogate$packages,
+            self$acq_optimizer$optimizer$packages,
+            self$result_assigner$packages
+          )
+        )
       } else {
         stop("$packages is read-only.")
       }
@@ -343,13 +400,21 @@ OptimizerMbo = R6Class("OptimizerMbo",
     .result_assigner = NULL,
 
     .optimize = function(inst) {
-      invoke(self$loop_function, instance = inst, surrogate = self$surrogate, acq_function = self$acq_function, acq_optimizer = self$acq_optimizer, .args = self$args)
+      invoke(
+        self$loop_function,
+        instance = inst,
+        surrogate = self$surrogate,
+        acq_function = self$acq_function,
+        acq_optimizer = self$acq_optimizer,
+        .args = self$args
+      )
 
       on.exit({
         tryCatch(
           {
             self$surrogate$update()
-          }, Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
+          },
+          Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
             lg = lgr::get_logger("mlr3/bbotk")
             lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
           }

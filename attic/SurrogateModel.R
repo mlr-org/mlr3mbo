@@ -59,5 +59,5 @@ SurrogateModel = R6Class(
       points = paradox::generate_design_grid(param_set = self$search_space, resolution = resolution)
       self$predict(points)
     }
-
-  ))
+  )
+)

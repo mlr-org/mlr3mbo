@@ -24,15 +24,21 @@
 mlr_output_trafos = R6Class("DictionaryOutputTrafo", inherit = Dictionary, cloneable = FALSE)$new()
 
 #' @export
-as.data.table.DictionaryOutputTrafo= function(x, ..., objects = FALSE) {
+as.data.table.DictionaryOutputTrafo = function(x, ..., objects = FALSE) {
   assert_flag(objects)
 
-  setkeyv(map_dtr(x$keys(), function(key) {
-    ot = withCallingHandlers(x$get(key), packageNotFoundWarning = function(w) invokeRestart("muffleWarning"))
-    insert_named(
-      list(key = key, label = ot$label, man = ot$man),
-      if (objects) list(object = list(ot))
-    )
-  }, .fill = TRUE), "key")[]
+  setkeyv(
+    map_dtr(
+      x$keys(),
+      function(key) {
+        ot = withCallingHandlers(x$get(key), packageNotFoundWarning = function(w) invokeRestart("muffleWarning"))
+        insert_named(
+          list(key = key, label = ot$label, man = ot$man),
+          if (objects) list(object = list(ot))
+        )
+      },
+      .fill = TRUE
+    ),
+    "key"
+  )[]
 }
-

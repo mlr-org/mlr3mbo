@@ -50,7 +50,8 @@
 #'   tnr("mbo")$optimize(instance)
 #' }
 #' }
-TunerMbo = R6Class("TunerMbo",
+TunerMbo = R6Class(
+  "TunerMbo",
   inherit = mlr3tuning::TunerBatchFromOptimizerBatch,
 
   public = list(
@@ -67,8 +68,22 @@ TunerMbo = R6Class("TunerMbo",
     #' @template param_acq_optimizer
     #' @template param_args
     #' @template param_result_assigner
-    initialize = function(loop_function = NULL, surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, args = NULL, result_assigner = NULL) {
-      optimizer = OptimizerMbo$new(loop_function = loop_function, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, args = args, result_assigner = result_assigner)
+    initialize = function(
+      loop_function = NULL,
+      surrogate = NULL,
+      acq_function = NULL,
+      acq_optimizer = NULL,
+      args = NULL,
+      result_assigner = NULL
+    ) {
+      optimizer = OptimizerMbo$new(
+        loop_function = loop_function,
+        surrogate = surrogate,
+        acq_function = acq_function,
+        acq_optimizer = acq_optimizer,
+        args = args,
+        result_assigner = result_assigner
+      )
       super$initialize(optimizer = optimizer, man = "mlr3mbo::TunerMbo")
     },
 
@@ -85,8 +100,14 @@ TunerMbo = R6Class("TunerMbo",
       catn(str_indent("* Loop function:", if (is.null(self$loop_function)) "-" else attr(self$loop_function, "id")))
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
-      catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
-      catn(str_indent("* Result Assigner:", if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]))
+      catn(str_indent(
+        "* Acquisition Function Optimizer:",
+        if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id
+      ))
+      catn(str_indent(
+        "* Result Assigner:",
+        if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]
+      ))
     },
 
     #' @description
@@ -138,14 +159,28 @@ TunerMbo = R6Class("TunerMbo",
     #' @template field_args
     args = function(rhs) {
       if (missing(rhs)) {
-       if (!is.null(private$.optimizer$loop_function)) {
-          assert_subset(names(private$.args), choices = setdiff(names(formals(private$.optimizer$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)  # args could have been set prior to a loop_function
+        if (!is.null(private$.optimizer$loop_function)) {
+          assert_subset(
+            names(private$.args),
+            choices = setdiff(
+              names(formals(private$.optimizer$loop_function)),
+              c("instance", "surrogate", "acq_function", "acq_optimizer")
+            ),
+            empty.ok = TRUE
+          ) # args could have been set prior to a loop_function
         }
         private$.optimizer$args
       } else {
         assert_list(rhs, names = "named", null.ok = TRUE)
         if (!is.null(private$.optimizer$loop_function)) {
-          assert_subset(names(rhs), choices = setdiff(names(formals(private$.optimizer$loop_function)), c("instance", "surrogate", "acq_function", "acq_optimizer")), empty.ok = TRUE)
+          assert_subset(
+            names(rhs),
+            choices = setdiff(
+              names(formals(private$.optimizer$loop_function)),
+              c("instance", "surrogate", "acq_function", "acq_optimizer")
+            ),
+            empty.ok = TRUE
+          )
         }
         private$.optimizer$args = rhs
       }

@@ -57,11 +57,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
+AcqFunctionEHVIGH = R6Class(
+  "AcqFunctionEHVIGH",
   inherit = AcqFunction,
 
   public = list(
-
     #' @field ys_front (`matrix()`)\cr
     #'   Approximated Pareto front.
     #'   Signs are corrected with respect to assuming minimization of objectives.
@@ -99,7 +99,8 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
       constants$values$k = k
       constants$values$r = r
 
-      super$initialize("acq_ehvigh",
+      super$initialize(
+        "acq_ehvigh",
         constants = constants,
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
@@ -107,7 +108,8 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
         direction = "maximize",
         packages = c("emoa", "fastGHQuad"),
         label = "Expected Hypervolume Improvement via GH Quadrature",
-        man = "mlr3mbo::mlr_acqfunctions_ehvigh")
+        man = "mlr3mbo::mlr_acqfunctions_ehvigh"
+      )
     },
 
     #' @description
@@ -119,21 +121,21 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
         ys = self$surrogate$output_trafo$transform(ys)
       }
       for (column in self$archive$cols_y) {
-        set(ys, j = column, value = ys[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
+        set(ys, j = column, value = ys[[column]] * self$surrogate_max_to_min[[column]]) # assume minimization
       }
       ys = as.matrix(ys)
 
-      self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1  # offset = 1 like in mlrMBO
+      self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1 # offset = 1 like in mlrMBO
 
       self$ys_front = self$archive$best()[, self$archive$cols_y, with = FALSE]
       for (column in self$archive$cols_y) {
-        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
+        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]]) # assume minimization
       }
       self$ys_front = as.matrix(self$ys_front)
 
       self$hypervolume = invoke(emoa::dominated_hypervolume, points = t(self$ys_front), ref = t(self$ref_point))
 
-      self$gh_data = invoke(fastGHQuad::gaussHermiteData, n = self$constants$values$k)  # k because the multi-dimensional grid is created within adjust_gh_data
+      self$gh_data = invoke(fastGHQuad::gaussHermiteData, n = self$constants$values$k) # k because the multi-dimensional grid is created within adjust_gh_data
       self$gh_data$x = self$gh_data$x * sqrt(2)
       self$gh_data$w = self$gh_data$w / sum(self$gh_data$w)
       self$gh_data = do.call(cbind, self$gh_data)
@@ -158,7 +160,7 @@ AcqFunctionEHVIGH = R6Class("AcqFunctionEHVIGH",
       }
       ps = self$surrogate$predict(xdt)
       means = as.matrix(map_dtc(ps, "mean"))
-      vars = as.matrix(map_dtc(ps, "se")) ^ 2
+      vars = as.matrix(map_dtc(ps, "se"))^2
 
       ehvi = map_dbl(seq_len(nrow(xdt)), function(i) {
         gh_data = adjust_gh_data(self$gh_data, mu = means[i, ], sigma = diag(vars[i, ]), r = r)
@@ -201,7 +203,8 @@ adjust_gh_data = function(gh_data, mu, sigma, r) {
       eigen_decomp = eigen(sigma)
       rotation = eigen_decomp$vectors %*% diag(sqrt(eigen_decomp$values))
       nodes = t(rotation %*% t(nodes) + mu)
-    }, error = function(ec) nodes
+    },
+    error = function(ec) nodes
   )
 
   list(nodes = nodes, weights = weights)

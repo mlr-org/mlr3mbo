@@ -80,14 +80,13 @@
 #' }
 #' }
 bayesopt_emo = function(
-    instance,
-    surrogate,
-    acq_function,
-    acq_optimizer,
-    init_design_size = NULL,
-    random_interleave_iter = 0L
-  ) {
-
+  instance,
+  surrogate,
+  acq_function,
+  acq_optimizer,
+  init_design_size = NULL,
+  random_interleave_iter = 0L
+) {
   # assertions
   assert_r6(instance, "OptimInstanceBatchMultiCrit")
   assert_r6(surrogate, classes = "SurrogateLearnerCollection")
@@ -113,22 +112,26 @@ bayesopt_emo = function(
 
   # actual loop
   repeat {
-    xdt = tryCatch({
-      # random interleaving is handled here
-      if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-        error_random_interleave("Random interleaving")
+    xdt = tryCatch(
+      {
+        # random interleaving is handled here
+        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+          error_random_interleave("Random interleaving")
+        }
+        acq_function$surrogate$update()
+        acq_function$update()
+        acq_optimizer$optimize()
+      },
+      Mlr3ErrorMboRandomInterleave = function(cond) {
+        lg$info("Random interleaving triggered, proposing a randomly sampled point")
+        generate_design_random(search_space, n = 1L)$data
+      },
+      Mlr3ErrorMbo = function(cond) {
+        lg$warn("Caught the following error: %s", cond$message)
+        lg$info("Proposing a randomly sampled point")
+        generate_design_random(search_space, n = 1L)$data
       }
-      acq_function$surrogate$update()
-      acq_function$update()
-      acq_optimizer$optimize()
-    }, Mlr3ErrorMboRandomInterleave = function(cond) {
-      lg$info("Random interleaving triggered, proposing a randomly sampled point")
-      generate_design_random(search_space, n = 1L)$data
-    }, Mlr3ErrorMbo = function(cond) {
-      lg$warn("Caught the following error: %s", cond$message)
-      lg$info("Proposing a randomly sampled point")
-      generate_design_random(search_space, n = 1L)$data
-    })
+    )
 
     instance$eval_batch(xdt)
     if (instance$is_terminated) break
@@ -144,4 +147,3 @@ attr(bayesopt_emo, "instance") = "multi-crit"
 attr(bayesopt_emo, "man") = "mlr3mbo::mlr_loop_functions_emo"
 
 mlr_loop_functions$add("bayesopt_emo", bayesopt_emo)
-

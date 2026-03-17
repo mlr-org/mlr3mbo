@@ -54,11 +54,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionEILog = R6Class("AcqFunctionEILog",
+AcqFunctionEILog = R6Class(
+  "AcqFunctionEILog",
   inherit = AcqFunction,
 
   public = list(
-
     #' @field y_best (`numeric(1)`)\cr
     #'   Best objective function value observed so far.
     #'   In the case of maximization, this already includes the necessary change of sign.
@@ -75,14 +75,16 @@ AcqFunctionEILog = R6Class("AcqFunctionEILog",
       constants = ps(epsilon = p_dbl(lower = 0, default = 0))
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_ei_log",
+      super$initialize(
+        "acq_ei_log",
         constants = constants,
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
         surrogate_class = "SurrogateLearner",
         direction = "maximize",
         label = "Expected Improvement on Log Scale",
-        man = "mlr3mbo::mlr_acqfunctions_ei_log")
+        man = "mlr3mbo::mlr_acqfunctions_ei_log"
+      )
     },
 
     #' @description
@@ -118,15 +120,18 @@ AcqFunctionEILog = R6Class("AcqFunctionEILog",
         y_best = self$y_best
         d = (y_best - mu) - epsilon
         d_norm = d / se
-        multiplicative_factor = (self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$max - self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
+        multiplicative_factor = (self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$max -
+          self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
         ei_log = multiplicative_factor * ((exp(y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) + mu)) * pnorm(d_norm - se))
       } else {
         # y is to be maximized and the OutputTrafoLog performed the transformation accordingly
-        y_best = - self$y_best
+        y_best = -self$y_best
         d = (mu - y_best) - epsilon
         d_norm = d / se
-        multiplicative_factor = (self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$max - self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
-        ei_log = multiplicative_factor * ((exp(-y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) - mu) * pnorm(d_norm - se)))
+        multiplicative_factor = (self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$max -
+          self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
+        ei_log = multiplicative_factor *
+          ((exp(-y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) - mu) * pnorm(d_norm - se)))
       }
       ei_log = ifelse(se < 1e-20 | is.na(ei_log), 0, ei_log)
       data.table(acq_ei_log = ei_log)
@@ -135,4 +140,3 @@ AcqFunctionEILog = R6Class("AcqFunctionEILog",
 )
 
 mlr_acqfunctions$add("ei_log", AcqFunctionEILog)
-

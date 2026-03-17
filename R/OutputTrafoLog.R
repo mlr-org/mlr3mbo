@@ -46,7 +46,8 @@
 #'
 #'   surrogate$predict(data.table(x = c(-1, 0, 1)))
 #' }
-OutputTrafoLog= R6Class("OutputTrafoLog",
+OutputTrafoLog = R6Class(
+  "OutputTrafoLog",
   inherit = OutputTrafo,
 
   public = list(
@@ -89,9 +90,21 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
       ydt = copy(ydt)
       for (col_y in self$cols_y) {
         if (self$max_to_min[[col_y]] == 1L) {
-          set(ydt, j = col_y, value = log(((ydt[[col_y]] - self$state[[col_y]]$min) / (self$state[[col_y]]$max - self$state[[col_y]]$min))))
+          set(
+            ydt,
+            j = col_y,
+            value = log(
+              ((ydt[[col_y]] - self$state[[col_y]]$min) / (self$state[[col_y]]$max - self$state[[col_y]]$min))
+            )
+          )
         } else {
-          set(ydt, j = col_y, value = - log1p(-(((ydt[[col_y]] - self$state[[col_y]]$min) / (self$state[[col_y]]$max - self$state[[col_y]]$min)))))
+          set(
+            ydt,
+            j = col_y,
+            value = -log1p(
+              -(((ydt[[col_y]] - self$state[[col_y]]$min) / (self$state[[col_y]]$max - self$state[[col_y]]$min)))
+            )
+          )
         }
       }
       ydt
@@ -124,12 +137,19 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
       }
       for (col_y in self$cols_y) {
         if (self$max_to_min[[col_y]] == 1L) {
-          mean = (self$state[[col_y]]$max - self$state[[col_y]]$min) * exp(pred[[col_y]]$mean + ((pred[[col_y]]$se^2)/2)) + self$state[[col_y]]$min
-          se = (self$state[[col_y]]$max - self$state[[col_y]]$min) * exp(pred[[col_y]]$mean + ((pred[[col_y]]$se^2)/2)) * sqrt(expm1(pred[[col_y]]$se^2))
+          mean = (self$state[[col_y]]$max - self$state[[col_y]]$min) *
+            exp(pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) +
+            self$state[[col_y]]$min
+          se = (self$state[[col_y]]$max - self$state[[col_y]]$min) *
+            exp(pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) *
+            sqrt(expm1(pred[[col_y]]$se^2))
         } else {
-          mean = - (self$state[[col_y]]$max - self$state[[col_y]]$min) * exp(- pred[[col_y]]$mean + ((pred[[col_y]]$se^2)/2)) + self$state[[col_y]]$max
-          se = (self$state[[col_y]]$max - self$state[[col_y]]$min) * exp(- pred[[col_y]]$mean + ((pred[[col_y]]$se^2)/2)) * sqrt(expm1(pred[[col_y]]$se^2))
-
+          mean = -(self$state[[col_y]]$max - self$state[[col_y]]$min) *
+            exp(-pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) +
+            self$state[[col_y]]$max
+          se = (self$state[[col_y]]$max - self$state[[col_y]]$min) *
+            exp(-pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) *
+            sqrt(expm1(pred[[col_y]]$se^2))
         }
         set(pred[[col_y]], j = "mean", value = mean)
         set(pred[[col_y]], j = "se", value = se)
@@ -155,10 +175,17 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
       ydt = copy(ydt)
       for (col_y in self$cols_y) {
         if (self$max_to_min[[col_y]] == 1L) {
-          set(ydt, j = col_y, value = exp(ydt[[col_y]]) * (self$state[[col_y]]$max - self$state[[col_y]]$min) + self$state[[col_y]]$min)
+          set(
+            ydt,
+            j = col_y,
+            value = exp(ydt[[col_y]]) * (self$state[[col_y]]$max - self$state[[col_y]]$min) + self$state[[col_y]]$min
+          )
         } else {
-          set(ydt, j = col_y, value = - exp(- ydt[[col_y]]) * (self$state[[col_y]]$max - self$state[[col_y]]$min) + self$state[[col_y]]$max)
-
+          set(
+            ydt,
+            j = col_y,
+            value = -exp(-ydt[[col_y]]) * (self$state[[col_y]]$max - self$state[[col_y]]$min) + self$state[[col_y]]$max
+          )
         }
       }
       ydt
@@ -180,4 +207,3 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
 )
 
 mlr_output_trafos$add("log", OutputTrafoLog)
-

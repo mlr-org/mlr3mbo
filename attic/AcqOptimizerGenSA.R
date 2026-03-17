@@ -9,16 +9,16 @@ AcqOptimizerGenSA = R6Class(
     # constructor
     initialize = function(control = list(trace.mat = FALSE)) {
       super$initialize(
-        "GenSA", 
-        parameters = list(control = control), 
-        capabilities = "continous", 
-        packages = "GenSA")
+        "GenSA",
+        parameters = list(control = control),
+        capabilities = "continous",
+        packages = "GenSA"
+      )
       self$storage$par = NULL
     },
 
     # public methods
     optim = function(acq_function) {
-
       search_space = acq_function$search_space
 
       fun = function(x) {

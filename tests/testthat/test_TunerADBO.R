@@ -8,9 +8,7 @@ test_that("TunerADBO works", {
     mirai::daemons(0)
   })
 
-  learner = lrn("classif.rpart",
-    minsplit  = to_tune(2L, 128L),
-    cp        = to_tune(1e-04, 1e-1))
+  learner = lrn("classif.rpart", minsplit = to_tune(2L, 128L), cp = to_tune(1e-04, 1e-1))
 
   instance = ti_async(
     task = tsk("pima"),
@@ -26,5 +24,8 @@ test_that("TunerADBO works", {
 
   expect_data_table(tuner$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data, min.rows = 10L)
-  expect_names(names(instance$archive$data), must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda"))
+  expect_names(
+    names(instance$archive$data),
+    must.include = c("acq_cb", ".already_evaluated", "acq_lambda_0", "acq_lambda")
+  )
 })

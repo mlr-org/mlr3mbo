@@ -56,11 +56,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionMulti = R6Class("AcqFunctionMulti",
+AcqFunctionMulti = R6Class(
+  "AcqFunctionMulti",
   inherit = AcqFunction,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -75,8 +75,14 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
       private$.acq_functions = acq_functions
       private$.acq_function_ids = acq_function_ids
       private$.acq_function_directions = acq_function_directions
-      id = paste0(c("acq", map_chr(acq_function_ids, function(id) gsub("acq_", replacement = "", x = id))), collapse = "_")
-      label = paste0("Multi Acquisition Function of ", paste0(map_chr(acq_functions, function(acq_function) acq_function$label), collapse = ", "))
+      id = paste0(
+        c("acq", map_chr(acq_function_ids, function(id) gsub("acq_", replacement = "", x = id))),
+        collapse = "_"
+      )
+      label = paste0(
+        "Multi Acquisition Function of ",
+        paste0(map_chr(acq_functions, function(acq_function) acq_function$label), collapse = ", ")
+      )
       constants = ps()
       domains = map(acq_functions, function(acq_function) acq_function$domain)
       assert_true(all(map_lgl(domains[-1L], function(domain) all.equal(domains[[1L]]$data, domain$data))))
@@ -88,7 +94,9 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
         }
         surrogate = surrogates[[1L]]
       }
-      requires_predict_type_se = any(map_lgl(acq_functions, function(acq_function) acq_function$requires_predict_type_se))
+      requires_predict_type_se = any(map_lgl(acq_functions, function(acq_function) {
+        acq_function$requires_predict_type_se
+      }))
       packages = unique(unlist(map(acq_functions, function(acq_function) acq_function$packages)))
       properties = character()
       check_values = FALSE
@@ -158,7 +166,7 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
         self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs)
         domain = generate_acq_domain(rhs)
         # lazy initialization requires this:
-        self$codomain = Codomain$new(get0("domains", codomain, ifnotfound = codomain$params))  # get0 for old paradox
+        self$codomain = Codomain$new(get0("domains", codomain, ifnotfound = codomain$params)) # get0 for old paradox
         self$domain = domain
       }
     },
@@ -204,19 +212,15 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
       }
       change_sign = ids[directions == "minimize"]
       for (j in change_sign) {
-        set(values, j = j, value = - values[[j]])
+        set(values, j = j, value = -values[[j]])
       }
       values
     },
 
     deep_clone = function(name, value) {
-      switch(name,
-        .acq_functions = value$clone(deep = TRUE),
-        value
-      )
+      switch(name, .acq_functions = value$clone(deep = TRUE), value)
     }
   )
 )
 
 mlr_acqfunctions$add("multi", AcqFunctionMulti)
-

@@ -41,4 +41,3 @@ test_that("AcqFunctionEILog works", {
   res_maximize = acqf$eval_dt(xdt)
   expect_equal(res, res_maximize)
 })
-

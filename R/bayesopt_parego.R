@@ -97,17 +97,16 @@
 #' }
 #' }
 bayesopt_parego = function(
-    instance,
-    surrogate,
-    acq_function,
-    acq_optimizer,
-    init_design_size = NULL,
-    q = 1L,
-    s = 100L,
-    rho = 0.05,
-    random_interleave_iter = 0L
-  ) {
-
+  instance,
+  surrogate,
+  acq_function,
+  acq_optimizer,
+  init_design_size = NULL,
+  q = 1L,
+  s = 100L,
+  rho = 0.05,
+  random_interleave_iter = 0L
+) {
   # assertions
   assert_r6(instance, "OptimInstanceBatchMultiCrit")
   assert_r6(surrogate, classes = "SurrogateLearner")
@@ -135,7 +134,7 @@ bayesopt_parego = function(
   acq_function$surrogate = surrogate
   acq_optimizer$acq_function = acq_function
 
-  k = length(instance$archive$cols_y)  # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
+  k = length(instance$archive$cols_y) # codomain can hold non targets since #08116aa02204980f87c8c08841176ae8f664980a
   lambdas = calculate_parego_weights(s, k = k)
   qs = seq_len(q)
 
@@ -143,34 +142,42 @@ bayesopt_parego = function(
   repeat {
     data = instance$archive$data
     ydt = data[, instance$archive$cols_y, with = FALSE]
-    ydt = Map("*", ydt, mult_max_to_min(instance$archive$codomain))  # we always assume minimization
-    ydt = Map(function(y) (y - min(y, na.rm = TRUE)) / diff(range(y, na.rm = TRUE)), ydt)  # scale y to [0, 1]
+    ydt = Map("*", ydt, mult_max_to_min(instance$archive$codomain)) # we always assume minimization
+    ydt = Map(function(y) (y - min(y, na.rm = TRUE)) / diff(range(y, na.rm = TRUE)), ydt) # scale y to [0, 1]
 
-    xdt = map_dtr(qs, function(q) {
-      # scalarize y
-      lambda = lambdas[sample.int(nrow(lambdas), 1L), , drop = TRUE]
-      mult = Map("*", ydt, lambda)
-      y_scal = Reduce("+", mult)
-      y_scal = do.call(pmax, mult) + rho * y_scal  # augmented Tchebycheff function
-      set(data, j = "y_scal", value = y_scal)
+    xdt = map_dtr(
+      qs,
+      function(q) {
+        # scalarize y
+        lambda = lambdas[sample.int(nrow(lambdas), 1L), , drop = TRUE]
+        mult = Map("*", ydt, lambda)
+        y_scal = Reduce("+", mult)
+        y_scal = do.call(pmax, mult) + rho * y_scal # augmented Tchebycheff function
+        set(data, j = "y_scal", value = y_scal)
 
-      tryCatch({
-        # random interleaving is handled here
-        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-          error_random_interleave("Random interleaving")
-        }
-        acq_function$surrogate$update()
-        acq_function$update()
-        acq_optimizer$optimize()
-      }, Mlr3ErrorMboRandomInterleave = function(cond) {
-        lg$info("Random interleaving triggered, proposing a randomly sampled point")
-        generate_design_random(search_space, n = 1L)$data
-      }, Mlr3ErrorMbo = function(cond) {
-        lg$warn("Caught the following error: %s", cond$message)
-        lg$info("Proposing a randomly sampled point")
-        generate_design_random(search_space, n = 1L)$data
-      })
-    }, .fill = TRUE)
+        tryCatch(
+          {
+            # random interleaving is handled here
+            if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+              error_random_interleave("Random interleaving")
+            }
+            acq_function$surrogate$update()
+            acq_function$update()
+            acq_optimizer$optimize()
+          },
+          Mlr3ErrorMboRandomInterleave = function(cond) {
+            lg$info("Random interleaving triggered, proposing a randomly sampled point")
+            generate_design_random(search_space, n = 1L)$data
+          },
+          Mlr3ErrorMbo = function(cond) {
+            lg$warn("Caught the following error: %s", cond$message)
+            lg$info("Proposing a randomly sampled point")
+            generate_design_random(search_space, n = 1L)$data
+          }
+        )
+      },
+      .fill = TRUE
+    )
 
     instance$eval_batch(xdt)
     if (instance$is_terminated) break
@@ -186,4 +193,3 @@ attr(bayesopt_parego, "instance") = "multi-crit"
 attr(bayesopt_parego, "man") = "mlr3mbo::mlr_loop_functions_parego"
 
 mlr_loop_functions$add("bayesopt_parego", bayesopt_parego)
-

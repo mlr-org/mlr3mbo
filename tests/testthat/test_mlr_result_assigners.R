@@ -21,4 +21,3 @@ test_that("as.data.table(..., objects = TRUE)", {
   expect_data_table(tab)
   expect_list(tab$object, "ResultAssigner", any.missing = FALSE)
 })
-

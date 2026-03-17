@@ -11,11 +11,11 @@
 #' @export
 #' @examples
 #' result_assigner = ras("archive")
-ResultAssignerArchive = R6Class("ResultAssignerArchive",
+ResultAssignerArchive = R6Class(
+  "ResultAssignerArchive",
   inherit = ResultAssigner,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -37,8 +37,7 @@ ResultAssignerArchive = R6Class("ResultAssignerArchive",
       if (inherits(instance, c("OptimInstanceBatchMultiCrit", "OptimInstanceAsyncMultiCrit"))) {
         ydt = xydt[, cols_y, with = FALSE]
         instance$assign_result(xdt, ydt, extra = extra)
-      }
-      else {
+      } else {
         y = unlist(xydt[, cols_y, with = FALSE])
         instance$assign_result(xdt = xdt, y = y, extra = extra)
       }
@@ -60,4 +59,3 @@ ResultAssignerArchive = R6Class("ResultAssignerArchive",
 )
 
 mlr_result_assigners$add("archive", ResultAssignerArchive)
-

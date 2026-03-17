@@ -45,15 +45,36 @@ srlrn = function(learner, input_trafo = NULL, output_trafo = NULL, archive = NUL
   assert_learner_surrogate(learner)
 
   surrogate = if (test_r6(learner, classes = "Learner")) {
-    SurrogateLearner$new(learner = learner, input_trafo = input_trafo, output_trafo = output_trafo, archive = archive, cols_x = cols_x, col_y = cols_y)
+    SurrogateLearner$new(
+      learner = learner,
+      input_trafo = input_trafo,
+      output_trafo = output_trafo,
+      archive = archive,
+      cols_x = cols_x,
+      col_y = cols_y
+    )
   } else if (inherits(learner, what = "list")) {
     if (length(learner) == 1L) {
       learner = learner[1L]
       # if a single learner is provided in a list, we unlist it
-      SurrogateLearner$new(learner = learner, input_trafo = input_trafo, output_trafo = output_trafo, archive = archive, cols_x = cols_x, col_y = cols_y)
+      SurrogateLearner$new(
+        learner = learner,
+        input_trafo = input_trafo,
+        output_trafo = output_trafo,
+        archive = archive,
+        cols_x = cols_x,
+        col_y = cols_y
+      )
     } else {
       assert_character(cols_y, len = length(learner), null.ok = TRUE)
-      SurrogateLearnerCollection$new(learners = learner, input_trafo = input_trafo, output_trafo = output_trafo, archive = archive, cols_x = cols_x, cols_y = cols_y)
+      SurrogateLearnerCollection$new(
+        learners = learner,
+        input_trafo = input_trafo,
+        output_trafo = output_trafo,
+        archive = archive,
+        cols_x = cols_x,
+        cols_y = cols_y
+      )
     }
   }
   surrogate$param_set$values = insert_named(surrogate$param_set$values, dots)
@@ -140,7 +161,12 @@ acqo = function(optimizer, terminator, acq_function = NULL, callbacks = NULL, ..
     return(dictionary_sugar_get(mlr_acqoptimizers, optimizer, acq_function = acq_function, ...))
   }
 
-  acqopt = AcqOptimizer$new(optimizer = optimizer, terminator = terminator, acq_function = acq_function, callbacks = callbacks)
+  acqopt = AcqOptimizer$new(
+    optimizer = optimizer,
+    terminator = terminator,
+    acq_function = acq_function,
+    callbacks = callbacks
+  )
   acqopt$param_set$values = insert_named(acqopt$param_set$values, dots)
   acqopt
 }
@@ -216,4 +242,3 @@ ot = function(.key, ...) {
 it = function(.key, ...) {
   dictionary_sugar_get(mlr_input_trafos, .key, ...)
 }
-

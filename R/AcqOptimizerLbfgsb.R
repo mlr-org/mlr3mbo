@@ -61,10 +61,10 @@
 #'   acqo("lbfgsb")
 #' }
 #' @export
-AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
+AcqOptimizerLbfgsb = R6Class(
+  "AcqOptimizerLbfgsb",
   inherit = AcqOptimizer,
   public = list(
-
     #' @field state (`list()`)\cr
     #' List of [nloptr::nloptr()] results.
     state = NULL,
@@ -143,7 +143,8 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
         saveguard_epsilon = 1e-5
 
         optimize = function() {
-          invoke(nloptr::nloptr,
+          invoke(
+            nloptr::nloptr,
             eval_f = wrapper,
             lb = self$acq_function$domain$lower + saveguard_epsilon,
             ub = self$acq_function$domain$upper - saveguard_epsilon,
@@ -152,15 +153,19 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
             x0 = x0,
             fun = fun,
             constants = constants,
-            direction = direction)
+            direction = direction
+          )
         }
 
         if (pv$catch_errors) {
-          tryCatch({
-            res = optimize()
-          }, error = function(error_condition) {
-            error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
-          })
+          tryCatch(
+            {
+              res = optimize()
+            },
+            error = function(error_condition) {
+              error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
+            }
+          )
         } else {
           res = optimize()
         }
@@ -176,7 +181,10 @@ AcqOptimizerLbfgsb = R6Class("AcqOptimizerLbfgsb",
 
         if (restart_strategy == "none") break
       }
-      as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+      as.data.table(as.list(set_names(
+        c(x, y * direction),
+        c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
+      )))
     }
   ),
 
