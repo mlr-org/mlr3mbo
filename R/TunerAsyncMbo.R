@@ -8,7 +8,8 @@
 #' This is a minimal interface internally passing on to [OptimizerAsyncMbo].
 #' For additional information and documentation see [OptimizerAsyncMbo].
 #'
-#' Currently, only single-objective optimization is supported and `TunerAsyncMbo` is considered an experimental feature and API might be subject to changes.
+#' Currently, only single-objective optimization is supported and
+#' `TunerAsyncMbo` is considered an experimental feature and API might be subject to changes.
 #'
 #' @section Parameters:
 #' \describe{
@@ -21,7 +22,8 @@
 #'   Default is `100`.}
 #' \item{`design_function`}{`character(1)`\cr
 #'   Sampling function to generate the initial design.
-#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs], or `sobol` [paradox::generate_design_sobol].
+#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs],
+#'   or `sobol` [paradox::generate_design_sobol].
 #'   Default is `sobol`.}
 #' \item{`n_workers`}{`integer(1)`\cr
 #'   Number of parallel workers.
@@ -72,7 +74,8 @@ TunerAsyncMbo = R6Class(
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    #' For more information on default values for `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`, see `?mbo_defaults`.
+    #' For more information on default values for `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`,
+    #' see `?mbo_defaults`.
     #'
     #' Note that all the parameters below are simply passed to the [OptimizerAsyncMbo] and
     #' the respective fields are simply (settable) active bindings to the fields of the [OptimizerAsyncMbo].

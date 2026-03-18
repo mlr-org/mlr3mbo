@@ -55,7 +55,8 @@ OutputTrafoLog = R6Class(
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param invert_posterior (`logical(1)`)\cr
-    #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or [SurrogateLearnerCollection]?
+    #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or
+    #'  [SurrogateLearnerCollection]?
     #'  Default is `FALSE`.
     initialize = function(invert_posterior = FALSE) {
       super$initialize(invert_posterior = invert_posterior, label = "Log", man = "mlr3mbo::mlr_output_trafos_log")
@@ -111,14 +112,19 @@ OutputTrafoLog = R6Class(
     },
 
     #' @description
-    #' Perform the inverse transformation on a posterior predictive distribution characterized by the first and second moment.
+    #' Perform the inverse transformation on a posterior predictive distribution characterized by the first and
+    #' second moment.
     #'
     #' @param pred ([data.table::data.table()])\cr
-    #'   Data. One row per observation characterizing a posterior predictive distribution with the columns `mean` and `se`.
-    #'   Can also be a named list of [data.table::data.table()] with posterior predictive distributions for multiple targets corresponding to (`cols_y`).
+    #'   Data. One row per observation characterizing a posterior predictive distribution with the columns
+    #'   `mean` and `se`.
+    #'   Can also be a named list of [data.table::data.table()] with posterior predictive distributions for
+    #'   multiple targets corresponding to (`cols_y`).
     #'
     #' @return [data.table::data.table()] with the inverse transformation applied to the columns `mean` and `se`.
-    #'   In the case of the input being a named list of [data.table::data.table()], the output will be a named list of [data.table::data.table()] with the inverse transformation applied to the columns `mean` and `se`.
+    #'   In the case of the input being a named list of [data.table::data.table()],
+    #'   the output will be a named list of [data.table::data.table()] with the inverse transformation applied to
+    #'   the columns `mean` and `se`.
     inverse_transform_posterior = function(pred) {
       if (is.null(self$state)) {
         stop("$state is not set. Missed to call $update()?")
@@ -195,7 +201,8 @@ OutputTrafoLog = R6Class(
   active = list(
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     packages = function(rhs) {
       if (missing(rhs)) {
         character(0)

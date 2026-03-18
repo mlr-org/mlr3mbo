@@ -3,11 +3,13 @@
 #'
 #' @description
 #' `TunerADBO` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
-#' ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses [AcqFunctionStochasticCB] with exponential lambda decay.
+#' ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses
+#' [AcqFunctionStochasticCB] with exponential lambda decay.
 #' This is a minimal interface internally passing on to [OptimizerAsyncMbo].
 #' For additional information and documentation see [OptimizerAsyncMbo].
 #'
-#' Currently, only single-objective optimization is supported and `TunerADBO` is considered an experimental feature and API might be subject to changes.
+#' Currently, only single-objective optimization is supported and
+#' `TunerADBO` is considered an experimental feature and API might be subject to changes.
 #'
 #' @section Parameters:
 #' \describe{
@@ -20,7 +22,8 @@
 #'   Default is `100`.}
 #' \item{`design_function`}{`character(1)`\cr
 #'   Sampling function to generate the initial design.
-#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs], or `sobol` [paradox::generate_design_sobol].
+#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs],
+#'   or `sobol` [paradox::generate_design_sobol].
 #'   Default is `sobol`.}
 #' \item{`n_workers`}{`integer(1)`\cr
 #'   Number of parallel workers.

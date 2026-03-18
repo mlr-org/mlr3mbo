@@ -6,11 +6,13 @@
 \title{TunerAsync using Asynchronous Decentralized Bayesian Optimization}
 \description{
 \code{TunerADBO} class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
-ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses \link{AcqFunctionStochasticCB} with exponential lambda decay.
+ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses
+\link{AcqFunctionStochasticCB} with exponential lambda decay.
 This is a minimal interface internally passing on to \link{OptimizerAsyncMbo}.
 For additional information and documentation see \link{OptimizerAsyncMbo}.
 
-Currently, only single-objective optimization is supported and \code{TunerADBO} is considered an experimental feature and API might be subject to changes.
+Currently, only single-objective optimization is supported and
+\code{TunerADBO} is considered an experimental feature and API might be subject to changes.
 }
 \section{Parameters}{
 
@@ -24,7 +26,8 @@ Size of the initial design if it is to be generated.
 Default is \code{100}.}
 \item{\code{design_function}}{\code{character(1)}\cr
 Sampling function to generate the initial design.
-Can be \code{random} \link[paradox:generate_design_random]{paradox::generate_design_random}, \code{lhs} \link[paradox:generate_design_lhs]{paradox::generate_design_lhs}, or \code{sobol} \link[paradox:generate_design_sobol]{paradox::generate_design_sobol}.
+Can be \code{random} \link[paradox:generate_design_random]{paradox::generate_design_random}, \code{lhs} \link[paradox:generate_design_lhs]{paradox::generate_design_lhs},
+or \code{sobol} \link[paradox:generate_design_sobol]{paradox::generate_design_sobol}.
 Default is \code{sobol}.}
 \item{\code{n_workers}}{\code{integer(1)}\cr
 Number of parallel workers.

@@ -29,19 +29,26 @@ If \code{TRUE}, a random forest is constructed even if the parameter space is pu
 \link{Surrogate}
 }
 \description{
-This is a helper function that constructs a default \link{Surrogate} based on properties of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+This is a helper function that constructs a default \link{Surrogate}
+based on properties of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 
-For purely numeric (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via \code{\link[=default_gp]{default_gp()}}.
-For mixed numeric-categorical parameter spaces, or spaces with conditional parameters a random forest is constructed via \code{\link[=default_rf]{default_rf()}}.
+For purely numeric (including integers) parameter spaces without any dependencies
+a Gaussian Process is constricted via \code{\link[=default_gp]{default_gp()}}.
+For mixed numeric-categorical parameter spaces, or spaces with conditional parameters
+a random forest is constructed via \code{\link[=default_rf]{default_rf()}}.
 
-In any case, learners are encapsulated using \code{"evaluate"}, and a fallback learner is set, in cases where the surrogate learner errors.
-Currently, the following learner is used as a fallback: \code{lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")}.
+In any case, learners are encapsulated using \code{"evaluate"}, and a fallback learner is set,
+in cases where the surrogate learner errors.
+Currently, the following learner is used as a fallback:
+\code{lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")}.
 
-If additionally dependencies are present in the parameter space, inactive conditional parameters are represented by missing \code{NA} values in the training design data.
+If additionally dependencies are present in the parameter space,
+inactive conditional parameters are represented by missing \code{NA} values in the training design data.
 We simply handle those with the internal \code{NA} handling method \verb{na.action = "na_learn} of \CRANpkg{ranger}.
 
 If \code{n_learner} is \code{1}, the learner is wrapped as a \link{SurrogateLearner}.
-Otherwise, if \code{n_learner} is larger than \code{1}, multiple deep clones of the learner are wrapped as a \link{SurrogateLearnerCollection}.
+Otherwise, if \code{n_learner} is larger than \code{1},
+multiple deep clones of the learner are wrapped as a \link{SurrogateLearnerCollection}.
 }
 \seealso{
 Other mbo_defaults: 

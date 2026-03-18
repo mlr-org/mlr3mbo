@@ -107,7 +107,8 @@ In the case of maximization, this already includes the necessary change of sign.
 
 \item{\code{noise_var}}{(\code{numeric(1)})\cr
 Estimate of the variance of the noise.
-This corresponds to the \code{nugget} estimate when using a \link[mlr3learners:mlr_learners_regr.km]{mlr3learners} as surrogate model.}
+This corresponds to the \code{nugget} estimate
+when using a \link[mlr3learners:mlr_learners_regr.km]{mlr3learners} as surrogate model.}
 }
 \if{html}{\out{</div>}}
 }

@@ -102,7 +102,8 @@ AcqFunctionEHVI = R6Class(
 
       self$ys_front = self$archive$best()[, self$archive$cols_y, with = FALSE]
       for (column in self$archive$cols_y) {
-        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]]) # assume minimization
+        # assume minimization
+        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]])
       }
       setorderv(self$ys_front, cols = self$archive$cols_y[1L], order = -1L)
 

@@ -8,8 +8,8 @@
 #' Normally used inside an [OptimizerMbo].
 #' The conceptual counterpart to [mlr_loop_functions_ego].
 #'
-#' In each iteration after the initial design, the surrogate and acquisition function are updated and the next candidate
-#' is chosen based on optimizing the acquisition function.
+#' In each iteration after the initial design, the surrogate and acquisition function are updated
+#' and the next candidate is chosen based on optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceBatchMultiCrit])\cr
 #'   The [bbotk::OptimInstanceBatchMultiCrit] to be optimized.
@@ -34,7 +34,8 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
+#' * The `surrogate$archive`, even if already populated,
+#'   will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.

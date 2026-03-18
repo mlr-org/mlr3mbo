@@ -19,7 +19,9 @@ Defaults to \code{15}.
 For example, if two objectives are to be optimized, the total number of nodes will therefore be 225 per default.
 Changing this value after construction requires a call to \verb{$update()} to update the \verb{$gh_data} field.
 \item \code{"r"} (\code{numeric(1)})\cr
-Pruning rate between 0 and 1 that determines the fraction of nodes of the Gauss-Hermite quadrature rule that are ignored based on their weight value (the nodes with the lowest weights being ignored).
+Pruning rate between 0 and 1
+that determines the fraction of nodes of the Gauss-Hermite quadrature rule that are ignored
+based on their weight value (the nodes with the lowest weights being ignored).
 Default is \code{0.2}.
 Changing this value after construction does not require a call to \verb{$update()}.
 }

@@ -4,7 +4,8 @@
 \alias{InputTrafoUnitcube}
 \title{Input Transformation Unitcube}
 \description{
-Input transformation that performs for each numeric and integer feature min-max scaling to \verb{[\\0, 1\]} based on the boundaries of the search space.
+Input transformation that performs for each numeric and integer feature min-max scaling to \verb{[\\0, 1\]}
+based on the boundaries of the search space.
 
 [\0, 1]: R:\%5C\%5C0,\%201\%5C
 }
@@ -58,7 +59,8 @@ Other Input Transformation:
 \describe{
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
-A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
+A warning is signaled if at least one of the packages is not installed,
+but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -125,7 +127,8 @@ Data. One row per observation with at least columns \verb{$cols_x}.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} with the transformation applied to the columns \verb{$cols_x} (if applicable) or a subset thereof.
+\code{\link[data.table:data.table]{data.table::data.table()}} with the transformation applied to the columns \verb{$cols_x} (if applicable)
+or a subset thereof.
 }
 }
 \if{html}{\out{<hr>}}

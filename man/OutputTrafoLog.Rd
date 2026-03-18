@@ -61,7 +61,8 @@ Other Output Transformation:
 \describe{
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
-A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
+A warning is signaled if at least one of the packages is not installed,
+but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -97,7 +98,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{invert_posterior}}{(\code{logical(1)})\cr
-Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or \link{SurrogateLearnerCollection}?
+Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or
+\link{SurrogateLearnerCollection}?
 Default is \code{FALSE}.}
 }
 \if{html}{\out{</div>}}
@@ -146,7 +148,8 @@ Data. One row per observation with at least columns \verb{$cols_y}.}
 \if{html}{\out{<a id="method-OutputTrafoLog-inverse_transform_posterior"></a>}}
 \if{latex}{\out{\hypertarget{method-OutputTrafoLog-inverse_transform_posterior}{}}}
 \subsection{Method \code{inverse_transform_posterior()}}{
-Perform the inverse transformation on a posterior predictive distribution characterized by the first and second moment.
+Perform the inverse transformation on a posterior predictive distribution characterized by the first and
+second moment.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OutputTrafoLog$inverse_transform_posterior(pred)}\if{html}{\out{</div>}}
 }
@@ -155,14 +158,18 @@ Perform the inverse transformation on a posterior predictive distribution charac
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{pred}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-Data. One row per observation characterizing a posterior predictive distribution with the columns \code{mean} and \code{se}.
-Can also be a named list of \code{\link[data.table:data.table]{data.table::data.table()}} with posterior predictive distributions for multiple targets corresponding to (\code{cols_y}).}
+Data. One row per observation characterizing a posterior predictive distribution with the columns
+\code{mean} and \code{se}.
+Can also be a named list of \code{\link[data.table:data.table]{data.table::data.table()}} with posterior predictive distributions for
+multiple targets corresponding to (\code{cols_y}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 \code{\link[data.table:data.table]{data.table::data.table()}} with the inverse transformation applied to the columns \code{mean} and \code{se}.
-In the case of the input being a named list of \code{\link[data.table:data.table]{data.table::data.table()}}, the output will be a named list of \code{\link[data.table:data.table]{data.table::data.table()}} with the inverse transformation applied to the columns \code{mean} and \code{se}.
+In the case of the input being a named list of \code{\link[data.table:data.table]{data.table::data.table()}},
+the output will be a named list of \code{\link[data.table:data.table]{data.table::data.table()}} with the inverse transformation applied to
+the columns \code{mean} and \code{se}.
 }
 }
 \if{html}{\out{<hr>}}

@@ -6,7 +6,8 @@
 \title{Acquisition Function Stochastic Expected Improvement}
 \description{
 Expected Improvement with epsilon decay.
-\eqn{\epsilon} is updated after each update by the formula \code{epsilon * exp(-rate * (t \%\% period))} where \code{t} is the number of times the acquisition function has been updated.
+\eqn{\epsilon} is updated after each update by the formula \code{epsilon * exp(-rate * (t \%\% period))}
+where \code{t} is the number of times the acquisition function has been updated.
 
 While this acquisition function usually would be used within an asynchronous optimizer, e.g., \link{OptimizerAsyncMbo},
 it can in principle also be used in synchronous optimizers, e.g., \link{OptimizerMbo}.
@@ -30,6 +31,7 @@ Higher values result in the importance of improvements predicted by the posterio
 decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
 Defaults to \code{0.1}.
 \item \code{"rate"} (\code{numeric(1)})\cr
+Rate of the exponential decay.
 Defaults to \code{0.05}.
 \item \code{"period"} (\code{integer(1)})\cr
 Period of the exponential decay.
@@ -40,9 +42,11 @@ Defaults to \code{NULL}, i.e., the decay has no period.
 \section{Note}{
 
 \itemize{
-\item This acquisition function always also returns its current (\code{acq_epsilon}) and original (\code{acq_epsilon_0}) \eqn{\epsilon}.
-These values will be logged into the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} of the \link{AcqOptimizer} and
-therefore also in the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that is to be optimized.
+\item This acquisition function always also returns its current (\code{acq_epsilon}) and original (\code{acq_epsilon_0})
+\eqn{\epsilon}.
+These values will be logged into the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}
+of the \link{AcqOptimizer}
+and therefore also in the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that is to be optimized.
 }
 }
 

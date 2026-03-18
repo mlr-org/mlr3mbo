@@ -94,7 +94,7 @@ PS_2D = ps(
   x1 = p_dbl(lower = -1, upper = 1),
   x2 = p_dbl(lower = -1, upper = 1)
 )
-PS_2D_trafo = ps(
+PS_2D_TRAFO = ps(
   x1 = p_dbl(lower = -1, upper = 1),
   x2 = p_dbl(lower = -1, upper = 1, trafo = function(x) x^2)
 )
@@ -236,6 +236,7 @@ expect_man_exists = function(man) {
   }
 }
 
+# nolint next: object_length_linter
 expect_dictionary_loop_function = function(d, contains = NA_character_, min_items = 0L) {
   expect_r6(d, "Dictionary")
   testthat::expect_output(print(d), "Dictionary")

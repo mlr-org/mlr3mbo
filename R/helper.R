@@ -51,13 +51,14 @@ archive_x = function(archive) {
   archive$data[, archive$cols_x, with = FALSE]
 }
 
-# during surrogate prediction it may have happened that whole columns where dropped (e.g., during focussearch if the search space was shrunk)
+# during surrogate prediction it may have happened that whole columns where dropped
+# (e.g., during focussearch if the search space was shrunk)
 fix_xdt_missing = function(xdt, cols_x, archive) {
   missing = cols_x[cols_x %nin% colnames(xdt)]
   types = map_chr(missing, function(x) typeof(archive$data[[x]]))
-  NA_types = list(double = NA_real_, integer = NA_integer_, character = NA_character_, logical = NA)[types]
+  na_types = list(double = NA_real_, integer = NA_integer_, character = NA_character_, logical = NA)[types]
   for (i in seq_along(missing)) {
-    xdt[, eval(missing[i]) := NA_types[i]]
+    xdt[, eval(missing[i]) := na_types[i]]
   }
   assert_subset(cols_x, colnames(xdt))
   xdt
@@ -76,10 +77,9 @@ calculate_parego_weights = function(s, k) {
 }
 
 surrogate_mult_max_to_min = function(surrogate) {
-  codomain = surrogate$archive$codomain
   cols_y = surrogate$cols_y
   mult = map_int(cols_y, function(col_y) {
-    mult = if (col_y %in% surrogate$archive$codomain$ids()) {
+    if (col_y %in% surrogate$archive$codomain$ids()) {
       if (has_element(surrogate$archive$codomain$tags[[col_y]], "maximize")) {
         -1L
       } else {
@@ -108,7 +108,10 @@ get_best = function(instance, is_multi_acq_function, evaluated, n_select, not_al
     not_already_evaluated = which(data[[already_evaluated_id]] == FALSE)
     if (length(not_already_evaluated) < n_select) {
       stopf(
-        "Less then `n_select` (%i) candidate points found during acquisition function optimization were not already evaluated.",
+        paste(
+          "Less then `n_select` (%i) candidate points found during acquisition function optimization",
+          "were not already evaluated."
+        ),
         n_select
       )
     }
@@ -166,6 +169,7 @@ check_learner_surrogate = function(learner) {
   "Must inherit from class 'Learner' or be a list of elements inheriting from class 'Learner'"
 }
 
+# nolint next: object_name_linter
 assert_loop_function = function(x, .var.name = vname(x)) {
   if (is.null(x)) {
     return(x)
@@ -186,6 +190,7 @@ assert_xdt = function(xdt) {
   assert_data_table(xdt)
 }
 
+# nolint next: object_name_linter
 assert_learner_surrogate = function(x, .var.name = vname(x)) {
   # NOTE: this is buggy in checkmate; assert should always return x invisible not TRUE as is the case here
   assert(check_learner_surrogate(x), .var.name = .var.name)

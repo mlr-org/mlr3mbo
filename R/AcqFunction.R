@@ -29,12 +29,13 @@ AcqFunction = R6Class(
     #' @param surrogate_class (`character(1)`)\cr
     #'   Allowed class of the surrogate.
     #' @param direction (`"same"` | `"minimize"` | `"maximize"`).
-    #'   Optimization direction of the acquisition function relative to the direction of the
-    #'   objective function of the [bbotk::OptimInstance].
+    #'   Optimization direction of the acquisition function relative to the direction of
+    #'   the objective function of the [bbotk::OptimInstance].
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
     #' @param packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled prior to construction if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled prior to construction if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     #' @param label (`character(1)`)\cr
     #'   Label for this object.
     #' @param man (`character(1)`)\cr
@@ -171,8 +172,8 @@ AcqFunction = R6Class(
 
   active = list(
     #' @field direction (`"same"` | `"minimize"` | `"maximize"`)\cr
-    #'   Optimization direction of the acquisition function relative to the direction of the
-    #'   objective function of the [bbotk::OptimInstance] related to the passed [bbotk::Archive].
+    #'   Optimization direction of the acquisition function relative to the direction of
+    #'   the objective function of the [bbotk::OptimInstance] related to the passed [bbotk::Archive].
     #'   Must be `"same"`, `"minimize"`, or `"maximize"`.
     direction = function(rhs) {
       if (missing(rhs)) {
@@ -183,8 +184,8 @@ AcqFunction = R6Class(
     },
 
     #' @field surrogate_max_to_min (`-1` | `1`)\cr
-    #'   Multiplicative factor to correct for minimization or maximization of the acquisition
-    #'   function.
+    #'   Multiplicative factor to correct for minimization or maximization of
+    #'   the acquisition function.
     surrogate_max_to_min = function(rhs) {
       if (missing(rhs)) {
         private$.surrogate_max_to_min

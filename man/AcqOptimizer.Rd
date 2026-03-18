@@ -12,11 +12,14 @@ Wraps an \link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} and \link[bbotk:Term
 \describe{
 \item{\code{n_candidates}}{\code{integer(1)}\cr
 Number of candidate points to propose.
-Note that this does not affect how the acquisition function itself is calculated (e.g., setting \code{n_candidates > 1} will not
-result in computing the q- or multi-Expected Improvement) but rather the top \code{n_candidates} are selected from the
-\link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the acquisition function \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
-Note that setting \code{n_candidates > 1} is usually not a sensible idea but it is still supported for experimental reasons.
-Note that in the case of the acquisition function \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} being multi-objective, due to using an \link{AcqFunctionMulti},
+Note that this does not affect how the acquisition function itself is calculated
+(e.g., setting \code{n_candidates > 1} will not result in computing the q- or multi-Expected Improvement)
+but rather the top \code{n_candidates} are selected from the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the acquisition function
+\link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
+Note that setting \code{n_candidates > 1} is usually not a sensible idea but it is still supported for
+experimental reasons.
+Note that in the case of the acquisition function \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} being multi-objective,
+due to using an \link{AcqFunctionMulti},
 selection of the best candidates is performed via non-dominated-sorting.
 Default is \code{1}.
 }
@@ -26,26 +29,31 @@ Can be \code{"fatal"}, \code{"error"}, \code{"warn"}, \code{"info"}, \code{"debu
 Default is \code{"warn"}, i.e., only warnings are logged.
 }
 \item{\code{warmstart}}{\code{logical(1)}\cr
-Should the acquisition function optimization be warm-started by evaluating the best point(s) present in the \link[bbotk:Archive]{bbotk::Archive} of
-the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} (which is contained in the archive of the \link{AcqFunction})?
+Should the acquisition function optimization be warm-started
+by evaluating the best point(s) present in the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}
+(which is contained in the archive of the \link{AcqFunction})?
 This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 Default is \code{FALSE}.
-Note that in the case of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} being multi-objective, selection of the best point(s) is performed via non-dominated-sorting.
+Note that in the case of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} being multi-objective,
+selection of the best point(s) is performed via non-dominated-sorting.
 }
 \item{\code{warmstart_size}}{\code{integer(1) | "all"}\cr
-Number of best points selected from the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that are to be used for warm starting.
+Number of best points selected from the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}
+that are to be used for warm starting.
 Can either be an integer or "all" to use all available points.
 Only relevant if \code{warmstart = TRUE}.
 Default is \code{1}.
 }
 \item{\code{skip_already_evaluated}}{\code{logical(1)}\cr
-It can happen that the candidate(s) resulting of the acquisition function optimization were already evaluated on the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+It can happen that the candidate(s) resulting of the acquisition function optimization
+were already evaluated on the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 Should such candidate proposals be ignored and only candidates that were yet not evaluated be considered?
 Default is \code{TRUE}.
 }
 \item{\code{catch_errors}}{\code{logical(1)}\cr
-Should errors during the acquisition function optimization be caught and propagated to the \code{loop_function} which can then handle
-the failed acquisition function optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
+Should errors during the acquisition function optimization be caught and propagated
+to the \code{loop_function}, which can then handle the failed acquisition function optimization appropriately,
+e.g., by proposing a randomly sampled point for evaluation?
 Setting this to \code{FALSE} can be helpful for debugging.
 Default is \code{TRUE}.
 }

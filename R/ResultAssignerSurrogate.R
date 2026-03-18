@@ -4,10 +4,13 @@
 #' @name mlr_result_assigners_surrogate
 #'
 #' @description
-#' Result assigner that chooses the final point(s) based on a surrogate mean prediction of all evaluated points in the [bbotk::Archive].
+#' Result assigner that chooses the final point(s) based on a surrogate mean prediction of all evaluated points
+#' in the [bbotk::Archive].
 #' This is especially useful in the case of noisy objective functions.
 #'
-#' In the case of operating on an [bbotk::OptimInstanceBatchMultiCrit] or [bbotk::OptimInstanceAsyncMultiCrit] the [SurrogateLearnerCollection] must use as many learners as there are objective functions.
+#' In the case of operating on an [bbotk::OptimInstanceBatchMultiCrit] or
+#' [bbotk::OptimInstanceAsyncMultiCrit] the [SurrogateLearnerCollection] must use as many learners as there are
+#' objective functions.
 #'
 #' @family Result Assigner
 #' @export
@@ -32,7 +35,8 @@ ResultAssignerSurrogate = R6Class(
     #' Assigns the result, i.e., the final point(s) to the instance.
     #' If `$surrogate` is `NULL`, `default_surrogate(instance)` is used and also assigned to `$surrogate`.
     #'
-    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit] |[bbotk::OptimInstanceAsyncSingleCrit] | [bbotk::OptimInstanceAsyncMultiCrit])\cr
+    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit] |
+    #'   [bbotk::OptimInstanceAsyncSingleCrit] | [bbotk::OptimInstanceAsyncMultiCrit])\cr
     #'   The [bbotk::OptimInstance] the final result should be assigned to.
     assign_result = function(instance) {
       if (is.null(self$surrogate)) {
@@ -44,7 +48,10 @@ ResultAssignerSurrogate = R6Class(
         assert_r6(self$surrogate, classes = "SurrogateLearnerCollection")
         if (self$surrogate$n_learner != instance$objective$ydim) {
           stopf(
-            "Surrogate used within the result assigner uses %i learners but the optimization instance has %i objective functions",
+            paste(
+              "Surrogate used within the result assigner uses %i learners",
+              "but the optimization instance has %i objective functions"
+            ),
             self$surrogate$n_learner,
             instance$objective$ydim
           )
@@ -92,7 +99,8 @@ ResultAssignerSurrogate = R6Class(
 
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     packages = function(rhs) {
       if (missing(rhs)) {
         if (is.null(self$surrogate)) character(0) else self$surrogate$packages
