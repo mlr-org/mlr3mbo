@@ -1,3 +1,5 @@
+# mlr3mbo (development version)
+
 # mlr3mbo 1.1.0
 
 * compatibility: rush 1.0.0 (#202).
