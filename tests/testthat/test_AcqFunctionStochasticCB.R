@@ -36,7 +36,7 @@ test_that("AcqFunctionStochasticCB works in defaults", {
 })
 
 test_that("AcqFunctionStochasticCB works with uniform sampling", {
-  rush = start_rush()
+  rush = start_rush(n_workers = 1)
   on.exit({
     rush$reset()
     mirai::daemons(0)
@@ -71,7 +71,7 @@ test_that("AcqFunctionStochasticCB works with uniform sampling", {
 })
 
 test_that("AcqFunctionStochasticCB works with exponential sampling", {
-  rush = start_rush()
+  rush = start_rush(n_workers = 1)
   on.exit({
     rush$reset()
     mirai::daemons(0)
