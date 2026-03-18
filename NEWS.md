@@ -1,4 +1,7 @@
-# mlr3mbo (development version)
+# mlr3mbo 1.1.0
+
+* compatibility: rush 1.0.0 (#202).
+* feat: `Surrogate` gained a `$check()` method (#200).
 
 # mlr3mbo 1.0.0
 
