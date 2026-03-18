@@ -61,7 +61,7 @@
 #'       terminator = trm("evals", n_evals = 10))
 #'
 #'     mirai::daemons(2)
-#'     rush::rush_plan(n_workers=2, worker_type = "remote")
+#'     rush::rush_plan(n_workers=2, worker_type = "mirai")
 #'
 #'     tnr("adbo", design_size = 4, n_workers = 2)$optimize(instance)
 #'     mirai::daemons(0)
