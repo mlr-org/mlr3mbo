@@ -7,8 +7,9 @@
 #' Loop function for sequential multi-objective Bayesian Optimization via SMS-EGO.
 #' Normally used inside an [OptimizerMbo].
 #'
-#' In each iteration after the initial design, the surrogate and acquisition function ([mlr_acqfunctions_smsego]) are
-#' updated and the next candidate is chosen based on optimizing the acquisition function.
+#' In each iteration after the initial design,
+#' the surrogate and acquisition function ([mlr_acqfunctions_smsego]) are updated
+#' and the next candidate is chosen based on optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceBatchMultiCrit])\cr
 #'   The [bbotk::OptimInstanceBatchMultiCrit] to be optimized.
@@ -33,9 +34,11 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
-#' * Due to the iterative computation of the epsilon within the [mlr_acqfunctions_smsego], requires the [bbotk::Terminator] of
-#'   the [bbotk::OptimInstanceBatchMultiCrit] to be a [bbotk::TerminatorEvals].
+#' * The `surrogate$archive`, even if already populated,
+#'   will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
+#' * Due to the iterative computation of the epsilon within the [mlr_acqfunctions_smsego],
+#'   requires the [bbotk::Terminator] of the [bbotk::OptimInstanceBatchMultiCrit]
+#'   to be a [bbotk::TerminatorEvals].
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.

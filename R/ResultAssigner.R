@@ -28,7 +28,8 @@ ResultAssigner = R6Class(
     #' @description
     #' Assigns the result, i.e., the final point(s) to the instance.
     #'
-    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit] |[bbotk::OptimInstanceAsyncSingleCrit] | [bbotk::OptimInstanceAsyncMultiCrit])\cr
+    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit] |
+    #'   [bbotk::OptimInstanceAsyncSingleCrit] | [bbotk::OptimInstanceAsyncMultiCrit])\cr
     #'   The [bbotk::OptimInstance] the final result should be assigned to.
     assign_result = function(instance) {
       stop("Abstract.")
@@ -72,7 +73,8 @@ ResultAssigner = R6Class(
 
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     packages = function(rhs) {
       if (missing(rhs)) {
         stop("Abstract.")

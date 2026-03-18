@@ -7,9 +7,10 @@
 #' Loop function for multi-objective Bayesian Optimization via ParEGO.
 #' Normally used inside an [OptimizerMbo].
 #'
-#' In each iteration after the initial design, the observed objective function values are normalized and `q` candidates are
-#' obtained by scalarizing these values via the augmented Tchebycheff function, updating the surrogate with respect to
-#' these scalarized values and optimizing the acquisition function.
+#' In each iteration after the initial design, the observed objective function values are normalized
+#' and `q` candidates are obtained by scalarizing these values via the augmented Tchebycheff function,
+#' updating the surrogate with respect to these scalarized values,
+#' and optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceBatchMultiCrit])\cr
 #'   The [bbotk::OptimInstanceBatchMultiCrit] to be optimized.
@@ -44,9 +45,10 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
-#' * The scalarizations of the objective function values are stored as the `y_scal` column in the
-#'   [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
+#' * The `surrogate$archive`, even if already populated,
+#'   will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
+#' * The scalarizations of the objective function values are stored as the `y_scal` column
+#'   in the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
 #' * To make use of parallel evaluations in the case of `q > 1, the objective
 #'   function of the [bbotk::OptimInstanceBatchMultiCrit] must be implemented accordingly.
 #'

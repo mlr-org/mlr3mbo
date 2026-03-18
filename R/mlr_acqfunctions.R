@@ -31,7 +31,8 @@ as.data.table.DictionaryAcqFunction = function(x, ..., objects = FALSE) {
     map_dtr(
       x$keys(),
       function(key) {
-        # NOTE: special handling of AcqFunctionMulti due to acq_functions being required as an argument during construction
+        # NOTE: special handling of AcqFunctionMulti due to acq_functions being required as an argument
+        # during construction
         if (key == "multi") {
           acq_function1 = AcqFunctionMean$new()
           acq_function2 = AcqFunctionSD$new()

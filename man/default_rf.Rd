@@ -15,7 +15,8 @@ See \code{\link[=default_surrogate]{default_surrogate()}}.}
 \link[mlr3learners:mlr_learners_regr.ranger]{mlr3learners::LearnerRegrRanger}
 }
 \description{
-This is a helper function that constructs a default random forest \link[mlr3learners:mlr_learners_regr.ranger]{mlr3learners::LearnerRegrRanger} which is for example used in \code{\link[=default_surrogate]{default_surrogate()}}.
+This is a helper function that constructs a default random forest \link[mlr3learners:mlr_learners_regr.ranger]{mlr3learners::LearnerRegrRanger}
+which is for example used in \code{\link[=default_surrogate]{default_surrogate()}}.
 }
 \seealso{
 Other mbo_defaults: 

@@ -8,8 +8,10 @@
 #' Normally used inside an [OptimizerMbo].
 #'
 #' In each iteration after the initial design, the surrogate and acquisition function are updated.
-#' The acquisition function is then optimized, to find a candidate but instead of evaluating this candidate, the
-#' objective function value is obtained by applying the `liar` function to all previously obtained objective function values.
+#' The acquisition function is then optimized to find a candidate,
+#' but instead of evaluating this candidate,
+#' the objective function value is obtained by applying the `liar` function to all previously obtained objective
+#' function values.
 #' This is repeated `q - 1` times to obtain a total of `q` candidates that are then evaluated in a single batch.
 #'
 #' @param instance ([bbotk::OptimInstanceBatchSingleCrit])\cr
@@ -42,7 +44,8 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchSingleCrit].
+#' * The `surrogate$archive`, even if already populated,
+#'   will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchSingleCrit].
 #' * To make use of parallel evaluations in the case of `q > 1, the objective
 #'   function of the [bbotk::OptimInstanceBatchSingleCrit] must be implemented accordingly.
 #'
@@ -149,7 +152,8 @@ bayesopt_mpcl = function(
     # prepare lie objects
     tmp_archive = instance$archive$clone(deep = TRUE)
     acq_function$surrogate$archive = tmp_archive
-    lie[, instance$archive$cols_y := liar(instance$archive$data[[instance$archive$cols_y]])] # FIXME: assert output of liar
+    # FIXME: assert output of liar
+    lie[, instance$archive$cols_y := liar(instance$archive$data[[instance$archive$cols_y]])]
     xdt_new = xdt
 
     # obtain proposals using fake archive with lie, also with error catching

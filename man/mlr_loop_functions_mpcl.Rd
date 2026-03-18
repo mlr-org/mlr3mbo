@@ -60,15 +60,18 @@ Loop function for single-objective Bayesian Optimization via multipoint constant
 Normally used inside an \link{OptimizerMbo}.
 
 In each iteration after the initial design, the surrogate and acquisition function are updated.
-The acquisition function is then optimized, to find a candidate but instead of evaluating this candidate, the
-objective function value is obtained by applying the \code{liar} function to all previously obtained objective function values.
+The acquisition function is then optimized to find a candidate,
+but instead of evaluating this candidate,
+the objective function value is obtained by applying the \code{liar} function to all previously obtained objective
+function values.
 This is repeated \code{q - 1} times to obtain a total of \code{q} candidates that are then evaluated in a single batch.
 }
 \note{
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
-\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit}.
+\item The \code{surrogate$archive}, even if already populated,
+will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit}.
 \item To make use of parallel evaluations in the case of `q > 1, the objective
 function of the \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} must be implemented accordingly.
 }

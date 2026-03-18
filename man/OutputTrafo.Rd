@@ -26,7 +26,8 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
-A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
+A warning is signaled if at least one of the packages is not installed,
+but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 
 \item{\code{state}}{(named \code{list()} | \code{NULL})\cr
 List of meta information regarding the parameters and their state.}
@@ -38,7 +39,8 @@ Column ids of target variables that should be transformed.}
 Multiplicative factor to correct for minimization or maximization.}
 
 \item{\code{invert_posterior}}{(\code{logical(1)})\cr
-Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or \link{SurrogateLearnerCollection}?}
+Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or
+\link{SurrogateLearnerCollection}?}
 }
 \if{html}{\out{</div>}}
 }
@@ -68,7 +70,8 @@ Creates a new instance of this \link[R6:R6Class]{R6} class.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{invert_posterior}}{(\code{logical(1)})\cr
-Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or \link{SurrogateLearnerCollection}?}
+Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or
+\link{SurrogateLearnerCollection}?}
 
 \item{\code{label}}{(\code{character(1)})\cr
 Label for this object.}
@@ -124,7 +127,8 @@ Data. One row per observation with at least columns \verb{$cols_y}.}
 \if{html}{\out{<a id="method-OutputTrafo-inverse_transform_posterior"></a>}}
 \if{latex}{\out{\hypertarget{method-OutputTrafo-inverse_transform_posterior}{}}}
 \subsection{Method \code{inverse_transform_posterior()}}{
-Perform the inverse transformation on a posterior predictive distribution characterized by the first and second moment.
+Perform the inverse transformation on a posterior predictive distribution characterized by the first and
+second moment.
 Must be implemented by subclasses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{OutputTrafo$inverse_transform_posterior(pred)}\if{html}{\out{</div>}}
@@ -134,7 +138,8 @@ Must be implemented by subclasses.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{pred}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-Data. One row per observation characterizing a posterior predictive distribution with the columns \code{mean} and \code{se}.}
+Data. One row per observation characterizing a posterior predictive distribution with the columns
+\code{mean} and \code{se}.}
 }
 \if{html}{\out{</div>}}
 }

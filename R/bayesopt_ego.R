@@ -7,8 +7,8 @@
 #' Loop function for sequential single-objective Bayesian Optimization.
 #' Normally used inside an [OptimizerMbo].
 #'
-#' In each iteration after the initial design, the surrogate and acquisition function are updated and the next candidate
-#' is chosen based on optimizing the acquisition function.
+#' In each iteration after the initial design, the surrogate and acquisition function are updated
+#' and the next candidate is chosen based on optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceBatchSingleCrit])\cr
 #'   The [bbotk::OptimInstanceBatchSingleCrit] to be optimized.
@@ -34,7 +34,8 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchSingleCrit].
+#' * The `surrogate$archive`, even if already populated,
+#'   will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchSingleCrit].
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.

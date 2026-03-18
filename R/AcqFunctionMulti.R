@@ -11,13 +11,14 @@
 #' Note that the optimization direction of each wrapped acquisition function is corrected for maximization.
 #'
 #' For each acquisition function, the same [Surrogate] must be used.
-#' If acquisition functions passed during construction already have been initialized with a surrogate, it is checked whether
-#' the surrogate is the same for all acquisition functions.
-#' If acquisition functions have not been initialized with a surrogate, the surrogate passed during construction or lazy initialization
-#' will be used for all acquisition functions.
+#' If acquisition functions passed during construction already have been initialized with a surrogate,
+#' it is checked whether the surrogate is the same for all acquisition functions.
+#' If acquisition functions have not been initialized with a surrogate,
+#' the surrogate passed during construction or lazy initialization will be used for all acquisition functions.
 #'
-#' For optimization, [AcqOptimizer] can be used as for any other [AcqFunction], however, the [bbotk::OptimizerBatch] wrapped within the [AcqOptimizer]
-#' must support multi-objective optimization as indicated via the `multi-crit` property.
+#' For optimization, [AcqOptimizer] can be used as for any other [AcqFunction],
+#' however, the [bbotk::OptimizerBatch] wrapped within the [AcqOptimizer] must support multi-objective optimization
+#' as indicated via the `multi-crit` property.
 #'
 #' @family Acquisition Function
 #' @export

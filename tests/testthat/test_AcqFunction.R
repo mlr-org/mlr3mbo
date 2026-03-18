@@ -154,7 +154,7 @@ test_that("AcqFunction generate_acq_domain works", {
   expect_equal(domain, OBJ_2D$domain)
   expect_equal(domain, inst$search_space)
 
-  inst = MAKE_INST(OBJ_2D, search_space = PS_2D_trafo)
+  inst = MAKE_INST(OBJ_2D, search_space = PS_2D_TRAFO)
   expect_true(inst$search_space$has_trafo)
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
   domain = generate_acq_domain(surrogate)

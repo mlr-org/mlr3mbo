@@ -13,12 +13,15 @@ Note that redundant \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} must be deep clon
 \describe{
 \item{\code{catch_errors}}{\code{logical(1)}\cr
 Should errors during updating the surrogate be caught and propagated to the \code{loop_function} which can then handle
-the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+the failed acquisition function optimization (as a result of the failed surrogate) appropriately by,
+e.g., proposing a randomly sampled point for evaluation?
 Default is \code{TRUE}.
 }
 \item{\code{impute_method}}{\code{character(1)}\cr
-Method to impute missing values in the case of updating on an asynchronous \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} with pending evaluations.
-Can be \code{"mean"} to use mean imputation or \code{"random"} to sample values uniformly at random between the empirical minimum and maximum.
+Method to impute missing values in the case of updating on an asynchronous \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync}
+with pending evaluations.
+Can be \code{"mean"} to use mean imputation or
+\code{"random"} to sample values uniformly at random between the empirical minimum and maximum.
 Default is \code{"random"}.
 }
 }

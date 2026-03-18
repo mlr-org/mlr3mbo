@@ -3,16 +3,22 @@
 #'
 #' @description
 #' `OptimizerADBO` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
-#' ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses [AcqFunctionStochasticCB] with exponential lambda decay.
+#' ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses
+#' [AcqFunctionStochasticCB] with exponential lambda decay.
 #'
-#' Currently, only single-objective optimization is supported and [OptimizerADBO] is considered an experimental feature and API might be subject to changes.
+#' Currently, only single-objective optimization is supported and
+#' [OptimizerADBO] is considered an experimental feature and API might be subject to changes.
 #'
 #' @note
-#' The lambda parameter of the confidence bound acquisition function controls the trade-off between exploration and exploitation.
+#' The lambda parameter of the confidence bound acquisition function controls the trade-off between
+#' exploration and exploitation.
 #' A large lambda value leads to more exploration, while a small lambda value leads to more exploitation.
-#' The initial lambda value of the acquisition function used on each worker is drawn from an exponential distribution with rate `1 / lambda`.
-#' ADBO can use periodic exponential decay to reduce lambda periodically for a given time step `t` with the formula `lambda * exp(-rate * (t %% period))`.
-#' The [SurrogateLearner] is configured to use a random forest and the [AcqOptimizer] is a random search with a batch size of 1000 and a budget of 10000 evaluations.
+#' The initial lambda value of the acquisition function used on each worker is drawn from an
+#' exponential distribution with rate `1 / lambda`.
+#' ADBO can use periodic exponential decay to reduce lambda periodically for a given time step `t` with the formula
+#' `lambda * exp(-rate * (t %% period))`.
+#' The [SurrogateLearner] is configured to use a random forest and
+#' the [AcqOptimizer] is a random search with a batch size of 1000 and a budget of 10000 evaluations.
 #'
 #' @section Parameters:
 #' \describe{
@@ -31,7 +37,8 @@
 #'   Default is `100`.}
 #' \item{`design_function`}{`character(1)`\cr
 #'   Sampling function to generate the initial design.
-#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs], or `sobol` [paradox::generate_design_sobol].
+#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs],
+#'   or `sobol` [paradox::generate_design_sobol].
 #'   Default is `sobol`.}
 #' \item{`n_workers`}{`integer(1)`\cr
 #'   Number of parallel workers.

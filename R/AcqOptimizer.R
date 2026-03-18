@@ -8,11 +8,14 @@
 #' \describe{
 #' \item{`n_candidates`}{`integer(1)`\cr
 #'   Number of candidate points to propose.
-#'   Note that this does not affect how the acquisition function itself is calculated (e.g., setting `n_candidates > 1` will not
-#'   result in computing the q- or multi-Expected Improvement) but rather the top `n_candidates` are selected from the
-#'   [bbotk::ArchiveBatch] of the acquisition function [bbotk::OptimInstanceBatch].
-#'   Note that setting `n_candidates > 1` is usually not a sensible idea but it is still supported for experimental reasons.
-#'   Note that in the case of the acquisition function [bbotk::OptimInstanceBatch] being multi-objective, due to using an [AcqFunctionMulti],
+#'   Note that this does not affect how the acquisition function itself is calculated
+#'   (e.g., setting `n_candidates > 1` will not result in computing the q- or multi-Expected Improvement)
+#'   but rather the top `n_candidates` are selected from the [bbotk::ArchiveBatch] of the acquisition function
+#'   [bbotk::OptimInstanceBatch].
+#'   Note that setting `n_candidates > 1` is usually not a sensible idea but it is still supported for
+#'   experimental reasons.
+#'   Note that in the case of the acquisition function [bbotk::OptimInstanceBatch] being multi-objective,
+#'   due to using an [AcqFunctionMulti],
 #'   selection of the best candidates is performed via non-dominated-sorting.
 #'   Default is `1`.
 #' }
@@ -22,26 +25,31 @@
 #'   Default is `"warn"`, i.e., only warnings are logged.
 #' }
 #' \item{`warmstart`}{`logical(1)`\cr
-#'   Should the acquisition function optimization be warm-started by evaluating the best point(s) present in the [bbotk::Archive] of
-#'   the actual [bbotk::OptimInstance] (which is contained in the archive of the [AcqFunction])?
+#'   Should the acquisition function optimization be warm-started
+#'   by evaluating the best point(s) present in the [bbotk::Archive] of the actual [bbotk::OptimInstance]
+#'   (which is contained in the archive of the [AcqFunction])?
 #'   This is sensible when using a population based acquisition function optimizer, e.g., local search or mutation.
 #'   Default is `FALSE`.
-#'   Note that in the case of the [bbotk::OptimInstance] being multi-objective, selection of the best point(s) is performed via non-dominated-sorting.
+#'   Note that in the case of the [bbotk::OptimInstance] being multi-objective,
+#'   selection of the best point(s) is performed via non-dominated-sorting.
 #' }
 #' \item{`warmstart_size`}{`integer(1) | "all"`\cr
-#'   Number of best points selected from the [bbotk::Archive] of the actual [bbotk::OptimInstance] that are to be used for warm starting.
+#'   Number of best points selected from the [bbotk::Archive] of the actual [bbotk::OptimInstance]
+#'   that are to be used for warm starting.
 #'   Can either be an integer or "all" to use all available points.
 #'   Only relevant if `warmstart = TRUE`.
 #'   Default is `1`.
 #' }
 #' \item{`skip_already_evaluated`}{`logical(1)`\cr
-#'   It can happen that the candidate(s) resulting of the acquisition function optimization were already evaluated on the actual [bbotk::OptimInstance].
+#'   It can happen that the candidate(s) resulting of the acquisition function optimization
+#'   were already evaluated on the actual [bbotk::OptimInstance].
 #'   Should such candidate proposals be ignored and only candidates that were yet not evaluated be considered?
 #'   Default is `TRUE`.
 #' }
 #' \item{`catch_errors`}{`logical(1)`\cr
-#'   Should errors during the acquisition function optimization be caught and propagated to the `loop_function` which can then handle
-#'   the failed acquisition function optimization appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   Should errors during the acquisition function optimization be caught and propagated
+#'   to the `loop_function`, which can then handle the failed acquisition function optimization appropriately,
+#'   e.g., by proposing a randomly sampled point for evaluation?
 #'   Setting this to `FALSE` can be helpful for debugging.
 #'   Default is `TRUE`.
 #' }
@@ -251,7 +259,8 @@ AcqOptimizer = R6Class(
           )
         }
       }
-      # the following is required to assure that evaluations of numerical gradient based methods that potentially evaluated out of bounds are not returned as out of bound but clipped to bounds
+      # the following is required to assure that evaluations of numerical gradient based methods that potentially
+      # evaluated out of bounds are not returned as out of bound but clipped to bounds
       for (param in names(which(instance$search_space$is_number))) {
         set(
           xdt,
@@ -260,7 +269,9 @@ AcqOptimizer = R6Class(
         )
       }
       #if (is_multi_acq_function) {
-      #  set(xdt, j = instance$objective$id, value = apply(xdt[, instance$objective$acq_function_ids, with = FALSE], MARGIN = 1L, FUN = c, simplify = FALSE))
+      #  set(xdt, j = instance$objective$id,
+      #    value = apply(xdt[, instance$objective$acq_function_ids, with = FALSE],
+      #      MARGIN = 1L, FUN = c, simplify = FALSE))
       #  for (acq_function_id in instance$objective$acq_function_ids) {
       #    set(xdt, j = acq_function_id, value = NULL)
       #  }

@@ -34,13 +34,13 @@ Other Acquisition Function:
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{direction}}{(\code{"same"} | \code{"minimize"} | \code{"maximize"})\cr
-Optimization direction of the acquisition function relative to the direction of the
-objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} related to the passed \link[bbotk:Archive]{bbotk::Archive}.
+Optimization direction of the acquisition function relative to the direction of
+the objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance} related to the passed \link[bbotk:Archive]{bbotk::Archive}.
 Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 
 \item{\code{surrogate_max_to_min}}{(\code{-1} | \code{1})\cr
-Multiplicative factor to correct for minimization or maximization of the acquisition
-function.}
+Multiplicative factor to correct for minimization or maximization of
+the acquisition function.}
 
 \item{\code{label}}{(\code{character(1)})\cr
 Label for this object.}
@@ -126,13 +126,14 @@ Whether the acquisition function requires the surrogate to have \code{"se"} as \
 Allowed class of the surrogate.}
 
 \item{\code{direction}}{(\code{"same"} | \code{"minimize"} | \code{"maximize"}).
-Optimization direction of the acquisition function relative to the direction of the
-objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
+Optimization direction of the acquisition function relative to the direction of
+the objective function of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.
 Must be \code{"same"}, \code{"minimize"}, or \code{"maximize"}.}
 
 \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
-A warning is signaled prior to construction if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
+A warning is signaled prior to construction if at least one of the packages is not installed,
+but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 
 \item{\code{label}}{(\code{character(1)})\cr
 Label for this object.}

@@ -4,47 +4,58 @@
 #'
 #' @description
 #' `OptimizerMbo` class that implements Model Based Optimization (MBO).
-#' The implementation follows a modular layout relying on a [loop_function] determining the MBO flavor to be used, e.g.,
-#' [bayesopt_ego] for sequential single-objective Bayesian Optimization, a [Surrogate], an [AcqFunction], e.g., [mlr_acqfunctions_ei] for
-#' Expected Improvement and an [AcqOptimizer].
+#' The implementation follows a modular layout relying on a [loop_function] determining the MBO flavor to be used,
+#' e.g., [bayesopt_ego] for sequential single-objective Bayesian Optimization, a [Surrogate],
+#' an [AcqFunction], e.g., [mlr_acqfunctions_ei] for Expected Improvement and an [AcqOptimizer].
 #'
-#' MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model built for the objective function.
-#' By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction, the next candidate is chosen for evaluation.
+#' MBO algorithms are iterative optimization algorithms that make use of a continuously updated surrogate model
+#' built for the objective function.
+#' By optimizing a comparably cheap to evaluate acquisition function defined on the surrogate prediction,
+#' the next candidate is chosen for evaluation.
 #'
 #' Detailed descriptions of different MBO flavors are provided in the documentation of the respective [loop_function].
 #'
 #' Termination is handled via a [bbotk::Terminator] part of the [bbotk::OptimInstanceBatch] to be optimized.
 #'
-#' Note that in general the [Surrogate] is updated one final time on all available data after the optimization process has terminated.
-#' However, in certain scenarios this is not always possible or meaningful, e.g., when using [bayesopt_parego()] for multi-objective optimization
+#' Note that in general the [Surrogate] is updated one final time on all available data
+#' after the optimization process has terminated.
+#' However, in certain scenarios this is not always possible or meaningful,
+#' e.g., when using [bayesopt_parego()] for multi-objective optimization
 #' which uses a surrogate that relies on a scalarization of the objectives.
-#' It is therefore recommended to manually inspect the [Surrogate] after optimization if it is to be used, e.g., for visualization purposes to make
-#' sure that it has been properly updated on all available data.
+#' It is therefore recommended to manually inspect the [Surrogate] after optimization if it is to be used,
+#' e.g., for visualization purposes to make sure that it has been properly updated on all available data.
 #' If this final update of the [Surrogate] could not be performed successfully, a warning will be logged.
 #'
 #' By specifying a [ResultAssigner], one can alter how the final result is determined after optimization, e.g.,
-#' simply based on the evaluations logged in the archive [ResultAssignerArchive] or based on the [Surrogate] via [ResultAssignerSurrogate].
+#' simply based on the evaluations logged in the archive [ResultAssignerArchive] or based on the [Surrogate] via
+#' [ResultAssignerSurrogate].
 #'
 #' @section Archive:
 #' The [bbotk::ArchiveBatch] holds the following additional columns that are specific to MBO algorithms:
 #'   * `acq_function$id` (`numeric(1)`)\cr
 #'     The value of the acquisition function.
 #'   * `".already_evaluated"` (`logical(1))`\cr
-#'     Whether this point was already evaluated. Depends on the `skip_already_evaluated` parameter of the [AcqOptimizer].
+#'     Whether this point was already evaluated.
+#'     Depends on the `skip_already_evaluated` parameter of the [AcqOptimizer].
 #'
 #' @section Conditions:
-#' During optimization, errors are caught and re-thrown as structured conditions that inherit from `Mlr3ErrorMbo` and `Mlr3Error` (defined in \CRANpkg{mlr3misc}).
+#' During optimization, errors are caught and re-thrown as structured conditions that inherit from `Mlr3ErrorMbo` and
+#' `Mlr3Error` (defined in \CRANpkg{mlr3misc}).
 #' Loop functions catch `Mlr3ErrorMbo` conditions and fall back to proposing a randomly sampled point.
 #'
 #' The following condition classes are used:
 #' \describe{
 #'   \item{`Mlr3ErrorMbo`}{Base class for all MBO-specific error conditions.}
-#'   \item{`Mlr3ErrorMboSurrogateUpdate`}{Raised by [Surrogate]`$update()` when the surrogate model fails to update (requires `catch_errors = TRUE`).}
-#'   \item{`Mlr3ErrorMboAcqOptimizer`}{Raised by [AcqOptimizer]`$optimize()` when the acquisition function optimization fails (requires `catch_errors = TRUE`).}
+#'   \item{`Mlr3ErrorMboSurrogateUpdate`}{Raised by [Surrogate]`$update()` when the surrogate model fails to update
+#'     (requires `catch_errors = TRUE`).}
+#'   \item{`Mlr3ErrorMboAcqOptimizer`}{Raised by [AcqOptimizer]`$optimize()` when
+#'     the acquisition function optimization fails (requires `catch_errors = TRUE`).}
 #'   \item{`Mlr3ErrorMboRandomInterleave`}{Raised by loop functions to trigger random interleaving.}
 #' }
-#' `Mlr3ErrorMboSurrogateUpdate` and `Mlr3ErrorMboAcqOptimizer` conditions are logged at the `"warn"` level and include the original error as a parent condition.
-#' All conditions can be constructed directly via the helper functions `error_surrogate_update()`, `error_acq_optimizer()`, and `error_random_interleave()`.
+#' `Mlr3ErrorMboSurrogateUpdate` and `Mlr3ErrorMboAcqOptimizer` conditions are logged at the `"warn"` level and
+#' include the original error as a parent condition.
+#' All conditions can be constructed directly via the helper functions `error_surrogate_update()`,
+#' `error_acq_optimizer()`, and `error_random_interleave()`.
 #'
 #' @export
 #' @examples
@@ -116,13 +127,16 @@ OptimizerMbo = R6Class(
     #'
     #' If `surrogate` is `NULL` and the `acq_function$surrogate` field is populated, this [Surrogate] is used.
     #' Otherwise, `default_surrogate(instance)` is used.
-    #' If `acq_function` is `NULL` and the `acq_optimizer$acq_function` field is populated, this [AcqFunction] is used (and therefore its `$surrogate` if populated; see above).
+    #' If `acq_function` is `NULL` and the `acq_optimizer$acq_function` field is populated,
+    #' this [AcqFunction] is used (and therefore its `$surrogate` if populated; see above).
     #' Otherwise `default_acqfunction(instance)` is used.
     #' If `acq_optimizer` is `NULL`, `default_acqoptimizer(instance)` is used.
     #'
-    #' Even if already initialized, the `surrogate$archive` field will always be overwritten by the [bbotk::ArchiveBatch] of the current [bbotk::OptimInstanceBatch] to be optimized.
+    #' Even if already initialized, the `surrogate$archive` field will always be overwritten by the
+    #' [bbotk::ArchiveBatch] of the current [bbotk::OptimInstanceBatch] to be optimized.
     #'
-    #' For more information on default values for `loop_function`, `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner`, see `?mbo_defaults`.
+    #' For more information on default values for `loop_function`, `surrogate`, `acq_function`, `acq_optimizer` and
+    #' `result_assigner`, see `?mbo_defaults`.
     #'
     #' @template param_loop_function
     #' @template param_surrogate
@@ -142,9 +156,12 @@ OptimizerMbo = R6Class(
       super$initialize(
         "mbo",
         param_set = param_set,
-        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"), # is replaced with dynamic AB after construction
-        properties = c("dependencies", "multi-crit", "single-crit"), # is replaced with dynamic AB after construction
-        packages = "mlr3mbo", # is replaced with dynamic AB after construction
+        # is replaced with dynamic AB after construction
+        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
+        # is replaced with dynamic AB after construction
+        properties = c("dependencies", "multi-crit", "single-crit"),
+        # is replaced with dynamic AB after construction
+        packages = "mlr3mbo",
         label = "Model Based Optimization",
         man = "mlr3mbo::OptimizerMbo"
       )
@@ -205,12 +222,14 @@ OptimizerMbo = R6Class(
 
     #' @description
     #' Performs the optimization and writes optimization result into [bbotk::OptimInstanceBatch].
-    #' The optimization result is returned but the complete optimization path is stored in [bbotk::ArchiveBatch] of [bbotk::OptimInstanceBatch].
+    #' The optimization result is returned but the complete optimization path is stored in [bbotk::ArchiveBatch] of
+    #' [bbotk::OptimInstanceBatch].
     #'
     #' @param inst ([bbotk::OptimInstanceBatch]).
     #' @return [data.table::data.table].
     optimize = function(inst) {
-      # FIXME: this needs more checks for edge cases like eips or loop_function bayesopt_parego then default_surrogate should use one learner
+      # FIXME: this needs more checks for edge cases like eips or loop_function bayesopt_parego
+      # then default_surrogate should use one learner
 
       if (is.null(self$loop_function)) {
         self$loop_function = default_loop_function(inst)

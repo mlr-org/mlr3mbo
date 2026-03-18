@@ -6,16 +6,22 @@
 \title{Asynchronous Decentralized Bayesian Optimization}
 \description{
 \code{OptimizerADBO} class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
-ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses \link{AcqFunctionStochasticCB} with exponential lambda decay.
+ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses
+\link{AcqFunctionStochasticCB} with exponential lambda decay.
 
-Currently, only single-objective optimization is supported and \link{OptimizerADBO} is considered an experimental feature and API might be subject to changes.
+Currently, only single-objective optimization is supported and
+\link{OptimizerADBO} is considered an experimental feature and API might be subject to changes.
 }
 \note{
-The lambda parameter of the confidence bound acquisition function controls the trade-off between exploration and exploitation.
+The lambda parameter of the confidence bound acquisition function controls the trade-off between
+exploration and exploitation.
 A large lambda value leads to more exploration, while a small lambda value leads to more exploitation.
-The initial lambda value of the acquisition function used on each worker is drawn from an exponential distribution with rate \code{1 / lambda}.
-ADBO can use periodic exponential decay to reduce lambda periodically for a given time step \code{t} with the formula \code{lambda * exp(-rate * (t \%\% period))}.
-The \link{SurrogateLearner} is configured to use a random forest and the \link{AcqOptimizer} is a random search with a batch size of 1000 and a budget of 10000 evaluations.
+The initial lambda value of the acquisition function used on each worker is drawn from an
+exponential distribution with rate \code{1 / lambda}.
+ADBO can use periodic exponential decay to reduce lambda periodically for a given time step \code{t} with the formula
+\code{lambda * exp(-rate * (t \%\% period))}.
+The \link{SurrogateLearner} is configured to use a random forest and
+the \link{AcqOptimizer} is a random search with a batch size of 1000 and a budget of 10000 evaluations.
 }
 \section{Parameters}{
 
@@ -35,7 +41,8 @@ Size of the initial design if it is to be generated.
 Default is \code{100}.}
 \item{\code{design_function}}{\code{character(1)}\cr
 Sampling function to generate the initial design.
-Can be \code{random} \link[paradox:generate_design_random]{paradox::generate_design_random}, \code{lhs} \link[paradox:generate_design_lhs]{paradox::generate_design_lhs}, or \code{sobol} \link[paradox:generate_design_sobol]{paradox::generate_design_sobol}.
+Can be \code{random} \link[paradox:generate_design_random]{paradox::generate_design_random}, \code{lhs} \link[paradox:generate_design_lhs]{paradox::generate_design_lhs},
+or \code{sobol} \link[paradox:generate_design_sobol]{paradox::generate_design_sobol}.
 Default is \code{sobol}.}
 \item{\code{n_workers}}{\code{integer(1)}\cr
 Number of parallel workers.

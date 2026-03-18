@@ -64,17 +64,19 @@ The original instance is modified in-place and returned invisible.
 Loop function for multi-objective Bayesian Optimization via ParEGO.
 Normally used inside an \link{OptimizerMbo}.
 
-In each iteration after the initial design, the observed objective function values are normalized and \code{q} candidates are
-obtained by scalarizing these values via the augmented Tchebycheff function, updating the surrogate with respect to
-these scalarized values and optimizing the acquisition function.
+In each iteration after the initial design, the observed objective function values are normalized
+and \code{q} candidates are obtained by scalarizing these values via the augmented Tchebycheff function,
+updating the surrogate with respect to these scalarized values,
+and optimizing the acquisition function.
 }
 \note{
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
-\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
-\item The scalarizations of the objective function values are stored as the \code{y_scal} column in the
-\link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
+\item The \code{surrogate$archive}, even if already populated,
+will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
+\item The scalarizations of the objective function values are stored as the \code{y_scal} column
+in the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
 \item To make use of parallel evaluations in the case of `q > 1, the objective
 function of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} must be implemented accordingly.
 }

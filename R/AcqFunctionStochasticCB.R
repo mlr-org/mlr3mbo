@@ -8,8 +8,10 @@
 #'
 #' @description
 #' Lower / Upper Confidence Bound with lambda sampling and decay.
-#' The initial \eqn{\lambda} is drawn from an uniform distribution between `min_lambda` and `max_lambda` or from an exponential distribution with rate `1 / lambda`.
-#' \eqn{\lambda} is updated after each update by the formula `lambda * exp(-rate * (t %% period))`, where `t` is the number of times the acquisition function has been updated.
+#' The initial \eqn{\lambda} is drawn from an uniform distribution between `min_lambda` and `max_lambda`
+#' or from an exponential distribution with rate `1 / lambda`.
+#' \eqn{\lambda} is updated after each update by the formula `lambda * exp(-rate * (t %% period))`,
+#' where `t` is the number of times the acquisition function has been updated.
 #'
 #' While this acquisition function usually would be used within an asynchronous optimizer, e.g., [OptimizerAsyncMbo],
 #' it can in principle also be used in synchronous optimizers, e.g., [OptimizerMbo].
@@ -19,7 +21,7 @@
 #'   \eqn{\lambda} value for sampling from the exponential distribution.
 #'   Defaults to `1.96`.
 #' * `"min_lambda"` (`numeric(1)`)\cr
-#'   Minimum value of \eqn{\lambda}for sampling from the uniform distribution.
+#'   Minimum value of \eqn{\lambda} for sampling from the uniform distribution.
 #'   Defaults to `0.01`.
 #' * `"max_lambda"` (`numeric(1)`)\cr
 #'   Maximum value of \eqn{\lambda} for sampling from the uniform distribution.
@@ -36,9 +38,11 @@
 #'   Defaults to `NULL`, i.e., the decay has no period.
 #'
 #' @section Note:
-#' * This acquisition function always also returns its current (`acq_lambda`) and original (`acq_lambda_0`) \eqn{\lambda}.
-#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch] of the [AcqOptimizer] and
-#'   therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
+#' * This acquisition function always also returns its current (`acq_lambda`) and original (`acq_lambda_0`)
+#'   \eqn{\lambda}.
+#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch]
+#'   of the [AcqOptimizer]
+#'   and therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
 #'
 #' @references
 #' * `r format_bib("snoek_2012")`

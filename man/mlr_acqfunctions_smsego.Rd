@@ -26,9 +26,11 @@ described in Horn et al. (2015).
 \section{Note}{
 
 \itemize{
-\item This acquisition function always also returns its current epsilon values in a list column (\code{acq_epsilon}).
-These values will be logged into the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} of the \link{AcqOptimizer} and
-therefore also in the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that is to be optimized.
+\item This acquisition function always also returns its current epsilon values in a list column
+(\code{acq_epsilon}).
+These values will be logged into the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}
+of the \link{AcqOptimizer}
+and therefore also in the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that is to be optimized.
 }
 }
 

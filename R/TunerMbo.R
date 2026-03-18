@@ -57,7 +57,8 @@ TunerMbo = R6Class(
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    #' For more information on default values for `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`, see `?mbo_defaults`.
+    #' For more information on default values for `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`,
+    #' and `result_assigner`, see `?mbo_defaults`.
     #'
     #' Note that all the parameters below are simply passed to the [OptimizerMbo] and
     #' the respective fields are simply (settable) active bindings to the fields of the [OptimizerMbo].
