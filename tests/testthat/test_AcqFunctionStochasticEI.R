@@ -37,7 +37,7 @@ test_that("AcqFunctionStochasticEI works in defaults", {
 })
 
 test_that("AcqFunctionStochasticEI works with multiple workers", {
-  rush = start_rush()
+  rush = start_rush(n_workers = 1)
   on.exit({
     rush$reset()
     mirai::daemons(0)
@@ -72,7 +72,7 @@ test_that("AcqFunctionStochasticEI works with multiple workers", {
 
 
 test_that("AcqFunctionStochasticEI works with periodic epsilon decay", {
-  rush = start_rush()
+  rush = start_rush(n_workers = 1)
   on.exit({
     rush$reset()
     mirai::daemons(0)

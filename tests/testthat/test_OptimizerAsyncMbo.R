@@ -2,7 +2,7 @@ skip_if_not_installed("rush")
 skip_if_no_redis()
 
 test_that("OptimizerAsyncMbo works in defaults", {
-  rush = start_rush()
+  rush = start_rush(n_workers = 1)
   on.exit({
     rush$reset()
     mirai::daemons(0)
@@ -22,7 +22,7 @@ test_that("OptimizerAsyncMbo works in defaults", {
 })
 
 test_that("OptimizerAsyncMbo works with evaluations in archive", {
-  rush = start_rush()
+  rush = start_rush(n_workers = 1)
   on.exit({
     rush$reset()
     mirai::daemons(0)

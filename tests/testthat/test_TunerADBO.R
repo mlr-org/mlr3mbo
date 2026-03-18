@@ -2,7 +2,7 @@ skip_if_not_installed("rush")
 skip_if_no_redis()
 
 test_that("TunerADBO works", {
-  rush = start_rush(n_workers = 4)
+  rush = start_rush(n_workers = 1)
   on.exit({
     rush$reset()
     mirai::daemons(0)
