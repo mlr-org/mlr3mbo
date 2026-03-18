@@ -6,7 +6,7 @@ constant liar. Normally used inside an
 
 In each iteration after the initial design, the surrogate and
 acquisition function are updated. The acquisition function is then
-optimized, to find a candidate but instead of evaluating this candidate,
+optimized to find a candidate, but instead of evaluating this candidate,
 the objective function value is obtained by applying the `liar` function
 to all previously obtained objective function values. This is repeated
 `q - 1` times to obtain a total of `q` candidates that are then
@@ -170,8 +170,8 @@ if (requireNamespace("mlr3learners") &
 
   optimizer$optimize(instance)
 }
-#>            x  x_domain         y
-#>        <num>    <list>     <num>
-#> 1: 0.3457214 <list[1]> 0.1195233
+#>           x  x_domain        y
+#>       <num>    <list>    <num>
+#> 1: 1.855705 <list[1]> 3.443643
 # }
 ```

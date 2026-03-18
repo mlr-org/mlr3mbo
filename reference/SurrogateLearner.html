@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,13 +61,16 @@
 <dl><dt><code>catch_errors</code></dt>
 <dd><p><code>logical(1)</code><br>
 Should errors during updating the surrogate be caught and propagated to the <code>loop_function</code> which can then handle
-the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+the failed acquisition function optimization (as a result of the failed surrogate) appropriately by,
+e.g., proposing a randomly sampled point for evaluation?
 Default is <code>TRUE</code>.</p></dd>
 
 <dt><code>impute_method</code></dt>
 <dd><p><code>character(1)</code><br>
-Method to impute missing values in the case of updating on an asynchronous <a href="https://bbotk.mlr-org.com/reference/ArchiveAsync.html" class="external-link">bbotk::ArchiveAsync</a> with pending evaluations.
-Can be <code>"mean"</code> to use mean imputation or <code>"random"</code> to sample values uniformly at random between the empirical minimum and maximum.
+Method to impute missing values in the case of updating on an asynchronous <a href="https://bbotk.mlr-org.com/reference/ArchiveAsync.html" class="external-link">bbotk::ArchiveAsync</a>
+with pending evaluations.
+Can be <code>"mean"</code> to use mean imputation or
+<code>"random"</code> to sample values uniformly at random between the empirical minimum and maximum.
 Default is <code>"random"</code>.</p></dd>
 
 
@@ -274,21 +277,21 @@ New data. One row per observation.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DiceKriging::km(design = data, response = truth, covtype = "matern5_2", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 4.09039649859895e-06, optim.method = "gen", control = pv$control, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     nugget = 1.08402239693444e-05, optim.method = "gen", control = pv$control, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     scaling = FALSE)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Trend  coeff.:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)    55.3437</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)    55.8573</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Covar. type  : matern5_2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Covar. coeff.:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     4.1085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     theta(x)     2.9298</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 592.1794</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Variance estimate: 1051.988</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 4.090396e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nugget effect : 1.084022e-05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

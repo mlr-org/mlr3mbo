@@ -248,12 +248,11 @@ if (requireNamespace("mlr3learners") &
 
   tnr("mbo")$optimize(instance)
 }
-#>            cp learner_param_vals  x_domain classif.acc selected_features
-#>         <num>             <list>    <list>       <num>             <num>
-#> 1: -0.7965785          <list[2]> <list[1]>   0.5443503         0.6666667
-#> 2: -5.4017490          <list[2]> <list[1]>   0.8993409         2.6666667
-#> 3: -3.0991636          <list[2]> <list[1]>   0.8993409         2.6666667
-#> 4: -7.7043341          <list[2]> <list[1]>   0.8993409         2.6666667
-#> 5: -5.7822485          <list[2]> <list[1]>   0.8993409         2.6666667
+#>           cp learner_param_vals  x_domain classif.acc selected_features
+#>        <num>             <list>    <list>       <num>             <num>
+#> 1: -6.372912          <list[2]> <list[1]>   0.8817326          2.666667
+#> 2: -1.767742          <list[2]> <list[1]>   0.8539548          2.000000
+#> 3: -8.675497          <list[2]> <list[1]>   0.8817326          2.666667
+#> 4: -7.479440          <list[2]> <list[1]>   0.8817326          2.666667
 # }
 ```

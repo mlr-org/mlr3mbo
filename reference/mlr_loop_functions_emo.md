@@ -137,9 +137,9 @@ if (requireNamespace("mlr3learners") &
 
   optimizer$optimize(instance)
 }
-#>             x  x_domain         y1       y2
-#>         <num>    <list>      <num>    <num>
-#> 1:  4.2306054 <list[1]> 17.8980217 4.975600
-#> 2: -0.7448662 <list[1]>  0.5548257 7.534291
+#>            x  x_domain        y1        y2
+#>        <num>    <list>     <num>     <num>
+#> 1:  3.174763 <list[1]> 10.079118  1.380067
+#> 2: -1.825238 <list[1]>  3.331493 14.632445
 # }
 ```

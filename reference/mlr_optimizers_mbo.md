@@ -408,10 +408,10 @@ if (requireNamespace("mlr3learners") &
 
   optimizer$optimize(instance)
 }
-#> WARN  [12:23:29.223] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
-#>             x  x_domain         y1       y2
-#>         <num>    <list>      <num>    <num>
-#> 1: -0.9576857 <list[1]>  0.9171619 8.747905
-#> 2:  4.0423143 <list[1]> 16.3403048 4.171048
+#> WARN  [09:52:51.102] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
+#>            x  x_domain        y1       y2
+#>        <num>    <list>     <num>    <num>
+#> 1: 0.5190372 <list[1]> 0.2693997 2.193251
+#> 2: 0.7298441 <list[1]> 0.5326723 1.613296
 # }
 ```

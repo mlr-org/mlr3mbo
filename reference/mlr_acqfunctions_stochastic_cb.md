@@ -32,7 +32,7 @@ or with the associated sugar function
   Defaults to `1.96`.
 
 - `"min_lambda"` (`numeric(1)`)  
-  Minimum value of \\\lambda\\for sampling from the uniform
+  Minimum value of \\\lambda\\ for sampling from the uniform
   distribution. Defaults to `0.01`.
 
 - `"max_lambda"` (`numeric(1)`)  
@@ -122,6 +122,7 @@ Inherited methods
 - [`bbotk::Objective$format()`](https://bbotk.mlr-org.com/reference/Objective.html#method-format)
 - [`bbotk::Objective$help()`](https://bbotk.mlr-org.com/reference/Objective.html#method-help)
 - [`bbotk::Objective$print()`](https://bbotk.mlr-org.com/reference/Objective.html#method-print)
+- [`mlr3mbo::AcqFunction$assert_surrogate()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-assert_surrogate)
 - [`mlr3mbo::AcqFunction$eval_dt()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_dt)
 - [`mlr3mbo::AcqFunction$eval_many()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_many)
 
@@ -248,7 +249,7 @@ if (requireNamespace("mlr3learners") &
 }
 #>       acq_cb acq_lambda acq_lambda_0
 #>        <num>      <num>        <num>
-#> 1: -64.77109   3.346387     3.346387
-#> 2: -64.67093   3.346387     3.346387
-#> 3: -57.39852   3.346387     3.346387
+#> 1: -191.7298   8.033506     8.033506
+#> 2: -187.7947   8.033506     8.033506
+#> 3: -162.4114   8.033506     8.033506
 ```

@@ -5,23 +5,37 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Default Surrogate — default_surrogate"><meta name="description" content='This is a helper function that constructs a default Surrogate based on properties of the bbotk::OptimInstance.
-For purely numeric (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via default_gp().
-For mixed numeric-categorical parameter spaces, or spaces with conditional parameters a random forest is constructed via default_rf().
-In any case, learners are encapsulated using "evaluate", and a fallback learner is set, in cases where the surrogate learner errors.
-Currently, the following learner is used as a fallback: lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack").
-If additionally dependencies are present in the parameter space, inactive conditional parameters are represented by missing NA values in the training design data.
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Default Surrogate — default_surrogate"><meta name="description" content='This is a helper function that constructs a default Surrogate
+based on properties of the bbotk::OptimInstance.
+For purely numeric (including integers) parameter spaces without any dependencies
+a Gaussian Process is constricted via default_gp().
+For mixed numeric-categorical parameter spaces, or spaces with conditional parameters
+a random forest is constructed via default_rf().
+In any case, learners are encapsulated using "evaluate", and a fallback learner is set,
+in cases where the surrogate learner errors.
+Currently, the following learner is used as a fallback:
+lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack").
+If additionally dependencies are present in the parameter space,
+inactive conditional parameters are represented by missing NA values in the training design data.
 We simply handle those with the internal NA handling method na.action = "na_learn of ranger.
 If n_learner is 1, the learner is wrapped as a SurrogateLearner.
-Otherwise, if n_learner is larger than 1, multiple deep clones of the learner are wrapped as a SurrogateLearnerCollection.'><meta property="og:description" content='This is a helper function that constructs a default Surrogate based on properties of the bbotk::OptimInstance.
-For purely numeric (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via default_gp().
-For mixed numeric-categorical parameter spaces, or spaces with conditional parameters a random forest is constructed via default_rf().
-In any case, learners are encapsulated using "evaluate", and a fallback learner is set, in cases where the surrogate learner errors.
-Currently, the following learner is used as a fallback: lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack").
-If additionally dependencies are present in the parameter space, inactive conditional parameters are represented by missing NA values in the training design data.
+Otherwise, if n_learner is larger than 1,
+multiple deep clones of the learner are wrapped as a SurrogateLearnerCollection.'><meta property="og:description" content='This is a helper function that constructs a default Surrogate
+based on properties of the bbotk::OptimInstance.
+For purely numeric (including integers) parameter spaces without any dependencies
+a Gaussian Process is constricted via default_gp().
+For mixed numeric-categorical parameter spaces, or spaces with conditional parameters
+a random forest is constructed via default_rf().
+In any case, learners are encapsulated using "evaluate", and a fallback learner is set,
+in cases where the surrogate learner errors.
+Currently, the following learner is used as a fallback:
+lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack").
+If additionally dependencies are present in the parameter space,
+inactive conditional parameters are represented by missing NA values in the training design data.
 We simply handle those with the internal NA handling method na.action = "na_learn of ranger.
 If n_learner is 1, the learner is wrapped as a SurrogateLearner.
-Otherwise, if n_learner is larger than 1, multiple deep clones of the learner are wrapped as a SurrogateLearnerCollection.'></head><body>
+Otherwise, if n_learner is larger than 1,
+multiple deep clones of the learner are wrapped as a SurrogateLearnerCollection.'></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -29,7 +43,7 @@ Otherwise, if n_learner is larger than 1, multiple deep clones of the learner ar
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,15 +80,22 @@ Otherwise, if n_learner is larger than 1, multiple deep clones of the learner ar
     </div>
 
     <div class="ref-description section level2">
-    <p>This is a helper function that constructs a default <a href="Surrogate.html">Surrogate</a> based on properties of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.</p>
-<p>For purely numeric (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via <code><a href="default_gp.html">default_gp()</a></code>.
-For mixed numeric-categorical parameter spaces, or spaces with conditional parameters a random forest is constructed via <code><a href="default_rf.html">default_rf()</a></code>.</p>
-<p>In any case, learners are encapsulated using <code>"evaluate"</code>, and a fallback learner is set, in cases where the surrogate learner errors.
-Currently, the following learner is used as a fallback: <code>lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")</code>.</p>
-<p>If additionally dependencies are present in the parameter space, inactive conditional parameters are represented by missing <code>NA</code> values in the training design data.
+    <p>This is a helper function that constructs a default <a href="Surrogate.html">Surrogate</a>
+based on properties of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.</p>
+<p>For purely numeric (including integers) parameter spaces without any dependencies
+a Gaussian Process is constricted via <code><a href="default_gp.html">default_gp()</a></code>.
+For mixed numeric-categorical parameter spaces, or spaces with conditional parameters
+a random forest is constructed via <code><a href="default_rf.html">default_rf()</a></code>.</p>
+<p>In any case, learners are encapsulated using <code>"evaluate"</code>, and a fallback learner is set,
+in cases where the surrogate learner errors.
+Currently, the following learner is used as a fallback:
+<code>lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")</code>.</p>
+<p>If additionally dependencies are present in the parameter space,
+inactive conditional parameters are represented by missing <code>NA</code> values in the training design data.
 We simply handle those with the internal <code>NA</code> handling method <code>na.action = "na_learn</code> of <a href="https://CRAN.R-project.org/package=ranger" class="external-link"><span class="pkg">ranger</span></a>.</p>
 <p>If <code>n_learner</code> is <code>1</code>, the learner is wrapped as a <a href="SurrogateLearner.html">SurrogateLearner</a>.
-Otherwise, if <code>n_learner</code> is larger than <code>1</code>, multiple deep clones of the learner are wrapped as a <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>.</p>
+Otherwise, if <code>n_learner</code> is larger than <code>1</code>,
+multiple deep clones of the learner are wrapped as a <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>.</p>
     </div>
 
     <div class="section level2">

@@ -6,9 +6,11 @@
     }
   };
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Acquisition Function Expected Improvement on Log Scale — mlr_acqfunctions_ei_log"><meta name="description" content="Expected Improvement assuming that the target variable has been modeled on log scale.
-In general only sensible if the SurrogateLearner uses an OutputTrafoLog without inverting the posterior predictive distribution (invert_posterior = FALSE).
+In general only sensible if the SurrogateLearner uses an OutputTrafoLog
+without inverting the posterior predictive distribution (invert_posterior = FALSE).
 See also the example below."><meta property="og:description" content="Expected Improvement assuming that the target variable has been modeled on log scale.
-In general only sensible if the SurrogateLearner uses an OutputTrafoLog without inverting the posterior predictive distribution (invert_posterior = FALSE).
+In general only sensible if the SurrogateLearner uses an OutputTrafoLog
+without inverting the posterior predictive distribution (invert_posterior = FALSE).
 See also the example below."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -17,7 +19,7 @@ See also the example below."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +57,8 @@ See also the example below."></head><body>
 
     <div class="ref-description section level2">
     <p>Expected Improvement assuming that the target variable has been modeled on log scale.
-In general only sensible if the <a href="SurrogateLearner.html">SurrogateLearner</a> uses an <a href="OutputTrafoLog.html">OutputTrafoLog</a> without inverting the posterior predictive distribution (<code>invert_posterior = FALSE</code>).
+In general only sensible if the <a href="SurrogateLearner.html">SurrogateLearner</a> uses an <a href="OutputTrafoLog.html">OutputTrafoLog</a>
+without inverting the posterior predictive distribution (<code>invert_posterior = FALSE</code>).
 See also the example below.</p>
     </div>
 
@@ -75,8 +78,8 @@ See also the example below.</p>
 
 <ul><li><p><code>"epsilon"</code> (<code>numeric(1)</code>)<br>
 \(\epsilon\) value used to determine the amount of exploration.
-Higher values result in the importance of improvements predicted by the posterior mean
-decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
+Higher values result in the importance of improvements predicted by the posterior mean decreasing
+relative to the importance of potential improvements in regions of high predictive uncertainty.
 Defaults to <code>0</code> (standard Expected Improvement).</p></li>
 </ul></div>
     <div class="section level2">
@@ -125,6 +128,7 @@ In the case of maximization, this already includes the necessary change of sign.
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-help"><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-print"><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href="AcqFunction.html#method-assert_surrogate"><code>mlr3mbo::AcqFunction$assert_surrogate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href="AcqFunction.html#method-eval_dt"><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href="AcqFunction.html#method-eval_many"><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href="AcqFunction.html#method-reset"><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
@@ -213,9 +217,9 @@ In the case of maximization, this already includes the necessary change of sign.
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     acq_ei_log</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.004804734</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 0.008287281</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 0.012162085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.004804737</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 0.008287288</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 0.012162093</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

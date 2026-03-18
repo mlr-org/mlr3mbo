@@ -32,7 +32,7 @@ or with the associated sugar function
   `0.1`.
 
 - `"rate"` (`numeric(1)`)  
-  Defaults to `0.05`.
+  Rate of the exponential decay. Defaults to `0.05`.
 
 - `"period"` (`integer(1)`)  
   Period of the exponential decay. Defaults to `NULL`, i.e., the decay
@@ -112,6 +112,7 @@ Inherited methods
 - [`bbotk::Objective$format()`](https://bbotk.mlr-org.com/reference/Objective.html#method-format)
 - [`bbotk::Objective$help()`](https://bbotk.mlr-org.com/reference/Objective.html#method-help)
 - [`bbotk::Objective$print()`](https://bbotk.mlr-org.com/reference/Objective.html#method-print)
+- [`mlr3mbo::AcqFunction$assert_surrogate()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-assert_surrogate)
 - [`mlr3mbo::AcqFunction$eval_dt()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_dt)
 - [`mlr3mbo::AcqFunction$eval_many()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_many)
 
@@ -224,7 +225,7 @@ if (requireNamespace("mlr3learners") &
 }
 #>      acq_ei acq_epsilon acq_epsilon_0
 #>       <num>       <num>         <num>
-#> 1: 4.374250         0.1           0.1
-#> 2: 4.834928         0.1           0.1
-#> 3: 5.261825         0.1           0.1
+#> 1: 4.374618         0.1           0.1
+#> 2: 4.835304         0.1           0.1
+#> 3: 5.262113         0.1           0.1
 ```

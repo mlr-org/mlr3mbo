@@ -15,7 +15,7 @@ Based on the predictions of a Surrogate, the acquisition function encodes the pr
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,15 +84,15 @@ Based on the predictions of a Surrogate, the acquisition function encodes the pr
     <h2 id="active-bindings">Active bindings<a class="anchor" aria-label="anchor" href="#active-bindings"></a></h2>
     <p></p><div class="r6-active-bindings"><dl><dt><code>direction</code></dt>
 <dd><p>(<code>"same"</code> | <code>"minimize"</code> | <code>"maximize"</code>)<br>
-Optimization direction of the acquisition function relative to the direction of the
-objective function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> related to the passed <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a>.
+Optimization direction of the acquisition function relative to the direction of
+the objective function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> related to the passed <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a>.
 Must be <code>"same"</code>, <code>"minimize"</code>, or <code>"maximize"</code>.</p></dd>
 
 
 <dt><code>surrogate_max_to_min</code></dt>
 <dd><p>(<code>-1</code> | <code>1</code>)<br>
-Multiplicative factor to correct for minimization or maximization of the acquisition
-function.</p></dd>
+Multiplicative factor to correct for minimization or maximization of
+the acquisition function.</p></dd>
 
 
 <dt><code>label</code></dt>
@@ -143,6 +143,7 @@ Set of required packages.</p></dd>
 <li><p><a href="#method-AcqFunction-reset"><code>AcqFunction$reset()</code></a></p></li>
 <li><p><a href="#method-AcqFunction-eval_many"><code>AcqFunction$eval_many()</code></a></p></li>
 <li><p><a href="#method-AcqFunction-eval_dt"><code>AcqFunction$eval_dt()</code></a></p></li>
+<li><p><a href="#method-AcqFunction-assert_surrogate"><code>AcqFunction$assert_surrogate()</code></a></p></li>
 <li><p><a href="#method-AcqFunction-clone"><code>AcqFunction$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-eval"><code>bbotk::Objective$eval()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></li>
@@ -156,8 +157,9 @@ Set of required packages.</p></dd>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/AcqFunction.html">AcqFunction</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  <span class="va">id</span>,</span>
 <span>  constants <span class="op">=</span> <span class="va"><a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">ParamSet</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  <span class="va">surrogate</span>,</span>
+<span>  surrogate <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">requires_predict_type_se</span>,</span>
+<span>  <span class="va">surrogate_class</span>,</span>
 <span>  <span class="va">direction</span>,</span>
 <span>  packages <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
@@ -186,17 +188,23 @@ Surrogate whose predictions are used in the acquisition function.</p></dd>
 Whether the acquisition function requires the surrogate to have <code>"se"</code> as <code>$predict_type</code>.</p></dd>
 
 
+<dt><code>surrogate_class</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+Allowed class of the surrogate.</p></dd>
+
+
 <dt><code>direction</code></dt>
 <dd><p>(<code>"same"</code> | <code>"minimize"</code> | <code>"maximize"</code>).
-Optimization direction of the acquisition function relative to the direction of the
-objective function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.
+Optimization direction of the acquisition function relative to the direction of
+the objective function of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.
 Must be <code>"same"</code>, <code>"minimize"</code>, or <code>"maximize"</code>.</p></dd>
 
 
 <dt><code>packages</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Set of required packages.
-A warning is signaled prior to construction if at least one of the packages is not installed, but loaded (not attached) later on-demand via <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>.</p></dd>
+A warning is signaled prior to construction if at least one of the packages is not installed,
+but loaded (not attached) later on-demand via <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>.</p></dd>
 
 
 <dt><code>label</code></dt>
@@ -277,15 +285,38 @@ single-objective acquisition functions and multiple y-columns for multi-objectiv
 acquisition functions, e.g. <code>data.table(y = 1:2)</code> or <code>data.table(y1 = 1:2, y2 = 3:4)</code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-AcqFunction-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
-<p>The objects of this class are cloneable with this method.</p><div class="section">
+</div><p></p><hr><a id="method-AcqFunction-assert_surrogate"></a><div class="section">
+<h3 id="method-assert-surrogate-">Method <code>assert_surrogate()</code><a class="anchor" aria-label="anchor" href="#method-assert-surrogate-"></a></h3>
+<p>Validate that the surrogate is compatible with this acquisition function.
+Asserts the surrogate class and that <code>$predict_type</code> is <code>"se"</code> if required.
+Subclasses with additional requirements must override this method.</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunction</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunction</span><span class="op">$</span><span class="fu">assert_surrogate</span><span class="op">(</span><span class="va">surrogate</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>surrogate</code></dt>
+<dd><p>(<a href="Surrogate.html">Surrogate</a>)<br>
+Surrogate to validate.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<p>The validated <a href="Surrogate.html">Surrogate</a>.</p>
+</div>
+
+</div><p></p><hr><a id="method-AcqFunction-clone"></a><div class="section">
+<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+<p>The objects of this class are cloneable with this method.</p><div class="section">
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunction</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 

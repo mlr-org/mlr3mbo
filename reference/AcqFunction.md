@@ -102,6 +102,8 @@ Other Acquisition Function:
 
 - [`AcqFunction$eval_dt()`](#method-AcqFunction-eval_dt)
 
+- [`AcqFunction$assert_surrogate()`](#method-AcqFunction-assert_surrogate)
+
 - [`AcqFunction$clone()`](#method-AcqFunction-clone)
 
 Inherited methods
@@ -126,8 +128,9 @@ the active binding `$surrogate`.
     AcqFunction$new(
       id,
       constants = ParamSet$new(),
-      surrogate,
+      surrogate = NULL,
       requires_predict_type_se,
+      surrogate_class,
       direction,
       packages = NULL,
       label = NA_character_,
@@ -156,6 +159,11 @@ the active binding `$surrogate`.
   (`logical(1)`)  
   Whether the acquisition function requires the surrogate to have `"se"`
   as `$predict_type`.
+
+- `surrogate_class`:
+
+  (`character(1)`)  
+  Allowed class of the surrogate.
 
 - `direction`:
 
@@ -256,6 +264,31 @@ data.table::data.table() that contains one y-column for single-objective
 acquisition functions and multiple y-columns for multi-objective
 acquisition functions, e.g. `data.table(y = 1:2)` or
 `data.table(y1 = 1:2, y2 = 3:4)`.
+
+------------------------------------------------------------------------
+
+### Method `assert_surrogate()`
+
+Validate that the surrogate is compatible with this acquisition
+function. Asserts the surrogate class and that `$predict_type` is `"se"`
+if required. Subclasses with additional requirements must override this
+method.
+
+#### Usage
+
+    AcqFunction$assert_surrogate(surrogate)
+
+#### Arguments
+
+- `surrogate`:
+
+  ([Surrogate](https://mlr3mbo.mlr-org.com/reference/Surrogate.md))  
+  Surrogate to validate.
+
+#### Returns
+
+The validated
+[Surrogate](https://mlr3mbo.mlr-org.com/reference/Surrogate.md).
 
 ------------------------------------------------------------------------
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## mlr3mbo 1.1.0
+
+- compatibility: rush 1.0.0
+  ([\#202](https://github.com/mlr-org/mlr3mbo/issues/202)).
+- feat: `Surrogate` gained a `$check()` method
+  ([\#200](https://github.com/mlr-org/mlr3mbo/issues/200)).
+
 ## mlr3mbo 1.0.0
 
 CRAN release: 2026-02-27

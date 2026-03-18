@@ -77,6 +77,7 @@ Inherited methods
 - [`bbotk::Objective$format()`](https://bbotk.mlr-org.com/reference/Objective.html#method-format)
 - [`bbotk::Objective$help()`](https://bbotk.mlr-org.com/reference/Objective.html#method-help)
 - [`bbotk::Objective$print()`](https://bbotk.mlr-org.com/reference/Objective.html#method-print)
+- [`mlr3mbo::AcqFunction$assert_surrogate()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-assert_surrogate)
 - [`mlr3mbo::AcqFunction$eval_dt()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_dt)
 - [`mlr3mbo::AcqFunction$eval_many()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_many)
 - [`mlr3mbo::AcqFunction$reset()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-reset)
@@ -161,7 +162,7 @@ if (requireNamespace("mlr3learners") &
 }
 #>    acq_ehvi
 #>       <num>
-#> 1: 206.4270
-#> 2: 264.3272
-#> 3: 376.3496
+#> 1: 206.4260
+#> 2: 264.3261
+#> 3: 376.3486
 ```

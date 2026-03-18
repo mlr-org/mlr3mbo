@@ -8,20 +8,22 @@
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Acquisition Function Wrapping Multiple Acquisition Functions — mlr_acqfunctions_multi"><meta name="description" content="Wrapping multiple AcqFunctions resulting in a multi-objective acquisition function composed of the individual ones.
 Note that the optimization direction of each wrapped acquisition function is corrected for maximization.
 For each acquisition function, the same Surrogate must be used.
-If acquisition functions passed during construction already have been initialized with a surrogate, it is checked whether
-the surrogate is the same for all acquisition functions.
-If acquisition functions have not been initialized with a surrogate, the surrogate passed during construction or lazy initialization
-will be used for all acquisition functions.
-For optimization, AcqOptimizer can be used as for any other AcqFunction, however, the bbotk::OptimizerBatch wrapped within the AcqOptimizer
-must support multi-objective optimization as indicated via the multi-crit property."><meta property="og:description" content="Wrapping multiple AcqFunctions resulting in a multi-objective acquisition function composed of the individual ones.
+If acquisition functions passed during construction already have been initialized with a surrogate,
+it is checked whether the surrogate is the same for all acquisition functions.
+If acquisition functions have not been initialized with a surrogate,
+the surrogate passed during construction or lazy initialization will be used for all acquisition functions.
+For optimization, AcqOptimizer can be used as for any other AcqFunction,
+however, the bbotk::OptimizerBatch wrapped within the AcqOptimizer must support multi-objective optimization
+as indicated via the multi-crit property."><meta property="og:description" content="Wrapping multiple AcqFunctions resulting in a multi-objective acquisition function composed of the individual ones.
 Note that the optimization direction of each wrapped acquisition function is corrected for maximization.
 For each acquisition function, the same Surrogate must be used.
-If acquisition functions passed during construction already have been initialized with a surrogate, it is checked whether
-the surrogate is the same for all acquisition functions.
-If acquisition functions have not been initialized with a surrogate, the surrogate passed during construction or lazy initialization
-will be used for all acquisition functions.
-For optimization, AcqOptimizer can be used as for any other AcqFunction, however, the bbotk::OptimizerBatch wrapped within the AcqOptimizer
-must support multi-objective optimization as indicated via the multi-crit property."></head><body>
+If acquisition functions passed during construction already have been initialized with a surrogate,
+it is checked whether the surrogate is the same for all acquisition functions.
+If acquisition functions have not been initialized with a surrogate,
+the surrogate passed during construction or lazy initialization will be used for all acquisition functions.
+For optimization, AcqOptimizer can be used as for any other AcqFunction,
+however, the bbotk::OptimizerBatch wrapped within the AcqOptimizer must support multi-objective optimization
+as indicated via the multi-crit property."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -29,7 +31,7 @@ must support multi-objective optimization as indicated via the multi-crit proper
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,12 +71,13 @@ must support multi-objective optimization as indicated via the multi-crit proper
     <p>Wrapping multiple <a href="AcqFunction.html">AcqFunction</a>s resulting in a multi-objective acquisition function composed of the individual ones.
 Note that the optimization direction of each wrapped acquisition function is corrected for maximization.</p>
 <p>For each acquisition function, the same <a href="Surrogate.html">Surrogate</a> must be used.
-If acquisition functions passed during construction already have been initialized with a surrogate, it is checked whether
-the surrogate is the same for all acquisition functions.
-If acquisition functions have not been initialized with a surrogate, the surrogate passed during construction or lazy initialization
-will be used for all acquisition functions.</p>
-<p>For optimization, <a href="AcqOptimizer.html">AcqOptimizer</a> can be used as for any other <a href="AcqFunction.html">AcqFunction</a>, however, the <a href="https://bbotk.mlr-org.com/reference/OptimizerBatch.html" class="external-link">bbotk::OptimizerBatch</a> wrapped within the <a href="AcqOptimizer.html">AcqOptimizer</a>
-must support multi-objective optimization as indicated via the <code>multi-crit</code> property.</p>
+If acquisition functions passed during construction already have been initialized with a surrogate,
+it is checked whether the surrogate is the same for all acquisition functions.
+If acquisition functions have not been initialized with a surrogate,
+the surrogate passed during construction or lazy initialization will be used for all acquisition functions.</p>
+<p>For optimization, <a href="AcqOptimizer.html">AcqOptimizer</a> can be used as for any other <a href="AcqFunction.html">AcqFunction</a>,
+however, the <a href="https://bbotk.mlr-org.com/reference/OptimizerBatch.html" class="external-link">bbotk::OptimizerBatch</a> wrapped within the <a href="AcqOptimizer.html">AcqOptimizer</a> must support multi-objective optimization
+as indicated via the <code>multi-crit</code> property.</p>
     </div>
 
 
@@ -142,6 +145,7 @@ Points to the ids of the individual acquisition functions.</p></dd>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-help"><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-print"><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href="AcqFunction.html#method-assert_surrogate"><code>mlr3mbo::AcqFunction$assert_surrogate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href="AcqFunction.html#method-eval_dt"><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href="AcqFunction.html#method-eval_many"><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href="AcqFunction.html#method-reset"><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
@@ -231,9 +235,9 @@ Points to the ids of the individual acquisition functions.</p></dd>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      acq_ei    acq_pi   acq_cb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;num&gt;     &lt;num&gt;    &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 4.401492 0.2666944 28.30303</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 4.864906 0.2939694 29.30439</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 5.297345 0.3509548 27.23401</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 4.401181 0.2666813 28.30175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 4.864589 0.2939562 29.30322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 5.297093 0.3509427 27.23331</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

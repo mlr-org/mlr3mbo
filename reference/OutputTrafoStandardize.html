@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,8 @@
     <p></p><div class="r6-active-bindings"><dl><dt><code>packages</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Set of required packages.
-A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>.</p></dd>
+A warning is signaled if at least one of the packages is not installed,
+but loaded (not attached) later on-demand via <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>.</p></dd>
 
 
 </dl><p></p></div>
@@ -100,7 +101,8 @@ A warning is signaled if at least one of the packages is not installed, but load
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>invert_posterior</code></dt>
 <dd><p>(<code>logical(1)</code>)<br>
-Should the posterior predictive distribution be inverted when used within a <a href="SurrogateLearner.html">SurrogateLearner</a> or <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>?
+Should the posterior predictive distribution be inverted when used within a <a href="SurrogateLearner.html">SurrogateLearner</a> or
+<a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>?
 Default is <code>TRUE</code>.</p></dd>
 
 
@@ -147,7 +149,8 @@ Data. One row per observation with at least columns <code>$cols_y</code>.</p></d
 
 </div><p></p><hr><a id="method-OutputTrafoStandardize-inverse_transform_posterior"></a><div class="section">
 <h3 id="method-inverse-transform-posterior-">Method <code>inverse_transform_posterior()</code><a class="anchor" aria-label="anchor" href="#method-inverse-transform-posterior-"></a></h3>
-<p>Perform the inverse transformation on a posterior predictive distribution characterized by the first and second moment.</p><div class="section">
+<p>Perform the inverse transformation on a posterior predictive distribution characterized by the first and
+second moment.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">OutputTrafoStandardize</span><span class="op">$</span><span class="fu">inverse_transform_posterior</span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -156,8 +159,10 @@ Data. One row per observation with at least columns <code>$cols_y</code>.</p></d
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>pred</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
-Data. One row per observation characterizing a posterior predictive distribution with the columns <code>mean</code> and <code>se</code>.
-Can also be a named list of <code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code> with posterior predictive distributions for multiple targets corresponding to (<code>cols_y</code>).</p></dd>
+Data. One row per observation characterizing a posterior predictive distribution with the columns
+<code>mean</code> and <code>se</code>.
+Can also be a named list of <code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code> with posterior predictive distributions for
+multiple targets corresponding to (<code>cols_y</code>).</p></dd>
 
 
 </dl><p></p></div>
@@ -165,7 +170,9 @@ Can also be a named list of <code><a href="https://rdrr.io/pkg/data.table/man/da
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p><code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code> with the inverse transformation applied to the columns <code>mean</code> and <code>se</code>.
-In the case of the input being a named list of <code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>, the output will be a named list of <code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code> with the inverse transformation applied to the columns <code>mean</code> and <code>se</code>.</p>
+In the case of the input being a named list of <code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>,
+the output will be a named list of <code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code> with the inverse transformation applied to
+the columns <code>mean</code> and <code>se</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-OutputTrafoStandardize-inverse_transform"></a><div class="section">
@@ -250,10 +257,10 @@ Data. One row per observation with at least columns <code>$cols_y</code>.</p></d
 <span class="r-in"><span>  <span class="va">surrogate</span><span class="op">$</span><span class="fu">predict</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.8573079 -0.8230771 -0.8150304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.9215786 -0.9649938 -0.9792974</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $se</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5289961 0.6169837 0.5875435</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01389580 0.07362557 0.16448148</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

@@ -98,6 +98,7 @@ Inherited methods
 - [`bbotk::Objective$format()`](https://bbotk.mlr-org.com/reference/Objective.html#method-format)
 - [`bbotk::Objective$help()`](https://bbotk.mlr-org.com/reference/Objective.html#method-help)
 - [`bbotk::Objective$print()`](https://bbotk.mlr-org.com/reference/Objective.html#method-print)
+- [`mlr3mbo::AcqFunction$assert_surrogate()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-assert_surrogate)
 - [`mlr3mbo::AcqFunction$eval_dt()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_dt)
 - [`mlr3mbo::AcqFunction$eval_many()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_many)
 - [`mlr3mbo::AcqFunction$reset()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-reset)
@@ -190,7 +191,7 @@ if (requireNamespace("mlr3learners") &
 }
 #>      acq_ei    acq_pi   acq_cb
 #>       <num>     <num>    <num>
-#> 1: 4.401492 0.2666944 28.30303
-#> 2: 4.864906 0.2939694 29.30439
-#> 3: 5.297345 0.3509548 27.23401
+#> 1: 4.401181 0.2666813 28.30175
+#> 2: 4.864589 0.2939562 29.30322
+#> 3: 5.297093 0.3509427 27.23331
 ```

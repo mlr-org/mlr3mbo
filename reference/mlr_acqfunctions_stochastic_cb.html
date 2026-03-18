@@ -6,12 +6,16 @@
     }
   };
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Acquisition Function Stochastic Confidence Bound â€” mlr_acqfunctions_stochastic_cb"><meta name="description" content="Lower / Upper Confidence Bound with lambda sampling and decay.
-The initial \(\lambda\) is drawn from an uniform distribution between min_lambda and max_lambda or from an exponential distribution with rate 1 / lambda.
-\(\lambda\) is updated after each update by the formula lambda * exp(-rate * (t %% period)), where t is the number of times the acquisition function has been updated.
+The initial \(\lambda\) is drawn from an uniform distribution between min_lambda and max_lambda
+or from an exponential distribution with rate 1 / lambda.
+\(\lambda\) is updated after each update by the formula lambda * exp(-rate * (t %% period)),
+where t is the number of times the acquisition function has been updated.
 While this acquisition function usually would be used within an asynchronous optimizer, e.g., OptimizerAsyncMbo,
 it can in principle also be used in synchronous optimizers, e.g., OptimizerMbo."><meta property="og:description" content="Lower / Upper Confidence Bound with lambda sampling and decay.
-The initial \(\lambda\) is drawn from an uniform distribution between min_lambda and max_lambda or from an exponential distribution with rate 1 / lambda.
-\(\lambda\) is updated after each update by the formula lambda * exp(-rate * (t %% period)), where t is the number of times the acquisition function has been updated.
+The initial \(\lambda\) is drawn from an uniform distribution between min_lambda and max_lambda
+or from an exponential distribution with rate 1 / lambda.
+\(\lambda\) is updated after each update by the formula lambda * exp(-rate * (t %% period)),
+where t is the number of times the acquisition function has been updated.
 While this acquisition function usually would be used within an asynchronous optimizer, e.g., OptimizerAsyncMbo,
 it can in principle also be used in synchronous optimizers, e.g., OptimizerMbo."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -21,7 +25,7 @@ it can in principle also be used in synchronous optimizers, e.g., OptimizerMbo."
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,8 +63,10 @@ it can in principle also be used in synchronous optimizers, e.g., OptimizerMbo."
 
     <div class="ref-description section level2">
     <p>Lower / Upper Confidence Bound with lambda sampling and decay.
-The initial \(\lambda\) is drawn from an uniform distribution between <code>min_lambda</code> and <code>max_lambda</code> or from an exponential distribution with rate <code>1 / lambda</code>.
-\(\lambda\) is updated after each update by the formula <code>lambda * exp(-rate * (t %% period))</code>, where <code>t</code> is the number of times the acquisition function has been updated.</p>
+The initial \(\lambda\) is drawn from an uniform distribution between <code>min_lambda</code> and <code>max_lambda</code>
+or from an exponential distribution with rate <code>1 / lambda</code>.
+\(\lambda\) is updated after each update by the formula <code>lambda * exp(-rate * (t %% period))</code>,
+where <code>t</code> is the number of times the acquisition function has been updated.</p>
 <p>While this acquisition function usually would be used within an asynchronous optimizer, e.g., <a href="mlr_optimizers_async_mbo.html">OptimizerAsyncMbo</a>,
 it can in principle also be used in synchronous optimizers, e.g., <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>.</p>
     </div>
@@ -83,7 +89,7 @@ it can in principle also be used in synchronous optimizers, e.g., <a href="mlr_o
 \(\lambda\) value for sampling from the exponential distribution.
 Defaults to <code>1.96</code>.</p></li>
 <li><p><code>"min_lambda"</code> (<code>numeric(1)</code>)<br>
-Minimum value of \(\lambda\)for sampling from the uniform distribution.
+Minimum value of \(\lambda\) for sampling from the uniform distribution.
 Defaults to <code>0.01</code>.</p></li>
 <li><p><code>"max_lambda"</code> (<code>numeric(1)</code>)<br>
 Maximum value of \(\lambda\) for sampling from the uniform distribution.
@@ -103,9 +109,11 @@ Defaults to <code>NULL</code>, i.e., the decay has no period.</p></li>
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
 
 
-<ul><li><p>This acquisition function always also returns its current (<code>acq_lambda</code>) and original (<code>acq_lambda_0</code>) \(\lambda\).
-These values will be logged into the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> of the <a href="AcqOptimizer.html">AcqOptimizer</a> and
-therefore also in the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> that is to be optimized.</p></li>
+<ul><li><p>This acquisition function always also returns its current (<code>acq_lambda</code>) and original (<code>acq_lambda_0</code>)
+\(\lambda\).
+These values will be logged into the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a>
+of the <a href="AcqOptimizer.html">AcqOptimizer</a>
+and therefore also in the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> that is to be optimized.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -154,6 +162,7 @@ In <em>2023 IEEE 19th International Conference on e-Science (e-Science)</em>, 1â
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-help"><code>bbotk::Objective$help()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-print"><code>bbotk::Objective$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href="AcqFunction.html#method-assert_surrogate"><code>mlr3mbo::AcqFunction$assert_surrogate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href="AcqFunction.html#method-eval_dt"><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href="AcqFunction.html#method-eval_many"><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
 </ul></details></p><hr><a id="method-AcqFunctionStochasticCB-new"></a><div class="section">
@@ -277,9 +286,9 @@ Resets the private update counter <code>.t</code> used within the epsilon decay.
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       acq_cb acq_lambda acq_lambda_0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;num&gt;      &lt;num&gt;        &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -64.77109   3.346387     3.346387</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -64.67093   3.346387     3.346387</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -57.39852   3.346387     3.346387</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -191.7298   8.033506     8.033506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -187.7947   8.033506     8.033506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -162.4114   8.033506     8.033506</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

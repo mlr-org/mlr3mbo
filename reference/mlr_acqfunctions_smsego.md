@@ -117,6 +117,7 @@ Inherited methods
 - [`bbotk::Objective$format()`](https://bbotk.mlr-org.com/reference/Objective.html#method-format)
 - [`bbotk::Objective$help()`](https://bbotk.mlr-org.com/reference/Objective.html#method-help)
 - [`bbotk::Objective$print()`](https://bbotk.mlr-org.com/reference/Objective.html#method-print)
+- [`mlr3mbo::AcqFunction$assert_surrogate()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-assert_surrogate)
 - [`mlr3mbo::AcqFunction$eval_dt()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_dt)
 - [`mlr3mbo::AcqFunction$eval_many()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_many)
 
@@ -220,7 +221,7 @@ if (requireNamespace("mlr3learners") &
 }
 #>    acq_smsego acq_epsilon
 #>         <num>      <list>
-#> 1:  -581.3276         0,0
-#> 2:  -730.5624         0,0
-#> 3: -1132.3142         0,0
+#> 1:  -581.3294         0,0
+#> 2:  -730.5643         0,0
+#> 3: -1132.3221         0,0
 ```

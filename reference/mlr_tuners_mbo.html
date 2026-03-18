@@ -17,7 +17,7 @@ For additional information and documentation see OptimizerMbo."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -138,7 +138,8 @@ Required packages are determined based on the <code>acq_function</code>, <code>s
 </ul></details></p><hr><a id="method-TunerMbo-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.
-For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>, and <code>result_assigner</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p>
+For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>,
+and <code>result_assigner</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p>
 <p>Note that all the parameters below are simply passed to the <a href="mlr_optimizers_mbo.html">OptimizerMbo</a> and
 the respective fields are simply (settable) active bindings to the fields of the <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -271,13 +272,12 @@ Sets the following fields to <code>NULL</code>:
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://mlr3tuning.mlr-org.com/reference/tnr.html" class="external-link">tnr</a></span><span class="op">(</span><span class="st">"mbo"</span><span class="op">)</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            cp learner_param_vals  x_domain classif.acc selected_features</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;             &lt;list&gt;    &lt;list&gt;       &lt;num&gt;             &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -0.7965785          &lt;list[2]&gt; &lt;list[1]&gt;   0.5443503         0.6666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -5.4017490          &lt;list[2]&gt; &lt;list[1]&gt;   0.8993409         2.6666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -3.0991636          &lt;list[2]&gt; &lt;list[1]&gt;   0.8993409         2.6666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: -7.7043341          &lt;list[2]&gt; &lt;list[1]&gt;   0.8993409         2.6666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: -5.7822485          &lt;list[2]&gt; &lt;list[1]&gt;   0.8993409         2.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           cp learner_param_vals  x_domain classif.acc selected_features</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;num&gt;             &lt;list&gt;    &lt;list&gt;       &lt;num&gt;             &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -6.372912          &lt;list[2]&gt; &lt;list[1]&gt;   0.8817326          2.666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -1.767742          &lt;list[2]&gt; &lt;list[1]&gt;   0.8539548          2.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -8.675497          &lt;list[2]&gt; &lt;list[1]&gt;   0.8817326          2.666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: -7.479440          &lt;list[2]&gt; &lt;list[1]&gt;   0.8817326          2.666667</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
