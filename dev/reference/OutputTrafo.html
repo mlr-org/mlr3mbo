@@ -79,7 +79,8 @@ String in the format <code>[pkg]::[topic]</code> pointing to a manual page for t
 <dt><code>packages</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Set of required packages.
-A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>.</p></dd>
+A warning is signaled if at least one of the packages is not installed,
+but loaded (not attached) later on-demand via <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>.</p></dd>
 
 
 <dt><code>state</code></dt>
@@ -99,7 +100,8 @@ Multiplicative factor to correct for minimization or maximization.</p></dd>
 
 <dt><code>invert_posterior</code></dt>
 <dd><p>(<code>logical(1)</code>)<br>
-Should the posterior predictive distribution be inverted when used within a <a href="SurrogateLearner.html">SurrogateLearner</a> or <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>?</p></dd>
+Should the posterior predictive distribution be inverted when used within a <a href="SurrogateLearner.html">SurrogateLearner</a> or
+<a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>?</p></dd>
 
 
 </dl><p></p></div>
@@ -129,7 +131,8 @@ Should the posterior predictive distribution be inverted when used within a <a h
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>invert_posterior</code></dt>
 <dd><p>(<code>logical(1)</code>)<br>
-Should the posterior predictive distribution be inverted when used within a <a href="SurrogateLearner.html">SurrogateLearner</a> or <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>?</p></dd>
+Should the posterior predictive distribution be inverted when used within a <a href="SurrogateLearner.html">SurrogateLearner</a> or
+<a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>?</p></dd>
 
 
 <dt><code>label</code></dt>
@@ -187,7 +190,8 @@ Data. One row per observation with at least columns <code>$cols_y</code>.</p></d
 
 </div><p></p><hr><a id="method-OutputTrafo-inverse_transform_posterior"></a><div class="section">
 <h3 id="method-inverse-transform-posterior-">Method <code>inverse_transform_posterior()</code><a class="anchor" aria-label="anchor" href="#method-inverse-transform-posterior-"></a></h3>
-<p>Perform the inverse transformation on a posterior predictive distribution characterized by the first and second moment.
+<p>Perform the inverse transformation on a posterior predictive distribution characterized by the first and
+second moment.
 Must be implemented by subclasses.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">OutputTrafo</span><span class="op">$</span><span class="fu">inverse_transform_posterior</span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></span></code></pre></div><p></p></div>
@@ -197,7 +201,8 @@ Must be implemented by subclasses.</p><div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>pred</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
-Data. One row per observation characterizing a posterior predictive distribution with the columns <code>mean</code> and <code>se</code>.</p></dd>
+Data. One row per observation characterizing a posterior predictive distribution with the columns
+<code>mean</code> and <code>se</code>.</p></dd>
 
 
 </dl><p></p></div>

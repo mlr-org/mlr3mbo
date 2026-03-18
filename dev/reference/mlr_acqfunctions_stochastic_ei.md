@@ -33,7 +33,7 @@ or with the associated sugar function
   `0.1`.
 
 - `"rate"` (`numeric(1)`)  
-  Defaults to `0.05`.
+  Rate of the exponential decay. Defaults to `0.05`.
 
 - `"period"` (`integer(1)`)  
   Period of the exponential decay. Defaults to `NULL`, i.e., the decay

@@ -33,7 +33,7 @@ or with the associated sugar function
   Defaults to `1.96`.
 
 - `"min_lambda"` (`numeric(1)`)  
-  Minimum value of \\\lambda\\for sampling from the uniform
+  Minimum value of \\\lambda\\ for sampling from the uniform
   distribution. Defaults to `0.01`.
 
 - `"max_lambda"` (`numeric(1)`)  

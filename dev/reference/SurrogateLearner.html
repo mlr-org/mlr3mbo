@@ -61,13 +61,16 @@
 <dl><dt><code>catch_errors</code></dt>
 <dd><p><code>logical(1)</code><br>
 Should errors during updating the surrogate be caught and propagated to the <code>loop_function</code> which can then handle
-the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+the failed acquisition function optimization (as a result of the failed surrogate) appropriately by,
+e.g., proposing a randomly sampled point for evaluation?
 Default is <code>TRUE</code>.</p></dd>
 
 <dt><code>impute_method</code></dt>
 <dd><p><code>character(1)</code><br>
-Method to impute missing values in the case of updating on an asynchronous <a href="https://bbotk.mlr-org.com/reference/ArchiveAsync.html" class="external-link">bbotk::ArchiveAsync</a> with pending evaluations.
-Can be <code>"mean"</code> to use mean imputation or <code>"random"</code> to sample values uniformly at random between the empirical minimum and maximum.
+Method to impute missing values in the case of updating on an asynchronous <a href="https://bbotk.mlr-org.com/reference/ArchiveAsync.html" class="external-link">bbotk::ArchiveAsync</a>
+with pending evaluations.
+Can be <code>"mean"</code> to use mean imputation or
+<code>"random"</code> to sample values uniformly at random between the empirical minimum and maximum.
 Default is <code>"random"</code>.</p></dd>
 
 

@@ -6,7 +6,7 @@ constant liar. Normally used inside an
 
 In each iteration after the initial design, the surrogate and
 acquisition function are updated. The acquisition function is then
-optimized, to find a candidate but instead of evaluating this candidate,
+optimized to find a candidate, but instead of evaluating this candidate,
 the objective function value is obtained by applying the `liar` function
 to all previously obtained objective function values. This is repeated
 `q - 1` times to obtain a total of `q` candidates that are then

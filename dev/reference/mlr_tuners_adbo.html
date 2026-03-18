@@ -6,14 +6,18 @@
     }
   };
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="TunerAsync using Asynchronous Decentralized Bayesian Optimization — mlr_tuners_adbo"><meta name="description" content="TunerADBO class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
-ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses AcqFunctionStochasticCB with exponential lambda decay.
+ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses
+AcqFunctionStochasticCB with exponential lambda decay.
 This is a minimal interface internally passing on to OptimizerAsyncMbo.
 For additional information and documentation see OptimizerAsyncMbo.
-Currently, only single-objective optimization is supported and TunerADBO is considered an experimental feature and API might be subject to changes."><meta property="og:description" content="TunerADBO class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
-ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses AcqFunctionStochasticCB with exponential lambda decay.
+Currently, only single-objective optimization is supported and
+TunerADBO is considered an experimental feature and API might be subject to changes."><meta property="og:description" content="TunerADBO class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
+ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses
+AcqFunctionStochasticCB with exponential lambda decay.
 This is a minimal interface internally passing on to OptimizerAsyncMbo.
 For additional information and documentation see OptimizerAsyncMbo.
-Currently, only single-objective optimization is supported and TunerADBO is considered an experimental feature and API might be subject to changes."><meta name="robots" content="noindex"></head><body>
+Currently, only single-objective optimization is supported and
+TunerADBO is considered an experimental feature and API might be subject to changes."><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -59,10 +63,12 @@ Currently, only single-objective optimization is supported and TunerADBO is cons
 
     <div class="ref-description section level2">
     <p><code>TunerADBO</code> class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
-ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses <a href="mlr_acqfunctions_stochastic_cb.html">AcqFunctionStochasticCB</a> with exponential lambda decay.
+ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses
+<a href="mlr_acqfunctions_stochastic_cb.html">AcqFunctionStochasticCB</a> with exponential lambda decay.
 This is a minimal interface internally passing on to <a href="mlr_optimizers_async_mbo.html">OptimizerAsyncMbo</a>.
 For additional information and documentation see <a href="mlr_optimizers_async_mbo.html">OptimizerAsyncMbo</a>.</p>
-<p>Currently, only single-objective optimization is supported and <code>TunerADBO</code> is considered an experimental feature and API might be subject to changes.</p>
+<p>Currently, only single-objective optimization is supported and
+<code>TunerADBO</code> is considered an experimental feature and API might be subject to changes.</p>
     </div>
 
 
@@ -84,7 +90,8 @@ Default is <code>100</code>.</p></dd>
 <dt><code>design_function</code></dt>
 <dd><p><code>character(1)</code><br>
 Sampling function to generate the initial design.
-Can be <code>random</code> <a href="https://paradox.mlr-org.com/reference/generate_design_random.html" class="external-link">paradox::generate_design_random</a>, <code>lhs</code> <a href="https://paradox.mlr-org.com/reference/generate_design_lhs.html" class="external-link">paradox::generate_design_lhs</a>, or <code>sobol</code> <a href="https://paradox.mlr-org.com/reference/generate_design_sobol.html" class="external-link">paradox::generate_design_sobol</a>.
+Can be <code>random</code> <a href="https://paradox.mlr-org.com/reference/generate_design_random.html" class="external-link">paradox::generate_design_random</a>, <code>lhs</code> <a href="https://paradox.mlr-org.com/reference/generate_design_lhs.html" class="external-link">paradox::generate_design_lhs</a>,
+or <code>sobol</code> <a href="https://paradox.mlr-org.com/reference/generate_design_sobol.html" class="external-link">paradox::generate_design_sobol</a>.
 Default is <code>sobol</code>.</p></dd>
 
 <dt><code>n_workers</code></dt>

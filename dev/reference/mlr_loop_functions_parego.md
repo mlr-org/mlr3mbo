@@ -7,7 +7,7 @@ Normally used inside an
 In each iteration after the initial design, the observed objective
 function values are normalized and `q` candidates are obtained by
 scalarizing these values via the augmented Tchebycheff function,
-updating the surrogate with respect to these scalarized values and
+updating the surrogate with respect to these scalarized values, and
 optimizing the acquisition function.
 
 ## Usage
@@ -176,7 +176,7 @@ if (requireNamespace("mlr3learners") &
 
   optimizer$optimize(instance)
 }
-#> WARN  [19:12:20.183] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
+#> WARN  [08:03:21.577] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
 #>             x  x_domain        y1        y2
 #>         <num>    <list>     <num>     <num>
 #> 1: -0.9253407 <list[1]> 0.8562553 8.5576179

@@ -77,10 +77,10 @@ and
 
   `logical(1)`  
   Should errors during the acquisition function optimization be caught
-  and propagated to the `loop_function` which can then handle the failed
-  acquisition function optimization appropriately by, e.g., proposing a
-  randomly sampled point for evaluation? Setting this to `FALSE` can be
-  helpful for debugging. Default is `TRUE`.
+  and propagated to the `loop_function`, which can then handle the
+  failed acquisition function optimization appropriately, e.g., by
+  proposing a randomly sampled point for evaluation? Setting this to
+  `FALSE` can be helpful for debugging. Default is `TRUE`.
 
 ## Public fields
 

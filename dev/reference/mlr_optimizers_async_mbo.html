@@ -8,38 +8,50 @@
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Asynchronous Model Based Optimization — mlr_optimizers_async_mbo"><meta name="description" content="OptimizerAsyncMbo class that implements Asynchronous Model Based Optimization (AMBO).
 AMBO starts multiple sequential MBO runs on different workers.
 The worker communicate asynchronously through a shared archive relying on the rush package.
-The optimizer follows a modular layout in which the surrogate model, acquisition function, and acquisition optimizer can be changed.
+The optimizer follows a modular layout in which the surrogate model, acquisition function,
+and acquisition optimizer can be changed.
 The SurrogateLearner will impute missing values due to pending evaluations.
-A stochastic AcqFunction, e.g., AcqFunctionStochasticEI or AcqFunctionStochasticCB is used to create varying versions of the acquisition
-function on each worker, promoting different exploration-exploitation trade-offs.
+A stochastic AcqFunction, e.g., AcqFunctionStochasticEI or AcqFunctionStochasticCB is used
+to create varying versions of the acquisition function on each worker,
+promoting different exploration-exploitation trade-offs.
 The AcqOptimizer class remains consistent with the one used in synchronous MBO.
-In contrast to OptimizerMbo, no loop_function can be specified that determines the AMBO flavor as OptimizerAsyncMbo simply relies on
-a surrogate update, acquisition function update and acquisition function optimization step as an internal loop.
-Currently, only single-objective optimization is supported and OptimizerAsyncMbo is considered an experimental feature and API might be subject to changes.
-Note that in general the SurrogateLearner is updated one final time on all available data after the optimization process has terminated.
+In contrast to OptimizerMbo, no loop_function can be specified that determines the AMBO flavor as
+OptimizerAsyncMbo simply relies on a surrogate update, acquisition function update and
+acquisition function optimization step as an internal loop.
+Currently, only single-objective optimization is supported and
+OptimizerAsyncMbo is considered an experimental feature and API might be subject to changes.
+Note that in general the SurrogateLearner is updated one final time on all available data
+after the optimization process has terminated.
 However, in certain scenarios this is not always possible or meaningful.
-It is therefore recommended to manually inspect the SurrogateLearner after optimization if it is to be used, e.g., for visualization purposes to make
-sure that it has been properly updated on all available data.
+It is therefore recommended to manually inspect the SurrogateLearner after optimization if it is to be used,
+e.g., for visualization purposes to make sure that it has been properly updated on all available data.
 If this final update of the SurrogateLearner could not be performed successfully, a warning will be logged.
 By specifying a ResultAssigner, one can alter how the final result is determined after optimization, e.g.,
-simply based on the evaluations logged in the archive ResultAssignerArchive or based on the Surrogate via ResultAssignerSurrogate."><meta property="og:description" content="OptimizerAsyncMbo class that implements Asynchronous Model Based Optimization (AMBO).
+simply based on the evaluations logged in the archive ResultAssignerArchive or based on the Surrogate via
+ResultAssignerSurrogate."><meta property="og:description" content="OptimizerAsyncMbo class that implements Asynchronous Model Based Optimization (AMBO).
 AMBO starts multiple sequential MBO runs on different workers.
 The worker communicate asynchronously through a shared archive relying on the rush package.
-The optimizer follows a modular layout in which the surrogate model, acquisition function, and acquisition optimizer can be changed.
+The optimizer follows a modular layout in which the surrogate model, acquisition function,
+and acquisition optimizer can be changed.
 The SurrogateLearner will impute missing values due to pending evaluations.
-A stochastic AcqFunction, e.g., AcqFunctionStochasticEI or AcqFunctionStochasticCB is used to create varying versions of the acquisition
-function on each worker, promoting different exploration-exploitation trade-offs.
+A stochastic AcqFunction, e.g., AcqFunctionStochasticEI or AcqFunctionStochasticCB is used
+to create varying versions of the acquisition function on each worker,
+promoting different exploration-exploitation trade-offs.
 The AcqOptimizer class remains consistent with the one used in synchronous MBO.
-In contrast to OptimizerMbo, no loop_function can be specified that determines the AMBO flavor as OptimizerAsyncMbo simply relies on
-a surrogate update, acquisition function update and acquisition function optimization step as an internal loop.
-Currently, only single-objective optimization is supported and OptimizerAsyncMbo is considered an experimental feature and API might be subject to changes.
-Note that in general the SurrogateLearner is updated one final time on all available data after the optimization process has terminated.
+In contrast to OptimizerMbo, no loop_function can be specified that determines the AMBO flavor as
+OptimizerAsyncMbo simply relies on a surrogate update, acquisition function update and
+acquisition function optimization step as an internal loop.
+Currently, only single-objective optimization is supported and
+OptimizerAsyncMbo is considered an experimental feature and API might be subject to changes.
+Note that in general the SurrogateLearner is updated one final time on all available data
+after the optimization process has terminated.
 However, in certain scenarios this is not always possible or meaningful.
-It is therefore recommended to manually inspect the SurrogateLearner after optimization if it is to be used, e.g., for visualization purposes to make
-sure that it has been properly updated on all available data.
+It is therefore recommended to manually inspect the SurrogateLearner after optimization if it is to be used,
+e.g., for visualization purposes to make sure that it has been properly updated on all available data.
 If this final update of the SurrogateLearner could not be performed successfully, a warning will be logged.
 By specifying a ResultAssigner, one can alter how the final result is determined after optimization, e.g.,
-simply based on the evaluations logged in the archive ResultAssignerArchive or based on the Surrogate via ResultAssignerSurrogate."><meta name="robots" content="noindex"></head><body>
+simply based on the evaluations logged in the archive ResultAssignerArchive or based on the Surrogate via
+ResultAssignerSurrogate."><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -87,21 +99,27 @@ simply based on the evaluations logged in the archive ResultAssignerArchive or b
     <p><code>OptimizerAsyncMbo</code> class that implements Asynchronous Model Based Optimization (AMBO).
 AMBO starts multiple sequential MBO runs on different workers.
 The worker communicate asynchronously through a shared archive relying on the <a href="https://CRAN.R-project.org/package=rush" class="external-link"><span class="pkg">rush</span></a> package.
-The optimizer follows a modular layout in which the surrogate model, acquisition function, and acquisition optimizer can be changed.
+The optimizer follows a modular layout in which the surrogate model, acquisition function,
+and acquisition optimizer can be changed.
 The <a href="SurrogateLearner.html">SurrogateLearner</a> will impute missing values due to pending evaluations.
-A stochastic <a href="AcqFunction.html">AcqFunction</a>, e.g., <a href="mlr_acqfunctions_stochastic_ei.html">AcqFunctionStochasticEI</a> or <a href="mlr_acqfunctions_stochastic_cb.html">AcqFunctionStochasticCB</a> is used to create varying versions of the acquisition
-function on each worker, promoting different exploration-exploitation trade-offs.
+A stochastic <a href="AcqFunction.html">AcqFunction</a>, e.g., <a href="mlr_acqfunctions_stochastic_ei.html">AcqFunctionStochasticEI</a> or <a href="mlr_acqfunctions_stochastic_cb.html">AcqFunctionStochasticCB</a> is used
+to create varying versions of the acquisition function on each worker,
+promoting different exploration-exploitation trade-offs.
 The <a href="AcqOptimizer.html">AcqOptimizer</a> class remains consistent with the one used in synchronous MBO.</p>
-<p>In contrast to <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>, no <a href="loop_function.html">loop_function</a> can be specified that determines the AMBO flavor as <code>OptimizerAsyncMbo</code> simply relies on
-a surrogate update, acquisition function update and acquisition function optimization step as an internal loop.</p>
-<p>Currently, only single-objective optimization is supported and <code>OptimizerAsyncMbo</code> is considered an experimental feature and API might be subject to changes.</p>
-<p>Note that in general the <a href="SurrogateLearner.html">SurrogateLearner</a> is updated one final time on all available data after the optimization process has terminated.
+<p>In contrast to <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>, no <a href="loop_function.html">loop_function</a> can be specified that determines the AMBO flavor as
+<code>OptimizerAsyncMbo</code> simply relies on a surrogate update, acquisition function update and
+acquisition function optimization step as an internal loop.</p>
+<p>Currently, only single-objective optimization is supported and
+<code>OptimizerAsyncMbo</code> is considered an experimental feature and API might be subject to changes.</p>
+<p>Note that in general the <a href="SurrogateLearner.html">SurrogateLearner</a> is updated one final time on all available data
+after the optimization process has terminated.
 However, in certain scenarios this is not always possible or meaningful.
-It is therefore recommended to manually inspect the <a href="SurrogateLearner.html">SurrogateLearner</a> after optimization if it is to be used, e.g., for visualization purposes to make
-sure that it has been properly updated on all available data.
+It is therefore recommended to manually inspect the <a href="SurrogateLearner.html">SurrogateLearner</a> after optimization if it is to be used,
+e.g., for visualization purposes to make sure that it has been properly updated on all available data.
 If this final update of the <a href="SurrogateLearner.html">SurrogateLearner</a> could not be performed successfully, a warning will be logged.</p>
 <p>By specifying a <a href="ResultAssigner.html">ResultAssigner</a>, one can alter how the final result is determined after optimization, e.g.,
-simply based on the evaluations logged in the archive <a href="mlr_result_assigners_archive.html">ResultAssignerArchive</a> or based on the <a href="Surrogate.html">Surrogate</a> via <a href="mlr_result_assigners_surrogate.html">ResultAssignerSurrogate</a>.</p>
+simply based on the evaluations logged in the archive <a href="mlr_result_assigners_archive.html">ResultAssignerArchive</a> or based on the <a href="Surrogate.html">Surrogate</a> via
+<a href="mlr_result_assigners_surrogate.html">ResultAssignerSurrogate</a>.</p>
     </div>
 
 
@@ -112,10 +130,13 @@ simply based on the evaluations logged in the archive <a href="mlr_result_assign
 <p>The <a href="https://bbotk.mlr-org.com/reference/ArchiveAsync.html" class="external-link">bbotk::ArchiveAsync</a> holds the following additional columns that are specific to AMBO algorithms:</p><ul><li><p><code>acq_function$id</code> (<code>numeric(1)</code>)<br>
 The value of the acquisition function.</p></li>
 <li><p><code>".already_evaluated"</code> (<code>logical(1))</code><br>
-Whether this point was already evaluated. Depends on the <code>skip_already_evaluated</code> parameter of the <a href="AcqOptimizer.html">AcqOptimizer</a>.</p></li>
-</ul><p>If the <a href="https://bbotk.mlr-org.com/reference/ArchiveAsync.html" class="external-link">bbotk::ArchiveAsync</a> does not contain any evaluations prior to optimization, an initial design is needed.
+Whether this point was already evaluated.
+Depends on the <code>skip_already_evaluated</code> parameter of the <a href="AcqOptimizer.html">AcqOptimizer</a>.</p></li>
+</ul><p>If the <a href="https://bbotk.mlr-org.com/reference/ArchiveAsync.html" class="external-link">bbotk::ArchiveAsync</a> does not contain any evaluations prior to optimization,
+an initial design is needed.
 If the <code>initial_design</code> parameter is specified to be a <code>data.table</code>, this data will be used.
-Otherwise, if it is <code>NULL</code>, an initial design of size <code>design_size</code> will be generated based on the <code>generate_design</code> sampling function.
+Otherwise, if it is <code>NULL</code>, an initial design of size <code>design_size</code> will be generated based on the
+<code>generate_design</code> sampling function.
 See also the parameters below.</p>
     </div>
     <div class="section level2">
@@ -136,7 +157,8 @@ Default is <code>100</code>.</p></dd>
 <dt><code>design_function</code></dt>
 <dd><p><code>character(1)</code><br>
 Sampling function to generate the initial design.
-Can be <code>random</code> <a href="https://paradox.mlr-org.com/reference/generate_design_random.html" class="external-link">paradox::generate_design_random</a>, <code>lhs</code> <a href="https://paradox.mlr-org.com/reference/generate_design_lhs.html" class="external-link">paradox::generate_design_lhs</a>, or <code>sobol</code> <a href="https://paradox.mlr-org.com/reference/generate_design_sobol.html" class="external-link">paradox::generate_design_sobol</a>.
+Can be <code>random</code> <a href="https://paradox.mlr-org.com/reference/generate_design_random.html" class="external-link">paradox::generate_design_random</a>, <code>lhs</code> <a href="https://paradox.mlr-org.com/reference/generate_design_lhs.html" class="external-link">paradox::generate_design_lhs</a>,
+or <code>sobol</code> <a href="https://paradox.mlr-org.com/reference/generate_design_sobol.html" class="external-link">paradox::generate_design_sobol</a>.
 Default is <code>sobol</code>.</p></dd>
 
 <dt><code>n_workers</code></dt>
@@ -151,23 +173,28 @@ Default is <code>NULL</code>.</p></dd>
     <h2 id="conditions">Conditions<a class="anchor" aria-label="anchor" href="#conditions"></a></h2>
 
 
-<p>During optimization, errors are caught and re-thrown as structured conditions that inherit from <code>Mlr3ErrorMbo</code> and <code>Mlr3Error</code> (defined in <a href="https://CRAN.R-project.org/package=mlr3misc" class="external-link"><span class="pkg">mlr3misc</span></a>).
+<p>During optimization, errors are caught and re-thrown as structured conditions that inherit from <code>Mlr3ErrorMbo</code> and
+<code>Mlr3Error</code> (defined in <a href="https://CRAN.R-project.org/package=mlr3misc" class="external-link"><span class="pkg">mlr3misc</span></a>).
 Loop functions catch <code>Mlr3ErrorMbo</code> conditions and fall back to proposing a randomly sampled point.</p>
 <p>The following condition classes are used:</p><dl><dt><code>Mlr3ErrorMbo</code></dt>
 <dd><p>Base class for all MBO-specific error conditions.</p></dd>
 
 <dt><code>Mlr3ErrorMboSurrogateUpdate</code></dt>
-<dd><p>Raised by <a href="Surrogate.html">Surrogate</a><code>$update()</code> when the surrogate model fails to update (requires <code>catch_errors = TRUE</code>).</p></dd>
+<dd><p>Raised by <a href="Surrogate.html">Surrogate</a><code>$update()</code> when the surrogate model fails to update
+(requires <code>catch_errors = TRUE</code>).</p></dd>
 
 <dt><code>Mlr3ErrorMboAcqOptimizer</code></dt>
-<dd><p>Raised by <a href="AcqOptimizer.html">AcqOptimizer</a><code>$optimize()</code> when the acquisition function optimization fails (requires <code>catch_errors = TRUE</code>).</p></dd>
+<dd><p>Raised by <a href="AcqOptimizer.html">AcqOptimizer</a><code>$optimize()</code> when
+the acquisition function optimization fails (requires <code>catch_errors = TRUE</code>).</p></dd>
 
 <dt><code>Mlr3ErrorMboRandomInterleave</code></dt>
 <dd><p>Raised by loop functions to trigger random interleaving.</p></dd>
 
 
-</dl><p><code>Mlr3ErrorMboSurrogateUpdate</code> and <code>Mlr3ErrorMboAcqOptimizer</code> conditions are logged at the <code>"warn"</code> level and include the original error as a parent condition.
-All conditions can be constructed directly via the helper functions <code><a href="mlr3mbo_conditions.html">error_surrogate_update()</a></code>, <code><a href="mlr3mbo_conditions.html">error_acq_optimizer()</a></code>, and <code><a href="mlr3mbo_conditions.html">error_random_interleave()</a></code>.</p>
+</dl><p><code>Mlr3ErrorMboSurrogateUpdate</code> and <code>Mlr3ErrorMboAcqOptimizer</code> conditions are logged at the <code>"warn"</code> level and
+include the original error as a parent condition.
+All conditions can be constructed directly via the helper functions <code><a href="mlr3mbo_conditions.html">error_surrogate_update()</a></code>,
+<code><a href="mlr3mbo_conditions.html">error_acq_optimizer()</a></code>, and <code><a href="mlr3mbo_conditions.html">error_random_interleave()</a></code>.</p>
     </div>
     <div class="section level2">
     <h2 id="super-classes">Super classes<a class="anchor" aria-label="anchor" href="#super-classes"></a></h2>
@@ -238,11 +265,14 @@ Required packages are determined based on the <code>acq_function</code>, <code>s
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p>
 <p>If <code>surrogate</code> is <code>NULL</code> and the <code>acq_function$surrogate</code> field is populated, this <a href="SurrogateLearner.html">SurrogateLearner</a> is used.
 Otherwise, <code>default_surrogate(instance)</code> is used.
-If <code>acq_function</code> is <code>NULL</code> and the <code>acq_optimizer$acq_function</code> field is populated, this <a href="AcqFunction.html">AcqFunction</a> is used (and therefore its <code>$surrogate</code> if populated; see above).
+If <code>acq_function</code> is <code>NULL</code> and the <code>acq_optimizer$acq_function</code> field is populated,
+this <a href="AcqFunction.html">AcqFunction</a> is used (and therefore its <code>$surrogate</code> if populated; see above).
 Otherwise <code>default_acqfunction(instance)</code> is used.
 If <code>acq_optimizer</code> is <code>NULL</code>, <code>default_acqoptimizer(instance)</code> is used.</p>
-<p>Even if already initialized, the <code>surrogate$archive</code> field will always be overwritten by the <a href="https://bbotk.mlr-org.com/reference/ArchiveAsync.html" class="external-link">bbotk::ArchiveAsync</a> of the current <a href="https://bbotk.mlr-org.com/reference/OptimInstanceAsyncSingleCrit.html" class="external-link">bbotk::OptimInstanceAsyncSingleCrit</a> to be optimized.</p>
-<p>For more information on default values for <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code> and <code>result_assigner</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p><div class="section">
+<p>Even if already initialized, the <code>surrogate$archive</code> field will always be overwritten by the
+<a href="https://bbotk.mlr-org.com/reference/ArchiveAsync.html" class="external-link">bbotk::ArchiveAsync</a> of the current <a href="https://bbotk.mlr-org.com/reference/OptimInstanceAsyncSingleCrit.html" class="external-link">bbotk::OptimInstanceAsyncSingleCrit</a> to be optimized.</p>
+<p>For more information on default values for <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code> and <code>result_assigner</code>,
+see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/mlr_optimizers_async_mbo.html">OptimizerAsyncMbo</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="st">"async_mbo"</span>,</span>

@@ -6,10 +6,12 @@
     }
   };
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Acquisition Function Stochastic Expected Improvement — mlr_acqfunctions_stochastic_ei"><meta name="description" content="Expected Improvement with epsilon decay.
-\(\epsilon\) is updated after each update by the formula epsilon * exp(-rate * (t %% period)) where t is the number of times the acquisition function has been updated.
+\(\epsilon\) is updated after each update by the formula epsilon * exp(-rate * (t %% period))
+where t is the number of times the acquisition function has been updated.
 While this acquisition function usually would be used within an asynchronous optimizer, e.g., OptimizerAsyncMbo,
 it can in principle also be used in synchronous optimizers, e.g., OptimizerMbo."><meta property="og:description" content="Expected Improvement with epsilon decay.
-\(\epsilon\) is updated after each update by the formula epsilon * exp(-rate * (t %% period)) where t is the number of times the acquisition function has been updated.
+\(\epsilon\) is updated after each update by the formula epsilon * exp(-rate * (t %% period))
+where t is the number of times the acquisition function has been updated.
 While this acquisition function usually would be used within an asynchronous optimizer, e.g., OptimizerAsyncMbo,
 it can in principle also be used in synchronous optimizers, e.g., OptimizerMbo."><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -57,7 +59,8 @@ it can in principle also be used in synchronous optimizers, e.g., OptimizerMbo."
 
     <div class="ref-description section level2">
     <p>Expected Improvement with epsilon decay.
-\(\epsilon\) is updated after each update by the formula <code>epsilon * exp(-rate * (t %% period))</code> where <code>t</code> is the number of times the acquisition function has been updated.</p>
+\(\epsilon\) is updated after each update by the formula <code>epsilon * exp(-rate * (t %% period))</code>
+where <code>t</code> is the number of times the acquisition function has been updated.</p>
 <p>While this acquisition function usually would be used within an asynchronous optimizer, e.g., <a href="mlr_optimizers_async_mbo.html">OptimizerAsyncMbo</a>,
 it can in principle also be used in synchronous optimizers, e.g., <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>.</p>
     </div>
@@ -82,6 +85,7 @@ Higher values result in the importance of improvements predicted by the posterio
 decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
 Defaults to <code>0.1</code>.</p></li>
 <li><p><code>"rate"</code> (<code>numeric(1)</code>)<br>
+Rate of the exponential decay.
 Defaults to <code>0.05</code>.</p></li>
 <li><p><code>"period"</code> (<code>integer(1)</code>)<br>
 Period of the exponential decay.
@@ -91,9 +95,11 @@ Defaults to <code>NULL</code>, i.e., the decay has no period.</p></li>
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
 
 
-<ul><li><p>This acquisition function always also returns its current (<code>acq_epsilon</code>) and original (<code>acq_epsilon_0</code>) \(\epsilon\).
-These values will be logged into the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a> of the <a href="AcqOptimizer.html">AcqOptimizer</a> and
-therefore also in the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> that is to be optimized.</p></li>
+<ul><li><p>This acquisition function always also returns its current (<code>acq_epsilon</code>) and original (<code>acq_epsilon_0</code>)
+\(\epsilon\).
+These values will be logged into the <a href="https://bbotk.mlr-org.com/reference/ArchiveBatch.html" class="external-link">bbotk::ArchiveBatch</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html" class="external-link">bbotk::OptimInstanceBatch</a>
+of the <a href="AcqOptimizer.html">AcqOptimizer</a>
+and therefore also in the <a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a> that is to be optimized.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

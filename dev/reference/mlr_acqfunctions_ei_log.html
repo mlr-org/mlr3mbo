@@ -6,9 +6,11 @@
     }
   };
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Acquisition Function Expected Improvement on Log Scale — mlr_acqfunctions_ei_log"><meta name="description" content="Expected Improvement assuming that the target variable has been modeled on log scale.
-In general only sensible if the SurrogateLearner uses an OutputTrafoLog without inverting the posterior predictive distribution (invert_posterior = FALSE).
+In general only sensible if the SurrogateLearner uses an OutputTrafoLog
+without inverting the posterior predictive distribution (invert_posterior = FALSE).
 See also the example below."><meta property="og:description" content="Expected Improvement assuming that the target variable has been modeled on log scale.
-In general only sensible if the SurrogateLearner uses an OutputTrafoLog without inverting the posterior predictive distribution (invert_posterior = FALSE).
+In general only sensible if the SurrogateLearner uses an OutputTrafoLog
+without inverting the posterior predictive distribution (invert_posterior = FALSE).
 See also the example below."><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -55,7 +57,8 @@ See also the example below."><meta name="robots" content="noindex"></head><body>
 
     <div class="ref-description section level2">
     <p>Expected Improvement assuming that the target variable has been modeled on log scale.
-In general only sensible if the <a href="SurrogateLearner.html">SurrogateLearner</a> uses an <a href="OutputTrafoLog.html">OutputTrafoLog</a> without inverting the posterior predictive distribution (<code>invert_posterior = FALSE</code>).
+In general only sensible if the <a href="SurrogateLearner.html">SurrogateLearner</a> uses an <a href="OutputTrafoLog.html">OutputTrafoLog</a>
+without inverting the posterior predictive distribution (<code>invert_posterior = FALSE</code>).
 See also the example below.</p>
     </div>
 
@@ -75,8 +78,8 @@ See also the example below.</p>
 
 <ul><li><p><code>"epsilon"</code> (<code>numeric(1)</code>)<br>
 \(\epsilon\) value used to determine the amount of exploration.
-Higher values result in the importance of improvements predicted by the posterior mean
-decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
+Higher values result in the importance of improvements predicted by the posterior mean decreasing
+relative to the importance of potential improvements in regions of high predictive uncertainty.
 Defaults to <code>0</code> (standard Expected Improvement).</p></li>
 </ul></div>
     <div class="section level2">
