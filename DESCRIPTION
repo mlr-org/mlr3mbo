@@ -65,7 +65,7 @@ Suggests:
     rgenoud,
     rpart,
     redux,
-    rush,
+    rush (>= 1.0.0),
     stringi,
     testthat (>= 3.0.0)
 ByteCompile: no
