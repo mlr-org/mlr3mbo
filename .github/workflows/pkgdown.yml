@@ -29,14 +29,15 @@ jobs:
         ports:
           - 6379:6379
 
+
     concurrency:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
+      
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -57,7 +58,7 @@ jobs:
 
       - name: Deploy
         if: github.event_name != 'pull_request'
-        uses: JamesIves/github-pages-deploy-action@v4.4.1
+        uses: JamesIves/github-pages-deploy-action@v4.8.0
         with:
           clean: false
           branch: gh-pages
