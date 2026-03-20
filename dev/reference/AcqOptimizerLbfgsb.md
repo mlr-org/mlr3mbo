@@ -163,6 +163,5 @@ if (requireNamespace("nloptr")) {
   acqo("lbfgsb")
 }
 #> <AcqOptimizerLbfgsb>: (OptimizerLbfgsb)
-#> * Parameters: maxeval=1000, restart_strategy=none, n_restarts=0,
-#>   max_restarts=0, catch_errors=TRUE
+#> * Parameters: restart_strategy=none, catch_errors=TRUE
 ```
