@@ -12,6 +12,13 @@ For additional information and documentation see \link{OptimizerAsyncMbo}.
 Currently, only single-objective optimization is supported and
 \code{TunerAsyncMbo} is considered an experimental feature and API might be subject to changes.
 }
+\section{Defaults}{
+
+All components have sensible defaults.
+For more information on the defaults for \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, and \code{result_assigner},
+see \link{mbo_defaults}.
+}
+
 \section{Parameters}{
 
 \describe{
@@ -130,8 +137,6 @@ Required packages are determined based on the \code{acq_function}, \code{surroga
 \if{latex}{\out{\hypertarget{method-TunerAsyncMbo-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new instance of this \link[R6:R6Class]{R6} class.
-For more information on default values for \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, and \code{result_assigner},
-see \code{?mbo_defaults}.
 
 Note that all the parameters below are simply passed to the \link{OptimizerAsyncMbo} and
 the respective fields are simply (settable) active bindings to the fields of the \link{OptimizerAsyncMbo}.
