@@ -137,6 +137,7 @@ acqfs = function(.keys, ...) {
 #' of `mlr_sugar` from \CRANpkg{mlr3}.
 #' @param optimizer ([bbotk::OptimizerBatch] | `character(1)`)\cr
 #'   [bbotk::OptimizerBatch] that is to be used or the name of the optimizer in [mlr_acqoptimizers].
+#'   If `optimizer` is missing, the [mlr_acqoptimizers] dictionary is returned.
 #' @param terminator ([bbotk::Terminator])\cr
 #'   [bbotk::Terminator] that is to be used.
 #' @param acq_function (`NULL` | [AcqFunction])\cr
@@ -155,6 +156,7 @@ acqfs = function(.keys, ...) {
 #' acqo(opt("random_search"), trm("evals"), catch_errors = FALSE)
 #' @export
 acqo = function(optimizer, terminator, acq_function = NULL, callbacks = NULL, ...) {
+  if (missing(optimizer)) return(mlr_acqoptimizers)
   dots = list(...)
 
   if (is.character(optimizer)) {
