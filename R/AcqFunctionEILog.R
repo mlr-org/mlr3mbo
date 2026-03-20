@@ -106,8 +106,16 @@ AcqFunctionEILog = R6Class(
       if (is.null(self$y_best)) {
         stop("$y_best is not set. Missed to call $update()?")
       }
-      assert_r6(self$surrogate$output_trafo, "OutputTrafoLog")
-      assert_false(self$surrogate$output_trafo$invert_posterior)
+      if (!inherits(self$surrogate$output_trafo, "OutputTrafoLog") || self$surrogate$output_trafo$invert_posterior) {
+        error_config(
+          paste(
+            "%s requires an OutputTrafoLog with `invert_posterior = FALSE`.",
+            "Set up the surrogate via `srlrn(learner, output_trafo = ot('log', invert_posterior = FALSE))`."
+          ),
+          self$id
+        )
+      }
+
       constants = list(...)
       epsilon = constants$epsilon
       p = self$surrogate$predict(xdt)
@@ -122,7 +130,7 @@ AcqFunctionEILog = R6Class(
         d = (y_best - mu) - epsilon
         d_norm = d / se
         multiplicative_factor = (self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$max -
-            self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
+          self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
         ei_log = multiplicative_factor *
           ((exp(y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) + mu)) * pnorm(d_norm - se))
       } else {
@@ -131,7 +139,7 @@ AcqFunctionEILog = R6Class(
         d = (mu - y_best) - epsilon
         d_norm = d / se
         multiplicative_factor = (self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$max -
-            self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
+          self$surrogate$output_trafo$state[[self$surrogate$output_trafo$cols_y]]$min)
         ei_log = multiplicative_factor *
           ((exp(-y_best) * pnorm(d_norm)) - (exp((0.5 * se^2) - mu) * pnorm(d_norm - se)))
       }

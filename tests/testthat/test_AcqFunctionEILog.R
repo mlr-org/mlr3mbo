@@ -29,6 +29,14 @@ test_that("AcqFunctionEILog works", {
   expect_error(acqf$update(), "update")
   acqf$surrogate$update()
   acqf$update()
+
+  # error in .fun when output_trafo is removed or changed after update
+  acqf$surrogate$output_trafo = NULL
+  expect_error(acqf$eval_dt(xdt), "requires an OutputTrafoLog", class = "Mlr3ErrorConfig")
+  acqf$surrogate$output_trafo = OutputTrafoLog$new(invert_posterior = TRUE)
+  expect_error(acqf$eval_dt(xdt), "invert_posterior = FALSE", class = "Mlr3ErrorConfig")
+  acqf$surrogate$output_trafo = ot
+
   res = acqf$eval_dt(xdt)
   expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
   expect_named(res, acqf$id)
