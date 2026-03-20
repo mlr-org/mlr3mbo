@@ -50,10 +50,11 @@ Relative tolerance of the parameters.
 Default is \code{10^-4}.
 Deactivate with \code{-1}.}
 \item{\code{xtol_abs}}{\code{numeric(1)}\cr
-Absolute tolerance of the parameters.run_nloptr
+Absolute tolerance of the parameters.
+Deactivate with \code{-1} (Default).}
 \item{\code{ftol_rel}}{\code{numeric(1)}\cr
 Relative tolerance of the objective function.
-Deactivate with \code{-1}. (Default).}
+Deactivate with \code{-1} (Default).}
 \item{\code{ftol_abs}}{\code{numeric(1)}\cr
 Absolute tolerance of the objective function.
 Deactivate with \code{-1} (Default).}
