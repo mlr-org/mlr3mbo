@@ -76,12 +76,12 @@ AcqOptimizerDirect = R6Class(
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        maxeval = p_int(),
+        maxeval = p_int(lower = 1, special_vals = list(-1)),
         stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
-        xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1L)),
-        xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1L)),
-        ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1L)),
-        ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1L)),
+        xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1)),
+        xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
+        ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
+        ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         minf_max = p_dbl(default = -Inf),
         restart_strategy = p_fct(levels = c("none", "random"), init = "random"),
         max_restarts = p_int(lower = 0L),
@@ -99,9 +99,11 @@ AcqOptimizerDirect = R6Class(
       restart_strategy = pv$restart_strategy
       max_restarts = pv$max_restarts
       maxeval = pv$maxeval
+      catch_errors = pv$catch_errors
       pv$max_restarts = NULL
       pv$restart_strategy = NULL
       pv$maxeval = NULL
+      pv$catch_errors = NULL
 
       if (restart_strategy == "none") {
         max_restarts = 0L
@@ -126,7 +128,7 @@ AcqOptimizerDirect = R6Class(
       y = Inf
       n_evals = 0L
       n_restarts = 0L
-      while (n_evals < maxeval || maxeval < 0 && n_restarts <= max_restarts) {
+      while ((n_evals < maxeval || maxeval < 0) && n_restarts <= max_restarts) {
         n_restarts = n_restarts + 1L
 
         x0 = if (n_restarts == 1L) {
@@ -151,7 +153,7 @@ AcqOptimizerDirect = R6Class(
           )
         }
 
-        if (pv$catch_errors) {
+        if (catch_errors) {
           tryCatch(
             {
               res = optimize()

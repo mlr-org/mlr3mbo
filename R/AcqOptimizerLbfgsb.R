@@ -46,8 +46,7 @@
 #'   Default is `10^-4`.
 #'   Deactivate with `-1`.}
 #' \item{`xtol_abs`}{`numeric(1)`\cr
-#'   Absolute tolerance of the parameters.
-#'   Deactivate with `-1` (Default).}
+#'   Absolute tolerance of the parameters.run_nloptr
 #' \item{`ftol_rel`}{`numeric(1)`\cr
 #'   Relative tolerance of the objective function.
 #'   Deactivate with `-1`. (Default).}
@@ -77,7 +76,7 @@ AcqOptimizerLbfgsb = R6Class(
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        maxeval = p_int(lower = 1, init = 1000L, special_vals = list(-1)),
+        maxeval = p_int(lower = 1, special_vals = list(-1)),
         stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
         xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1)),
         xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
@@ -85,8 +84,7 @@ AcqOptimizerLbfgsb = R6Class(
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         minf_max = p_dbl(default = -Inf),
         restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
-        n_restarts = p_int(lower = 0L, init = 0L),
-        max_restarts = p_int(lower = 0L, init = 0L),
+        max_restarts = p_int(lower = 0L),
         catch_errors = p_lgl(init = TRUE)
       )
       private$.param_set = param_set
@@ -101,9 +99,11 @@ AcqOptimizerLbfgsb = R6Class(
       restart_strategy = pv$restart_strategy
       max_restarts = pv$max_restarts
       maxeval = pv$maxeval
+      catch_errors = pv$catch_errors
       pv$max_restarts = NULL
       pv$restart_strategy = NULL
       pv$maxeval = NULL
+      pv$catch_errors = NULL
 
       if (restart_strategy == "none") {
         max_restarts = 0L
@@ -128,7 +128,7 @@ AcqOptimizerLbfgsb = R6Class(
       y = Inf
       n_evals = 0L
       n_restarts = 0L
-      while (n_evals < maxeval || maxeval < 0 && n_restarts <= max_restarts) {
+      while ((n_evals < maxeval || maxeval < 0) && n_restarts <= max_restarts) {
         n_restarts = n_restarts + 1L
 
         x0 = if (n_restarts == 1L) {
@@ -141,14 +141,14 @@ AcqOptimizerLbfgsb = R6Class(
         eval_grad_f = function(x, fun, constants, direction) {
           invoke(nloptr::nl.grad, x0 = x, fn = wrapper, fun = fun, constants = constants, direction = direction)
         }
-        saveguard_epsilon = 1e-5
+        safeguard_epsilon = 1e-5
 
         optimize = function() {
           invoke(
             nloptr::nloptr,
             eval_f = wrapper,
-            lb = self$acq_function$domain$lower + saveguard_epsilon,
-            ub = self$acq_function$domain$upper - saveguard_epsilon,
+            lb = self$acq_function$domain$lower + safeguard_epsilon,
+            ub = self$acq_function$domain$upper - safeguard_epsilon,
             opts = insert_named(pv, list(algorithm = "NLOPT_LD_LBFGS", maxeval = maxeval - n_evals)),
             eval_grad_f = eval_grad_f,
             x0 = x0,
@@ -158,7 +158,7 @@ AcqOptimizerLbfgsb = R6Class(
           )
         }
 
-        if (pv$catch_errors) {
+        if (catch_errors) {
           tryCatch(
             {
               res = optimize()
