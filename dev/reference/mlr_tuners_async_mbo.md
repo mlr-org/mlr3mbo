@@ -253,9 +253,5 @@ if (requireNamespace("rush") &
     message("Redis server is not available.\nPlease set up Redis prior to running the example.")
   }
 }
-#> Warning: 
-#> ✖ $push_failed() is deprecated. Use $fail_tasks() instead. is deprecated and
-#>   will be removed in the future.
-#> → Class: Mlr3WarningDeprecated
 # }
 ```
