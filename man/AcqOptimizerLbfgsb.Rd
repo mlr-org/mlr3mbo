@@ -54,7 +54,7 @@ Absolute tolerance of the parameters.
 Deactivate with \code{-1} (Default).}
 \item{\code{ftol_rel}}{\code{numeric(1)}\cr
 Relative tolerance of the objective function.
-Deactivate with \code{-1}. (Default).}
+Deactivate with \code{-1} (Default).}
 \item{\code{ftol_abs}}{\code{numeric(1)}\cr
 Absolute tolerance of the objective function.
 Deactivate with \code{-1} (Default).}
