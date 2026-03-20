@@ -1,5 +1,7 @@
 # mlr3mbo (development version)
 
+* fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now correctly enforce the `max_restarts` limit in all cases.
+
 # mlr3mbo 1.1.0
 
 * compatibility: rush 1.0.0 (#202).
