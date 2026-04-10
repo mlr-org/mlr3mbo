@@ -196,8 +196,5 @@ if (requireNamespace("rush") &
   }
 }
 #> Loading required namespace: rush
-#> Warning: 
-#> ✖ $start_remote_workers() is deprecated and will be removed in the future.
-#> → Class: Mlr3WarningDeprecated
 # }
 ```
