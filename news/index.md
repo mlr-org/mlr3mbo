@@ -1,6 +1,21 @@
 # Changelog
 
+## mlr3mbo 1.1.1
+
+- fix: [`acqo()`](https://mlr3mbo.mlr-org.com/reference/acqo.md) now
+  correctly returns the `mlr_acqoptimizers` dictionary when called with
+  no arguments ([\#211](https://github.com/mlr-org/mlr3mbo/issues/211)).
+- fix: `AcqFunctionEILog` now provides a more informative error message
+  when the surrogate is not configured with the correct output
+  transformation.
+- fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now correctly
+  enforce the `max_restarts` limit in all cases.
+- fix: `SurrogateLearner` and `SurrogateLearnerCollection` now correctly
+  apply their output transformation after imputing running evaluations.
+
 ## mlr3mbo 1.1.0
+
+CRAN release: 2026-03-18
 
 - compatibility: rush 1.0.0
   ([\#202](https://github.com/mlr-org/mlr3mbo/issues/202)).

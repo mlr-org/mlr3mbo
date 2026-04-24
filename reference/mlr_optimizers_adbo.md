@@ -185,7 +185,7 @@ if (requireNamespace("rush") &
       terminator = trm("evals", n_evals = 10))
 
     mirai::daemons(2)
-    rush::rush_plan(n_workers=2, worker_type = "remote")
+    rush::rush_plan(n_workers=2, worker_type = "mirai")
 
     optimizer = opt("adbo", design_size = 4, n_workers = 2)
 

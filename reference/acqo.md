@@ -20,6 +20,9 @@ acqo(optimizer, terminator, acq_function = NULL, callbacks = NULL, ...)
   [bbotk::OptimizerBatch](https://bbotk.mlr-org.com/reference/OptimizerBatch.html)
   that is to be used or the name of the optimizer in
   [mlr_acqoptimizers](https://mlr3mbo.mlr-org.com/reference/mlr_acqoptimizers.md).
+  If `optimizer` is missing, the
+  [mlr_acqoptimizers](https://mlr3mbo.mlr-org.com/reference/mlr_acqoptimizers.md)
+  dictionary is returned.
 
 - terminator:
 
