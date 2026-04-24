@@ -1,3 +1,5 @@
+# mlr3mbo (development version)
+
 # mlr3mbo 1.1.1
 
 * fix: `acqo()` now correctly returns the `mlr_acqoptimizers` dictionary when called with no arguments (#211).
