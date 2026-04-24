@@ -1,5 +1,6 @@
 # mlr3mbo (development version)
 
+* fix: `SurrogateLearner` and `SurrogateLearnerCollection` now correctly apply their output transformation after imputing running evaluations.
 * fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now correctly enforce the `max_restarts` limit in all cases.
 
 # mlr3mbo 1.1.0
