@@ -1,7 +1,9 @@
-# mlr3mbo (development version)
+# mlr3mbo 1.1.1
 
-* fix: `SurrogateLearner` and `SurrogateLearnerCollection` now correctly apply their output transformation after imputing running evaluations.
+* fix: `acqo()` now correctly returns the `mlr_acqoptimizers` dictionary when called with no arguments (#211).
+* fix: `AcqFunctionEILog` now provides a more informative error message when the surrogate is not configured with the correct output transformation.
 * fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now correctly enforce the `max_restarts` limit in all cases.
+* fix: `SurrogateLearner` and `SurrogateLearnerCollection` now correctly apply their output transformation after imputing running evaluations.
 
 # mlr3mbo 1.1.0
 
