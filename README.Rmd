@@ -37,8 +37,8 @@ Based on these, Bayesian Optimization (BO) loops can be written, see, e.g., `bay
 `mlr3mbo` also provides an `OptimizerMbo` class behaving like any other `Optimizer` from the [bbotk](https://cran.r-project.org/package=bbotk) package as well as
 a `TunerMbo` class behaving like any other `Tuner` from the [mlr3tuning](https://cran.r-project.org/package=mlr3tuning) package.
 
-`mlr3mbo` uses sensible defaults for the `Surrogate`, `AcqFunction`, `AcqOptimizer`, and even the `loop_function`.
-See `?mbo_defaults` for more details.
+`mlr3mbo` uses sensible defaults for the `Surrogate`, `AcqFunction`, `AcqOptimizer`, and the `loop_function`.
+See [`mbo_defaults`](https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html) for more details on all defaults.
 
 ## Simple Optimization Example
 
@@ -79,10 +79,7 @@ surrogate = srlrn(lrn("regr.km", control = list(trace = FALSE)))
 
 acq_function = acqf("ei")
 
-acq_optimizer = acqo(
-  opt("local_search", n_initial_points = 10, initial_random_sample_size = 1000, neighbors_per_point = 10),
-  terminator = trm("evals", n_evals = 2000)
-)
+acq_optimizer = acqo("local_search", n_searches = 10, n_steps = 5, n_neighs = 10)
 
 optimizer = opt("mbo",
   loop_function = bayesopt_ego,

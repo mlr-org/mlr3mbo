@@ -11,6 +11,11 @@
 #' Currently, only single-objective optimization is supported and
 #' `TunerAsyncMbo` is considered an experimental feature and API might be subject to changes.
 #'
+#' @section Defaults:
+#' All components have sensible defaults.
+#' For more information on the defaults for `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`,
+#' see [mbo_defaults].
+#'
 #' @section Parameters:
 #' \describe{
 #' \item{`initial_design`}{`data.table::data.table()`\cr
@@ -74,8 +79,6 @@ TunerAsyncMbo = R6Class(
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    #' For more information on default values for `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`,
-    #' see `?mbo_defaults`.
     #'
     #' Note that all the parameters below are simply passed to the [OptimizerAsyncMbo] and
     #' the respective fields are simply (settable) active bindings to the fields of the [OptimizerAsyncMbo].

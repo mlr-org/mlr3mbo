@@ -33,6 +33,11 @@
 #' simply based on the evaluations logged in the archive [ResultAssignerArchive] or based on the [Surrogate] via
 #' [ResultAssignerSurrogate].
 #'
+#' @section Defaults:
+#' All components have sensible defaults.
+#' For more information on the defaults for `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`,
+#' see [mbo_defaults].
+#'
 #' @section Archive:
 #' The [bbotk::ArchiveAsync] holds the following additional columns that are specific to AMBO algorithms:
 #'   * `acq_function$id` (`numeric(1)`)\cr
@@ -124,9 +129,6 @@ OptimizerAsyncMbo = R6Class(
     #'
     #' Even if already initialized, the `surrogate$archive` field will always be overwritten by the
     #' [bbotk::ArchiveAsync] of the current [bbotk::OptimInstanceAsyncSingleCrit] to be optimized.
-    #'
-    #' For more information on default values for `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner`,
-    #' see `?mbo_defaults`.
     #'
     #' @template param_id
     #' @template param_surrogate
