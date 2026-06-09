@@ -43,6 +43,7 @@ GP as surrogate and EI as acquisition function optimized via a local
 serch:
 
 ``` r
+
 library(bbotk)
 library(mlr3mbo)
 library(mlr3learners)
@@ -104,6 +105,7 @@ colours indicating points that were evaluated in later stages of the
 optimization process; the first batch is given by the initial design).
 
 ``` r
+
 library(ggplot2)
 grid = generate_design_grid(instance$search_space, resolution = 1000L)$data
 grid[, y := branin(x1 = x1, x2 = x2)]
@@ -122,6 +124,7 @@ constructing an optimization instance.
 ## Simple Tuning Example
 
 ``` r
+
 library(mlr3)
 library(mlr3learners)
 library(mlr3tuning)

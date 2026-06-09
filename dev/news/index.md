@@ -4,6 +4,8 @@
 
 ## mlr3mbo 1.1.1
 
+CRAN release: 2026-04-24
+
 - fix: [`acqo()`](https://mlr3mbo.mlr-org.com/dev/reference/acqo.md) now
   correctly returns the `mlr_acqoptimizers` dictionary when called with
   no arguments ([\#211](https://github.com/mlr-org/mlr3mbo/issues/211)).
