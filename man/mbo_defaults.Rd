@@ -25,13 +25,13 @@ Defaults to \link{ResultAssignerArchive}.
 }
 }
 \seealso{
-Other mbo_defaults: 
-\code{\link{default_acqfunction}()},
-\code{\link{default_acqoptimizer}()},
-\code{\link{default_gp}()},
-\code{\link{default_loop_function}()},
-\code{\link{default_result_assigner}()},
-\code{\link{default_rf}()},
-\code{\link{default_surrogate}()}
+Other mbo_defaults:
+\code{\link[=default_acqfunction]{default_acqfunction()}},
+\code{\link[=default_acqoptimizer]{default_acqoptimizer()}},
+\code{\link[=default_gp]{default_gp()}},
+\code{\link[=default_loop_function]{default_loop_function()}},
+\code{\link[=default_result_assigner]{default_result_assigner()}},
+\code{\link[=default_rf]{default_rf()}},
+\code{\link[=default_surrogate]{default_surrogate()}}
 }
 \concept{mbo_defaults}

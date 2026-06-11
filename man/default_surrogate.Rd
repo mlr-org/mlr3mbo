@@ -51,13 +51,13 @@ Otherwise, if \code{n_learner} is larger than \code{1},
 multiple deep clones of the learner are wrapped as a \link{SurrogateLearnerCollection}.
 }
 \seealso{
-Other mbo_defaults: 
-\code{\link{default_acqfunction}()},
-\code{\link{default_acqoptimizer}()},
-\code{\link{default_gp}()},
-\code{\link{default_loop_function}()},
-\code{\link{default_result_assigner}()},
-\code{\link{default_rf}()},
+Other mbo_defaults:
+\code{\link[=default_acqfunction]{default_acqfunction()}},
+\code{\link[=default_acqoptimizer]{default_acqoptimizer()}},
+\code{\link[=default_gp]{default_gp()}},
+\code{\link[=default_loop_function]{default_loop_function()}},
+\code{\link[=default_result_assigner]{default_result_assigner()}},
+\code{\link[=default_rf]{default_rf()}},
 \code{\link{mbo_defaults}}
 }
 \concept{mbo_defaults}

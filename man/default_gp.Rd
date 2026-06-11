@@ -12,10 +12,10 @@ Whether the learner will be used in a noisy objective function scenario.
 See above.}
 }
 \value{
-\link[mlr3learners:mlr_learners_regr.km]{mlr3learners::LearnerRegrKM}
+\link[mlr3learners:LearnerRegrKM]{mlr3learners::LearnerRegrKM}
 }
 \description{
-This is a helper function that constructs a default Gaussian Process \link[mlr3learners:mlr_learners_regr.km]{mlr3learners::LearnerRegrKM}
+This is a helper function that constructs a default Gaussian Process \link[mlr3learners:LearnerRegrKM]{mlr3learners::LearnerRegrKM}
 which is for example used in \code{\link[=default_surrogate]{default_surrogate()}}.
 
 Constructs a Kriging learner \code{"regr.km"} with kernel \code{"matern5_2"}.
@@ -30,13 +30,13 @@ to combine global search based on genetic algorithms and local search based on g
 This may improve the model fit and will less frequently produce a constant model prediction.
 }
 \seealso{
-Other mbo_defaults: 
-\code{\link{default_acqfunction}()},
-\code{\link{default_acqoptimizer}()},
-\code{\link{default_loop_function}()},
-\code{\link{default_result_assigner}()},
-\code{\link{default_rf}()},
-\code{\link{default_surrogate}()},
+Other mbo_defaults:
+\code{\link[=default_acqfunction]{default_acqfunction()}},
+\code{\link[=default_acqoptimizer]{default_acqoptimizer()}},
+\code{\link[=default_loop_function]{default_loop_function()}},
+\code{\link[=default_result_assigner]{default_result_assigner()}},
+\code{\link[=default_rf]{default_rf()}},
+\code{\link[=default_surrogate]{default_surrogate()}},
 \code{\link{mbo_defaults}}
 }
 \concept{mbo_defaults}

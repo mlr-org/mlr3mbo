@@ -67,86 +67,90 @@ if (requireNamespace("nloptr")) {
 }
 }
 \section{Super class}{
-\code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerDirect}
+\code{\link[mlr3mbo:AcqOptimizer]{AcqOptimizer}} -> \code{AcqOptimizerDirect}
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{state}}{(\code{list()})\cr
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{state}}{(\code{list()})\cr
 List of \code{\link[nloptr:nloptr]{nloptr::nloptr()}} results.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{print_id}}{(\code{character})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-AcqOptimizerDirect-new}{\code{AcqOptimizerDirect$new()}}
-\item \href{#method-AcqOptimizerDirect-optimize}{\code{AcqOptimizerDirect$optimize()}}
-\item \href{#method-AcqOptimizerDirect-clone}{\code{AcqOptimizerDirect$clone()}}
+  \itemize{
+    \item \href{#method-AcqOptimizerDirect-initialize}{\code{AcqOptimizerDirect$new()}}
+    \item \href{#method-AcqOptimizerDirect-optimize}{\code{AcqOptimizerDirect$optimize()}}
+    \item \href{#method-AcqOptimizerDirect-clone}{\code{AcqOptimizerDirect$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>mlr3mbo::AcqOptimizer$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>mlr3mbo::AcqOptimizer$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>mlr3mbo::AcqOptimizer$reset()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>AcqOptimizer$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>AcqOptimizer$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>AcqOptimizer$reset()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqOptimizerDirect-new"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqOptimizerDirect-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizerDirect$new(acq_function = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-AcqOptimizerDirect-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizerDirect-initialize}{}}}
+\subsection{\code{AcqOptimizerDirect$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizerDirect$new(acq_function = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{acq_function}}{(\code{NULL} | \link{AcqFunction}).}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{acq_function}}{(\code{NULL} | \link{AcqFunction}).}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizerDirect-optimize"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqOptimizerDirect-optimize}{}}}
-\subsection{Method \code{optimize()}}{
-Optimize the acquisition function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizerDirect$optimize()}\if{html}{\out{</div>}}
+\subsection{\code{AcqOptimizerDirect$optimize()}}{
+  Optimize the acquisition function.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizerDirect$optimize()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
+  }
 }
 
-\subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizerDirect-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqOptimizerDirect-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizerDirect$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{AcqOptimizerDirect$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizerDirect$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

@@ -81,133 +81,136 @@ if (requireNamespace("rush") &
 \code{\link[mlr3tuning:Tuner]{mlr3tuning::Tuner}} -> \code{\link[mlr3tuning:TunerAsync]{mlr3tuning::TunerAsync}} -> \code{\link[mlr3tuning:TunerAsyncFromOptimizerAsync]{mlr3tuning::TunerAsyncFromOptimizerAsync}} -> \code{TunerAsyncMbo}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
 The surrogate.}
 
-\item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+    \item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
 The acquisition function.}
 
-\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+    \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
 The acquisition function optimizer.}
 
-\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+    \item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
 The result assigner.}
 
-\item{\code{param_classes}}{(\code{character()})\cr
+    \item{\code{param_classes}}{(\code{character()})\cr
 Supported parameter classes that the optimizer can optimize.
 Determined based on the \code{surrogate} and the \code{acq_optimizer}.
 This corresponds to the values given by a \link[paradox:ParamSet]{paradox::ParamSet}'s
 \verb{$class} field.}
 
-\item{\code{properties}}{(\code{character()})\cr
+    \item{\code{properties}}{(\code{character()})\cr
 Set of properties of the optimizer.
 Must be a subset of \code{\link[bbotk:bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
 MBO in principle is very flexible and by default we assume that the optimizer has all properties.
 When fully initialized, properties are determined based on the loop, e.g., the \code{loop_function}, and \code{surrogate}.}
 
-\item{\code{packages}}{(\code{character()})\cr
+    \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
 A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.
 Required packages are determined based on the \code{acq_function}, \code{surrogate} and the \code{acq_optimizer}.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-TunerAsyncMbo-new}{\code{TunerAsyncMbo$new()}}
-\item \href{#method-TunerAsyncMbo-print}{\code{TunerAsyncMbo$print()}}
-\item \href{#method-TunerAsyncMbo-reset}{\code{TunerAsyncMbo$reset()}}
-\item \href{#method-TunerAsyncMbo-clone}{\code{TunerAsyncMbo$clone()}}
+  \itemize{
+    \item \href{#method-TunerAsyncMbo-initialize}{\code{TunerAsyncMbo$new()}}
+    \item \href{#method-TunerAsyncMbo-print}{\code{TunerAsyncMbo$print()}}
+    \item \href{#method-TunerAsyncMbo-reset}{\code{TunerAsyncMbo$reset()}}
+    \item \href{#method-TunerAsyncMbo-clone}{\code{TunerAsyncMbo$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-format'><code>mlr3tuning::Tuner$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-help'><code>mlr3tuning::Tuner$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerAsyncFromOptimizerAsync" data-id="optimize"><a href='../../mlr3tuning/html/TunerAsyncFromOptimizerAsync.html#method-TunerAsyncFromOptimizerAsync-optimize'><code>mlr3tuning::TunerAsyncFromOptimizerAsync$optimize()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-format'><code>mlr3tuning::Tuner$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href='../../mlr3tuning/html/Tuner.html#method-Tuner-help'><code>mlr3tuning::Tuner$help()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerAsyncFromOptimizerAsync" data-id="optimize"><a href='../../mlr3tuning/html/TunerAsyncFromOptimizerAsync.html#method-TunerAsyncFromOptimizerAsync-optimize'><code>mlr3tuning::TunerAsyncFromOptimizerAsync$optimize()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TunerAsyncMbo-new"></a>}}
-\if{latex}{\out{\hypertarget{method-TunerAsyncMbo-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
+\if{html}{\out{<a id="method-TunerAsyncMbo-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-TunerAsyncMbo-initialize}{}}}
+\subsection{\code{TunerAsyncMbo$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 Note that all the parameters below are simply passed to the \link{OptimizerAsyncMbo} and
 the respective fields are simply (settable) active bindings to the fields of the \link{OptimizerAsyncMbo}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TunerAsyncMbo$new(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TunerAsyncMbo$new(
   surrogate = NULL,
   acq_function = NULL,
   acq_optimizer = NULL,
   param_set = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
 The surrogate.}
-
-\item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+      \item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
 The acquisition function.}
-
-\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+      \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
 The acquisition function optimizer.}
-
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+      \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of control parameters.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TunerAsyncMbo-print"></a>}}
 \if{latex}{\out{\hypertarget{method-TunerAsyncMbo-print}{}}}
-\subsection{Method \code{print()}}{
-Print method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TunerAsyncMbo$print()}\if{html}{\out{</div>}}
+\subsection{\code{TunerAsyncMbo$print()}}{
+  Print method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TunerAsyncMbo$print()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{character()}).
+  }
 }
 
-\subsection{Returns}{
-(\code{character()}).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TunerAsyncMbo-reset"></a>}}
 \if{latex}{\out{\hypertarget{method-TunerAsyncMbo-reset}{}}}
-\subsection{Method \code{reset()}}{
-Reset the tuner.
+\subsection{\code{TunerAsyncMbo$reset()}}{
+  Reset the tuner.
 Sets the following fields to \code{NULL}:
 \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{result_assigner}
 Resets parameter values \code{design_size} and \code{design_function} to their defaults.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TunerAsyncMbo$reset()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TunerAsyncMbo$reset()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TunerAsyncMbo-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-TunerAsyncMbo-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TunerAsyncMbo$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{TunerAsyncMbo$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{TunerAsyncMbo$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

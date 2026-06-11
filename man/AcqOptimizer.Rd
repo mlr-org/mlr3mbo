@@ -100,129 +100,138 @@ if (requireNamespace("mlr3learners") &
 }
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{optimizer}}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch}).}
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{optimizer}}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch}).}
 
-\item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
+    \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
 
-\item{\code{acq_function}}{(\link{AcqFunction}).}
+    \item{\code{acq_function}}{(\link{AcqFunction}).}
 
-\item{\code{callbacks}}{(\code{NULL} | list of \link[mlr3misc:Callback]{mlr3misc::Callback}).}
-}
-\if{html}{\out{</div>}}
+    \item{\code{callbacks}}{(\code{NULL} | list of \link[mlr3misc:Callback]{mlr3misc::Callback}).}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{print_id}}{(\code{character})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+    \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of hyperparameters.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-AcqOptimizer-new}{\code{AcqOptimizer$new()}}
-\item \href{#method-AcqOptimizer-format}{\code{AcqOptimizer$format()}}
-\item \href{#method-AcqOptimizer-print}{\code{AcqOptimizer$print()}}
-\item \href{#method-AcqOptimizer-optimize}{\code{AcqOptimizer$optimize()}}
-\item \href{#method-AcqOptimizer-reset}{\code{AcqOptimizer$reset()}}
-\item \href{#method-AcqOptimizer-clone}{\code{AcqOptimizer$clone()}}
-}
+  \itemize{
+    \item \href{#method-AcqOptimizer-initialize}{\code{AcqOptimizer$new()}}
+    \item \href{#method-AcqOptimizer-format}{\code{AcqOptimizer$format()}}
+    \item \href{#method-AcqOptimizer-print}{\code{AcqOptimizer$print()}}
+    \item \href{#method-AcqOptimizer-optimize}{\code{AcqOptimizer$optimize()}}
+    \item \href{#method-AcqOptimizer-reset}{\code{AcqOptimizer$reset()}}
+    \item \href{#method-AcqOptimizer-clone}{\code{AcqOptimizer$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqOptimizer-new"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqOptimizer-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$new(optimizer, terminator, acq_function = NULL, callbacks = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-AcqOptimizer-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizer-initialize}{}}}
+\subsection{\code{AcqOptimizer$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizer$new(optimizer, terminator, acq_function = NULL, callbacks = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{optimizer}}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch}).}
+      \item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
+      \item{\code{acq_function}}{(\code{NULL} | \link{AcqFunction}).}
+      \item{\code{callbacks}}{(\code{NULL} | list of \link[mlr3misc:Callback]{mlr3misc::Callback})}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{optimizer}}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch}).}
-
-\item{\code{terminator}}{(\link[bbotk:Terminator]{bbotk::Terminator}).}
-
-\item{\code{acq_function}}{(\code{NULL} | \link{AcqFunction}).}
-
-\item{\code{callbacks}}{(\code{NULL} | list of \link[mlr3misc:Callback]{mlr3misc::Callback})}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizer-format"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqOptimizer-format}{}}}
-\subsection{Method \code{format()}}{
-Helper for print outputs.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$format()}\if{html}{\out{</div>}}
+\subsection{\code{AcqOptimizer$format()}}{
+  Helper for print outputs.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizer$format()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{character(1)}).
+  }
 }
 
-\subsection{Returns}{
-(\code{character(1)}).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizer-print"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqOptimizer-print}{}}}
-\subsection{Method \code{print()}}{
-Print method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$print()}\if{html}{\out{</div>}}
+\subsection{\code{AcqOptimizer$print()}}{
+  Print method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizer$print()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{character()}).
+  }
 }
 
-\subsection{Returns}{
-(\code{character()}).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizer-optimize"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqOptimizer-optimize}{}}}
-\subsection{Method \code{optimize()}}{
-Optimize the acquisition function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$optimize()}\if{html}{\out{</div>}}
+\subsection{\code{AcqOptimizer$optimize()}}{
+  Optimize the acquisition function.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizer$optimize()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
+  }
 }
 
-\subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizer-reset"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqOptimizer-reset}{}}}
-\subsection{Method \code{reset()}}{
-Reset the acquisition function optimizer.
+\subsection{\code{AcqOptimizer$reset()}}{
+  Reset the acquisition function optimizer.
 
 Currently not used.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$reset()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizer$reset()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizer-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqOptimizer-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizer$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{AcqOptimizer$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizer$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

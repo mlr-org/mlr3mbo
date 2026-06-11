@@ -17,97 +17,101 @@ objective functions.
 result_assigner = ras("surrogate")
 }
 \seealso{
-Other Result Assigner: 
+Other Result Assigner:
 \code{\link{ResultAssigner}},
 \code{\link{mlr_result_assigners}},
 \code{\link{mlr_result_assigners_archive}}
 }
 \concept{Result Assigner}
 \section{Super class}{
-\code{\link[mlr3mbo:ResultAssigner]{mlr3mbo::ResultAssigner}} -> \code{ResultAssignerSurrogate}
+\code{\link[mlr3mbo:ResultAssigner]{ResultAssigner}} -> \code{ResultAssignerSurrogate}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
 The surrogate.}
 
-\item{\code{packages}}{(\code{character()})\cr
+    \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
 A warning is signaled if at least one of the packages is not installed,
 but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-ResultAssignerSurrogate-new}{\code{ResultAssignerSurrogate$new()}}
-\item \href{#method-ResultAssignerSurrogate-assign_result}{\code{ResultAssignerSurrogate$assign_result()}}
-\item \href{#method-ResultAssignerSurrogate-clone}{\code{ResultAssignerSurrogate$clone()}}
+  \itemize{
+    \item \href{#method-ResultAssignerSurrogate-initialize}{\code{ResultAssignerSurrogate$new()}}
+    \item \href{#method-ResultAssignerSurrogate-assign_result}{\code{ResultAssignerSurrogate$assign_result()}}
+    \item \href{#method-ResultAssignerSurrogate-clone}{\code{ResultAssignerSurrogate$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="ResultAssigner" data-id="format"><a href='../../mlr3mbo/html/ResultAssigner.html#method-ResultAssigner-format'><code>mlr3mbo::ResultAssigner$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="ResultAssigner" data-id="print"><a href='../../mlr3mbo/html/ResultAssigner.html#method-ResultAssigner-print'><code>mlr3mbo::ResultAssigner$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="ResultAssigner" data-id="format"><a href='../../mlr3mbo/html/ResultAssigner.html#method-ResultAssigner-format'><code>ResultAssigner$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="ResultAssigner" data-id="print"><a href='../../mlr3mbo/html/ResultAssigner.html#method-ResultAssigner-print'><code>ResultAssigner$print()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ResultAssignerSurrogate-new"></a>}}
-\if{latex}{\out{\hypertarget{method-ResultAssignerSurrogate-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ResultAssignerSurrogate$new(surrogate = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-ResultAssignerSurrogate-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-ResultAssignerSurrogate-initialize}{}}}
+\subsection{\code{ResultAssignerSurrogate$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ResultAssignerSurrogate$new(surrogate = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+The surrogate that is used to predict the mean of all evaluated points.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
-The surrogate that is used to predict the mean of all evaluated points.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ResultAssignerSurrogate-assign_result"></a>}}
 \if{latex}{\out{\hypertarget{method-ResultAssignerSurrogate-assign_result}{}}}
-\subsection{Method \code{assign_result()}}{
-Assigns the result, i.e., the final point(s) to the instance.
+\subsection{\code{ResultAssignerSurrogate$assign_result()}}{
+  Assigns the result, i.e., the final point(s) to the instance.
 If \verb{$surrogate} is \code{NULL}, \code{default_surrogate(instance)} is used and also assigned to \verb{$surrogate}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ResultAssignerSurrogate$assign_result(instance)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} |
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ResultAssignerSurrogate$assign_result(instance)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} |
 \link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} | \link[bbotk:OptimInstanceAsyncMultiCrit]{bbotk::OptimInstanceAsyncMultiCrit})\cr
 The \link[bbotk:OptimInstance]{bbotk::OptimInstance} the final result should be assigned to.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ResultAssignerSurrogate-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-ResultAssignerSurrogate-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ResultAssignerSurrogate$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{ResultAssignerSurrogate$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ResultAssignerSurrogate$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

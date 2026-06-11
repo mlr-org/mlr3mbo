@@ -56,7 +56,6 @@
 #'   Deactivate with `-1` (Default).}
 #' }
 #'
-#' @export
 #' @examples
 #' if (requireNamespace("nloptr")) {
 #'   acqo("lbfgsb")

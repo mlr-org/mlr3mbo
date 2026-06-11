@@ -65,7 +65,7 @@ if (requireNamespace("mlr3learners") &
 }
 }
 \seealso{
-Other Acquisition Function: 
+Other Acquisition Function:
 \code{\link{AcqFunction}},
 \code{\link{mlr_acqfunctions}},
 \code{\link{mlr_acqfunctions_aei}},
@@ -84,88 +84,91 @@ Other Acquisition Function:
 }
 \concept{Acquisition Function}
 \section{Super classes}{
-\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionMulti}
+\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[mlr3mbo:AcqFunction]{AcqFunction}} -> \code{AcqFunctionMulti}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{surrogate}}{(\link{Surrogate})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{surrogate}}{(\link{Surrogate})\cr
 Surrogate.}
 
-\item{\code{acq_functions}}{(list of \link{AcqFunction})\cr
+    \item{\code{acq_functions}}{(list of \link{AcqFunction})\cr
 Points to the list of the individual acquisition functions.}
 
-\item{\code{acq_function_ids}}{(character())\cr
+    \item{\code{acq_function_ids}}{(character())\cr
 Points to the ids of the individual acquisition functions.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-AcqFunctionMulti-new}{\code{AcqFunctionMulti$new()}}
-\item \href{#method-AcqFunctionMulti-update}{\code{AcqFunctionMulti$update()}}
-\item \href{#method-AcqFunctionMulti-clone}{\code{AcqFunctionMulti$clone()}}
+  \itemize{
+    \item \href{#method-AcqFunctionMulti-initialize}{\code{AcqFunctionMulti$new()}}
+    \item \href{#method-AcqFunctionMulti-update}{\code{AcqFunctionMulti$update()}}
+    \item \href{#method-AcqFunctionMulti-clone}{\code{AcqFunctionMulti$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-assert_surrogate'><code>mlr3mbo::AcqFunction$assert_surrogate()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-reset'><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-assert_surrogate'><code>AcqFunction$assert_surrogate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>AcqFunction$eval_dt()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>AcqFunction$eval_many()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-reset'><code>AcqFunction$reset()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionMulti-new"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionMulti-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionMulti$new(acq_functions, surrogate = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-AcqFunctionMulti-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionMulti-initialize}{}}}
+\subsection{\code{AcqFunctionMulti$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionMulti$new(acq_functions, surrogate = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{acq_functions}}{(list of \link{AcqFunction}s).}
+      \item{\code{surrogate}}{(\code{NULL} | \link{Surrogate}).}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{acq_functions}}{(list of \link{AcqFunction}s).}
-
-\item{\code{surrogate}}{(\code{NULL} | \link{Surrogate}).}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionMulti-update"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionMulti-update}{}}}
-\subsection{Method \code{update()}}{
-Update each of the wrapped acquisition functions.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionMulti$update()}\if{html}{\out{</div>}}
+\subsection{\code{AcqFunctionMulti$update()}}{
+  Update each of the wrapped acquisition functions.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionMulti$update()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionMulti-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionMulti-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionMulti$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{AcqFunctionMulti$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionMulti$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

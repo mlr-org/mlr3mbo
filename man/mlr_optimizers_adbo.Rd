@@ -96,73 +96,77 @@ In \emph{2023 IEEE 19th International Conference on e-Science (e-Science)}, 1--1
 }
 }
 \section{Super classes}{
-\code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{\link[bbotk:OptimizerAsync]{bbotk::OptimizerAsync}} -> \code{\link[mlr3mbo:OptimizerAsyncMbo]{mlr3mbo::OptimizerAsyncMbo}} -> \code{OptimizerADBO}
+\code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{\link[bbotk:OptimizerAsync]{bbotk::OptimizerAsync}} -> \code{\link[mlr3mbo:OptimizerAsyncMbo]{OptimizerAsyncMbo}} -> \code{OptimizerADBO}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-OptimizerADBO-new}{\code{OptimizerADBO$new()}}
-\item \href{#method-OptimizerADBO-optimize}{\code{OptimizerADBO$optimize()}}
-\item \href{#method-OptimizerADBO-clone}{\code{OptimizerADBO$clone()}}
+  \itemize{
+    \item \href{#method-OptimizerADBO-initialize}{\code{OptimizerADBO$new()}}
+    \item \href{#method-OptimizerADBO-optimize}{\code{OptimizerADBO$optimize()}}
+    \item \href{#method-OptimizerADBO-clone}{\code{OptimizerADBO$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="OptimizerAsyncMbo" data-id="print"><a href='../../mlr3mbo/html/OptimizerAsyncMbo.html#method-OptimizerAsyncMbo-print'><code>mlr3mbo::OptimizerAsyncMbo$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="OptimizerAsyncMbo" data-id="reset"><a href='../../mlr3mbo/html/OptimizerAsyncMbo.html#method-OptimizerAsyncMbo-reset'><code>mlr3mbo::OptimizerAsyncMbo$reset()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="OptimizerAsyncMbo" data-id="print"><a href='../../mlr3mbo/html/OptimizerAsyncMbo.html#method-OptimizerAsyncMbo-print'><code>OptimizerAsyncMbo$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="OptimizerAsyncMbo" data-id="reset"><a href='../../mlr3mbo/html/OptimizerAsyncMbo.html#method-OptimizerAsyncMbo-reset'><code>OptimizerAsyncMbo$reset()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-OptimizerADBO-new"></a>}}
-\if{latex}{\out{\hypertarget{method-OptimizerADBO-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerADBO$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-OptimizerADBO-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-OptimizerADBO-initialize}{}}}
+\subsection{\code{OptimizerADBO$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerADBO$new()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerADBO-optimize"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerADBO-optimize}{}}}
-\subsection{Method \code{optimize()}}{
-Performs the optimization on an \link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} until termination.
+\subsection{\code{OptimizerADBO$optimize()}}{
+  Performs the optimization on an \link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} until termination.
 The single evaluations will be written into the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync}.
 The result will be written into the instance object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerADBO$optimize(inst)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerADBO$optimize(inst)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{inst}}{(\link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{\link[data.table:data.table]{data.table::data.table()}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{inst}}{(\link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerADBO-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerADBO-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerADBO$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{OptimizerADBO$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerADBO$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
