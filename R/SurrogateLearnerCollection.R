@@ -309,12 +309,6 @@ SurrogateLearnerCollection = R6Class(
         self$input_trafo$update(xydt)
         xydt = self$input_trafo$transform(xydt)
       }
-      if (!is.null(self$output_trafo)) {
-        self$output_trafo$cols_y = self$cols_y
-        self$output_trafo$max_to_min = surrogate_mult_max_to_min(self)
-        self$output_trafo$update(xydt)
-        xydt = self$output_trafo$transform(xydt)
-      }
       if (self$param_set$values$impute_method == "mean") {
         walk(self$cols_y, function(col) {
           mean_y = mean(xydt[[col]], na.rm = TRUE)
@@ -326,6 +320,12 @@ SurrogateLearnerCollection = R6Class(
           max_y = max(xydt[[col]], na.rm = TRUE)
           xydt[c("queued", "running"), (col) := runif(.N, min = min_y, max = max_y), on = "state"]
         })
+      }
+      if (!is.null(self$output_trafo)) {
+        self$output_trafo$cols_y = self$cols_y
+        self$output_trafo$max_to_min = surrogate_mult_max_to_min(self)
+        self$output_trafo$update(xydt)
+        xydt = self$output_trafo$transform(xydt)
       }
       set(xydt, j = "state", value = NULL)
 

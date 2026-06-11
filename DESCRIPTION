@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 1.1.0.9000
+Version: 1.1.1.9000
 Authors@R: c(
     person("Marc", "Becker", , "marcbecker@posteo.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-8115-0400")),
@@ -97,7 +97,7 @@ Collate:
     'AcqOptimizerDirect.R'
     'AcqOptimizerLbfgsb.R'
     'AcqOptimizerLocalSearch.R'
-    'AcqOptimzerRandomSearch.R'
+    'AcqOptimizerRandomSearch.R'
     'mlr_input_trafos.R'
     'InputTrafo.R'
     'InputTrafoUnitcube.R'
