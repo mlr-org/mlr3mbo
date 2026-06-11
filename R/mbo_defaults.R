@@ -5,11 +5,21 @@
 #' The following defaults are set for [OptimizerMbo] during optimization
 #' if the respective fields are not set during initialization.
 #'
-#' * Optimization Loop: [default_loop_function]\cr
-#' * Surrogate: [default_surrogate]\cr
-#' * Acquisition Function: [default_acqfunction]\cr
-#' * Acqfun Optimizer: [default_acqoptimizer]\cr
-#' * Result Assigner: [default_result_assigner]\cr
+#' * **Loop Function** ([default_loop_function]): The Bayesian optimization flavor.
+#'   Defaults to [bayesopt_ego] for single-objective and [bayesopt_smsego] for multi-objective optimization.
+#' * **Surrogate** ([default_surrogate]): The surrogate model.
+#'   Uses a Gaussian process ([default_gp]) for purely numeric parameter spaces without dependencies,
+#'   and a random forest ([default_rf]) otherwise.
+#'   For multi-objective optimization, one surrogate learner per objective is used.
+#' * **Acquisition Function** ([default_acqfunction]): The criterion used to propose future points.
+#'   Defaults to [mlr_acqfunctions_cb] (confidence bound) for synchronous single-objective optimization
+#'   (`lambda = 3` for numeric, `lambda = 1` for mixed spaces),
+#'   [mlr_acqfunctions_smsego] for synchronous multi-objective optimization,
+#'   and [mlr_acqfunctions_stochastic_cb] for asynchronous single-objective optimization.
+#' * **Acquisition Function Optimizer** ([default_acqoptimizer]): The optimizer for the acquisition function.
+#'   Defaults to [AcqOptimizerLocalSearch].
+#' * **Result Assigner** ([default_result_assigner]): Determines how the final result is assigned.
+#'   Defaults to [ResultAssignerArchive].
 #'
 #' @family mbo_defaults
 NULL

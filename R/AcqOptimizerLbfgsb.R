@@ -46,10 +46,11 @@
 #'   Default is `10^-4`.
 #'   Deactivate with `-1`.}
 #' \item{`xtol_abs`}{`numeric(1)`\cr
-#'   Absolute tolerance of the parameters.run_nloptr
+#'   Absolute tolerance of the parameters.
+#'   Deactivate with `-1` (Default).}
 #' \item{`ftol_rel`}{`numeric(1)`\cr
 #'   Relative tolerance of the objective function.
-#'   Deactivate with `-1`. (Default).}
+#'   Deactivate with `-1` (Default).}
 #' \item{`ftol_abs`}{`numeric(1)`\cr
 #'   Absolute tolerance of the objective function.
 #'   Deactivate with `-1` (Default).}

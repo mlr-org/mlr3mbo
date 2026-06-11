@@ -41,8 +41,9 @@ from the [mlr3tuning](https://cran.r-project.org/package=mlr3tuning)
 package.
 
 `mlr3mbo` uses sensible defaults for the `Surrogate`, `AcqFunction`,
-`AcqOptimizer`, and even the `loop_function`. See `?mbo_defaults` for
-more details.
+`AcqOptimizer`, and the `loop_function`. See
+[`mbo_defaults`](https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html)
+for more details on all defaults.
 
 ## Simple Optimization Example
 
@@ -85,10 +86,7 @@ surrogate = srlrn(lrn("regr.km", control = list(trace = FALSE)))
 
 acq_function = acqf("ei")
 
-acq_optimizer = acqo(
-  opt("local_search", n_initial_points = 10, initial_random_sample_size = 1000, neighbors_per_point = 10),
-  terminator = trm("evals", n_evals = 2000)
-)
+acq_optimizer = acqo("local_search", n_searches = 10, n_steps = 5, n_neighs = 10)
 
 optimizer = opt("mbo",
   loop_function = bayesopt_ego,
@@ -100,9 +98,9 @@ optimizer = opt("mbo",
 optimizer$optimize(instance)
 ```
 
-    ##          x1       x2  x_domain        y
-    ##       <num>    <num>    <list>    <num>
-    ## 1: 3.104516 2.396279 <list[2]> 0.412985
+    ##           x1       x2  x_domain         y
+    ##        <num>    <num>    <list>     <num>
+    ## 1: -3.152173 12.30826 <list[2]> 0.3984859
 
 We can quickly visualize the contours of the objective function (on log
 scale) as well as the sampling behavior of our BO run (lighter blue
@@ -149,6 +147,6 @@ instance = tune(
 instance$result
 ```
 
-    ##           cp learner_param_vals  x_domain classif.ce
-    ##        <num>             <list>    <list>      <num>
-    ## 1: -6.188733          <list[2]> <list[1]>  0.2382812
+    ##          cp learner_param_vals  x_domain classif.ce
+    ##       <num>             <list>    <list>      <num>
+    ## 1: -6.48394          <list[2]> <list[1]>  0.2382812
