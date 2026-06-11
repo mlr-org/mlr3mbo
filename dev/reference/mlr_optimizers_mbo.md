@@ -54,6 +54,13 @@ or based on the
 [Surrogate](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.md) via
 [ResultAssignerSurrogate](https://mlr3mbo.mlr-org.com/dev/reference/mlr_result_assigners_surrogate.md).
 
+## Defaults
+
+All components have sensible defaults. For more information on the
+defaults for `loop_function`, `surrogate`, `acq_function`,
+`acq_optimizer`, and `result_assigner`, see
+[mbo_defaults](https://mlr3mbo.mlr-org.com/dev/reference/mbo_defaults.md).
+
 ## Archive
 
 The
@@ -227,10 +234,6 @@ be overwritten by the
 of the current
 [bbotk::OptimInstanceBatch](https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html)
 to be optimized.
-
-For more information on default values for `loop_function`, `surrogate`,
-`acq_function`, `acq_optimizer` and `result_assigner`, see
-[`?mbo_defaults`](https://mlr3mbo.mlr-org.com/dev/reference/mbo_defaults.md).
 
 #### Usage
 
@@ -409,7 +412,7 @@ if (requireNamespace("mlr3learners") &
 
   optimizer$optimize(instance)
 }
-#> WARN  [10:55:55.801] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
+#> WARN  [10:59:25.554] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
 #>            x  x_domain        y1       y2
 #>        <num>    <list>     <num>    <num>
 #> 1: 0.5190372 <list[1]> 0.2693997 2.193251

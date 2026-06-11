@@ -61,6 +61,14 @@ For additional information and documentation see <a href="mlr_optimizers_mbo.htm
 
 
     <div class="section level2">
+    <h2 id="defaults">Defaults<a class="anchor" aria-label="anchor" href="#defaults"></a></h2>
+
+
+<p>All components have sensible defaults.
+For more information on the defaults for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>, and
+<code>result_assigner</code>, see <a href="mbo_defaults.html">mbo_defaults</a>.</p>
+    </div>
+    <div class="section level2">
     <h2 id="super-classes">Super classes<a class="anchor" aria-label="anchor" href="#super-classes"></a></h2>
     <p><code><a href="https://mlr3tuning.mlr-org.com/reference/Tuner.html" class="external-link">mlr3tuning::Tuner</a></code> -&gt; <code><a href="https://mlr3tuning.mlr-org.com/reference/TunerBatch.html" class="external-link">mlr3tuning::TunerBatch</a></code> -&gt; <code><a href="https://mlr3tuning.mlr-org.com/reference/TunerBatchFromOptimizerBatch.html" class="external-link">mlr3tuning::TunerBatchFromOptimizerBatch</a></code> -&gt; <code>TunerMbo</code></p>
     </div>
@@ -137,9 +145,7 @@ Required packages are determined based on the <code>acq_function</code>, <code>s
 <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerBatchFromOptimizerBatch" data-id="optimize"><a href="https://mlr3tuning.mlr-org.com/reference/TunerBatchFromOptimizerBatch.html#method-optimize"><code>mlr3tuning::TunerBatchFromOptimizerBatch$optimize()</code></a></span></li>
 </ul></details></p><hr><a id="method-TunerMbo-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
-<p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.
-For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>,
-and <code>result_assigner</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p>
+<p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p>
 <p>Note that all the parameters below are simply passed to the <a href="mlr_optimizers_mbo.html">OptimizerMbo</a> and
 the respective fields are simply (settable) active bindings to the fields of the <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>

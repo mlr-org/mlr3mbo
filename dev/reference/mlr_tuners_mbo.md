@@ -6,6 +6,13 @@ a minimal interface internally passing on to
 For additional information and documentation see
 [OptimizerMbo](https://mlr3mbo.mlr-org.com/dev/reference/mlr_optimizers_mbo.md).
 
+## Defaults
+
+All components have sensible defaults. For more information on the
+defaults for `loop_function`, `surrogate`, `acq_function`,
+`acq_optimizer`, and `result_assigner`, see
+[mbo_defaults](https://mlr3mbo.mlr-org.com/dev/reference/mbo_defaults.md).
+
 ## Super classes
 
 [`mlr3tuning::Tuner`](https://mlr3tuning.mlr-org.com/reference/Tuner.html)
@@ -105,10 +112,7 @@ Inherited methods
 ### Method `new()`
 
 Creates a new instance of this
-[R6](https://r6.r-lib.org/reference/R6Class.html) class. For more
-information on default values for `loop_function`, `surrogate`,
-`acq_function`, `acq_optimizer`, and `result_assigner`, see
-[`?mbo_defaults`](https://mlr3mbo.mlr-org.com/dev/reference/mbo_defaults.md).
+[R6](https://r6.r-lib.org/reference/R6Class.html) class.
 
 Note that all the parameters below are simply passed to the
 [OptimizerMbo](https://mlr3mbo.mlr-org.com/dev/reference/mlr_optimizers_mbo.md)

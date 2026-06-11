@@ -53,6 +53,13 @@ or based on the
 [Surrogate](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.md) via
 [ResultAssignerSurrogate](https://mlr3mbo.mlr-org.com/dev/reference/mlr_result_assigners_surrogate.md).
 
+## Defaults
+
+All components have sensible defaults. For more information on the
+defaults for `surrogate`, `acq_function`, `acq_optimizer`, and
+`result_assigner`, see
+[mbo_defaults](https://mlr3mbo.mlr-org.com/dev/reference/mbo_defaults.md).
+
 ## Archive
 
 The
@@ -254,10 +261,6 @@ be overwritten by the
 of the current
 [bbotk::OptimInstanceAsyncSingleCrit](https://bbotk.mlr-org.com/reference/OptimInstanceAsyncSingleCrit.html)
 to be optimized.
-
-For more information on default values for `surrogate`, `acq_function`,
-`acq_optimizer` and `result_assigner`, see
-[`?mbo_defaults`](https://mlr3mbo.mlr-org.com/dev/reference/mbo_defaults.md).
 
 #### Usage
 

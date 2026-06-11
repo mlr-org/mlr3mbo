@@ -11,6 +11,13 @@ Currently, only single-objective optimization is supported and
 `TunerAsyncMbo` is considered an experimental feature and API might be
 subject to changes.
 
+## Defaults
+
+All components have sensible defaults. For more information on the
+defaults for `surrogate`, `acq_function`, `acq_optimizer`, and
+`result_assigner`, see
+[mbo_defaults](https://mlr3mbo.mlr-org.com/dev/reference/mbo_defaults.md).
+
 ## Parameters
 
 - `initial_design`:
@@ -130,10 +137,7 @@ Inherited methods
 ### Method `new()`
 
 Creates a new instance of this
-[R6](https://r6.r-lib.org/reference/R6Class.html) class. For more
-information on default values for `surrogate`, `acq_function`,
-`acq_optimizer`, and `result_assigner`, see
-[`?mbo_defaults`](https://mlr3mbo.mlr-org.com/dev/reference/mbo_defaults.md).
+[R6](https://r6.r-lib.org/reference/R6Class.html) class.
 
 Note that all the parameters below are simply passed to the
 [OptimizerAsyncMbo](https://mlr3mbo.mlr-org.com/dev/reference/mlr_optimizers_async_mbo.md)

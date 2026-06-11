@@ -7,19 +7,39 @@
   };
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Defaults for OptimizerMbo — mbo_defaults"><meta name="description" content="The following defaults are set for OptimizerMbo during optimization
 if the respective fields are not set during initialization.
-Optimization Loop: default_loop_function
-Surrogate: default_surrogate
-Acquisition Function: default_acqfunction
-Acqfun Optimizer: default_acqoptimizer
-Result Assigner: default_result_assigner
+Loop Function (default_loop_function): The Bayesian optimization flavor.
+Defaults to bayesopt_ego for single-objective and bayesopt_smsego for multi-objective optimization.
+Surrogate (default_surrogate): The surrogate model.
+Uses a Gaussian process (default_gp) for purely numeric parameter spaces without dependencies,
+and a random forest (default_rf) otherwise.
+For multi-objective optimization, one surrogate learner per objective is used.
+Acquisition Function (default_acqfunction): The criterion used to propose future points.
+Defaults to mlr_acqfunctions_cb (confidence bound) for synchronous single-objective optimization
+(lambda = 3 for numeric, lambda = 1 for mixed spaces),
+mlr_acqfunctions_smsego for synchronous multi-objective optimization,
+and mlr_acqfunctions_stochastic_cb for asynchronous single-objective optimization.
+Acquisition Function Optimizer (default_acqoptimizer): The optimizer for the acquisition function.
+Defaults to AcqOptimizerLocalSearch.
+Result Assigner (default_result_assigner): Determines how the final result is assigned.
+Defaults to ResultAssignerArchive.
 
 "><meta property="og:description" content="The following defaults are set for OptimizerMbo during optimization
 if the respective fields are not set during initialization.
-Optimization Loop: default_loop_function
-Surrogate: default_surrogate
-Acquisition Function: default_acqfunction
-Acqfun Optimizer: default_acqoptimizer
-Result Assigner: default_result_assigner
+Loop Function (default_loop_function): The Bayesian optimization flavor.
+Defaults to bayesopt_ego for single-objective and bayesopt_smsego for multi-objective optimization.
+Surrogate (default_surrogate): The surrogate model.
+Uses a Gaussian process (default_gp) for purely numeric parameter spaces without dependencies,
+and a random forest (default_rf) otherwise.
+For multi-objective optimization, one surrogate learner per objective is used.
+Acquisition Function (default_acqfunction): The criterion used to propose future points.
+Defaults to mlr_acqfunctions_cb (confidence bound) for synchronous single-objective optimization
+(lambda = 3 for numeric, lambda = 1 for mixed spaces),
+mlr_acqfunctions_smsego for synchronous multi-objective optimization,
+and mlr_acqfunctions_stochastic_cb for asynchronous single-objective optimization.
+Acquisition Function Optimizer (default_acqoptimizer): The optimizer for the acquisition function.
+Defaults to AcqOptimizerLocalSearch.
+Result Assigner (default_result_assigner): Determines how the final result is assigned.
+Defaults to ResultAssignerArchive.
 
 "><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -67,11 +87,21 @@ Result Assigner: default_result_assigner
 
     <div class="ref-description section level2">
     <p>The following defaults are set for <a href="mlr_optimizers_mbo.html">OptimizerMbo</a> during optimization
-if the respective fields are not set during initialization.</p><ul><li><p>Optimization Loop: <a href="default_loop_function.html">default_loop_function</a><br></p></li>
-<li><p>Surrogate: <a href="default_surrogate.html">default_surrogate</a><br></p></li>
-<li><p>Acquisition Function: <a href="default_acqfunction.html">default_acqfunction</a><br></p></li>
-<li><p>Acqfun Optimizer: <a href="default_acqoptimizer.html">default_acqoptimizer</a><br></p></li>
-<li><p>Result Assigner: <a href="default_result_assigner.html">default_result_assigner</a><br></p></li>
+if the respective fields are not set during initialization.</p><ul><li><p><strong>Loop Function</strong> (<a href="default_loop_function.html">default_loop_function</a>): The Bayesian optimization flavor.
+Defaults to <a href="mlr_loop_functions_ego.html">bayesopt_ego</a> for single-objective and <a href="mlr_loop_functions_smsego.html">bayesopt_smsego</a> for multi-objective optimization.</p></li>
+<li><p><strong>Surrogate</strong> (<a href="default_surrogate.html">default_surrogate</a>): The surrogate model.
+Uses a Gaussian process (<a href="default_gp.html">default_gp</a>) for purely numeric parameter spaces without dependencies,
+and a random forest (<a href="default_rf.html">default_rf</a>) otherwise.
+For multi-objective optimization, one surrogate learner per objective is used.</p></li>
+<li><p><strong>Acquisition Function</strong> (<a href="default_acqfunction.html">default_acqfunction</a>): The criterion used to propose future points.
+Defaults to <a href="mlr_acqfunctions_cb.html">mlr_acqfunctions_cb</a> (confidence bound) for synchronous single-objective optimization
+(<code>lambda = 3</code> for numeric, <code>lambda = 1</code> for mixed spaces),
+<a href="mlr_acqfunctions_smsego.html">mlr_acqfunctions_smsego</a> for synchronous multi-objective optimization,
+and <a href="mlr_acqfunctions_stochastic_cb.html">mlr_acqfunctions_stochastic_cb</a> for asynchronous single-objective optimization.</p></li>
+<li><p><strong>Acquisition Function Optimizer</strong> (<a href="default_acqoptimizer.html">default_acqoptimizer</a>): The optimizer for the acquisition function.
+Defaults to <a href="AcqOptimizerLocalSearch.html">AcqOptimizerLocalSearch</a>.</p></li>
+<li><p><strong>Result Assigner</strong> (<a href="default_result_assigner.html">default_result_assigner</a>): Determines how the final result is assigned.
+Defaults to <a href="mlr_result_assigners_archive.html">ResultAssignerArchive</a>.</p></li>
 </ul></div>
 
 

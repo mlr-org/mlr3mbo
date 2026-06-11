@@ -99,7 +99,7 @@
 </ul>
 <p>Based on these, Bayesian Optimization (BO) loops can be written, see, e.g., <code>bayesopt_ego</code> for sequential single-objective BO.</p>
 <p><code>mlr3mbo</code> also provides an <code>OptimizerMbo</code> class behaving like any other <code>Optimizer</code> from the <a href="https://cran.r-project.org/package=bbotk" class="external-link">bbotk</a> package as well as a <code>TunerMbo</code> class behaving like any other <code>Tuner</code> from the <a href="https://cran.r-project.org/package=mlr3tuning" class="external-link">mlr3tuning</a> package.</p>
-<p><code>mlr3mbo</code> uses sensible defaults for the <code>Surrogate</code>, <code>AcqFunction</code>, <code>AcqOptimizer</code>, and even the <code>loop_function</code>. See <code><a href="reference/mbo_defaults.html">?mbo_defaults</a></code> for more details.</p>
+<p><code>mlr3mbo</code> uses sensible defaults for the <code>Surrogate</code>, <code>AcqFunction</code>, <code>AcqOptimizer</code>, and the <code>loop_function</code>. See <a href="https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html"><code>mbo_defaults</code></a> for more details on all defaults.</p>
 </div>
 <div class="section level2">
 <h2 id="simple-optimization-example">Simple Optimization Example<a class="anchor" aria-label="anchor" href="#simple-optimization-example"></a>
@@ -140,10 +140,7 @@
 <span></span>
 <span><span class="va">acq_function</span> <span class="op">=</span> <span class="fu"><a href="reference/acqf.html">acqf</a></span><span class="op">(</span><span class="st">"ei"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">acq_optimizer</span> <span class="op">=</span> <span class="fu"><a href="reference/acqo.html">acqo</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"local_search"</span>, n_initial_points <span class="op">=</span> <span class="fl">10</span>, initial_random_sample_size <span class="op">=</span> <span class="fl">1000</span>, neighbors_per_point <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
-<span>  terminator <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
+<span><span class="va">acq_optimizer</span> <span class="op">=</span> <span class="fu"><a href="reference/acqo.html">acqo</a></span><span class="op">(</span><span class="st">"local_search"</span>, n_searches <span class="op">=</span> <span class="fl">10</span>, n_steps <span class="op">=</span> <span class="fl">5</span>, n_neighs <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span> <span class="op">=</span> <span class="fu"><a href="https://bbotk.mlr-org.com/reference/opt.html" class="external-link">opt</a></span><span class="op">(</span><span class="st">"mbo"</span>,</span>
 <span>  loop_function <span class="op">=</span> <span class="va">bayesopt_ego</span>,</span>
@@ -153,9 +150,9 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">optimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="do">##          x1       x2  x_domain        y</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">##       &lt;num&gt;    &lt;num&gt;    &lt;list&gt;    &lt;num&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## 1: 3.104516 2.396279 &lt;list[2]&gt; 0.412985</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="do">##           x1       x2  x_domain         y</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">##        &lt;num&gt;    &lt;num&gt;    &lt;list&gt;     &lt;num&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## 1: -3.152173 12.30826 &lt;list[2]&gt; 0.3984859</span></span></code></pre></div>
 <p>We can quickly visualize the contours of the objective function (on log scale) as well as the sampling behavior of our BO run (lighter blue colors indicating points that were evaluated in later stages of the optimization process; the first batch is given by the initial design).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -193,9 +190,9 @@
 <span>  term_evals <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">instance</span><span class="op">$</span><span class="va">result</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="do">##           cp learner_param_vals  x_domain classif.ce</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="do">##        &lt;num&gt;             &lt;list&gt;    &lt;list&gt;      &lt;num&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">## 1: -6.188733          &lt;list[2]&gt; &lt;list[1]&gt;  0.2382812</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="do">##          cp learner_param_vals  x_domain classif.ce</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="do">##       &lt;num&gt;             &lt;list&gt;    &lt;list&gt;      &lt;num&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">## 1: -6.48394          &lt;list[2]&gt; &lt;list[1]&gt;  0.2382812</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
