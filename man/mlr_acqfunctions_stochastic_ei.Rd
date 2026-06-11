@@ -91,7 +91,7 @@ if (requireNamespace("mlr3learners") &
 }
 }
 \seealso{
-Other Acquisition Function: 
+Other Acquisition Function:
 \code{\link{AcqFunction}},
 \code{\link{mlr_acqfunctions}},
 \code{\link{mlr_acqfunctions_aei}},
@@ -110,105 +110,108 @@ Other Acquisition Function:
 }
 \concept{Acquisition Function}
 \section{Super classes}{
-\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionStochasticEI}
+\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[mlr3mbo:AcqFunction]{AcqFunction}} -> \code{AcqFunctionStochasticEI}
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{y_best}}{(\code{numeric(1)})\cr
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{y_best}}{(\code{numeric(1)})\cr
 Best objective function value observed so far.
 In the case of maximization, this already includes the necessary change of sign.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-AcqFunctionStochasticEI-new}{\code{AcqFunctionStochasticEI$new()}}
-\item \href{#method-AcqFunctionStochasticEI-update}{\code{AcqFunctionStochasticEI$update()}}
-\item \href{#method-AcqFunctionStochasticEI-reset}{\code{AcqFunctionStochasticEI$reset()}}
-\item \href{#method-AcqFunctionStochasticEI-clone}{\code{AcqFunctionStochasticEI$clone()}}
+  \itemize{
+    \item \href{#method-AcqFunctionStochasticEI-initialize}{\code{AcqFunctionStochasticEI$new()}}
+    \item \href{#method-AcqFunctionStochasticEI-update}{\code{AcqFunctionStochasticEI$update()}}
+    \item \href{#method-AcqFunctionStochasticEI-reset}{\code{AcqFunctionStochasticEI$reset()}}
+    \item \href{#method-AcqFunctionStochasticEI-clone}{\code{AcqFunctionStochasticEI$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-assert_surrogate'><code>mlr3mbo::AcqFunction$assert_surrogate()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-assert_surrogate'><code>AcqFunction$assert_surrogate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>AcqFunction$eval_dt()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>AcqFunction$eval_many()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionStochasticEI-new"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionStochasticEI-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticEI$new(
+\if{html}{\out{<a id="method-AcqFunctionStochasticEI-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionStochasticEI-initialize}{}}}
+\subsection{\code{AcqFunctionStochasticEI$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionStochasticEI$new(
   surrogate = NULL,
   epsilon = 0.1,
   rate = 0.05,
   period = NULL
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearner}).}
+      \item{\code{epsilon}}{(\code{numeric(1)}).}
+      \item{\code{rate}}{(\code{numeric(1)}).}
+      \item{\code{period}}{(\code{NULL} | \code{integer(1)}).}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearner}).}
-
-\item{\code{epsilon}}{(\code{numeric(1)}).}
-
-\item{\code{rate}}{(\code{numeric(1)}).}
-
-\item{\code{period}}{(\code{NULL} | \code{integer(1)}).}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionStochasticEI-update"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionStochasticEI-update}{}}}
-\subsection{Method \code{update()}}{
-Update the acquisition function.
+\subsection{\code{AcqFunctionStochasticEI$update()}}{
+  Update the acquisition function.
 Sets \code{y_best} to the best observed objective function value.
 Decays epsilon.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticEI$update()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionStochasticEI$update()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionStochasticEI-reset"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionStochasticEI-reset}{}}}
-\subsection{Method \code{reset()}}{
-Reset the acquisition function.
+\subsection{\code{AcqFunctionStochasticEI$reset()}}{
+  Reset the acquisition function.
 Resets the private update counter \code{.t} used within the epsilon decay.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticEI$reset()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionStochasticEI$reset()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionStochasticEI-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionStochasticEI-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionStochasticEI$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{AcqFunctionStochasticEI$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionStochasticEI$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

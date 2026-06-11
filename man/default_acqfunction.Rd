@@ -23,13 +23,13 @@ For synchronous multi-objective optimization, defaults to \link{mlr_acqfunctions
 For asynchronous single-objective optimization, defaults to \link{mlr_acqfunctions_stochastic_cb}.
 }
 \seealso{
-Other mbo_defaults: 
-\code{\link{default_acqoptimizer}()},
-\code{\link{default_gp}()},
-\code{\link{default_loop_function}()},
-\code{\link{default_result_assigner}()},
-\code{\link{default_rf}()},
-\code{\link{default_surrogate}()},
+Other mbo_defaults:
+\code{\link[=default_acqoptimizer]{default_acqoptimizer()}},
+\code{\link[=default_gp]{default_gp()}},
+\code{\link[=default_loop_function]{default_loop_function()}},
+\code{\link[=default_result_assigner]{default_result_assigner()}},
+\code{\link[=default_rf]{default_rf()}},
+\code{\link[=default_surrogate]{default_surrogate()}},
 \code{\link{mbo_defaults}}
 }
 \concept{mbo_defaults}

@@ -144,62 +144,60 @@ if (requireNamespace("rush") &
 \code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{\link[bbotk:OptimizerAsync]{bbotk::OptimizerAsync}} -> \code{OptimizerAsyncMbo}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
 The surrogate.}
 
-\item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+    \item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
 The acquisition function.}
 
-\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+    \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
 The acquisition function optimizer.}
 
-\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+    \item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
 The result assigner.}
 
-\item{\code{param_classes}}{(\code{character()})\cr
+    \item{\code{param_classes}}{(\code{character()})\cr
 Supported parameter classes that the optimizer can optimize.
 Determined based on the \code{surrogate} and the \code{acq_optimizer}.
 This corresponds to the values given by a \link[paradox:ParamSet]{paradox::ParamSet}'s
 \verb{$class} field.}
 
-\item{\code{properties}}{(\code{character()})\cr
+    \item{\code{properties}}{(\code{character()})\cr
 Set of properties of the optimizer.
 Must be a subset of \code{\link[bbotk:bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
 MBO in principle is very flexible and by default we assume that the optimizer has all properties.
 When fully initialized, properties are determined based on the loop, e.g., the \code{loop_function}, and \code{surrogate}.}
 
-\item{\code{packages}}{(\code{character()})\cr
+    \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
 A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.
 Required packages are determined based on the \code{acq_function}, \code{surrogate} and the \code{acq_optimizer}.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-OptimizerAsyncMbo-new}{\code{OptimizerAsyncMbo$new()}}
-\item \href{#method-OptimizerAsyncMbo-print}{\code{OptimizerAsyncMbo$print()}}
-\item \href{#method-OptimizerAsyncMbo-reset}{\code{OptimizerAsyncMbo$reset()}}
-\item \href{#method-OptimizerAsyncMbo-optimize}{\code{OptimizerAsyncMbo$optimize()}}
-\item \href{#method-OptimizerAsyncMbo-clone}{\code{OptimizerAsyncMbo$clone()}}
+  \itemize{
+    \item \href{#method-OptimizerAsyncMbo-initialize}{\code{OptimizerAsyncMbo$new()}}
+    \item \href{#method-OptimizerAsyncMbo-print}{\code{OptimizerAsyncMbo$print()}}
+    \item \href{#method-OptimizerAsyncMbo-reset}{\code{OptimizerAsyncMbo$reset()}}
+    \item \href{#method-OptimizerAsyncMbo-optimize}{\code{OptimizerAsyncMbo$optimize()}}
+    \item \href{#method-OptimizerAsyncMbo-clone}{\code{OptimizerAsyncMbo$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-OptimizerAsyncMbo-new"></a>}}
-\if{latex}{\out{\hypertarget{method-OptimizerAsyncMbo-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
+\if{html}{\out{<a id="method-OptimizerAsyncMbo-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-OptimizerAsyncMbo-initialize}{}}}
+\subsection{\code{OptimizerAsyncMbo$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 If \code{surrogate} is \code{NULL} and the \code{acq_function$surrogate} field is populated, this \link{SurrogateLearner} is used.
 Otherwise, \code{default_surrogate(instance)} is used.
@@ -210,8 +208,9 @@ If \code{acq_optimizer} is \code{NULL}, \code{default_acqoptimizer(instance)} is
 
 Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the
 \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} of the current \link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} to be optimized.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerAsyncMbo$new(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerAsyncMbo$new(
   id = "async_mbo",
   surrogate = NULL,
   acq_function = NULL,
@@ -220,104 +219,106 @@ Even if already initialized, the \code{surrogate$archive} field will always be o
   param_set = NULL,
   label = "Asynchronous Model Based Optimization",
   man = "mlr3mbo::OptimizerAsyncMbo"
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})\cr
 Identifier for the new instance.}
-
-\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+      \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
 The surrogate.}
-
-\item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+      \item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
 The acquisition function.}
-
-\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+      \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
 The acquisition function optimizer.}
-
-\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+      \item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
 The result assigner.}
-
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+      \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of control parameters.}
-
-\item{\code{label}}{(\code{character(1)})\cr
+      \item{\code{label}}{(\code{character(1)})\cr
 Label for this object.
 Can be used in tables, plot and text output instead of the ID.}
-
-\item{\code{man}}{(\code{character(1)})\cr
+      \item{\code{man}}{(\code{character(1)})\cr
 String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.
 The referenced help package can be opened via method \verb{$help()}.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerAsyncMbo-print"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerAsyncMbo-print}{}}}
-\subsection{Method \code{print()}}{
-Print method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerAsyncMbo$print()}\if{html}{\out{</div>}}
+\subsection{\code{OptimizerAsyncMbo$print()}}{
+  Print method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerAsyncMbo$print()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{character()}).
+  }
 }
 
-\subsection{Returns}{
-(\code{character()}).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerAsyncMbo-reset"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerAsyncMbo-reset}{}}}
-\subsection{Method \code{reset()}}{
-Reset the optimizer.
+\subsection{\code{OptimizerAsyncMbo$reset()}}{
+  Reset the optimizer.
 Sets the following fields to \code{NULL}:
 \code{surrogate}, \code{acq_function}, \code{acq_optimizer},\code{result_assigner}
 Resets parameter values \code{design_size} and \code{design_function} to their defaults.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerAsyncMbo$reset()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerAsyncMbo$reset()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerAsyncMbo-optimize"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerAsyncMbo-optimize}{}}}
-\subsection{Method \code{optimize()}}{
-Performs the optimization on an \link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} until termination.
+\subsection{\code{OptimizerAsyncMbo$optimize()}}{
+  Performs the optimization on an \link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} until termination.
 The single evaluations will be written into the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync}.
 The result will be written into the instance object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerAsyncMbo$optimize(inst)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerAsyncMbo$optimize(inst)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{inst}}{(\link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{\link[data.table:data.table]{data.table::data.table()}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{inst}}{(\link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerAsyncMbo-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerAsyncMbo-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerAsyncMbo$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{OptimizerAsyncMbo$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerAsyncMbo$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

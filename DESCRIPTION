@@ -74,7 +74,6 @@ Config/testthat/edition: 3
 Config/testthat/parallel: false
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE, r6 = TRUE)
-RoxygenNote: 7.3.3
 Collate:
     'mlr_acqfunctions.R'
     'AcqFunction.R'
@@ -132,3 +131,4 @@ Collate:
     'mbo_defaults.R'
     'sugar.R'
     'zzz.R'
+Config/roxygen2/version: 8.0.0.9000

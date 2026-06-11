@@ -46,106 +46,112 @@ if (requireNamespace("mlr3learners") &
 }
 }
 \seealso{
-Other Input Transformation: 
+Other Input Transformation:
 \code{\link{InputTrafo}},
 \code{\link{mlr_input_trafos}}
 }
 \concept{Input Transformation}
 \section{Super class}{
-\code{\link[mlr3mbo:InputTrafo]{mlr3mbo::InputTrafo}} -> \code{InputTrafoUnitcube}
+\code{\link[mlr3mbo:InputTrafo]{InputTrafo}} -> \code{InputTrafoUnitcube}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{packages}}{(\code{character()})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
 A warning is signaled if at least one of the packages is not installed,
 but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-InputTrafoUnitcube-new}{\code{InputTrafoUnitcube$new()}}
-\item \href{#method-InputTrafoUnitcube-update}{\code{InputTrafoUnitcube$update()}}
-\item \href{#method-InputTrafoUnitcube-transform}{\code{InputTrafoUnitcube$transform()}}
-\item \href{#method-InputTrafoUnitcube-clone}{\code{InputTrafoUnitcube$clone()}}
+  \itemize{
+    \item \href{#method-InputTrafoUnitcube-initialize}{\code{InputTrafoUnitcube$new()}}
+    \item \href{#method-InputTrafoUnitcube-update}{\code{InputTrafoUnitcube$update()}}
+    \item \href{#method-InputTrafoUnitcube-transform}{\code{InputTrafoUnitcube$transform()}}
+    \item \href{#method-InputTrafoUnitcube-clone}{\code{InputTrafoUnitcube$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="InputTrafo" data-id="format"><a href='../../mlr3mbo/html/InputTrafo.html#method-InputTrafo-format'><code>mlr3mbo::InputTrafo$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="InputTrafo" data-id="print"><a href='../../mlr3mbo/html/InputTrafo.html#method-InputTrafo-print'><code>mlr3mbo::InputTrafo$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="InputTrafo" data-id="format"><a href='../../mlr3mbo/html/InputTrafo.html#method-InputTrafo-format'><code>InputTrafo$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="InputTrafo" data-id="print"><a href='../../mlr3mbo/html/InputTrafo.html#method-InputTrafo-print'><code>InputTrafo$print()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-InputTrafoUnitcube-new"></a>}}
-\if{latex}{\out{\hypertarget{method-InputTrafoUnitcube-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputTrafoUnitcube$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-InputTrafoUnitcube-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-InputTrafoUnitcube-initialize}{}}}
+\subsection{\code{InputTrafoUnitcube$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{InputTrafoUnitcube$new()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-InputTrafoUnitcube-update"></a>}}
 \if{latex}{\out{\hypertarget{method-InputTrafoUnitcube-update}{}}}
-\subsection{Method \code{update()}}{
-Learn the transformation based on observed data and update parameters in \verb{$state}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputTrafoUnitcube$update(xdt)}\if{html}{\out{</div>}}
+\subsection{\code{InputTrafoUnitcube$update()}}{
+  Learn the transformation based on observed data and update parameters in \verb{$state}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{InputTrafoUnitcube$update(xdt)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
+Data. One row per observation with at least columns \verb{$cols_x}.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-Data. One row per observation with at least columns \verb{$cols_x}.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-InputTrafoUnitcube-transform"></a>}}
 \if{latex}{\out{\hypertarget{method-InputTrafoUnitcube-transform}{}}}
-\subsection{Method \code{transform()}}{
-Perform the transformation.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputTrafoUnitcube$transform(xdt)}\if{html}{\out{</div>}}
+\subsection{\code{InputTrafoUnitcube$transform()}}{
+  Perform the transformation.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{InputTrafoUnitcube$transform(xdt)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
+Data. One row per observation with at least columns \verb{$cols_x}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{\link[data.table:data.table]{data.table::data.table()}} with the transformation applied to the columns \verb{$cols_x} (if applicable)
+or a subset thereof.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-Data. One row per observation with at least columns \verb{$cols_x}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} with the transformation applied to the columns \verb{$cols_x} (if applicable)
-or a subset thereof.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-InputTrafoUnitcube-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-InputTrafoUnitcube-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputTrafoUnitcube$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{InputTrafoUnitcube$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{InputTrafoUnitcube$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

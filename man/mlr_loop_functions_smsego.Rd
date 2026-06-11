@@ -60,7 +60,7 @@ and the next candidate is chosen based on optimizing the acquisition function.
 will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}.
 \item Due to the iterative computation of the epsilon within the \link{mlr_acqfunctions_smsego},
 requires the \link[bbotk:Terminator]{bbotk::Terminator} of the \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit}
-to be a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.
+to be a \link[bbotk:TerminatorEvals]{bbotk::TerminatorEvals}.
 }
 }
 \examples{
@@ -113,7 +113,7 @@ In \emph{Proceedings of the 10th International Conference on Parallel Problem So
 }
 }
 \seealso{
-Other Loop Function: 
+Other Loop Function:
 \code{\link{loop_function}},
 \code{\link{mlr_loop_functions}},
 \code{\link{mlr_loop_functions_ego}},

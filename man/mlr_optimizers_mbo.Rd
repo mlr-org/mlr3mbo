@@ -136,69 +136,67 @@ if (requireNamespace("mlr3learners") &
 \code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch}} -> \code{OptimizerMbo}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{loop_function}}{(\link{loop_function} | \code{NULL})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{loop_function}}{(\link{loop_function} | \code{NULL})\cr
 Loop function determining the MBO flavor.}
 
-\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+    \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
 The surrogate.}
 
-\item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+    \item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
 The acquisition function.}
 
-\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+    \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
 The acquisition function optimizer.}
 
-\item{\code{args}}{(named \code{list()})\cr
+    \item{\code{args}}{(named \code{list()})\cr
 Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
 
-\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+    \item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
 The result assigner.}
 
-\item{\code{param_classes}}{(\code{character()})\cr
+    \item{\code{param_classes}}{(\code{character()})\cr
 Supported parameter classes that the optimizer can optimize.
 Determined based on the \code{surrogate} and the \code{acq_optimizer}.
 This corresponds to the values given by a \link[paradox:ParamSet]{paradox::ParamSet}'s
 \verb{$class} field.}
 
-\item{\code{properties}}{(\code{character()})\cr
+    \item{\code{properties}}{(\code{character()})\cr
 Set of properties of the optimizer.
 Must be a subset of \code{\link[bbotk:bbotk_reflections]{bbotk_reflections$optimizer_properties}}.
 MBO in principle is very flexible and by default we assume that the optimizer has all properties.
 When fully initialized, properties are determined based on the loop, e.g., the \code{loop_function}, and \code{surrogate}.}
 
-\item{\code{packages}}{(\code{character()})\cr
+    \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
 A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.
 Required packages are determined based on the \code{acq_function}, \code{surrogate} and the \code{acq_optimizer}.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-OptimizerMbo-new}{\code{OptimizerMbo$new()}}
-\item \href{#method-OptimizerMbo-print}{\code{OptimizerMbo$print()}}
-\item \href{#method-OptimizerMbo-reset}{\code{OptimizerMbo$reset()}}
-\item \href{#method-OptimizerMbo-optimize}{\code{OptimizerMbo$optimize()}}
-\item \href{#method-OptimizerMbo-clone}{\code{OptimizerMbo$clone()}}
+  \itemize{
+    \item \href{#method-OptimizerMbo-initialize}{\code{OptimizerMbo$new()}}
+    \item \href{#method-OptimizerMbo-print}{\code{OptimizerMbo$print()}}
+    \item \href{#method-OptimizerMbo-reset}{\code{OptimizerMbo$reset()}}
+    \item \href{#method-OptimizerMbo-optimize}{\code{OptimizerMbo$optimize()}}
+    \item \href{#method-OptimizerMbo-clone}{\code{OptimizerMbo$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="format"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-format'><code>bbotk::Optimizer$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Optimizer" data-id="help"><a href='../../bbotk/html/Optimizer.html#method-Optimizer-help'><code>bbotk::Optimizer$help()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-OptimizerMbo-new"></a>}}
-\if{latex}{\out{\hypertarget{method-OptimizerMbo-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
+\if{html}{\out{<a id="method-OptimizerMbo-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-OptimizerMbo-initialize}{}}}
+\subsection{\code{OptimizerMbo$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
 
 If \code{surrogate} is \code{NULL} and the \code{acq_function$surrogate} field is populated, this \link{Surrogate} is used.
 Otherwise, \code{default_surrogate(instance)} is used.
@@ -209,104 +207,109 @@ If \code{acq_optimizer} is \code{NULL}, \code{default_acqoptimizer(instance)} is
 
 Even if already initialized, the \code{surrogate$archive} field will always be overwritten by the
 \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the current \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} to be optimized.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$new(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerMbo$new(
   loop_function = NULL,
   surrogate = NULL,
   acq_function = NULL,
   acq_optimizer = NULL,
   args = NULL,
   result_assigner = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{loop_function}}{(\link{loop_function} | \code{NULL})\cr
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{loop_function}}{(\link{loop_function} | \code{NULL})\cr
 Loop function determining the MBO flavor.}
-
-\item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+      \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
 The surrogate.}
-
-\item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+      \item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
 The acquisition function.}
-
-\item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+      \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
 The acquisition function optimizer.}
-
-\item{\code{args}}{(named \code{list()})\cr
+      \item{\code{args}}{(named \code{list()})\cr
 Further arguments passed to the \code{loop_function}.
 For example, \code{random_interleave_iter}.}
-
-\item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+      \item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
 The result assigner.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerMbo-print"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerMbo-print}{}}}
-\subsection{Method \code{print()}}{
-Print method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$print()}\if{html}{\out{</div>}}
+\subsection{\code{OptimizerMbo$print()}}{
+  Print method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerMbo$print()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{character()}).
+  }
 }
 
-\subsection{Returns}{
-(\code{character()}).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerMbo-reset"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerMbo-reset}{}}}
-\subsection{Method \code{reset()}}{
-Reset the optimizer.
+\subsection{\code{OptimizerMbo$reset()}}{
+  Reset the optimizer.
 Sets the following fields to \code{NULL}:
 \code{loop_function}, \code{surrogate}, \code{acq_function}, \code{acq_optimizer}, \code{args}, \code{result_assigner}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$reset()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerMbo$reset()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerMbo-optimize"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerMbo-optimize}{}}}
-\subsection{Method \code{optimize()}}{
-Performs the optimization and writes optimization result into \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
+\subsection{\code{OptimizerMbo$optimize()}}{
+  Performs the optimization and writes optimization result into \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
 The optimization result is returned but the complete optimization path is stored in \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of
 \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$optimize(inst)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerMbo$optimize(inst)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{inst}}{(\link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \link[data.table:data.table]{data.table::data.table}.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{inst}}{(\link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\link[data.table:data.table]{data.table::data.table}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OptimizerMbo-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-OptimizerMbo-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OptimizerMbo$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{OptimizerMbo$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OptimizerMbo$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

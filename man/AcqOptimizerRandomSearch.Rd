@@ -21,78 +21,82 @@ Default is \code{100 * D^2}, where \code{D} is the dimension of the search space
 acqo("random_search")
 }
 \section{Super class}{
-\code{\link[mlr3mbo:AcqOptimizer]{mlr3mbo::AcqOptimizer}} -> \code{AcqOptimizerRandomSearch}
+\code{\link[mlr3mbo:AcqOptimizer]{AcqOptimizer}} -> \code{AcqOptimizerRandomSearch}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{print_id}}{(\code{character})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-AcqOptimizerRandomSearch-new}{\code{AcqOptimizerRandomSearch$new()}}
-\item \href{#method-AcqOptimizerRandomSearch-optimize}{\code{AcqOptimizerRandomSearch$optimize()}}
-\item \href{#method-AcqOptimizerRandomSearch-clone}{\code{AcqOptimizerRandomSearch$clone()}}
+  \itemize{
+    \item \href{#method-AcqOptimizerRandomSearch-initialize}{\code{AcqOptimizerRandomSearch$new()}}
+    \item \href{#method-AcqOptimizerRandomSearch-optimize}{\code{AcqOptimizerRandomSearch$optimize()}}
+    \item \href{#method-AcqOptimizerRandomSearch-clone}{\code{AcqOptimizerRandomSearch$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>mlr3mbo::AcqOptimizer$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>mlr3mbo::AcqOptimizer$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>mlr3mbo::AcqOptimizer$reset()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>AcqOptimizer$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>AcqOptimizer$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>AcqOptimizer$reset()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqOptimizerRandomSearch-new"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqOptimizerRandomSearch-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizerRandomSearch$new(acq_function = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-AcqOptimizerRandomSearch-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizerRandomSearch-initialize}{}}}
+\subsection{\code{AcqOptimizerRandomSearch$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizerRandomSearch$new(acq_function = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{acq_function}}{(\code{NULL} | \link{AcqFunction}).}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{acq_function}}{(\code{NULL} | \link{AcqFunction}).}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizerRandomSearch-optimize"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqOptimizerRandomSearch-optimize}{}}}
-\subsection{Method \code{optimize()}}{
-Optimize the acquisition function.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizerRandomSearch$optimize()}\if{html}{\out{</div>}}
+\subsection{\code{AcqOptimizerRandomSearch$optimize()}}{
+  Optimize the acquisition function.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizerRandomSearch$optimize()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
+  }
 }
 
-\subsection{Returns}{
-\code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqOptimizerRandomSearch-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqOptimizerRandomSearch-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqOptimizerRandomSearch$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{AcqOptimizerRandomSearch$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizerRandomSearch$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
