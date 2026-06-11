@@ -48,7 +48,7 @@ more details.
 
 Minimize the two-dimensional Branin function via sequential BO using a
 GP as surrogate and EI as acquisition function optimized via a local
-serch:
+search:
 
 ``` r
 library(bbotk)
@@ -106,7 +106,7 @@ optimizer$optimize(instance)
 
 We can quickly visualize the contours of the objective function (on log
 scale) as well as the sampling behavior of our BO run (lighter blue
-colours indicating points that were evaluated in later stages of the
+colors indicating points that were evaluated in later stages of the
 optimization process; the first batch is given by the initial design).
 
 ``` r
@@ -115,8 +115,8 @@ grid = generate_design_grid(instance$search_space, resolution = 1000L)$data
 grid[, y := branin(x1 = x1, x2 = x2)]
 
 ggplot(aes(x = x1, y = x2, z = log(y)), data = grid) +
-  geom_contour(colour = "black") +
-  geom_point(aes(x = x1, y = x2, colour = batch_nr), data = instance$archive$data) +
+  geom_contour(color = "black") +
+  geom_point(aes(x = x1, y = x2, color = batch_nr), data = instance$archive$data) +
   labs(x =  expression(x[1]), y = expression(x[2])) +
   theme_minimal() +
   theme(legend.position = "bottom")
