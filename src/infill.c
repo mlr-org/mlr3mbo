@@ -51,7 +51,7 @@ SEXP c_sms_indicator(SEXP s_cbs, SEXP s_front, SEXP s_front2, SEXP s_eps, SEXP s
         penalty_front_point = penalty_front_point * (1 + MAX(d, 0));
       }
       if (penalty_front_point != 0 && real_greater) /* we had eps-dominance (hence penalty), add -1 */
-        /* we want to min thge penalty later, getting close to 0 is good */
+        /* we want to min the penalty later, getting close to 0 is good */
         penalty_front_point = -1 + penalty_front_point;
       else
         penalty_front_point = 0;
@@ -70,7 +70,7 @@ SEXP c_sms_indicator(SEXP s_cbs, SEXP s_front, SEXP s_front2, SEXP s_eps, SEXP s
         /* add cb point to last COLUMN of front2 (it is transposed! must be for fpli_hv) */
         front2[k + (ncol_front2 - 1) * nrow_front2] = cbs[i + k * nrow_cbs];
       }
-      /* big HV contrib is nice, but we minize later */
+      /* big HV contrib is nice, but we minimize later */
       ret[i] = -(fpli_hv(front2, nrow_front2, ncol_front2, ref) - hvtot);
     }
   }
@@ -103,7 +103,7 @@ SEXP c_eps_indicator(SEXP s_cbs, SEXP s_front) {
         dist_to_set = dist_2_points;
     }
     /* set dist to set as crit val for i-cb point, but this distance should be
-     * maximized, so -1 as we minize later */
+     * maximized, so -1 as we minimize later */
     ret[i] = -dist_to_set;
 
   }
