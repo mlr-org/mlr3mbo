@@ -12,7 +12,7 @@ Other Output Transformation:
 
 ## Super class
 
-[`mlr3mbo::OutputTrafo`](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.md)
+[`OutputTrafo`](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.md)
 -\> `OutputTrafoLog`
 
 ## Active bindings
@@ -28,7 +28,7 @@ Other Output Transformation:
 
 ### Public methods
 
-- [`OutputTrafoLog$new()`](#method-OutputTrafoLog-new)
+- [`OutputTrafoLog$new()`](#method-OutputTrafoLog-initialize)
 
 - [`OutputTrafoLog$update()`](#method-OutputTrafoLog-update)
 
@@ -42,12 +42,12 @@ Other Output Transformation:
 
 Inherited methods
 
-- [`mlr3mbo::OutputTrafo$format()`](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.html#method-format)
-- [`mlr3mbo::OutputTrafo$print()`](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.html#method-print)
+- [`OutputTrafo$format()`](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.html#method-format)
+- [`OutputTrafo$print()`](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.html#method-print)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `OutputTrafoLog$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -70,7 +70,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `OutputTrafoLog$update()`
 
 Learn the transformation based on observed data and update parameters in
 `$state`.
@@ -88,7 +88,7 @@ Learn the transformation based on observed data and update parameters in
 
 ------------------------------------------------------------------------
 
-### Method [`transform()`](https://rdrr.io/r/base/transform.html)
+### `OutputTrafoLog$transform()`
 
 Perform the transformation.
 
@@ -110,7 +110,7 @@ with the transformation applied to the columns `$cols_y`.
 
 ------------------------------------------------------------------------
 
-### Method `inverse_transform_posterior()`
+### `OutputTrafoLog$inverse_transform_posterior()`
 
 Perform the inverse transformation on a posterior predictive
 distribution characterized by the first and second moment.
@@ -143,7 +143,7 @@ with the inverse transformation applied to the columns `mean` and `se`.
 
 ------------------------------------------------------------------------
 
-### Method `inverse_transform()`
+### `OutputTrafoLog$inverse_transform()`
 
 Perform the inverse transformation.
 
@@ -165,7 +165,7 @@ with the inverse transformation applied to the columns `$cols_y`.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `OutputTrafoLog$clone()`
 
 The objects of this class are cloneable with this method.
 

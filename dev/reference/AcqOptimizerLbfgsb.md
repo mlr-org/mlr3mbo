@@ -72,7 +72,7 @@ The following termination parameters can be used.
 
 ## Super class
 
-[`mlr3mbo::AcqOptimizer`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)
+[`AcqOptimizer`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)
 -\> `AcqOptimizerLbfgsb`
 
 ## Public fields
@@ -95,7 +95,7 @@ The following termination parameters can be used.
 
 ### Public methods
 
-- [`AcqOptimizerLbfgsb$new()`](#method-AcqOptimizerLbfgsb-new)
+- [`AcqOptimizerLbfgsb$new()`](#method-AcqOptimizerLbfgsb-initialize)
 
 - [`AcqOptimizerLbfgsb$optimize()`](#method-AcqOptimizerLbfgsb-optimize)
 
@@ -103,13 +103,13 @@ The following termination parameters can be used.
 
 Inherited methods
 
-- [`mlr3mbo::AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-format)
-- [`mlr3mbo::AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-print)
-- [`mlr3mbo::AcqOptimizer$reset()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-reset)
+- [`AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-format)
+- [`AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-print)
+- [`AcqOptimizer$reset()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-reset)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqOptimizerLbfgsb$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -127,7 +127,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `AcqOptimizerLbfgsb$optimize()`
 
 Optimize the acquisition function.
 
@@ -142,7 +142,7 @@ with 1 row per candidate.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqOptimizerLbfgsb$clone()`
 
 The objects of this class are cloneable with this method.
 

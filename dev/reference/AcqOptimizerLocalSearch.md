@@ -9,7 +9,7 @@ The termination stops when the budget defined by the `n_searches`,
 
 ## Super class
 
-[`mlr3mbo::AcqOptimizer`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)
+[`AcqOptimizer`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)
 -\> `AcqOptimizerLocalSearch`
 
 ## Public fields
@@ -30,7 +30,7 @@ The termination stops when the budget defined by the `n_searches`,
 
 ### Public methods
 
-- [`AcqOptimizerLocalSearch$new()`](#method-AcqOptimizerLocalSearch-new)
+- [`AcqOptimizerLocalSearch$new()`](#method-AcqOptimizerLocalSearch-initialize)
 
 - [`AcqOptimizerLocalSearch$optimize()`](#method-AcqOptimizerLocalSearch-optimize)
 
@@ -40,12 +40,12 @@ The termination stops when the budget defined by the `n_searches`,
 
 Inherited methods
 
-- [`mlr3mbo::AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-format)
-- [`mlr3mbo::AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-print)
+- [`AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-format)
+- [`AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-print)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqOptimizerLocalSearch$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -63,7 +63,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `AcqOptimizerLocalSearch$optimize()`
 
 Optimize the acquisition function.
 
@@ -78,7 +78,7 @@ with 1 row per candidate.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `AcqOptimizerLocalSearch$reset()`
 
 Reset the acquisition function optimizer.
 
@@ -90,7 +90,7 @@ Currently not used.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqOptimizerLocalSearch$clone()`
 
 The objects of this class are cloneable with this method.
 

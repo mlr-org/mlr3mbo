@@ -118,7 +118,7 @@ defaults for `surrogate`, `acq_function`, `acq_optimizer`, and
 
 ### Public methods
 
-- [`TunerAsyncMbo$new()`](#method-TunerAsyncMbo-new)
+- [`TunerAsyncMbo$new()`](#method-TunerAsyncMbo-initialize)
 
 - [`TunerAsyncMbo$print()`](#method-TunerAsyncMbo-print)
 
@@ -134,7 +134,7 @@ Inherited methods
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `TunerAsyncMbo$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -181,7 +181,7 @@ fields of the
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `TunerAsyncMbo$print()`
 
 Print method.
 
@@ -195,7 +195,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `TunerAsyncMbo$reset()`
 
 Reset the tuner. Sets the following fields to `NULL`: `surrogate`,
 `acq_function`, `acq_optimizer`, `result_assigner` Resets parameter
@@ -207,7 +207,7 @@ values `design_size` and `design_function` to their defaults.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `TunerAsyncMbo$clone()`
 
 The objects of this class are cloneable with this method.
 

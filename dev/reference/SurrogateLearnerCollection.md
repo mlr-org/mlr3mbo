@@ -32,7 +32,7 @@ must be deep clones.
 
 ## Super class
 
-[`mlr3mbo::Surrogate`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.md)
+[`Surrogate`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.md)
 -\> `SurrogateLearnerCollection`
 
 ## Public fields
@@ -104,7 +104,7 @@ must be deep clones.
 
 ### Public methods
 
-- [`SurrogateLearnerCollection$new()`](#method-SurrogateLearnerCollection-new)
+- [`SurrogateLearnerCollection$new()`](#method-SurrogateLearnerCollection-initialize)
 
 - [`SurrogateLearnerCollection$predict()`](#method-SurrogateLearnerCollection-predict)
 
@@ -112,14 +112,14 @@ must be deep clones.
 
 Inherited methods
 
-- [`mlr3mbo::Surrogate$format()`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.html#method-format)
-- [`mlr3mbo::Surrogate$print()`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.html#method-print)
-- [`mlr3mbo::Surrogate$reset()`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.html#method-reset)
-- [`mlr3mbo::Surrogate$update()`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.html#method-update)
+- [`Surrogate$format()`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.html#method-format)
+- [`Surrogate$print()`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.html#method-print)
+- [`Surrogate$reset()`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.html#method-reset)
+- [`Surrogate$update()`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.html#method-update)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `SurrogateLearnerCollection$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -178,7 +178,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`predict()`](https://rdrr.io/r/stats/predict.html)
+### `SurrogateLearnerCollection$predict()`
 
 Predict mean response and standard error. Returns a named list of
 [`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html).
@@ -203,7 +203,7 @@ with the columns `mean` and `se`.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `SurrogateLearnerCollection$clone()`
 
 The objects of this class are cloneable with this method.
 

@@ -61,7 +61,7 @@ Other Output Transformation:
 
 ### Public methods
 
-- [`OutputTrafo$new()`](#method-OutputTrafo-new)
+- [`OutputTrafo$new()`](#method-OutputTrafo-initialize)
 
 - [`OutputTrafo$update()`](#method-OutputTrafo-update)
 
@@ -79,7 +79,7 @@ Other Output Transformation:
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `OutputTrafo$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -112,7 +112,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `OutputTrafo$update()`
 
 Learn the transformation based on observed data and update parameters in
 `$state`. Must be implemented by subclasses.
@@ -130,7 +130,7 @@ Learn the transformation based on observed data and update parameters in
 
 ------------------------------------------------------------------------
 
-### Method [`transform()`](https://rdrr.io/r/base/transform.html)
+### `OutputTrafo$transform()`
 
 Perform the transformation. Must be implemented by subclasses.
 
@@ -152,7 +152,7 @@ with the transformation applied to the columns `$cols_y`.
 
 ------------------------------------------------------------------------
 
-### Method `inverse_transform_posterior()`
+### `OutputTrafo$inverse_transform_posterior()`
 
 Perform the inverse transformation on a posterior predictive
 distribution characterized by the first and second moment. Must be
@@ -177,7 +177,7 @@ with the inverse transformation applied to the columns `mean` and `se`.
 
 ------------------------------------------------------------------------
 
-### Method `inverse_transform()`
+### `OutputTrafo$inverse_transform()`
 
 Perform the inverse transformation. Must be implemented by subclasses.
 
@@ -199,7 +199,7 @@ with the inverse transformation applied to the columns `$cols_y`.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `OutputTrafo$format()`
 
 Helper for print outputs.
 
@@ -213,7 +213,7 @@ Helper for print outputs.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `OutputTrafo$print()`
 
 Print method.
 
@@ -227,7 +227,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `OutputTrafo$clone()`
 
 The objects of this class are cloneable with this method.
 

@@ -58,7 +58,7 @@ Other Acquisition Function:
 
 [`bbotk::Objective`](https://bbotk.mlr-org.com/reference/Objective.html)
 -\>
-[`mlr3mbo::AcqFunction`](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+[`AcqFunction`](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
 -\> `AcqFunctionEIPS`
 
 ## Public fields
@@ -83,7 +83,7 @@ Other Acquisition Function:
 
 ### Public methods
 
-- [`AcqFunctionEIPS$new()`](#method-AcqFunctionEIPS-new)
+- [`AcqFunctionEIPS$new()`](#method-AcqFunctionEIPS-initialize)
 
 - [`AcqFunctionEIPS$update()`](#method-AcqFunctionEIPS-update)
 
@@ -95,14 +95,14 @@ Inherited methods
 - [`bbotk::Objective$format()`](https://bbotk.mlr-org.com/reference/Objective.html#method-format)
 - [`bbotk::Objective$help()`](https://bbotk.mlr-org.com/reference/Objective.html#method-help)
 - [`bbotk::Objective$print()`](https://bbotk.mlr-org.com/reference/Objective.html#method-print)
-- [`mlr3mbo::AcqFunction$assert_surrogate()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html#method-assert_surrogate)
-- [`mlr3mbo::AcqFunction$eval_dt()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html#method-eval_dt)
-- [`mlr3mbo::AcqFunction$eval_many()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html#method-eval_many)
-- [`mlr3mbo::AcqFunction$reset()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html#method-reset)
+- [`AcqFunction$assert_surrogate()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html#method-assert_surrogate)
+- [`AcqFunction$eval_dt()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html#method-eval_dt)
+- [`AcqFunction$eval_many()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html#method-eval_many)
+- [`AcqFunction$reset()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html#method-reset)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqFunctionEIPS$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -120,7 +120,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `AcqFunctionEIPS$update()`
 
 Update the acquisition function and set `y_best`.
 
@@ -130,7 +130,7 @@ Update the acquisition function and set `y_best`.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqFunctionEIPS$clone()`
 
 The objects of this class are cloneable with this method.
 

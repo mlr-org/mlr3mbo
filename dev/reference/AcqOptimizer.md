@@ -117,7 +117,7 @@ and
 
 ### Public methods
 
-- [`AcqOptimizer$new()`](#method-AcqOptimizer-new)
+- [`AcqOptimizer$new()`](#method-AcqOptimizer-initialize)
 
 - [`AcqOptimizer$format()`](#method-AcqOptimizer-format)
 
@@ -131,7 +131,7 @@ and
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqOptimizer$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -162,7 +162,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `AcqOptimizer$format()`
 
 Helper for print outputs.
 
@@ -176,7 +176,7 @@ Helper for print outputs.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `AcqOptimizer$print()`
 
 Print method.
 
@@ -190,7 +190,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `AcqOptimizer$optimize()`
 
 Optimize the acquisition function.
 
@@ -205,7 +205,7 @@ with 1 row per candidate.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `AcqOptimizer$reset()`
 
 Reset the acquisition function optimizer.
 
@@ -217,7 +217,7 @@ Currently not used.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqOptimizer$clone()`
 
 The objects of this class are cloneable with this method.
 

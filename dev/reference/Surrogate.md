@@ -87,7 +87,7 @@ based on all points evaluated so far.
 
 ### Public methods
 
-- [`Surrogate$new()`](#method-Surrogate-new)
+- [`Surrogate$new()`](#method-Surrogate-initialize)
 
 - [`Surrogate$update()`](#method-Surrogate-update)
 
@@ -103,7 +103,7 @@ based on all points evaluated so far.
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `Surrogate$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -146,7 +146,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `Surrogate$update()`
 
 Train learner with new data. Subclasses must implement
 `private.update()` and `private.update_async()`.
@@ -161,7 +161,7 @@ Train learner with new data. Subclasses must implement
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `Surrogate$reset()`
 
 Reset the surrogate model. Subclasses must implement `private$.reset()`.
 
@@ -175,7 +175,7 @@ Reset the surrogate model. Subclasses must implement `private$.reset()`.
 
 ------------------------------------------------------------------------
 
-### Method [`predict()`](https://rdrr.io/r/stats/predict.html)
+### `Surrogate$predict()`
 
 Predict mean response and standard error. Must be implemented by
 subclasses.
@@ -197,7 +197,7 @@ Arbitrary prediction object.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `Surrogate$format()`
 
 Helper for print outputs.
 
@@ -211,7 +211,7 @@ Helper for print outputs.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `Surrogate$print()`
 
 Print method.
 
@@ -225,7 +225,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `Surrogate$clone()`
 
 The objects of this class are cloneable with this method.
 

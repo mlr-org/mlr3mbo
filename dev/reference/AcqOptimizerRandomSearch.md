@@ -15,7 +15,7 @@ value is returned.
 
 ## Super class
 
-[`mlr3mbo::AcqOptimizer`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)
+[`AcqOptimizer`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)
 -\> `AcqOptimizerRandomSearch`
 
 ## Active bindings
@@ -29,7 +29,7 @@ value is returned.
 
 ### Public methods
 
-- [`AcqOptimizerRandomSearch$new()`](#method-AcqOptimizerRandomSearch-new)
+- [`AcqOptimizerRandomSearch$new()`](#method-AcqOptimizerRandomSearch-initialize)
 
 - [`AcqOptimizerRandomSearch$optimize()`](#method-AcqOptimizerRandomSearch-optimize)
 
@@ -37,13 +37,13 @@ value is returned.
 
 Inherited methods
 
-- [`mlr3mbo::AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-format)
-- [`mlr3mbo::AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-print)
-- [`mlr3mbo::AcqOptimizer$reset()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-reset)
+- [`AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-format)
+- [`AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-print)
+- [`AcqOptimizer$reset()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-reset)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqOptimizerRandomSearch$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -61,7 +61,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `AcqOptimizerRandomSearch$optimize()`
 
 Optimize the acquisition function.
 
@@ -76,7 +76,7 @@ with 1 row per candidate.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqOptimizerRandomSearch$clone()`
 
 The objects of this class are cloneable with this method.
 

@@ -93,7 +93,7 @@ defaults for `loop_function`, `surrogate`, `acq_function`,
 
 ### Public methods
 
-- [`TunerMbo$new()`](#method-TunerMbo-new)
+- [`TunerMbo$new()`](#method-TunerMbo-initialize)
 
 - [`TunerMbo$print()`](#method-TunerMbo-print)
 
@@ -109,7 +109,7 @@ Inherited methods
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `TunerMbo$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -171,7 +171,7 @@ fields of the
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `TunerMbo$print()`
 
 Print method.
 
@@ -185,7 +185,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `TunerMbo$reset()`
 
 Reset the tuner. Sets the following fields to `NULL`: `loop_function`,
 `surrogate`, `acq_function`, `acq_optimizer`, `args`, `result_assigner`
@@ -196,7 +196,7 @@ Reset the tuner. Sets the following fields to `NULL`: `loop_function`,
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `TunerMbo$clone()`
 
 The objects of this class are cloneable with this method.
 

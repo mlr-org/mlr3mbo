@@ -121,7 +121,7 @@ subject to changes.
 
 ### Public methods
 
-- [`TunerADBO$new()`](#method-TunerADBO-new)
+- [`TunerADBO$new()`](#method-TunerADBO-initialize)
 
 - [`TunerADBO$print()`](#method-TunerADBO-print)
 
@@ -137,7 +137,7 @@ Inherited methods
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `TunerADBO$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -148,7 +148,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `TunerADBO$print()`
 
 Print method.
 
@@ -162,7 +162,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `TunerADBO$reset()`
 
 Reset the tuner. Sets the following fields to `NULL`: `surrogate`,
 `acq_function`, `acq_optimizer`, `result_assigner` Resets parameter
@@ -174,7 +174,7 @@ values `design_size` and `design_function` to their defaults.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `TunerADBO$clone()`
 
 The objects of this class are cloneable with this method.
 

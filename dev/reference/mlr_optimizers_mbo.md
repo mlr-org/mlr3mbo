@@ -195,7 +195,7 @@ and
 
 ### Public methods
 
-- [`OptimizerMbo$new()`](#method-OptimizerMbo-new)
+- [`OptimizerMbo$new()`](#method-OptimizerMbo-initialize)
 
 - [`OptimizerMbo$print()`](#method-OptimizerMbo-print)
 
@@ -212,7 +212,7 @@ Inherited methods
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `OptimizerMbo$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -286,7 +286,7 @@ to be optimized.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `OptimizerMbo$print()`
 
 Print method.
 
@@ -300,7 +300,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `OptimizerMbo$reset()`
 
 Reset the optimizer. Sets the following fields to `NULL`:
 `loop_function`, `surrogate`, `acq_function`, `acq_optimizer`, `args`,
@@ -312,7 +312,7 @@ Reset the optimizer. Sets the following fields to `NULL`:
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `OptimizerMbo$optimize()`
 
 Performs the optimization and writes optimization result into
 [bbotk::OptimInstanceBatch](https://bbotk.mlr-org.com/reference/OptimInstanceBatch.html).
@@ -338,7 +338,7 @@ of
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `OptimizerMbo$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -412,7 +412,7 @@ if (requireNamespace("mlr3learners") &
 
   optimizer$optimize(instance)
 }
-#> WARN  [10:59:25.554] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
+#> WARN  [11:13:12.582] [bbotk] Could not update the surrogate a final time after the optimization process has terminated.
 #>            x  x_domain        y1       y2
 #>        <num>    <list>     <num>    <num>
 #> 1: 0.5190372 <list[1]> 0.2693997 2.193251

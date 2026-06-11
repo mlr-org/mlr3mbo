@@ -51,7 +51,7 @@ Other Input Transformation:
 
 ### Public methods
 
-- [`InputTrafo$new()`](#method-InputTrafo-new)
+- [`InputTrafo$new()`](#method-InputTrafo-initialize)
 
 - [`InputTrafo$update()`](#method-InputTrafo-update)
 
@@ -65,7 +65,7 @@ Other Input Transformation:
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `InputTrafo$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -89,7 +89,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `InputTrafo$update()`
 
 Learn the transformation based on observed data and update parameters in
 `$state`. Must be implemented by subclasses.
@@ -107,7 +107,7 @@ Learn the transformation based on observed data and update parameters in
 
 ------------------------------------------------------------------------
 
-### Method [`transform()`](https://rdrr.io/r/base/transform.html)
+### `InputTrafo$transform()`
 
 Perform the transformation. Must be implemented by subclasses.
 
@@ -130,7 +130,7 @@ or a subset thereof.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `InputTrafo$format()`
 
 Helper for print outputs.
 
@@ -144,7 +144,7 @@ Helper for print outputs.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `InputTrafo$print()`
 
 Print method.
 
@@ -158,7 +158,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `InputTrafo$clone()`
 
 The objects of this class are cloneable with this method.
 

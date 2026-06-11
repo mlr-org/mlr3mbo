@@ -222,7 +222,7 @@ and
 
 ### Public methods
 
-- [`OptimizerAsyncMbo$new()`](#method-OptimizerAsyncMbo-new)
+- [`OptimizerAsyncMbo$new()`](#method-OptimizerAsyncMbo-initialize)
 
 - [`OptimizerAsyncMbo$print()`](#method-OptimizerAsyncMbo-print)
 
@@ -239,7 +239,7 @@ Inherited methods
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `OptimizerAsyncMbo$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -326,7 +326,7 @@ to be optimized.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `OptimizerAsyncMbo$print()`
 
 Print method.
 
@@ -340,7 +340,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `OptimizerAsyncMbo$reset()`
 
 Reset the optimizer. Sets the following fields to `NULL`: `surrogate`,
 `acq_function`, `acq_optimizer`,`result_assigner` Resets parameter
@@ -352,7 +352,7 @@ values `design_size` and `design_function` to their defaults.
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `OptimizerAsyncMbo$optimize()`
 
 Performs the optimization on an
 [bbotk::OptimInstanceAsyncSingleCrit](https://bbotk.mlr-org.com/reference/OptimInstanceAsyncSingleCrit.html)
@@ -376,7 +376,7 @@ The result will be written into the instance object.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `OptimizerAsyncMbo$clone()`
 
 The objects of this class are cloneable with this method.
 

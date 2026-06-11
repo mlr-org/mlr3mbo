@@ -70,29 +70,29 @@ An input transformation can be used within a Surrogate to perform a transformati
 Label for this object.</p></dd>
 
 
-<dt><code>man</code></dt>
+    <dt><code>man</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 String in the format <code>[pkg]::[topic]</code> pointing to a manual page for this object.</p></dd>
 
 
-<dt><code>packages</code></dt>
+    <dt><code>packages</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Set of required packages.
 A warning is signaled if at least one of the packages is not installed,
 but loaded (not attached) later on-demand via <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>.</p></dd>
 
 
-<dt><code>state</code></dt>
+    <dt><code>state</code></dt>
 <dd><p>(named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> | <code>NULL</code>)<br>
 List of meta information regarding the parameters and their state.</p></dd>
 
 
-<dt><code>search_space</code></dt>
+    <dt><code>search_space</code></dt>
 <dd><p>(<a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">paradox::ParamSet</a>)<br>
 Search space.</p></dd>
 
 
-<dt><code>cols_x</code></dt>
+    <dt><code>cols_x</code></dt>
 <dd><p>(<a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">paradox::ParamSet</a>)<br>
 Column ids of feature variables that should be transformed.</p></dd>
 
@@ -104,28 +104,24 @@ Column ids of feature variables that should be transformed.</p></dd>
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-InputTrafo-new"><code>InputTrafo$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-InputTrafo-initialize"><code>InputTrafo$new()</code></a></p></li>
 <li><p><a href="#method-InputTrafo-update"><code>InputTrafo$update()</code></a></p></li>
 <li><p><a href="#method-InputTrafo-transform"><code>InputTrafo$transform()</code></a></p></li>
 <li><p><a href="#method-InputTrafo-format"><code>InputTrafo$format()</code></a></p></li>
 <li><p><a href="#method-InputTrafo-print"><code>InputTrafo$print()</code></a></p></li>
 <li><p><a href="#method-InputTrafo-clone"><code>InputTrafo$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-InputTrafo-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+</ul></div><p></p><hr><a id="method-InputTrafo-initialize"></a><div class="section">
+<h3 id="inputtrafo-new-"><code>InputTrafo$new()</code><a class="anchor" aria-label="anchor" href="#inputtrafo-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/InputTrafo.html">InputTrafo</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>label <span class="op">=</span> <span class="cn">NA_character_</span>, man <span class="op">=</span> <span class="cn">NA_character_</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>label</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 Label for this object.</p></dd>
 
-
-<dt><code>man</code></dt>
+      <dt><code>man</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 String in the format <code>[pkg]::[topic]</code> pointing to a manual page for this object.</p></dd>
 
@@ -133,15 +129,15 @@ String in the format <code>[pkg]::[topic]</code> pointing to a manual page for t
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-InputTrafo-update"></a><div class="section">
-<h3 id="method-update-">Method <code><a href="https://rdrr.io/r/stats/update.html" class="external-link">update()</a></code><a class="anchor" aria-label="anchor" href="#method-update-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-InputTrafo-update"></a><div class="section">
+<h3 id="inputtrafo-update-"><code>InputTrafo$update()</code><a class="anchor" aria-label="anchor" href="#inputtrafo-update-"></a></h3>
 <p>Learn the transformation based on observed data and update parameters in <code>$state</code>.
 Must be implemented by subclasses.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">InputTrafo</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>xdt</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
@@ -151,15 +147,15 @@ Data. One row per observation with at least columns <code>$cols_x</code>.</p></d
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-InputTrafo-transform"></a><div class="section">
-<h3 id="method-transform-">Method <code><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform()</a></code><a class="anchor" aria-label="anchor" href="#method-transform-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-InputTrafo-transform"></a><div class="section">
+<h3 id="inputtrafo-transform-"><code>InputTrafo$transform()</code><a class="anchor" aria-label="anchor" href="#inputtrafo-transform-"></a></h3>
 <p>Perform the transformation.
 Must be implemented by subclasses.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">InputTrafo</span><span class="op">$</span><span class="fu">transform</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>xdt</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
@@ -167,45 +163,44 @@ Data. One row per observation with at least columns <code>$cols_x</code>.</p></d
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
 <p><code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code> with the transformation applied to the columns <code>$cols_x</code> (if applicable)
 or a subset thereof.</p>
 </div>
 
-</div><p></p><hr><a id="method-InputTrafo-format"></a><div class="section">
-<h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-InputTrafo-format"></a><div class="section">
+<h3 id="inputtrafo-format-"><code>InputTrafo$format()</code><a class="anchor" aria-label="anchor" href="#inputtrafo-format-"></a></h3>
 <p>Helper for print outputs.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">InputTrafo</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p>(<code>character(1)</code>).</p>
 </div>
 
-</div><p></p><hr><a id="method-InputTrafo-print"></a><div class="section">
-<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-InputTrafo-print"></a><div class="section">
+<h3 id="inputtrafo-print-"><code>InputTrafo$print()</code><a class="anchor" aria-label="anchor" href="#inputtrafo-print-"></a></h3>
 <p>Print method.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">InputTrafo</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>).</p>
 </div>
 
-</div><p></p><hr><a id="method-InputTrafo-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-InputTrafo-clone"></a><div class="section">
+<h3 id="inputtrafo-clone-"><code>InputTrafo$clone()</code><a class="anchor" aria-label="anchor" href="#inputtrafo-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">InputTrafo</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
@@ -215,6 +210,7 @@ or a subset thereof.</p>
 </div>
 
 </div>
+
 
     </div>
 

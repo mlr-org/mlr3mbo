@@ -15,7 +15,7 @@ Other Result Assigner:
 
 ## Super class
 
-[`mlr3mbo::ResultAssigner`](https://mlr3mbo.mlr-org.com/dev/reference/ResultAssigner.md)
+[`ResultAssigner`](https://mlr3mbo.mlr-org.com/dev/reference/ResultAssigner.md)
 -\> `ResultAssignerArchive`
 
 ## Active bindings
@@ -31,7 +31,7 @@ Other Result Assigner:
 
 ### Public methods
 
-- [`ResultAssignerArchive$new()`](#method-ResultAssignerArchive-new)
+- [`ResultAssignerArchive$new()`](#method-ResultAssignerArchive-initialize)
 
 - [`ResultAssignerArchive$assign_result()`](#method-ResultAssignerArchive-assign_result)
 
@@ -39,12 +39,12 @@ Other Result Assigner:
 
 Inherited methods
 
-- [`mlr3mbo::ResultAssigner$format()`](https://mlr3mbo.mlr-org.com/dev/reference/ResultAssigner.html#method-format)
-- [`mlr3mbo::ResultAssigner$print()`](https://mlr3mbo.mlr-org.com/dev/reference/ResultAssigner.html#method-print)
+- [`ResultAssigner$format()`](https://mlr3mbo.mlr-org.com/dev/reference/ResultAssigner.html#method-format)
+- [`ResultAssigner$print()`](https://mlr3mbo.mlr-org.com/dev/reference/ResultAssigner.html#method-print)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `ResultAssignerArchive$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -55,7 +55,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method `assign_result()`
+### `ResultAssignerArchive$assign_result()`
 
 Assigns the result, i.e., the final point(s) to the instance.
 
@@ -80,7 +80,7 @@ Assigns the result, i.e., the final point(s) to the instance.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `ResultAssignerArchive$clone()`
 
 The objects of this class are cloneable with this method.
 
