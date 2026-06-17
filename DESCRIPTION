@@ -93,6 +93,7 @@ Collate:
     'AcqFunctionStochasticEI.R'
     'AcqOptimizer.R'
     'mlr_acqoptimizers.R'
+    'AcqOptimizerCmaes.R'
     'AcqOptimizerDirect.R'
     'AcqOptimizerLbfgsb.R'
     'AcqOptimizerLocalSearch.R'
