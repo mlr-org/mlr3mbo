@@ -2,7 +2,7 @@ test_that("OptimizerMbo works", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
   skip_if_not_installed("rgenoud")
-  
+
   optimizer = OptimizerMbo$new()
   expect_r6(optimizer, classes = "OptimizerMbo")
 
@@ -16,7 +16,7 @@ test_that("OptimizerMbo works", {
 
   opdf = instance$archive$data
   expect_data_table(opdf, any.missing = TRUE, nrows = 10L)
-  expect_data_table(tail(opdf, - nrow(design)), any.missing = FALSE, nrows = 10L - nrow(design))
+  expect_data_table(tail(opdf, -nrow(design)), any.missing = FALSE, nrows = 10L - nrow(design))
   expect_equal(instance$result$y, 0, tolerance = 0.1)
 
   optimizer$optimize(instance)
@@ -44,11 +44,14 @@ test_that("OptimizerMbo works with different settings - singlecrit", {
     rs = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
   )
 
-  combinations = cross_join(list(
-    loop_function = loop_functions,
-    acq_function = acq_functions,
-    acq_optimizer = acq_optimizers
-  ), sorted = FALSE)
+  combinations = cross_join(
+    list(
+      loop_function = loop_functions,
+      acq_function = acq_functions,
+      acq_optimizer = acq_optimizers
+    ),
+    sorted = FALSE
+  )
 
   for (i in seq_row(combinations)) {
     mbofun = combinations[i, "loop_function"][[1L]][[1L]]$fun
@@ -166,9 +169,15 @@ test_that("OptimizerMbo args", {
   optimizer = opt("mbo", args = list(test = 1))
   expect_equal(optimizer$args, list(test = 1))
   optimizer$loop_function = bayesopt_ego
-  expect_error(optimizer$args, "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}.")
+  expect_error(
+    optimizer$args,
+    "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}."
+  )
   instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
-  expect_error(optimizer$optimize(instance), "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}.")
+  expect_error(
+    optimizer$optimize(instance),
+    "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}."
+  )
   expect_equal(instance$archive$data, data.table())
   optimizer$args = list(random_interleave_iter = 1L)
   optimizer$optimize(instance)
@@ -204,4 +213,3 @@ test_that("OptimizerMbo reset", {
   expect_r6(optimizer$acq_function, "AcqFunction")
   expect_r6(optimizer$acq_optimizer, "AcqOptimizer")
 })
-

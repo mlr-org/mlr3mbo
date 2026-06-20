@@ -14,7 +14,7 @@ or "multi_crit"), and \code{man} (link to the manual page).
 As an example, see, e.g., \link{bayesopt_ego}.
 }
 \seealso{
-Other Loop Function: 
+Other Loop Function:
 \code{\link{mlr_loop_functions}},
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_emo}},

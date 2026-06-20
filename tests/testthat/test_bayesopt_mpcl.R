@@ -17,4 +17,3 @@ test_that("default bayesopt_mpcl", {
   expect_true(!is.na(instance$archive$data$acq_ei[6L]))
   expect_true(all(instance$archive$data$batch_nr[c(5L, 6L)] == c(2L, 2L)))
 })
-

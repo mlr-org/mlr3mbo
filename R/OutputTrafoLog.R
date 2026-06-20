@@ -46,7 +46,8 @@
 #'
 #'   surrogate$predict(data.table(x = c(-1, 0, 1)))
 #' }
-OutputTrafoLog= R6Class("OutputTrafoLog",
+OutputTrafoLog = R6Class(
+  "OutputTrafoLog",
   inherit = OutputTrafo,
 
   public = list(
@@ -54,7 +55,8 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param invert_posterior (`logical(1)`)\cr
-    #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or [SurrogateLearnerCollection]?
+    #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or
+    #'  [SurrogateLearnerCollection]?
     #'  Default is `FALSE`.
     initialize = function(invert_posterior = FALSE) {
       super$initialize(invert_posterior = invert_posterior, label = "Log", man = "mlr3mbo::mlr_output_trafos_log")
@@ -89,23 +91,40 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
       ydt = copy(ydt)
       for (col_y in self$cols_y) {
         if (self$max_to_min[[col_y]] == 1L) {
-          set(ydt, j = col_y, value = log(((ydt[[col_y]] - self$state[[col_y]]$min) / (self$state[[col_y]]$max - self$state[[col_y]]$min))))
+          set(
+            ydt,
+            j = col_y,
+            value = log(
+              ((ydt[[col_y]] - self$state[[col_y]]$min) / (self$state[[col_y]]$max - self$state[[col_y]]$min))
+            )
+          )
         } else {
-          set(ydt, j = col_y, value = - log1p(-(((ydt[[col_y]] - self$state[[col_y]]$min) / (self$state[[col_y]]$max - self$state[[col_y]]$min)))))
+          set(
+            ydt,
+            j = col_y,
+            value = -log1p(
+              -(((ydt[[col_y]] - self$state[[col_y]]$min) / (self$state[[col_y]]$max - self$state[[col_y]]$min)))
+            )
+          )
         }
       }
       ydt
     },
 
     #' @description
-    #' Perform the inverse transformation on a posterior predictive distribution characterized by the first and second moment.
+    #' Perform the inverse transformation on a posterior predictive distribution characterized by the first and
+    #' second moment.
     #'
     #' @param pred ([data.table::data.table()])\cr
-    #'   Data. One row per observation characterizing a posterior predictive distribution with the columns `mean` and `se`.
-    #'   Can also be a named list of [data.table::data.table()] with posterior predictive distributions for multiple targets corresponding to (`cols_y`).
+    #'   Data. One row per observation characterizing a posterior predictive distribution with the columns
+    #'   `mean` and `se`.
+    #'   Can also be a named list of [data.table::data.table()] with posterior predictive distributions for
+    #'   multiple targets corresponding to (`cols_y`).
     #'
     #' @return [data.table::data.table()] with the inverse transformation applied to the columns `mean` and `se`.
-    #'   In the case of the input being a named list of [data.table::data.table()], the output will be a named list of [data.table::data.table()] with the inverse transformation applied to the columns `mean` and `se`.
+    #'   In the case of the input being a named list of [data.table::data.table()],
+    #'   the output will be a named list of [data.table::data.table()] with the inverse transformation applied to
+    #'   the columns `mean` and `se`.
     inverse_transform_posterior = function(pred) {
       if (is.null(self$state)) {
         stop("$state is not set. Missed to call $update()?")
@@ -124,12 +143,19 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
       }
       for (col_y in self$cols_y) {
         if (self$max_to_min[[col_y]] == 1L) {
-          mean = (self$state[[col_y]]$max - self$state[[col_y]]$min) * exp(pred[[col_y]]$mean + ((pred[[col_y]]$se^2)/2)) + self$state[[col_y]]$min
-          se = (self$state[[col_y]]$max - self$state[[col_y]]$min) * exp(pred[[col_y]]$mean + ((pred[[col_y]]$se^2)/2)) * sqrt(expm1(pred[[col_y]]$se^2))
+          mean = (self$state[[col_y]]$max - self$state[[col_y]]$min) *
+            exp(pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) +
+            self$state[[col_y]]$min
+          se = (self$state[[col_y]]$max - self$state[[col_y]]$min) *
+            exp(pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) *
+            sqrt(expm1(pred[[col_y]]$se^2))
         } else {
-          mean = - (self$state[[col_y]]$max - self$state[[col_y]]$min) * exp(- pred[[col_y]]$mean + ((pred[[col_y]]$se^2)/2)) + self$state[[col_y]]$max
-          se = (self$state[[col_y]]$max - self$state[[col_y]]$min) * exp(- pred[[col_y]]$mean + ((pred[[col_y]]$se^2)/2)) * sqrt(expm1(pred[[col_y]]$se^2))
-
+          mean = -(self$state[[col_y]]$max - self$state[[col_y]]$min) *
+            exp(-pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) +
+            self$state[[col_y]]$max
+          se = (self$state[[col_y]]$max - self$state[[col_y]]$min) *
+            exp(-pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) *
+            sqrt(expm1(pred[[col_y]]$se^2))
         }
         set(pred[[col_y]], j = "mean", value = mean)
         set(pred[[col_y]], j = "se", value = se)
@@ -155,10 +181,17 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
       ydt = copy(ydt)
       for (col_y in self$cols_y) {
         if (self$max_to_min[[col_y]] == 1L) {
-          set(ydt, j = col_y, value = exp(ydt[[col_y]]) * (self$state[[col_y]]$max - self$state[[col_y]]$min) + self$state[[col_y]]$min)
+          set(
+            ydt,
+            j = col_y,
+            value = exp(ydt[[col_y]]) * (self$state[[col_y]]$max - self$state[[col_y]]$min) + self$state[[col_y]]$min
+          )
         } else {
-          set(ydt, j = col_y, value = - exp(- ydt[[col_y]]) * (self$state[[col_y]]$max - self$state[[col_y]]$min) + self$state[[col_y]]$max)
-
+          set(
+            ydt,
+            j = col_y,
+            value = -exp(-ydt[[col_y]]) * (self$state[[col_y]]$max - self$state[[col_y]]$min) + self$state[[col_y]]$max
+          )
         }
       }
       ydt
@@ -168,7 +201,8 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
   active = list(
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     packages = function(rhs) {
       if (missing(rhs)) {
         character(0)
@@ -180,4 +214,3 @@ OutputTrafoLog= R6Class("OutputTrafoLog",
 )
 
 mlr_output_trafos$add("log", OutputTrafoLog)
-

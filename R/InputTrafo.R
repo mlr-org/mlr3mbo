@@ -9,9 +9,9 @@
 #'
 #' @family Input Transformation
 #' @export
-InputTrafo = R6Class("InputTrafo",
+InputTrafo = R6Class(
+  "InputTrafo",
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -41,7 +41,8 @@ InputTrafo = R6Class("InputTrafo",
     #' @param xdt ([data.table::data.table()])\cr
     #'   Data. One row per observation with at least columns `$cols_x`.
     #'
-    #' @return [data.table::data.table()] with the transformation applied to the columns `$cols_x` (if applicable) or a subset thereof.
+    #' @return [data.table::data.table()] with the transformation applied to the columns `$cols_x` (if applicable)
+    #'   or a subset thereof.
     transform = function(xdt) {
       stop("Abstract.")
     },
@@ -84,7 +85,8 @@ InputTrafo = R6Class("InputTrafo",
 
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     packages = function(rhs) {
       if (missing(rhs)) {
         stop("Abstract.")
@@ -135,4 +137,3 @@ InputTrafo = R6Class("InputTrafo",
     .cols_x = NULL
   )
 )
-

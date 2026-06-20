@@ -21,4 +21,3 @@ print.loop_function = function(x, ...) {
   catn(str_indent("* Description:", attr(x, "label")))
   catn(str_indent("* Supported Instance:", attr(x, "instance")))
 }
-

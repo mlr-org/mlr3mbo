@@ -19,7 +19,9 @@ Defaults to \code{15}.
 For example, if two objectives are to be optimized, the total number of nodes will therefore be 225 per default.
 Changing this value after construction requires a call to \verb{$update()} to update the \verb{$gh_data} field.
 \item \code{"r"} (\code{numeric(1)})\cr
-Pruning rate between 0 and 1 that determines the fraction of nodes of the Gauss-Hermite quadrature rule that are ignored based on their weight value (the nodes with the lowest weights being ignored).
+Pruning rate between 0 and 1
+that determines the fraction of nodes of the Gauss-Hermite quadrature rule that are ignored
+based on their weight value (the nodes with the lowest weights being ignored).
 Default is \code{0.2}.
 Changing this value after construction does not require a call to \verb{$update()}.
 }
@@ -66,7 +68,7 @@ In Rudolph, Günter, Kononova, V. A, Aguirre, Hernán, Kerschke, Pascal, Ochoa, 
 }
 }
 \seealso{
-Other Acquisition Function: 
+Other Acquisition Function:
 \code{\link{AcqFunction}},
 \code{\link{mlr_acqfunctions}},
 \code{\link{mlr_acqfunctions_aei}},
@@ -85,97 +87,100 @@ Other Acquisition Function:
 }
 \concept{Acquisition Function}
 \section{Super classes}{
-\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionEHVIGH}
+\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[mlr3mbo:AcqFunction]{AcqFunction}} -> \code{AcqFunctionEHVIGH}
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{ys_front}}{(\code{matrix()})\cr
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{ys_front}}{(\code{matrix()})\cr
 Approximated Pareto front.
 Signs are corrected with respect to assuming minimization of objectives.}
 
-\item{\code{ref_point}}{(\code{numeric()})\cr
+    \item{\code{ref_point}}{(\code{numeric()})\cr
 Reference point.
 Signs are corrected with respect to assuming minimization of objectives.}
 
-\item{\code{hypervolume}}{(\code{numeric(1)}).
+    \item{\code{hypervolume}}{(\code{numeric(1)}).
 Current hypervolume of the approximated Pareto front with respect to the reference point.}
 
-\item{\code{gh_data}}{(\code{matrix()})\cr
+    \item{\code{gh_data}}{(\code{matrix()})\cr
 Data required for the Gauss-Hermite quadrature rule in the form of a matrix of dimension (k x 2).
 Each row corresponds to one Gauss-Hermite node (column \code{"x"}) and corresponding weight (column \code{"w"}).
 Computed via \link[fastGHQuad:gaussHermiteData]{fastGHQuad::gaussHermiteData}.
 Nodes are scaled by a factor of \code{sqrt(2)} and weights are normalized under a sum to one constraint.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-AcqFunctionEHVIGH-new}{\code{AcqFunctionEHVIGH$new()}}
-\item \href{#method-AcqFunctionEHVIGH-update}{\code{AcqFunctionEHVIGH$update()}}
-\item \href{#method-AcqFunctionEHVIGH-clone}{\code{AcqFunctionEHVIGH$clone()}}
+  \itemize{
+    \item \href{#method-AcqFunctionEHVIGH-initialize}{\code{AcqFunctionEHVIGH$new()}}
+    \item \href{#method-AcqFunctionEHVIGH-update}{\code{AcqFunctionEHVIGH$update()}}
+    \item \href{#method-AcqFunctionEHVIGH-clone}{\code{AcqFunctionEHVIGH$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-reset'><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-assert_surrogate'><code>AcqFunction$assert_surrogate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>AcqFunction$eval_dt()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>AcqFunction$eval_many()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-reset'><code>AcqFunction$reset()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionEHVIGH-new"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionEHVIGH-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVIGH$new(surrogate = NULL, k = 15L, r = 0.2)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-AcqFunctionEHVIGH-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionEHVIGH-initialize}{}}}
+\subsection{\code{AcqFunctionEHVIGH$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionEHVIGH$new(surrogate = NULL, k = 15L, r = 0.2)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearnerCollection}).}
+      \item{\code{k}}{(\code{integer(1)}).}
+      \item{\code{r}}{(\code{numeric(1)}).}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearnerCollection}).}
-
-\item{\code{k}}{(\code{integer(1)}).}
-
-\item{\code{r}}{(\code{numeric(1)}).}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionEHVIGH-update"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionEHVIGH-update}{}}}
-\subsection{Method \code{update()}}{
-Update the acquisition function and set \code{ys_front}, \code{ref_point}, \code{hypervolume} and \code{gh_data}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVIGH$update()}\if{html}{\out{</div>}}
+\subsection{\code{AcqFunctionEHVIGH$update()}}{
+  Update the acquisition function and set \code{ys_front}, \code{ref_point}, \code{hypervolume} and \code{gh_data}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionEHVIGH$update()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionEHVIGH-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionEHVIGH-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionEHVIGH$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{AcqFunctionEHVIGH$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionEHVIGH$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

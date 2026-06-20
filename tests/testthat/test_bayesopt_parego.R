@@ -18,4 +18,3 @@ test_that("default bayesopt_parego", {
   expect_true(!is.na(instance$archive$data$acq_ei[5L]))
   expect_true(is.na(instance$archive$data$y_scal[5L]))
 })
-

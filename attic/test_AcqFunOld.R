@@ -14,10 +14,8 @@ test_that("AcqFunctionEI is faster than old", {
   acqf$surrogate$update(xydt = archive_xy(inst$archive), y_cols = inst$archive$cols_y)
   acqf$update(inst$archive)
 
-
   xdt = MAKE_DESIGN(inst, n = 50)
 
   res = rbenchmark::benchmark(acqf_old$eval_dt(xdt), acqf$eval_dt(xdt), replications = 100)
   res
-
 })

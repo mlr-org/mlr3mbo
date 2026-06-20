@@ -4,6 +4,8 @@ format_bib = function(...) {
 }
 
 #' @importFrom utils bibentry
+# fmt: skip
+# nolint start
 bibentries = c(
   huang_2012 = bibentry("article",
     title    = "Erratum To: Global Optimization of Stochastic Black-box Systems via Sequential Kriging Meta-Models",
@@ -135,3 +137,4 @@ bibentries = c(
     pages     = "1--10"
   )
 )
+# nolint end

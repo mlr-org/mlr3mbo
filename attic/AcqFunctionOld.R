@@ -7,9 +7,9 @@
 #' @family Acquisition Function
 #'
 #' @export
-AcqFunctionOld = R6Class("AcqFunctionOld",
+AcqFunctionOld = R6Class(
+  "AcqFunctionOld",
   public = list(
-
     #' @field id (`character(1)`).
     id = NULL,
 

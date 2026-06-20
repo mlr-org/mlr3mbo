@@ -79,7 +79,13 @@ test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_ego", {
   acq_function = AcqFunctionEI$new()
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
-  optimizer = opt("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_ego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer
+  )
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_data_table(instance$result, nrows = 1L)
@@ -94,7 +100,13 @@ test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_ego for maximizat
   acq_function = AcqFunctionEILog$new()
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
-  optimizer = opt("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_ego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer
+  )
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_data_table(instance$result, nrows = 1L)
@@ -109,7 +121,13 @@ test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_parego", {
   acq_function = AcqFunctionEI$new()
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
-  optimizer = opt("mbo", loop_function = bayesopt_parego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_parego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer
+  )
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_data_table(instance$result, min.rows = 1L)
@@ -125,9 +143,14 @@ test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_smsego", {
   acq_function = AcqFunctionSmsEgo$new()
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
-  optimizer = opt("mbo", loop_function = bayesopt_smsego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer)
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_smsego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer
+  )
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_data_table(instance$result, min.rows = 1L)
 })
-

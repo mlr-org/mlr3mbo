@@ -3,7 +3,8 @@
 #' @include mlr_input_trafos.R
 #'
 #' @description
-#' Input transformation that performs for each numeric and integer feature min-max scaling to `[\0, 1\]` based on the boundaries of the search space.
+#' Input transformation that performs for each numeric and integer feature min-max scaling to `[\0, 1\]`
+#' based on the boundaries of the search space.
 #'
 #' @family Input Transformation
 #' @export
@@ -42,7 +43,8 @@
 #'
 #'   surrogate$predict(data.table(x = c(-1, 0, 1)))
 #' }
-InputTrafoUnitcube= R6Class("InputTrafoUnitcube",
+InputTrafoUnitcube = R6Class(
+  "InputTrafoUnitcube",
   inherit = InputTrafo,
 
   public = list(
@@ -68,16 +70,22 @@ InputTrafoUnitcube= R6Class("InputTrafoUnitcube",
     #' @param xdt ([data.table::data.table()])\cr
     #'   Data. One row per observation with at least columns `$cols_x`.
     #'
-    #' @return [data.table::data.table()] with the transformation applied to the columns `$cols_x` (if applicable) or a subset thereof.
+    #' @return [data.table::data.table()] with the transformation applied to the columns `$cols_x` (if applicable)
+    #'   or a subset thereof.
     transform = function(xdt) {
       if (is.null(self$state)) {
         stop("$state is not set. Missed to call $update()?")
       }
       xdt = copy(xdt)
-      parameters = names(which(self$search_space$is_number))  # numeric or integer
+      parameters = names(which(self$search_space$is_number)) # numeric or integer
       assert_subset(parameters, self$cols_x)
       for (parameter in parameters) {
-        set(xdt, j = parameter, value = (xdt[[parameter]] - self$search_space$lower[[parameter]]) / (self$search_space$upper[[parameter]] - self$search_space$lower[[parameter]]))
+        set(
+          xdt,
+          j = parameter,
+          value = (xdt[[parameter]] - self$search_space$lower[[parameter]]) /
+            (self$search_space$upper[[parameter]] - self$search_space$lower[[parameter]])
+        )
       }
       xdt
     }
@@ -86,7 +94,8 @@ InputTrafoUnitcube= R6Class("InputTrafoUnitcube",
   active = list(
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     packages = function(rhs) {
       if (missing(rhs)) {
         character(0)
@@ -98,4 +107,3 @@ InputTrafoUnitcube= R6Class("InputTrafoUnitcube",
 )
 
 mlr_input_trafos$add("unitcube", InputTrafoUnitcube)
-

@@ -16,14 +16,13 @@
 #' @template param_search_space
 #' @export
 
-MboDummyArchive = R6Class("MboArchive",
+MboDummyArchive = R6Class(
+  "MboArchive",
   inherit = Archive,
 
   public = list(
-
     #' @field archive ([bbotk::Archive])
     archive = NULL, # unfortunately we can not inherit from an Object :(
-
 
     #' @field codomain ([paradox::ParamSet])\cr
     #' Codomain of objective function.
@@ -75,10 +74,13 @@ MboDummyArchive = R6Class("MboArchive",
       }
       xydt[, "batch_nr" := self$n_batch + 1]
 
-      self$added_rows = rbindlist(list(
-        self$added_rows,
-        xydt),
-        fill = TRUE, use.names = TRUE
+      self$added_rows = rbindlist(
+        list(
+          self$added_rows,
+          xydt
+        ),
+        fill = TRUE,
+        use.names = TRUE
       )
     },
 
@@ -90,9 +92,9 @@ MboDummyArchive = R6Class("MboArchive",
       assert_data_table(dt, nrows = self$n_evals)
       if (is.null(self$added_cols)) {
         self$added_cols = dt
-      } else (
-        self$added_cols = cbind(self$added_cols, dt)
-      )
+      } else {
+        (self$added_cols = cbind(self$added_cols, dt))
+      }
     },
 
     #' @description
@@ -152,7 +154,6 @@ MboDummyArchive = R6Class("MboArchive",
   ),
 
   active = list(
-
     #' @field n_evals (`integer(1)`)\cr
     #' Number of evaluations stored in the archive.
     n_evals = function() {

@@ -1,8 +1,22 @@
 # mlr3mbo (development version)
 
-* feat: Added `mlr_acqoptimizers` dictionary with predefined acquisition function optimizers.
-* perf: Added `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch`.
-* feat: `default_*` helpers return new empirical based default values.
+# mlr3mbo 1.1.1
+
+* fix: `acqo()` now correctly returns the `mlr_acqoptimizers` dictionary when called with no arguments (#211).
+* fix: `AcqFunctionEILog` now provides a more informative error message when the surrogate is not configured with the correct output transformation.
+* fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now correctly enforce the `max_restarts` limit in all cases.
+* fix: `SurrogateLearner` and `SurrogateLearnerCollection` now correctly apply their output transformation after imputing running evaluations.
+
+# mlr3mbo 1.1.0
+
+* compatibility: rush 1.0.0 (#202).
+* feat: `Surrogate` gained a `$check()` method (#200).
+
+# mlr3mbo 1.0.0
+
+* feat: Added `mlr_acqoptimizers` dictionary with pre-defined acquisition function optimizers (`AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, `AcqOptimizerRandomSearch`).
+* perf: Default surrogate model, acquisition function, optimizer, and further settings of `OptimizerMbo` are now empirically derived from a large-scale benchmark study, significantly improving out-of-the-box optimization performance.
+* feat: Added `Mlr3ErrorMbo*` condition classes.
 
 # mlr3mbo 0.3.3
 

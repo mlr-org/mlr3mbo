@@ -8,7 +8,8 @@
 #'
 #' @description
 #' Expected Improvement with epsilon decay.
-#' \eqn{\epsilon} is updated after each update by the formula `epsilon * exp(-rate * (t %% period))` where `t` is the number of times the acquisition function has been updated.
+#' \eqn{\epsilon} is updated after each update by the formula `epsilon * exp(-rate * (t %% period))`
+#' where `t` is the number of times the acquisition function has been updated.
 #'
 #' While this acquisition function usually would be used within an asynchronous optimizer, e.g., [OptimizerAsyncMbo],
 #' it can in principle also be used in synchronous optimizers, e.g., [OptimizerMbo].
@@ -20,16 +21,18 @@
 #'   decreasing relative to the importance of potential improvements in regions of high predictive uncertainty.
 #'   Defaults to `0.1`.
 #' * `"rate"` (`numeric(1)`)\cr
-#    Rate of the exponential decay.
+#'   Rate of the exponential decay.
 #'   Defaults to `0.05`.
 #' * `"period"` (`integer(1)`)\cr
 #'   Period of the exponential decay.
 #'   Defaults to `NULL`, i.e., the decay has no period.
 #'
 #' @section Note:
-#' * This acquisition function always also returns its current (`acq_epsilon`) and original (`acq_epsilon_0`) \eqn{\epsilon}.
-#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch] of the [AcqOptimizer] and
-#'   therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
+#' * This acquisition function always also returns its current (`acq_epsilon`) and original (`acq_epsilon_0`)
+#'   \eqn{\epsilon}.
+#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch]
+#'   of the [AcqOptimizer]
+#'   and therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
 #'
 #' @references
 #' * `r format_bib("jones_1998")`
@@ -68,11 +71,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionStochasticEI = R6Class("AcqFunctionStochasticEI",
+AcqFunctionStochasticEI = R6Class(
+  "AcqFunctionStochasticEI",
   inherit = AcqFunction,
 
   public = list(
-
     #' @field y_best (`numeric(1)`)\cr
     #'   Best objective function value observed so far.
     #'   In the case of maximization, this already includes the necessary change of sign.
@@ -90,21 +93,23 @@ AcqFunctionStochasticEI = R6Class("AcqFunctionStochasticEI",
       epsilon = 0.1,
       rate = 0.05,
       period = NULL
-      ) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
+    ) {
       private$.epsilon_0 = assert_number(epsilon, lower = 0, finite = TRUE)
       private$.rate = assert_number(rate, lower = 0, finite = TRUE)
       private$.period = assert_int(period, lower = 1, null.ok = TRUE)
 
       constants = ps(epsilon = p_dbl(lower = 0, default = 0.1))
 
-      super$initialize("acq_ei",
+      super$initialize(
+        "acq_ei",
         constants = constants,
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
         direction = "maximize",
         label = "Stochastic Expected Improvement",
-        man = "mlr3mbo::mlr_acqfunctions_stochastic_ei")
+        man = "mlr3mbo::mlr_acqfunctions_stochastic_ei"
+      )
     },
 
     #' @description
@@ -158,4 +163,3 @@ AcqFunctionStochasticEI = R6Class("AcqFunctionStochasticEI",
 )
 
 mlr_acqfunctions$add("stochastic_ei", AcqFunctionStochasticEI)
-

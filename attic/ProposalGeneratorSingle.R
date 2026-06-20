@@ -1,11 +1,11 @@
 #' @title Single Point Proposal Generator
 #' @export
 #'
-ProposalGeneratorSingle = R6Class("ProposalGeneratorSingle",
+ProposalGeneratorSingle = R6Class(
+  "ProposalGeneratorSingle",
   inherit = ProposalGenerator,
 
   public = list(
-
     acq_function = NULL,
     acq_optimizer = NULL,
 
@@ -30,7 +30,5 @@ ProposalGeneratorSingle = R6Class("ProposalGeneratorSingle",
       self$acq_function$update(self$archive)
       #self$acq_optimizer$update()
     }
-
-
   )
 )

@@ -19,9 +19,11 @@
 #'   described in Horn et al. (2015).
 #'
 #' @section Note:
-#' * This acquisition function always also returns its current epsilon values in a list column (`acq_epsilon`).
-#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch] of the [AcqOptimizer] and
-#'   therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
+#' * This acquisition function always also returns its current epsilon values in a list column
+#'   (`acq_epsilon`).
+#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch]
+#'   of the [AcqOptimizer]
+#'   and therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
 #'
 #' @references
 #' * `r format_bib("ponweiser_2008")`
@@ -62,11 +64,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
+AcqFunctionSmsEgo = R6Class(
+  "AcqFunctionSmsEgo",
   inherit = AcqFunction,
 
   public = list(
-
     #' @field ys_front (`matrix()`)\cr
     #'   Approximated Pareto front.
     #'   Signs are corrected with respect to assuming minimization of objectives.
@@ -93,25 +95,36 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
     #' @param lambda (`numeric(1)`).
     #' @param epsilon (`NULL` | `numeric(1)`).
     initialize = function(surrogate = NULL, lambda = 1, epsilon = NULL) {
-      assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       assert_number(lambda, lower = 1, finite = TRUE)
       assert_number(epsilon, lower = 0, finite = TRUE, null.ok = TRUE)
 
       constants = ps(
         lambda = p_dbl(lower = 0, default = 1),
-        epsilon = p_dbl(lower = 0, default = NULL, special_vals = list(NULL))  # if NULL, it will be calculated dynamically
+        # if NULL, it will be calculated dynamically
+        epsilon = p_dbl(lower = 0, default = NULL, special_vals = list(NULL))
       )
       constants$values$lambda = lambda
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_smsego", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "minimize", label = "SMS-EGO", man = "mlr3mbo::mlr_acqfunctions_smsego")  # indeed, we minimize, see comments below about C code
+      super$initialize(
+        "acq_smsego",
+        constants = constants,
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearnerCollection",
+        direction = "minimize",
+        label = "SMS-EGO",
+        man = "mlr3mbo::mlr_acqfunctions_smsego"
+      )
     },
 
     #' @description
     #' Update the acquisition function and set `ys_front`, `ref_point` and `epsilon`.
     update = function() {
       if (is.null(self$progress)) {
-        stop("$progress is not set.")  # needs self$progress here! Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
+        # needs self$progress here!
+        # Originally self$instance$terminator$param_set$values$n_evals - archive$n_evals
+        stop("$progress is not set.")
       }
 
       n_obj = length(self$archive$cols_y)
@@ -120,15 +133,16 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
         ys = self$surrogate$output_trafo$transform(ys)
       }
       for (column in self$archive$cols_y) {
-        set(ys, j = column, value = ys[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
+        set(ys, j = column, value = ys[[column]] * self$surrogate_max_to_min[[column]]) # assume minimization
       }
       ys = as.matrix(ys)
 
-      self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1  # offset = 1 like in mlrMBO
+      self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1 # offset = 1 like in mlrMBO
 
       self$ys_front = self$archive$best()[, self$archive$cols_y, with = FALSE]
       for (column in self$archive$cols_y) {
-        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]])  # assume minimization
+        # assume minimization
+        set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]])
       }
 
       self$ys_front = as.matrix(self$ys_front)
@@ -136,8 +150,9 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       if (is.null(self$constants$values$epsilon)) {
         # The following formula is taken from Horn et al. (2015).
         # Note that the one in Ponweiser et al. 2008 has a typo.
-        # Note that nrow(self$ys_front) is correct and mlrMBO has a bug https://github.com/mlr-org/mlrMBO/blob/2dd83601ed80030713dfe0f55d4a5b8661919ce1/R/infill_crits.R#L292
-        c_val = 1 - (1 / (2 ^ n_obj))
+        # Note that nrow(self$ys_front) is correct and mlrMBO has a bug
+        # https://github.com/mlr-org/mlrMBO/blob/2dd83601ed80030713dfe0f55d4a5b8661919ce1/R/infill_crits.R#L292
+        c_val = 1 - (1 / (2^n_obj))
         epsilon = map_dbl(
           seq_col(self$ys_front),
           function(i) {
@@ -177,11 +192,13 @@ AcqFunctionSmsEgo = R6Class("AcqFunctionSmsEgo",
       cbs = as.matrix(means) %*% diag(self$surrogate_max_to_min) - lambda * as.matrix(ses)
       # allocate memory for adding points to front for HV calculation in C
       front2 = t(rbind(self$ys_front, 0))
-      sms = .Call("c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$epsilon, self$ref_point)  # note that the negative indicator is returned from C
+      # note that the negative indicator is returned from C
+      sms = .Call(
+        "c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$epsilon, self$ref_point
+      )
       data.table(acq_smsego = sms, acq_epsilon = list(self$epsilon))
     }
   )
 )
 
 mlr_acqfunctions$add("smsego", AcqFunctionSmsEgo)
-

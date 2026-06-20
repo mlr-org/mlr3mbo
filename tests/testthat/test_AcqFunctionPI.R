@@ -4,7 +4,6 @@ test_that("AcqFunctionPI works", {
   acqf = AcqFunctionPI$new(surrogate = surrogate)
   expect_acqfunction(acqf)
 
-
   expect_r6(acqf$codomain, "ParamSet")
   expect_equal(acqf$codomain$ids(), acqf$id)
   expect_equal(acqf$surrogate_max_to_min, c(y = 1))
@@ -24,4 +23,3 @@ test_that("AcqFunctionPI works", {
   expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
   expect_named(res, acqf$id)
 })
-

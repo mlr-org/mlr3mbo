@@ -7,8 +7,8 @@
 #' Loop function for sequential single-objective Bayesian Optimization.
 #' Normally used inside an [OptimizerMbo].
 #'
-#' In each iteration after the initial design, the surrogate and acquisition function are updated and the next candidate
-#' is chosen based on optimizing the acquisition function.
+#' In each iteration after the initial design, the surrogate and acquisition function are updated
+#' and the next candidate is chosen based on optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceBatchSingleCrit])\cr
 #'   The [bbotk::OptimInstanceBatchSingleCrit] to be optimized.
@@ -34,7 +34,8 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchSingleCrit].
+#' * The `surrogate$archive`, even if already populated,
+#'   will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchSingleCrit].
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.
@@ -107,17 +108,16 @@
 #' }
 #' }
 bayesopt_ego = function(
-    instance,
-    surrogate,
-    acq_function,
-    acq_optimizer,
-    init_design_size = NULL,
-    random_interleave_iter = 0L
-  ) {
-
+  instance,
+  surrogate,
+  acq_function,
+  acq_optimizer,
+  init_design_size = NULL,
+  random_interleave_iter = 0L
+) {
   # assertions
   assert_r6(instance, "OptimInstanceBatchSingleCrit")
-  assert_r6(surrogate, classes = "Surrogate")  # cannot be SurrogateLearner due to EIPS
+  assert_r6(surrogate, classes = "Surrogate") # cannot be SurrogateLearner due to EIPS
   assert_r6(acq_function, classes = "AcqFunction")
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
@@ -140,30 +140,41 @@ bayesopt_ego = function(
 
   # actual loop
   repeat {
-    xdt = tryCatch({
-      # random interleaving is handled here
-      if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-        stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
+    xdt = tryCatch(
+      {
+        # random interleaving is handled here
+        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+          error_random_interleave("Random interleaving")
+        }
+
+        start_time = Sys.time()
+        acq_function$surrogate$update()
+        time_surrogate = Sys.time() - start_time
+        acq_function$update()
+        start_time = Sys.time()
+        xdt = acq_optimizer$optimize()
+        time_acq_optimizer = Sys.time() - start_time
+        set(xdt, j = "time_surrogate", value = time_surrogate)
+        set(xdt, j = "time_acq_optimizer", value = time_acq_optimizer)
+        xdt
+      },
+      Mlr3ErrorMboRandomInterleave = function(cond) {
+        lg$info("Random interleaving triggered, proposing a randomly sampled point")
+        xdt = generate_design_random(search_space, n = 1L)$data
+        set(xdt, j = "time_surrogate", value = difftime(0, 0))
+        set(xdt, j = "time_acq_optimizer", value = difftime(0, 0))
+        xdt
+      },
+      Mlr3ErrorMbo = function(cond) {
+        lg$warn("Caught the following error: %s", cond$message)
+        lg$info("Proposing a randomly sampled point")
+        xdt = generate_design_random(search_space, n = 1L)$data
+        set(xdt, j = "time_surrogate", value = difftime(0, 0))
+        set(xdt, j = "time_acq_optimizer", value = difftime(0, 0))
+        xdt
       }
-      start_time = Sys.time()
-      acq_function$surrogate$update()
-      time_surrogate = Sys.time() - start_time
-      start_time = Sys.time()
-      acq_function$update()
-      start_time = Sys.time()
-      xdt = acq_optimizer$optimize()
-      time_acq_optimizer = Sys.time() - start_time
-      set(xdt, j = "time_surrogate", value = time_surrogate)
-      set(xdt, j = "time_acq_optimizer", value = time_acq_optimizer)
-      xdt
-    }, mbo_error = function(mbo_error_condition) {
-      lg$info(paste0(class(mbo_error_condition), collapse = " / "))
-      lg$info("Proposing a randomly sampled point")
-      xdt = generate_design_random(search_space, n = 1L)$data
-      set(xdt, j = "time_surrogate", value = difftime(0, 0))
-      set(xdt, j = "time_acq_optimizer", value = difftime(0, 0))
-      xdt
-    })
+    )
+
     instance$eval_batch(xdt)
     if (instance$is_terminated) break
   }
@@ -178,4 +189,3 @@ attr(bayesopt_ego, "instance") = "single-crit"
 attr(bayesopt_ego, "man") = "mlr3mbo::mlr_loop_functions_ego"
 
 mlr_loop_functions$add("bayesopt_ego", bayesopt_ego)
-

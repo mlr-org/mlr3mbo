@@ -50,31 +50,39 @@
 #'   acq_function$surrogate$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionCB = R6Class("AcqFunctionCB",
+AcqFunctionCB = R6Class(
+  "AcqFunctionCB",
   inherit = AcqFunction,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     #' @param lambda (`numeric(1)`).
     initialize = function(surrogate = NULL, lambda = 2) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       assert_number(lambda, lower = 0, finite = TRUE)
 
       constants = ps(lambda = p_dbl(lower = 0, default = 2))
       constants$values$lambda = lambda
 
-      super$initialize("acq_cb", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "same", label = "Lower / Upper Confidence Bound", man = "mlr3mbo::mlr_acqfunctions_cb")
+      super$initialize(
+        "acq_cb",
+        constants = constants,
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
+        direction = "same",
+        label = "Lower / Upper Confidence Bound",
+        man = "mlr3mbo::mlr_acqfunctions_cb"
+      )
     }
   ),
 
   private = list(
     .fun = function(xdt, ...) {
       constants = list(...)
-      lambda  = constants$lambda
+      lambda = constants$lambda
       p = self$surrogate$predict(xdt)
       cb = p$mean - self$surrogate_max_to_min * lambda * p$se
       data.table(acq_cb = cb)
@@ -83,4 +91,3 @@ AcqFunctionCB = R6Class("AcqFunctionCB",
 )
 
 mlr_acqfunctions$add("cb", AcqFunctionCB)
-

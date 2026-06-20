@@ -1,6 +1,9 @@
 test_that("AcqFunctionEHVI works", {
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
-  surrogate = SurrogateLearnerCollection$new(list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
+  surrogate = SurrogateLearnerCollection$new(
+    list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)),
+    archive = inst$archive
+  )
   acqf = AcqFunctionEHVI$new(surrogate = surrogate)
   expect_acqfunction(acqf)
 
@@ -24,4 +27,3 @@ test_that("AcqFunctionEHVI works", {
   expect_named(res, acqf$id)
   expect_true(all(res[[acqf$id]] >= 0))
 })
-

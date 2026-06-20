@@ -29,7 +29,10 @@ test_that("AcqFunctionMulti works for multi-objective instances", {
   skip_if_not_installed("emoa")
   skip_if_not_installed("fastGHQuad")
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
-  surrogate = SurrogateLearnerCollection$new(list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
+  surrogate = SurrogateLearnerCollection$new(
+    list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)),
+    archive = inst$archive
+  )
   acqfs = list(AcqFunctionEHVI$new(), AcqFunctionEHVIGH$new())
   acqf_ids = map_chr(acqfs, function(acqf) acqf$id)
   acqf = AcqFunctionMulti$new(acqfs, surrogate = surrogate)
@@ -164,4 +167,3 @@ test_that("AcqFunctionMulti lazy initialization", {
   acqfs = list(AcqFunctionMean$new(surrogate_mean), AcqFunctionSD$new(surrogate_sd))
   expect_error(AcqFunctionMulti$new(acqfs), "Acquisition functions must rely on the same surrogate model")
 })
-

@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 0.3.3.9000
+Version: 1.1.1.9000
 Authors@R: c(
     person("Marc", "Becker", , "marcbecker@posteo.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-8115-0400")),
@@ -47,7 +47,7 @@ Imports:
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
-    mlr3misc (>= 0.15.1),
+    mlr3misc (>= 0.21.0),
     paradox (>= 1.0.1),
     spacefillr,
     R6 (>= 2.4.1)
@@ -60,24 +60,24 @@ Suggests:
     mirai,
     mlr3pipelines (>= 0.5.2),
     nloptr,
+    processx,
     ranger,
     rgenoud,
     rpart,
     redux,
-    rush,
+    rush (>= 1.0.0),
     stringi,
     testthat (>= 3.0.0)
 Remotes:
     mlr-org/mlr3tuning,
-    mlr-org/bbotk@push_point_extra,
-    mlr-org/rush@push
+    mlr-org/bbotk,
+    mlr-org/rush
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE, r6 = TRUE)
-RoxygenNote: 7.3.3
 Collate:
     'mlr_acqfunctions.R'
     'AcqFunction.R'
@@ -100,15 +100,15 @@ Collate:
     'AcqOptimizerDirect.R'
     'AcqOptimizerLbfgsb.R'
     'AcqOptimizerLocalSearch.R'
-    'AcqOptimzerRandomSearch.R'
+    'AcqOptimizerRandomSearch.R'
     'mlr_input_trafos.R'
     'InputTrafo.R'
     'InputTrafoUnitcube.R'
     'aaa.R'
     'OptimizerADBO.R'
+    'OptimizerMbo.R'
     'OptimizerAsyncMbo.R'
     'OptimizerAsyncMboCentral.R'
-    'OptimizerMbo.R'
     'mlr_output_trafos.R'
     'OutputTrafo.R'
     'OutputTrafoLog.R'
@@ -131,8 +131,10 @@ Collate:
     'bayesopt_parego.R'
     'bayesopt_smsego.R'
     'bibentries.R'
+    'conditions.R'
     'helper.R'
     'loop_function.R'
     'mbo_defaults.R'
     'sugar.R'
     'zzz.R'
+Config/roxygen2/version: 8.0.0.9000

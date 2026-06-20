@@ -10,117 +10,128 @@ A result assigner is responsible for assigning the final optimization result to 
 Normally, it is only used within an \link{OptimizerMbo}.
 }
 \seealso{
-Other Result Assigner: 
+Other Result Assigner:
 \code{\link{mlr_result_assigners}},
 \code{\link{mlr_result_assigners_archive}},
 \code{\link{mlr_result_assigners_surrogate}}
 }
 \concept{Result Assigner}
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{label}}{(\code{character(1)})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{label}}{(\code{character(1)})\cr
 Label for this object.}
 
-\item{\code{man}}{(\code{character(1)})\cr
+    \item{\code{man}}{(\code{character(1)})\cr
 String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.}
 
-\item{\code{packages}}{(\code{character()})\cr
+    \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
-A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
-}
-\if{html}{\out{</div>}}
+A warning is signaled if at least one of the packages is not installed,
+but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-ResultAssigner-new}{\code{ResultAssigner$new()}}
-\item \href{#method-ResultAssigner-assign_result}{\code{ResultAssigner$assign_result()}}
-\item \href{#method-ResultAssigner-format}{\code{ResultAssigner$format()}}
-\item \href{#method-ResultAssigner-print}{\code{ResultAssigner$print()}}
-\item \href{#method-ResultAssigner-clone}{\code{ResultAssigner$clone()}}
-}
+  \itemize{
+    \item \href{#method-ResultAssigner-initialize}{\code{ResultAssigner$new()}}
+    \item \href{#method-ResultAssigner-assign_result}{\code{ResultAssigner$assign_result()}}
+    \item \href{#method-ResultAssigner-format}{\code{ResultAssigner$format()}}
+    \item \href{#method-ResultAssigner-print}{\code{ResultAssigner$print()}}
+    \item \href{#method-ResultAssigner-clone}{\code{ResultAssigner$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ResultAssigner-new"></a>}}
-\if{latex}{\out{\hypertarget{method-ResultAssigner-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ResultAssigner$new(label = NA_character_, man = NA_character_)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{label}}{(\code{character(1)})\cr
+\if{html}{\out{<a id="method-ResultAssigner-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-ResultAssigner-initialize}{}}}
+\subsection{\code{ResultAssigner$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ResultAssigner$new(label = NA_character_, man = NA_character_)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{label}}{(\code{character(1)})\cr
 Label for this object.}
-
-\item{\code{man}}{(\code{character(1)})\cr
+      \item{\code{man}}{(\code{character(1)})\cr
 String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ResultAssigner-assign_result"></a>}}
 \if{latex}{\out{\hypertarget{method-ResultAssigner-assign_result}{}}}
-\subsection{Method \code{assign_result()}}{
-Assigns the result, i.e., the final point(s) to the instance.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ResultAssigner$assign_result(instance)}\if{html}{\out{</div>}}
+\subsection{\code{ResultAssigner$assign_result()}}{
+  Assigns the result, i.e., the final point(s) to the instance.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ResultAssigner$assign_result(instance)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} |
+\link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} | \link[bbotk:OptimInstanceAsyncMultiCrit]{bbotk::OptimInstanceAsyncMultiCrit})\cr
+The \link[bbotk:OptimInstance]{bbotk::OptimInstance} the final result should be assigned to.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{instance}}{(\link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit} | \link[bbotk:OptimInstanceBatchMultiCrit]{bbotk::OptimInstanceBatchMultiCrit} |\link[bbotk:OptimInstanceAsyncSingleCrit]{bbotk::OptimInstanceAsyncSingleCrit} | \link[bbotk:OptimInstanceAsyncMultiCrit]{bbotk::OptimInstanceAsyncMultiCrit})\cr
-The \link[bbotk:OptimInstance]{bbotk::OptimInstance} the final result should be assigned to.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ResultAssigner-format"></a>}}
 \if{latex}{\out{\hypertarget{method-ResultAssigner-format}{}}}
-\subsection{Method \code{format()}}{
-Helper for print outputs.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ResultAssigner$format()}\if{html}{\out{</div>}}
+\subsection{\code{ResultAssigner$format()}}{
+  Helper for print outputs.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ResultAssigner$format()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{character(1)}).
+  }
 }
 
-\subsection{Returns}{
-(\code{character(1)}).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ResultAssigner-print"></a>}}
 \if{latex}{\out{\hypertarget{method-ResultAssigner-print}{}}}
-\subsection{Method \code{print()}}{
-Print method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ResultAssigner$print()}\if{html}{\out{</div>}}
+\subsection{\code{ResultAssigner$print()}}{
+  Print method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ResultAssigner$print()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{character()}).
+  }
 }
 
-\subsection{Returns}{
-(\code{character()}).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ResultAssigner-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-ResultAssigner-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ResultAssigner$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{ResultAssigner$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ResultAssigner$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

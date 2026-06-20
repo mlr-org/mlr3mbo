@@ -7,8 +7,7 @@ OptTerminator = R6Class(
     storage = list(),
 
     # constructor
-    initialize = function() {
-    },
+    initialize = function() {},
 
     # public methods
     # returns true if we can continue our optimization
@@ -17,16 +16,9 @@ OptTerminator = R6Class(
     },
 
     # hook called at begin of step
-    step_begin = function(opt_state) {
-
-    },
+    step_begin = function(opt_state) {},
 
     # hook called at end of step
-    step_end = function(opt_state) {
-
-    }
-
-
+    step_end = function(opt_state) {}
   )
 )
-

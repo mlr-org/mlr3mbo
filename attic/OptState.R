@@ -3,7 +3,7 @@
 # The OptState stores all temporary information for the optimization
 # It is not supposed to have any optimization logic
 
-OptState= R6Class(
+OptState = R6Class(
   "OptState",
 
   public = list(
@@ -45,6 +45,5 @@ OptState= R6Class(
     terminate = function() {
       return(self) #just for the moment
     }
-
   )
 )

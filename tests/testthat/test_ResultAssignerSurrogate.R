@@ -27,9 +27,12 @@ test_that("ResultAssignerSurrogate result and best can be different", {
   result_assigner$assign_result(instance)
   expect_data_table(instance$result, nrows = 1L)
   mean = result_assigner$surrogate$predict(design)$mean
-  best_index = which.min(mean)  # first one
+  best_index = which.min(mean) # first one
   expect_equal(instance$result[[instance$archive$cols_x]], design[best_index, ][[instance$archive$cols_x]])
-  expect_equal(instance$result[[instance$archive$cols_y]], instance$archive$data[best_index, ][[instance$archive$cols_y]])
+  expect_equal(
+    instance$result[[instance$archive$cols_y]],
+    instance$archive$data[best_index, ][[instance$archive$cols_y]]
+  )
   expect_true(abs(instance$result[[instance$archive$cols_y]] - mean[best_index]) > 1e-2)
 })
 
@@ -43,7 +46,14 @@ test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_ego", {
   acq_function = AcqFunctionAEI$new()
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
-  optimizer = opt("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_ego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer,
+    result_assigner = result_assigner
+  )
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
 
@@ -62,7 +72,14 @@ test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_parego",
   acq_function = AcqFunctionEI$new()
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
-  optimizer = opt("mbo", loop_function = bayesopt_parego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_parego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer,
+    result_assigner = result_assigner
+  )
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
 
@@ -81,7 +98,14 @@ test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_smsego",
   acq_function = AcqFunctionSmsEgo$new()
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
-  optimizer = opt("mbo", loop_function = bayesopt_smsego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_smsego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer,
+    result_assigner = result_assigner
+  )
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
 
@@ -94,11 +118,13 @@ test_that("ResultAssignerSurrogate passes internal tuned values", {
   skip_if_missing_regr_km()
   result_assigner = ResultAssignerSurrogate$new()
 
-  learner = lrn("classif.debug",
+  learner = lrn(
+    "classif.debug",
     validate = 0.2,
     early_stopping = TRUE,
     x = to_tune(0.2, 0.3),
-    iter = to_tune(upper = 1000L, internal = TRUE, aggr = function(x) 99L))
+    iter = to_tune(upper = 1000L, internal = TRUE, aggr = function(x) 99L)
+  )
 
   instance = ti(
     task = tsk("pima"),

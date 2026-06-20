@@ -11,13 +11,14 @@
 #' Note that the optimization direction of each wrapped acquisition function is corrected for maximization.
 #'
 #' For each acquisition function, the same [Surrogate] must be used.
-#' If acquisition functions passed during construction already have been initialized with a surrogate, it is checked whether
-#' the surrogate is the same for all acquisition functions.
-#' If acquisition functions have not been initialized with a surrogate, the surrogate passed during construction or lazy initialization
-#' will be used for all acquisition functions.
+#' If acquisition functions passed during construction already have been initialized with a surrogate,
+#' it is checked whether the surrogate is the same for all acquisition functions.
+#' If acquisition functions have not been initialized with a surrogate,
+#' the surrogate passed during construction or lazy initialization will be used for all acquisition functions.
 #'
-#' For optimization, [AcqOptimizer] can be used as for any other [AcqFunction], however, the [bbotk::OptimizerBatch] wrapped within the [AcqOptimizer]
-#' must support multi-objective optimization as indicated via the `multi-crit` property.
+#' For optimization, [AcqOptimizer] can be used as for any other [AcqFunction],
+#' however, the [bbotk::OptimizerBatch] wrapped within the [AcqOptimizer] must support multi-objective optimization
+#' as indicated via the `multi-crit` property.
 #'
 #' @family Acquisition Function
 #' @export
@@ -56,11 +57,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionMulti = R6Class("AcqFunctionMulti",
+AcqFunctionMulti = R6Class(
+  "AcqFunctionMulti",
   inherit = AcqFunction,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -75,8 +76,14 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
       private$.acq_functions = acq_functions
       private$.acq_function_ids = acq_function_ids
       private$.acq_function_directions = acq_function_directions
-      id = paste0(c("acq", map_chr(acq_function_ids, function(id) gsub("acq_", replacement = "", x = id))), collapse = "_")
-      label = paste0("Multi Acquisition Function of ", paste0(map_chr(acq_functions, function(acq_function) acq_function$label), collapse = ", "))
+      id = paste0(
+        c("acq", map_chr(acq_function_ids, function(id) gsub("acq_", replacement = "", x = id))),
+        collapse = "_"
+      )
+      label = paste0(
+        "Multi Acquisition Function of ",
+        paste0(map_chr(acq_functions, function(acq_function) acq_function$label), collapse = ", ")
+      )
       constants = ps()
       domains = map(acq_functions, function(acq_function) acq_function$domain)
       assert_true(all(map_lgl(domains[-1L], function(domain) all.equal(domains[[1L]]$data, domain$data))))
@@ -88,22 +95,23 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
         }
         surrogate = surrogates[[1L]]
       }
-      requires_predict_type_se = any(map_lgl(acq_functions, function(acq_function) acq_function$requires_predict_type_se))
+      requires_predict_type_se = any(map_lgl(acq_functions, function(acq_function) {
+        acq_function$requires_predict_type_se
+      }))
       packages = unique(unlist(map(acq_functions, function(acq_function) acq_function$packages)))
       properties = character()
       check_values = FALSE
       man = "mlr3mbo::mlr_acqfunctions_multi"
 
       private$.requires_predict_type_se = requires_predict_type_se
+      private$.surrogate_class = "Surrogate"
       private$.packages = packages
       self$direction = "maximize"
       if (is.null(surrogate)) {
         domain = ParamSet$new()
         codomain = ParamSet$new()
       } else {
-        if (requires_predict_type_se && surrogate$predict_type != "se") {
-          stopf("Acquisition function '%s' requires the surrogate to have `\"se\"` as `$predict_type`.", sprintf("<%s:%s>", "AcqFunction", id))
-        }
+        self$assert_surrogate(surrogate)
         private$.surrogate = surrogate
         private$.archive = assert_archive(surrogate$archive)
         for (acq_function in private$.acq_functions) {
@@ -149,10 +157,7 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
       if (missing(rhs)) {
         private$.surrogate
       } else {
-        assert_r6(rhs, classes = "Surrogate")
-        if (self$requires_predict_type_se && rhs$predict_type != "se") {
-          stopf("Acquisition function '%s' requires the surrogate to have `\"se\"` as `$predict_type`.", format(self))
-        }
+        self$assert_surrogate(rhs)
         private$.surrogate = rhs
         private$.archive = assert_archive(rhs$archive)
         for (acq_function in self$acq_functions) {
@@ -162,7 +167,7 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
         self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs)
         domain = generate_acq_domain(rhs)
         # lazy initialization requires this:
-        self$codomain = Codomain$new(get0("domains", codomain, ifnotfound = codomain$params))  # get0 for old paradox
+        self$codomain = Codomain$new(get0("domains", codomain, ifnotfound = codomain$params)) # get0 for old paradox
         self$domain = domain
       }
     },
@@ -208,19 +213,15 @@ AcqFunctionMulti = R6Class("AcqFunctionMulti",
       }
       change_sign = ids[directions == "minimize"]
       for (j in change_sign) {
-        set(values, j = j, value = - values[[j]])
+        set(values, j = j, value = -values[[j]])
       }
       values
     },
 
     deep_clone = function(name, value) {
-      switch(name,
-        .acq_functions = value$clone(deep = TRUE),
-        value
-      )
+      switch(name, .acq_functions = value$clone(deep = TRUE), value)
     }
   )
 )
 
 mlr_acqfunctions$add("multi", AcqFunctionMulti)
-

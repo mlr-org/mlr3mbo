@@ -36,4 +36,3 @@ test_that("OutputTrafo sugar", {
   outputtrafo = ot("log")
   expect_r6(outputtrafo, "OutputTrafo")
 })
-

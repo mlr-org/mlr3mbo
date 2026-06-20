@@ -4,23 +4,34 @@
 \alias{mbo_defaults}
 \title{Defaults for OptimizerMbo}
 \description{
-The following defaults are set for \link{OptimizerMbo} during optimization if the respective fields are not set during initialization.
+The following defaults are set for \link{OptimizerMbo} during optimization
+if the respective fields are not set during initialization.
 \itemize{
-\item Optimization Loop: \link{default_loop_function}\cr
-\item Surrogate: \link{default_surrogate}\cr
-\item Acquisition Function: \link{default_acqfunction}\cr
-\item Acqfun Optimizer: \link{default_acqoptimizer}\cr
-\item Result Assigner: \link{default_result_assigner}\cr
+\item \strong{Loop Function} (\link{default_loop_function}): The Bayesian optimization flavor.
+Defaults to \link{bayesopt_ego} for single-objective and \link{bayesopt_smsego} for multi-objective optimization.
+\item \strong{Surrogate} (\link{default_surrogate}): The surrogate model.
+Uses a Gaussian process (\link{default_gp}) for purely numeric parameter spaces without dependencies,
+and a random forest (\link{default_rf}) otherwise.
+For multi-objective optimization, one surrogate learner per objective is used.
+\item \strong{Acquisition Function} (\link{default_acqfunction}): The criterion used to propose future points.
+Defaults to \link{mlr_acqfunctions_cb} (confidence bound) for synchronous single-objective optimization
+(\code{lambda = 3} for numeric, \code{lambda = 1} for mixed spaces),
+\link{mlr_acqfunctions_smsego} for synchronous multi-objective optimization,
+and \link{mlr_acqfunctions_stochastic_cb} for asynchronous single-objective optimization.
+\item \strong{Acquisition Function Optimizer} (\link{default_acqoptimizer}): The optimizer for the acquisition function.
+Defaults to \link{AcqOptimizerLocalSearch}.
+\item \strong{Result Assigner} (\link{default_result_assigner}): Determines how the final result is assigned.
+Defaults to \link{ResultAssignerArchive}.
 }
 }
 \seealso{
-Other mbo_defaults: 
-\code{\link{default_acqfunction}()},
-\code{\link{default_acqoptimizer}()},
-\code{\link{default_gp}()},
-\code{\link{default_loop_function}()},
-\code{\link{default_result_assigner}()},
-\code{\link{default_rf}()},
-\code{\link{default_surrogate}()}
+Other mbo_defaults:
+\code{\link[=default_acqfunction]{default_acqfunction()}},
+\code{\link[=default_acqoptimizer]{default_acqoptimizer()}},
+\code{\link[=default_gp]{default_gp()}},
+\code{\link[=default_loop_function]{default_loop_function()}},
+\code{\link[=default_result_assigner]{default_result_assigner()}},
+\code{\link[=default_rf]{default_rf()}},
+\code{\link[=default_surrogate]{default_surrogate()}}
 }
 \concept{mbo_defaults}

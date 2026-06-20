@@ -16,10 +16,10 @@
 #' @export
 #' @examples
 #' acqo("random_search")
-AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
+AcqOptimizerRandomSearch = R6Class(
+  "AcqOptimizerRandomSearch",
   inherit = AcqOptimizer,
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -48,20 +48,20 @@ AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
         pv$n_evals = 100 * self$acq_function$domain$length^2
       }
 
-
       xdt = generate_design_random(self$acq_function$domain, n = pv$n_evals)$data
 
       optimize = function() {
         mlr3misc::invoke(fun, xdt = xdt, .args = constants)[[1]]
       }
-
       if (pv$catch_errors) {
-        tryCatch({
-          ys = optimize()
-        }, error = function(error_condition) {
-          lg$warn(error_condition$message)
-          stop(set_class(list(message = error_condition$message, call = NULL), classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
-        })
+        tryCatch(
+          {
+            ys = optimize()
+          },
+          error = function(error_condition) {
+            error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
+          }
+        )
       } else {
         ys = optimize()
       }
@@ -87,7 +87,8 @@ AcqOptimizerRandomSearch = R6Class("AcqOptimizerRandomSearch",
     .param_set = NULL,
 
     deep_clone = function(name, value) {
-      switch(name,
+      switch(
+        name,
         optimizer = value$clone(deep = TRUE),
         terminator = value$clone(deep = TRUE),
         acq_function = if (!is.null(value)) value$clone(deep = TRUE) else NULL,

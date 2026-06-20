@@ -32,11 +32,11 @@
 #' }
 #'
 #' @export
-OptimizerADBO = R6Class("OptimizerADBO",
+OptimizerADBO = R6Class(
+  "OptimizerADBO",
   inherit = OptimizerAsyncMbo,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function() {
@@ -51,17 +51,25 @@ OptimizerADBO = R6Class("OptimizerADBO",
         n_workers = p_int(lower = 1L, default = NULL, special_vals = list(NULL))
       )
 
-      param_set$set_values(lambda = 1.96, exponential_decay = TRUE, rate = 0.1, period = 25L, design_size = 1L, impute_method = "random")
+      param_set$set_values(
+        lambda = 1.96,
+        exponential_decay = TRUE,
+        rate = 0.1,
+        period = 25L,
+        design_size = 1L,
+        impute_method = "random"
+      )
 
-      super$initialize("adbo",
+      super$initialize(
+        "adbo",
         param_set = param_set,
         param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
         properties = c("dependencies", "single-crit"),
         packages = "mlr3mbo",
         label = "Asynchronous Decentralized Bayesian Optimization",
-        man = "mlr3mbo::OptimizerADBO")
+        man = "mlr3mbo::OptimizerADBO"
+      )
     },
-
 
     #' @description
     #' Performs the optimization on a [OptimInstanceAsyncSingleCrit] or [OptimInstanceAsyncMultiCrit] until termination.
@@ -76,11 +84,9 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
       # initial design
       design = if (is.null(pv$initial_design)) {
-
         lg$debug("Generating sobol design with size %s", pv$design_size)
         generate_design_sobol(inst$search_space, n = pv$design_size)$data
       } else {
-
         lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
         pv$initial_design
       }
@@ -90,7 +96,6 @@ OptimizerADBO = R6Class("OptimizerADBO",
   ),
 
   private = list(
-
     .optimize = function(inst) {
       pv = self$param_set$values
       search_space = inst$search_space
@@ -102,7 +107,7 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
       surrogate = default_surrogate(inst)
       surrogate$param_set$set_values(impute_method = pv$impute_method)
-      acq_function = acqf("cb", lambda = runif(1, 1 , 3))
+      acq_function = acqf("cb", lambda = runif(1, 1, 3))
       acq_optimizer = acqo(opt("random_search", batch_size = 1000L), terminator = trm("evals", n_evals = 10000L))
       surrogate$archive = inst$archive
       acq_function$surrogate = surrogate
@@ -115,7 +120,6 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
       # actual loop
       while (!inst$is_terminated) {
-
         # decrease lambda
         if (pv$exponential_decay) {
           lambda = lambda_0 * exp(-pv$rate * (t %% pv$period))

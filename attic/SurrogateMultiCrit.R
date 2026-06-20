@@ -4,7 +4,8 @@
 #' Surrogate model for multi criteria response surfaces.
 #'
 #' @export
-SurrogateMultiCrit = R6Class("SurrogateMultiCrit",
+SurrogateMultiCrit = R6Class(
+  "SurrogateMultiCrit",
   inherit = Surrogate,
 
   public = list(

@@ -10,7 +10,13 @@ test_that("TunerMbo works", {
 
   learner = lrn("classif.debug", x = to_tune())
 
-  instance = TuningInstanceBatchSingleCrit$new(tsk("iris"), learner = learner, resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  instance = TuningInstanceBatchSingleCrit$new(
+    tsk("iris"),
+    learner = learner,
+    resampling = rsmp("holdout"),
+    measure = msr("classif.ce"),
+    terminator = trm("evals", n_evals = 5L)
+  )
 
   design = MAKE_DESIGN(instance)
   instance$eval_batch(design)
@@ -20,7 +26,7 @@ test_that("TunerMbo works", {
 
   opdf = instance$archive$data
   expect_data_table(opdf, any.missing = TRUE, nrows = 5L)
-  expect_data_table(tail(opdf, - nrow(design)), any.missing = FALSE, nrows = 5L - nrow(design))
+  expect_data_table(tail(opdf, -nrow(design)), any.missing = FALSE, nrows = 5L - nrow(design))
 
   tuner$optimize(instance)
 })
@@ -31,9 +37,21 @@ test_that("Constructing TunerMbo and ABs", {
   skip_if_not_installed("rgenoud")
 
   learner = lrn("classif.debug", x = to_tune())
-  instance = TuningInstanceBatchSingleCrit$new(tsk("iris"), learner = learner, resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  instance = TuningInstanceBatchSingleCrit$new(
+    tsk("iris"),
+    learner = learner,
+    resampling = rsmp("holdout"),
+    measure = msr("classif.ce"),
+    terminator = trm("evals", n_evals = 5L)
+  )
   surrogate = default_surrogate(instance)
-  tuner = tnr("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = AcqFunctionEI$new(), acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L)))
+  tuner = tnr(
+    "mbo",
+    loop_function = bayesopt_ego,
+    surrogate = surrogate,
+    acq_function = AcqFunctionEI$new(),
+    acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  )
   expect_r6(tuner, classes = "TunerMbo")
   expect_r6(tuner$.__enclos_env__$private$.optimizer, classes = "OptimizerMbo")
 
@@ -70,7 +88,11 @@ test_that("TunerMbo sugar", {
   learner = lrn("classif.debug", x = to_tune())
 
   instance = tune(
-    tnr("mbo", acq_function = acqf("cb"), acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))),
+    tnr(
+      "mbo",
+      acq_function = acqf("cb"),
+      acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+    ),
     task = tsk("iris"),
     learner = learner,
     measures = msr("classif.ce"),
@@ -89,7 +111,13 @@ test_that("TunerMbo param_classes", {
 
   tuner = tnr("mbo")
   expect_equal(tuner$param_classes, c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"))
-  instance = TuningInstanceBatchSingleCrit$new(tsk("iris"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  instance = TuningInstanceBatchSingleCrit$new(
+    tsk("iris"),
+    learner = lrn("classif.debug", x = to_tune()),
+    resampling = rsmp("holdout"),
+    measure = msr("classif.ce"),
+    terminator = trm("evals", n_evals = 5L)
+  )
   tuner$surrogate = default_surrogate(instance)
   expect_equal(tuner$param_classes, c("ParamLgl", "ParamInt", "ParamDbl"))
   tuner$acq_optimizer = AcqOptimizer$new(opt("nloptr"), terminator = trm("evals", n_evals = 2L))
@@ -103,7 +131,13 @@ test_that("TunerMbo properties", {
 
   tuner = tnr("mbo")
   expect_equal(tuner$properties, c("dependencies", "single-crit", "multi-crit"))
-  instance = TuningInstanceBatchSingleCrit$new(tsk("iris"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  instance = TuningInstanceBatchSingleCrit$new(
+    tsk("iris"),
+    learner = lrn("classif.debug", x = to_tune()),
+    resampling = rsmp("holdout"),
+    measure = msr("classif.ce"),
+    terminator = trm("evals", n_evals = 5L)
+  )
   tuner$surrogate = default_surrogate(instance)
   expect_equal(tuner$properties, c("single-crit", "multi-crit"))
   tuner$loop_function = bayesopt_ego
@@ -119,7 +153,13 @@ test_that("TunerMbo packages", {
 
   tuner = tnr("mbo")
   expect_equal(tuner$packages, "mlr3mbo")
-  instance = TuningInstanceBatchSingleCrit$new(tsk("iris"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  instance = TuningInstanceBatchSingleCrit$new(
+    tsk("iris"),
+    learner = lrn("classif.debug", x = to_tune()),
+    resampling = rsmp("holdout"),
+    measure = msr("classif.ce"),
+    terminator = trm("evals", n_evals = 5L)
+  )
   tuner$surrogate = default_surrogate(instance)
   expect_equal(tuner$packages, c("mlr3mbo", "mlr3", "mlr3learners", "DiceKriging"))
   tuner$acq_optimizer = AcqOptimizer$new(opt("nloptr"), terminator = trm("evals", n_evals = 2L))
@@ -135,9 +175,21 @@ test_that("TunerMbo args", {
   tuner = tnr("mbo", args = list(test = 1))
   expect_equal(tuner$args, list(test = 1))
   tuner$loop_function = bayesopt_ego
-  expect_error(tuner$args, "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}.")
-  instance = TuningInstanceBatchSingleCrit$new(tsk("iris"), learner = lrn("classif.debug", x = to_tune()), resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
-  expect_error(tuner$optimize(instance), "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}.")
+  expect_error(
+    tuner$args,
+    "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}."
+  )
+  instance = TuningInstanceBatchSingleCrit$new(
+    tsk("iris"),
+    learner = lrn("classif.debug", x = to_tune()),
+    resampling = rsmp("holdout"),
+    measure = msr("classif.ce"),
+    terminator = trm("evals", n_evals = 5L)
+  )
+  expect_error(
+    tuner$optimize(instance),
+    "Must be a subset of \\{'init_design_size','random_interleave_iter'\\}, but has additional elements \\{'test'\\}."
+  )
   expect_equal(instance$archive$data, data.table())
   tuner$args = list(random_interleave_iter = 1L)
   tuner$optimize(instance)
@@ -149,15 +201,34 @@ test_that("TunerMbo reset", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
 
-  tuner = tnr("mbo", acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L), acq_function = acqf("ei")))
+  tuner = tnr(
+    "mbo",
+    acq_optimizer = acqo(
+      opt("random_search", batch_size = 2L),
+      terminator = trm("evals", n_evals = 2L),
+      acq_function = acqf("ei")
+    )
+  )
 
   learner = lrn("classif.debug", x = to_tune())
   learner$predict_type = "prob"
 
-  instance = TuningInstanceBatchSingleCrit$new(tsk("iris"), learner = learner, resampling = rsmp("holdout"), measure = msr("classif.ce"), terminator = trm("evals", n_evals = 5L))
+  instance = TuningInstanceBatchSingleCrit$new(
+    tsk("iris"),
+    learner = learner,
+    resampling = rsmp("holdout"),
+    measure = msr("classif.ce"),
+    terminator = trm("evals", n_evals = 5L)
+  )
   tuner$optimize(instance)
 
-  instance_mult = TuningInstanceBatchMultiCrit$new(tsk("iris"), learner = learner, resampling = rsmp("holdout"), measures = msrs(c("classif.ce", "classif.logloss")), terminator = trm("evals", n_evals = 5L))
+  instance_mult = TuningInstanceBatchMultiCrit$new(
+    tsk("iris"),
+    learner = learner,
+    resampling = rsmp("holdout"),
+    measures = msrs(c("classif.ce", "classif.logloss")),
+    terminator = trm("evals", n_evals = 5L)
+  )
 
   expect_error(tuner$optimize(instance_mult), "does not support multi-crit objectives")
   expect_loop_function(tuner$loop_function)
@@ -177,4 +248,3 @@ test_that("TunerMbo reset", {
   expect_r6(tuner$acq_function, "AcqFunction")
   expect_r6(tuner$acq_optimizer, "AcqOptimizer")
 })
-

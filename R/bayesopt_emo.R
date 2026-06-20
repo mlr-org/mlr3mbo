@@ -8,8 +8,8 @@
 #' Normally used inside an [OptimizerMbo].
 #' The conceptual counterpart to [mlr_loop_functions_ego].
 #'
-#' In each iteration after the initial design, the surrogate and acquisition function are updated and the next candidate
-#' is chosen based on optimizing the acquisition function.
+#' In each iteration after the initial design, the surrogate and acquisition function are updated
+#' and the next candidate is chosen based on optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceBatchMultiCrit])\cr
 #'   The [bbotk::OptimInstanceBatchMultiCrit] to be optimized.
@@ -34,7 +34,8 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
+#' * The `surrogate$archive`, even if already populated,
+#'   will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.
@@ -80,14 +81,13 @@
 #' }
 #' }
 bayesopt_emo = function(
-    instance,
-    surrogate,
-    acq_function,
-    acq_optimizer,
-    init_design_size = NULL,
-    random_interleave_iter = 0L
-  ) {
-
+  instance,
+  surrogate,
+  acq_function,
+  acq_optimizer,
+  init_design_size = NULL,
+  random_interleave_iter = 0L
+) {
   # assertions
   assert_r6(instance, "OptimInstanceBatchMultiCrit")
   assert_r6(surrogate, classes = "SurrogateLearnerCollection")
@@ -113,19 +113,26 @@ bayesopt_emo = function(
 
   # actual loop
   repeat {
-    xdt = tryCatch({
-      # random interleaving is handled here
-      if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-        stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
+    xdt = tryCatch(
+      {
+        # random interleaving is handled here
+        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+          error_random_interleave("Random interleaving")
+        }
+        acq_function$surrogate$update()
+        acq_function$update()
+        acq_optimizer$optimize()
+      },
+      Mlr3ErrorMboRandomInterleave = function(cond) {
+        lg$info("Random interleaving triggered, proposing a randomly sampled point")
+        generate_design_random(search_space, n = 1L)$data
+      },
+      Mlr3ErrorMbo = function(cond) {
+        lg$warn("Caught the following error: %s", cond$message)
+        lg$info("Proposing a randomly sampled point")
+        generate_design_random(search_space, n = 1L)$data
       }
-      acq_function$surrogate$update()
-      acq_function$update()
-      acq_optimizer$optimize()
-    }, mbo_error = function(mbo_error_condition) {
-      lg$info(paste0(class(mbo_error_condition), collapse = " / "))
-      lg$info("Proposing a randomly sampled point")
-      generate_design_random(search_space, n = 1L)$data
-    })
+    )
 
     instance$eval_batch(xdt)
     if (instance$is_terminated) break
@@ -141,4 +148,3 @@ attr(bayesopt_emo, "instance") = "multi-crit"
 attr(bayesopt_emo, "man") = "mlr3mbo::mlr_loop_functions_emo"
 
 mlr_loop_functions$add("bayesopt_emo", bayesopt_emo)
-

@@ -12,19 +12,20 @@ Whether the learner will be used in a noisy objective function scenario.
 See \code{\link[=default_surrogate]{default_surrogate()}}.}
 }
 \value{
-\link[mlr3learners:mlr_learners_regr.ranger]{mlr3learners::LearnerRegrRanger}
+\link[mlr3learners:LearnerRegrRanger]{mlr3learners::LearnerRegrRanger}
 }
 \description{
-This is a helper function that constructs a default random forest \link[mlr3learners:mlr_learners_regr.ranger]{mlr3learners::LearnerRegrRanger} which is for example used in \code{\link[=default_surrogate]{default_surrogate()}}.
+This is a helper function that constructs a default random forest \link[mlr3learners:LearnerRegrRanger]{mlr3learners::LearnerRegrRanger}
+which is for example used in \code{\link[=default_surrogate]{default_surrogate()}}.
 }
 \seealso{
-Other mbo_defaults: 
-\code{\link{default_acqfunction}()},
-\code{\link{default_acqoptimizer}()},
-\code{\link{default_gp}()},
-\code{\link{default_loop_function}()},
-\code{\link{default_result_assigner}()},
-\code{\link{default_surrogate}()},
+Other mbo_defaults:
+\code{\link[=default_acqfunction]{default_acqfunction()}},
+\code{\link[=default_acqoptimizer]{default_acqoptimizer()}},
+\code{\link[=default_gp]{default_gp()}},
+\code{\link[=default_loop_function]{default_loop_function()}},
+\code{\link[=default_result_assigner]{default_result_assigner()}},
+\code{\link[=default_surrogate]{default_surrogate()}},
 \code{\link{mbo_defaults}}
 }
 \concept{mbo_defaults}

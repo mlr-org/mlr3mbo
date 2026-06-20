@@ -7,12 +7,15 @@
 #' \describe{
 #' \item{`catch_errors`}{`logical(1)`\cr
 #'   Should errors during updating the surrogate be caught and propagated to the `loop_function` which can then handle
-#'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by,
+#'   e.g., proposing a randomly sampled point for evaluation?
 #'   Default is `TRUE`.
 #' }
 #' \item{`impute_method`}{`character(1)`\cr
-#'   Method to impute missing values in the case of updating on an asynchronous [bbotk::ArchiveAsync] with pending evaluations.
-#'   Can be `"mean"` to use mean imputation or `"random"` to sample values uniformly at random between the empirical minimum and maximum.
+#'   Method to impute missing values in the case of updating on an asynchronous [bbotk::ArchiveAsync]
+#'   with pending evaluations.
+#'   Can be `"mean"` to use mean imputation or
+#'   `"random"` to sample values uniformly at random between the empirical minimum and maximum.
 #'   Default is `"random"`.
 #' }
 #' }
@@ -49,11 +52,11 @@
 #'
 #'   surrogate$learner$model
 #' }
-SurrogateLearner = R6Class("SurrogateLearner",
+SurrogateLearner = R6Class(
+  "SurrogateLearner",
   inherit = Surrogate,
 
   public = list(
-
     #' @field learner ([mlr3::LearnerRegr])\cr
     #'   [mlr3::LearnerRegr] wrapped as a surrogate model.
     learner = NULL,
@@ -75,7 +78,14 @@ SurrogateLearner = R6Class("SurrogateLearner",
     #' @template param_archive_surrogate
     #' @template param_col_y_surrogate
     #' @template param_cols_x_surrogate
-    initialize = function(learner, input_trafo = NULL, output_trafo = NULL, archive = NULL, cols_x = NULL, col_y = NULL) {
+    initialize = function(
+      learner,
+      input_trafo = NULL,
+      output_trafo = NULL,
+      archive = NULL,
+      cols_x = NULL,
+      col_y = NULL
+    ) {
       assert_learner(learner)
       if (learner$predict_type != "se" && "se" %in% learner$predict_types) {
         learner$predict_type = "se"
@@ -126,7 +136,8 @@ SurrogateLearner = R6Class("SurrogateLearner",
       } else {
         # speeding up some checks by constructing the predict task directly instead of relying on predict_newdata
         task = self$learner$state$train_task$clone()
-        set(xdt, j = task$target_names, value = NA_real_)  # tasks only have features and the target but we have to set the target to NA
+        # tasks only have features and the target but we have to set the target to NA
+        set(xdt, j = task$target_names, value = NA_real_)
         newdata = as_data_backend(xdt)
         task$backend = newdata
         task$row_roles$use = task$backend$rownames
@@ -147,7 +158,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
   ),
 
   active = list(
-
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
@@ -216,7 +226,6 @@ SurrogateLearner = R6Class("SurrogateLearner",
   ),
 
   private = list(
-
     # Train learner with new data.
     .update = function() {
       xydt = copy(self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE])
@@ -240,7 +249,10 @@ SurrogateLearner = R6Class("SurrogateLearner",
     # Train learner with new data.
     # Operates on an asynchronous archive and performs imputation as needed.
     .update_async = function() {
-      xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE])
+      xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[,
+          c(self$cols_x, self$cols_y, "state"),
+          with = FALSE
+        ])
 
       if (self$param_set$values$impute_method == "mean") {
         mean_y = mean(xydt[[self$cols_y]], na.rm = TRUE)
@@ -275,7 +287,8 @@ SurrogateLearner = R6Class("SurrogateLearner",
     },
 
     deep_clone = function(name, value) {
-      switch(name,
+      switch(
+        name,
         learner = value$clone(deep = TRUE),
         input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
         output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
@@ -288,4 +301,3 @@ SurrogateLearner = R6Class("SurrogateLearner",
     .predict_names = NULL
   )
 )
-

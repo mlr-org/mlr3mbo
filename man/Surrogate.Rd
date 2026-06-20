@@ -9,191 +9,201 @@ Abstract surrogate model class.
 A surrogate model is used to model the unknown objective function(s) based on all points evaluated so far.
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{learner}}{(learner)\cr
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{learner}}{(learner)\cr
 Arbitrary learner object depending on the subclass.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{print_id}}{(\code{character})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 
-\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
+    \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
 
-\item{\code{archive_is_async}}{(`bool(1)``)\cr
+    \item{\code{archive_is_async}}{(`bool(1)``)\cr
 Whether the \link[bbotk:Archive]{bbotk::Archive} is an asynchronous one.}
 
-\item{\code{n_learner}}{(\code{integer(1)})\cr
+    \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of surrogate models.}
 
-\item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
+    \item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
 Column ids of variables that should be used as features.
 By default, automatically inferred based on the archive.}
 
-\item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
+    \item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
 Column ids of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
 
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+    \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of hyperparameters.}
 
-\item{\code{packages}}{(\code{character()})\cr
+    \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
 A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 
-\item{\code{feature_types}}{(\code{character()})\cr
+    \item{\code{feature_types}}{(\code{character()})\cr
 Stores the feature types the surrogate can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
 A complete list of candidate feature types, grouped by task type, is stored in \code{\link[mlr3:mlr_reflections]{mlr_reflections$task_feature_types}}.}
 
-\item{\code{properties}}{(\code{character()})\cr
+    \item{\code{properties}}{(\code{character()})\cr
 Stores a set of properties/capabilities the surrogate has.
 A complete list of candidate properties, grouped by task type, is stored in \code{\link[mlr3:mlr_reflections]{mlr_reflections$learner_properties}}.}
 
-\item{\code{predict_type}}{(\code{character(1)})\cr
+    \item{\code{predict_type}}{(\code{character(1)})\cr
 Retrieves the currently active predict type, e.g. \code{"response"}.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-Surrogate-new}{\code{Surrogate$new()}}
-\item \href{#method-Surrogate-update}{\code{Surrogate$update()}}
-\item \href{#method-Surrogate-reset}{\code{Surrogate$reset()}}
-\item \href{#method-Surrogate-predict}{\code{Surrogate$predict()}}
-\item \href{#method-Surrogate-format}{\code{Surrogate$format()}}
-\item \href{#method-Surrogate-print}{\code{Surrogate$print()}}
-\item \href{#method-Surrogate-clone}{\code{Surrogate$clone()}}
-}
+  \itemize{
+    \item \href{#method-Surrogate-initialize}{\code{Surrogate$new()}}
+    \item \href{#method-Surrogate-update}{\code{Surrogate$update()}}
+    \item \href{#method-Surrogate-reset}{\code{Surrogate$reset()}}
+    \item \href{#method-Surrogate-predict}{\code{Surrogate$predict()}}
+    \item \href{#method-Surrogate-format}{\code{Surrogate$format()}}
+    \item \href{#method-Surrogate-print}{\code{Surrogate$print()}}
+    \item \href{#method-Surrogate-clone}{\code{Surrogate$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Surrogate-new"></a>}}
-\if{latex}{\out{\hypertarget{method-Surrogate-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$new(learner, archive, cols_x, cols_y, param_set)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{learner}}{(learner)\cr
+\if{html}{\out{<a id="method-Surrogate-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-Surrogate-initialize}{}}}
+\subsection{\code{Surrogate$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Surrogate$new(learner, archive, cols_x, cols_y, param_set)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{learner}}{(learner)\cr
 Arbitrary learner object depending on the subclass.}
-
-\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
+      \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
-
-\item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
+      \item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
-
-\item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
+      \item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
-
-\item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+      \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Parameter space description depending on the subclass.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Surrogate-update"></a>}}
 \if{latex}{\out{\hypertarget{method-Surrogate-update}{}}}
-\subsection{Method \code{update()}}{
-Train learner with new data.
+\subsection{\code{Surrogate$update()}}{
+  Train learner with new data.
 Subclasses must implement \code{private.update()} and \code{private.update_async()}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$update()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Surrogate$update()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}.
+  }
 }
 
-\subsection{Returns}{
-\code{NULL}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Surrogate-reset"></a>}}
 \if{latex}{\out{\hypertarget{method-Surrogate-reset}{}}}
-\subsection{Method \code{reset()}}{
-Reset the surrogate model.
+\subsection{\code{Surrogate$reset()}}{
+  Reset the surrogate model.
 Subclasses must implement \code{private$.reset()}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$reset()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Surrogate$reset()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}
+  }
 }
 
-\subsection{Returns}{
-\code{NULL}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Surrogate-predict"></a>}}
 \if{latex}{\out{\hypertarget{method-Surrogate-predict}{}}}
-\subsection{Method \code{predict()}}{
-Predict mean response and standard error.
+\subsection{\code{Surrogate$predict()}}{
+  Predict mean response and standard error.
 Must be implemented by subclasses.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$predict(xdt)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Surrogate$predict(xdt)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
+New data. One row per observation.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Arbitrary prediction object.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-New data. One row per observation.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Arbitrary prediction object.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Surrogate-format"></a>}}
 \if{latex}{\out{\hypertarget{method-Surrogate-format}{}}}
-\subsection{Method \code{format()}}{
-Helper for print outputs.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$format()}\if{html}{\out{</div>}}
+\subsection{\code{Surrogate$format()}}{
+  Helper for print outputs.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Surrogate$format()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{character(1)}).
+  }
 }
 
-\subsection{Returns}{
-(\code{character(1)}).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Surrogate-print"></a>}}
 \if{latex}{\out{\hypertarget{method-Surrogate-print}{}}}
-\subsection{Method \code{print()}}{
-Print method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$print()}\if{html}{\out{</div>}}
+\subsection{\code{Surrogate$print()}}{
+  Print method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Surrogate$print()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{character()}).
+  }
 }
 
-\subsection{Returns}{
-(\code{character()}).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Surrogate-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-Surrogate-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Surrogate$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{Surrogate$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Surrogate$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

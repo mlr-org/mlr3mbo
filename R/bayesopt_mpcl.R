@@ -8,8 +8,10 @@
 #' Normally used inside an [OptimizerMbo].
 #'
 #' In each iteration after the initial design, the surrogate and acquisition function are updated.
-#' The acquisition function is then optimized, to find a candidate but instead of evaluating this candidate, the
-#' objective function value is obtained by applying the `liar` function to all previously obtained objective function values.
+#' The acquisition function is then optimized to find a candidate,
+#' but instead of evaluating this candidate,
+#' the objective function value is obtained by applying the `liar` function to all previously obtained objective
+#' function values.
 #' This is repeated `q - 1` times to obtain a total of `q` candidates that are then evaluated in a single batch.
 #'
 #' @param instance ([bbotk::OptimInstanceBatchSingleCrit])\cr
@@ -42,7 +44,8 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchSingleCrit].
+#' * The `surrogate$archive`, even if already populated,
+#'   will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchSingleCrit].
 #' * To make use of parallel evaluations in the case of `q > 1, the objective
 #'   function of the [bbotk::OptimInstanceBatchSingleCrit] must be implemented accordingly.
 #'
@@ -95,19 +98,18 @@
 #' }
 #' }
 bayesopt_mpcl = function(
-    instance,
-    surrogate,
-    acq_function,
-    acq_optimizer,
-    init_design_size = NULL,
-    q = 2L,
-    liar = mean,
-    random_interleave_iter = 0L
-  ) {
-
+  instance,
+  surrogate,
+  acq_function,
+  acq_optimizer,
+  init_design_size = NULL,
+  q = 2L,
+  liar = mean,
+  random_interleave_iter = 0L
+) {
   # assertions
   assert_r6(instance, "OptimInstanceBatchSingleCrit")
-  assert_r6(surrogate, classes = "Surrogate")  # cannot be SurrogateLearner due to EIPS
+  assert_r6(surrogate, classes = "Surrogate") # cannot be SurrogateLearner due to EIPS
   assert_r6(acq_function, classes = "AcqFunction")
   assert_r6(acq_optimizer, classes = "AcqOptimizer")
   assert_int(init_design_size, lower = 1L, null.ok = TRUE)
@@ -135,69 +137,90 @@ bayesopt_mpcl = function(
   # actual loop
   repeat {
     # normal ego proposal with error catching
-    xdt = tryCatch({
-      timestamp_surrogate = Sys.time()
-      acq_function$surrogate$update()
-      timestamp_acq_function = Sys.time()
-      acq_function$update()
-      timestamp_acq_optimizer = Sys.time()
-      xdt = acq_optimizer$optimize()
-      timestamp_loop = Sys.time()
-      set(xdt, j = "timestamp_surrogate", value = timestamp_surrogate)
-      set(xdt, j = "timestamp_acq_function", value = timestamp_acq_function)
-      set(xdt, j = "timestamp_acq_optimizer", value = timestamp_acq_optimizer)
-      set(xdt, j = "timestamp_loop", value = timestamp_loop)
-      xdt
-    }, mbo_error = function(mbo_error_condition) {
-      #lg$info("Proposing a randomly sampled point") no logging because we do not evaluate this point
-      xdt = generate_design_random(search_space, n = 1L)$data
-      set(xdt, j = "timestamp_surrogate", value = NA)
-      set(xdt, j = "timestamp_acq_function", value = NA)
-      set(xdt, j = "timestamp_acq_optimizer", value = NA)
-      set(xdt, j = "timestamp_loop", value = NA)
-      xdt
-    })
-
-    # prepare lie objects
-    tmp_archive = instance$archive$clone(deep = TRUE)
-    acq_function$surrogate$archive = tmp_archive
-    lie[, instance$archive$cols_y := liar(instance$archive$data[[instance$archive$cols_y]])]  # FIXME: assert output of liar
-    xdt_new = xdt
-
-    # obtain proposals using fake archive with lie, also with error catching
-    for (i in seq_len(q)[-1L]) { # this is save because q is asserted >= 2
-      xdt_new = tryCatch({
-        # add lie instead of true eval
-        tmp_archive$add_evals(xdt = xdt_new, xss_trafoed = transform_xdt_to_xss(xdt_new, tmp_archive$search_space), ydt = lie)
-
-        # random interleaving is handled here
-        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-          stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
-        }
-
-        # update all objects with lie
+    xdt = tryCatch(
+      {
         timestamp_surrogate = Sys.time()
         acq_function$surrogate$update()
         timestamp_acq_function = Sys.time()
         acq_function$update()
         timestamp_acq_optimizer = Sys.time()
-        xdt_new = acq_optimizer$optimize()
+        xdt = acq_optimizer$optimize()
         timestamp_loop = Sys.time()
-        set(xdt_new, j = "timestamp_surrogate", value = timestamp_surrogate)
-        set(xdt_new, j = "timestamp_acq_function", value = timestamp_acq_function)
-        set(xdt_new, j = "timestamp_acq_optimizer", value = timestamp_acq_optimizer)
-        set(xdt_new, j = "timestamp_loop", value = timestamp_loop)
-        xdt_new
-      }, mbo_error = function(mbo_error_condition) {
-        lg$info(paste0(class(mbo_error_condition), collapse = " / "))
-        lg$info("Proposing a randomly sampled point")
-        xdt_new = generate_design_random(search_space, n = 1L)$data
-        set(xdt_new, j = "timestamp_surrogate", value = NA)
-        set(xdt_new, j = "timestamp_acq_function", value = NA)
-        set(xdt_new, j = "timestamp_acq_optimizer", value = NA)
-        set(xdt_new, j = "timestamp_loop", value = NA)
-        xdt_new
-      })
+        set(xdt, j = "timestamp_surrogate", value = timestamp_surrogate)
+        set(xdt, j = "timestamp_acq_function", value = timestamp_acq_function)
+        set(xdt, j = "timestamp_acq_optimizer", value = timestamp_acq_optimizer)
+        set(xdt, j = "timestamp_loop", value = timestamp_loop)
+        xdt
+      },
+      Mlr3ErrorMbo = function(cond) {
+        #lg$info("Proposing a randomly sampled point") no logging because we do not evaluate this point
+        xdt = generate_design_random(search_space, n = 1L)$data
+        set(xdt, j = "timestamp_surrogate", value = NA)
+        set(xdt, j = "timestamp_acq_function", value = NA)
+        set(xdt, j = "timestamp_acq_optimizer", value = NA)
+        set(xdt, j = "timestamp_loop", value = NA)
+        xdt
+      }
+    )
+
+    # prepare lie objects
+    tmp_archive = instance$archive$clone(deep = TRUE)
+    acq_function$surrogate$archive = tmp_archive
+    # FIXME: assert output of liar
+    lie[, instance$archive$cols_y := liar(instance$archive$data[[instance$archive$cols_y]])]
+    xdt_new = xdt
+
+    # obtain proposals using fake archive with lie, also with error catching
+    for (i in seq_len(q)[-1L]) {
+      # this is save because q is asserted >= 2
+      xdt_new = tryCatch(
+        {
+          # add lie instead of true eval
+          tmp_archive$add_evals(
+            xdt = xdt_new,
+            xss_trafoed = transform_xdt_to_xss(xdt_new, tmp_archive$search_space),
+            ydt = lie
+          )
+
+          # random interleaving is handled here
+          if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+            error_random_interleave("Random interleaving")
+          }
+
+          # update all objects with lie
+          timestamp_surrogate = Sys.time()
+          acq_function$surrogate$update()
+          timestamp_acq_function = Sys.time()
+          acq_function$update()
+          timestamp_acq_optimizer = Sys.time()
+          xdt_new = acq_optimizer$optimize()
+          timestamp_loop = Sys.time()
+          set(xdt_new, j = "timestamp_surrogate", value = timestamp_surrogate)
+          set(xdt_new, j = "timestamp_acq_function", value = timestamp_acq_function)
+          set(xdt_new, j = "timestamp_acq_optimizer", value = timestamp_acq_optimizer)
+          set(xdt_new, j = "timestamp_loop", value = timestamp_loop)
+          xdt_new
+        },
+        Mlr3ErrorMboRandomInterleave = function(cond) {
+          lg$info("Random interleaving triggered, proposing a randomly sampled point")
+          xdt_new = generate_design_random(search_space, n = 1L)$data
+          set(xdt_new, j = "timestamp_surrogate", value = NA)
+          set(xdt_new, j = "timestamp_acq_function", value = NA)
+          set(xdt_new, j = "timestamp_acq_optimizer", value = NA)
+          set(xdt_new, j = "timestamp_loop", value = NA)
+          xdt_new
+        },
+        Mlr3ErrorMbo = function(cond) {
+          lg$warn("Caught the following error: %s", cond$message)
+          lg$info("Proposing a randomly sampled point")
+          xdt_new = generate_design_random(search_space, n = 1L)$data
+          set(xdt_new, j = "timestamp_surrogate", value = NA)
+          set(xdt_new, j = "timestamp_acq_function", value = NA)
+          set(xdt_new, j = "timestamp_acq_optimizer", value = NA)
+          set(xdt_new, j = "timestamp_loop", value = NA)
+          xdt_new
+        }
+      )
       xdt = rbindlist(list(xdt, xdt_new), use.names = TRUE, fill = TRUE)
     }
 
@@ -218,4 +241,3 @@ attr(bayesopt_mpcl, "instance") = "single-crit"
 attr(bayesopt_mpcl, "man") = "mlr3mbo::mlr_loop_functions_mpcl"
 
 mlr_loop_functions$add("bayesopt_mpcl", bayesopt_mpcl)
-

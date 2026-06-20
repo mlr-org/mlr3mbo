@@ -24,16 +24,19 @@ bayesopt_smsego = function(instance, acq_function = NULL, acq_optimizer = NULL) 
   acq_function$setup(archive) # setup necessary to determine the domain, codomain (for opt direction) of acq function
 
   repeat {
-    xdt = tryCatch({
-      # FIXME:
-      acq_function$update_surrogate(archive)
-      acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
-      acq_function$update(archive)
-      acq_optimizer$optimize(acq_function)
-    }, mbo_error = function(mbo_error_condition) {
-      lg$info("Proposing a randomly sampled point")  # FIXME: logging?
-      SamplerUnif$new(instance$search_space)$sample(1L)$data  # FIXME: also think about augmented lhs
-    })
+    xdt = tryCatch(
+      {
+        # FIXME:
+        acq_function$update_surrogate(archive)
+        acq_function$progress = instance$terminator$param_set$values$n_evals - archive$n_evals
+        acq_function$update(archive)
+        acq_optimizer$optimize(acq_function)
+      },
+      mbo_error = function(mbo_error_condition) {
+        lg$info("Proposing a randomly sampled point") # FIXME: logging?
+        SamplerUnif$new(instance$search_space)$sample(1L)$data # FIXME: also think about augmented lhs
+      }
+    )
 
     instance$eval_batch(xdt)
     if (instance$is_terminated || instance$terminator$is_terminated(archive)) break
@@ -50,7 +53,7 @@ if (FALSE) {
   library(mlr3learners)
 
   FUN_2D_2D = function(xs) {
-    list(y1 = xs$x1 ^ 2, y2 = (xs$x1 - 2) ^ 2)
+    list(y1 = xs$x1^2, y2 = (xs$x1 - 2)^2)
   }
   PS_2D = ParamSet$new(list(
     ParamDbl$new("x1", lower = -10, upper = 10)
@@ -59,8 +62,7 @@ if (FALSE) {
     ParamDbl$new("y1", tags = "minimize"),
     ParamDbl$new("y2", tags = "minimize")
   ))
-  obfun = ObjectiveRFun$new(fun = FUN_2D_2D, domain = PS_2D,
-    codomain = FUN_2D_2D_CODOMAIN, properties = "multi-crit")
+  obfun = ObjectiveRFun$new(fun = FUN_2D_2D, domain = PS_2D, codomain = FUN_2D_2D_CODOMAIN, properties = "multi-crit")
 
   terminator = trm("evals", n_evals = 30)
 
@@ -83,4 +85,3 @@ if (FALSE) {
   g = g + geom_point()
   g + geom_point(data = best, color = "red")
 }
-

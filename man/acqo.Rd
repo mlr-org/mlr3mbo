@@ -8,7 +8,8 @@ acqo(optimizer, terminator, acq_function = NULL, callbacks = NULL, ...)
 }
 \arguments{
 \item{optimizer}{(\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} | \code{character(1)})\cr
-\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} that is to be used or the name of the optimizer in \link{mlr_acqoptimizers}.}
+\link[bbotk:OptimizerBatch]{bbotk::OptimizerBatch} that is to be used or the name of the optimizer in \link{mlr_acqoptimizers}.
+If \code{optimizer} is missing, the \link{mlr_acqoptimizers} dictionary is returned.}
 
 \item{terminator}{(\link[bbotk:Terminator]{bbotk::Terminator})\cr
 \link[bbotk:Terminator]{bbotk::Terminator} that is to be used.}

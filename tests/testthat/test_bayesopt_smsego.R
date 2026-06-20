@@ -16,4 +16,3 @@ test_that("default bayesopt_sms", {
   expect_true(sum(is.na(instance$archive$data$acq_smsego)) == 4L)
   expect_true(!is.na(instance$archive$data$acq_smsego[5L]))
 })
-

@@ -49,14 +49,15 @@ The original instance is modified in-place and returned invisible.
 Loop function for sequential single-objective Bayesian Optimization.
 Normally used inside an \link{OptimizerMbo}.
 
-In each iteration after the initial design, the surrogate and acquisition function are updated and the next candidate
-is chosen based on optimizing the acquisition function.
+In each iteration after the initial design, the surrogate and acquisition function are updated
+and the next candidate is chosen based on optimizing the acquisition function.
 }
 \note{
 \itemize{
 \item The \code{acq_function$surrogate}, even if already populated, will always be overwritten by the \code{surrogate}.
 \item The \code{acq_optimizer$acq_function}, even if already populated, will always be overwritten by \code{acq_function}.
-\item The \code{surrogate$archive}, even if already populated, will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit}.
+\item The \code{surrogate$archive}, even if already populated,
+will always be overwritten by the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatchSingleCrit]{bbotk::OptimInstanceBatchSingleCrit}.
 }
 }
 \examples{
@@ -132,7 +133,7 @@ In Pereira F, Burges CJC, Bottou L, Weinberger KQ (eds.), \emph{Advances in Neur
 }
 }
 \seealso{
-Other Loop Function: 
+Other Loop Function:
 \code{\link{loop_function}},
 \code{\link{mlr_loop_functions}},
 \code{\link{mlr_loop_functions_emo}},

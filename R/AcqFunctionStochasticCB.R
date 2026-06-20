@@ -8,8 +8,10 @@
 #'
 #' @description
 #' Lower / Upper Confidence Bound with lambda sampling and decay.
-#' The initial \eqn{\lambda} is drawn from an uniform distribution between `min_lambda` and `max_lambda` or from an exponential distribution with rate `1 / lambda`.
-#' \eqn{\lambda} is updated after each update by the formula `lambda * exp(-rate * (t %% period))`, where `t` is the number of times the acquisition function has been updated.
+#' The initial \eqn{\lambda} is drawn from an uniform distribution between `min_lambda` and `max_lambda`
+#' or from an exponential distribution with rate `1 / lambda`.
+#' \eqn{\lambda} is updated after each update by the formula `lambda * exp(-rate * (t %% period))`,
+#' where `t` is the number of times the acquisition function has been updated.
 #'
 #' While this acquisition function usually would be used within an asynchronous optimizer, e.g., [OptimizerAsyncMbo],
 #' it can in principle also be used in synchronous optimizers, e.g., [OptimizerMbo].
@@ -19,7 +21,7 @@
 #'   \eqn{\lambda} value for sampling from the exponential distribution.
 #'   Defaults to `1.96`.
 #' * `"min_lambda"` (`numeric(1)`)\cr
-#'   Minimum value of \eqn{\lambda}for sampling from the uniform distribution.
+#'   Minimum value of \eqn{\lambda} for sampling from the uniform distribution.
 #'   Defaults to `0.01`.
 #' * `"max_lambda"` (`numeric(1)`)\cr
 #'   Maximum value of \eqn{\lambda} for sampling from the uniform distribution.
@@ -36,9 +38,11 @@
 #'   Defaults to `NULL`, i.e., the decay has no period.
 #'
 #' @section Note:
-#' * This acquisition function always also returns its current (`acq_lambda`) and original (`acq_lambda_0`) \eqn{\lambda}.
-#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch] of the [AcqOptimizer] and
-#'   therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
+#' * This acquisition function always also returns its current (`acq_lambda`) and original (`acq_lambda_0`)
+#'   \eqn{\lambda}.
+#'   These values will be logged into the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatch]
+#'   of the [AcqOptimizer]
+#'   and therefore also in the [bbotk::Archive] of the actual [bbotk::OptimInstance] that is to be optimized.
 #'
 #' @references
 #' * `r format_bib("snoek_2012")`
@@ -78,11 +82,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
+AcqFunctionStochasticCB = R6Class(
+  "AcqFunctionStochasticCB",
   inherit = AcqFunction,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -101,8 +105,7 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
       distribution = "uniform",
       rate = 0,
       period = NULL
-      ) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
+    ) {
       private$.lambda = assert_number(lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
       private$.min_lambda = assert_number(min_lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
       private$.max_lambda = assert_number(max_lambda, lower = .Machine$double.neg.eps, null.ok = TRUE)
@@ -121,13 +124,16 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
 
       constants = ps(lambda = p_dbl(lower = 0))
 
-      super$initialize("acq_cb",
+      super$initialize(
+        "acq_cb",
         constants = constants,
         surrogate = surrogate,
         requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
         direction = "same",
         label = "Stochastic Lower / Upper Confidence Bound",
-        man = "mlr3mbo::mlr_acqfunctions_stochastic_cb")
+        man = "mlr3mbo::mlr_acqfunctions_stochastic_cb"
+      )
     },
 
     #' @description
@@ -136,7 +142,6 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
     update = function() {
       # sample lambda
       if (is.null(self$constants$values$lambda)) {
-
         if (private$.distribution == "uniform") {
           lambda = runif(1, private$.min_lambda, private$.max_lambda)
         } else {
@@ -179,10 +184,9 @@ AcqFunctionStochasticCB = R6Class("AcqFunctionStochasticCB",
     .fun = function(xdt, lambda) {
       p = self$surrogate$predict(xdt)
       cb = p$mean - self$surrogate_max_to_min * lambda * p$se
-      data.table(acq_cb = cb,  acq_lambda = lambda, acq_lambda_0 = private$.lambda_0)
+      data.table(acq_cb = cb, acq_lambda = lambda, acq_lambda_0 = private$.lambda_0)
     }
   )
 )
 
 mlr_acqfunctions$add("stochastic_cb", AcqFunctionStochasticCB)
-

@@ -18,7 +18,7 @@ test_that("SurrogateLearner API works", {
 
   # upgrading error class works
   surrogate = SurrogateLearner$new(LearnerRegrError$new(), archive = inst$archive)
-  expect_error(surrogate$update(), class = "surrogate_update_error")
+  expect_error(surrogate$update(), class = "Mlr3ErrorMboSurrogateUpdate")
 
   surrogate$param_set$values$catch_errors = FALSE
   expect_error(surrogate$optimize(), class = "simpleError")
@@ -27,7 +27,12 @@ test_that("SurrogateLearner API works", {
   expect_equal(surrogate$predict_type, surrogate$learner$predict_type)
   surrogate$learner$predict_type = "response"
   expect_equal(surrogate$predict_type, surrogate$learner$predict_type)
-  expect_error({surrogate$predict_type = "response"}, "is read-only")
+  expect_error(
+    {
+      surrogate$predict_type = "response"
+    },
+    "is read-only"
+  )
 })
 
 test_that("predict_types are recognized", {
@@ -55,7 +60,12 @@ test_that("param_set", {
   expect_setequal(surrogate$param_set$ids(), c("catch_errors", "impute_method"))
   expect_equal(surrogate$param_set$class[["catch_errors"]], "ParamLgl")
   expect_equal(surrogate$param_set$class[["impute_method"]], "ParamFct")
-  expect_error({surrogate$param_set = list()}, regexp = "param_set is read-only.")
+  expect_error(
+    {
+      surrogate$param_set = list()
+    },
+    regexp = "param_set is read-only."
+  )
 })
 
 test_that("deep clone", {
@@ -80,4 +90,3 @@ test_that("feature types", {
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
   expect_equal(surrogate$feature_types, surrogate$learner$feature_types)
 })
-

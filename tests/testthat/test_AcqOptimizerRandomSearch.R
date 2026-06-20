@@ -44,4 +44,3 @@ test_that("AcqOptimizerRandomSearch works with instance", {
   optimizer = opt("mbo", acq_optimizer = acqopt, acq_function = acqfun, surrogate = surrogate)
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
-

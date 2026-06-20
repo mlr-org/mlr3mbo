@@ -7,8 +7,9 @@
 #' Loop function for sequential multi-objective Bayesian Optimization via SMS-EGO.
 #' Normally used inside an [OptimizerMbo].
 #'
-#' In each iteration after the initial design, the surrogate and acquisition function ([mlr_acqfunctions_smsego]) are
-#' updated and the next candidate is chosen based on optimizing the acquisition function.
+#' In each iteration after the initial design,
+#' the surrogate and acquisition function ([mlr_acqfunctions_smsego]) are updated
+#' and the next candidate is chosen based on optimizing the acquisition function.
 #'
 #' @param instance ([bbotk::OptimInstanceBatchMultiCrit])\cr
 #'   The [bbotk::OptimInstanceBatchMultiCrit] to be optimized.
@@ -33,9 +34,11 @@
 #' @note
 #' * The `acq_function$surrogate`, even if already populated, will always be overwritten by the `surrogate`.
 #' * The `acq_optimizer$acq_function`, even if already populated, will always be overwritten by `acq_function`.
-#' * The `surrogate$archive`, even if already populated, will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
-#' * Due to the iterative computation of the epsilon within the [mlr_acqfunctions_smsego], requires the [bbotk::Terminator] of
-#'   the [bbotk::OptimInstanceBatchMultiCrit] to be a [bbotk::TerminatorEvals].
+#' * The `surrogate$archive`, even if already populated,
+#'   will always be overwritten by the [bbotk::ArchiveBatch] of the [bbotk::OptimInstanceBatchMultiCrit].
+#' * Due to the iterative computation of the epsilon within the [mlr_acqfunctions_smsego],
+#'   requires the [bbotk::Terminator] of the [bbotk::OptimInstanceBatchMultiCrit]
+#'   to be a [bbotk::TerminatorEvals].
 #'
 #' @return invisible(instance)\cr
 #'   The original instance is modified in-place and returned invisible.
@@ -85,14 +88,13 @@
 #' }
 #' }
 bayesopt_smsego = function(
-    instance,
-    surrogate,
-    acq_function,
-    acq_optimizer,
-    init_design_size = NULL,
-    random_interleave_iter = 0L
-  ) {
-
+  instance,
+  surrogate,
+  acq_function,
+  acq_optimizer,
+  init_design_size = NULL,
+  random_interleave_iter = 0L
+) {
   # assertions
   assert_r6(instance, "OptimInstanceBatchMultiCrit")
   assert_r6(instance$terminator, "TerminatorEvals")
@@ -119,20 +121,27 @@ bayesopt_smsego = function(
 
   # actual loop
   repeat {
-    xdt = tryCatch({
-      # random interleaving is handled here
-      if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
-        stop(set_class(list(message = "Random interleaving", call = NULL), classes = c("random_interleave", "mbo_error", "error", "condition")))
+    xdt = tryCatch(
+      {
+        # random interleaving is handled here
+        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+          error_random_interleave("Random interleaving")
+        }
+        acq_function$progress = instance$terminator$param_set$values$n_evals - instance$archive$n_evals
+        acq_function$surrogate$update()
+        acq_function$update()
+        acq_optimizer$optimize()
+      },
+      Mlr3ErrorMboRandomInterleave = function(cond) {
+        lg$info("Random interleaving triggered, proposing a randomly sampled point")
+        generate_design_random(search_space, n = 1L)$data
+      },
+      Mlr3ErrorMbo = function(cond) {
+        lg$warn("Caught the following error: %s", cond$message)
+        lg$info("Proposing a randomly sampled point")
+        generate_design_random(search_space, n = 1L)$data
       }
-      acq_function$progress = instance$terminator$param_set$values$n_evals - instance$archive$n_evals
-      acq_function$surrogate$update()
-      acq_function$update()
-      acq_optimizer$optimize()
-    }, mbo_error = function(mbo_error_condition) {
-      lg$info(paste0(class(mbo_error_condition), collapse = " / "))
-      lg$info("Proposing a randomly sampled point")
-      generate_design_random(search_space, n = 1L)$data
-    })
+    )
 
     instance$eval_batch(xdt)
     if (instance$is_terminated) break
@@ -148,4 +157,3 @@ attr(bayesopt_smsego, "instance") = "multi-crit"
 attr(bayesopt_smsego, "man") = "mlr3mbo::mlr_loop_functions_smsego"
 
 mlr_loop_functions$add("bayesopt_smsego", bayesopt_smsego)
-

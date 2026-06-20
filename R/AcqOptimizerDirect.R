@@ -5,7 +5,8 @@
 #' @description
 #' Direct acquisition function optimizer.
 #' Calls `nloptr()` from \CRANpkg{nloptr}.
-#' In its default setting, the algorithm restarts `5 * D` times and runs at most for `100 * D^2` function evaluations, where `D` is the dimension of the search space.
+#' In its default setting, the algorithm restarts `5 * D` times and runs at most for `100 * D^2` function evaluations,
+#' where `D` is the dimension of the search space.
 #' Each run stops when the relative tolerance of the parameters is less than `10^-4`.
 #' The first iteration starts with the best point in the archive and the next iterations start from a random point.
 #'
@@ -60,10 +61,10 @@
 #' if (requireNamespace("nloptr")) {
 #'   acqo("direct")
 #' }
-AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
+AcqOptimizerDirect = R6Class(
+  "AcqOptimizerDirect",
   inherit = AcqOptimizer,
   public = list(
-
     #' @field state (`list()`)\cr
     #' List of [nloptr::nloptr()] results.
     state = NULL,
@@ -75,12 +76,12 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        maxeval = p_int(),
+        maxeval = p_int(lower = 1, special_vals = list(-1)),
         stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
-        xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1L)),
-        xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1L)),
-        ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1L)),
-        ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1L)),
+        xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1)),
+        xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
+        ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
+        ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         minf_max = p_dbl(default = -Inf),
         restart_strategy = p_fct(levels = c("none", "random"), init = "random"),
         max_restarts = p_int(lower = 0L),
@@ -98,9 +99,11 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
       restart_strategy = pv$restart_strategy
       max_restarts = pv$max_restarts
       maxeval = pv$maxeval
+      catch_errors = pv$catch_errors
       pv$max_restarts = NULL
       pv$restart_strategy = NULL
       pv$maxeval = NULL
+      pv$catch_errors = NULL
 
       if (restart_strategy == "none") {
         max_restarts = 0L
@@ -125,7 +128,7 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
       y = Inf
       n_evals = 0L
       n_restarts = 0L
-      while (n_evals < maxeval || maxeval < 0 && n_restarts <= max_restarts) {
+      while ((n_evals < maxeval || maxeval < 0) && n_restarts <= max_restarts) {
         n_restarts = n_restarts + 1L
 
         x0 = if (n_restarts == 1L) {
@@ -136,7 +139,8 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
         }
 
         optimize = function() {
-          invoke(nloptr::nloptr,
+          invoke(
+            nloptr::nloptr,
             eval_f = wrapper,
             lb = self$acq_function$domain$lower,
             ub = self$acq_function$domain$upper,
@@ -145,16 +149,19 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
             x0 = x0,
             fun = fun,
             constants = constants,
-            direction = direction)
+            direction = direction
+          )
         }
 
-        if (pv$catch_errors) {
-          tryCatch({
-            res = optimize()
-          }, error = function(error_condition) {
-            lg$warn(error_condition$message)
-            stop(set_class(list(message = error_condition$message, call = NULL), classes = c("acq_optimizer_error", "mbo_error", "error", "condition")))
-          })
+        if (catch_errors) {
+          tryCatch(
+            {
+              res = optimize()
+            },
+            error = function(error_condition) {
+              error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
+            }
+          )
         } else {
           res = optimize()
         }
@@ -170,7 +177,10 @@ AcqOptimizerDirect = R6Class("AcqOptimizerDirect",
 
         if (restart_strategy == "none") break
       }
-      as.data.table(as.list(set_names(c(x, y * direction), c(self$acq_function$domain$ids(), self$acq_function$codomain$ids()))))
+      as.data.table(as.list(set_names(
+        c(x, y * direction),
+        c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
+      )))
     }
   ),
 

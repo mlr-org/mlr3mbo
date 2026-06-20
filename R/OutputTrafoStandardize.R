@@ -46,7 +46,8 @@
 #'
 #'   surrogate$predict(data.table(x = c(-1, 0, 1)))
 #' }
-OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
+OutputTrafoStandardize = R6Class(
+  "OutputTrafoStandardize",
   inherit = OutputTrafo,
 
   public = list(
@@ -54,10 +55,15 @@ OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param invert_posterior (`logical(1)`)\cr
-    #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or [SurrogateLearnerCollection]?
+    #'  Should the posterior predictive distribution be inverted when used within a [SurrogateLearner] or
+    #'  [SurrogateLearnerCollection]?
     #'  Default is `TRUE`.
     initialize = function(invert_posterior = TRUE) {
-      super$initialize(invert_posterior = invert_posterior, label = "Standardize", man = "mlr3mbo::mlr_output_trafos_standardize")
+      super$initialize(
+        invert_posterior = invert_posterior,
+        label = "Standardize",
+        man = "mlr3mbo::mlr_output_trafos_standardize"
+      )
     },
 
     #' @description
@@ -92,14 +98,19 @@ OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
     },
 
     #' @description
-    #' Perform the inverse transformation on a posterior predictive distribution characterized by the first and second moment.
+    #' Perform the inverse transformation on a posterior predictive distribution characterized by the first and
+    #' second moment.
     #'
     #' @param pred ([data.table::data.table()])\cr
-    #'   Data. One row per observation characterizing a posterior predictive distribution with the columns `mean` and `se`.
-    #'   Can also be a named list of [data.table::data.table()] with posterior predictive distributions for multiple targets corresponding to (`cols_y`).
+    #'   Data. One row per observation characterizing a posterior predictive distribution with the columns
+    #'   `mean` and `se`.
+    #'   Can also be a named list of [data.table::data.table()] with posterior predictive distributions for
+    #'   multiple targets corresponding to (`cols_y`).
     #'
     #' @return [data.table::data.table()] with the inverse transformation applied to the columns `mean` and `se`.
-    #'   In the case of the input being a named list of [data.table::data.table()], the output will be a named list of [data.table::data.table()] with the inverse transformation applied to the columns `mean` and `se`.
+    #'   In the case of the input being a named list of [data.table::data.table()],
+    #'   the output will be a named list of [data.table::data.table()] with the inverse transformation applied to
+    #'   the columns `mean` and `se`.
     inverse_transform_posterior = function(pred) {
       if (is.null(self$state)) {
         stop("$state is not set. Missed to call $update()?")
@@ -117,10 +128,10 @@ OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
         }
       }
       for (col_y in self$cols_y) {
-      	mean = pred[[col_y]]$mean * self$state[[col_y]]$sigma + self$state[[col_y]]$mu
-      	se = pred[[col_y]]$se * self$state[[col_y]]$sigma
-      	set(pred[[col_y]], j = "mean", value = mean)
-      	set(pred[[col_y]], j = "se", value = se)
+        mean = pred[[col_y]]$mean * self$state[[col_y]]$sigma + self$state[[col_y]]$mu
+        se = pred[[col_y]]$se * self$state[[col_y]]$sigma
+        set(pred[[col_y]], j = "mean", value = mean)
+        set(pred[[col_y]], j = "se", value = se)
       }
       if (length(self$cols_y) == 1L) {
         pred[[self$cols_y]]
@@ -151,7 +162,8 @@ OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
   active = list(
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     packages = function(rhs) {
       if (missing(rhs)) {
         character(0)
@@ -163,4 +175,3 @@ OutputTrafoStandardize = R6Class("OutputTrafoStandardize",
 )
 
 mlr_output_trafos$add("standardize", OutputTrafoStandardize)
-

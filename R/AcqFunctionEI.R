@@ -53,11 +53,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionEI = R6Class("AcqFunctionEI",
+AcqFunctionEI = R6Class(
+  "AcqFunctionEI",
   inherit = AcqFunction,
 
   public = list(
-
     #' @field y_best (`numeric(1)`)\cr
     #'   Best objective function value observed so far.
     #'   In the case of maximization, this already includes the necessary change of sign.
@@ -69,13 +69,21 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     #' @param epsilon (`numeric(1)`).
     initialize = function(surrogate = NULL, epsilon = 0) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
       assert_number(epsilon, lower = 0, finite = TRUE)
 
       constants = ps(epsilon = p_dbl(lower = 0, default = 0))
       constants$values$epsilon = epsilon
 
-      super$initialize("acq_ei", constants = constants, surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Improvement", man = "mlr3mbo::mlr_acqfunctions_ei")
+      super$initialize(
+        "acq_ei",
+        constants = constants,
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
+        direction = "maximize",
+        label = "Expected Improvement",
+        man = "mlr3mbo::mlr_acqfunctions_ei"
+      )
     },
 
     #' @description
@@ -109,4 +117,3 @@ AcqFunctionEI = R6Class("AcqFunctionEI",
 )
 
 mlr_acqfunctions$add("ei", AcqFunctionEI)
-

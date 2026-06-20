@@ -2,7 +2,7 @@
 
 # The OptProblem is an object that is not allowed to change during optimization
 # It contains all information to start the optimization
-OptProblem= R6Class(
+OptProblem = R6Class(
   "OptProblem",
 
   public = list(
@@ -17,7 +17,15 @@ OptProblem= R6Class(
     hook_fun = NULL,
 
     # constructor
-    initialize = function(target_fun, design, opt_iterator, opt_terminator, surrogate_model, proposal_generator, hook_fun = function(opt_state) NULL) {
+    initialize = function(
+      target_fun,
+      design,
+      opt_iterator,
+      opt_terminator,
+      surrogate_model,
+      proposal_generator,
+      hook_fun = function(opt_state) NULL
+    ) {
       self$target_fun = target_fun
       self$design = design
       self$opt_iterator = opt_iterator

@@ -29,7 +29,7 @@ SurrogateModelGPfit = R6Class(
       npar = length(range)
       mat_scale = function(x) {
         mat = as.matrix(rbindlist(x)) # Suprisingly slow according to profiling
-        mat = sweep(mat, 2, lower) %*% diag(1/(range), npar, npar)
+        mat = sweep(mat, 2, lower) %*% diag(1 / (range), npar, npar)
       }
       if (is.null(self$storage$model)) {
         model = GPfit::GP_fit(X = mat_scale(self$design$x), Y = self$design$y)
@@ -39,5 +39,5 @@ SurrogateModelGPfit = R6Class(
       res = predict(self$storage$model, mat_scale(points$x))
       data.table(mean = res$Y_hat, se = res$MSE)
     }
-
-  ))
+  )
+)

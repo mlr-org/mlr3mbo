@@ -54,11 +54,11 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
+AcqFunctionEIPS = R6Class(
+  "AcqFunctionEIPS",
   inherit = AcqFunction,
 
   public = list(
-
     #' @field y_best (`numeric(1)`)\cr
     #'   Best objective function value observed so far.
     #'   In the case of maximization, this already includes the necessary change of sign.
@@ -69,10 +69,17 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
     #'
     #' @param surrogate (`NULL` | [SurrogateLearnerCollection]).
     initialize = function(surrogate = NULL) {
-      assert_r6(surrogate, "SurrogateLearnerCollection", null.ok = TRUE)
       # FIXME: check that col_y, col_time is the same as surrogate$cols_y?
 
-      super$initialize("acq_eips", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Expected Improvement Per Second", man = "mlr3mbo::mlr_acqfunctions_eips")
+      super$initialize(
+        "acq_eips",
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearnerCollection",
+        direction = "maximize",
+        label = "Expected Improvement Per Second",
+        man = "mlr3mbo::mlr_acqfunctions_eips"
+      )
     },
 
     #' @description
@@ -87,7 +94,6 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
   ),
 
   active = list(
-
     #' @field col_y (`character(1)`).
     col_y = function(rhs) {
       if (!missing(rhs)) {
@@ -129,4 +135,3 @@ AcqFunctionEIPS = R6Class("AcqFunctionEIPS",
 )
 
 mlr_acqfunctions$add("eips", AcqFunctionEIPS)
-

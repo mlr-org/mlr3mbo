@@ -27,12 +27,18 @@ mlr_result_assigners = R6Class("DictionaryResultAssigner", inherit = Dictionary,
 as.data.table.DictionaryResultAssigner = function(x, ..., objects = FALSE) {
   assert_flag(objects)
 
-  setkeyv(map_dtr(x$keys(), function(key) {
-    ras = withCallingHandlers(x$get(key), packageNotFoundWarning = function(w) invokeRestart("muffleWarning"))
-    insert_named(
-      list(key = key, label = ras$label, man = ras$man),
-      if (objects) list(object = list(ras))
-    )
-  }, .fill = TRUE), "key")[]
+  setkeyv(
+    map_dtr(
+      x$keys(),
+      function(key) {
+        ras = withCallingHandlers(x$get(key), packageNotFoundWarning = function(w) invokeRestart("muffleWarning"))
+        insert_named(
+          list(key = key, label = ras$label, man = ras$man),
+          if (objects) list(object = list(ras))
+        )
+      },
+      .fill = TRUE
+    ),
+    "key"
+  )[]
 }
-

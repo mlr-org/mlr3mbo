@@ -25,4 +25,3 @@ test_that("default bayesopt_emo", {
   expect_true(sum(is.na(instance$archive$data$acq_ehvigh)) == 4L)
   expect_true(!is.na(instance$archive$data$acq_ehvigh[5L]))
 })
-

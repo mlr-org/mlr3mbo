@@ -26,9 +26,11 @@ described in Horn et al. (2015).
 \section{Note}{
 
 \itemize{
-\item This acquisition function always also returns its current epsilon values in a list column (\code{acq_epsilon}).
-These values will be logged into the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} of the \link{AcqOptimizer} and
-therefore also in the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that is to be optimized.
+\item This acquisition function always also returns its current epsilon values in a list column
+(\code{acq_epsilon}).
+These values will be logged into the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} of the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch}
+of the \link{AcqOptimizer}
+and therefore also in the \link[bbotk:Archive]{bbotk::Archive} of the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance} that is to be optimized.
 }
 }
 
@@ -77,7 +79,7 @@ In \emph{International Conference on Evolutionary Multi-Criterion Optimization},
 }
 }
 \seealso{
-Other Acquisition Function: 
+Other Acquisition Function:
 \code{\link{AcqFunction}},
 \code{\link{mlr_acqfunctions}},
 \code{\link{mlr_acqfunctions_aei}},
@@ -96,106 +98,111 @@ Other Acquisition Function:
 }
 \concept{Acquisition Function}
 \section{Super classes}{
-\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[mlr3mbo:AcqFunction]{mlr3mbo::AcqFunction}} -> \code{AcqFunctionSmsEgo}
+\code{\link[bbotk:Objective]{bbotk::Objective}} -> \code{\link[mlr3mbo:AcqFunction]{AcqFunction}} -> \code{AcqFunctionSmsEgo}
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{ys_front}}{(\code{matrix()})\cr
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{ys_front}}{(\code{matrix()})\cr
 Approximated Pareto front.
 Signs are corrected with respect to assuming minimization of objectives.}
 
-\item{\code{ref_point}}{(\code{numeric()})\cr
+    \item{\code{ref_point}}{(\code{numeric()})\cr
 Reference point.
 Signs are corrected with respect to assuming minimization of objectives.}
 
-\item{\code{epsilon}}{(\code{numeric()})\cr
+    \item{\code{epsilon}}{(\code{numeric()})\cr
 Epsilon used for the additive epsilon dominance.}
 
-\item{\code{progress}}{(\code{numeric(1)})\cr
+    \item{\code{progress}}{(\code{numeric(1)})\cr
 Optimization progress (typically, the number of function evaluations left).
-Note that this requires the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} to be terminated via a \link[bbotk:mlr_terminators_evals]{bbotk::TerminatorEvals}.}
-}
-\if{html}{\out{</div>}}
+Note that this requires the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstanceBatch} to be terminated via a \link[bbotk:TerminatorEvals]{bbotk::TerminatorEvals}.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-AcqFunctionSmsEgo-new}{\code{AcqFunctionSmsEgo$new()}}
-\item \href{#method-AcqFunctionSmsEgo-update}{\code{AcqFunctionSmsEgo$update()}}
-\item \href{#method-AcqFunctionSmsEgo-reset}{\code{AcqFunctionSmsEgo$reset()}}
-\item \href{#method-AcqFunctionSmsEgo-clone}{\code{AcqFunctionSmsEgo$clone()}}
+  \itemize{
+    \item \href{#method-AcqFunctionSmsEgo-initialize}{\code{AcqFunctionSmsEgo$new()}}
+    \item \href{#method-AcqFunctionSmsEgo-update}{\code{AcqFunctionSmsEgo$update()}}
+    \item \href{#method-AcqFunctionSmsEgo-reset}{\code{AcqFunctionSmsEgo$reset()}}
+    \item \href{#method-AcqFunctionSmsEgo-clone}{\code{AcqFunctionSmsEgo$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details><summary>Inherited methods</summary>
+\if{html}{\out{<details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href='../../bbotk/html/Objective.html#method-Objective-eval'><code>bbotk::Objective$eval()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href='../../bbotk/html/Objective.html#method-Objective-format'><code>bbotk::Objective$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href='../../bbotk/html/Objective.html#method-Objective-help'><code>bbotk::Objective$help()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href='../../bbotk/html/Objective.html#method-Objective-print'><code>bbotk::Objective$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-assert_surrogate'><code>AcqFunction$assert_surrogate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_dt'><code>AcqFunction$eval_dt()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href='../../mlr3mbo/html/AcqFunction.html#method-AcqFunction-eval_many'><code>AcqFunction$eval_many()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AcqFunctionSmsEgo-new"></a>}}
-\if{latex}{\out{\hypertarget{method-AcqFunctionSmsEgo-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionSmsEgo$new(surrogate = NULL, lambda = 1, epsilon = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-AcqFunctionSmsEgo-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqFunctionSmsEgo-initialize}{}}}
+\subsection{\code{AcqFunctionSmsEgo$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionSmsEgo$new(surrogate = NULL, lambda = 1, epsilon = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearnerCollection}).}
+      \item{\code{lambda}}{(\code{numeric(1)}).}
+      \item{\code{epsilon}}{(\code{NULL} | \code{numeric(1)}).}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{surrogate}}{(\code{NULL} | \link{SurrogateLearnerCollection}).}
-
-\item{\code{lambda}}{(\code{numeric(1)}).}
-
-\item{\code{epsilon}}{(\code{NULL} | \code{numeric(1)}).}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionSmsEgo-update"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionSmsEgo-update}{}}}
-\subsection{Method \code{update()}}{
-Update the acquisition function and set \code{ys_front}, \code{ref_point} and \code{epsilon}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionSmsEgo$update()}\if{html}{\out{</div>}}
+\subsection{\code{AcqFunctionSmsEgo$update()}}{
+  Update the acquisition function and set \code{ys_front}, \code{ref_point} and \code{epsilon}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionSmsEgo$update()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionSmsEgo-reset"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionSmsEgo-reset}{}}}
-\subsection{Method \code{reset()}}{
-Reset the acquisition function.
+\subsection{\code{AcqFunctionSmsEgo$reset()}}{
+  Reset the acquisition function.
 Resets \code{epsilon}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionSmsEgo$reset()}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionSmsEgo$reset()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AcqFunctionSmsEgo-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-AcqFunctionSmsEgo-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AcqFunctionSmsEgo$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{AcqFunctionSmsEgo$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqFunctionSmsEgo$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

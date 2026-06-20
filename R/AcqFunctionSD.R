@@ -43,18 +43,25 @@
 #'   acq_function$update()
 #'   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 #' }
-AcqFunctionSD = R6Class("AcqFunctionSD",
+AcqFunctionSD = R6Class(
+  "AcqFunctionSD",
   inherit = AcqFunction,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
     #' @param surrogate (`NULL` | [SurrogateLearner]).
     initialize = function(surrogate = NULL) {
-      assert_r6(surrogate, "SurrogateLearner", null.ok = TRUE)
-      super$initialize("acq_sd", surrogate = surrogate, requires_predict_type_se = TRUE, direction = "maximize", label = "Posterior Standard Deviation", man = "mlr3mbo::mlr_acqfunctions_sd")
+      super$initialize(
+        "acq_sd",
+        surrogate = surrogate,
+        requires_predict_type_se = TRUE,
+        surrogate_class = "SurrogateLearner",
+        direction = "maximize",
+        label = "Posterior Standard Deviation",
+        man = "mlr3mbo::mlr_acqfunctions_sd"
+      )
     }
   ),
 
@@ -67,4 +74,3 @@ AcqFunctionSD = R6Class("AcqFunctionSD",
 )
 
 mlr_acqfunctions$add("sd", AcqFunctionSD)
-

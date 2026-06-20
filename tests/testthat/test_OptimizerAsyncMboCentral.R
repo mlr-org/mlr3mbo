@@ -1,37 +1,38 @@
-test_that("OptimizerAsyncMboCentral works in defaults", {
-  skip_on_cran()
-  skip_if_not_installed("rush")
-  skip_if_not(redis_available())
-  flush_redis()
+skip_if_not_installed("rush")
+skip_if_no_redis()
 
-  mirai::daemons(2L)
-  rush::rush_plan(n_workers = 2L, worker_type = "remote")
+test_that("OptimizerAsyncMboCentral works in defaults", {
+  rush = start_rush(n_workers = 2)
+  on.exit({
+    rush$reset()
+    mirai::daemons(0)
+  })
+
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
     terminator = trm("evals", n_evals = 10L),
+    rush = rush
   )
   optimizer = opt("async_mbo_central", design_function = "sobol", design_size = 5L)
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data, min.rows = 10L)
   expect_names(names(instance$archive$data), must.include = c("acq_cb"))
-
-  expect_rush_reset(instance$rush)
 })
 
 test_that("OptimizerAsyncMboCentral works with initial design", {
-  skip_on_cran()
-  skip_if_not_installed("rush")
-  skip_if_not(redis_available())
-  flush_redis()
+  rush = start_rush(n_workers = 2)
+  on.exit({
+    rush$reset()
+    mirai::daemons(0)
+  })
 
-  mirai::daemons(2L)
-  rush::rush_plan(n_workers = 2L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
     terminator = trm("evals", n_evals = 10L),
+    rush = rush
   )
   initial_design = generate_design_sobol(PS_2D, n = 5L)$data
   initial_design[, y := OBJ_2D$eval_many(transpose_list(initial_design))]
@@ -41,20 +42,18 @@ test_that("OptimizerAsyncMboCentral works with initial design", {
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
 
-
-
 test_that("OptimizerAsyncMboCentral works with evaluations in archive", {
-  skip_on_cran()
-  skip_if_not_installed("rush")
-  skip_if_not(redis_available())
-  flush_redis()
+  rush = start_rush(n_workers = 2)
+  on.exit({
+    rush$reset()
+    mirai::daemons(0)
+  })
 
-  mirai::daemons(2L)
-  rush::rush_plan(n_workers = 2L, worker_type = "remote")
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
     terminator = trm("evals", n_evals = 10L),
+    rush = rush
   )
 
   optimizer = opt("async_random_search")
@@ -67,24 +66,23 @@ test_that("OptimizerAsyncMboCentral works with evaluations in archive", {
 
   expect_data_table(instance$archive$data[is.na(get("acq_cb"))], min.rows = 10L)
   expect_data_table(instance$archive$data[!is.na(get("acq_cb"))], min.rows = 20L)
-
-  expect_rush_reset(instance$rush)
 })
 
 test_that("OptimizerAsyncMboCentral works with custom surrogate", {
-  skip_on_cran()
-  skip_if_not_installed("rush")
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("ranger")
-  skip_if_not(redis_available())
-  flush_redis()
 
-  mirai::daemons(2L)
-  rush::rush_plan(n_workers = 2L, worker_type = "remote")
+  rush = start_rush(n_workers = 2)
+  on.exit({
+    rush$reset()
+    mirai::daemons(0)
+  })
+
   instance = oi_async(
     objective = OBJ_2D,
     search_space = PS_2D,
     terminator = trm("evals", n_evals = 10L),
+    rush = rush
   )
 
   surrogate = default_surrogate(instance)
@@ -102,8 +100,6 @@ test_that("OptimizerAsyncMboCentral works with custom surrogate", {
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
   expect_data_table(instance$archive$data, min.rows = 10L)
-
-  expect_rush_reset(instance$rush)
 })
 
 test_that("OptimizerAsyncMboCentral print method works", {

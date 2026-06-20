@@ -2,13 +2,24 @@
 #' @name mbo_defaults
 #'
 #' @description
-#' The following defaults are set for [OptimizerMbo] during optimization if the respective fields are not set during initialization.
+#' The following defaults are set for [OptimizerMbo] during optimization
+#' if the respective fields are not set during initialization.
 #'
-#' * Optimization Loop: [default_loop_function]\cr
-#' * Surrogate: [default_surrogate]\cr
-#' * Acquisition Function: [default_acqfunction]\cr
-#' * Acqfun Optimizer: [default_acqoptimizer]\cr
-#' * Result Assigner: [default_result_assigner]\cr
+#' * **Loop Function** ([default_loop_function]): The Bayesian optimization flavor.
+#'   Defaults to [bayesopt_ego] for single-objective and [bayesopt_smsego] for multi-objective optimization.
+#' * **Surrogate** ([default_surrogate]): The surrogate model.
+#'   Uses a Gaussian process ([default_gp]) for purely numeric parameter spaces without dependencies,
+#'   and a random forest ([default_rf]) otherwise.
+#'   For multi-objective optimization, one surrogate learner per objective is used.
+#' * **Acquisition Function** ([default_acqfunction]): The criterion used to propose future points.
+#'   Defaults to [mlr_acqfunctions_cb] (confidence bound) for synchronous single-objective optimization
+#'   (`lambda = 3` for numeric, `lambda = 1` for mixed spaces),
+#'   [mlr_acqfunctions_smsego] for synchronous multi-objective optimization,
+#'   and [mlr_acqfunctions_stochastic_cb] for asynchronous single-objective optimization.
+#' * **Acquisition Function Optimizer** ([default_acqoptimizer]): The optimizer for the acquisition function.
+#'   Defaults to [AcqOptimizerLocalSearch].
+#' * **Result Assigner** ([default_result_assigner]): Determines how the final result is assigned.
+#'   Defaults to [ResultAssignerArchive].
 #'
 #' @family mbo_defaults
 NULL
@@ -38,13 +49,18 @@ default_loop_function = function(instance) {
 #' @title Default Gaussian Process
 #'
 #' @description
-#' This is a helper function that constructs a default Gaussian Process [mlr3learners::LearnerRegrKM] which is for example used in [default_surrogate()].
+#' This is a helper function that constructs a default Gaussian Process [mlr3learners::LearnerRegrKM]
+#' which is for example used in [default_surrogate()].
 #'
 #' Constructs a Kriging learner `"regr.km"` with kernel `"matern5_2"`.
-#' If `noisy = FALSE` (default) a small nugget effect is added `nugget.stability = 10^-8` to increase numerical stability to hopefully prevent crashes of `DiceKriging`.
+#' If `noisy = FALSE` (default) a small nugget effect is added `nugget.stability = 10^-8`
+#' to increase numerical stability to hopefully prevent crashes of `DiceKriging`.
 #' If `noisy = TRUE` the nugget effect will be estimated with `nugget.estim = TRUE`.
-#' If `noisy = TRUE` `jitter` is set to `TRUE` to circumvent a problem with `DiceKriging` where already trained input values produce the exact trained output.
-#' In general, instead of the default `"BFGS"` optimization method we use rgenoud (`"gen"`), which is a hybrid algorithm, to combine global search based on genetic algorithms and local search based on gradients.
+#' If `noisy = TRUE` `jitter` is set to `TRUE` to circumvent a problem with `DiceKriging`
+#' where already trained input values produce the exact trained output.
+#' In general, instead of the default `"BFGS"` optimization method we use rgenoud (`"gen"`),
+#' which is a hybrid algorithm,
+#' to combine global search based on genetic algorithms and local search based on gradients.
 #' This may improve the model fit and will less frequently produce a constant model prediction.
 #'
 #' @param noisy (`logical(1)`)\cr
@@ -60,7 +76,8 @@ default_gp = function(noisy = FALSE) {
   require_namespaces("DiceKriging")
   require_namespaces("rgenoud")
 
-  learner = lrn("regr.km",
+  learner = lrn(
+    "regr.km",
     predict_type = "se",
     control = list(trace = FALSE),
     optim.method = "gen",
@@ -79,7 +96,8 @@ default_gp = function(noisy = FALSE) {
 #' @title Default Random Forest
 #'
 #' @description
-#' This is a helper function that constructs a default random forest [mlr3learners::LearnerRegrRanger] which is for example used in [default_surrogate()].
+#' This is a helper function that constructs a default random forest [mlr3learners::LearnerRegrRanger]
+#' which is for example used in [default_surrogate()].
 #'
 #' @param noisy (`logical(1)`)\cr
 #'   Whether the learner will be used in a noisy objective function scenario.
@@ -91,7 +109,8 @@ default_rf = function(noisy = FALSE) {
   assert_flag(noisy)
   require_namespaces("mlr3learners")
   require_namespaces("ranger")
-  lrn("regr.ranger",
+  lrn(
+    "regr.ranger",
     num.trees = 500L,
     se.method = "law_of_total_variance",
     splitrule = "variance",
@@ -107,19 +126,26 @@ default_rf = function(noisy = FALSE) {
 #' @title Default Surrogate
 #'
 #' @description
-#' This is a helper function that constructs a default [Surrogate] based on properties of the [bbotk::OptimInstance].
+#' This is a helper function that constructs a default [Surrogate]
+#' based on properties of the [bbotk::OptimInstance].
 #'
-#' For purely numeric (including integers) parameter spaces without any dependencies a Gaussian Process is constricted via [default_gp()].
-#' For mixed numeric-categorical parameter spaces, or spaces with conditional parameters a random forest is constructed via [default_rf()].
+#' For purely numeric (including integers) parameter spaces without any dependencies
+#' a Gaussian Process is constricted via [default_gp()].
+#' For mixed numeric-categorical parameter spaces, or spaces with conditional parameters
+#' a random forest is constructed via [default_rf()].
 #'
-#' In any case, learners are encapsulated using `"evaluate"`, and a fallback learner is set, in cases where the surrogate learner errors.
-#' Currently, the following learner is used as a fallback: `lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")`.
+#' In any case, learners are encapsulated using `"evaluate"`, and a fallback learner is set,
+#' in cases where the surrogate learner errors.
+#' Currently, the following learner is used as a fallback:
+#' `lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")`.
 #'
-#' If additionally dependencies are present in the parameter space, inactive conditional parameters are represented by missing `NA` values in the training design data.
+#' If additionally dependencies are present in the parameter space,
+#' inactive conditional parameters are represented by missing `NA` values in the training design data.
 #' We simply handle those with the internal `NA` handling method `na.action = "na_learn` of \CRANpkg{ranger}.
 #'
 #' If `n_learner` is `1`, the learner is wrapped as a [SurrogateLearner].
-#' Otherwise, if `n_learner` is larger than `1`, multiple deep clones of the learner are wrapped as a [SurrogateLearnerCollection].
+#' Otherwise, if `n_learner` is larger than `1`,
+#' multiple deep clones of the learner are wrapped as a [SurrogateLearnerCollection].
 #'
 #' @param instance ([bbotk::OptimInstance])\cr
 #'   An object that inherits from [bbotk::OptimInstance].
@@ -138,7 +164,6 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL, force_r
   assert_r6(learner, "Learner", null.ok = TRUE)
   assert_int(n_learner, lower = 1L, null.ok = TRUE)
   noisy = "noisy" %in% instance$objective$properties
-  output_trafo = NULL
 
   if (is.null(learner)) {
     require_namespaces(c("ranger", "mlr3learners"))
@@ -153,7 +178,9 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL, force_r
     learner$encapsulate("evaluate", fallback)
   }
 
-  if (is.null(n_learner)) n_learner = length(instance$archive$cols_y)
+  if (is.null(n_learner)) {
+    n_learner = length(instance$archive$cols_y)
+  }
 
   if (n_learner == 1L) {
     SurrogateLearner$new(learner, output_trafo = OutputTrafoLog$new(invert_posterior = FALSE))
@@ -167,8 +194,10 @@ default_surrogate = function(instance, learner = NULL, n_learner = NULL, force_r
 #'
 #' @description
 #' Chooses a default acquisition function, i.e. the criterion used to propose future points.
-#' For synchronous single-objective optimization and a purely numeric parameter space, defaults to [mlr_acqfunctions_cb] with `lambda = 3`.
-#' For synchronous single-objective optimization and a mixed numeric-categorical parameter space, defaults to [mlr_acqfunctions_cb] with `lambda = 1`.
+#' For synchronous single-objective optimization and a purely numeric parameter space,
+#' defaults to [mlr_acqfunctions_cb] with `lambda = 3`.
+#' For synchronous single-objective optimization and a mixed numeric-categorical parameter space,
+#' defaults to [mlr_acqfunctions_cb] with `lambda = 1`.
 #' For synchronous multi-objective optimization, defaults to [mlr_acqfunctions_smsego].
 #' For asynchronous single-objective optimization, defaults to [mlr_acqfunctions_stochastic_cb].
 #'
@@ -196,7 +225,8 @@ default_acqfunction = function(instance) {
 #'
 #' @description
 #' Chooses a default acquisition function optimizer.
-#' Defaults to [AcqOptimizerLocalSearch] with `n_searches = 10`, `n_steps = ceiling(100 * D^2 / 300)`, and `n_neighs = 30`, where `D` is the dimension of the search space.
+#' Defaults to [AcqOptimizerLocalSearch] with `n_searches = 10`, `n_steps = ceiling(100 * D^2 / 300)`,
+#' and `n_neighs = 30`, where `D` is the dimension of the search space.
 #'
 #' @param acq_function ([AcqFunction]).
 #' @param instance ([bbotk::OptimInstance]).
@@ -227,4 +257,3 @@ default_result_assigner = function(instance) {
   assert_r6(instance, classes = "OptimInstance")
   ResultAssignerArchive$new()
 }
-

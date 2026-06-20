@@ -8,7 +8,13 @@
 #' This is a minimal interface internally passing on to [OptimizerAsyncMbo].
 #' For additional information and documentation see [OptimizerAsyncMbo].
 #'
-#' Currently, only single-objective optimization is supported and `TunerAsyncMbo` is considered an experimental feature and API might be subject to changes.
+#' Currently, only single-objective optimization is supported and
+#' `TunerAsyncMbo` is considered an experimental feature and API might be subject to changes.
+#'
+#' @section Defaults:
+#' All components have sensible defaults.
+#' For more information on the defaults for `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`,
+#' see [mbo_defaults].
 #'
 #' @section Parameters:
 #' \describe{
@@ -21,7 +27,8 @@
 #'   Default is `100`.}
 #' \item{`design_function`}{`character(1)`\cr
 #'   Sampling function to generate the initial design.
-#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs], or `sobol` [paradox::generate_design_sobol].
+#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs],
+#'   or `sobol` [paradox::generate_design_sobol].
 #'   Default is `sobol`.}
 #' \item{`n_workers`}{`integer(1)`\cr
 #'   Number of parallel workers.
@@ -56,7 +63,7 @@
 #'       terminator = trm("evals", n_evals = 10))
 #'
 #'     mirai::daemons(2)
-#'     rush::rush_plan(n_workers=2, worker_type = "remote")
+#'     rush::rush_plan(n_workers=2, worker_type = "mirai")
 #'
 #'     tnr("async_mbo", design_size = 4, n_workers = 2)$optimize(instance)
 #'     mirai::daemons(0)
@@ -65,13 +72,13 @@
 #'   }
 #' }
 #' }
-TunerAsyncMbo = R6Class("TunerAsyncMbo",
+TunerAsyncMbo = R6Class(
+  "TunerAsyncMbo",
   inherit = mlr3tuning::TunerAsyncFromOptimizerAsync,
 
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    #' For more information on default values for `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`, see `?mbo_defaults`.
     #'
     #' Note that all the parameters below are simply passed to the [OptimizerAsyncMbo] and
     #' the respective fields are simply (settable) active bindings to the fields of the [OptimizerAsyncMbo].
@@ -83,7 +90,12 @@ TunerAsyncMbo = R6Class("TunerAsyncMbo",
     #' @param param_set ([paradox::ParamSet])\cr
     #'  Set of control parameters.
     initialize = function(surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, param_set = NULL) {
-      optimizer = OptimizerAsyncMbo$new(surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, param_set = param_set)
+      optimizer = OptimizerAsyncMbo$new(
+        surrogate = surrogate,
+        acq_function = acq_function,
+        acq_optimizer = acq_optimizer,
+        param_set = param_set
+      )
 
       super$initialize(optimizer = optimizer, man = "mlr3mbo::TunerAsyncMbo")
     },
@@ -100,8 +112,14 @@ TunerAsyncMbo = R6Class("TunerAsyncMbo",
       catn(str_indent("* Packages:", self$packages))
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
-      catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
-      catn(str_indent("* Result Assigner:", if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]))
+      catn(str_indent(
+        "* Acquisition Function Optimizer:",
+        if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id
+      ))
+      catn(str_indent(
+        "* Result Assigner:",
+        if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]
+      ))
     },
 
     #' @description

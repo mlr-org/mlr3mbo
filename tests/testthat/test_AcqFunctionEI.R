@@ -30,7 +30,7 @@ test_that("AcqFunctionEI works", {
 test_that("AcqFunctionEI trafo", {
   domain = ps(x = p_dbl(lower = 10, upper = 20, trafo = function(x) x - 15))
   obj = ObjectiveRFunDt$new(
-    fun = function(xdt) data.table(y = xdt$x ^ 2),
+    fun = function(xdt) data.table(y = xdt$x^2),
     domain = domain,
     codomain = ps(y = p_dbl(tags = "minimize")),
     check_values = FALSE
@@ -51,6 +51,5 @@ test_that("AcqFunctionEI trafo", {
   res = acqf$eval_dt(xdt)
   expect_data_table(res, ncols = 1L, nrows = 11L, any.missing = FALSE)
   expect_named(res, acqf$id)
-  expect_true(max(res$acq_ei) == res$acq_ei[6])  # at x = 15
+  expect_true(max(res$acq_ei) == res$acq_ei[6]) # at x = 15
 })
-

@@ -8,10 +8,10 @@
 #' @family Acquisition Function
 #'
 #' @export
-AcqFunctionEIOld = R6Class("AcqFunctionEIOld",
+AcqFunctionEIOld = R6Class(
+  "AcqFunctionEIOld",
   inherit = AcqFunctionOld,
   public = list(
-
     #' @field y_best (`numeric()`).
     y_best = NULL,
 

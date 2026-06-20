@@ -21,7 +21,14 @@ test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_ego", {
   acq_function = AcqFunctionEI$new()
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
-  optimizer = opt("mbo", loop_function = bayesopt_ego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_ego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer,
+    result_assigner = result_assigner
+  )
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_data_table(instance$result, nrows = 1L)
@@ -36,7 +43,14 @@ test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_parego", {
   acq_function = AcqFunctionEI$new()
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
-  optimizer = opt("mbo", loop_function = bayesopt_parego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_parego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer,
+    result_assigner = result_assigner
+  )
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_data_table(instance$result, min.rows = 1L)
@@ -51,7 +65,14 @@ test_that("ResultAssignerArchive works with OptimizerMbo and bayesopt_smsego", {
   acq_function = AcqFunctionSmsEgo$new()
   acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
 
-  optimizer = opt("mbo", loop_function = bayesopt_smsego, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer, result_assigner = result_assigner)
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_smsego,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer,
+    result_assigner = result_assigner
+  )
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_data_table(instance$result, min.rows = 1L)
@@ -61,11 +82,13 @@ test_that("ResultAssignerArchive passes internal tuned values", {
   skip_if_missing_regr_km()
   result_assigner = ResultAssignerArchive$new()
 
-  learner = lrn("classif.debug",
+  learner = lrn(
+    "classif.debug",
     validate = 0.2,
     early_stopping = TRUE,
     x = to_tune(0.2, 0.3),
-    iter = to_tune(upper = 1000L, internal = TRUE, aggr = function(x) 99L))
+    iter = to_tune(upper = 1000L, internal = TRUE, aggr = function(x) 99L)
+  )
 
   instance = ti(
     task = tsk("pima"),

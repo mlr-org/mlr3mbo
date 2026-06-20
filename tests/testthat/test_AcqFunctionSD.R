@@ -21,4 +21,3 @@ test_that("AcqFunctionSD works", {
   expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
   expect_named(res, acqf$id)
 })
-

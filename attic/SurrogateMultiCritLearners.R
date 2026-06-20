@@ -5,10 +5,10 @@
 #' Note that redundant [mlr3::Learner]s must be deep clones.
 #'
 #' @export
-SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
+SurrogateMultiCritLearners = R6Class(
+  "SurrogateMultiCritLearners",
   inherit = SurrogateMultiCrit,
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -26,10 +26,18 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       }
       ps = ParamSet$new(list(
         ParamLgl$new("calc_insample_perf"),
-        ParamUty$new("perf_measures", custom_check = function(x) check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(self$model))),  # FIXME: actually want check_measures
-        ParamUty$new("perf_thresholds", custom_check = function(x) check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(self$model))))
+        ParamUty$new("perf_measures", custom_check = function(x) {
+          check_list(x, types = "MeasureRegr", any.missing = FALSE, len = length(self$model))
+        }), # FIXME: actually want check_measures
+        ParamUty$new("perf_thresholds", custom_check = function(x) {
+          check_double(x, lower = -Inf, upper = Inf, any.missing = FALSE, len = length(self$model))
+        })
+      ))
+      ps$values = list(
+        calc_insample_perf = FALSE,
+        perf_measures = replicate(length(self$model), msr("regr.rsq")),
+        perf_thresholds = rep(0, length(self$model))
       )
-      ps$values = list(calc_insample_perf = FALSE, perf_measures = replicate(length(self$model), msr("regr.rsq")), perf_thresholds = rep(0, length(self$model)))
       ps$add_dep("perf_measures", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
       ps$add_dep("perf_thresholds", on = "calc_insample_perf", cond = CondEqual$new(TRUE))
       private$.param_set = ps
@@ -60,7 +68,6 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
   ),
 
   active = list(
-
     #' @field k (`integer(1)`)\cr
     #' Returns the number of models.
     k = function() {
@@ -90,8 +97,8 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
           } else {
             insample_perf > perf_threshold
           }
-        })
-      )
+        }
+      ))
 
       if (!check) {
         stop("Current insample performance of the Surrogate Model does not meet the performance threshold")
@@ -101,7 +108,6 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
   ),
 
   private = list(
-
     # Train model with new data
     # Also calculates the insample performance based on the `perf_measures` hyperparameter if `calc_insample_perf = TRUE`
     .update = function(xydt, y_cols) {
@@ -115,7 +121,8 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
         task = TaskRegr$new(
           id = paste0("surrogate_task_", y_col),
           backend = backend,
-          target = y_col)
+          target = y_col
+        )
         task$col_roles$feature = features
         task
       })
@@ -127,22 +134,22 @@ SurrogateMultiCritLearners = R6Class("SurrogateMultiCritLearners",
       names(self$model) = y_cols
 
       if (self$param_set$values$calc_insample_perf) {
-        private$.insample_perf = setNames(pmap_dbl(list(model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures),
-          .f = function(model, task, perf_measure) {
-            assert_measure(perf_measure, task = task, learner = model)
-            model$predict(task)$score(perf_measure, task = task, learner = model)
-          }
-        ), nm = map_chr(self$param_set$values$perf_measures, "id"))
+        private$.insample_perf = setNames(
+          pmap_dbl(
+            list(model = self$model, task = tasks, perf_measure = self$param_set$values$perf_measures),
+            .f = function(model, task, perf_measure) {
+              assert_measure(perf_measure, task = task, learner = model)
+              model$predict(task)$score(perf_measure, task = task, learner = model)
+            }
+          ),
+          nm = map_chr(self$param_set$values$perf_measures, "id")
+        )
         self$assert_insample_perf
       }
     },
 
     deep_clone = function(name, value) {
-      switch(name,
-        model = map(value, function(x) x$clone(deep = TRUE)),
-        .param_set = value$clone(deep = TRUE),
-        value
-      )
+      switch(name, model = map(value, function(x) x$clone(deep = TRUE)), .param_set = value$clone(deep = TRUE), value)
     }
   )
 )

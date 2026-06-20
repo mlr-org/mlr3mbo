@@ -4,20 +4,23 @@
 #' @name mlr_result_assigners_surrogate
 #'
 #' @description
-#' Result assigner that chooses the final point(s) based on a surrogate mean prediction of all evaluated points in the [bbotk::Archive].
+#' Result assigner that chooses the final point(s) based on a surrogate mean prediction of all evaluated points
+#' in the [bbotk::Archive].
 #' This is especially useful in the case of noisy objective functions.
 #'
-#' In the case of operating on an [bbotk::OptimInstanceBatchMultiCrit] or [bbotk::OptimInstanceAsyncMultiCrit] the [SurrogateLearnerCollection] must use as many learners as there are objective functions.
+#' In the case of operating on an [bbotk::OptimInstanceBatchMultiCrit] or
+#' [bbotk::OptimInstanceAsyncMultiCrit] the [SurrogateLearnerCollection] must use as many learners as there are
+#' objective functions.
 #'
 #' @family Result Assigner
 #' @export
 #' @examples
 #' result_assigner = ras("surrogate")
-ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
+ResultAssignerSurrogate = R6Class(
+  "ResultAssignerSurrogate",
   inherit = ResultAssigner,
 
   public = list(
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -32,7 +35,8 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
     #' Assigns the result, i.e., the final point(s) to the instance.
     #' If `$surrogate` is `NULL`, `default_surrogate(instance)` is used and also assigned to `$surrogate`.
     #'
-    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit] |[bbotk::OptimInstanceAsyncSingleCrit] | [bbotk::OptimInstanceAsyncMultiCrit])\cr
+    #' @param instance ([bbotk::OptimInstanceBatchSingleCrit] | [bbotk::OptimInstanceBatchMultiCrit] |
+    #'   [bbotk::OptimInstanceAsyncSingleCrit] | [bbotk::OptimInstanceAsyncMultiCrit])\cr
     #'   The [bbotk::OptimInstance] the final result should be assigned to.
     assign_result = function(instance) {
       if (is.null(self$surrogate)) {
@@ -43,7 +47,14 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
       } else if (inherits(instance, c("OptimInstanceBatchMultiCrit", "OptimInstanceAsyncMultiCrit"))) {
         assert_r6(self$surrogate, classes = "SurrogateLearnerCollection")
         if (self$surrogate$n_learner != instance$objective$ydim) {
-          stopf("Surrogate used within the result assigner uses %i learners but the optimization instance has %i objective functions", self$surrogate$n_learner, instance$objective$ydim)
+          stopf(
+            paste(
+              "Surrogate used within the result assigner uses %i learners",
+              "but the optimization instance has %i objective functions"
+            ),
+            self$surrogate$n_learner,
+            instance$objective$ydim
+          )
         }
       }
 
@@ -73,7 +84,6 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
         best_y = archive$data[best, on = cols_x][, cols_y, with = FALSE]
         instance$assign_result(xdt = best, ydt = best_y, extra = extra)
       }
-
     }
   ),
 
@@ -89,7 +99,8 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
 
     #' @field packages (`character()`)\cr
     #'   Set of required packages.
-    #'   A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via [requireNamespace()].
+    #'   A warning is signaled if at least one of the packages is not installed,
+    #'   but loaded (not attached) later on-demand via [requireNamespace()].
     packages = function(rhs) {
       if (missing(rhs)) {
         if (is.null(self$surrogate)) character(0) else self$surrogate$packages
@@ -103,8 +114,11 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
     .surrogate = NULL,
 
     deep_clone = function(name, value) {
-      switch(name,
-        .surrogate = {if (!is.null(value)) value$clone(deep = TRUE) else value},
+      switch(
+        name,
+        .surrogate = {
+          if (!is.null(value)) value$clone(deep = TRUE) else value
+        },
         value
       )
     }
@@ -112,4 +126,3 @@ ResultAssignerSurrogate = R6Class("ResultAssignerSurrogate",
 )
 
 mlr_result_assigners$add("surrogate", ResultAssignerSurrogate)
-

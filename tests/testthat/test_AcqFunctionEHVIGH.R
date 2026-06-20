@@ -2,7 +2,10 @@ test_that("AcqFunctionEHVIGH works", {
   skip_if_not_installed("emoa")
   skip_if_not_installed("fastGHQuad")
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
-  surrogate = SurrogateLearnerCollection$new(list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), archive = inst$archive)
+  surrogate = SurrogateLearnerCollection$new(
+    list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)),
+    archive = inst$archive
+  )
   acqf = AcqFunctionEHVIGH$new(surrogate = surrogate)
   expect_acqfunction(acqf)
 
@@ -41,7 +44,10 @@ test_that("AcqFunctionEHVIGH is close to AcqFunctionEHVI", {
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
   design = data.table(x = c(-0.8, -0.3, 0.6, 0.9))
   inst$eval_batch(design)
-  surrogate = SurrogateLearnerCollection$new(list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)), archive = inst$archive)
+  surrogate = SurrogateLearnerCollection$new(
+    list(REGR_KM_DETERM, REGR_KM_DETERM$clone(deep = TRUE)),
+    archive = inst$archive
+  )
   surrogate$update()
   xdt = data.table(x = seq(PS_1D$lower, PS_1D$upper, length.out = 101L))
 
@@ -58,5 +64,3 @@ test_that("AcqFunctionEHVIGH is close to AcqFunctionEHVI", {
 
   expect_true(sum(x * abs(res - res_ref)) < 0.1)
 })
-
-

@@ -4,7 +4,6 @@ OptTerminatorSteps = R6Class(
   inherit = OptTerminator,
 
   public = list(
-
     # constructor
     initialize = function(max_steps = 20L) {
       super$initialize()
@@ -18,4 +17,3 @@ OptTerminatorSteps = R6Class(
     }
   )
 )
-

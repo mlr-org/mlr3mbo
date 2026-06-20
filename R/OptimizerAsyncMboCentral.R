@@ -361,29 +361,32 @@ OptimizerAsyncMboCentral = R6Class("OptimizerAsyncMboCentral",
 
               # propose a new point using MBO
               # update surrogate on each iteration to account for newly queued points
-              xdt = tryCatch({
-                timestamp_surrogate = Sys.time()
-                self$acq_function$surrogate$update()
-                timestamp_acq_function = Sys.time()
-                self$acq_function$update()
-                timestamp_acq_optimizer = Sys.time()
-                xdt = self$acq_optimizer$optimize()
-                timestamp_loop = Sys.time()
-                set(xdt, j = "timestamp_surrogate", value = timestamp_surrogate)
-                set(xdt, j = "timestamp_acq_function", value = timestamp_acq_function)
-                set(xdt, j = "timestamp_acq_optimizer", value = timestamp_acq_optimizer)
-                set(xdt, j = "timestamp_loop", value = timestamp_loop)
-                xdt
-              }, mbo_error = function(mbo_error_condition) {
-                lg$info(paste0(class(mbo_error_condition), collapse = " / "))
-                lg$info("Proposing a randomly sampled point")
-                xdt = generate_design_random(inst$search_space, n = 1L)$data
-                set(xdt, j = "timestamp_surrogate", value = NA)
-                set(xdt, j = "timestamp_acq_function", value = NA)
-                set(xdt, j = "timestamp_acq_optimizer", value = NA)
-                set(xdt, j = "timestamp_loop", value = NA)
-                xdt
-              })
+              xdt = tryCatch(
+                {
+                  timestamp_surrogate = Sys.time()
+                  self$acq_function$surrogate$update()
+                  timestamp_acq_function = Sys.time()
+                  self$acq_function$update()
+                  timestamp_acq_optimizer = Sys.time()
+                  xdt = self$acq_optimizer$optimize()
+                  timestamp_loop = Sys.time()
+                  set(xdt, j = "timestamp_surrogate", value = timestamp_surrogate)
+                  set(xdt, j = "timestamp_acq_function", value = timestamp_acq_function)
+                  set(xdt, j = "timestamp_acq_optimizer", value = timestamp_acq_optimizer)
+                  set(xdt, j = "timestamp_loop", value = timestamp_loop)
+                  xdt
+                },
+                Mlr3ErrorMbo = function(cond) {
+                  lg$warn("Caught the following error: %s", cond$message)
+                  lg$info("Proposing a randomly sampled point")
+                  xdt = generate_design_random(inst$search_space, n = 1L)$data
+                  set(xdt, j = "timestamp_surrogate", value = NA)
+                  set(xdt, j = "timestamp_acq_function", value = NA)
+                  set(xdt, j = "timestamp_acq_optimizer", value = NA)
+                  set(xdt, j = "timestamp_loop", value = NA)
+                  xdt
+                }
+              )
               # push the new point to the queue
               xs = transpose_list(xdt)[[1]]
               extra = xs[names(xs) %nin% inst$archive$cols_x]
@@ -411,7 +414,8 @@ OptimizerAsyncMboCentral = R6Class("OptimizerAsyncMboCentral",
       tryCatch(
         {
           self$surrogate$update()
-        }, surrogate_update_error = function(error_condition) {
+        },
+        Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
           lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
         }
       )

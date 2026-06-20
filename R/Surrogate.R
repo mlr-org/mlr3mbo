@@ -6,9 +6,9 @@
 #' A surrogate model is used to model the unknown objective function(s) based on all points evaluated so far.
 #'
 #' @export
-Surrogate = R6Class("Surrogate",
+Surrogate = R6Class(
+  "Surrogate",
   public = list(
-
     #' @field learner (learner)\cr
     #'   Arbitrary learner object depending on the subclass.
     learner = NULL,
@@ -40,24 +40,18 @@ Surrogate = R6Class("Surrogate",
     #'
     #' @return `NULL`.
     update = function() {
-      if (is.null(self$archive)) stop("Archive must be set during construction or manually prior before calling $update().")
+      if (is.null(self$archive)) {
+        error_config("Archive must be set during construction or manually prior before calling $update().")
+      }
       if (self$param_set$values$catch_errors) {
         if (self$archive_is_async) {
-          tryCatch(private$.update_async(),
-            error = function(error_condition) {
-              lg$warn(error_condition$message)
-              stop(set_class(list(message = error_condition$message, call = NULL),
-                classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
-            }
-          )
+          tryCatch(private$.update_async(), error = function(error_condition) {
+            error_surrogate_update("Surrogate update failed.", parent = error_condition)
+          })
         } else {
-          tryCatch(private$.update(),
-            error = function(error_condition) {
-              lg$warn(error_condition$message)
-              stop(set_class(list(message = error_condition$message, call = NULL),
-                classes = c("surrogate_update_error", "mbo_error", "error", "condition")))
-            }
-          )
+          tryCatch(private$.update(), error = function(error_condition) {
+            error_surrogate_update("Surrogate update failed.", parent = error_condition)
+          })
         }
       } else {
         if (self$archive_is_async) {
@@ -109,7 +103,6 @@ Surrogate = R6Class("Surrogate",
   ),
 
   active = list(
-
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
@@ -209,7 +202,6 @@ Surrogate = R6Class("Surrogate",
   ),
 
   private = list(
-
     .archive = NULL,
 
     .cols_x = NULL,
@@ -227,12 +219,7 @@ Surrogate = R6Class("Surrogate",
     },
 
     deep_clone = function(name, value) {
-      switch(name,
-        .param_set = value$clone(deep = TRUE),
-        .archive = value$clone(deep = TRUE),
-        value
-      )
+      switch(name, .param_set = value$clone(deep = TRUE), .archive = value$clone(deep = TRUE), value)
     }
   )
 )
-

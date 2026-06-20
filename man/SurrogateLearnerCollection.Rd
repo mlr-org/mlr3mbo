@@ -13,12 +13,15 @@ Note that redundant \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} must be deep clon
 \describe{
 \item{\code{catch_errors}}{\code{logical(1)}\cr
 Should errors during updating the surrogate be caught and propagated to the \code{loop_function} which can then handle
-the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+the failed acquisition function optimization (as a result of the failed surrogate) appropriately by,
+e.g., proposing a randomly sampled point for evaluation?
 Default is \code{TRUE}.
 }
 \item{\code{impute_method}}{\code{character(1)}\cr
-Method to impute missing values in the case of updating on an asynchronous \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} with pending evaluations.
-Can be \code{"mean"} to use mean imputation or \code{"random"} to sample values uniformly at random between the empirical minimum and maximum.
+Method to impute missing values in the case of updating on an asynchronous \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync}
+with pending evaluations.
+Can be \code{"mean"} to use mean imputation or
+\code{"random"} to sample values uniformly at random between the empirical minimum and maximum.
 Default is \code{"random"}.
 }
 }
@@ -64,148 +67,147 @@ if (requireNamespace("mlr3learners") &
 }
 }
 \section{Super class}{
-\code{\link[mlr3mbo:Surrogate]{mlr3mbo::Surrogate}} -> \code{SurrogateLearnerCollection}
+\code{\link[mlr3mbo:Surrogate]{Surrogate}} -> \code{SurrogateLearnerCollection}
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{learner}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{learner}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
 List of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} wrapped as surrogate models.}
 
-\item{\code{input_trafo}}{(\link{InputTrafo})\cr
+    \item{\code{input_trafo}}{(\link{InputTrafo})\cr
 Input transformation.}
 
-\item{\code{output_trafo}}{(\link{OutputTrafo})\cr
+    \item{\code{output_trafo}}{(\link{OutputTrafo})\cr
 Output transformation.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{print_id}}{(\code{character})\cr
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 
-\item{\code{n_learner}}{(\code{integer(1)})\cr
+    \item{\code{n_learner}}{(\code{integer(1)})\cr
 Returns the number of surrogate models.}
 
-\item{\code{packages}}{(\code{character()})\cr
+    \item{\code{packages}}{(\code{character()})\cr
 Set of required packages.
 A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via \code{\link[=requireNamespace]{requireNamespace()}}.}
 
-\item{\code{feature_types}}{(\code{character()})\cr
+    \item{\code{feature_types}}{(\code{character()})\cr
 Stores the feature types the surrogate can handle, e.g. \code{"logical"}, \code{"numeric"}, or \code{"factor"}.
 A complete list of candidate feature types, grouped by task type, is stored in \code{\link[mlr3:mlr_reflections]{mlr_reflections$task_feature_types}}.}
 
-\item{\code{properties}}{(\code{character()})\cr
+    \item{\code{properties}}{(\code{character()})\cr
 Stores a set of properties/capabilities the surrogate has.
 A complete list of candidate properties, grouped by task type, is stored in \code{\link[mlr3:mlr_reflections]{mlr_reflections$learner_properties}}.}
 
-\item{\code{predict_type}}{(\code{character(1)})\cr
+    \item{\code{predict_type}}{(\code{character(1)})\cr
 Retrieves the currently active predict type, e.g. \code{"response"}.}
 
-\item{\code{output_trafo_must_be_considered}}{(\code{logical(1)})\cr
+    \item{\code{output_trafo_must_be_considered}}{(\code{logical(1)})\cr
 Whether a transformation has been applied to the target variable that has not been inverted during prediction.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-SurrogateLearnerCollection-new}{\code{SurrogateLearnerCollection$new()}}
-\item \href{#method-SurrogateLearnerCollection-predict}{\code{SurrogateLearnerCollection$predict()}}
-\item \href{#method-SurrogateLearnerCollection-clone}{\code{SurrogateLearnerCollection$clone()}}
+  \itemize{
+    \item \href{#method-SurrogateLearnerCollection-initialize}{\code{SurrogateLearnerCollection$new()}}
+    \item \href{#method-SurrogateLearnerCollection-predict}{\code{SurrogateLearnerCollection$predict()}}
+    \item \href{#method-SurrogateLearnerCollection-clone}{\code{SurrogateLearnerCollection$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="format"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-format'><code>mlr3mbo::Surrogate$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="print"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-print'><code>mlr3mbo::Surrogate$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="reset"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-reset'><code>mlr3mbo::Surrogate$reset()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-update'><code>mlr3mbo::Surrogate$update()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="format"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-format'><code>Surrogate$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="print"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-print'><code>Surrogate$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="reset"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-reset'><code>Surrogate$reset()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href='../../mlr3mbo/html/Surrogate.html#method-Surrogate-update'><code>Surrogate$update()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SurrogateLearnerCollection-new"></a>}}
-\if{latex}{\out{\hypertarget{method-SurrogateLearnerCollection-new}{}}}
-\subsection{Method \code{new()}}{
-Creates a new instance of this \link[R6:R6Class]{R6} class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearnerCollection$new(
+\if{html}{\out{<a id="method-SurrogateLearnerCollection-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-SurrogateLearnerCollection-initialize}{}}}
+\subsection{\code{SurrogateLearnerCollection$new()}}{
+  Creates a new instance of this \link[R6:R6Class]{R6} class.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{SurrogateLearnerCollection$new(
   learners,
   input_trafo = NULL,
   output_trafo = NULL,
   archive = NULL,
   cols_x = NULL,
   cols_y = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
-
-\item{\code{input_trafo}}{(\link{InputTrafo} | \code{NULL}).
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{learners}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr}).}
+      \item{\code{input_trafo}}{(\link{InputTrafo} | \code{NULL}).
 \link{InputTrafo} to be applied.}
-
-\item{\code{output_trafo}}{(\link{OutputTrafo} | \code{NULL}).
+      \item{\code{output_trafo}}{(\link{OutputTrafo} | \code{NULL}).
 \link{OutputTrafo} to be applied.}
-
-\item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
+      \item{\code{archive}}{(\link[bbotk:Archive]{bbotk::Archive} | \code{NULL})\cr
 \link[bbotk:Archive]{bbotk::Archive} of the \link[bbotk:OptimInstance]{bbotk::OptimInstance}.}
-
-\item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
+      \item{\code{cols_x}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.}
-
-\item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
+      \item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
 Column id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SurrogateLearnerCollection-predict"></a>}}
 \if{latex}{\out{\hypertarget{method-SurrogateLearnerCollection-predict}{}}}
-\subsection{Method \code{predict()}}{
-Predict mean response and standard error.
+\subsection{\code{SurrogateLearnerCollection$predict()}}{
+  Predict mean response and standard error.
 Returns a named list of \code{\link[data.table:data.table]{data.table::data.table()}}.
 Each contains the mean response and standard error for one \code{col_y}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearnerCollection$predict(xdt)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{SurrogateLearnerCollection$predict(xdt)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
+New data. One row per observation.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    named list of \code{\link[data.table:data.table]{data.table::data.table()}} with the columns \code{mean} and \code{se}.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{xdt}}{(\code{\link[data.table:data.table]{data.table::data.table()}})\cr
-New data. One row per observation.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-named list of \code{\link[data.table:data.table]{data.table::data.table()}} with the columns \code{mean} and \code{se}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SurrogateLearnerCollection-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-SurrogateLearnerCollection-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurrogateLearnerCollection$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{SurrogateLearnerCollection$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{SurrogateLearnerCollection$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

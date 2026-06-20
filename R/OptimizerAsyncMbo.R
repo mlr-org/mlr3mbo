@@ -1,42 +1,59 @@
 #' @title Asynchronous Model Based Optimization
 #'
+#' @include OptimizerMbo.R
 #' @name mlr_optimizers_async_mbo
 #'
 #' @description
 #' `OptimizerAsyncMbo` class that implements Asynchronous Model Based Optimization (AMBO).
 #' AMBO starts multiple sequential MBO runs on different workers.
 #' The worker communicate asynchronously through a shared archive relying on the \CRANpkg{rush} package.
-#' The optimizer follows a modular layout in which the surrogate model, acquisition function, and acquisition optimizer can be changed.
+#' The optimizer follows a modular layout in which the surrogate model, acquisition function,
+#' and acquisition optimizer can be changed.
 #' The [SurrogateLearner] will impute missing values due to pending evaluations.
-#' A stochastic [AcqFunction], e.g., [AcqFunctionStochasticEI] or [AcqFunctionStochasticCB] is used to create varying versions of the acquisition
-#' function on each worker, promoting different exploration-exploitation trade-offs.
+#' A stochastic [AcqFunction], e.g., [AcqFunctionStochasticEI] or [AcqFunctionStochasticCB] is used
+#' to create varying versions of the acquisition function on each worker,
+#' promoting different exploration-exploitation trade-offs.
 #' The [AcqOptimizer] class remains consistent with the one used in synchronous MBO.
 #'
-#' In contrast to [OptimizerMbo], no [loop_function] can be specified that determines the AMBO flavor as `OptimizerAsyncMbo` simply relies on
-#' a surrogate update, acquisition function update and acquisition function optimization step as an internal loop.
+#' In contrast to [OptimizerMbo], no [loop_function] can be specified that determines the AMBO flavor as
+#' `OptimizerAsyncMbo` simply relies on a surrogate update, acquisition function update and
+#' acquisition function optimization step as an internal loop.
 #'
-#' Currently, only single-objective optimization is supported and `OptimizerAsyncMbo` is considered an experimental feature and API might be subject to changes.
+#' Currently, only single-objective optimization is supported and
+#' `OptimizerAsyncMbo` is considered an experimental feature and API might be subject to changes.
 #'
-#' Note that in general the [SurrogateLearner] is updated one final time on all available data after the optimization process has terminated.
+#' Note that in general the [SurrogateLearner] is updated one final time on all available data
+#' after the optimization process has terminated.
 #' However, in certain scenarios this is not always possible or meaningful.
-#' It is therefore recommended to manually inspect the [SurrogateLearner] after optimization if it is to be used, e.g., for visualization purposes to make
-#' sure that it has been properly updated on all available data.
+#' It is therefore recommended to manually inspect the [SurrogateLearner] after optimization if it is to be used,
+#' e.g., for visualization purposes to make sure that it has been properly updated on all available data.
 #' If this final update of the [SurrogateLearner] could not be performed successfully, a warning will be logged.
 #'
 #' By specifying a [ResultAssigner], one can alter how the final result is determined after optimization, e.g.,
-#' simply based on the evaluations logged in the archive [ResultAssignerArchive] or based on the [Surrogate] via [ResultAssignerSurrogate].
+#' simply based on the evaluations logged in the archive [ResultAssignerArchive] or based on the [Surrogate] via
+#' [ResultAssignerSurrogate].
+#'
+#' @section Defaults:
+#' All components have sensible defaults.
+#' For more information on the defaults for `surrogate`, `acq_function`, `acq_optimizer`, and `result_assigner`,
+#' see [mbo_defaults].
 #'
 #' @section Archive:
 #' The [bbotk::ArchiveAsync] holds the following additional columns that are specific to AMBO algorithms:
 #'   * `acq_function$id` (`numeric(1)`)\cr
 #'     The value of the acquisition function.
 #'   * `".already_evaluated"` (`logical(1))`\cr
-#'     Whether this point was already evaluated. Depends on the `skip_already_evaluated` parameter of the [AcqOptimizer].
+#'     Whether this point was already evaluated.
+#'     Depends on the `skip_already_evaluated` parameter of the [AcqOptimizer].
 #'
-#' If the [bbotk::ArchiveAsync] does not contain any evaluations prior to optimization, an initial design is needed.
+#' If the [bbotk::ArchiveAsync] does not contain any evaluations prior to optimization,
+#' an initial design is needed.
 #' If the `initial_design` parameter is specified to be a `data.table`, this data will be used.
-#' Otherwise, if it is `NULL`, an initial design of size `design_size` will be generated based on the `generate_design` sampling function.
+#' Otherwise, if it is `NULL`, an initial design of size `design_size` will be generated based on the
+#' `generate_design` sampling function.
 #' See also the parameters below.
+#'
+#' @inheritSection mlr_optimizers_mbo Conditions
 #'
 #' @section Parameters:
 #' \describe{
@@ -49,7 +66,8 @@
 #'   Default is `100`.}
 #' \item{`design_function`}{`character(1)`\cr
 #'   Sampling function to generate the initial design.
-#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs], or `sobol` [paradox::generate_design_sobol].
+#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs],
+#'   or `sobol` [paradox::generate_design_sobol].
 #'   Default is `sobol`.}
 #' \item{`n_workers`}{`integer(1)`\cr
 #'   Number of parallel workers.
@@ -83,7 +101,7 @@
 #'       terminator = trm("evals", n_evals = 10))
 #'
 #'     mirai::daemons(2)
-#'     rush::rush_plan(n_workers=2, worker_type = "remote")
+#'     rush::rush_plan(n_workers=2, worker_type = "mirai")
 #'
 #'     optimizer = opt("async_mbo", design_size = 4, n_workers = 2)
 #'
@@ -94,7 +112,8 @@
 #'   }
 #' }
 #' }
-OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
+OptimizerAsyncMbo = R6Class(
+  "OptimizerAsyncMbo",
   inherit = bbotk::OptimizerAsync,
 
   public = list(
@@ -103,13 +122,13 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
     #'
     #' If `surrogate` is `NULL` and the `acq_function$surrogate` field is populated, this [SurrogateLearner] is used.
     #' Otherwise, `default_surrogate(instance)` is used.
-    #' If `acq_function` is `NULL` and the `acq_optimizer$acq_function` field is populated, this [AcqFunction] is used (and therefore its `$surrogate` if populated; see above).
+    #' If `acq_function` is `NULL` and the `acq_optimizer$acq_function` field is populated,
+    #' this [AcqFunction] is used (and therefore its `$surrogate` if populated; see above).
     #' Otherwise `default_acqfunction(instance)` is used.
     #' If `acq_optimizer` is `NULL`, `default_acqoptimizer(instance)` is used.
     #'
-    #' Even if already initialized, the `surrogate$archive` field will always be overwritten by the [bbotk::ArchiveAsync] of the current [bbotk::OptimInstanceAsyncSingleCrit] to be optimized.
-    #'
-    #' For more information on default values for `surrogate`, `acq_function`, `acq_optimizer` and `result_assigner`, see `?mbo_defaults`.
+    #' Even if already initialized, the `surrogate$archive` field will always be overwritten by the
+    #' [bbotk::ArchiveAsync] of the current [bbotk::OptimInstanceAsyncSingleCrit] to be optimized.
     #'
     #' @template param_id
     #' @template param_surrogate
@@ -129,8 +148,7 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       param_set = NULL,
       label = "Asynchronous Model Based Optimization",
       man = "mlr3mbo::OptimizerAsyncMbo"
-      ) {
-
+    ) {
       default_param_set = ps(
         initial_design = p_uty(),
         design_size = p_int(lower = 1, default = 100L),
@@ -141,13 +159,18 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
 
       param_set$set_values(design_size = 100L, design_function = "sobol")
 
-      super$initialize("async_mbo",
+      super$initialize(
+        "async_mbo",
         param_set = param_set,
-        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),  # is replaced with dynamic AB after construction
-        properties = c("dependencies", "single-crit"),  # is replaced with dynamic AB after construction
-        packages = c("mlr3mbo", "rush"),  # is replaced with dynamic AB after construction
+        # is replaced with dynamic AB after construction
+        param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
+        # is replaced with dynamic AB after construction
+        properties = c("dependencies", "single-crit"),
+        # is replaced with dynamic AB after construction
+        packages = c("mlr3mbo", "rush"),
         label = label,
-        man = man)
+        man = man
+      )
 
       self$surrogate = assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
       self$acq_function = assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
@@ -167,8 +190,14 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       catn(str_indent("* Packages:", self$packages))
       catn(str_indent("* Surrogate:", if (is.null(self$surrogate)) "-" else self$surrogate$print_id))
       catn(str_indent("* Acquisition Function:", if (is.null(self$acq_function)) "-" else class(self$acq_function)[1L]))
-      catn(str_indent("* Acquisition Function Optimizer:", if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id))
-      catn(str_indent("* Result Assigner:", if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]))
+      catn(str_indent(
+        "* Acquisition Function Optimizer:",
+        if (is.null(self$acq_optimizer)) "-" else self$acq_optimizer$print_id
+      ))
+      catn(str_indent(
+        "* Result Assigner:",
+        if (is.null(self$result_assigner)) "-" else class(self$result_assigner)[1L]
+      ))
     },
 
     #' @description
@@ -196,7 +225,8 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         self$acq_function = self$acq_optimizer$acq_function %??% default_acqfunction(inst)
       }
 
-      if (is.null(self$surrogate)) {  # acq_function$surrogate has precedence
+      if (is.null(self$surrogate)) {
+        # acq_function$surrogate has precedence
         self$surrogate = self$acq_function$surrogate %??% default_surrogate(inst)
       }
 
@@ -218,7 +248,10 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
 
       # FIXME: if result_assigner is for example ResultAssignerSurrogate the surrogate won't be set automatically
 
-      check_packages_installed(self$packages, msg = sprintf("Package '%%s' required but not installed for Optimizer '%s'", format(self)))
+      check_packages_installed(
+        self$packages,
+        msg = sprintf("Package '%%s' required but not installed for Optimizer '%s'", format(self))
+      )
 
       lg = lgr::get_logger("mlr3/bbotk")
       pv = self$param_set$values
@@ -229,10 +262,12 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         NULL
       } else if (is.null(pv$initial_design)) {
         # generate initial design
-        generate_design = switch(pv$design_function,
+        generate_design = switch(
+          pv$design_function,
           "random" = generate_design_random,
           "sobol" = generate_design_sobol,
-          "lhs" = generate_design_lhs)
+          "lhs" = generate_design_lhs
+        )
 
         lg$debug("Generating sobol design with size %s", pv$design_size)
         generate_design(inst$search_space, n = pv$design_size)$data
@@ -289,9 +324,16 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
     #' @template field_param_classes
     param_classes = function(rhs) {
       if (missing(rhs)) {
-        param_classes_surrogate = c("logical" = "ParamLgl", "integer" = "ParamInt", "numeric" = "ParamDbl", "factor" = "ParamFct")
+        param_classes_surrogate = c(
+          "logical" = "ParamLgl",
+          "integer" = "ParamInt",
+          "numeric" = "ParamDbl",
+          "factor" = "ParamFct"
+        )
         if (!is.null(self$surrogate)) {
-          param_classes_surrogate = param_classes_surrogate[c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types] # surrogate has precedence over acq_function$surrogate
+          param_classes_surrogate = param_classes_surrogate[
+            c("logical", "integer", "numeric", "factor") %in% self$surrogate$feature_types
+          ] # surrogate has precedence over acq_function$surrogate
         }
         param_classes_acq_opt = if (!is.null(self$acq_optimizer)) {
           self$acq_optimizer$optimizer$param_classes
@@ -323,7 +365,15 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
     #' @template field_packages
     packages = function(rhs) {
       if (missing(rhs)) {
-        union(c("mlr3mbo", "rush"), c(self$acq_function$packages, self$surrogate$packages, self$acq_optimizer$optimizer$packages, self$result_assigner$packages))
+        union(
+          c("mlr3mbo", "rush"),
+          c(
+            self$acq_function$packages,
+            self$surrogate$packages,
+            self$acq_optimizer$optimizer$packages,
+            self$result_assigner$packages
+          )
+        )
       } else {
         stop("$packages is read-only.")
       }
@@ -346,33 +396,37 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
       # actual loop
       while (!inst$is_terminated) {
         # sample
-        xs = tryCatch({
-          timestamp_surrogate = Sys.time()
-          self$acq_function$surrogate$update()
-          timestamp_acq_function = Sys.time()
-          self$acq_function$update()
-          timestamp_acq_optimizer = Sys.time()
-          xdt = self$acq_optimizer$optimize()
-          xs = transpose_list(xdt)[[1L]]
-          timestamp_loop = Sys.time()
-          c(xs, list(
-            timestamp_surrogate = timestamp_surrogate,
-            timestamp_acq_function = timestamp_acq_function,
-            timestamp_acq_optimizer = timestamp_acq_optimizer,
-            timestamp_loop = timestamp_loop
-          ))
-        }, mbo_error = function(mbo_error_condition) {
-          lg$info(paste0(class(mbo_error_condition), collapse = " / "))
-          lg$info("Proposing a randomly sampled point")
-          xdt = generate_design_random(inst$search_space, n = 1L)$data
-          xs = transpose_list(xdt)[[1L]]
-          c(xs, list(
-            timestamp_surrogate = NA,
-            timestamp_acq_function = NA,
-            timestamp_acq_optimizer = NA,
-            timestamp_loop = NA
-          ))
-        })
+        xs = tryCatch(
+          {
+            timestamp_surrogate = Sys.time()
+            self$acq_function$surrogate$update()
+            timestamp_acq_function = Sys.time()
+            self$acq_function$update()
+            timestamp_acq_optimizer = Sys.time()
+            xdt = self$acq_optimizer$optimize()
+            xs = transpose_list(xdt)[[1L]]
+            timestamp_loop = Sys.time()
+            c(xs, list(
+              timestamp_surrogate = timestamp_surrogate,
+              timestamp_acq_function = timestamp_acq_function,
+              timestamp_acq_optimizer = timestamp_acq_optimizer,
+              timestamp_loop = timestamp_loop
+            ))
+          },
+          Mlr3ErrorMbo = function(cond) {
+            lg$warn("Caught the following error: %s", cond$message)
+            lg$info("Proposing a randomly sampled point")
+            xdt = generate_design_random(inst$search_space, n = 1L)$data
+            xs = transpose_list(xdt)[[1L]]
+            c(xs, list(
+              timestamp_surrogate = NA,
+              timestamp_acq_function = NA,
+              timestamp_acq_optimizer = NA,
+              timestamp_loop = NA
+            ))
+          }
+        )
+
 
         # eval
         get_private(inst)$.eval_point(xs)
@@ -382,7 +436,8 @@ OptimizerAsyncMbo = R6Class("OptimizerAsyncMbo",
         tryCatch(
           {
             self$surrogate$update()
-          }, surrogate_update_error = function(error_condition) {
+          },
+          Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
             lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
           }
         )

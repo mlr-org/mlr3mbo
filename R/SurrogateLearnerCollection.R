@@ -9,12 +9,15 @@
 #' \describe{
 #' \item{`catch_errors`}{`logical(1)`\cr
 #'   Should errors during updating the surrogate be caught and propagated to the `loop_function` which can then handle
-#'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by, e.g., proposing a randomly sampled point for evaluation?
+#'   the failed acquisition function optimization (as a result of the failed surrogate) appropriately by,
+#'   e.g., proposing a randomly sampled point for evaluation?
 #'   Default is `TRUE`.
 #' }
 #' \item{`impute_method`}{`character(1)`\cr
-#'   Method to impute missing values in the case of updating on an asynchronous [bbotk::ArchiveAsync] with pending evaluations.
-#'   Can be `"mean"` to use mean imputation or `"random"` to sample values uniformly at random between the empirical minimum and maximum.
+#'   Method to impute missing values in the case of updating on an asynchronous [bbotk::ArchiveAsync]
+#'   with pending evaluations.
+#'   Can be `"mean"` to use mean imputation or
+#'   `"random"` to sample values uniformly at random between the empirical minimum and maximum.
 #'   Default is `"random"`.
 #' }
 #' }
@@ -58,11 +61,11 @@
 #'
 #'   surrogate$learner[["y2"]]$model
 #' }
-SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
+SurrogateLearnerCollection = R6Class(
+  "SurrogateLearnerCollection",
   inherit = Surrogate,
 
   public = list(
-
     #' @field learner (list of [mlr3::LearnerRegr])\cr
     #'   List of [mlr3::LearnerRegr] wrapped as surrogate models.
     learner = NULL,
@@ -84,7 +87,14 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     #' @template param_archive_surrogate
     #' @template param_cols_y_surrogate
     #' @template param_cols_x_surrogate
-    initialize = function(learners, input_trafo = NULL, output_trafo = NULL, archive = NULL, cols_x = NULL, cols_y = NULL) {
+    initialize = function(
+      learners,
+      input_trafo = NULL,
+      output_trafo = NULL,
+      archive = NULL,
+      cols_x = NULL,
+      cols_y = NULL
+    ) {
       assert_learners(learners)
       addresses = map(learners, address)
       if (length(unique(addresses)) != length(addresses)) {
@@ -134,7 +144,8 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       # speeding up some checks by constructing the predict task directly instead of relying on predict_newdata
       preds = lapply(self$learner, function(learner) {
         task = learner$state$train_task$clone()
-        set(xdt, j = task$target_names, value = NA_real_)  # tasks only have features and the target but we have to set the target to NA
+        # tasks only have features and the target but we have to set the target to NA
+        set(xdt, j = task$target_names, value = NA_real_)
         newdata = as_data_backend(xdt)
         task$backend = newdata
         task$row_roles$use = task$backend$rownames
@@ -165,7 +176,6 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
   ),
 
   active = list(
-
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
@@ -238,10 +248,10 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
   ),
 
   private = list(
-
     # Train learner with new data.
     .update = function() {
-      assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
+      # either as many cols_y as learner or only one
+      assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)
       one_to_multiple = length(self$cols_y) == 1L
       xydt = copy(self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE])
       if (!is.null(self$input_trafo)) {
@@ -259,7 +269,11 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
       features = setdiff(names(xydt), self$cols_y)
       tasks = lapply(self$cols_y, function(col_y) {
         # if this turns out to be a bottleneck, we can also operate on a single task here
-        task = TaskRegr$new(id = paste0("surrogate_task_", col_y), backend = xydt[, c(features, col_y), with = FALSE], target = col_y)
+        task = TaskRegr$new(
+          id = paste0("surrogate_task_", col_y),
+          backend = xydt[, c(features, col_y), with = FALSE],
+          target = col_y
+        )
         task
       })
       if (one_to_multiple) {
@@ -281,21 +295,19 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     # Train learner with new data.
     # Operates on an asynchronous archive and performs imputation as needed.
     .update_async = function() {
-      assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)  # either as many cols_y as learner or only one
+      # either as many cols_y as learner or only one
+      assert_true((length(self$cols_y) == length(self$learner)) || length(self$cols_y) == 1L)
       one_to_multiple = length(self$cols_y) == 1L
 
-      xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[, c(self$cols_x, self$cols_y, "state"), with = FALSE])
+      xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[,
+          c(self$cols_x, self$cols_y, "state"),
+          with = FALSE
+        ])
       if (!is.null(self$input_trafo)) {
         self$input_trafo$cols_x = self$cols_x
         self$input_trafo$search_space = self$archive$search_space
         self$input_trafo$update(xydt)
         xydt = self$input_trafo$transform(xydt)
-      }
-      if (!is.null(self$output_trafo)) {
-        self$output_trafo$cols_y = self$cols_y
-        self$output_trafo$max_to_min = surrogate_mult_max_to_min(self)
-        self$output_trafo$update(xydt)
-        xydt = self$output_trafo$transform(xydt)
       }
       if (self$param_set$values$impute_method == "mean") {
         walk(self$cols_y, function(col) {
@@ -309,12 +321,22 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
           xydt[c("queued", "running"), (col) := runif(.N, min = min_y, max = max_y), on = "state"]
         })
       }
+      if (!is.null(self$output_trafo)) {
+        self$output_trafo$cols_y = self$cols_y
+        self$output_trafo$max_to_min = surrogate_mult_max_to_min(self)
+        self$output_trafo$update(xydt)
+        xydt = self$output_trafo$transform(xydt)
+      }
       set(xydt, j = "state", value = NULL)
 
       features = setdiff(names(xydt), self$cols_y)
       tasks = lapply(self$cols_y, function(col_y) {
         # if this turns out to be a bottleneck, we can also operate on a single task here
-        task = TaskRegr$new(id = paste0("surrogate_task_", col_y), backend = xydt[, c(features, col_y), with = FALSE], target = col_y)
+        task = TaskRegr$new(
+          id = paste0("surrogate_task_", col_y),
+          backend = xydt[, c(features, col_y), with = FALSE],
+          target = col_y
+        )
         task
       })
       if (one_to_multiple) {
@@ -340,10 +362,11 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     },
 
     deep_clone = function(name, value) {
-      switch(name,
+      switch(
+        name,
         learner = map(value, function(x) x$clone(deep = TRUE)),
-	input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
-	output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+        input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+        output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value
@@ -351,4 +374,3 @@ SurrogateLearnerCollection = R6Class("SurrogateLearnerCollection",
     }
   )
 )
-

@@ -3,16 +3,22 @@
 #'
 #' @description
 #' `OptimizerADBO` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
-#' ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses [AcqFunctionStochasticCB] with exponential lambda decay.
+#' ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses
+#' [AcqFunctionStochasticCB] with exponential lambda decay.
 #'
-#' Currently, only single-objective optimization is supported and [OptimizerADBO] is considered an experimental feature and API might be subject to changes.
+#' Currently, only single-objective optimization is supported and
+#' [OptimizerADBO] is considered an experimental feature and API might be subject to changes.
 #'
 #' @note
-#' The lambda parameter of the confidence bound acquisition function controls the trade-off between exploration and exploitation.
+#' The lambda parameter of the confidence bound acquisition function controls the trade-off between
+#' exploration and exploitation.
 #' A large lambda value leads to more exploration, while a small lambda value leads to more exploitation.
-#' The initial lambda value of the acquisition function used on each worker is drawn from an exponential distribution with rate `1 / lambda`.
-#' ADBO can use periodic exponential decay to reduce lambda periodically for a given time step `t` with the formula `lambda * exp(-rate * (t %% period))`.
-#' The [SurrogateLearner] is configured to use a random forest and the [AcqOptimizer] is a random search with a batch size of 1000 and a budget of 10000 evaluations.
+#' The initial lambda value of the acquisition function used on each worker is drawn from an
+#' exponential distribution with rate `1 / lambda`.
+#' ADBO can use periodic exponential decay to reduce lambda periodically for a given time step `t` with the formula
+#' `lambda * exp(-rate * (t %% period))`.
+#' The [SurrogateLearner] is configured to use a random forest and
+#' the [AcqOptimizer] is a random search with a batch size of 1000 and a budget of 10000 evaluations.
 #'
 #' @section Parameters:
 #' \describe{
@@ -31,7 +37,8 @@
 #'   Default is `100`.}
 #' \item{`design_function`}{`character(1)`\cr
 #'   Sampling function to generate the initial design.
-#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs], or `sobol` [paradox::generate_design_sobol].
+#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs],
+#'   or `sobol` [paradox::generate_design_sobol].
 #'   Default is `sobol`.}
 #' \item{`n_workers`}{`integer(1)`\cr
 #'   Number of parallel workers.
@@ -68,7 +75,7 @@
 #'       terminator = trm("evals", n_evals = 10))
 #'
 #'     mirai::daemons(2)
-#'     rush::rush_plan(n_workers=2, worker_type = "remote")
+#'     rush::rush_plan(n_workers=2, worker_type = "mirai")
 #'
 #'     optimizer = opt("adbo", design_size = 4, n_workers = 2)
 #'
@@ -79,7 +86,8 @@
 #'   }
 #' }
 #' }
-OptimizerADBO = R6Class("OptimizerADBO",
+OptimizerADBO = R6Class(
+  "OptimizerADBO",
   inherit = OptimizerAsyncMbo,
 
   public = list(
@@ -96,12 +104,14 @@ OptimizerADBO = R6Class("OptimizerADBO",
         id = "adbo",
         param_set = param_set,
         label = "Asynchronous Decentralized Bayesian Optimization",
-        man = "mlr3mbo::OptimizerADBO")
+        man = "mlr3mbo::OptimizerADBO"
+      )
 
       self$param_set$set_values(
         lambda = 1.96,
         rate = 0.1,
-        period = 25L)
+        period = 25L
+      )
     },
 
     #' @description
@@ -122,7 +132,8 @@ OptimizerADBO = R6Class("OptimizerADBO",
 
       self$acq_optimizer = AcqOptimizer$new(
         optimizer = opt("random_search", batch_size = 1000L),
-        terminator = trm("evals", n_evals = 10000L))
+        terminator = trm("evals", n_evals = 10000L)
+      )
 
       super$optimize(inst)
     }
