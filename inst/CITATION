@@ -1,0 +1,15 @@
+bibentry(
+  bibtype = "Article",
+  title = "mlr3mbo: Bayesian Optimization in R",
+  author = c(
+    person("Marc", "Becker"),
+    person("Lennart", "Schneider"),
+    person("Martin", "Binder"),
+    person("Lars", "Kotthoff"),
+    person("Bernd", "Bischl")
+  ),
+  year = 2026,
+  journal = "arXiv preprint arXiv:2603.29730",
+  doi = "10.48550/arXiv.2603.29730",
+  url = "https://arxiv.org/abs/2603.29730"
+)

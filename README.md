@@ -7,6 +7,7 @@ Package website: [release](https://mlr3mbo.mlr-org.com/) \|
 <!-- badges: start -->
 
 [![r-cmd-check](https://github.com/mlr-org/mlr3mbo/actions/workflows/r-cmd-check.yml/badge.svg)](https://github.com/mlr-org/mlr3mbo/actions/workflows/r-cmd-check.yml)
+[![arXiv](https://img.shields.io/badge/arXiv-2603.29730-b31b1b.svg)](https://arxiv.org/abs/2603.29730)
 [![CRANstatus](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
 [![StackOverflow](https://img.shields.io/badge/stackoverflow-mlr3-orange.svg)](https://stackoverflow.com/questions/tagged/mlr3)
 [![Mattermost](https://img.shields.io/badge/chat-mattermost-orange.svg)](https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/)
