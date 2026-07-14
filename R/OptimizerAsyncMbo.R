@@ -392,20 +392,28 @@ OptimizerAsyncMbo = R6Class(
       # actual loop
       while (!inst$is_terminated) {
         # sample
-        xs = tryCatch(
-          {
-            self$acq_function$surrogate$update()
-            self$acq_function$update()
-            xdt = self$acq_optimizer$optimize()
-            transpose_list(xdt)[[1L]]
-          },
-          Mlr3ErrorMbo = function(cond) {
-            lg$warn("Caught the following error: %s", cond$message)
-            lg$info("Proposing a randomly sampled point")
-            xdt = generate_design_random(inst$search_space, n = 1L)$data
-            transpose_list(xdt)[[1L]]
-          }
-        )
+        xs = if (inst$archive$n_finished == 0L) {
+          # the surrogate cannot be trained without any finished evaluation
+          # this happens when a worker reaches this point before the initial design has been evaluated
+          lg$info("No finished evaluations available yet. Proposing a randomly sampled point")
+          xdt = generate_design_random(inst$search_space, n = 1L)$data
+          transpose_list(xdt)[[1L]]
+        } else {
+          tryCatch(
+            {
+              self$acq_function$surrogate$update()
+              self$acq_function$update()
+              xdt = self$acq_optimizer$optimize()
+              transpose_list(xdt)[[1L]]
+            },
+            Mlr3ErrorMbo = function(cond) {
+              lg$warn("Caught the following error: %s", cond$message)
+              lg$info("Proposing a randomly sampled point")
+              xdt = generate_design_random(inst$search_space, n = 1L)$data
+              transpose_list(xdt)[[1L]]
+            }
+          )
+        }
 
         # eval
         get_private(inst)$.eval_point(xs)
