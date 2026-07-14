@@ -1,5 +1,6 @@
 bibentry(
   bibtype = "Article",
+  key = "becker2026mlr3mbo",
   title = "mlr3mbo: Bayesian Optimization in R",
   author = c(
     person("Marc", "Becker"),
