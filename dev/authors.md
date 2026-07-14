@@ -42,7 +42,7 @@ Bayesian Optimization in R.” *arXiv preprint arXiv:2603.29730*.
 [doi:10.48550/arXiv.2603.29730](https://doi.org/10.48550/arXiv.2603.29730).
 <https://arxiv.org/abs/2603.29730>.
 
-    @Article{,
+    @Article{becker2026mlr3mbo,
       title = {mlr3mbo: Bayesian Optimization in R},
       author = {Marc Becker and Lennart Schneider and Martin Binder and Lars Kotthoff and Bernd Bischl},
       year = {2026},
