@@ -35,16 +35,18 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/mlr-org/mlr3mbo/blob/main/DESCRIPTION)
+[`inst/CITATION`](https://github.com/mlr-org/mlr3mbo/blob/main/inst/CITATION)
 
-Becker M, Schneider L, Richter J, Lang M, Bischl B, Pfisterer F, Binder
-M, Fischer S (2026). *mlr3mbo: Flexible Bayesian Optimization*. R
-package version 1.1.1.9000, <https://mlr3mbo.mlr-org.com>.
+Becker M, Schneider L, Binder M, Kotthoff L, Bischl B (2026). “mlr3mbo:
+Bayesian Optimization in R.” *arXiv preprint arXiv:2603.29730*.
+[doi:10.48550/arXiv.2603.29730](https://doi.org/10.48550/arXiv.2603.29730).
+<https://arxiv.org/abs/2603.29730>.
 
-    @Manual{,
-      title = {mlr3mbo: Flexible Bayesian Optimization},
-      author = {Marc Becker and Lennart Schneider and Jakob Richter and Michel Lang and Bernd Bischl and Florian Pfisterer and Martin Binder and Sebastian Fischer},
+    @Article{,
+      title = {mlr3mbo: Bayesian Optimization in R},
+      author = {Marc Becker and Lennart Schneider and Martin Binder and Lars Kotthoff and Bernd Bischl},
       year = {2026},
-      note = {R package version 1.1.1.9000},
-      url = {https://mlr3mbo.mlr-org.com},
+      journal = {arXiv preprint arXiv:2603.29730},
+      doi = {10.48550/arXiv.2603.29730},
+      url = {https://arxiv.org/abs/2603.29730},
     }
