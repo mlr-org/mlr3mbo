@@ -1,5 +1,7 @@
 # mlr3mbo (development version)
 
+* fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
+
 # mlr3mbo 1.1.1
 
 * fix: `acqo()` now correctly returns the `mlr_acqoptimizers` dictionary when called with no arguments (#211).

@@ -73,7 +73,10 @@ OutputTrafoStandardize = R6Class(
     #'   Data. One row per observation with columns `$cols_y`.
     update = function(ydt) {
       state = map(self$cols_y, function(col_y) {
-        list(mu = mean(ydt[[col_y]]), sigma = sd(ydt[[col_y]]))
+        sigma = sd(ydt[[col_y]])
+        # if there is only a single observation or all values are identical, transform() would yield NA or Inf
+        if (is.na(sigma) || sigma == 0) sigma = 1
+        list(mu = mean(ydt[[col_y]]), sigma = sigma)
       })
       state = setNames(state, nm = self$cols_y)
       private$.state = state

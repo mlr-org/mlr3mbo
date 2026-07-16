@@ -70,7 +70,9 @@ OutputTrafoLog = R6Class(
     update = function(ydt) {
       epsilon = 1e-3
       state = map(self$cols_y, function(col_y) {
-        epsilon_extended = epsilon * diff(range(ydt[[col_y]]))
+        range_y = diff(range(ydt[[col_y]]))
+        # if all values are identical, a relative epsilon would result in min == max and transform() would yield NaN
+        epsilon_extended = if (range_y == 0) epsilon * max(1, abs(ydt[[col_y]][1L])) else epsilon * range_y
         list(min = min(ydt[[col_y]]) - epsilon_extended, max = max(ydt[[col_y]]) + epsilon_extended, epsilon = epsilon)
       })
       state = setNames(state, nm = self$cols_y)

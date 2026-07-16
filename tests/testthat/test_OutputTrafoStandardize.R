@@ -25,6 +25,24 @@ test_that("OutputTrafoStandardize works", {
   expect_equal(data, orig_data)
 })
 
+test_that("OutputTrafoStandardize works with constant y values", {
+  ot = OutputTrafoStandardize$new()
+  ot$cols_y = "y"
+  ot$max_to_min = c(y = 1L)
+
+  ydt = data.table(y = rep(0.5, 3L))
+  ot$update(ydt)
+  transformed_data = ot$transform(ydt)
+  expect_true(all(is.finite(transformed_data$y)))
+  expect_equal(ot$inverse_transform(transformed_data), ydt)
+
+  ydt = data.table(y = 0.5)
+  ot$update(ydt)
+  transformed_data = ot$transform(ydt)
+  expect_true(is.finite(transformed_data$y))
+  expect_equal(ot$inverse_transform(transformed_data), ydt)
+})
+
 test_that("OutputTrafoStandardize works with SurrogateLearner", {
   skip_if_missing_regr_km()
   instance = MAKE_INST_1D()
