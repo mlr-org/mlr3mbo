@@ -24,6 +24,9 @@
   parameter has an effect.
 - fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce
   `NaN` or `Inf` values when all observed outcomes are identical.
+- fix: [`srlrn()`](https://mlr3mbo.mlr-org.com/dev/reference/srlrn.md)
+  now correctly unwraps a single learner supplied in a list instead of
+  erroring.
 - fix: `SurrogateLearner$predict()` no longer modifies the data.table
   passed as `xdt` by reference.
 
