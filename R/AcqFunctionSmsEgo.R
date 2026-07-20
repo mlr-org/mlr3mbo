@@ -140,6 +140,9 @@ AcqFunctionSmsEgo = R6Class(
       self$ref_point = apply(ys, MARGIN = 2L, FUN = max) + 1 # offset = 1 like in mlrMBO
 
       self$ys_front = self$archive$best()[, self$archive$cols_y, with = FALSE]
+      if (self$surrogate$output_trafo_must_be_considered) {
+        self$ys_front = self$surrogate$output_trafo$transform(self$ys_front)
+      }
       for (column in self$archive$cols_y) {
         # assume minimization
         set(self$ys_front, j = column, value = self$ys_front[[column]] * self$surrogate_max_to_min[[column]])
