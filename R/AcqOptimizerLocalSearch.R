@@ -86,6 +86,18 @@ AcqOptimizerLocalSearch = R6Class(
     print_id = function(rhs) {
       assert_ro_binding(rhs)
       "(OptimizerLocalSearch)"
+    },
+
+    #' @template field_label
+    label = function(rhs) {
+      assert_ro_binding(rhs)
+      "Local Search"
+    },
+
+    #' @template field_man
+    man = function(rhs) {
+      assert_ro_binding(rhs)
+      "mlr3mbo::AcqOptimizerLocalSearch"
     }
   ),
 

@@ -118,6 +118,13 @@ if (requireNamespace("mlr3learners") &
     \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 
+    \item{\code{label}}{(\code{character(1)})\cr
+Label for this object.
+Can be used in tables, plot and text output instead of the ID.}
+
+    \item{\code{man}}{(\code{character(1)})\cr
+String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.}
+
     \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of hyperparameters.}
   }

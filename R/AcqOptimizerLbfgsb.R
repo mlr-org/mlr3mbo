@@ -194,6 +194,18 @@ AcqOptimizerLbfgsb = R6Class(
     print_id = function(rhs) {
       assert_ro_binding(rhs)
       "(OptimizerLbfgsb)"
+    },
+
+    #' @template field_label
+    label = function(rhs) {
+      assert_ro_binding(rhs)
+      "L-BFGS-B"
+    },
+
+    #' @template field_man
+    man = function(rhs) {
+      assert_ro_binding(rhs)
+      "mlr3mbo::AcqOptimizerLbfgsb"
     }
   )
 )
