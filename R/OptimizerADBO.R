@@ -123,6 +123,7 @@ OptimizerADBO = R6Class(
     #' @return [data.table::data.table()]
     optimize = function(inst) {
       self$acq_function = AcqFunctionStochasticCB$new(
+        distribution = "exponential",
         lambda = self$param_set$values$lambda,
         rate = self$param_set$values$rate,
         period = self$param_set$values$period
