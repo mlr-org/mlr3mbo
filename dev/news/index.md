@@ -21,6 +21,8 @@
   silently degenerate into random search.
 - fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce
   `NaN` or `Inf` values when all observed outcomes are identical.
+- fix: `SurrogateLearner$predict()` no longer modifies the data.table
+  passed as `xdt` by reference.
 
 ## mlr3mbo 1.1.1
 
