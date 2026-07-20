@@ -127,8 +127,7 @@ AcqFunctionEIPS = R6Class(
       d = self$y_best - self$surrogate_max_to_min[[self$col_y]] * mu
       d_norm = d / se
       ei = d * pnorm(d_norm) + se * dnorm(d_norm)
-      eips = ei / mu_t
-      eips = ifelse(se < 1e-20 | mu_t < 1e-20, 0, ei)
+      eips = ifelse(se < 1e-20 | mu_t < 1e-20, 0, ei / mu_t)
       data.table(acq_eips = eips)
     }
   )
