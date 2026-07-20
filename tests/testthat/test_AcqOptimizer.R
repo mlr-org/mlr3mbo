@@ -172,3 +172,19 @@ test_that("AcqOptimizer callbacks", {
   res = acqopt$optimize()
   expect_number(attr(instance, "acq_opt_runtime"))
 })
+
+test_that("mlr_acqoptimizers dictionary and label/man work", {
+  tab = as.data.table(mlr_acqoptimizers)
+  expect_data_table(tab, ncols = 3L)
+  expect_names(names(tab), permutation.of = c("key", "label", "man"))
+  expect_character(tab$label, any.missing = FALSE)
+  expect_character(tab$man, any.missing = FALSE)
+
+  # base AcqOptimizer derives its label from the wrapped bbotk::Optimizer
+  optimizer = opt("random_search")
+  acqopt = AcqOptimizer$new(optimizer, trm("evals", n_evals = 2L))
+  expect_equal(acqopt$label, optimizer$label)
+  expect_equal(acqopt$man, "mlr3mbo::AcqOptimizer")
+  expect_error({acqopt$label = "x"}, "read-only")
+  expect_error({acqopt$man = "x"}, "read-only")
+})

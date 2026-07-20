@@ -189,6 +189,18 @@ AcqOptimizerDirect = R6Class(
     print_id = function(rhs) {
       assert_ro_binding(rhs)
       "(OptimizerDirect)"
+    },
+
+    #' @template field_label
+    label = function(rhs) {
+      assert_ro_binding(rhs)
+      "DIRECT"
+    },
+
+    #' @template field_man
+    man = function(rhs) {
+      assert_ro_binding(rhs)
+      "mlr3mbo::AcqOptimizerDirect"
     }
   )
 )
