@@ -1,5 +1,6 @@
 # mlr3mbo (development version)
 
+* fix: `AcqFunctionEHVI`, `AcqFunctionEHVIGH`, and `AcqFunctionSmsEgo` now apply the surrogate's output transformation to `ys_front`, so the front and the reference point are compared on the same scale.
 * fix: `AcqFunctionEIPS` now correctly divides the expected improvement by the predicted time instead of behaving like plain expected improvement.
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
 

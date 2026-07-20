@@ -34,6 +34,34 @@ test_that("AcqFunctionEHVIGH works", {
   expect_true(all(res[[acqf$id]] >= 0))
 })
 
+test_that("AcqFunctionEHVIGH transforms ys_front onto the output trafo scale", {
+  skip_if_not_installed("emoa")
+  skip_if_not_installed("fastGHQuad")
+  inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
+  surrogate = SurrogateLearnerCollection$new(
+    list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)),
+    archive = inst$archive
+  )
+  ot = OutputTrafoStandardize$new()
+  ot$invert_posterior = FALSE
+  surrogate$output_trafo = ot
+  acqf = AcqFunctionEHVIGH$new(surrogate = surrogate)
+
+  design = MAKE_DESIGN(inst)
+  inst$eval_batch(design)
+
+  acqf$surrogate$update()
+  expect_true(surrogate$output_trafo_must_be_considered)
+  acqf$update()
+
+  expected = ot$transform(inst$archive$best()[, inst$archive$cols_y, with = FALSE])
+  for (col in inst$archive$cols_y) {
+    set(expected, j = col, value = expected[[col]] * acqf$surrogate_max_to_min[[col]])
+  }
+  expect_equal(acqf$ys_front, as.matrix(expected))
+  expect_true(all(apply(acqf$ys_front, 2L, max) <= acqf$ref_point))
+})
+
 test_that("AcqFunctionEHVIGH is close to AcqFunctionEHVI", {
   skip_on_cran()
   skip_if_not_installed("mlr3learners")
