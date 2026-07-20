@@ -5,30 +5,13 @@
 #' @description
 #' Direct acquisition function optimizer.
 #' Calls `nloptr()` from \CRANpkg{nloptr} with the `NLOPT_GN_DIRECT_L` algorithm.
-#' In its default setting, the algorithm runs a single time for at most `100 * D^2` function evaluations,
+#' In its default setting, the algorithm runs for at most `100 * D^2` function evaluations,
 #' where `D` is the dimension of the search space.
-#' The run stops when the relative tolerance of the parameters is less than `10^-4`.
-#' `NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the starting point.
-#' Restarts therefore only repeat the identical search with a smaller evaluation budget and are disabled by default.
-#'
-#' @section Parameters:
-#' \describe{
-#' \item{`restart_strategy`}{`character(1)`\cr
-#'   Restart strategy.
-#'   Can be `"none"` or `"random"`.
-#'   Default is `"none"`.
-#' }
-#' \item{`max_restarts`}{`integer(1)`\cr
-#'   Maximum number of restarts.
-#'   Default is `5 * D` (Default).}
-#' }
+#' The optimization stops when the relative tolerance of the parameters is less than `10^-4`.
 #'
 #' @note
-#' If the restart strategy is `"none"`, the optimizer runs a single time and stops when one of the stopping criteria is met.
-#'
-#' If `restart_strategy` is `"random"`, the optimizer additionally restarts from random points until the budget is exhausted.
-#' Because `NLOPT_GN_DIRECT_L` is deterministic and ignores the starting point, restarts do not improve the result
-#' and only split the evaluation budget across repeated searches.
+#' `NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the starting point.
+#' Restarts would only repeat the identical search, so the optimizer does not support them.
 #'
 #' @section Termination Parameters:
 #' The following termination parameters can be used.
@@ -65,8 +48,8 @@ AcqOptimizerDirect = R6Class(
   "AcqOptimizerDirect",
   inherit = AcqOptimizer,
   public = list(
-    #' @field state (`list()`)\cr
-    #' List of [nloptr::nloptr()] results.
+    #' @field state ([nloptr::nloptr()] result)\cr
+    #' Result of the last optimization run.
     state = NULL,
 
     #' @description
@@ -83,8 +66,6 @@ AcqOptimizerDirect = R6Class(
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         minf_max = p_dbl(default = -Inf),
-        restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
-        max_restarts = p_int(lower = 0L),
         catch_errors = p_lgl(init = TRUE)
       )
       private$.param_set = param_set
@@ -97,20 +78,10 @@ AcqOptimizerDirect = R6Class(
     optimize = function() {
       self$state = NULL
       pv = self$param_set$values
-      restart_strategy = pv$restart_strategy
-      max_restarts = pv$max_restarts
       maxeval = pv$maxeval
       catch_errors = pv$catch_errors
-      pv$max_restarts = NULL
-      pv$restart_strategy = NULL
       pv$maxeval = NULL
       pv$catch_errors = NULL
-
-      if (restart_strategy == "none") {
-        max_restarts = 0L
-      } else if (restart_strategy == "random" && is.null(max_restarts)) {
-        max_restarts = 5 * self$acq_function$domain$length
-      }
 
       if (is.null(maxeval)) {
         maxeval = 100 * self$acq_function$domain$length^2
@@ -126,60 +97,36 @@ AcqOptimizerDirect = R6Class(
       constants = self$acq_function$constants$values
       direction = self$acq_function$codomain$direction
 
-      y = Inf
-      n_evals = 0L
-      n_restarts = 0L
-      while ((n_evals < maxeval || maxeval < 0) && n_restarts <= max_restarts) {
-        n_restarts = n_restarts + 1L
+      # NLOPT_GN_DIRECT_L ignores the starting point; nloptr only requires x0 to infer the dimension
+      x0 = (self$acq_function$domain$lower + self$acq_function$domain$upper) / 2
 
-        x0 = if (n_restarts == 1L) {
-          as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
-        } else {
-          # random restart
-          as.numeric(generate_design_random(self$acq_function$domain, n = 1)$data)
-        }
-
-        optimize = function() {
-          invoke(
-            nloptr::nloptr,
-            eval_f = wrapper,
-            lb = self$acq_function$domain$lower,
-            ub = self$acq_function$domain$upper,
-            opts = insert_named(pv, list(algorithm = "NLOPT_GN_DIRECT_L", maxeval = maxeval - n_evals)),
-            eval_grad_f = NULL,
-            x0 = x0,
-            fun = fun,
-            constants = constants,
-            direction = direction
-          )
-        }
-
-        if (catch_errors) {
-          tryCatch(
-            {
-              res = optimize()
-            },
-            error = function(error_condition) {
-              error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
-            }
-          )
-        } else {
-          res = optimize()
-        }
-
-        if (res$objective < y) {
-          y = res$objective
-          x = res$solution
-        }
-
-        n_evals = n_evals + res$iterations
-
-        self$state = c(self$state, set_names(list(list(model = res, start = x0)), paste0("iteration_", n_restarts)))
-
-        if (restart_strategy == "none") break
+      optimize = function() {
+        invoke(
+          nloptr::nloptr,
+          eval_f = wrapper,
+          lb = self$acq_function$domain$lower,
+          ub = self$acq_function$domain$upper,
+          opts = insert_named(pv, list(algorithm = "NLOPT_GN_DIRECT_L", maxeval = maxeval)),
+          eval_grad_f = NULL,
+          x0 = x0,
+          fun = fun,
+          constants = constants,
+          direction = direction
+        )
       }
+
+      res = if (catch_errors) {
+        tryCatch(optimize(), error = function(error_condition) {
+          error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
+        })
+      } else {
+        optimize()
+      }
+
+      self$state = res
+
       as.data.table(as.list(set_names(
-        c(x, y * direction),
+        c(res$solution, res$objective * direction),
         c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
       )))
     },

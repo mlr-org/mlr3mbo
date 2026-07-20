@@ -6,33 +6,14 @@
 \description{
 Direct acquisition function optimizer.
 Calls \code{nloptr()} from \CRANpkg{nloptr} with the \code{NLOPT_GN_DIRECT_L} algorithm.
-In its default setting, the algorithm runs a single time for at most \code{100 * D^2} function evaluations,
+In its default setting, the algorithm runs for at most \code{100 * D^2} function evaluations,
 where \code{D} is the dimension of the search space.
-The run stops when the relative tolerance of the parameters is less than \code{10^-4}.
-\code{NLOPT_GN_DIRECT_L} is a deterministic global optimizer that ignores the starting point.
-Restarts therefore only repeat the identical search with a smaller evaluation budget and are disabled by default.
+The optimization stops when the relative tolerance of the parameters is less than \code{10^-4}.
 }
 \note{
-If the restart strategy is \code{"none"}, the optimizer runs a single time and stops when one of the stopping criteria is met.
-
-If \code{restart_strategy} is \code{"random"}, the optimizer additionally restarts from random points until the budget is exhausted.
-Because \code{NLOPT_GN_DIRECT_L} is deterministic and ignores the starting point, restarts do not improve the result
-and only split the evaluation budget across repeated searches.
+\code{NLOPT_GN_DIRECT_L} is a deterministic global optimizer that ignores the starting point.
+Restarts would only repeat the identical search, so the optimizer does not support them.
 }
-\section{Parameters}{
-
-\describe{
-\item{\code{restart_strategy}}{\code{character(1)}\cr
-Restart strategy.
-Can be \code{"none"} or \code{"random"}.
-Default is \code{"none"}.
-}
-\item{\code{max_restarts}}{\code{integer(1)}\cr
-Maximum number of restarts.
-Default is \code{5 * D} (Default).}
-}
-}
-
 \section{Termination Parameters}{
 
 The following termination parameters can be used.
@@ -72,8 +53,8 @@ if (requireNamespace("nloptr")) {
 \section{Public fields}{
   \if{html}{\out{<div class="r6-fields">}}
   \describe{
-    \item{\code{state}}{(\code{list()})\cr
-List of \code{\link[nloptr:nloptr]{nloptr::nloptr()}} results.}
+    \item{\code{state}}{(\code{\link[nloptr:nloptr]{nloptr::nloptr()}} result)\cr
+Result of the last optimization run.}
   }
   \if{html}{\out{</div>}}
 }

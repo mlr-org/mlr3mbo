@@ -9,7 +9,7 @@
 * fix: `AcqFunctionMulti` now raises an informative error when the wrapped acquisition functions do not share the same domain instead of failing with a cryptic type error.
 * fix: `AcqFunctionMulti` can now be deep cloned without error and preserves the shared surrogate across the wrapped acquisition functions.
 * fix: `AcqFunctionStochasticCB` now clears the sampled lambda on `$reset()`, so a reused optimizer draws a fresh initial lambda for each run as documented.
-* fix: `AcqOptimizerDirect` now defaults to `restart_strategy = "none"` because the deterministic `NLOPT_GN_DIRECT_L` algorithm ignores the starting point, so restarts only repeated the identical search with a smaller evaluation budget.
+* BREAKING CHANGE: `AcqOptimizerDirect` no longer supports restarts and its `restart_strategy` and `max_restarts` parameters have been removed, because the deterministic `NLOPT_GN_DIRECT_L` algorithm ignores the starting point, so restarts only repeated the identical search with a smaller evaluation budget. The `$state` field now holds the `nloptr()` result of the last optimization run directly.
 * fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be deep cloned without error.
 * fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now reset their `state` at the start of each `optimize()` call and clear it on `reset()`, so the `state` no longer grows unboundedly across a Bayesian optimization loop.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
