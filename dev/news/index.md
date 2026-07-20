@@ -29,6 +29,11 @@
 - fix: `AcqFunctionStochasticCB` now clears the sampled lambda on
   `$reset()`, so a reused optimizer draws a fresh initial lambda for
   each run as documented.
+- BREAKING CHANGE: `AcqOptimizerDirect` no longer supports restarts and
+  its `restart_strategy` and `max_restarts` parameters have been
+  removed, because the deterministic `NLOPT_GN_DIRECT_L` algorithm
+  ignores the starting point, so restarts only repeated the identical
+  search with a smaller evaluation budget.
 - fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`,
   `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be
   deep cloned without error.

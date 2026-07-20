@@ -1,36 +1,17 @@
 # Direct Acquisition Function Optimizer
 
 Direct acquisition function optimizer. Calls `nloptr()` from
-[nloptr](https://CRAN.R-project.org/package=nloptr). In its default
-setting, the algorithm restarts `5 * D` times and runs at most for
-`100 * D^2` function evaluations, where `D` is the dimension of the
-search space. Each run stops when the relative tolerance of the
-parameters is less than `10^-4`. The first iteration starts with the
-best point in the archive and the next iterations start from a random
-point.
+[nloptr](https://CRAN.R-project.org/package=nloptr) with the
+`NLOPT_GN_DIRECT_L` algorithm. In its default setting, the algorithm
+runs for at most `100 * D^2` function evaluations, where `D` is the
+dimension of the search space. The optimization stops when the relative
+tolerance of the parameters is less than `10^-4`.
 
 ## Note
 
-If the restart strategy is `"none"`, the optimizer starts with the best
-point in the archive. The optimization stops when one of the stopping
-criteria is met.
-
-If `restart_strategy` is `"random"`, the optimizer runs at least for
-`maxeval` iterations. The first iteration starts with the best point in
-the archive and stops when one of the stopping criteria is met. The next
-iterations start from a random point.
-
-## Parameters
-
-- `restart_strategy`:
-
-  `character(1)`  
-  Restart strategy. Can be `"none"` or `"random"`. Default is `"none"`.
-
-- `max_restarts`:
-
-  `integer(1)`  
-  Maximum number of restarts. Default is `5 * D` (Default).
+`NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the
+starting point. Restarts would only repeat the identical search, so the
+optimizer does not support them.
 
 ## Termination Parameters
 
@@ -79,10 +60,9 @@ The following termination parameters can be used.
 
 - `state`:
 
-  ([`list()`](https://rdrr.io/r/base/list.html))  
-  List of
-  [`nloptr::nloptr()`](https://astamm.github.io/nloptr/reference/nloptr.html)
-  results.
+  ([`nloptr::nloptr()`](https://astamm.github.io/nloptr/reference/nloptr.html)
+  result)  
+  Result of the last optimization run.
 
 ## Active bindings
 
@@ -189,5 +169,5 @@ if (requireNamespace("nloptr")) {
 }
 #> Loading required namespace: nloptr
 #> <AcqOptimizerDirect>: (OptimizerDirect)
-#> * Parameters: restart_strategy=random, catch_errors=TRUE
+#> * Parameters: catch_errors=TRUE
 ```

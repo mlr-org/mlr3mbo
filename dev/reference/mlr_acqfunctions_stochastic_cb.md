@@ -192,7 +192,7 @@ Update the acquisition function. Samples and decays lambda.
 ### `AcqFunctionStochasticCB$reset()`
 
 Reset the acquisition function. Resets the private update counter `.t`
-used within the epsilon decay.
+and the sampled lambda so that a fresh lambda is drawn on the next run.
 
 #### Usage
 
