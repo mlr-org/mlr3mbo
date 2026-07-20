@@ -267,7 +267,7 @@ AcqOptimizer = R6Class(
           pmin(xdt[[param]], instance$search_space$upper[[param]]),
           instance$search_space$lower[[param]]
         )
-        if (!isTRUE(all.equal(clipped_value, xdt[[param]]))) {
+        if (!clipped && any(clipped_value != xdt[[param]])) {
           clipped = TRUE
         }
         set(xdt, j = param, value = clipped_value)
