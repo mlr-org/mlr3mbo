@@ -70,18 +70,22 @@ ResultAssignerSurrogate = R6Class(
       }
       archive_tmp = archive$clone(deep = TRUE)
       archive_tmp$data[, self$surrogate$cols_y := means]
+      # carry a row index so that the originally evaluated ys can be recovered by position,
+      # which is robust to duplicated x-configurations (the noisy objective case)
+      archive_tmp$data[, ".result_index" := seq_len(nrow(archive_tmp$data))]
       xydt = archive_tmp$best()
       cols_x = archive_tmp$cols_x
       cols_y = archive_tmp$cols_y
+      best_index = xydt[[".result_index"]]
       best = xydt[, cols_x, with = FALSE]
-      extra = xydt[, !c(cols_x, cols_y), with = FALSE]
+      extra = xydt[, !c(cols_x, cols_y, ".result_index"), with = FALSE]
 
       # ys are still the ones originally evaluated
       if (inherits(instance, c("OptimInstanceBatchSingleCrit", "OptimInstanceAsyncSingleCrit"))) {
-        best_y = unlist(archive$data[best, on = cols_x][, cols_y, with = FALSE])
+        best_y = unlist(archive$data[best_index, cols_y, with = FALSE])
         instance$assign_result(xdt = best, y = best_y, extra = extra)
       } else if (inherits(instance, c("OptimInstanceBatchMultiCrit", "OptimInstanceAsyncMultiCrit"))) {
-        best_y = archive$data[best, on = cols_x][, cols_y, with = FALSE]
+        best_y = archive$data[best_index, cols_y, with = FALSE]
         instance$assign_result(xdt = best, ydt = best_y, extra = extra)
       }
     }
