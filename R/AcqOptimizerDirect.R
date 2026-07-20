@@ -82,7 +82,6 @@ AcqOptimizerDirect = R6Class(
         xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        minf_max = p_dbl(default = -Inf),
         restart_strategy = p_fct(levels = c("none", "random"), init = "random"),
         max_restarts = p_int(lower = 0L),
         catch_errors = p_lgl(init = TRUE)

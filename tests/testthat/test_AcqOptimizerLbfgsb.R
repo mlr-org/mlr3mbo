@@ -18,6 +18,10 @@ test_that("AcqOptimizerLbfgsb works", {
   expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
 })
 
+test_that("AcqOptimizerLbfgsb does not expose the dead minf_max parameter", {
+  expect_false("minf_max" %in% AcqOptimizerLbfgsb$new()$param_set$ids())
+})
+
 test_that("AcqOptimizerLbfgsb works with 2D", {
   skip_if_missing_regr_km()
   instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))

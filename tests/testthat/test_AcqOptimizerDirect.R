@@ -53,6 +53,10 @@ test_that("AcqOptimizerDirect works with instance", {
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
 
+test_that("AcqOptimizerDirect does not expose the dead minf_max parameter", {
+  expect_false("minf_max" %in% AcqOptimizerDirect$new()$param_set$ids())
+})
+
 test_that("AcqOptimizerDirect works with random restart", {
   skip_if_missing_regr_km()
   instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))
