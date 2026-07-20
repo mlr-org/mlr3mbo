@@ -126,6 +126,7 @@ AcqOptimizerDirect = R6Class(
       direction = self$acq_function$codomain$direction
 
       y = Inf
+      x = NULL
       n_evals = 0L
       n_restarts = 0L
       while ((n_evals < maxeval || maxeval < 0) && n_restarts <= max_restarts) {
@@ -166,7 +167,8 @@ AcqOptimizerDirect = R6Class(
           res = optimize()
         }
 
-        if (res$objective < y) {
+        # isTRUE guards against a NaN objective (e.g., constant acquisition surface) that would otherwise error here
+        if (isTRUE(res$objective < y)) {
           y = res$objective
           x = res$solution
         }
@@ -176,6 +178,9 @@ AcqOptimizerDirect = R6Class(
         self$state = c(self$state, set_names(list(list(model = res, start = x0)), paste0("iteration_", n_restarts)))
 
         if (restart_strategy == "none") break
+      }
+      if (is.null(x)) {
+        error_acq_optimizer("Acquisition function optimization did not yield a valid solution.")
       }
       as.data.table(as.list(set_names(
         c(x, y * direction),
