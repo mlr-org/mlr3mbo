@@ -1,5 +1,6 @@
 # mlr3mbo (development version)
 
+* fix: `AcqOptimizer` now respects `warmstart_size` when warm-starting a single-objective acquisition function on a multi-objective archive, instead of evaluating the entire non-dominated front.
 * fix: `AcqOptimizer` and its subclasses gained `$label` and `$man` fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
 * fix: `AcqFunctionEHVI`, `AcqFunctionEHVIGH`, and `AcqFunctionSmsEgo` now apply the surrogate's output transformation to `ys_front`, so the front and the reference point are compared on the same scale.
 * fix: `AcqFunctionEIPS` now correctly divides the expected improvement by the predicted time instead of behaving like plain expected improvement.
