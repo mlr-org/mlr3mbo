@@ -31,4 +31,16 @@ test_that("AcqFunctionEIPS works", {
   res = acqf$eval_dt(xdt)
   expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
   expect_named(res, acqf$id)
+
+  # eips must actually divide expected improvement by the predicted time
+  p = acqf$surrogate$predict(xdt)
+  mu = p[[acqf$col_y]]$mean
+  se = p[[acqf$col_y]]$se
+  mu_t = p[[acqf$col_time]]$mean
+  d = acqf$y_best - acqf$surrogate_max_to_min[[acqf$col_y]] * mu
+  d_norm = d / se
+  ei = d * pnorm(d_norm) + se * dnorm(d_norm)
+  expected_eips = ifelse(se < 1e-20 | mu_t < 1e-20, 0, ei / mu_t)
+  expect_equal(res[[acqf$id]], expected_eips)
+  expect_false(isTRUE(all.equal(res[[acqf$id]], ei)))
 })
