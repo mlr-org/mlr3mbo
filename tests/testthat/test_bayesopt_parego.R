@@ -41,3 +41,28 @@ test_that("bayesopt_parego aligns the multiplier with the target columns", {
   ))
   expect_data_table(instance$archive$data, nrows = 6L)
 })
+
+test_that("bayesopt_parego works with a constant objective", {
+  fun = function(xs) list(y1 = as.numeric(xs)^2, y2 = 1)
+  objective = bbotk::ObjectiveRFun$new(
+    fun = fun,
+    domain = PS_1D,
+    codomain = ps(y1 = p_dbl(tags = "minimize"), y2 = p_dbl(tags = "minimize")),
+    properties = "multi-crit"
+  )
+  instance = OptimInstanceBatchMultiCrit$new(objective = objective, terminator = trm("evals", n_evals = 6L))
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+
+  bayesopt_parego(
+    instance,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer,
+    init_design_size = 4L
+  )
+
+  expect_true(all(is.finite(head(instance$archive$data$y_scal, 5L))))
+  expect_true(all(!is.na(tail(instance$archive$data$acq_ei, 2L))))
+})
