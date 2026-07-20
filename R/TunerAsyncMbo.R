@@ -89,11 +89,18 @@ TunerAsyncMbo = R6Class(
     #' @template param_result_assigner
     #' @param param_set ([paradox::ParamSet])\cr
     #'  Set of control parameters.
-    initialize = function(surrogate = NULL, acq_function = NULL, acq_optimizer = NULL, param_set = NULL) {
+    initialize = function(
+      surrogate = NULL,
+      acq_function = NULL,
+      acq_optimizer = NULL,
+      result_assigner = NULL,
+      param_set = NULL
+    ) {
       optimizer = OptimizerAsyncMbo$new(
         surrogate = surrogate,
         acq_function = acq_function,
         acq_optimizer = acq_optimizer,
+        result_assigner = result_assigner,
         param_set = param_set
       )
 
