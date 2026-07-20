@@ -168,6 +168,15 @@ test_that("AcqFunctionMulti lazy initialization", {
   expect_error(AcqFunctionMulti$new(acqfs), "Acquisition functions must rely on the same surrogate model")
 })
 
+test_that("AcqFunctionMulti errors informatively when domains differ", {
+  inst_1d = MAKE_INST_1D()
+  inst_2d = MAKE_INST(OBJ_2D, PS_2D, trm("evals", n_evals = 5L))
+  surrogate_1d = SurrogateLearner$new(REGR_FEATURELESS, archive = inst_1d$archive)
+  surrogate_2d = SurrogateLearner$new(REGR_FEATURELESS, archive = inst_2d$archive)
+  acqfs = list(AcqFunctionMean$new(surrogate_1d), AcqFunctionSD$new(surrogate_2d))
+  expect_error(AcqFunctionMulti$new(acqfs), "same domain")
+})
+
 test_that("AcqFunctionMulti deep cloning works", {
   inst = MAKE_INST_1D()
   surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
