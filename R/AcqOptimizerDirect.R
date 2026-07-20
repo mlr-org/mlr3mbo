@@ -19,14 +19,14 @@
 #' }
 #' \item{`max_restarts`}{`integer(1)`\cr
 #'   Maximum number of restarts.
-#'   Default is `5 * D` (Default).}
+#'   Default is `5 * D`, where `D` is the dimension of the search space.}
 #' }
 #'
 #' @note
 #' If the restart strategy is `"none"`, the optimizer starts with the best point in the archive.
 #' The optimization stops when one of the stopping criteria is met.
 #'
-#' If `restart_strategy` is `"random"`, the optimizer runs at least for `maxeval` iterations.
+#' If `restart_strategy` is `"random"`, the optimizer runs at most for `maxeval` iterations in total.
 #' The first iteration starts with the best point in the archive and stops when one of the stopping criteria is met.
 #' The next iterations start from a random point.
 #'
@@ -50,7 +50,7 @@
 #'   Deactivate with `-1` (Default).}
 #' \item{`ftol_rel`}{`numeric(1)`\cr
 #'   Relative tolerance of the objective function.
-#'   Deactivate with `-1`. (Default).}
+#'   Deactivate with `-1` (Default).}
 #' \item{`ftol_abs`}{`numeric(1)`\cr
 #'   Absolute tolerance of the objective function.
 #'   Deactivate with `-1` (Default).}

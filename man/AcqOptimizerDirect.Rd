@@ -15,7 +15,7 @@ The first iteration starts with the best point in the archive and the next itera
 If the restart strategy is \code{"none"}, the optimizer starts with the best point in the archive.
 The optimization stops when one of the stopping criteria is met.
 
-If \code{restart_strategy} is \code{"random"}, the optimizer runs at least for \code{maxeval} iterations.
+If \code{restart_strategy} is \code{"random"}, the optimizer runs at most for \code{maxeval} iterations in total.
 The first iteration starts with the best point in the archive and stops when one of the stopping criteria is met.
 The next iterations start from a random point.
 }
@@ -29,7 +29,7 @@ Default is \code{"none"}.
 }
 \item{\code{max_restarts}}{\code{integer(1)}\cr
 Maximum number of restarts.
-Default is \code{5 * D} (Default).}
+Default is \code{5 * D}, where \code{D} is the dimension of the search space.}
 }
 }
 
@@ -54,7 +54,7 @@ Absolute tolerance of the parameters.
 Deactivate with \code{-1} (Default).}
 \item{\code{ftol_rel}}{\code{numeric(1)}\cr
 Relative tolerance of the objective function.
-Deactivate with \code{-1}. (Default).}
+Deactivate with \code{-1} (Default).}
 \item{\code{ftol_abs}}{\code{numeric(1)}\cr
 Absolute tolerance of the objective function.
 Deactivate with \code{-1} (Default).}
