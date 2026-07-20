@@ -18,6 +18,26 @@ test_that("AcqOptimizerLbfgsb works", {
   expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
 })
 
+test_that("AcqOptimizerLbfgsb raises an acq optimizer error when no valid solution is found", {
+  instance = oi(OBJ_1D, terminator = trm("evals", n_evals = 5L))
+  instance$eval_batch(generate_design_grid(instance$search_space, resolution = 4L)$data)
+  surrogate = srlrn(REGR_FEATURELESS, archive = instance$archive)
+
+  AcqFunctionNaN = R6::R6Class("AcqFunctionNaN", inherit = AcqFunction,
+    public = list(initialize = function(surrogate = NULL) {
+      super$initialize("acq_nan", surrogate = surrogate, requires_predict_type_se = FALSE,
+        surrogate_class = "SurrogateLearner", direction = "minimize")
+    }),
+    private = list(.fun = function(xdt) data.table(acq_nan = rep(NaN, nrow(xdt))))
+  )
+  acqfun = AcqFunctionNaN$new(surrogate = surrogate)
+  acqfun$surrogate$update()
+  acqfun$update()
+  acqopt = AcqOptimizerLbfgsb$new(acq_function = acqfun)
+  acqopt$param_set$set_values(maxeval = 50L, restart_strategy = "none")
+  expect_error(acqopt$optimize(), class = "Mlr3ErrorMboAcqOptimizer")
+})
+
 test_that("AcqOptimizerLbfgsb resets state between optimize() calls", {
   skip_if_missing_regr_km()
   instance = oi(OBJ_1D, terminator = trm("evals", n_evals = 5L))

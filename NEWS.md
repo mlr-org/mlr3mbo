@@ -12,6 +12,7 @@
 * BREAKING CHANGE: `AcqOptimizerDirect` no longer supports restarts and its `restart_strategy` and `max_restarts` parameters have been removed, because the deterministic `NLOPT_GN_DIRECT_L` algorithm ignores the starting point, so restarts only repeated the identical search with a smaller evaluation budget.
 * fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be deep cloned without error.
 * fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now reset their `state` at the start of each `optimize()` call and clear it on `reset()`, so the `state` no longer grows unboundedly across a Bayesian optimization loop.
+* fix: `AcqOptimizerLbfgsb` now raises a catchable acquisition function optimizer error instead of an unrelated error when no restart produces a valid solution, so the loop function can fall back to a randomly sampled point.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
