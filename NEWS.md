@@ -18,6 +18,7 @@
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
 * fix: `ResultAssignerSurrogate` no longer errors when the archive contains duplicated x-configurations.
 * fix: `srlrn()` now correctly unwraps a single learner supplied in a list instead of erroring.
+* fix: `srlrn()` now implements the documented replication of a single learner when `cols_y` or the `archive` reference more than one target variable, returning a `SurrogateLearnerCollection` with deep clones of the learner.
 * fix: `SurrogateLearner$predict()` no longer modifies the data.table passed as `xdt` by reference.
 
 # mlr3mbo 1.1.1
