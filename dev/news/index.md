@@ -2,6 +2,9 @@
 
 ## mlr3mbo (development version)
 
+- fix: `AcqFunctionEIPS` now correctly divides the expected improvement
+  by the predicted time instead of behaving like plain expected
+  improvement.
 - fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce
   `NaN` or `Inf` values when all observed outcomes are identical.
 

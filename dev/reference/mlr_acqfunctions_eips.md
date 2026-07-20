@@ -179,9 +179,9 @@ if (requireNamespace("mlr3learners") &
   acq_function$update()
   acq_function$eval_dt(data.table(x = c(-1, 0, 1)))
 }
-#>    acq_eips
-#>       <num>
-#> 1: 4.401295
-#> 2: 4.864705
-#> 3: 5.297184
+#>     acq_eips
+#>        <num>
+#> 1: 0.8907669
+#> 2: 1.0459798
+#> 3: 1.3060509
 ```
