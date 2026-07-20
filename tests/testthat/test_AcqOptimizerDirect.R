@@ -53,6 +53,12 @@ test_that("AcqOptimizerDirect works with instance", {
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
 
+test_that("AcqOptimizerDirect has skip_already_evaluated enabled by default", {
+  acqopt = AcqOptimizerDirect$new()
+  expect_true("skip_already_evaluated" %in% acqopt$param_set$ids())
+  expect_true(acqopt$param_set$values$skip_already_evaluated)
+})
+
 test_that("AcqOptimizerDirect works with random restart", {
   skip_if_missing_regr_km()
   instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))

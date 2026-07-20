@@ -12,6 +12,11 @@
 #' \item{`n_evals`}{`integer(1)`\cr
 #'   Number of random points to sample.
 #'   Default is `100 * D^2`, where `D` is the dimension of the search space.}
+#' \item{`skip_already_evaluated`}{`logical(1)`\cr
+#'   Should the proposed candidate be rejected if it was already evaluated on the actual [bbotk::OptimInstance]?
+#'   If `TRUE` and the candidate was already evaluated, an error is raised so that the `loop_function` can
+#'   propose a randomly sampled point instead.
+#'   Default is `TRUE`.}
 #' }
 #' @export
 #' @examples
@@ -28,6 +33,7 @@ AcqOptimizerRandomSearch = R6Class(
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
         n_evals = p_int(lower = 1),
+        skip_already_evaluated = p_lgl(init = TRUE),
         catch_errors = p_lgl(init = TRUE)
       )
       private$.param_set = param_set
@@ -71,6 +77,9 @@ AcqOptimizerRandomSearch = R6Class(
       y = ys[id]
 
       set(x, j = self$acq_function$codomain$ids(), value = y)
+      if (pv$skip_already_evaluated) {
+        assert_not_already_evaluated(x, self$acq_function$archive)
+      }
       x
     }
   ),

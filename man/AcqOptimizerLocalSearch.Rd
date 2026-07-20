@@ -8,6 +8,9 @@ Local search acquisition function optimizer.
 Calls \code{\link[bbotk:local_search]{bbotk::local_search()}}.
 For the meaning of the control parameters, see \code{\link[bbotk:local_search_control]{bbotk::local_search_control()}}.
 The termination stops when the budget defined by the \code{n_searches}, \code{n_steps}, and \code{n_neighs} parameters is exhausted.
+
+If \code{skip_already_evaluated} is \code{TRUE} (default) and the proposed candidate was already evaluated on the actual
+\link[bbotk:OptimInstance]{bbotk::OptimInstance}, an error is raised so that the \code{loop_function} can propose a randomly sampled point instead.
 }
 \examples{
 acqo("local_search")
