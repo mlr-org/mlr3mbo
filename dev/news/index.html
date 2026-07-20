@@ -53,6 +53,7 @@
 <ul><li>fix: <code>AcqOptimizer</code> and its subclasses gained <code>$label</code> and <code>$man</code> fields, so that <code>as.data.table(mlr_acqoptimizers)</code> no longer errors.</li>
 <li>fix: <code>AcqFunctionEHVI</code>, <code>AcqFunctionEHVIGH</code>, and <code>AcqFunctionSmsEgo</code> now apply the surrogate’s output transformation to <code>ys_front</code>, so the front and the reference point are compared on the same scale.</li>
 <li>fix: <code>AcqFunctionEIPS</code> now correctly divides the expected improvement by the predicted time instead of behaving like plain expected improvement.</li>
+<li>fix: <code>AcqOptimizerLbfgsb</code> no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.</li>
 <li>fix: <code>OutputTrafoLog</code> and <code>OutputTrafoStandardize</code> no longer produce <code>NaN</code> or <code>Inf</code> values when all observed outcomes are identical.</li>
 </ul></div>
     <div class="section level2">
