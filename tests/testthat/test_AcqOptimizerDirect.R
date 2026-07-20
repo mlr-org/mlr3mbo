@@ -53,6 +53,11 @@ test_that("AcqOptimizerDirect works with instance", {
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
 
+test_that("AcqOptimizerDirect defaults to restart_strategy = 'none'", {
+  acqopt = AcqOptimizerDirect$new()
+  expect_equal(acqopt$param_set$values$restart_strategy, "none")
+})
+
 test_that("AcqOptimizerDirect works with random restart", {
   skip_if_missing_regr_km()
   instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))

@@ -4,11 +4,12 @@
 #'
 #' @description
 #' Direct acquisition function optimizer.
-#' Calls `nloptr()` from \CRANpkg{nloptr}.
-#' In its default setting, the algorithm restarts `5 * D` times and runs at most for `100 * D^2` function evaluations,
+#' Calls `nloptr()` from \CRANpkg{nloptr} with the `NLOPT_GN_DIRECT_L` algorithm.
+#' In its default setting, the algorithm runs a single time for at most `100 * D^2` function evaluations,
 #' where `D` is the dimension of the search space.
-#' Each run stops when the relative tolerance of the parameters is less than `10^-4`.
-#' The first iteration starts with the best point in the archive and the next iterations start from a random point.
+#' The run stops when the relative tolerance of the parameters is less than `10^-4`.
+#' `NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the starting point.
+#' Restarts therefore only repeat the identical search with a smaller evaluation budget and are disabled by default.
 #'
 #' @section Parameters:
 #' \describe{
@@ -23,12 +24,11 @@
 #' }
 #'
 #' @note
-#' If the restart strategy is `"none"`, the optimizer starts with the best point in the archive.
-#' The optimization stops when one of the stopping criteria is met.
+#' If the restart strategy is `"none"`, the optimizer runs a single time and stops when one of the stopping criteria is met.
 #'
-#' If `restart_strategy` is `"random"`, the optimizer runs at least for `maxeval` iterations.
-#' The first iteration starts with the best point in the archive and stops when one of the stopping criteria is met.
-#' The next iterations start from a random point.
+#' If `restart_strategy` is `"random"`, the optimizer additionally restarts from random points until the budget is exhausted.
+#' Because `NLOPT_GN_DIRECT_L` is deterministic and ignores the starting point, restarts do not improve the result
+#' and only split the evaluation budget across repeated searches.
 #'
 #' @section Termination Parameters:
 #' The following termination parameters can be used.
@@ -83,7 +83,7 @@ AcqOptimizerDirect = R6Class(
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         minf_max = p_dbl(default = -Inf),
-        restart_strategy = p_fct(levels = c("none", "random"), init = "random"),
+        restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
         max_restarts = p_int(lower = 0L),
         catch_errors = p_lgl(init = TRUE)
       )

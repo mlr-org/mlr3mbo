@@ -4,6 +4,7 @@
 * fix: `AcqFunctionEHVI`, `AcqFunctionEHVIGH`, and `AcqFunctionSmsEgo` now apply the surrogate's output transformation to `ys_front`, so the front and the reference point are compared on the same scale.
 * fix: `AcqFunctionEIPS` now correctly divides the expected improvement by the predicted time instead of behaving like plain expected improvement.
 * fix: `AcqFunctionMulti` can now be deep cloned without error and preserves the shared surrogate across the wrapped acquisition functions.
+* fix: `AcqOptimizerDirect` now defaults to `restart_strategy = "none"` because the deterministic `NLOPT_GN_DIRECT_L` algorithm ignores the starting point, so restarts only repeated the identical search with a smaller evaluation budget.
 * fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be deep cloned without error.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
