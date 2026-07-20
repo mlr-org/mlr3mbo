@@ -4,6 +4,13 @@ test_that("SurrogateLearner sugar", {
   expect_false(surrogate$param_set$values$catch_errors)
 })
 
+test_that("SurrogateLearner sugar with a single learner in a list", {
+  surrogate = srlrn(list(REGR_FEATURELESS), catch_errors = FALSE)
+  expect_r6(surrogate, classes = "SurrogateLearner")
+  expect_r6(surrogate$learner, classes = "Learner")
+  expect_false(surrogate$param_set$values$catch_errors)
+})
+
 test_that("SurrogateLearnerCollection sugar", {
   surrogate = srlrn(list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)), catch_errors = FALSE)
   expect_r6(surrogate, classes = "SurrogateLearnerCollection")

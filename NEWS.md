@@ -9,6 +9,7 @@
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
 * fix: `ResultAssignerSurrogate` no longer errors when the archive contains duplicated x-configurations.
+* fix: `srlrn()` now correctly unwraps a single learner supplied in a list instead of erroring.
 * fix: `SurrogateLearner$predict()` no longer modifies the data.table passed as `xdt` by reference.
 
 # mlr3mbo 1.1.1

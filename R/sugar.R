@@ -55,7 +55,7 @@ srlrn = function(learner, input_trafo = NULL, output_trafo = NULL, archive = NUL
     )
   } else if (inherits(learner, what = "list")) {
     if (length(learner) == 1L) {
-      learner = learner[1L]
+      learner = learner[[1L]]
       # if a single learner is provided in a list, we unlist it
       SurrogateLearner$new(
         learner = learner,
