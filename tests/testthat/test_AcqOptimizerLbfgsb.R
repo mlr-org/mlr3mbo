@@ -18,6 +18,12 @@ test_that("AcqOptimizerLbfgsb works", {
   expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
 })
 
+test_that("AcqOptimizerLbfgsb maxeval accepts -1L and -1 to deactivate", {
+  acqopt = AcqOptimizerLbfgsb$new()
+  expect_error(acqopt$param_set$set_values(maxeval = -1L), NA)
+  expect_error(acqopt$param_set$set_values(maxeval = -1), NA)
+})
+
 test_that("AcqOptimizerLbfgsb works with 2D", {
   skip_if_missing_regr_km()
   instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))
