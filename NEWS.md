@@ -19,6 +19,7 @@
 * fix: `ResultAssignerSurrogate` no longer errors when the archive contains duplicated x-configurations.
 * fix: `srlrn()` now correctly unwraps a single learner supplied in a list instead of erroring.
 * fix: `SurrogateLearner$predict()` no longer modifies the data.table passed as `xdt` by reference.
+* fix: `SurrogateLearner$predict()` now always returns a `data.table` with columns `mean` and `se` as documented, instead of a bare named list in configurations without an inverting output transformation.
 
 # mlr3mbo 1.1.1
 
