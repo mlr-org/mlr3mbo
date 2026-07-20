@@ -172,3 +172,21 @@ test_that("AcqOptimizer callbacks", {
   res = acqopt$optimize()
   expect_number(attr(instance, "acq_opt_runtime"))
 })
+
+test_that("AcqOptimizer deep cloning works", {
+  # base class with optimizer and terminator
+  acqopt = AcqOptimizer$new(opt("random_search", batch_size = 10L), trm("evals", n_evals = 10L))
+  acqopt_clone = acqopt$clone(deep = TRUE)
+  expect_class(acqopt_clone, "AcqOptimizer")
+  expect_false(identical(acqopt$optimizer, acqopt_clone$optimizer))
+  expect_false(identical(acqopt$terminator, acqopt_clone$terminator))
+  expect_false(identical(acqopt$param_set, acqopt_clone$param_set))
+
+  # subclasses have NULL optimizer and terminator and must still deep clone
+  for (key in c("direct", "lbfgsb", "local_search", "random_search")) {
+    acqopt = acqo(key)
+    acqopt_clone = acqopt$clone(deep = TRUE)
+    expect_class(acqopt_clone, class(acqopt)[1L])
+    expect_false(identical(acqopt$param_set, acqopt_clone$param_set))
+  }
+})

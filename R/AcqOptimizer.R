@@ -313,8 +313,8 @@ AcqOptimizer = R6Class(
     deep_clone = function(name, value) {
       switch(
         name,
-        optimizer = value$clone(deep = TRUE),
-        terminator = value$clone(deep = TRUE),
+        optimizer = if (!is.null(value)) value$clone(deep = TRUE) else NULL,
+        terminator = if (!is.null(value)) value$clone(deep = TRUE) else NULL,
         acq_function = if (!is.null(value)) value$clone(deep = TRUE) else NULL,
         .param_set = value$clone(deep = TRUE),
         value
