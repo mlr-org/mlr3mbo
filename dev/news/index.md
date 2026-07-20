@@ -10,9 +10,16 @@
 - fix: `AcqFunctionEHVI`, `AcqFunctionEHVIGH`, and `AcqFunctionSmsEgo`
   now apply the surrogate’s output transformation to `ys_front`, so the
   front and the reference point are compared on the same scale.
+- fix: `AcqFunctionEI`, `AcqFunctionEILog`, `AcqFunctionPI`, and
+  `AcqFunctionStochasticEI` now ignore the missing outcomes of pending
+  evaluations when determining the best observed value, so `y_best` is
+  no longer `NA` on an asynchronous archive with more than one worker.
 - fix: `AcqFunctionEIPS` now correctly divides the expected improvement
   by the predicted time instead of behaving like plain expected
   improvement.
+- fix: `AcqFunctionMulti` now raises an informative error when the
+  wrapped acquisition functions do not share the same domain instead of
+  failing with a cryptic type error.
 - fix: `AcqFunctionMulti` can now be deep cloned without error and
   preserves the shared surrogate across the wrapped acquisition
   functions.
