@@ -167,3 +167,25 @@ test_that("AcqFunctionMulti lazy initialization", {
   acqfs = list(AcqFunctionMean$new(surrogate_mean), AcqFunctionSD$new(surrogate_sd))
   expect_error(AcqFunctionMulti$new(acqfs), "Acquisition functions must rely on the same surrogate model")
 })
+
+test_that("AcqFunctionMulti deep cloning works", {
+  inst = MAKE_INST_1D()
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
+  acqfs = list(AcqFunctionMean$new(), AcqFunctionSD$new())
+  acqf = AcqFunctionMulti$new(acqfs, surrogate = surrogate)
+  design = MAKE_DESIGN(inst)
+  inst$eval_batch(design)
+  acqf$surrogate$update()
+
+  acqf_clone = acqf$clone(deep = TRUE)
+  expect_class(acqf_clone, "AcqFunctionMulti")
+  expect_false(identical(acqf, acqf_clone))
+  # acq_functions is a plain list and must be cloned element-wise
+  expect_false(identical(acqf$acq_functions[[1L]], acqf_clone$acq_functions[[1L]]))
+  # the shared-surrogate invariant asserted in $update() must survive the clone
+  expect_equal(address(acqf_clone$surrogate), address(acqf_clone$acq_functions[[1L]]$surrogate))
+  expect_equal(address(acqf_clone$surrogate), address(acqf_clone$acq_functions[[2L]]$surrogate))
+  acqf_clone$update()
+  res = acqf_clone$eval_dt(data.table(x = seq(-1, 1, length.out = 5L)))
+  expect_data_table(res, ncols = 2L, nrows = 5L, any.missing = FALSE)
+})
