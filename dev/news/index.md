@@ -24,6 +24,8 @@
   parameter has an effect.
 - fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce
   `NaN` or `Inf` values when all observed outcomes are identical.
+- fix: `ResultAssignerSurrogate` no longer errors when the archive
+  contains duplicated x-configurations.
 - fix: [`srlrn()`](https://mlr3mbo.mlr-org.com/dev/reference/srlrn.md)
   now correctly unwraps a single learner supplied in a list instead of
   erroring.
