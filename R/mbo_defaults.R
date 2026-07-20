@@ -102,6 +102,8 @@ default_gp = function(noisy = FALSE) {
 #' @param noisy (`logical(1)`)\cr
 #'   Whether the learner will be used in a noisy objective function scenario.
 #'   See [default_surrogate()].
+#'   Currently, the constructed random forest is identical in the noisy and deterministic case,
+#'   and the argument only exists for consistency with [default_gp()].
 #' @return [mlr3learners::LearnerRegrRanger]
 #' @family mbo_defaults
 #' @export
