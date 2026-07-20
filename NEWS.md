@@ -1,6 +1,7 @@
 # mlr3mbo (development version)
 
 * fix: `AcqOptimizer` and its subclasses gained `$label` and `$man` fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
+* fix: `AcqFunctionEIPS` now correctly divides the expected improvement by the predicted time instead of behaving like plain expected improvement.
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
 
 # mlr3mbo 1.1.1
