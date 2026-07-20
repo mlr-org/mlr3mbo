@@ -219,7 +219,11 @@ AcqFunctionMulti = R6Class(
     },
 
     deep_clone = function(name, value) {
-      switch(name, .acq_functions = value$clone(deep = TRUE), value)
+      # .acq_functions is a plain list of R6 objects and must be cloned element-wise.
+      # Cloning an AcqFunction shares its surrogate by reference (like the inherited .surrogate field),
+      # so all cloned acquisition functions keep pointing to the same shared surrogate as the parent,
+      # which preserves the shared-surrogate invariant asserted in $update().
+      switch(name, .acq_functions = map(value, function(acq_function) acq_function$clone(deep = TRUE)), value)
     }
   )
 )
