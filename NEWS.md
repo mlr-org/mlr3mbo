@@ -1,5 +1,6 @@
 # mlr3mbo (development version)
 
+* fix: `acqo()` now raises an error when `terminator` or `callbacks` are combined with a dictionary key as `optimizer`, because these arguments were silently discarded before.
 * fix: `AcqOptimizer` and its subclasses gained `$label` and `$man` fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
 * fix: `AcqFunctionAEI` no longer errors during `$update()` when the surrogate model is not a `"regr.km"` model and now falls back to a noise variance of `0` as documented.
 * fix: `AcqFunctionEHVI`, `AcqFunctionEHVIGH`, and `AcqFunctionSmsEgo` now apply the surrogate's output transformation to `ys_front`, so the front and the reference point are compared on the same scale.
