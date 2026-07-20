@@ -205,6 +205,26 @@ Surrogate = R6Class(
       } else {
         stop("$predict_type is read-only. To change it, modify $predict_type of the learner directly.")
       }
+    },
+
+    #' @field output_trafo ([OutputTrafo] | `NULL`)\cr
+    #'   Output transformation.
+    #'   Defaults to `NULL` for subclasses that do not support output transformations.
+    output_trafo = function(rhs) {
+      if (missing(rhs)) {
+        NULL
+      } else {
+        stop("$output_trafo is read-only.")
+      }
+    },
+
+    #' @template field_output_trafo_must_be_considered
+    output_trafo_must_be_considered = function(rhs) {
+      if (missing(rhs)) {
+        FALSE
+      } else {
+        stop("$output_trafo_must_be_considered is read-only.")
+      }
     }
   ),
 

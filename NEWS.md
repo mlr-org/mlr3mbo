@@ -20,6 +20,7 @@
 * fix: `srlrn()` now correctly unwraps a single learner supplied in a list instead of erroring.
 * fix: `SurrogateLearner$predict()` no longer modifies the data.table passed as `xdt` by reference.
 * fix: `SurrogateLearner` and `SurrogateLearnerCollection` now validate assignments to the `learner`, `input_trafo`, and `output_trafo` fields, so invalid values are rejected immediately instead of failing later during updating or predicting.
+* fix: `Surrogate` now provides default `output_trafo` and `output_trafo_must_be_considered` fields, so third-party subclasses work with the acquisition functions without implementing output transformation support.
 
 # mlr3mbo 1.1.1
 

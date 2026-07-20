@@ -122,3 +122,17 @@ test_that("SurrogateLearner fields are validated on assignment", {
   surrogate$learner = learner
   expect_identical(surrogate$learner, learner)
 })
+
+test_that("Surrogate base class provides output_trafo defaults", {
+  param_set = ps(catch_errors = p_lgl())
+  param_set$values = list(catch_errors = TRUE)
+  surrogate = Surrogate$new(
+    learner = REGR_FEATURELESS$clone(deep = TRUE),
+    archive = NULL,
+    cols_x = NULL,
+    cols_y = NULL,
+    param_set = param_set
+  )
+  expect_null(surrogate$output_trafo)
+  expect_false(surrogate$output_trafo_must_be_considered)
+})
