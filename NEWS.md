@@ -6,6 +6,7 @@
 * fix: `AcqFunctionMulti` can now be deep cloned without error and preserves the shared surrogate across the wrapped acquisition functions.
 * fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be deep cloned without error.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
+* fix: `AcqOptimizerLocalSearch` now populates its `state` field with the result of the last `bbotk::local_search()` call and clears it on `reset()`, and no longer references the unavailable `cmaes` package in its documentation.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
 * fix: `srlrn()` now correctly unwraps a single learner supplied in a list instead of erroring.
