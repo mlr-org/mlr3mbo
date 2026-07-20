@@ -5,6 +5,7 @@
 * fix: `AcqFunctionEIPS` now correctly divides the expected improvement by the predicted time instead of behaving like plain expected improvement.
 * fix: `AcqFunctionMulti` can now be deep cloned without error and preserves the shared surrogate across the wrapped acquisition functions.
 * fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be deep cloned without error.
+* fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now reset their `state` at the start of each `optimize()` call and clear it on `reset()`, so the `state` no longer grows unboundedly across a Bayesian optimization loop.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.

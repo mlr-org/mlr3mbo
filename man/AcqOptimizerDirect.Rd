@@ -97,6 +97,7 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
   \itemize{
     \item \href{#method-AcqOptimizerDirect-initialize}{\code{AcqOptimizerDirect$new()}}
     \item \href{#method-AcqOptimizerDirect-optimize}{\code{AcqOptimizerDirect$optimize()}}
+    \item \href{#method-AcqOptimizerDirect-reset}{\code{AcqOptimizerDirect$reset()}}
     \item \href{#method-AcqOptimizerDirect-clone}{\code{AcqOptimizerDirect$clone()}}
   }
 }
@@ -104,7 +105,6 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
 <ul>
   <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>AcqOptimizer$format()</code></a></span></li>
   <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>AcqOptimizer$print()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>AcqOptimizer$reset()</code></a></span></li>
 </ul>
 </details>}}
 \if{html}{\out{<hr>}}
@@ -138,6 +138,20 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
   }
   \subsection{Returns}{
     \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
+  }
+}
+
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqOptimizerDirect-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizerDirect-reset}{}}}
+\subsection{\code{AcqOptimizerDirect$reset()}}{
+  Reset the acquisition function optimizer.
+
+Clears the \code{state} of the previous optimization run.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizerDirect$reset()}
+    \if{html}{\out{</div>}}
   }
 }
 
