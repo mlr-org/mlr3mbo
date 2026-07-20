@@ -75,3 +75,7 @@ test_that("custom loop_function", {
 
   optimizer$optimize(instance)
 })
+
+test_that("mlr_loop_functions get rejects additional arguments", {
+  expect_error(mlr_loop_functions$get("bayesopt_ego", init_design_size = 10L), "must not be passed")
+})

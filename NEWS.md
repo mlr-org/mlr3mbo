@@ -15,6 +15,7 @@
 * fix: `AcqOptimizerLbfgsb` now raises a catchable acquisition function optimizer error instead of an unrelated error when no restart produces a valid solution, so the loop function can fall back to a randomly sampled point.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
+* fix: `mlr_loop_functions$get()` now raises an error when additional arguments are passed, because loop functions are stored as plain values and the arguments were silently discarded before.
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
 * fix: `ResultAssignerSurrogate` no longer errors when the archive contains duplicated x-configurations.
 * fix: `srlrn()` now correctly unwraps a single learner supplied in a list instead of erroring.
