@@ -2,6 +2,8 @@
 
 * fix: `AcqOptimizer` and its subclasses gained `$label` and `$man` fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
 * fix: `bayesopt_mpcl()` now logs a warning when a surrogate or acquisition function error is caught and a randomly sampled point is proposed, consistent with the other loop functions.
+* fix: `bayesopt_mpcl()` no longer aborts when a batch mixes model-based proposals and randomly sampled fallback points, because the batch is now combined with filling missing columns.
+* fix: `bayesopt_mpcl()` and `bayesopt_parego()` now advance the random interleaving counter per proposal instead of per batch, so random interleaving also triggers for `q > 1` as documented.
 * fix: `bayesopt_parego()` now subsets the minimization multiplier to the target columns, so the scalarization signs no longer misalign when the codomain holds non-target columns.
 * fix: `bayesopt_parego()` no longer silently degrades to random search when an objective is constant, because the zero-range scaling now maps the constant objective to a constant value instead of `NaN`.
 * fix: `AcqFunctionAEI` no longer errors during `$update()` when the surrogate model is not a `"regr.km"` model and now falls back to a noise variance of `0` as documented.
