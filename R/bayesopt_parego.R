@@ -144,8 +144,16 @@ bayesopt_parego = function(
   repeat {
     data = instance$archive$data
     ydt = data[, instance$archive$cols_y, with = FALSE]
-    ydt = Map("*", ydt, mult_max_to_min(instance$archive$codomain)) # we always assume minimization
-    ydt = Map(function(y) (y - min(y, na.rm = TRUE)) / diff(range(y, na.rm = TRUE)), ydt) # scale y to [0, 1]
+    # the codomain can hold non-target columns, so the multiplier must be subset to the target columns
+    ydt = Map("*", ydt, mult_max_to_min(instance$archive$codomain)[instance$archive$cols_y]) # we always assume minimization
+    # scale y to [0, 1]; a constant objective would yield division by zero and is mapped to a constant instead
+    ydt = Map(
+      function(y) {
+        range_y = diff(range(y, na.rm = TRUE))
+        if (range_y == 0) rep(0.5, length(y)) else (y - min(y, na.rm = TRUE)) / range_y
+      },
+      ydt
+    )
 
     xdt = map_dtr(
       qs,
