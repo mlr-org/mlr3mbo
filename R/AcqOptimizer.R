@@ -261,12 +261,21 @@ AcqOptimizer = R6Class(
       }
       # the following is required to assure that evaluations of numerical gradient based methods that potentially
       # evaluated out of bounds are not returned as out of bound but clipped to bounds
+      clipped = FALSE
       for (param in names(which(instance$search_space$is_number))) {
-        set(
-          xdt,
-          j = param,
-          value = pmax(pmin(xdt[[param]], instance$search_space$upper[[param]]), instance$search_space$lower[[param]])
+        clipped_value = pmax(
+          pmin(xdt[[param]], instance$search_space$upper[[param]]),
+          instance$search_space$lower[[param]]
         )
+        if (!isTRUE(all.equal(clipped_value, xdt[[param]]))) {
+          clipped = TRUE
+        }
+        set(xdt, j = param, value = clipped_value)
+      }
+      # rebuild the stale x_domain list column from the clipped x columns, otherwise the out-of-bounds x_domain
+      # would be stored verbatim in the real archive and break the x == x_domain invariant
+      if (clipped && "x_domain" %in% names(xdt)) {
+        set(xdt, j = "x_domain", value = transform_xdt_to_xss(xdt, instance$search_space))
       }
       #if (is_multi_acq_function) {
       #  set(xdt, j = instance$objective$id,

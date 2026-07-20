@@ -173,6 +173,26 @@ test_that("AcqOptimizer callbacks", {
   expect_number(attr(instance, "acq_opt_runtime"))
 })
 
+test_that("AcqOptimizer rebuilds x_domain after clipping to bounds", {
+  OptimizerOOB = R6::R6Class("OptimizerOOB", inherit = OptimizerBatch,
+    public = list(initialize = function() super$initialize(param_set = ps(),
+      param_classes = "ParamDbl", properties = "single-crit")),
+    private = list(.optimize = function(inst) inst$eval_batch(data.table(x = 2)))
+  )
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 10L))
+  instance$eval_batch(data.table(x = c(-0.5, 0, 0.5)))
+  surrogate = srlrn(REGR_FEATURELESS, archive = instance$archive)
+  acqfun = acqf("mean", surrogate = surrogate)
+  acqfun$surrogate$update()
+  acqfun$update()
+  acqopt = AcqOptimizer$new(OptimizerOOB$new(), trm("evals", n_evals = 1L), acq_function = acqfun)
+  xdt = acqopt$optimize()
+
+  # out-of-bounds candidate x = 2 is clipped to the upper bound and x_domain follows
+  expect_equal(xdt$x, 1)
+  expect_equal(unname(unlist(xdt$x_domain[[1L]])), 1)
+})
+
 test_that("AcqOptimizer deep cloning works", {
   # base class with optimizer and terminator
   acqopt = AcqOptimizer$new(opt("random_search", batch_size = 10L), trm("evals", n_evals = 10L))
