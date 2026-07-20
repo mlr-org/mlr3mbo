@@ -95,6 +95,7 @@ AcqOptimizerLbfgsb = R6Class(
     #'
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
+      self$state = NULL
       pv = self$param_set$values
       restart_strategy = pv$restart_strategy
       max_restarts = pv$max_restarts
@@ -206,6 +207,14 @@ AcqOptimizerLbfgsb = R6Class(
         c(x, y * direction),
         c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
       )))
+    },
+
+    #' @description
+    #' Reset the acquisition function optimizer.
+    #'
+    #' Clears the `state` of the previous optimization run.
+    reset = function() {
+      self$state = NULL
     }
   ),
 

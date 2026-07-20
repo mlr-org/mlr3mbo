@@ -166,9 +166,11 @@ AcqFunctionStochasticCB = R6Class(
 
     #' @description
     #' Reset the acquisition function.
-    #' Resets the private update counter `.t` used within the epsilon decay.
+    #' Resets the private update counter `.t` and the sampled lambda so that a fresh lambda is drawn on the next run.
     reset = function() {
       private$.t = 0L
+      private$.lambda_0 = NULL
+      self$constants$values$lambda = NULL
     }
   ),
 

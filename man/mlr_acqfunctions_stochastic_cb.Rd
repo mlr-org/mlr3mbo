@@ -196,7 +196,7 @@ Samples and decays lambda.
 \if{latex}{\out{\hypertarget{method-AcqFunctionStochasticCB-reset}{}}}
 \subsection{\code{AcqFunctionStochasticCB$reset()}}{
   Reset the acquisition function.
-Resets the private update counter \code{.t} used within the epsilon decay.
+Resets the private update counter \code{.t} and the sampled lambda so that a fresh lambda is drawn on the next run.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionStochasticCB$reset()}
