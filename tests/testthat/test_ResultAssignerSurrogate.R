@@ -36,6 +36,21 @@ test_that("ResultAssignerSurrogate result and best can be different", {
   expect_true(abs(instance$result[[instance$archive$cols_y]] - mean[best_index]) > 1e-2)
 })
 
+test_that("ResultAssignerSurrogate works with duplicated x-configurations", {
+  skip_if_not_installed("rpart")
+  result_assigner = ResultAssignerSurrogate$new(surrogate = SurrogateLearner$new(lrn("regr.rpart")))
+
+  instance = MAKE_INST_1D()
+  design = generate_design_grid(instance$search_space, resolution = 4L)$data
+  # duplicate every point so that the join back onto the archive by x would return multiple rows
+  instance$eval_batch(rbind(design, design))
+
+  expect_null(instance$result)
+  result_assigner$assign_result(instance)
+  expect_data_table(instance$result, nrows = 1L)
+  expect_number(instance$result[[instance$archive$cols_y]])
+})
+
 test_that("ResultAssignerSurrogate works with OptimizerMbo and bayesopt_ego", {
   skip_if_missing_regr_km()
   result_assigner = ResultAssignerSurrogate$new()
