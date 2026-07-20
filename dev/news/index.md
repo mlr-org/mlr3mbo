@@ -19,6 +19,9 @@
 - fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a
   search space bound, which previously caused the optimization to
   silently degenerate into random search.
+- fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from
+  an exponential distribution as documented, so that the `lambda`
+  parameter has an effect.
 - fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce
   `NaN` or `Inf` values when all observed outcomes are identical.
 - fix: `SurrogateLearner$predict()` no longer modifies the data.table

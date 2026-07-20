@@ -56,6 +56,7 @@
 <li>fix: <code>AcqFunctionMulti</code> can now be deep cloned without error and preserves the shared surrogate across the wrapped acquisition functions.</li>
 <li>fix: <code>AcqOptimizerDirect</code>, <code>AcqOptimizerLbfgsb</code>, <code>AcqOptimizerLocalSearch</code>, and <code>AcqOptimizerRandomSearch</code> can now be deep cloned without error.</li>
 <li>fix: <code>AcqOptimizerLbfgsb</code> no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.</li>
+<li>fix: <code>OptimizerADBO</code> and <code>TunerADBO</code> now draw the initial lambda from an exponential distribution as documented, so that the <code>lambda</code> parameter has an effect.</li>
 <li>fix: <code>OutputTrafoLog</code> and <code>OutputTrafoStandardize</code> no longer produce <code>NaN</code> or <code>Inf</code> values when all observed outcomes are identical.</li>
 <li>fix: <code>SurrogateLearner$predict()</code> no longer modifies the data.table passed as <code>xdt</code> by reference.</li>
 </ul></div>
