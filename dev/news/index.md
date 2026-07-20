@@ -2,6 +2,8 @@
 
 ## mlr3mbo (development version)
 
+- fix: `AcqOptimizer` and its subclasses gained `$label` and `$man`
+  fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
 - fix: `AcqFunctionEHVI`, `AcqFunctionEHVIGH`, and `AcqFunctionSmsEgo`
   now apply the surrogate’s output transformation to `ys_front`, so the
   front and the reference point are compared on the same scale.

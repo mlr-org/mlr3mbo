@@ -85,14 +85,13 @@ Each input transformation has an associated help page, see <code>mlr_acqoptimize
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">mlr_acqoptimizers</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Column 2 ['label'] of item 1 is length 0. This (and 7 others like it) has been filled with NA (NULL for list columns) to make each item uniform.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Key: &lt;key&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              key  label    man</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;char&gt; &lt;lgcl&gt; &lt;lgcl&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:        direct     NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:        lbfgsb     NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:  local_search     NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: random_search     NA     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              key         label                               man</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;char&gt;        &lt;char&gt;                            &lt;char&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:        direct        DIRECT       mlr3mbo::AcqOptimizerDirect</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:        lbfgsb      L-BFGS-B       mlr3mbo::AcqOptimizerLbfgsb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:  local_search  Local Search  mlr3mbo::AcqOptimizerLocalSearch</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: random_search Random Search mlr3mbo::AcqOptimizerRandomSearch</span>
 <span class="r-in"><span><span class="fu"><a href="acqo.html">acqo</a></span><span class="op">(</span><span class="st">"local_search"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;AcqOptimizerLocalSearch&gt;: (OptimizerLocalSearch)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Parameters: catch_errors=TRUE</span>

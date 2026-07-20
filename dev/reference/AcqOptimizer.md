@@ -108,6 +108,18 @@ and
   (`character`)  
   Id used when printing.
 
+- `label`:
+
+  (`character(1)`)  
+  Label for this object. Can be used in tables, plot and text output
+  instead of the ID.
+
+- `man`:
+
+  (`character(1)`)  
+  String in the format `[pkg]::[topic]` pointing to a manual page for
+  this object.
+
 - `param_set`:
 
   ([paradox::ParamSet](https://paradox.mlr-org.com/reference/ParamSet.html))  

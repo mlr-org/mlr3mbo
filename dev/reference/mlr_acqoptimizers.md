@@ -39,14 +39,13 @@ Other Dictionary:
 ``` r
 library(data.table)
 as.data.table(mlr_acqoptimizers)
-#> Warning: Column 2 ['label'] of item 1 is length 0. This (and 7 others like it) has been filled with NA (NULL for list columns) to make each item uniform.
 #> Key: <key>
-#>              key  label    man
-#>           <char> <lgcl> <lgcl>
-#> 1:        direct     NA     NA
-#> 2:        lbfgsb     NA     NA
-#> 3:  local_search     NA     NA
-#> 4: random_search     NA     NA
+#>              key         label                               man
+#>           <char>        <char>                            <char>
+#> 1:        direct        DIRECT       mlr3mbo::AcqOptimizerDirect
+#> 2:        lbfgsb      L-BFGS-B       mlr3mbo::AcqOptimizerLbfgsb
+#> 3:  local_search  Local Search  mlr3mbo::AcqOptimizerLocalSearch
+#> 4: random_search Random Search mlr3mbo::AcqOptimizerRandomSearch
 acqo("local_search")
 #> <AcqOptimizerLocalSearch>: (OptimizerLocalSearch)
 #> * Parameters: catch_errors=TRUE
