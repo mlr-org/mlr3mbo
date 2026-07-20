@@ -8,6 +8,7 @@
 * fix: `AcqFunctionSmsEgo` now accepts a `lambda` below `1` during construction, consistent with the lower bound of its `constants` parameter set.
 * fix: `AcqFunctionMulti` now raises an informative error when the wrapped acquisition functions do not share the same domain instead of failing with a cryptic type error.
 * fix: `AcqFunctionMulti` can now be deep cloned without error and preserves the shared surrogate across the wrapped acquisition functions.
+* fix: `AcqFunctionStochasticCB` now clears the sampled lambda on `$reset()`, so a reused optimizer draws a fresh initial lambda for each run as documented.
 * fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be deep cloned without error.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
