@@ -22,6 +22,7 @@ ADBO can use periodic exponential decay to reduce lambda periodically for a give
 \code{lambda * exp(-rate * (t \%\% period))}.
 The \link{SurrogateLearner} is configured to use a random forest and
 the \link{AcqOptimizer} is a random search with a batch size of 1000 and a budget of 10000 evaluations.
+These defaults are only used for fields that have not been set by the user prior to optimization.
 }
 \section{Parameters}{
 

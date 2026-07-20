@@ -19,6 +19,7 @@
 #' `lambda * exp(-rate * (t %% period))`.
 #' The [SurrogateLearner] is configured to use a random forest and
 #' the [AcqOptimizer] is a random search with a batch size of 1000 and a budget of 10000 evaluations.
+#' These defaults are only used for fields that have not been set by the user prior to optimization.
 #'
 #' @section Parameters:
 #' \describe{
@@ -122,19 +123,25 @@ OptimizerADBO = R6Class(
     #' @param inst ([bbotk::OptimInstanceAsyncSingleCrit]).
     #' @return [data.table::data.table()]
     optimize = function(inst) {
-      self$acq_function = AcqFunctionStochasticCB$new(
-        distribution = "exponential",
-        lambda = self$param_set$values$lambda,
-        rate = self$param_set$values$rate,
-        period = self$param_set$values$period
-      )
+      if (is.null(self$acq_function)) {
+        self$acq_function = AcqFunctionStochasticCB$new(
+          distribution = "exponential",
+          lambda = self$param_set$values$lambda,
+          rate = self$param_set$values$rate,
+          period = self$param_set$values$period
+        )
+      }
 
-      self$surrogate = default_surrogate(inst, force_random_forest = TRUE)
+      if (is.null(self$surrogate)) {
+        self$surrogate = default_surrogate(inst, force_random_forest = TRUE)
+      }
 
-      self$acq_optimizer = AcqOptimizer$new(
-        optimizer = opt("random_search", batch_size = 1000L),
-        terminator = trm("evals", n_evals = 10000L)
-      )
+      if (is.null(self$acq_optimizer)) {
+        self$acq_optimizer = AcqOptimizer$new(
+          optimizer = opt("random_search", batch_size = 1000L),
+          terminator = trm("evals", n_evals = 10000L)
+        )
+      }
 
       super$optimize(inst)
     }
