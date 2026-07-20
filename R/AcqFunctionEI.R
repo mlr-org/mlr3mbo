@@ -93,7 +93,8 @@ AcqFunctionEI = R6Class(
       if (self$surrogate$output_trafo_must_be_considered) {
         y = self$surrogate$output_trafo$transform(y)
       }
-      self$y_best = min(self$surrogate_max_to_min * y)
+      # na.rm = TRUE because on an asynchronous archive queued/running/failed rows have NA outcomes
+      self$y_best = min(self$surrogate_max_to_min * y, na.rm = TRUE)
     }
   ),
 

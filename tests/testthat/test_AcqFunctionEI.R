@@ -27,6 +27,22 @@ test_that("AcqFunctionEI works", {
   expect_named(res, acqf$id)
 })
 
+test_that("AcqFunctionEI ignores NA outcomes when computing y_best", {
+  inst = MAKE_INST_1D()
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
+  acqf = AcqFunctionEI$new(surrogate = surrogate)
+
+  design = MAKE_DESIGN(inst)
+  inst$eval_batch(design)
+  acqf$surrogate$update()
+
+  # simulate a queued/running evaluation with a missing outcome (as on an asynchronous archive)
+  set(inst$archive$data, i = 1L, j = "y", value = NA_real_)
+  acqf$update()
+  expect_false(is.na(acqf$y_best))
+  expect_equal(acqf$y_best, min(inst$archive$data[["y"]], na.rm = TRUE))
+})
+
 test_that("AcqFunctionEI trafo", {
   domain = ps(x = p_dbl(lower = 10, upper = 20, trafo = function(x) x - 15))
   obj = ObjectiveRFunDt$new(
