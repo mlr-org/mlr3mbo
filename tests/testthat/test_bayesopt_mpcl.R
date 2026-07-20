@@ -17,3 +17,22 @@ test_that("default bayesopt_mpcl", {
   expect_true(!is.na(instance$archive$data$acq_ei[6L]))
   expect_true(all(instance$archive$data$batch_nr[c(5L, 6L)] == c(2L, 2L)))
 })
+
+test_that("bayesopt_mpcl with random interleaving", {
+  skip_if_not_installed("mlr3learners")
+  skip_if_not_installed("DiceKriging")
+  skip_if_not_installed("rgenoud")
+
+  # random_interleave_iter = 1L always triggers the random fallback for the lie
+  # proposals, whose designs miss the acq columns of the model based proposal;
+  # rbind must fill the missing columns instead of aborting the run
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 6L))
+  surrogate = SurrogateLearner$new(REGR_KM_DETERM)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  expect_error(
+    bayesopt_mpcl(instance, surrogate = surrogate, acq_function = acq_function, acq_optimizer = acq_optimizer,
+      init_design_size = 4L, q = 2L, random_interleave_iter = 1L),
+    NA)
+  expect_true(instance$archive$n_evals >= 6L)
+})

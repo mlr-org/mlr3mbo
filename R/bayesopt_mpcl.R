@@ -188,7 +188,7 @@ bayesopt_mpcl = function(
           generate_design_random(search_space, n = 1L)$data
         }
       )
-      xdt = rbind(xdt, xdt_new)
+      xdt = rbind(xdt, xdt_new, fill = TRUE)
     }
 
     acq_function$surrogate$archive = instance$archive
