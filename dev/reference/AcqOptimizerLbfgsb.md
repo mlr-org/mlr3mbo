@@ -111,13 +111,14 @@ The following termination parameters can be used.
 
 - [`AcqOptimizerLbfgsb$optimize()`](#method-AcqOptimizerLbfgsb-optimize)
 
+- [`AcqOptimizerLbfgsb$reset()`](#method-AcqOptimizerLbfgsb-reset)
+
 - [`AcqOptimizerLbfgsb$clone()`](#method-AcqOptimizerLbfgsb-clone)
 
 Inherited methods
 
 - [`AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-format)
 - [`AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-print)
-- [`AcqOptimizer$reset()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-reset)
 
 ------------------------------------------------------------------------
 
@@ -151,6 +152,18 @@ Optimize the acquisition function.
 
 [`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)
 with 1 row per candidate.
+
+------------------------------------------------------------------------
+
+### `AcqOptimizerLbfgsb$reset()`
+
+Reset the acquisition function optimizer.
+
+Clears the `state` of the previous optimization run.
+
+#### Usage
+
+    AcqOptimizerLbfgsb$reset()
 
 ------------------------------------------------------------------------
 

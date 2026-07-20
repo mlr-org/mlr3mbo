@@ -32,6 +32,11 @@
 - fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`,
   `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be
   deep cloned without error.
+- fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now reset their
+  `state` at the start of each
+  [`optimize()`](https://rdrr.io/r/stats/optimize.html) call and clear
+  it on `reset()`, so the `state` no longer grows unboundedly across a
+  Bayesian optimization loop.
 - fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a
   search space bound, which previously caused the optimization to
   silently degenerate into random search.

@@ -173,10 +173,10 @@ String in the format <code>[pkg]::[topic]</code> pointing to a manual page for t
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 <p></p><ul><li><p><a href="#method-AcqOptimizerLbfgsb-initialize"><code>AcqOptimizerLbfgsb$new()</code></a></p></li>
 <li><p><a href="#method-AcqOptimizerLbfgsb-optimize"><code>AcqOptimizerLbfgsb$optimize()</code></a></p></li>
+<li><p><a href="#method-AcqOptimizerLbfgsb-reset"><code>AcqOptimizerLbfgsb$reset()</code></a></p></li>
 <li><p><a href="#method-AcqOptimizerLbfgsb-clone"><code>AcqOptimizerLbfgsb$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href="AcqOptimizer.html#method-format"><code>AcqOptimizer$format()</code></a></span></li>
   <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href="AcqOptimizer.html#method-print"><code>AcqOptimizer$print()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href="AcqOptimizer.html#method-reset"><code>AcqOptimizer$reset()</code></a></span></li>
 </ul></details></p><hr><a id="method-AcqOptimizerLbfgsb-initialize"></a><div class="section">
 <h3 id="acqoptimizerlbfgsb-new-"><code>AcqOptimizerLbfgsb$new()</code><a class="anchor" aria-label="anchor" href="#acqoptimizerlbfgsb-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p><div class="section">
@@ -205,10 +205,20 @@ String in the format <code>[pkg]::[topic]</code> pointing to a manual page for t
 
 </div>
 
+<p></p><hr><a id="method-AcqOptimizerLbfgsb-reset"></a><div class="section">
+<h3 id="acqoptimizerlbfgsb-reset-"><code>AcqOptimizerLbfgsb$reset()</code><a class="anchor" aria-label="anchor" href="#acqoptimizerlbfgsb-reset-"></a></h3>
+<p>Reset the acquisition function optimizer.</p>
+<p>Clears the <code>state</code> of the previous optimization run.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizerLbfgsb</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+</div>
+
 <p></p><hr><a id="method-AcqOptimizerLbfgsb-clone"></a><div class="section">
 <h3 id="acqoptimizerlbfgsb-clone-"><code>AcqOptimizerLbfgsb$clone()</code><a class="anchor" aria-label="anchor" href="#acqoptimizerlbfgsb-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizerLbfgsb</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>

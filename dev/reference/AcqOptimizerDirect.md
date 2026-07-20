@@ -111,13 +111,14 @@ The following termination parameters can be used.
 
 - [`AcqOptimizerDirect$optimize()`](#method-AcqOptimizerDirect-optimize)
 
+- [`AcqOptimizerDirect$reset()`](#method-AcqOptimizerDirect-reset)
+
 - [`AcqOptimizerDirect$clone()`](#method-AcqOptimizerDirect-clone)
 
 Inherited methods
 
 - [`AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-format)
 - [`AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-print)
-- [`AcqOptimizer$reset()`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html#method-reset)
 
 ------------------------------------------------------------------------
 
@@ -151,6 +152,18 @@ Optimize the acquisition function.
 
 [`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)
 with 1 row per candidate.
+
+------------------------------------------------------------------------
+
+### `AcqOptimizerDirect$reset()`
+
+Reset the acquisition function optimizer.
+
+Clears the `state` of the previous optimization run.
+
+#### Usage
+
+    AcqOptimizerDirect$reset()
 
 ------------------------------------------------------------------------
 
