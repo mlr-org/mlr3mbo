@@ -297,6 +297,18 @@ AcqOptimizer = R6Class(
       }
     },
 
+    #' @template field_label
+    label = function(rhs) {
+      assert_ro_binding(rhs)
+      self$optimizer$label
+    },
+
+    #' @template field_man
+    man = function(rhs) {
+      assert_ro_binding(rhs)
+      "mlr3mbo::AcqOptimizer"
+    },
+
     #' @field param_set ([paradox::ParamSet])\cr
     #'   Set of hyperparameters.
     param_set = function(rhs) {

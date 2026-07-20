@@ -53,6 +53,33 @@ test_that("AcqOptimizerLbfgsb works with instance", {
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
 
+test_that("AcqOptimizerLbfgsb works when the incumbent lies on a search space bound", {
+  skip_if_missing_regr_km()
+  # linear objective, minimized -> the incumbent lies exactly on the lower bound
+  obj = bbotk::ObjectiveRFun$new(
+    fun = function(xs) list(y = as.numeric(xs$x)),
+    domain = PS_1D,
+    codomain = ps(y = p_dbl(tags = "minimize")),
+    properties = "single-crit"
+  )
+  instance = oi(obj, terminator = trm("evals", n_evals = 5L))
+  design = generate_design_grid(instance$search_space, resolution = 4L)$data
+  instance$eval_batch(design)
+
+  surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
+  acqfun = acqf("ei", surrogate = surrogate)
+  acqopt = AcqOptimizerLbfgsb$new(acq_function = acqfun)
+  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "none")
+  acqfun$surrogate$update()
+  acqfun$update()
+
+  # the incumbent is at the lower bound, which used to abort nloptr with "at least one element in x0 < lb"
+  expect_equal(acqfun$archive$best()[["x"]], unname(instance$search_space$lower))
+  res = acqopt$optimize()
+  expect_data_table(res, nrows = 1L)
+  expect_number(res[["x"]], lower = instance$search_space$lower, upper = instance$search_space$upper)
+})
+
 test_that("AcqOptimizerLbfgsb works with random restart", {
   skip_if_missing_regr_km()
   instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))

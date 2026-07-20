@@ -80,6 +80,18 @@ AcqOptimizerRandomSearch = R6Class(
     print_id = function(rhs) {
       assert_ro_binding(rhs)
       "(OptimizerRandomSearch)"
+    },
+
+    #' @template field_label
+    label = function(rhs) {
+      assert_ro_binding(rhs)
+      "Random Search"
+    },
+
+    #' @template field_man
+    man = function(rhs) {
+      assert_ro_binding(rhs)
+      "mlr3mbo::AcqOptimizerRandomSearch"
     }
   ),
 

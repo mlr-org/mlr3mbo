@@ -125,6 +125,20 @@ AcqOptimizerLbfgsb = R6Class(
       constants = self$acq_function$constants$values
       direction = self$acq_function$codomain$direction
 
+      # nloptr requires x0 to lie strictly within the bounds, so we shrink the box by safeguard_epsilon on each side.
+      # Degenerate dimensions (span smaller than 2 * safeguard_epsilon) are collapsed to their midpoint to keep lb <= ub.
+      safeguard_epsilon = 1e-5
+      lower = self$acq_function$domain$lower
+      upper = self$acq_function$domain$upper
+      lb = lower + safeguard_epsilon
+      ub = upper - safeguard_epsilon
+      degenerate = lb > ub
+      if (any(degenerate)) {
+        mid = (lower + upper) / 2
+        lb[degenerate] = mid[degenerate]
+        ub[degenerate] = mid[degenerate]
+      }
+
       y = Inf
       n_evals = 0L
       n_restarts = 0L
@@ -137,18 +151,19 @@ AcqOptimizerLbfgsb = R6Class(
           # random restart
           as.numeric(generate_design_random(self$acq_function$domain, n = 1)$data)
         }
+        # clip the starting point into the shrunk box, otherwise nloptr aborts when the incumbent lies on a bound
+        x0 = pmin(pmax(x0, lb), ub)
 
         eval_grad_f = function(x, fun, constants, direction) {
           invoke(nloptr::nl.grad, x0 = x, fn = wrapper, fun = fun, constants = constants, direction = direction)
         }
-        safeguard_epsilon = 1e-5
 
         optimize = function() {
           invoke(
             nloptr::nloptr,
             eval_f = wrapper,
-            lb = self$acq_function$domain$lower + safeguard_epsilon,
-            ub = self$acq_function$domain$upper - safeguard_epsilon,
+            lb = lb,
+            ub = ub,
             opts = insert_named(pv, list(algorithm = "NLOPT_LD_LBFGS", maxeval = maxeval - n_evals)),
             eval_grad_f = eval_grad_f,
             x0 = x0,
@@ -194,6 +209,18 @@ AcqOptimizerLbfgsb = R6Class(
     print_id = function(rhs) {
       assert_ro_binding(rhs)
       "(OptimizerLbfgsb)"
+    },
+
+    #' @template field_label
+    label = function(rhs) {
+      assert_ro_binding(rhs)
+      "L-BFGS-B"
+    },
+
+    #' @template field_man
+    man = function(rhs) {
+      assert_ro_binding(rhs)
+      "mlr3mbo::AcqOptimizerLbfgsb"
     }
   )
 )
