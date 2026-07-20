@@ -18,6 +18,17 @@ test_that("AcqOptimizerLbfgsb works", {
   expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
 })
 
+test_that("AcqOptimizerLbfgsb errors on non-numeric search spaces", {
+  instance = oi(OBJ_1D_MIXED, terminator = trm("evals", n_evals = 5L))
+  instance$eval_batch(generate_design_random(instance$search_space, n = 4L)$data)
+  surrogate = srlrn(REGR_FEATURELESS, archive = instance$archive)
+  acqfun = acqf("mean", surrogate = surrogate)
+  acqfun$surrogate$update()
+  acqfun$update()
+  acqopt = AcqOptimizerLbfgsb$new(acq_function = acqfun)
+  expect_error(acqopt$optimize(), "only supports fully numeric")
+})
+
 test_that("AcqOptimizerLbfgsb works with 2D", {
   skip_if_missing_regr_km()
   instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))

@@ -10,6 +10,8 @@
 #' Each run stops when the relative tolerance of the parameters is less than `10^-4`.
 #' The first iteration starts with the best point in the archive and the next iterations start from a random point.
 #'
+#' Only fully numeric search spaces (all parameters of type `p_dbl`) are supported.
+#'
 #' @section Parameters:
 #' \describe{
 #' \item{`restart_strategy`}{`character(1)`\cr
@@ -95,6 +97,9 @@ AcqOptimizerDirect = R6Class(
     #'
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
+      if (!all(self$acq_function$domain$class == "ParamDbl")) {
+        stopf("`AcqOptimizerDirect` only supports fully numeric (`p_dbl`) search spaces.")
+      }
       pv = self$param_set$values
       restart_strategy = pv$restart_strategy
       max_restarts = pv$max_restarts
