@@ -122,10 +122,8 @@ SurrogateLearner = R6Class(
     #'
     #' @return [data.table::data.table()] with the columns `mean` and `se`.
     predict = function(xdt) {
-      # assert_xdt(xdt)
-
-      # xdt = fix_xdt_missing(copy(xdt), cols_x = self$cols_x, archive = self$archive)
-
+      assert_xdt(xdt)
+      xdt = fix_xdt_missing(copy(xdt), cols_x = self$cols_x, archive = self$archive)
       if (!is.null(self$input_trafo)) {
         xdt = self$input_trafo$transform(xdt)
       }

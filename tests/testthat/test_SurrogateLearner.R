@@ -35,6 +35,23 @@ test_that("SurrogateLearner API works", {
   )
 })
 
+test_that("predict does not mutate the input data.table", {
+  skip_if_not_installed("mlr3pipelines")
+  inst = MAKE_INST_1D()
+  design = MAKE_DESIGN(inst)
+  inst$eval_batch(design)
+
+  graph = mlr3pipelines::`%>>%`(mlr3pipelines::po("nop"), REGR_FEATURELESS)
+  learner = as_learner(graph)
+  surrogate = SurrogateLearner$new(learner = learner, archive = inst$archive)
+  surrogate$update()
+
+  xdt = copy(inst$archive$data)
+  y_before = copy(xdt$y)
+  surrogate$predict(xdt)
+  expect_equal(xdt$y, y_before)
+})
+
 test_that("predict_types are recognized", {
   skip_if_not_installed("rpart")
   inst = MAKE_INST_1D()
