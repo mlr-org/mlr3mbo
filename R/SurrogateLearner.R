@@ -57,18 +57,6 @@ SurrogateLearner = R6Class(
   inherit = Surrogate,
 
   public = list(
-    #' @field learner ([mlr3::LearnerRegr])\cr
-    #'   [mlr3::LearnerRegr] wrapped as a surrogate model.
-    learner = NULL,
-
-    #' @field input_trafo ([InputTrafo])\cr
-    #'   Input transformation.
-    input_trafo = NULL,
-
-    #' @field output_trafo ([OutputTrafo])\cr
-    #'   Output transformation.
-    output_trafo = NULL,
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -91,9 +79,9 @@ SurrogateLearner = R6Class(
         learner$predict_type = "se"
       }
 
-      self$input_trafo = assert_r6(input_trafo, classes = "InputTrafo", null.ok = TRUE)
+      self$input_trafo = input_trafo
 
-      self$output_trafo = assert_r6(output_trafo, classes = "OutputTrafo", null.ok = TRUE)
+      self$output_trafo = output_trafo
 
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 
@@ -106,11 +94,6 @@ SurrogateLearner = R6Class(
       )
       ps$values = list(catch_errors = TRUE, impute_method = "random")
 
-      private$.predict_names = if (learner$predict_type == "se") {
-        c("mean", "se")
-      } else {
-        "mean"
-      }
       super$initialize(learner = learner, archive = archive, cols_x = cols_x, cols_y = col_y, param_set = ps)
     },
 
@@ -156,6 +139,37 @@ SurrogateLearner = R6Class(
   ),
 
   active = list(
+    #' @field learner ([mlr3::LearnerRegr])\cr
+    #'   [mlr3::LearnerRegr] wrapped as a surrogate model.
+    learner = function(rhs) {
+      if (missing(rhs)) {
+        return(private$.learner)
+      }
+      assert_learner(rhs)
+      private$.learner = rhs
+      private$.predict_names = if (rhs$predict_type == "se") c("mean", "se") else "mean"
+    },
+
+    #' @field input_trafo ([InputTrafo] | `NULL`)\cr
+    #'   Input transformation.
+    input_trafo = function(rhs) {
+      if (missing(rhs)) {
+        private$.input_trafo
+      } else {
+        private$.input_trafo = assert_r6(rhs, classes = "InputTrafo", null.ok = TRUE)
+      }
+    },
+
+    #' @field output_trafo ([OutputTrafo] | `NULL`)\cr
+    #'   Output transformation.
+    output_trafo = function(rhs) {
+      if (missing(rhs)) {
+        private$.output_trafo
+      } else {
+        private$.output_trafo = assert_r6(rhs, classes = "OutputTrafo", null.ok = TRUE)
+      }
+    },
+
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
@@ -285,14 +299,18 @@ SurrogateLearner = R6Class(
     deep_clone = function(name, value) {
       switch(
         name,
-        learner = value$clone(deep = TRUE),
-        input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
-        output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+        .learner = value$clone(deep = TRUE),
+        .input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+        .output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value
       )
     },
+
+    .input_trafo = NULL,
+
+    .output_trafo = NULL,
 
     .predict_names = NULL
   )

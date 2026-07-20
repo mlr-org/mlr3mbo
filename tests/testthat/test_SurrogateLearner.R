@@ -107,3 +107,18 @@ test_that("feature types", {
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
   expect_equal(surrogate$feature_types, surrogate$learner$feature_types)
 })
+
+test_that("SurrogateLearner fields are validated on assignment", {
+  inst = MAKE_INST_1D()
+  surrogate = SurrogateLearner$new(learner = REGR_FEATURELESS$clone(deep = TRUE), archive = inst$archive)
+  expect_error({surrogate$learner = "garbage"}, "Learner")
+  expect_error({surrogate$input_trafo = "garbage"}, "R6")
+  expect_error({surrogate$output_trafo = "garbage"}, "R6")
+  surrogate$output_trafo = OutputTrafoStandardize$new()
+  expect_r6(surrogate$output_trafo, "OutputTrafoStandardize")
+  surrogate$output_trafo = NULL
+  expect_null(surrogate$output_trafo)
+  learner = lrn("regr.featureless")
+  surrogate$learner = learner
+  expect_identical(surrogate$learner, learner)
+})

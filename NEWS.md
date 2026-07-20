@@ -19,6 +19,7 @@
 * fix: `ResultAssignerSurrogate` no longer errors when the archive contains duplicated x-configurations.
 * fix: `srlrn()` now correctly unwraps a single learner supplied in a list instead of erroring.
 * fix: `SurrogateLearner$predict()` no longer modifies the data.table passed as `xdt` by reference.
+* fix: `SurrogateLearner` and `SurrogateLearnerCollection` now validate assignments to the `learner`, `input_trafo`, and `output_trafo` fields, so invalid values are rejected immediately instead of failing later during updating or predicting.
 
 # mlr3mbo 1.1.1
 
