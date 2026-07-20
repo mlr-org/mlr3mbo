@@ -46,3 +46,8 @@ test_that("OptimizerAsyncMbo works with evaluations in archive", {
   expect_data_table(instance$archive$data[is.na(get("acq_cb"))], min.rows = 10L)
   expect_data_table(instance$archive$data[!is.na(get("acq_cb"))], min.rows = 20L)
 })
+
+test_that("OptimizerAsyncMbo asserts the param_set argument", {
+  expect_error(OptimizerAsyncMbo$new(param_set = "foo"), "param_set")
+  expect_error(TunerAsyncMbo$new(param_set = "foo"), "param_set")
+})
