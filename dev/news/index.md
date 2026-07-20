@@ -42,6 +42,10 @@
   [`optimize()`](https://rdrr.io/r/stats/optimize.html) call and clear
   it on `reset()`, so the `state` no longer grows unboundedly across a
   Bayesian optimization loop.
+- fix: `AcqOptimizerLbfgsb` now raises a catchable acquisition function
+  optimizer error instead of an unrelated error when no restart produces
+  a valid solution, so the loop function can fall back to a randomly
+  sampled point.
 - fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a
   search space bound, which previously caused the optimization to
   silently degenerate into random search.

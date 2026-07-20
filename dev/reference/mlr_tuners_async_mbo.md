@@ -257,6 +257,5 @@ if (requireNamespace("rush") &
     message("Redis server is not available.\nPlease set up Redis prior to running the example.")
   }
 }
-#> ERROR [13:14:07.543] [rush] Lost 1 task(s): dd599540-dbcc-48ed-b549-7dc9c8916539
 # }
 ```
