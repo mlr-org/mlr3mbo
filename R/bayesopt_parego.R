@@ -129,6 +129,9 @@ bayesopt_parego = function(
     design = generate_design_sobol(search_space, n = init_design_size)$data
     instance$eval_batch(design)
   }
+  # a user-supplied initial design already in the archive leaves init_design_size NULL,
+  # which would otherwise silently disable random interleaving
+  init_design_size = init_design_size %??% instance$archive$n_evals
 
   # completing initialization
   surrogate$archive = instance$archive
@@ -144,7 +147,8 @@ bayesopt_parego = function(
   repeat {
     data = instance$archive$data
     ydt = data[, instance$archive$cols_y, with = FALSE]
-    ydt = Map("*", ydt, mult_max_to_min(instance$archive$codomain)) # we always assume minimization
+    # the codomain can hold non-target columns, so the multiplier must be subset to the target columns
+    ydt = Map("*", ydt, mult_max_to_min(instance$archive$codomain)[instance$archive$cols_y]) # we always assume minimization
     ydt = Map(function(y) (y - min(y, na.rm = TRUE)) / diff(range(y, na.rm = TRUE)), ydt) # scale y to [0, 1]
 
     xdt = map_dtr(

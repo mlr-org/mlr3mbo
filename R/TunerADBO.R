@@ -13,6 +13,12 @@
 #'
 #' @section Parameters:
 #' \describe{
+#' \item{`lambda`}{`numeric(1)`\cr
+#'   Value used for sampling the lambda for each worker from an exponential distribution.}
+#' \item{`rate`}{`numeric(1)`\cr
+#'   Rate of the exponential decay.}
+#' \item{`period`}{`integer(1)`\cr
+#'   Period of the exponential decay.}
 #' \item{`initial_design`}{`data.table::data.table()`\cr
 #'   Initial design of the optimization.
 #'   If `NULL`, a design of size `design_size` is generated with the specified `design_function`.
