@@ -33,6 +33,17 @@ test_that("AcqFunctionSmsEgo works", {
   expect_setequal(colnames(res), c(acqf$id, "acq_epsilon"))
 })
 
+test_that("AcqFunctionSmsEgo accepts lambda < 1 consistently with its constants", {
+  inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
+  surrogate = SurrogateLearnerCollection$new(
+    list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)),
+    archive = inst$archive
+  )
+  # constructor bound now matches the constants ParamSet lower bound of 0
+  acqf = AcqFunctionSmsEgo$new(surrogate = surrogate, lambda = 0.5)
+  expect_equal(acqf$constants$values$lambda, 0.5)
+})
+
 test_that("AcqFunctionSmsEgo transforms ys_front onto the output trafo scale", {
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
   surrogate = SurrogateLearnerCollection$new(

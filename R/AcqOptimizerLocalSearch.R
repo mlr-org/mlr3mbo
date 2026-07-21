@@ -16,7 +16,7 @@ AcqOptimizerLocalSearch = R6Class(
   inherit = AcqOptimizer,
   public = list(
     #' @field state (`list()`)\cr
-    #' List of [cmaes::cma_es()] results.
+    #' Result of the last [bbotk::local_search()] call.
     state = NULL,
 
     #' @description
@@ -68,6 +68,7 @@ AcqOptimizerLocalSearch = R6Class(
       } else {
         res = optimize()
       }
+      self$state = res
       as.data.table(as.list(set_names(
         c(res$x, res$y),
         c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
@@ -77,8 +78,10 @@ AcqOptimizerLocalSearch = R6Class(
     #' @description
     #' Reset the acquisition function optimizer.
     #'
-    #' Currently not used.
-    reset = function() {}
+    #' Clears the `state` of the previous optimization run.
+    reset = function() {
+      self$state = NULL
+    }
   ),
 
   active = list(

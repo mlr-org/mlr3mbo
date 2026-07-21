@@ -244,3 +244,21 @@ test_that("OptimizerMbo up to date surrogate after optimization", {
   expect_true(all(sqrt((predictions$mean - instance$archive$data$y)^2) < 1e-4))
   expect_true(all(predictions$se < 1e-4))
 })
+
+test_that("OptimizerMbo updates the surrogate a final time when terminated during random interleaving", {
+  surrogate = srlrn(lrn("regr.featureless"))
+  optimizer = opt(
+    "mbo",
+    loop_function = bayesopt_ego,
+    surrogate = surrogate,
+    acq_function = acqf("ei"),
+    acq_optimizer = acqo(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L)),
+    args = list(init_design_size = 5L, random_interleave_iter = 1L)
+  )
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 5L))
+  instance$eval_batch(MAKE_DESIGN(instance, n = 5L))
+
+  optimizer$optimize(instance)
+
+  expect_true(optimizer$surrogate$learner$state$train_task$nrow == 5L)
+})
