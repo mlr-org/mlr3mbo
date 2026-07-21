@@ -5,9 +5,7 @@ A simple
 storing objects of class `loop_function`. Each loop function has an
 associated help page, see `mlr_loop_functions_[id]`.
 
-Retrieves object with key `key` from the dictionary. Additional
-arguments must be named and are passed to the constructor of the stored
-object.
+Retrieves object with key `key` from the dictionary.
 
 ## Format
 
@@ -24,7 +22,8 @@ inheriting from
 - ...:
 
   (`any`)  
-  Passed down to constructor.
+  Must be empty, because loop functions are stored as plain values and
+  nothing is constructed.
 
 ## Value
 
