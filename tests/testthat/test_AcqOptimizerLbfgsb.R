@@ -18,6 +18,10 @@ test_that("AcqOptimizerLbfgsb works", {
   expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
 })
 
+test_that("AcqOptimizerLbfgsb does not expose the dead minf_max parameter", {
+  expect_false("minf_max" %in% AcqOptimizerLbfgsb$new()$param_set$ids())
+})
+
 test_that("AcqOptimizerLbfgsb maxeval accepts -1L and -1 to deactivate", {
   acqopt = AcqOptimizerLbfgsb$new()
   expect_error(acqopt$param_set$set_values(maxeval = -1L), NA)

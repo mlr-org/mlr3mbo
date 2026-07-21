@@ -12,6 +12,7 @@
 * fix: `AcqFunctionStochasticCB` now clears the sampled lambda on `$reset()`, so a reused optimizer draws a fresh initial lambda for each run as documented.
 * BREAKING CHANGE: `AcqOptimizerDirect` no longer supports restarts and its `restart_strategy` and `max_restarts` parameters have been removed, because the deterministic `NLOPT_GN_DIRECT_L` algorithm ignores the starting point, so restarts only repeated the identical search with a smaller evaluation budget.
 * fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be deep cloned without error.
+* fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` no longer expose the `minf_max` parameter, which was not a valid `nloptr` option and was silently ignored.
 * fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now accept `maxeval = -1L` to deactivate the evaluation limit, as documented.
 * fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now raise an informative error for non-numeric search spaces instead of failing confusingly inside `nloptr` or silently degrading to random search under `catch_errors = TRUE`.
 * fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now reset their `state` at the start of each `optimize()` call and clear it on `reset()`, so the `state` no longer grows unboundedly across a Bayesian optimization loop.
