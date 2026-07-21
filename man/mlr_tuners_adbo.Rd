@@ -17,6 +17,12 @@ Currently, only single-objective optimization is supported and
 \section{Parameters}{
 
 \describe{
+\item{\code{lambda}}{\code{numeric(1)}\cr
+Value used for sampling the lambda for each worker from an exponential distribution.}
+\item{\code{rate}}{\code{numeric(1)}\cr
+Rate of the exponential decay.}
+\item{\code{period}}{\code{integer(1)}\cr
+Period of the exponential decay.}
 \item{\code{initial_design}}{\code{data.table::data.table()}\cr
 Initial design of the optimization.
 If \code{NULL}, a design of size \code{design_size} is generated with the specified \code{design_function}.

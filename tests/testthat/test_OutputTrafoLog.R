@@ -44,6 +44,22 @@ test_that("OutputTrafoLog works with constant y values", {
   expect_equal(ot$inverse_transform(transformed_data), ydt)
 })
 
+test_that("OutputTrafoLog works with tiny relative ranges", {
+  ot = OutputTrafoLog$new()
+  ot$cols_y = "y"
+  ydt = data.table(y = c(1e12, 1e12 + 1e-3))
+
+  ot$max_to_min = c(y = 1L)
+  ot$update(ydt)
+  transformed_data = ot$transform(ydt)
+  expect_true(all(is.finite(transformed_data$y)))
+
+  ot$max_to_min = c(y = -1L)
+  ot$update(ydt)
+  transformed_data = ot$transform(ydt)
+  expect_true(all(is.finite(transformed_data$y)))
+})
+
 test_that("OutputTrafoLog works with SurrogateLearner", {
   skip_if_missing_regr_km()
   instance = MAKE_INST_1D()

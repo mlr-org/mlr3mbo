@@ -7,7 +7,8 @@ test_that("AcqOptimizerLbfgsb works", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerLbfgsb$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "none")
+  # L-BFGS-B starts at and can return the incumbent here, so disable skip_already_evaluated for this smoke test
+  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "none", skip_already_evaluated = FALSE)
   acqfun$surrogate$update()
   acqfun$update()
 
@@ -16,6 +17,34 @@ test_that("AcqOptimizerLbfgsb works", {
   expect_names(names(acqopt$state), must.include = "iteration_1")
   expect_class(acqopt$state$iteration_1$model, "nloptr")
   expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
+})
+
+test_that("AcqOptimizerLbfgsb rejects an already evaluated candidate when skip_already_evaluated is TRUE", {
+  skip_if_missing_regr_km()
+  instance = oi(OBJ_1D, terminator = trm("evals", n_evals = 5L))
+  instance$eval_batch(generate_design_grid(instance$search_space, resolution = 4L)$data)
+
+  surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
+  acqfun = acqf("ei", surrogate = surrogate)
+  acqopt = AcqOptimizerLbfgsb$new(acq_function = acqfun)
+  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "none")
+  acqfun$surrogate$update()
+  acqfun$update()
+
+  # the incumbent is re-proposed, which is rejected by default and accepted with skip_already_evaluated = FALSE
+  expect_error(acqopt$optimize(), class = "Mlr3ErrorMboAcqOptimizer")
+  acqopt$param_set$set_values(skip_already_evaluated = FALSE)
+  expect_data_table(acqopt$optimize(), nrows = 1L)
+})
+
+test_that("AcqOptimizerLbfgsb does not expose the dead minf_max parameter", {
+  expect_false("minf_max" %in% AcqOptimizerLbfgsb$new()$param_set$ids())
+})
+
+test_that("AcqOptimizerLbfgsb maxeval accepts -1L and -1 to deactivate", {
+  acqopt = AcqOptimizerLbfgsb$new()
+  expect_error(acqopt$param_set$set_values(maxeval = -1L), NA)
+  expect_error(acqopt$param_set$set_values(maxeval = -1), NA)
 })
 
 test_that("AcqOptimizerLbfgsb raises an acq optimizer error when no valid solution is found", {
@@ -47,7 +76,8 @@ test_that("AcqOptimizerLbfgsb resets state between optimize() calls", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerLbfgsb$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "none")
+  # L-BFGS-B starts at and can return the incumbent here, so disable skip_already_evaluated for this test
+  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "none", skip_already_evaluated = FALSE)
   acqfun$surrogate$update()
   acqfun$update()
 

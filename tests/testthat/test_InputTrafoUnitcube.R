@@ -112,3 +112,19 @@ test_that("InputTrafoUnitcube works with OptimizerMbo and bayesopt_smsego", {
   expect_true(nrow(instance$archive$data) == 5L)
   expect_data_table(instance$result, min.rows = 1L)
 })
+
+test_that("InputTrafoUnitcube handles degenerate and infinite bounds", {
+  it = InputTrafoUnitcube$new()
+  it$cols_x = c("x1", "x2")
+  it$search_space = ps(x1 = p_dbl(-1, 1), x2 = p_dbl(1, 1))
+  xdt = data.table(x1 = c(-1, 0, 1), x2 = c(1, 1, 1))
+  it$update(xdt)
+  transformed = it$transform(xdt)
+  expect_equal(transformed$x1, c(0, 0.5, 1))
+  expect_equal(transformed$x2, rep(0.5, 3L))
+
+  it = InputTrafoUnitcube$new()
+  it$cols_x = "x"
+  it$search_space = ps(x = p_dbl())
+  expect_error(it$update(data.table(x = 1)), "finite")
+})

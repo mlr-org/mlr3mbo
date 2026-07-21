@@ -143,14 +143,18 @@ OutputTrafo = R6Class(
       }
     },
 
-    #' @field max_to_min (`-1` | `1`)\cr
-    #'   Multiplicative factor to correct for minimization or maximization.
+    #' @field max_to_min (named `integer()`)\cr
+    #'   Multiplicative factors of `-1` or `1` to correct for minimization or maximization, named by `$cols_y`.
     max_to_min = function(rhs) {
       if (missing(rhs)) {
-        private$.max_to_min
-      } else {
-        private$.max_to_min = assert_subset(rhs, choices = c(-1L, 1L))
+        return(private$.max_to_min)
       }
+      assert_integerish(rhs, any.missing = FALSE, min.len = 1L, names = "unique")
+      assert_subset(rhs, choices = c(-1L, 1L))
+      if (!is.null(self$cols_y)) {
+        assert_names(names(rhs), permutation.of = self$cols_y)
+      }
+      private$.max_to_min = rhs
     },
 
     #' @field invert_posterior (`logical(1)`)\cr
