@@ -95,7 +95,7 @@ AcqFunctionSmsEgo = R6Class(
     #' @param lambda (`numeric(1)`).
     #' @param epsilon (`NULL` | `numeric(1)`).
     initialize = function(surrogate = NULL, lambda = 1, epsilon = NULL) {
-      assert_number(lambda, lower = 1, finite = TRUE)
+      assert_number(lambda, lower = 0, finite = TRUE)
       assert_number(epsilon, lower = 0, finite = TRUE, null.ok = TRUE)
 
       constants = ps(

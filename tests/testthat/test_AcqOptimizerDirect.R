@@ -7,15 +7,13 @@ test_that("AcqOptimizerDirect works", {
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerDirect$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxeval = 200L, restart_strategy = "none")
+  acqopt$param_set$set_values(maxeval = 200L)
   acqfun$surrogate$update()
   acqfun$update()
 
   expect_data_table(acqopt$optimize(), nrows = 1L)
-  expect_list(acqopt$state)
-  expect_names(names(acqopt$state), must.include = "iteration_1")
-  expect_class(acqopt$state$iteration_1$model, "nloptr")
-  expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
+  expect_class(acqopt$state, "nloptr")
+  expect_true(acqopt$state$iterations <= 200L)
 })
 
 test_that("AcqOptimizerDirect works with 2D", {
@@ -32,10 +30,8 @@ test_that("AcqOptimizerDirect works with 2D", {
   acqfun$update()
 
   expect_data_table(acqopt$optimize(), nrows = 1L)
-  expect_list(acqopt$state)
-  expect_names(names(acqopt$state), must.include = "iteration_1")
-  expect_class(acqopt$state$iteration_1$model, "nloptr")
-  expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
+  expect_class(acqopt$state, "nloptr")
+  expect_true(acqopt$state$iterations <= 200L)
 })
 
 test_that("AcqOptimizerDirect works with instance", {
@@ -57,21 +53,35 @@ test_that("AcqOptimizerDirect does not expose the dead minf_max parameter", {
   expect_false("minf_max" %in% AcqOptimizerDirect$new()$param_set$ids())
 })
 
-test_that("AcqOptimizerDirect works with random restart", {
+test_that("AcqOptimizerDirect maxeval accepts -1L and -1 to deactivate", {
+  acqopt = AcqOptimizerDirect$new()
+  expect_error(acqopt$param_set$set_values(maxeval = -1L), NA)
+  expect_error(acqopt$param_set$set_values(maxeval = -1), NA)
+})
+
+test_that("AcqOptimizerDirect resets state between optimize() calls", {
   skip_if_missing_regr_km()
-  instance = oi(OBJ_2D, terminator = trm("evals", n_evals = 5L))
+  instance = oi(OBJ_1D, terminator = trm("evals", n_evals = 5L))
   design = generate_design_grid(instance$search_space, resolution = 4L)$data
   instance$eval_batch(design)
 
   surrogate = srlrn(REGR_KM_DETERM, archive = instance$archive)
   acqfun = acqf("ei", surrogate = surrogate)
   acqopt = AcqOptimizerDirect$new(acq_function = acqfun)
-  acqopt$param_set$set_values(maxeval = -1, ftol_rel = 1e-6, restart_strategy = "random", max_restarts = 3L)
+  acqopt$param_set$set_values(maxeval = 200L)
   acqfun$surrogate$update()
   acqfun$update()
 
-  expect_data_table(acqopt$optimize(), nrows = 1L)
-  expect_list(acqopt$state, min.len = 4L)
-  expect_names(names(acqopt$state), must.include = c("iteration_1", "iteration_2", "iteration_3", "iteration_4"))
-  walk(acqopt$state, function(x) expect_class(x$model, "nloptr"))
+  acqopt$optimize()
+  acqopt$optimize()
+  expect_class(acqopt$state, "nloptr")
+
+  acqopt$reset()
+  expect_null(acqopt$state)
+})
+
+test_that("AcqOptimizerDirect has no restart parameters", {
+  acqopt = AcqOptimizerDirect$new()
+  expect_true("restart_strategy" %nin% acqopt$param_set$ids())
+  expect_true("max_restarts" %nin% acqopt$param_set$ids())
 })
