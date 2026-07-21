@@ -161,7 +161,7 @@ OptimizerAsyncMbo = R6Class(
       param_set$set_values(design_size = 100L, design_function = "sobol")
 
       super$initialize(
-        "async_mbo",
+        id = id,
         param_set = param_set,
         # is replaced with dynamic AB after construction
         param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),

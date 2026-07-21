@@ -195,7 +195,11 @@ AcqOptimizer = R6Class(
           self$param_set$values$warmstart_size %??% 1L
         } # default is 1L
         n_select = min(nrow(self$acq_function$archive$data), warmstart_size)
-        warmstart_xdt = if (is_multi_acq_function) {
+        # branch on the codomain of the actual instance archive, not on the acq codomain:
+        # a single-objective acq function (e.g., SMS-EGO, EHVI, ParEGO) can wrap a multi-crit archive whose
+        # best() would return the entire non-dominated front and ignore warmstart_size
+        is_multi_crit_archive = length(self$acq_function$archive$cols_y) > 1L
+        warmstart_xdt = if (is_multi_crit_archive) {
           self$acq_function$archive$nds_selection(n_select = n_select)[, instance$search_space$ids(), with = FALSE]
         } else {
           self$acq_function$archive$best(n_select = n_select)[, instance$search_space$ids(), with = FALSE]

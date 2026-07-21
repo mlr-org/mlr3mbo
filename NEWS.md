@@ -1,5 +1,6 @@
 # mlr3mbo (development version)
 
+* fix: `AcqOptimizer` now respects `warmstart_size` when warm-starting a single-objective acquisition function on a multi-objective archive, instead of evaluating the entire non-dominated front.
 * fix: `AcqOptimizer` and its subclasses gained `$label` and `$man` fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
 * fix: `AcqFunctionAEI` no longer errors during `$update()` when the surrogate model is not a `"regr.km"` model and now falls back to a noise variance of `0` as documented.
 * fix: `AcqFunctionEHVI`, `AcqFunctionEHVIGH`, and `AcqFunctionSmsEgo` now apply the surrogate's output transformation to `ys_front`, so the front and the reference point are compared on the same scale.
@@ -11,11 +12,17 @@
 * fix: `AcqFunctionStochasticCB` now clears the sampled lambda on `$reset()`, so a reused optimizer draws a fresh initial lambda for each run as documented.
 * BREAKING CHANGE: `AcqOptimizerDirect` no longer supports restarts and its `restart_strategy` and `max_restarts` parameters have been removed, because the deterministic `NLOPT_GN_DIRECT_L` algorithm ignores the starting point, so restarts only repeated the identical search with a smaller evaluation budget.
 * fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`, `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be deep cloned without error.
+* fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` no longer expose the `minf_max` parameter, which was not a valid `nloptr` option and was silently ignored.
+* fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now accept `maxeval = -1L` to deactivate the evaluation limit, as documented.
+* fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now raise an informative error for non-numeric search spaces instead of failing confusingly inside `nloptr` or silently degrading to random search under `catch_errors = TRUE`.
 * fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now reset their `state` at the start of each `optimize()` call and clear it on `reset()`, so the `state` no longer grows unboundedly across a Bayesian optimization loop.
 * fix: `AcqOptimizerLbfgsb` now raises a catchable acquisition function optimizer error instead of an unrelated error when no restart produces a valid solution, so the loop function can fall back to a randomly sampled point.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
+* fix: `AcqOptimizerLocalSearch` now populates its `state` field with the result of the last `bbotk::local_search()` call and clears it on `reset()`, and no longer references the unavailable `cmaes` package in its documentation.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
 * fix: `OptimizerAsyncMbo` and `TunerAsyncMbo` now raise an informative error when the `param_set` construction argument is not a `ParamSet`.
+* fix: `OptimizerAsyncMbo` no longer ignores its `id` construction argument, so `OptimizerADBO` and `TunerADBO` now correctly report the id `"adbo"` instead of `"async_mbo"`.
+* fix: `OptimizerMbo` and `TunerMbo` now update the surrogate a final time even when the optimization exits through a termination error, e.g., when the archive is already at budget or the terminator triggers between two evaluations.
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
 * fix: `ResultAssignerSurrogate` no longer errors when the archive contains duplicated x-configurations.
 * fix: `srlrn()` now correctly unwraps a single learner supplied in a list instead of erroring.

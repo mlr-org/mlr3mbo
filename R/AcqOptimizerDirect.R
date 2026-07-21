@@ -9,6 +9,8 @@
 #' where `D` is the dimension of the search space.
 #' The optimization stops when the relative tolerance of the parameters is less than `10^-4`.
 #'
+#' Only fully numeric search spaces (all parameters of type `p_dbl`) are supported.
+#'
 #' @note
 #' `NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the starting point.
 #' Restarts would only repeat the identical search, so the optimizer does not support them.
@@ -59,13 +61,12 @@ AcqOptimizerDirect = R6Class(
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        maxeval = p_int(lower = 1, special_vals = list(-1)),
+        maxeval = p_int(lower = 1, special_vals = list(-1L, -1)),
         stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
         xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1)),
         xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        minf_max = p_dbl(default = -Inf),
         catch_errors = p_lgl(init = TRUE)
       )
       private$.param_set = param_set
@@ -76,6 +77,9 @@ AcqOptimizerDirect = R6Class(
     #'
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
+      if (!all(self$acq_function$domain$class == "ParamDbl")) {
+        stopf("`AcqOptimizerDirect` only supports fully numeric (`p_dbl`) search spaces.")
+      }
       self$state = NULL
       pv = self$param_set$values
       maxeval = pv$maxeval
