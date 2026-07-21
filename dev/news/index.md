@@ -13,6 +13,23 @@
   caught and a randomly sampled point is proposed, consistent with the
   other loop functions.
 - fix:
+  [`bayesopt_mpcl()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_mpcl.md)
+  no longer aborts when a batch mixes model-based proposals and randomly
+  sampled fallback points, because the batch is now combined with
+  filling missing columns.
+- fix:
+  [`bayesopt_mpcl()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_mpcl.md)
+  and
+  [`bayesopt_parego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_parego.md)
+  now advance the random interleaving counter per proposal instead of
+  per batch, so random interleaving also triggers for `q > 1` as
+  documented.
+- fix:
+  [`bayesopt_parego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_parego.md)
+  now subsets the minimization multiplier to the target columns, so the
+  scalarization signs no longer misalign when the codomain holds
+  non-target columns.
+- fix:
   [`bayesopt_parego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_parego.md)
   now subsets the minimization multiplier to the target columns, so the
   scalarization signs no longer misalign when the codomain holds
