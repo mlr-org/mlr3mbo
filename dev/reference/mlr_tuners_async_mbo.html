@@ -177,6 +177,7 @@ the respective fields are simply (settable) active bindings to the fields of the
 <span>  surrogate <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  acq_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  acq_optimizer <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  result_assigner <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  param_set <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div><p></p><div class="section">
@@ -192,6 +193,10 @@ The acquisition function.</p></dd>
       <dt><code>acq_optimizer</code></dt>
 <dd><p>(<a href="AcqOptimizer.html">AcqOptimizer</a> | <code>NULL</code>)<br>
 The acquisition function optimizer.</p></dd>
+
+      <dt><code>result_assigner</code></dt>
+<dd><p>(<a href="ResultAssigner.html">ResultAssigner</a> | <code>NULL</code>)<br>
+The result assigner.</p></dd>
 
       <dt><code>param_set</code></dt>
 <dd><p>(<a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">paradox::ParamSet</a>)<br>

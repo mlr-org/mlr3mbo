@@ -151,6 +151,7 @@ fields of the
       surrogate = NULL,
       acq_function = NULL,
       acq_optimizer = NULL,
+      result_assigner = NULL,
       param_set = NULL
     )
 
@@ -173,6 +174,12 @@ fields of the
   ([AcqOptimizer](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)
   \| `NULL`)  
   The acquisition function optimizer.
+
+- `result_assigner`:
+
+  ([ResultAssigner](https://mlr3mbo.mlr-org.com/dev/reference/ResultAssigner.md)
+  \| `NULL`)  
+  The result assigner.
 
 - `param_set`:
 

@@ -69,6 +69,8 @@
 - fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from
   an exponential distribution as documented, so that the `lambda`
   parameter has an effect.
+- fix: `OptimizerAsyncMbo` and `TunerAsyncMbo` now raise an informative
+  error when the `param_set` construction argument is not a `ParamSet`.
 - fix: `OptimizerAsyncMbo` no longer ignores its `id` construction
   argument, so `OptimizerADBO` and `TunerADBO` now correctly report the
   id `"adbo"` instead of `"async_mbo"`.
@@ -83,6 +85,8 @@
 - fix: [`srlrn()`](https://mlr3mbo.mlr-org.com/dev/reference/srlrn.md)
   now correctly unwraps a single learner supplied in a list instead of
   erroring.
+- fix: `TunerAsyncMbo` now accepts the documented `result_assigner`
+  construction argument and forwards it to `OptimizerAsyncMbo`.
 - fix: `SurrogateLearner$predict()` no longer modifies the data.table
   passed as `xdt` by reference.
 
