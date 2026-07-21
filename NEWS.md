@@ -1,5 +1,6 @@
 # mlr3mbo (development version)
 
+* fix: `acqo()` now raises an error when `terminator` or `callbacks` are combined with a dictionary key as `optimizer`, because these arguments were silently discarded before.
 * fix: `AcqOptimizer` now respects `warmstart_size` when warm-starting a single-objective acquisition function on a multi-objective archive, instead of evaluating the entire non-dominated front.
 * fix: `AcqOptimizer` and its subclasses gained `$label` and `$man` fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
 * fix: `bayesopt_mpcl()` now logs a warning when a surrogate or acquisition function error is caught and a randomly sampled point is proposed, consistent with the other loop functions.

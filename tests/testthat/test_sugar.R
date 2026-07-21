@@ -44,6 +44,11 @@ test_that("OutputTrafo sugar", {
   expect_r6(outputtrafo, "OutputTrafo")
 })
 
+test_that("acqo errors when terminator or callbacks are combined with a dictionary key", {
+  expect_error(acqo("random_search", terminator = trm("evals")), "must not be given")
+  expect_error(acqo("random_search", callbacks = list()), "must not be given")
+})
+
 test_that("srlrn replicates a single learner for multiple targets", {
   surrogate = srlrn(lrn("regr.featureless"), cols_y = c("y1", "y2"))
   expect_r6(surrogate, "SurrogateLearnerCollection")

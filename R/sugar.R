@@ -160,6 +160,11 @@ acqo = function(optimizer, terminator, acq_function = NULL, callbacks = NULL, ..
   dots = list(...)
 
   if (is.character(optimizer)) {
+    if (!missing(terminator) || !is.null(callbacks)) {
+      stopf(
+        "'terminator' and 'callbacks' must not be given when 'optimizer' is a key of mlr_acqoptimizers, because the pre-defined acquisition function optimizers do not use them."  # nolint
+      )
+    }
     return(dictionary_sugar_get(mlr_acqoptimizers, optimizer, acq_function = acq_function, ...))
   }
 
