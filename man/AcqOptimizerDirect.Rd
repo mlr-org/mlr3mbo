@@ -9,11 +9,24 @@ Calls \code{nloptr()} from \CRANpkg{nloptr} with the \code{NLOPT_GN_DIRECT_L} al
 In its default setting, the algorithm runs for at most \code{100 * D^2} function evaluations,
 where \code{D} is the dimension of the search space.
 The optimization stops when the relative tolerance of the parameters is less than \code{10^-4}.
+
+Only fully numeric search spaces (all parameters of type \code{p_dbl}) are supported.
 }
 \note{
 \code{NLOPT_GN_DIRECT_L} is a deterministic global optimizer that ignores the starting point.
 Restarts would only repeat the identical search, so the optimizer does not support them.
 }
+\section{Parameters}{
+
+\describe{
+\item{\code{skip_already_evaluated}}{\code{logical(1)}\cr
+Should the proposed candidate be rejected if it was already evaluated on the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}?
+If \code{TRUE} and the candidate was already evaluated, an error is raised so that the \code{loop_function} can
+propose a randomly sampled point instead.
+Default is \code{TRUE}.}
+}
+}
+
 \section{Termination Parameters}{
 
 The following termination parameters can be used.

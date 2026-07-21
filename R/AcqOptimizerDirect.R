@@ -9,9 +9,20 @@
 #' where `D` is the dimension of the search space.
 #' The optimization stops when the relative tolerance of the parameters is less than `10^-4`.
 #'
+#' Only fully numeric search spaces (all parameters of type `p_dbl`) are supported.
+#'
 #' @note
 #' `NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the starting point.
 #' Restarts would only repeat the identical search, so the optimizer does not support them.
+#'
+#' @section Parameters:
+#' \describe{
+#' \item{`skip_already_evaluated`}{`logical(1)`\cr
+#'   Should the proposed candidate be rejected if it was already evaluated on the actual [bbotk::OptimInstance]?
+#'   If `TRUE` and the candidate was already evaluated, an error is raised so that the `loop_function` can
+#'   propose a randomly sampled point instead.
+#'   Default is `TRUE`.}
+#' }
 #'
 #' @section Termination Parameters:
 #' The following termination parameters can be used.
@@ -59,13 +70,13 @@ AcqOptimizerDirect = R6Class(
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        maxeval = p_int(lower = 1, special_vals = list(-1)),
+        maxeval = p_int(lower = 1, special_vals = list(-1L, -1)),
         stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
         xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1)),
         xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        minf_max = p_dbl(default = -Inf),
+        skip_already_evaluated = p_lgl(init = TRUE),
         catch_errors = p_lgl(init = TRUE)
       )
       private$.param_set = param_set
@@ -76,12 +87,17 @@ AcqOptimizerDirect = R6Class(
     #'
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
+      if (!all(self$acq_function$domain$class == "ParamDbl")) {
+        stopf("`AcqOptimizerDirect` only supports fully numeric (`p_dbl`) search spaces.")
+      }
       self$state = NULL
       pv = self$param_set$values
       maxeval = pv$maxeval
       catch_errors = pv$catch_errors
+      skip_already_evaluated = pv$skip_already_evaluated
       pv$maxeval = NULL
       pv$catch_errors = NULL
+      pv$skip_already_evaluated = NULL
 
       if (is.null(maxeval)) {
         maxeval = 100 * self$acq_function$domain$length^2
@@ -125,10 +141,14 @@ AcqOptimizerDirect = R6Class(
 
       self$state = res
 
-      as.data.table(as.list(set_names(
+      xdt = as.data.table(as.list(set_names(
         c(res$solution, res$objective * direction),
         c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
       )))
+      if (skip_already_evaluated) {
+        assert_not_already_evaluated(xdt, self$acq_function$archive)
+      }
+      xdt
     },
 
     #' @description

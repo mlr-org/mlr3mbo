@@ -29,7 +29,7 @@ test_that("SurrogateLearnerCollection API works", {
   expect_error(surrogate$update(), class = "Mlr3ErrorMboSurrogateUpdate")
 
   surrogate$param_set$values$catch_errors = FALSE
-  expect_error(surrogate$optimize(), class = "simpleError")
+  expect_error(surrogate$update(), class = "Mlr3ErrorLearnerTrain")
 
   # predict_type
   expect_equal(surrogate$predict_type, surrogate$learner[[1L]]$predict_type)
@@ -118,4 +118,15 @@ test_that("feature types", {
   skip_if_missing_regr_km()
   surrogate = SurrogateLearnerCollection$new(learners = list(REGR_KM_DETERM, REGR_FEATURELESS))
   expect_equal(surrogate$feature_types, Reduce(intersect, map(surrogate$learner, "feature_types")))
+})
+
+test_that("SurrogateLearnerCollection fields are validated on assignment", {
+  surrogate = SurrogateLearnerCollection$new(
+    learners = list(REGR_FEATURELESS$clone(deep = TRUE), REGR_FEATURELESS$clone(deep = TRUE))
+  )
+  expect_error({surrogate$learner = "garbage"}, "list")
+  learner = REGR_FEATURELESS$clone(deep = TRUE)
+  expect_error({surrogate$learner = list(learner, learner)}, "unique in memory")
+  expect_error({surrogate$input_trafo = "garbage"}, "R6")
+  expect_error({surrogate$output_trafo = "garbage"}, "R6")
 })
