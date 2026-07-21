@@ -19,6 +19,9 @@ default_rf(noisy = FALSE)
   Whether the learner will be used in a noisy objective function
   scenario. See
   [`default_surrogate()`](https://mlr3mbo.mlr-org.com/dev/reference/default_surrogate.md).
+  Currently, the constructed random forest is identical in the noisy and
+  deterministic case, and the argument only exists for consistency with
+  [`default_gp()`](https://mlr3mbo.mlr-org.com/dev/reference/default_gp.md).
 
 ## Value
 

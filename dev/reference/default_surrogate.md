@@ -12,9 +12,11 @@ For mixed numeric-categorical parameter spaces, or spaces with
 conditional parameters a random forest is constructed via
 [`default_rf()`](https://mlr3mbo.mlr-org.com/dev/reference/default_rf.md).
 
-In any case, learners are encapsulated using `"evaluate"`, and a
-fallback learner is set, in cases where the surrogate learner errors.
-Currently, the following learner is used as a fallback:
+These default learners are encapsulated using `"evaluate"`, and a
+fallback learner is set, in cases where the surrogate learner errors. A
+user-supplied `learner` is used as is, without encapsulation or a
+fallback learner. Currently, the following learner is used as a
+fallback:
 `lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")`.
 
 If additionally dependencies are present in the parameter space,

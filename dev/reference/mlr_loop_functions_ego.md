@@ -55,8 +55,8 @@ bayesopt_ego(
   Size of the initial design. If `NULL` and the
   [bbotk::ArchiveBatch](https://bbotk.mlr-org.com/reference/ArchiveBatch.html)
   contains no evaluations, `4 * d` is used with `d` being the
-  dimensionality of the search space. Points are generated via a Sobol
-  sequence.
+  dimensionality of the search space. Points are sampled uniformly at
+  random.
 
 - random_interleave_iter:
 

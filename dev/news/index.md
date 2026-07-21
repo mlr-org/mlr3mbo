@@ -27,6 +27,11 @@
   no longer silently disable random interleaving when the archive
   already contains a user-supplied initial design and `init_design_size`
   is `NULL`.
+- fix:
+  [`bayesopt_parego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_parego.md)
+  no longer silently degrades to random search when an objective is
+  constant, because the zero-range scaling now maps the constant
+  objective to a constant value instead of `NaN`.
 - fix: `AcqFunctionAEI` no longer errors during `$update()` when the
   surrogate model is not a `"regr.km"` model and now falls back to a
   noise variance of `0` as documented.

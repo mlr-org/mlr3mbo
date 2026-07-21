@@ -11,8 +11,9 @@ For purely numeric (including integers) parameter spaces without any dependencie
 a Gaussian Process is constricted via default_gp().
 For mixed numeric-categorical parameter spaces, or spaces with conditional parameters
 a random forest is constructed via default_rf().
-In any case, learners are encapsulated using "evaluate", and a fallback learner is set,
+These default learners are encapsulated using "evaluate", and a fallback learner is set,
 in cases where the surrogate learner errors.
+A user-supplied learner is used as is, without encapsulation or a fallback learner.
 Currently, the following learner is used as a fallback:
 lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack").
 If additionally dependencies are present in the parameter space,
@@ -26,8 +27,9 @@ For purely numeric (including integers) parameter spaces without any dependencie
 a Gaussian Process is constricted via default_gp().
 For mixed numeric-categorical parameter spaces, or spaces with conditional parameters
 a random forest is constructed via default_rf().
-In any case, learners are encapsulated using "evaluate", and a fallback learner is set,
+These default learners are encapsulated using "evaluate", and a fallback learner is set,
 in cases where the surrogate learner errors.
+A user-supplied learner is used as is, without encapsulation or a fallback learner.
 Currently, the following learner is used as a fallback:
 lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack").
 If additionally dependencies are present in the parameter space,
@@ -86,8 +88,9 @@ based on properties of the <a href="https://bbotk.mlr-org.com/reference/OptimIns
 a Gaussian Process is constricted via <code><a href="default_gp.html">default_gp()</a></code>.
 For mixed numeric-categorical parameter spaces, or spaces with conditional parameters
 a random forest is constructed via <code><a href="default_rf.html">default_rf()</a></code>.</p>
-<p>In any case, learners are encapsulated using <code>"evaluate"</code>, and a fallback learner is set,
+<p>These default learners are encapsulated using <code>"evaluate"</code>, and a fallback learner is set,
 in cases where the surrogate learner errors.
+A user-supplied <code>learner</code> is used as is, without encapsulation or a fallback learner.
 Currently, the following learner is used as a fallback:
 <code>lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")</code>.</p>
 <p>If additionally dependencies are present in the parameter space,
