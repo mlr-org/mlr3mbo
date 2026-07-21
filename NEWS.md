@@ -16,6 +16,7 @@
 * fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now reset their `state` at the start of each `optimize()` call and clear it on `reset()`, so the `state` no longer grows unboundedly across a Bayesian optimization loop.
 * fix: `AcqOptimizerLbfgsb` now raises a catchable acquisition function optimizer error instead of an unrelated error when no restart produces a valid solution, so the loop function can fall back to a randomly sampled point.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
+* fix: `AcqOptimizerLocalSearch` now populates its `state` field with the result of the last `bbotk::local_search()` call and clears it on `reset()`, and no longer references the unavailable `cmaes` package in its documentation.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
 * fix: `OptimizerAsyncMbo` no longer ignores its `id` construction argument, so `OptimizerADBO` and `TunerADBO` now correctly report the id `"adbo"` instead of `"async_mbo"`.
 * fix: `OptimizerMbo` and `TunerMbo` now update the surrogate a final time even when the optimization exits through a termination error, e.g., when the archive is already at budget or the terminator triggers between two evaluations.
