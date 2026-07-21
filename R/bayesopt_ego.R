@@ -16,7 +16,7 @@
 #'   Size of the initial design.
 #'   If `NULL` and the [bbotk::ArchiveBatch] contains no evaluations, \code{4 * d} is used with \code{d} being the
 #'   dimensionality of the search space.
-#'   Points are generated via a Sobol sequence.
+#'   Points are sampled uniformly at random.
 #' @param surrogate ([Surrogate])\cr
 #'   [Surrogate] to be used as a surrogate.
 #'   Typically a [SurrogateLearner].
