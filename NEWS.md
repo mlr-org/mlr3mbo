@@ -27,6 +27,7 @@
 * fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now reset their `state` at the start of each `optimize()` call and clear it on `reset()`, so the `state` no longer grows unboundedly across a Bayesian optimization loop.
 * fix: `AcqOptimizerLbfgsb` now raises a catchable acquisition function optimizer error instead of an unrelated error when no restart produces a valid solution, so the loop function can fall back to a randomly sampled point.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
+* fix: `InputTrafoUnitcube` now raises an informative error for infinite bounds and maps degenerate parameters with equal lower and upper bounds to a constant, instead of producing `NaN` features that fail inside the surrogate learner.
 * fix: `default_acqfunction()` now raises an informative error for unsupported instance classes instead of returning invisible `NULL`.
 * fix: `AcqOptimizerLocalSearch` now populates its `state` field with the result of the last `bbotk::local_search()` call and clears it on `reset()`, and no longer references the unavailable `cmaes` package in its documentation.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
