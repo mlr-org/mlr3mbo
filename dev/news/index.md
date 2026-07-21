@@ -92,6 +92,10 @@
 - fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a
   search space bound, which previously caused the optimization to
   silently degenerate into random search.
+- fix:
+  [`default_acqfunction()`](https://mlr3mbo.mlr-org.com/dev/reference/default_acqfunction.md)
+  now raises an informative error for unsupported instance classes
+  instead of returning invisible `NULL`.
 - fix: `AcqOptimizerLocalSearch` now populates its `state` field with
   the result of the last
   [`bbotk::local_search()`](https://bbotk.mlr-org.com/reference/local_search.html)
