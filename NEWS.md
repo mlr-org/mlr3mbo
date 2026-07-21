@@ -1,3 +1,5 @@
+# mlr3mbo (development version)
+
 # mlr3mbo 1.2.0
 
 * fix: `acqo()` now raises an error when `terminator` or `callbacks` are combined with a dictionary key as `optimizer`, because these arguments were silently discarded before.
