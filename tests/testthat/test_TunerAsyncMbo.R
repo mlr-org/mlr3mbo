@@ -26,3 +26,8 @@ test_that("TunerAsyncMbo works", {
   expect_data_table(instance$archive$data, min.rows = 10L)
   expect_names(names(instance$archive$data), must.include = "acq_cb")
 })
+
+test_that("TunerAsyncMbo accepts a result_assigner during construction", {
+  tuner = tnr("async_mbo", result_assigner = ras("archive"))
+  expect_r6(tuner$result_assigner, classes = "ResultAssignerArchive")
+})

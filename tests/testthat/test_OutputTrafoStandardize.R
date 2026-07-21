@@ -150,3 +150,16 @@ test_that("OutputTrafoStandardize works with OptimizerMbo and bayesopt_smsego", 
   expect_true(nrow(instance$archive$data) == 5L)
   expect_data_table(instance$result, min.rows = 1L)
 })
+
+test_that("OutputTrafoStandardize inverse_transform_posterior works with mean-only predictions", {
+  ot = OutputTrafoStandardize$new()
+  ot$cols_y = "y"
+  ot$max_to_min = c(y = 1L)
+  ydt = data.table(y = c(1, 2, 3))
+  ot$update(ydt)
+  pred = data.table(mean = ot$transform(ydt)$y)
+  inverted = ot$inverse_transform_posterior(pred)
+  expect_data_table(inverted, nrows = 3L)
+  expect_equal(inverted$mean, ydt$y)
+  expect_false("se" %in% names(inverted))
+})

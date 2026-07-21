@@ -1,3 +1,16 @@
+test_that("AcqFunctionStochasticCB reset draws a fresh lambda on the next run", {
+  acqf = AcqFunctionStochasticCB$new()
+  acqf$update()
+  expect_number(acqf$constants$values$lambda)
+
+  acqf$reset()
+  # the sampled lambda must be cleared so the next run resamples it
+  expect_null(acqf$constants$values$lambda)
+
+  acqf$update()
+  expect_number(acqf$constants$values$lambda)
+})
+
 skip_if_not_installed("rush")
 skip_if_no_redis()
 

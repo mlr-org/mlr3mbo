@@ -195,7 +195,11 @@ AcqOptimizer = R6Class(
           self$param_set$values$warmstart_size %??% 1L
         } # default is 1L
         n_select = min(nrow(self$acq_function$archive$data), warmstart_size)
-        warmstart_xdt = if (is_multi_acq_function) {
+        # branch on the codomain of the actual instance archive, not on the acq codomain:
+        # a single-objective acq function (e.g., SMS-EGO, EHVI, ParEGO) can wrap a multi-crit archive whose
+        # best() would return the entire non-dominated front and ignore warmstart_size
+        is_multi_crit_archive = length(self$acq_function$archive$cols_y) > 1L
+        warmstart_xdt = if (is_multi_crit_archive) {
           self$acq_function$archive$nds_selection(n_select = n_select)[, instance$search_space$ids(), with = FALSE]
         } else {
           self$acq_function$archive$best(n_select = n_select)[, instance$search_space$ids(), with = FALSE]
@@ -277,7 +281,11 @@ AcqOptimizer = R6Class(
       #  }
       #  setcolorder(xdt, c(instance$archive$cols_x, "x_domain", instance$objective$id))
       #}
-      xdt[, -c("timestamp", "batch_nr")] # drop timestamp and batch_nr information from the candidates
+      # drop timestamp and batch_nr, and drop x_domain so that instance$eval_batch() recomputes it from the (clipped)
+      # x columns; carrying over the acquisition function archive's x_domain would store a stale, potentially
+      # out-of-bounds value and is inconsistent with all other candidates entering the archive (initial design,
+      # random interleaving, and the AcqOptimizer subclasses), none of which supply an x_domain
+      xdt[, -c("timestamp", "batch_nr", "x_domain")]
     },
 
     #' @description

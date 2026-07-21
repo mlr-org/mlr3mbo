@@ -35,8 +35,8 @@ List of meta information regarding the parameters and their state.}
     \item{\code{cols_y}}{(\code{character()} | \code{NULL})\cr
 Column ids of target variables that should be transformed.}
 
-    \item{\code{max_to_min}}{(\code{-1} | \code{1})\cr
-Multiplicative factor to correct for minimization or maximization.}
+    \item{\code{max_to_min}}{(named \code{integer()})\cr
+Multiplicative factors of \code{-1} or \code{1} to correct for minimization or maximization, named by \verb{$cols_y}.}
 
     \item{\code{invert_posterior}}{(\code{logical(1)})\cr
 Should the posterior predictive distribution be inverted when used within a \link{SurrogateLearner} or

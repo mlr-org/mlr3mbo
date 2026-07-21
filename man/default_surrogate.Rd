@@ -37,8 +37,9 @@ a Gaussian Process is constricted via \code{\link[=default_gp]{default_gp()}}.
 For mixed numeric-categorical parameter spaces, or spaces with conditional parameters
 a random forest is constructed via \code{\link[=default_rf]{default_rf()}}.
 
-In any case, learners are encapsulated using \code{"evaluate"}, and a fallback learner is set,
+These default learners are encapsulated using \code{"evaluate"}, and a fallback learner is set,
 in cases where the surrogate learner errors.
+A user-supplied \code{learner} is used as is, without encapsulation or a fallback learner.
 Currently, the following learner is used as a fallback:
 \code{lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")}.
 

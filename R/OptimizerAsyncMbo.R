@@ -149,6 +149,7 @@ OptimizerAsyncMbo = R6Class(
       label = "Asynchronous Model Based Optimization",
       man = "mlr3mbo::OptimizerAsyncMbo"
     ) {
+      assert_r6(param_set, classes = "ParamSet", null.ok = TRUE)
       default_param_set = ps(
         initial_design = p_uty(),
         design_size = p_int(lower = 1, default = 100L),
@@ -160,7 +161,7 @@ OptimizerAsyncMbo = R6Class(
       param_set$set_values(design_size = 100L, design_function = "sobol")
 
       super$initialize(
-        "async_mbo",
+        id = id,
         param_set = param_set,
         # is replaced with dynamic AB after construction
         param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),
@@ -276,7 +277,19 @@ OptimizerAsyncMbo = R6Class(
         lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
         pv$initial_design
       }
-      optimize_async_default(inst, self, design, n_workers = pv$n_workers)
+      result = optimize_async_default(inst, self, design, n_workers = pv$n_workers)
+
+      # the workers only update copies of the surrogate, so the final update must happen on the main process
+      tryCatch(
+        {
+          self$surrogate$update()
+        },
+        error = function(error_condition) {
+          lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
+        }
+      )
+
+      result
     }
   ),
 
@@ -418,17 +431,6 @@ OptimizerAsyncMbo = R6Class(
         # eval
         get_private(inst)$.eval_point(xs)
       }
-
-      on.exit({
-        tryCatch(
-          {
-            self$surrogate$update()
-          },
-          Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
-            lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
-          }
-        )
-      })
     },
 
     .assign_result = function(inst) {
