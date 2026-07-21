@@ -28,19 +28,12 @@ generate_acq_multi_codomain = function(surrogate, acq_functions) {
 
 generate_acq_domain = function(surrogate) {
   assert_archive(surrogate$archive)
-  if ("set_id" %in% names(ps())) {
-    # old paradox
-    domain = surrogate$archive$search_space$clone(deep = TRUE)$subset(surrogate$cols_x)
-    domain$trafo = NULL
-  } else {
-    # get "domain" objects, set their .trafo-entry to NULL individually
-    dms = lapply(surrogate$archive$search_space$domains[surrogate$cols_x], function(x) {
-      x$.trafo[1] = list(NULL)
-      x
-    })
-    domain = do.call(ps, dms)
-  }
-  domain
+  # get "domain" objects, set their .trafo-entry to NULL individually
+  dms = lapply(surrogate$archive$search_space$domains[surrogate$cols_x], function(x) {
+    x$.trafo[1] = list(NULL)
+    x
+  })
+  do.call(ps, dms)
 }
 
 archive_xy = function(archive) {

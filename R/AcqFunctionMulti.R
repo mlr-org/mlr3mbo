@@ -128,9 +128,7 @@ AcqFunctionMulti = R6Class(
       self$id = assert_string(id)
       self$domain = assert_param_set(domain)
       assert_param_set(codomain)
-      # get "codomain" element if present (new paradox) or default to $params (old paradox)
-      params = get0("domains", codomain, ifnotfound = codomain$params)
-      self$codomain = Codomain$new(params)
+      self$codomain = Codomain$new(codomain$domains)
       assert_names(self$domain$ids(), disjunct.from = self$codomain$ids())
       assert_names(self$domain$ids(), disjunct.from = c("x_domain", "timestamp", "batch_nr"))
       assert_names(self$codomain$ids(), disjunct.from = c("x_domain", "timestamp", "batch_nr"))
@@ -170,7 +168,7 @@ AcqFunctionMulti = R6Class(
         self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs)
         domain = generate_acq_domain(rhs)
         # lazy initialization requires this:
-        self$codomain = Codomain$new(get0("domains", codomain, ifnotfound = codomain$params)) # get0 for old paradox
+        self$codomain = Codomain$new(codomain$domains)
         self$domain = domain
       }
     },

@@ -243,7 +243,7 @@ AcqFunction = R6Class(
         self$surrogate_max_to_min = surrogate_mult_max_to_min(rhs)
         domain = generate_acq_domain(rhs)
         # lazy initialization requires this:
-        self$codomain = Codomain$new(get0("domains", codomain, ifnotfound = codomain$params)) # get0 for old paradox
+        self$codomain = Codomain$new(codomain$domains)
         self$domain = domain
       }
     },
