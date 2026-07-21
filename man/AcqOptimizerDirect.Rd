@@ -5,36 +5,17 @@
 \title{Direct Acquisition Function Optimizer}
 \description{
 Direct acquisition function optimizer.
-Calls \code{nloptr()} from \CRANpkg{nloptr}.
-In its default setting, the algorithm restarts \code{5 * D} times and runs at most for \code{100 * D^2} function evaluations,
+Calls \code{nloptr()} from \CRANpkg{nloptr} with the \code{NLOPT_GN_DIRECT_L} algorithm.
+In its default setting, the algorithm runs for at most \code{100 * D^2} function evaluations,
 where \code{D} is the dimension of the search space.
-Each run stops when the relative tolerance of the parameters is less than \code{10^-4}.
-The first iteration starts with the best point in the archive and the next iterations start from a random point.
+The optimization stops when the relative tolerance of the parameters is less than \code{10^-4}.
 
 Only fully numeric search spaces (all parameters of type \code{p_dbl}) are supported.
 }
 \note{
-If the restart strategy is \code{"none"}, the optimizer starts with the best point in the archive.
-The optimization stops when one of the stopping criteria is met.
-
-If \code{restart_strategy} is \code{"random"}, the optimizer runs at least for \code{maxeval} iterations.
-The first iteration starts with the best point in the archive and stops when one of the stopping criteria is met.
-The next iterations start from a random point.
+\code{NLOPT_GN_DIRECT_L} is a deterministic global optimizer that ignores the starting point.
+Restarts would only repeat the identical search, so the optimizer does not support them.
 }
-\section{Parameters}{
-
-\describe{
-\item{\code{restart_strategy}}{\code{character(1)}\cr
-Restart strategy.
-Can be \code{"none"} or \code{"random"}.
-Default is \code{"none"}.
-}
-\item{\code{max_restarts}}{\code{integer(1)}\cr
-Maximum number of restarts.
-Default is \code{5 * D} (Default).}
-}
-}
-
 \section{Termination Parameters}{
 
 The following termination parameters can be used.
@@ -74,8 +55,8 @@ if (requireNamespace("nloptr")) {
 \section{Public fields}{
   \if{html}{\out{<div class="r6-fields">}}
   \describe{
-    \item{\code{state}}{(\code{list()})\cr
-List of \code{\link[nloptr:nloptr]{nloptr::nloptr()}} results.}
+    \item{\code{state}}{(\code{\link[nloptr:nloptr]{nloptr::nloptr()}} result)\cr
+Result of the last optimization run.}
   }
   \if{html}{\out{</div>}}
 }
@@ -99,6 +80,7 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
   \itemize{
     \item \href{#method-AcqOptimizerDirect-initialize}{\code{AcqOptimizerDirect$new()}}
     \item \href{#method-AcqOptimizerDirect-optimize}{\code{AcqOptimizerDirect$optimize()}}
+    \item \href{#method-AcqOptimizerDirect-reset}{\code{AcqOptimizerDirect$reset()}}
     \item \href{#method-AcqOptimizerDirect-clone}{\code{AcqOptimizerDirect$clone()}}
   }
 }
@@ -106,7 +88,6 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
 <ul>
   <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>AcqOptimizer$format()</code></a></span></li>
   <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>AcqOptimizer$print()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>AcqOptimizer$reset()</code></a></span></li>
 </ul>
 </details>}}
 \if{html}{\out{<hr>}}
@@ -140,6 +121,20 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
   }
   \subsection{Returns}{
     \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
+  }
+}
+
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqOptimizerDirect-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizerDirect-reset}{}}}
+\subsection{\code{AcqOptimizerDirect$reset()}}{
+  Reset the acquisition function optimizer.
+
+Clears the \code{state} of the previous optimization run.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizerDirect$reset()}
+    \if{html}{\out{</div>}}
   }
 }
 

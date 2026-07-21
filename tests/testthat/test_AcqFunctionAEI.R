@@ -27,3 +27,19 @@ test_that("AcqFunctionAEI works", {
   expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
   expect_named(res, "acq_aei")
 })
+
+test_that("AcqFunctionAEI falls back gracefully for non-km surrogate models", {
+  inst = MAKE_INST_1D_NOISY()
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS, archive = inst$archive)
+  acqf = AcqFunctionAEI$new(surrogate = surrogate)
+
+  design = MAKE_DESIGN(inst)
+  inst$eval_batch(design)
+
+  acqf$surrogate$update()
+  # a non-km model must not error on the nugget slot access and noise_var falls back to 0
+  acqf$update()
+  expect_equal(acqf$noise_var, 0)
+  res = acqf$eval_dt(data.table(x = seq(-1, 1, length.out = 5L)))
+  expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
+})
