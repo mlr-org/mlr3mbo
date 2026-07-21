@@ -14,6 +14,7 @@
 * fix: `AcqFunctionAEI` no longer errors during `$update()` when the surrogate model is not a `"regr.km"` model and now falls back to a noise variance of `0` as documented.
 * fix: `AcqFunctionEHVI`, `AcqFunctionEHVIGH`, and `AcqFunctionSmsEgo` now apply the surrogate's output transformation to `ys_front`, so the front and the reference point are compared on the same scale.
 * fix: `AcqFunctionEHVIGH` no longer prunes all Gauss-Hermite nodes when their weights are tied, which previously made the acquisition function identically `0` for `k = 2`.
+* feat: `AcqFunctionEHVIGH` now computes the hypervolume via the `moocore` package instead of `emoa`, which is no longer a dependency (#186).
 * fix: `AcqFunctionEI`, `AcqFunctionEILog`, `AcqFunctionPI`, and `AcqFunctionStochasticEI` now ignore the missing outcomes of pending evaluations when determining the best observed value, so `y_best` is no longer `NA` on an asynchronous archive with more than one worker.
 * fix: `AcqFunctionEIPS` now correctly divides the expected improvement by the predicted time instead of behaving like plain expected improvement.
 * fix: `AcqFunctionSmsEgo` now accepts a `lambda` below `1` during construction, consistent with the lower bound of its `constants` parameter set.

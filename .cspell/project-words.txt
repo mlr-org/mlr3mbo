@@ -40,7 +40,6 @@ EHVI
 EHVIGH
 EIPS
 Emmerich
-emoa
 epsdom
 estim
 evals
@@ -73,6 +72,7 @@ matern
 mathjax
 maxeval
 mirai
+moocore
 mpcl
 msrs
 multiarch

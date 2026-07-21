@@ -1,5 +1,5 @@
 test_that("AcqFunctionEHVIGH works", {
-  skip_if_not_installed("emoa")
+  skip_if_not_installed("moocore")
   skip_if_not_installed("fastGHQuad")
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
   surrogate = SurrogateLearnerCollection$new(
@@ -16,7 +16,7 @@ test_that("AcqFunctionEHVIGH works", {
   expect_equal(acqf$domain, inst$search_space)
   expect_list(acqf$surrogate$learner, types = "Learner")
   expect_true(acqf$requires_predict_type_se)
-  expect_setequal(acqf$packages, c("emoa", "fastGHQuad"))
+  expect_setequal(acqf$packages, c("moocore", "fastGHQuad"))
 
   expect_r6(acqf$constants, "ParamSet")
   expect_equal(acqf$constants$ids(), c("k", "r"))
@@ -35,7 +35,7 @@ test_that("AcqFunctionEHVIGH works", {
 })
 
 test_that("AcqFunctionEHVIGH does not vanish for k = 2", {
-  skip_if_not_installed("emoa")
+  skip_if_not_installed("moocore")
   skip_if_not_installed("fastGHQuad")
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
   surrogate = SurrogateLearnerCollection$new(
@@ -56,7 +56,7 @@ test_that("AcqFunctionEHVIGH does not vanish for k = 2", {
 })
 
 test_that("AcqFunctionEHVIGH transforms ys_front onto the output trafo scale", {
-  skip_if_not_installed("emoa")
+  skip_if_not_installed("moocore")
   skip_if_not_installed("fastGHQuad")
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
   surrogate = SurrogateLearnerCollection$new(
@@ -88,7 +88,7 @@ test_that("AcqFunctionEHVIGH is close to AcqFunctionEHVI", {
   skip_if_not_installed("mlr3learners")
   skip_if_not_installed("DiceKriging")
   skip_if_not_installed("rgenoud")
-  skip_if_not_installed("emoa")
+  skip_if_not_installed("moocore")
   skip_if_not_installed("fastGHQuad")
   inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
   design = data.table(x = c(-0.8, -0.3, 0.6, 0.9))

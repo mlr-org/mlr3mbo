@@ -16,7 +16,7 @@ test_that("default bayesopt_emo", {
   expect_true(sum(is.na(instance$archive$data$acq_ehvi)) == 4L)
   expect_true(!is.na(instance$archive$data$acq_ehvi[5L]))
 
-  skip_if_not_installed("emoa")
+  skip_if_not_installed("moocore")
   skip_if_not_installed("fastGHQuad")
   instance$archive$clear()
   acq_function = AcqFunctionEHVIGH$new()

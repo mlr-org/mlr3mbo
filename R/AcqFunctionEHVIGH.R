@@ -108,7 +108,7 @@ AcqFunctionEHVIGH = R6Class(
         requires_predict_type_se = TRUE,
         surrogate_class = "SurrogateLearnerCollection",
         direction = "maximize",
-        packages = c("emoa", "fastGHQuad"),
+        packages = c("moocore", "fastGHQuad"),
         label = "Expected Hypervolume Improvement via GH Quadrature",
         man = "mlr3mbo::mlr_acqfunctions_ehvigh"
       )
@@ -139,7 +139,7 @@ AcqFunctionEHVIGH = R6Class(
       }
       self$ys_front = as.matrix(self$ys_front)
 
-      self$hypervolume = invoke(emoa::dominated_hypervolume, points = t(self$ys_front), ref = t(self$ref_point))
+      self$hypervolume = invoke(moocore::hypervolume, x = self$ys_front, reference = self$ref_point)
 
       # k because the multi-dimensional grid is created within adjust_gh_data
       self$gh_data = invoke(fastGHQuad::gaussHermiteData, n = self$constants$values$k)
@@ -173,7 +173,7 @@ AcqFunctionEHVIGH = R6Class(
         gh_data = adjust_gh_data(self$gh_data, mu = means[i, ], sigma = diag(vars[i, ]), r = r)
         hvs = map_dbl(seq_along(gh_data$weights), function(j) {
           ys = rbind(self$ys_front, gh_data$nodes[j, ] %*% diag(self$surrogate_max_to_min))
-          invoke(emoa::dominated_hypervolume, points = t(ys), ref = t(self$ref_point))
+          invoke(moocore::hypervolume, x = ys, reference = self$ref_point)
         })
         sum((hvs - self$hypervolume) * gh_data$weights, na.rm = TRUE)
       })
