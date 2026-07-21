@@ -6,20 +6,9 @@
 \format{
 \link[R6:R6Class]{R6::R6Class} object inheriting from \link[mlr3misc:Dictionary]{mlr3misc::Dictionary}.
 }
-\arguments{
-\item{key}{(\code{character(1)}).}
-
-\item{...}{(\code{any})\cr
-Must be empty, because loop functions are stored as plain values and nothing is constructed.}
-}
-\value{
-Object with corresponding key.
-}
 \description{
 A simple \link[mlr3misc:Dictionary]{mlr3misc::Dictionary} storing objects of class \code{loop_function}.
 Each loop function has an associated help page, see \code{mlr_loop_functions_[id]}.
-
-Retrieves object with key \code{key} from the dictionary.
 }
 \section{Methods}{
 

@@ -21,15 +21,8 @@ mlr_loop_functions = R6Class(
   inherit = Dictionary,
   cloneable = FALSE,
   public = list(
-    #' @description
-    #' Retrieves object with key `key` from the dictionary.
-    #'
-    #' @param key (`character(1)`).
-    #'
-    #' @param ... (`any`)\cr
-    #' Must be empty, because loop functions are stored as plain values and nothing is constructed.
-    #'
-    #' @return Object with corresponding key.
+    # Retrieves object with key `key` from the dictionary.
+    # Loop functions are stored as plain values, so no additional arguments must be passed.
     get = function(key, ...) {
       assert_string(key, min.chars = 1L)
       if (...length() > 0L) {
