@@ -123,6 +123,11 @@
 - fix: [`srlrn()`](https://mlr3mbo.mlr-org.com/dev/reference/srlrn.md)
   now correctly unwraps a single learner supplied in a list instead of
   erroring.
+- fix: [`srlrn()`](https://mlr3mbo.mlr-org.com/dev/reference/srlrn.md)
+  now implements the documented replication of a single learner when
+  `cols_y` or the `archive` reference more than one target variable,
+  returning a `SurrogateLearnerCollection` with deep clones of the
+  learner.
 - fix: `TunerAsyncMbo` now accepts the documented `result_assigner`
   construction argument and forwards it to `OptimizerAsyncMbo`.
 - fix: `Surrogate` now provides default `output_trafo` and
