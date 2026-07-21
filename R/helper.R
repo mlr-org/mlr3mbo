@@ -124,6 +124,17 @@ get_best = function(instance, is_multi_acq_function, evaluated, n_select, not_al
   }
 }
 
+# used in AcqOptimizer subclasses that produce a single candidate;
+# raises an acq optimizer error when the proposed candidate was already evaluated on the actual instance
+assert_not_already_evaluated = function(xdt, archive) {
+  cols_x = archive$cols_x
+  matched = archive$data[xdt[, cols_x, with = FALSE], on = cols_x, nomatch = NULL, which = TRUE]
+  if (length(matched)) {
+    error_acq_optimizer("Acquisition function optimization proposed an already evaluated candidate.")
+  }
+  xdt
+}
+
 catn = function(..., file = "") {
   cat(paste0(..., collapse = "\n"), "\n", sep = "", file = file)
 }

@@ -421,6 +421,21 @@ OptimizerMbo = R6Class(
     .result_assigner = NULL,
 
     .optimize = function(inst) {
+      on.exit(
+        {
+          tryCatch(
+            {
+              self$surrogate$update()
+            },
+            Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
+              lg = lgr::get_logger("mlr3/bbotk")
+              lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
+            }
+          )
+        },
+        add = TRUE
+      )
+
       invoke(
         self$loop_function,
         instance = inst,
@@ -429,18 +444,6 @@ OptimizerMbo = R6Class(
         acq_optimizer = self$acq_optimizer,
         .args = self$args
       )
-
-      on.exit({
-        tryCatch(
-          {
-            self$surrogate$update()
-          },
-          Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
-            lg = lgr::get_logger("mlr3/bbotk")
-            lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
-          }
-        )
-      })
     },
 
     .assign_result = function(inst) {
