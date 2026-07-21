@@ -7,6 +7,9 @@ runs for at most `100 * D^2` function evaluations, where `D` is the
 dimension of the search space. The optimization stops when the relative
 tolerance of the parameters is less than `10^-4`.
 
+Only fully numeric search spaces (all parameters of type `p_dbl`) are
+supported.
+
 ## Note
 
 `NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the

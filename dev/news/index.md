@@ -37,6 +37,10 @@
 - fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`,
   `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be
   deep cloned without error.
+- fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now raise an
+  informative error for non-numeric search spaces instead of failing
+  confusingly inside `nloptr` or silently degrading to random search
+  under `catch_errors = TRUE`.
 - fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now reset their
   `state` at the start of each
   [`optimize()`](https://rdrr.io/r/stats/optimize.html) call and clear

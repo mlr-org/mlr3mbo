@@ -9,6 +9,9 @@ parameters is less than `10^-4`. The first iteration starts with the
 best point in the archive and the next iterations start from a random
 point.
 
+Only fully numeric search spaces (all parameters of type `p_dbl`) are
+supported.
+
 ## Note
 
 If the restart strategy is `"none"`, the optimizer starts with the best
