@@ -57,7 +57,7 @@ The following termination parameters can be used.
 - `ftol_rel`:
 
   `numeric(1)`  
-  Relative tolerance of the objective function. Deactivate with `-1`.
+  Relative tolerance of the objective function. Deactivate with `-1`
   (Default).
 
 - `ftol_abs`:
