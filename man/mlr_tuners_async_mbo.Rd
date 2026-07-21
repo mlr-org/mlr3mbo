@@ -144,6 +144,7 @@ the respective fields are simply (settable) active bindings to the fields of the
   surrogate = NULL,
   acq_function = NULL,
   acq_optimizer = NULL,
+  result_assigner = NULL,
   param_set = NULL
 )}
     \if{html}{\out{</div>}}
@@ -157,6 +158,8 @@ The surrogate.}
 The acquisition function.}
       \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
 The acquisition function optimizer.}
+      \item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
+The result assigner.}
       \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of control parameters.}
     }

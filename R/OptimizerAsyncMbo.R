@@ -149,6 +149,7 @@ OptimizerAsyncMbo = R6Class(
       label = "Asynchronous Model Based Optimization",
       man = "mlr3mbo::OptimizerAsyncMbo"
     ) {
+      assert_r6(param_set, classes = "ParamSet", null.ok = TRUE)
       default_param_set = ps(
         initial_design = p_uty(),
         design_size = p_int(lower = 1, default = 100L),
