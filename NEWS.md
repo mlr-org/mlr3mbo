@@ -2,6 +2,7 @@
 
 * fix: `AcqOptimizer` now respects `warmstart_size` when warm-starting a single-objective acquisition function on a multi-objective archive, instead of evaluating the entire non-dominated front.
 * fix: `AcqOptimizer` and its subclasses gained `$label` and `$man` fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
+* fix: `bayesopt_ego()`, `bayesopt_emo()`, `bayesopt_mpcl()`, `bayesopt_parego()`, and `bayesopt_smsego()` no longer silently disable random interleaving when the archive already contains a user-supplied initial design and `init_design_size` is `NULL`.
 * fix: `AcqFunctionAEI` no longer errors during `$update()` when the surrogate model is not a `"regr.km"` model and now falls back to a noise variance of `0` as documented.
 * fix: `AcqFunctionEHVI`, `AcqFunctionEHVIGH`, and `AcqFunctionSmsEgo` now apply the surrogate's output transformation to `ys_front`, so the front and the reference point are compared on the same scale.
 * fix: `AcqFunctionEI`, `AcqFunctionEILog`, `AcqFunctionPI`, and `AcqFunctionStochasticEI` now ignore the missing outcomes of pending evaluations when determining the best observed value, so `y_best` is no longer `NA` on an asynchronous archive with more than one worker.
