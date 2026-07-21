@@ -91,6 +91,7 @@
 <li>fix: <code>OptimizerAsyncMbo</code> no longer ignores its <code>id</code> construction argument, so <code>OptimizerADBO</code> and <code>TunerADBO</code> now correctly report the id <code>"adbo"</code> instead of <code>"async_mbo"</code>.</li>
 <li>fix: <code>OptimizerMbo</code> and <code>TunerMbo</code> now update the surrogate a final time even when the optimization exits through a termination error, e.g., when the archive is already at budget or the terminator triggers between two evaluations.</li>
 <li>fix: <code>OutputTrafoLog</code> and <code>OutputTrafoStandardize</code> no longer produce <code>NaN</code> or <code>Inf</code> values when all observed outcomes are identical.</li>
+<li>fix: <code>OutputTrafoLog$inverse_transform_posterior()</code> no longer errors on mean-only predictions of a response-only learner; the mean is inverted with a variance of zero and no <code>se</code> column is fabricated.</li>
 <li>fix: <code>OutputTrafoStandardize$inverse_transform_posterior()</code> no longer fabricates an all-<code>NA</code> <code>se</code> column for mean-only predictions of a response-only learner.</li>
 <li>fix: <code>OutputTrafoLog</code> no longer produces infinite values when the range of the observed outcomes is tiny relative to their magnitude, because the epsilon padding is now floored at the local floating point precision.</li>
 <li>fix: <code>ResultAssignerSurrogate</code> no longer errors when the archive contains duplicated x-configurations.</li>

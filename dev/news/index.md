@@ -161,6 +161,9 @@
   between two evaluations.
 - fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce
   `NaN` or `Inf` values when all observed outcomes are identical.
+- fix: `OutputTrafoLog$inverse_transform_posterior()` no longer errors
+  on mean-only predictions of a response-only learner; the mean is
+  inverted with a variance of zero and no `se` column is fabricated.
 - fix: `OutputTrafoStandardize$inverse_transform_posterior()` no longer
   fabricates an all-`NA` `se` column for mean-only predictions of a
   response-only learner.
