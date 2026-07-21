@@ -96,6 +96,7 @@ TunerAsyncMbo = R6Class(
       result_assigner = NULL,
       param_set = NULL
     ) {
+      assert_r6(param_set, classes = "ParamSet", null.ok = TRUE)
       optimizer = OptimizerAsyncMbo$new(
         surrogate = surrogate,
         acq_function = acq_function,
