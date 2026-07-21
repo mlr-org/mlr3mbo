@@ -33,6 +33,7 @@
 * fix: `OutputTrafoLog` no longer produces infinite values when the range of the observed outcomes is tiny relative to their magnitude, because the epsilon padding is now floored at the local floating point precision.
 * fix: `ResultAssignerSurrogate` no longer errors when the archive contains duplicated x-configurations.
 * fix: `srlrn()` now correctly unwraps a single learner supplied in a list instead of erroring.
+* fix: `srlrn()` now implements the documented replication of a single learner when `cols_y` or the `archive` reference more than one target variable, returning a `SurrogateLearnerCollection` with deep clones of the learner.
 * fix: `TunerAsyncMbo` now accepts the documented `result_assigner` construction argument and forwards it to `OptimizerAsyncMbo`.
 * fix: `Surrogate` now provides default `output_trafo` and `output_trafo_must_be_considered` fields, so third-party subclasses work with the acquisition functions without implementing output transformation support.
 * fix: `SurrogateLearner$predict()` no longer modifies the data.table passed as `xdt` by reference.
