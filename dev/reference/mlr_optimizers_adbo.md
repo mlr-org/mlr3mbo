@@ -196,6 +196,5 @@ if (requireNamespace("rush") &
   }
 }
 #> Loading required namespace: rush
-#> ERROR [06:55:48.683] [rush] Lost 1 task(s): 3918a4c6-1d13-4af2-a9d8-aaea0a0351b8
 # }
 ```

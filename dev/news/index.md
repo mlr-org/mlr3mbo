@@ -7,6 +7,16 @@
   instead of evaluating the entire non-dominated front.
 - fix: `AcqOptimizer` and its subclasses gained `$label` and `$man`
   fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
+- fix:
+  [`bayesopt_ego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_ego.md),
+  [`bayesopt_emo()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_emo.md),
+  [`bayesopt_mpcl()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_mpcl.md),
+  [`bayesopt_parego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_parego.md),
+  and
+  [`bayesopt_smsego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_smsego.md)
+  no longer silently disable random interleaving when the archive
+  already contains a user-supplied initial design and `init_design_size`
+  is `NULL`.
 - fix: `AcqFunctionAEI` no longer errors during `$update()` when the
   surrogate model is not a `"regr.km"` model and now falls back to a
   noise variance of `0` as documented.
