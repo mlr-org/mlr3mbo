@@ -192,11 +192,9 @@ test_that("AcqOptimizer warmstart respects warmstart_size for multi-crit archive
   # the non-dominated front has more than one point, so best() would ignore warmstart_size
   expect_gt(nrow(instance$archive$best()), 1L)
 
-  callback = callback_batch("mlr3mbo.warmstart_count",
-    on_optimization_begin = function(callback, context) {
-      attr(callback$state$outer, "n_warmstart") = context$instance$archive$n_evals
-    }
-  )
+  callback = callback_batch("mlr3mbo.warmstart_count", on_optimization_begin = function(callback, context) {
+    attr(callback$state$outer, "n_warmstart") = context$instance$archive$n_evals
+  })
   acqopt = AcqOptimizer$new(
     opt("random_search", batch_size = 20L),
     trm("evals", n_evals = 20L),
@@ -239,6 +237,16 @@ test_that("mlr_acqoptimizers dictionary and label/man work", {
   acqopt = AcqOptimizer$new(optimizer, trm("evals", n_evals = 2L))
   expect_equal(acqopt$label, optimizer$label)
   expect_equal(acqopt$man, "mlr3mbo::AcqOptimizer")
-  expect_error({acqopt$label = "x"}, "read-only")
-  expect_error({acqopt$man = "x"}, "read-only")
+  expect_error(
+    {
+      acqopt$label = "x"
+    },
+    "read-only"
+  )
+  expect_error(
+    {
+      acqopt$man = "x"
+    },
+    "read-only"
+  )
 })

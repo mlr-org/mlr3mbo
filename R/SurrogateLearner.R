@@ -263,9 +263,9 @@ SurrogateLearner = R6Class(
     # Operates on an asynchronous archive and performs imputation as needed.
     .update_async = function() {
       xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[,
-          c(self$cols_x, self$cols_y, "state"),
-          with = FALSE
-        ])
+        c(self$cols_x, self$cols_y, "state"),
+        with = FALSE
+      ])
       if (!is.null(self$input_trafo)) {
         self$input_trafo$cols_x = self$cols_x
         self$input_trafo$search_space = self$archive$search_space

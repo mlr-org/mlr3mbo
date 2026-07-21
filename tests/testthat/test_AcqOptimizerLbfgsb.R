@@ -52,10 +52,17 @@ test_that("AcqOptimizerLbfgsb raises an acq optimizer error when no valid soluti
   instance$eval_batch(generate_design_grid(instance$search_space, resolution = 4L)$data)
   surrogate = srlrn(REGR_FEATURELESS, archive = instance$archive)
 
-  AcqFunctionNaN = R6::R6Class("AcqFunctionNaN", inherit = AcqFunction,
+  AcqFunctionNaN = R6::R6Class(
+    "AcqFunctionNaN",
+    inherit = AcqFunction,
     public = list(initialize = function(surrogate = NULL) {
-      super$initialize("acq_nan", surrogate = surrogate, requires_predict_type_se = FALSE,
-        surrogate_class = "SurrogateLearner", direction = "minimize")
+      super$initialize(
+        "acq_nan",
+        surrogate = surrogate,
+        requires_predict_type_se = FALSE,
+        surrogate_class = "SurrogateLearner",
+        direction = "minimize"
+      )
     }),
     private = list(.fun = function(xdt) data.table(acq_nan = rep(NaN, nrow(xdt))))
   )
