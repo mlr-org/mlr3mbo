@@ -19,7 +19,7 @@ acqo("local_search")
   \if{html}{\out{<div class="r6-fields">}}
   \describe{
     \item{\code{state}}{(\code{list()})\cr
-List of \code{\link[cmaes:cma_es]{cmaes::cma_es()}} results.}
+Result of the last \code{\link[bbotk:local_search]{bbotk::local_search()}} call.}
   }
   \if{html}{\out{</div>}}
 }
@@ -93,7 +93,7 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
 \subsection{\code{AcqOptimizerLocalSearch$reset()}}{
   Reset the acquisition function optimizer.
 
-Currently not used.
+Clears the \code{state} of the previous optimization run.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqOptimizerLocalSearch$reset()}
