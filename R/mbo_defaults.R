@@ -219,7 +219,7 @@ default_acqfunction = function(instance) {
     AcqFunctionStochasticCB$new()
   } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
     AcqFunctionSmsEgo$new()
-  } else if (inherits(instance, "OptimInstanceAsyncMultiCrit")) {
+  } else {
     stopf("Currently, there is no default acquisition function for %s.", class(instance)[1L])
   }
 }
