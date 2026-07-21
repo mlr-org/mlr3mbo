@@ -131,8 +131,9 @@ SurrogateLearner = R6Class(
         }
       }
 
+      pred = as.data.table(pred)
       if (!is.null(self$output_trafo) && self$output_trafo$invert_posterior) {
-        pred = self$output_trafo$inverse_transform_posterior(as.data.table(pred))
+        pred = self$output_trafo$inverse_transform_posterior(pred)
       }
       pred
     }

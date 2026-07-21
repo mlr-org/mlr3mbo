@@ -11,7 +11,7 @@ test_that("SurrogateLearner API works", {
 
   xdt = data.table(x = seq(-1, 1, length.out = 5L))
   pred = surrogate$predict(xdt)
-  expect_list(pred, len = 2L)
+  expect_data_table(pred, ncols = 2L, nrows = 5L)
   expect_names(names(pred), identical.to = c("mean", "se"))
   expect_numeric(pred$mean, len = 5L)
   expect_numeric(pred$se, len = 5L)

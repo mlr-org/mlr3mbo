@@ -18,6 +18,16 @@ test_that("AcqOptimizerLbfgsb works", {
   expect_true(acqopt$state$iteration_1$model$iterations <= 200L)
 })
 
+test_that("AcqOptimizerLbfgsb does not expose the dead minf_max parameter", {
+  expect_false("minf_max" %in% AcqOptimizerLbfgsb$new()$param_set$ids())
+})
+
+test_that("AcqOptimizerLbfgsb maxeval accepts -1L and -1 to deactivate", {
+  acqopt = AcqOptimizerLbfgsb$new()
+  expect_error(acqopt$param_set$set_values(maxeval = -1L), NA)
+  expect_error(acqopt$param_set$set_values(maxeval = -1), NA)
+})
+
 test_that("AcqOptimizerLbfgsb raises an acq optimizer error when no valid solution is found", {
   instance = oi(OBJ_1D, terminator = trm("evals", n_evals = 5L))
   instance$eval_batch(generate_design_grid(instance$search_space, resolution = 4L)$data)
