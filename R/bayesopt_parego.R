@@ -129,6 +129,9 @@ bayesopt_parego = function(
     design = generate_design_sobol(search_space, n = init_design_size)$data
     instance$eval_batch(design)
   }
+  # a user-supplied initial design already in the archive leaves init_design_size NULL,
+  # which would otherwise silently disable random interleaving
+  init_design_size = init_design_size %??% instance$archive$n_evals
 
   # completing initialization
   surrogate$archive = instance$archive
