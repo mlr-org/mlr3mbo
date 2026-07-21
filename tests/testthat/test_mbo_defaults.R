@@ -268,3 +268,9 @@ test_that("stability and defaults", {
   # Nothing should happen here due to the fallback learner
   expect_true(sum(grepl("Surrogate Train Error", unlist(map(strsplit(lines, "\\[bbotk\\] "), 2L)))) == 0L)
 })
+
+test_that("default_acqfunction errors for unsupported instance classes", {
+  instance = MAKE_INST_1D()
+  class(instance) = c("OptimInstanceCustom", "OptimInstance", "R6")
+  expect_error(default_acqfunction(instance), "no default acquisition function")
+})

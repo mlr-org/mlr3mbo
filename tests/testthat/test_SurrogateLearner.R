@@ -11,7 +11,7 @@ test_that("SurrogateLearner API works", {
 
   xdt = data.table(x = seq(-1, 1, length.out = 5L))
   pred = surrogate$predict(xdt)
-  expect_list(pred, len = 2L)
+  expect_data_table(pred, ncols = 2L, nrows = 5L)
   expect_names(names(pred), identical.to = c("mean", "se"))
   expect_numeric(pred$mean, len = 5L)
   expect_numeric(pred$se, len = 5L)
@@ -21,7 +21,7 @@ test_that("SurrogateLearner API works", {
   expect_error(surrogate$update(), class = "Mlr3ErrorMboSurrogateUpdate")
 
   surrogate$param_set$values$catch_errors = FALSE
-  expect_error(surrogate$optimize(), class = "simpleError")
+  expect_error(surrogate$update(), class = "Mlr3ErrorLearnerTrain")
 
   # predict_type
   expect_equal(surrogate$predict_type, surrogate$learner$predict_type)
@@ -106,4 +106,33 @@ test_that("feature types", {
   skip_if_missing_regr_km()
   surrogate = SurrogateLearner$new(learner = REGR_KM_DETERM)
   expect_equal(surrogate$feature_types, surrogate$learner$feature_types)
+})
+
+test_that("SurrogateLearner fields are validated on assignment", {
+  inst = MAKE_INST_1D()
+  surrogate = SurrogateLearner$new(learner = REGR_FEATURELESS$clone(deep = TRUE), archive = inst$archive)
+  expect_error({surrogate$learner = "garbage"}, "Learner")
+  expect_error({surrogate$input_trafo = "garbage"}, "R6")
+  expect_error({surrogate$output_trafo = "garbage"}, "R6")
+  surrogate$output_trafo = OutputTrafoStandardize$new()
+  expect_r6(surrogate$output_trafo, "OutputTrafoStandardize")
+  surrogate$output_trafo = NULL
+  expect_null(surrogate$output_trafo)
+  learner = lrn("regr.featureless")
+  surrogate$learner = learner
+  expect_identical(surrogate$learner, learner)
+})
+
+test_that("Surrogate base class provides output_trafo defaults", {
+  param_set = ps(catch_errors = p_lgl())
+  param_set$values = list(catch_errors = TRUE)
+  surrogate = Surrogate$new(
+    learner = REGR_FEATURELESS$clone(deep = TRUE),
+    archive = NULL,
+    cols_x = NULL,
+    cols_y = NULL,
+    param_set = param_set
+  )
+  expect_null(surrogate$output_trafo)
+  expect_false(surrogate$output_trafo_must_be_considered)
 })

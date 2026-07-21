@@ -69,23 +69,19 @@ if (requireNamespace("mlr3learners") &
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{Surrogate}} -> \code{SurrogateLearnerCollection}
 }
-\section{Public fields}{
-  \if{html}{\out{<div class="r6-fields">}}
-  \describe{
-    \item{\code{learner}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
-List of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} wrapped as surrogate models.}
-
-    \item{\code{input_trafo}}{(\link{InputTrafo})\cr
-Input transformation.}
-
-    \item{\code{output_trafo}}{(\link{OutputTrafo})\cr
-Output transformation.}
-  }
-  \if{html}{\out{</div>}}
-}
 \section{Active bindings}{
   \if{html}{\out{<div class="r6-active-bindings">}}
   \describe{
+    \item{\code{learner}}{(list of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
+List of \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} wrapped as surrogate models.
+The learners must be unique in memory, i.e., deep clones.}
+
+    \item{\code{input_trafo}}{(\link{InputTrafo} | \code{NULL})\cr
+Input transformation.}
+
+    \item{\code{output_trafo}}{(\link{OutputTrafo} | \code{NULL})\cr
+Output transformation.}
+
     \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 

@@ -60,23 +60,18 @@ if (requireNamespace("mlr3learners") &
 \section{Super class}{
 \code{\link[mlr3mbo:Surrogate]{Surrogate}} -> \code{SurrogateLearner}
 }
-\section{Public fields}{
-  \if{html}{\out{<div class="r6-fields">}}
+\section{Active bindings}{
+  \if{html}{\out{<div class="r6-active-bindings">}}
   \describe{
     \item{\code{learner}}{(\link[mlr3:LearnerRegr]{mlr3::LearnerRegr})\cr
 \link[mlr3:LearnerRegr]{mlr3::LearnerRegr} wrapped as a surrogate model.}
 
-    \item{\code{input_trafo}}{(\link{InputTrafo})\cr
+    \item{\code{input_trafo}}{(\link{InputTrafo} | \code{NULL})\cr
 Input transformation.}
 
-    \item{\code{output_trafo}}{(\link{OutputTrafo})\cr
+    \item{\code{output_trafo}}{(\link{OutputTrafo} | \code{NULL})\cr
 Output transformation.}
-  }
-  \if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-  \if{html}{\out{<div class="r6-active-bindings">}}
-  \describe{
+
     \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 
