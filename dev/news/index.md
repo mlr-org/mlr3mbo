@@ -8,6 +8,11 @@
 - fix: `AcqOptimizer` and its subclasses gained `$label` and `$man`
   fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
 - fix:
+  [`bayesopt_mpcl()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_mpcl.md)
+  now logs a warning when a surrogate or acquisition function error is
+  caught and a randomly sampled point is proposed, consistent with the
+  other loop functions.
+- fix:
   [`bayesopt_parego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_parego.md)
   now subsets the minimization multiplier to the target columns, so the
   scalarization signs no longer misalign when the codomain holds
