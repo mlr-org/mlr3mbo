@@ -149,6 +149,7 @@ OptimizerAsyncMbo = R6Class(
       label = "Asynchronous Model Based Optimization",
       man = "mlr3mbo::OptimizerAsyncMbo"
     ) {
+      assert_r6(param_set, classes = "ParamSet", null.ok = TRUE)
       default_param_set = ps(
         initial_design = p_uty(),
         design_size = p_int(lower = 1, default = 100L),
@@ -160,7 +161,7 @@ OptimizerAsyncMbo = R6Class(
       param_set$set_values(design_size = 100L, design_function = "sobol")
 
       super$initialize(
-        "async_mbo",
+        id = id,
         param_set = param_set,
         # is replaced with dynamic AB after construction
         param_classes = c("ParamLgl", "ParamInt", "ParamDbl", "ParamFct"),

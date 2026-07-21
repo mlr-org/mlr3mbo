@@ -65,4 +65,10 @@ test_that("OptimizerAsyncMbo updates the surrogate on the main process after opt
 
   expect_false(is.null(optimizer$surrogate$learner$model))
   expect_equal(optimizer$surrogate$learner$state$train_task$nrow, instance$archive$n_finished)
+})  
+  
+test_that("OptimizerAsyncMbo passes the id argument through", {
+  expect_equal(OptimizerAsyncMbo$new()$id, "async_mbo")
+  expect_equal(OptimizerAsyncMbo$new(id = "custom")$id, "custom")
+  expect_equal(OptimizerADBO$new()$id, "adbo")
 })

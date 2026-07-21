@@ -66,18 +66,6 @@ SurrogateLearnerCollection = R6Class(
   inherit = Surrogate,
 
   public = list(
-    #' @field learner (list of [mlr3::LearnerRegr])\cr
-    #'   List of [mlr3::LearnerRegr] wrapped as surrogate models.
-    learner = NULL,
-
-    #' @field input_trafo ([InputTrafo])\cr
-    #'   Input transformation.
-    input_trafo = NULL,
-
-    #' @field output_trafo ([OutputTrafo])\cr
-    #'   Output transformation.
-    output_trafo = NULL,
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -96,20 +84,15 @@ SurrogateLearnerCollection = R6Class(
       cols_y = NULL
     ) {
       assert_learners(learners)
-      addresses = map(learners, address)
-      if (length(unique(addresses)) != length(addresses)) {
-        stop("Redundant Learners must be unique in memory, i.e., deep clones.")
-      }
-      assert_learners(learners)
       for (learner in learners) {
         if (learner$predict_type != "se" && "se" %in% learner$predict_types) {
           learner$predict_type = "se"
         }
       }
 
-      self$input_trafo = assert_r6(input_trafo, classes = "InputTrafo", null.ok = TRUE)
+      self$input_trafo = input_trafo
 
-      self$output_trafo = assert_r6(output_trafo, classes = "OutputTrafo", null.ok = TRUE)
+      self$output_trafo = output_trafo
 
       assert_r6(archive, classes = "Archive", null.ok = TRUE)
 
@@ -176,6 +159,41 @@ SurrogateLearnerCollection = R6Class(
   ),
 
   active = list(
+    #' @field learner (list of [mlr3::LearnerRegr])\cr
+    #'   List of [mlr3::LearnerRegr] wrapped as surrogate models.
+    #'   The learners must be unique in memory, i.e., deep clones.
+    learner = function(rhs) {
+      if (missing(rhs)) {
+        return(private$.learner)
+      }
+      assert_learners(rhs)
+      addresses = map(rhs, address)
+      if (length(unique(addresses)) != length(addresses)) {
+        stop("Redundant Learners must be unique in memory, i.e., deep clones.")
+      }
+      private$.learner = rhs
+    },
+
+    #' @field input_trafo ([InputTrafo] | `NULL`)\cr
+    #'   Input transformation.
+    input_trafo = function(rhs) {
+      if (missing(rhs)) {
+        private$.input_trafo
+      } else {
+        private$.input_trafo = assert_r6(rhs, classes = "InputTrafo", null.ok = TRUE)
+      }
+    },
+
+    #' @field output_trafo ([OutputTrafo] | `NULL`)\cr
+    #'   Output transformation.
+    output_trafo = function(rhs) {
+      if (missing(rhs)) {
+        private$.output_trafo
+      } else {
+        private$.output_trafo = assert_r6(rhs, classes = "OutputTrafo", null.ok = TRUE)
+      }
+    },
+
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
@@ -364,13 +382,17 @@ SurrogateLearnerCollection = R6Class(
     deep_clone = function(name, value) {
       switch(
         name,
-        learner = map(value, function(x) x$clone(deep = TRUE)),
-        input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
-        output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+        .learner = map(value, function(x) x$clone(deep = TRUE)),
+        .input_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
+        .output_trafo = if (is.null(value)) value else value$clone(deep = TRUE),
         .param_set = value$clone(deep = TRUE),
         .archive = value$clone(deep = TRUE),
         value
       )
-    }
+    },
+
+    .input_trafo = NULL,
+
+    .output_trafo = NULL
   )
 )

@@ -102,6 +102,8 @@ default_gp = function(noisy = FALSE) {
 #' @param noisy (`logical(1)`)\cr
 #'   Whether the learner will be used in a noisy objective function scenario.
 #'   See [default_surrogate()].
+#'   Currently, the constructed random forest is identical in the noisy and deterministic case,
+#'   and the argument only exists for consistency with [default_gp()].
 #' @return [mlr3learners::LearnerRegrRanger]
 #' @family mbo_defaults
 #' @export
@@ -134,8 +136,9 @@ default_rf = function(noisy = FALSE) {
 #' For mixed numeric-categorical parameter spaces, or spaces with conditional parameters
 #' a random forest is constructed via [default_rf()].
 #'
-#' In any case, learners are encapsulated using `"evaluate"`, and a fallback learner is set,
+#' These default learners are encapsulated using `"evaluate"`, and a fallback learner is set,
 #' in cases where the surrogate learner errors.
+#' A user-supplied `learner` is used as is, without encapsulation or a fallback learner.
 #' Currently, the following learner is used as a fallback:
 #' `lrn("regr.ranger", num.trees = 10L, keep.inbag = TRUE, se.method = "jack")`.
 #'
@@ -216,7 +219,7 @@ default_acqfunction = function(instance) {
     AcqFunctionStochasticCB$new()
   } else if (inherits(instance, "OptimInstanceBatchMultiCrit")) {
     AcqFunctionSmsEgo$new()
-  } else if (inherits(instance, "OptimInstanceAsyncMultiCrit")) {
+  } else {
     stopf("Currently, there is no default acquisition function for %s.", class(instance)[1L])
   }
 }

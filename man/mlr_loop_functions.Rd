@@ -10,7 +10,7 @@
 \item{key}{(\code{character(1)}).}
 
 \item{...}{(\code{any})\cr
-Passed down to constructor.}
+Must be empty, because loop functions are stored as plain values and nothing is constructed.}
 }
 \value{
 Object with corresponding key.
@@ -20,7 +20,6 @@ A simple \link[mlr3misc:Dictionary]{mlr3misc::Dictionary} storing objects of cla
 Each loop function has an associated help page, see \code{mlr_loop_functions_[id]}.
 
 Retrieves object with key \code{key} from the dictionary.
-Additional arguments must be named and are passed to the constructor of the stored object.
 }
 \section{Methods}{
 

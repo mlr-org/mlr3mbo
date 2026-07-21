@@ -51,7 +51,7 @@ FUN_1D_2_NOISY = function(xs) {
   list(y1 = as.numeric(xs)^2 + rnorm(1, sd = 0.5), y2 = sqrt(abs(as.numeric(xs))) + rnorm(1, sd = 0.5))
 }
 OBJ_1D_2_NOISY = bbotk::ObjectiveRFun$new(
-  fun = FUN_1D_2,
+  fun = FUN_1D_2_NOISY,
   domain = PS_1D,
   codomain = FUN_1D_2_CODOMAIN,
   properties = c("multi-crit", "noisy")

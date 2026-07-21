@@ -61,6 +61,14 @@ InputTrafoUnitcube = R6Class(
     #' @param xdt ([data.table::data.table()])\cr
     #'   Data. One row per observation with at least columns `$cols_x`.
     update = function(xdt) {
+      parameters = names(which(self$search_space$is_number)) # numeric or integer
+      bounds_finite = is.finite(self$search_space$lower[parameters]) & is.finite(self$search_space$upper[parameters])
+      if (!all(bounds_finite)) {
+        error_config(
+          "InputTrafoUnitcube requires finite bounds for all numeric parameters but the bounds of '%s' are not finite.",
+          str_collapse(names(which(!bounds_finite)))
+        )
+      }
       private$.state = list()
     },
 
@@ -80,12 +88,15 @@ InputTrafoUnitcube = R6Class(
       parameters = names(which(self$search_space$is_number)) # numeric or integer
       assert_subset(parameters, self$cols_x)
       for (parameter in parameters) {
-        set(
-          xdt,
-          j = parameter,
-          value = (xdt[[parameter]] - self$search_space$lower[[parameter]]) /
-            (self$search_space$upper[[parameter]] - self$search_space$lower[[parameter]])
-        )
+        lower = self$search_space$lower[[parameter]]
+        upper = self$search_space$upper[[parameter]]
+        # a degenerate dimension carries no information and is mapped to the center of the unit interval
+        value = if (lower == upper) {
+          rep(0.5, nrow(xdt))
+        } else {
+          (xdt[[parameter]] - lower) / (upper - lower)
+        }
+        set(xdt, j = parameter, value = value)
       }
       xdt
     }

@@ -32,7 +32,7 @@ Typically a \link{SurrogateLearner}.}
 Size of the initial design.
 If \code{NULL} and the \link[bbotk:ArchiveBatch]{bbotk::ArchiveBatch} contains no evaluations, \code{4 * d} is used with \code{d} being the
 dimensionality of the search space.
-Points are generated via a Sobol sequence.}
+Points are sampled uniformly at random.}
 
 \item{random_interleave_iter}{(\code{integer(1)})\cr
 Every \code{random_interleave_iter} iteration (starting after the initial design), a point is
