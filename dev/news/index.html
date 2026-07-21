@@ -50,7 +50,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="mlr3mbo-development-version">mlr3mbo (development version)<a class="anchor" aria-label="anchor" href="#mlr3mbo-development-version"></a></h2>
-<ul><li>fix: <code>AcqOptimizer</code> now respects <code>warmstart_size</code> when warm-starting a single-objective acquisition function on a multi-objective archive, instead of evaluating the entire non-dominated front.</li>
+<ul><li>fix: <code><a href="../reference/acqo.html">acqo()</a></code> now raises an error when <code>terminator</code> or <code>callbacks</code> are combined with a dictionary key as <code>optimizer</code>, because these arguments were silently discarded before.</li>
+<li>fix: <code>AcqOptimizer</code> now respects <code>warmstart_size</code> when warm-starting a single-objective acquisition function on a multi-objective archive, instead of evaluating the entire non-dominated front.</li>
 <li>fix: <code>AcqOptimizer</code> and its subclasses gained <code>$label</code> and <code>$man</code> fields, so that <code>as.data.table(mlr_acqoptimizers)</code> no longer errors.</li>
 <li>fix: <code><a href="../reference/mlr_loop_functions_mpcl.html">bayesopt_mpcl()</a></code> now logs a warning when a surrogate or acquisition function error is caught and a randomly sampled point is proposed, consistent with the other loop functions.</li>
 <li>fix: <code><a href="../reference/mlr_loop_functions_mpcl.html">bayesopt_mpcl()</a></code> no longer aborts when a batch mixes model-based proposals and randomly sampled fallback points, because the batch is now combined with filling missing columns.</li>
