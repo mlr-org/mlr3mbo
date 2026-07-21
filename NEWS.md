@@ -1,4 +1,4 @@
-# mlr3mbo (development version)
+# mlr3mbo 1.2.0
 
 * fix: `acqo()` now raises an error when `terminator` or `callbacks` are combined with a dictionary key as `optimizer`, because these arguments were silently discarded before.
 * fix: `AcqOptimizer` now respects `warmstart_size` when warm-starting a single-objective acquisition function on a multi-objective archive, instead of evaluating the entire non-dominated front.
@@ -7,7 +7,6 @@
 * fix: `bayesopt_mpcl()` now logs a warning when a surrogate or acquisition function error is caught and a randomly sampled point is proposed, consistent with the other loop functions.
 * fix: `bayesopt_mpcl()` no longer aborts when a batch mixes model-based proposals and randomly sampled fallback points, because the batch is now combined with filling missing columns.
 * fix: `bayesopt_mpcl()` and `bayesopt_parego()` now advance the random interleaving counter per proposal instead of per batch, so random interleaving also triggers for `q > 1` as documented.
-* fix: `bayesopt_parego()` now subsets the minimization multiplier to the target columns, so the scalarization signs no longer misalign when the codomain holds non-target columns.
 * fix: `bayesopt_parego()` now subsets the minimization multiplier to the target columns, so the scalarization signs no longer misalign when the codomain holds non-target columns.
 * fix: `bayesopt_ego()`, `bayesopt_emo()`, `bayesopt_mpcl()`, `bayesopt_parego()`, and `bayesopt_smsego()` no longer silently disable random interleaving when the archive already contains a user-supplied initial design and `init_design_size` is `NULL`.
 * fix: `bayesopt_parego()` no longer silently degrades to random search when an objective is constant, because the zero-range scaling now maps the constant objective to a constant value instead of `NaN`.
@@ -42,7 +41,6 @@
 * fix: `OutputTrafo$max_to_min` now requires a named vector whose names match `$cols_y`, so invalid assignments fail immediately instead of causing a subscript error during the transformation.
 * fix: `OptimizerAsyncMbo` and `TunerAsyncMbo` now raise an informative error when the `param_set` construction argument is not a `ParamSet`.
 * fix: `OptimizerAsyncMbo` no longer ignores its `id` construction argument, so `OptimizerADBO` and `TunerADBO` now correctly report the id `"adbo"` instead of `"async_mbo"`.
-* fix: `OptimizerMbo` and `TunerMbo` now update the surrogate a final time even when the optimization exits through a termination error, e.g., when the archive is already at budget or the terminator triggers between two evaluations.
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
 * fix: `OutputTrafoLog$inverse_transform_posterior()` no longer errors on mean-only predictions of a response-only learner; the mean is inverted with a variance of zero and no `se` column is fabricated.
 * fix: `OutputTrafoStandardize$inverse_transform_posterior()` no longer fabricates an all-`NA` `se` column for mean-only predictions of a response-only learner.
