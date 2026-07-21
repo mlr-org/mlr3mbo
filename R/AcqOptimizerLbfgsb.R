@@ -4,11 +4,12 @@
 #'
 #' @description
 #' L-BFGS-B acquisition function optimizer.
-#' Calls `nloptr()` from \CRANpkg{nloptr}.
-#' In its default setting, the algorithm restarts `5 * D` times and runs at most for `100 * D^2` function evaluations,
-#' where `D` is the dimension of the search space.
-#' Each run stops when the relative tolerance of the parameters is less than `10^-4`.
-#' The first iteration starts with the best point in the archive and the next iterations start from a random point.
+#' Calls `nloptr()` from \CRANpkg{nloptr} with the `NLOPT_LD_LBFGS` algorithm.
+#' In its default setting, the algorithm runs a single time starting from the best point in the archive,
+#' for at most `100 * D^2` function evaluations, where `D` is the dimension of the search space.
+#' The run stops when the relative tolerance of the parameters is less than `10^-4`.
+#' With `restart_strategy = "random"`, the optimizer additionally restarts from random points until the evaluation
+#' budget is exhausted, which can help escape local optima.
 #'
 #' Only fully numeric search spaces (all parameters of type `p_dbl`) are supported.
 #'
@@ -21,7 +22,7 @@
 #' }
 #' \item{`max_restarts`}{`integer(1)`\cr
 #'   Maximum number of restarts.
-#'   Default is `5 * D` (Default).}
+#'   Default is `5 * D`, where `D` is the dimension of the search space.}
 #' \item{`skip_already_evaluated`}{`logical(1)`\cr
 #'   Should the proposed candidate be rejected if it was already evaluated on the actual [bbotk::OptimInstance]?
 #'   If `TRUE` and the candidate was already evaluated, an error is raised so that the `loop_function` can
@@ -30,10 +31,10 @@
 #' }
 #'
 #' @note
-#' If the restart strategy is `"none"`, the optimizer starts with the best point in the archive.
+#' If the restart strategy is `"none"`, the optimizer runs a single time starting from the best point in the archive.
 #' The optimization stops when one of the stopping criteria is met.
 #'
-#' If `restart_strategy` is `"random"`, the optimizer runs at least for `maxeval` iterations.
+#' If `restart_strategy` is `"random"`, the optimizer runs at most for `maxeval` iterations in total.
 #' The first iteration starts with the best point in the archive and stops when one of the stopping criteria is met.
 #' The next iterations start from a random point.
 #'

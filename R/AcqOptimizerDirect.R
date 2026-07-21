@@ -44,7 +44,7 @@
 #'   Deactivate with `-1` (Default).}
 #' \item{`ftol_rel`}{`numeric(1)`\cr
 #'   Relative tolerance of the objective function.
-#'   Deactivate with `-1`. (Default).}
+#'   Deactivate with `-1` (Default).}
 #' \item{`ftol_abs`}{`numeric(1)`\cr
 #'   Absolute tolerance of the objective function.
 #'   Deactivate with `-1` (Default).}
