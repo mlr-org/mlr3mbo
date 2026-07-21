@@ -40,6 +40,9 @@
 - fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`,
   `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be
   deep cloned without error.
+- fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` no longer expose
+  the `minf_max` parameter, which was not a valid `nloptr` option and
+  was silently ignored.
 - fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now accept
   `maxeval = -1L` to deactivate the evaluation limit, as documented.
 - fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now raise an
