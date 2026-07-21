@@ -47,6 +47,26 @@ test_that("OptimizerAsyncMbo works with evaluations in archive", {
   expect_data_table(instance$archive$data[!is.na(get("acq_cb"))], min.rows = 20L)
 })
 
+test_that("OptimizerAsyncMbo updates the surrogate on the main process after optimization", {
+  rush = start_rush(n_workers = 1)
+  on.exit({
+    rush$reset()
+    mirai::daemons(0)
+  })
+
+  instance = oi_async(
+    objective = OBJ_2D,
+    search_space = PS_2D,
+    terminator = trm("evals", n_evals = 10L),
+    rush = rush
+  )
+  optimizer = opt("async_mbo", design_function = "sobol", design_size = 5L)
+  optimizer$optimize(instance)
+
+  expect_false(is.null(optimizer$surrogate$learner$model))
+  expect_equal(optimizer$surrogate$learner$state$train_task$nrow, instance$archive$n_finished)
+})  
+  
 test_that("OptimizerAsyncMbo passes the id argument through", {
   expect_equal(OptimizerAsyncMbo$new()$id, "async_mbo")
   expect_equal(OptimizerAsyncMbo$new(id = "custom")$id, "custom")

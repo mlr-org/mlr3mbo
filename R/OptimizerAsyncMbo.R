@@ -277,7 +277,19 @@ OptimizerAsyncMbo = R6Class(
         lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
         pv$initial_design
       }
-      optimize_async_default(inst, self, design, n_workers = pv$n_workers)
+      result = optimize_async_default(inst, self, design, n_workers = pv$n_workers)
+
+      # the workers only update copies of the surrogate, so the final update must happen on the main process
+      tryCatch(
+        {
+          self$surrogate$update()
+        },
+        error = function(error_condition) {
+          lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
+        }
+      )
+
+      result
     }
   ),
 
@@ -419,17 +431,6 @@ OptimizerAsyncMbo = R6Class(
         # eval
         get_private(inst)$.eval_point(xs)
       }
-
-      on.exit({
-        tryCatch(
-          {
-            self$surrogate$update()
-          },
-          Mlr3ErrorMboSurrogateUpdate = function(error_condition) {
-            lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
-          }
-        )
-      })
     },
 
     .assign_result = function(inst) {
