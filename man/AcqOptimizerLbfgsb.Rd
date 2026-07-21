@@ -10,6 +10,8 @@ In its default setting, the algorithm restarts \code{5 * D} times and runs at mo
 where \code{D} is the dimension of the search space.
 Each run stops when the relative tolerance of the parameters is less than \code{10^-4}.
 The first iteration starts with the best point in the archive and the next iterations start from a random point.
+
+Only fully numeric search spaces (all parameters of type \code{p_dbl}) are supported.
 }
 \note{
 If the restart strategy is \code{"none"}, the optimizer starts with the best point in the archive.

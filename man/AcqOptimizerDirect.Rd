@@ -9,6 +9,8 @@ Calls \code{nloptr()} from \CRANpkg{nloptr} with the \code{NLOPT_GN_DIRECT_L} al
 In its default setting, the algorithm runs for at most \code{100 * D^2} function evaluations,
 where \code{D} is the dimension of the search space.
 The optimization stops when the relative tolerance of the parameters is less than \code{10^-4}.
+
+Only fully numeric search spaces (all parameters of type \code{p_dbl}) are supported.
 }
 \note{
 \code{NLOPT_GN_DIRECT_L} is a deterministic global optimizer that ignores the starting point.

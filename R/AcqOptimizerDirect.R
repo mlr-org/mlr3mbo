@@ -9,6 +9,8 @@
 #' where `D` is the dimension of the search space.
 #' The optimization stops when the relative tolerance of the parameters is less than `10^-4`.
 #'
+#' Only fully numeric search spaces (all parameters of type `p_dbl`) are supported.
+#'
 #' @note
 #' `NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the starting point.
 #' Restarts would only repeat the identical search, so the optimizer does not support them.
@@ -76,6 +78,9 @@ AcqOptimizerDirect = R6Class(
     #'
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
+      if (!all(self$acq_function$domain$class == "ParamDbl")) {
+        stopf("`AcqOptimizerDirect` only supports fully numeric (`p_dbl`) search spaces.")
+      }
       self$state = NULL
       pv = self$param_set$values
       maxeval = pv$maxeval
