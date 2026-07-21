@@ -8,17 +8,13 @@ Abstract surrogate model class.
 
 A surrogate model is used to model the unknown objective function(s) based on all points evaluated so far.
 }
-\section{Public fields}{
-  \if{html}{\out{<div class="r6-fields">}}
-  \describe{
-    \item{\code{learner}}{(learner)\cr
-Arbitrary learner object depending on the subclass.}
-  }
-  \if{html}{\out{</div>}}
-}
 \section{Active bindings}{
   \if{html}{\out{<div class="r6-active-bindings">}}
   \describe{
+    \item{\code{learner}}{(learner)\cr
+Arbitrary learner object depending on the subclass.
+Subclasses validate the learner on assignment.}
+
     \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 

@@ -9,10 +9,6 @@
 Surrogate = R6Class(
   "Surrogate",
   public = list(
-    #' @field learner (learner)\cr
-    #'   Arbitrary learner object depending on the subclass.
-    learner = NULL,
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -103,6 +99,17 @@ Surrogate = R6Class(
   ),
 
   active = list(
+    #' @field learner (learner)\cr
+    #'   Arbitrary learner object depending on the subclass.
+    #'   Subclasses validate the learner on assignment.
+    learner = function(rhs) {
+      if (missing(rhs)) {
+        private$.learner
+      } else {
+        private$.learner = rhs
+      }
+    },
+
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
@@ -202,6 +209,8 @@ Surrogate = R6Class(
   ),
 
   private = list(
+    .learner = NULL,
+
     .archive = NULL,
 
     .cols_x = NULL,
