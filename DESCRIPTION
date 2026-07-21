@@ -53,12 +53,12 @@ Imports:
     R6 (>= 2.4.1)
 Suggests:
     DiceKriging,
-    emoa,
     fastGHQuad,
     lhs,
     mlr3learners (>= 0.12.0),
     mirai,
     mlr3pipelines (>= 0.5.2),
+    moocore,
     nloptr,
     processx,
     ranger,
