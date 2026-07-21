@@ -179,7 +179,7 @@ test_that("AcqOptimizer callbacks", {
 })
 
 test_that("AcqOptimizer warmstart respects warmstart_size for multi-crit archives", {
-  skip_if_not_installed("moocore")
+  skip_if_not_installed("emoa")
 
   instance = MAKE_INST(objective = OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 20L))
   instance$eval_batch(data.table(x = seq(-1, 1, length.out = 8L)))
