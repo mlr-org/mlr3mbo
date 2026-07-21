@@ -25,6 +25,7 @@
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
 * fix: `AcqOptimizerLocalSearch` now populates its `state` field with the result of the last `bbotk::local_search()` call and clears it on `reset()`, and no longer references the unavailable `cmaes` package in its documentation.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
+* fix: `OptimizerAsyncMbo` now proposes a randomly sampled point when the archive contains no finished evaluations yet, instead of failing to train the surrogate on an empty archive.
 * fix: `mlr_loop_functions$get()` now raises an error when additional arguments are passed, because loop functions are stored as plain values and the arguments were silently discarded before.
 * fix: `OutputTrafo$max_to_min` now requires a named vector whose names match `$cols_y`, so invalid assignments fail immediately instead of causing a subscript error during the transformation.
 * fix: `OptimizerAsyncMbo` and `TunerAsyncMbo` now raise an informative error when the `param_set` construction argument is not a `ParamSet`.
