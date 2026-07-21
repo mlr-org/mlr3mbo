@@ -35,6 +35,16 @@ iterations start from a random point.
   `integer(1)`  
   Maximum number of restarts. Default is `5 * D` (Default).
 
+- `skip_already_evaluated`:
+
+  `logical(1)`  
+  Should the proposed candidate be rejected if it was already evaluated
+  on the actual
+  [bbotk::OptimInstance](https://bbotk.mlr-org.com/reference/OptimInstance.html)?
+  If `TRUE` and the candidate was already evaluated, an error is raised
+  so that the `loop_function` can propose a randomly sampled point
+  instead. Default is `TRUE`.
+
 ## Termination Parameters
 
 The following termination parameters can be used.
@@ -191,5 +201,6 @@ if (requireNamespace("nloptr")) {
   acqo("lbfgsb")
 }
 #> <AcqOptimizerLbfgsb>: (OptimizerLbfgsb)
-#> * Parameters: restart_strategy=none, catch_errors=TRUE
+#> * Parameters: restart_strategy=none, skip_already_evaluated=TRUE,
+#>   catch_errors=TRUE
 ```

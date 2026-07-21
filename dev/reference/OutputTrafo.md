@@ -45,8 +45,9 @@ Other Output Transformation:
 
 - `max_to_min`:
 
-  (`-1` \| `1`)  
-  Multiplicative factor to correct for minimization or maximization.
+  (named [`integer()`](https://rdrr.io/r/base/integer.html))  
+  Multiplicative factors of `-1` or `1` to correct for minimization or
+  maximization, named by `$cols_y`.
 
 - `invert_posterior`:
 

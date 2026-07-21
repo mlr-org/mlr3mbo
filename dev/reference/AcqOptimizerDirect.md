@@ -16,6 +16,18 @@ supported.
 starting point. Restarts would only repeat the identical search, so the
 optimizer does not support them.
 
+## Parameters
+
+- `skip_already_evaluated`:
+
+  `logical(1)`  
+  Should the proposed candidate be rejected if it was already evaluated
+  on the actual
+  [bbotk::OptimInstance](https://bbotk.mlr-org.com/reference/OptimInstance.html)?
+  If `TRUE` and the candidate was already evaluated, an error is raised
+  so that the `loop_function` can propose a randomly sampled point
+  instead. Default is `TRUE`.
+
 ## Termination Parameters
 
 The following termination parameters can be used.
@@ -172,5 +184,5 @@ if (requireNamespace("nloptr")) {
 }
 #> Loading required namespace: nloptr
 #> <AcqOptimizerDirect>: (OptimizerDirect)
-#> * Parameters: catch_errors=TRUE
+#> * Parameters: skip_already_evaluated=TRUE, catch_errors=TRUE
 ```

@@ -13,6 +13,16 @@ value is returned.
   Number of random points to sample. Default is `100 * D^2`, where `D`
   is the dimension of the search space.
 
+- `skip_already_evaluated`:
+
+  `logical(1)`  
+  Should the proposed candidate be rejected if it was already evaluated
+  on the actual
+  [bbotk::OptimInstance](https://bbotk.mlr-org.com/reference/OptimInstance.html)?
+  If `TRUE` and the candidate was already evaluated, an error is raised
+  so that the `loop_function` can propose a randomly sampled point
+  instead. Default is `TRUE`.
+
 ## Super class
 
 [`AcqOptimizer`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)
@@ -107,5 +117,5 @@ The objects of this class are cloneable with this method.
 ``` r
 acqo("random_search")
 #> <AcqOptimizerRandomSearch>: (OptimizerRandomSearch)
-#> * Parameters: catch_errors=TRUE
+#> * Parameters: skip_already_evaluated=TRUE, catch_errors=TRUE
 ```

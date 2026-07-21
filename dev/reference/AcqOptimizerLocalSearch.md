@@ -7,6 +7,12 @@ For the meaning of the control parameters, see
 The termination stops when the budget defined by the `n_searches`,
 `n_steps`, and `n_neighs` parameters is exhausted.
 
+If `skip_already_evaluated` is `TRUE` (default) and the proposed
+candidate was already evaluated on the actual
+[bbotk::OptimInstance](https://bbotk.mlr-org.com/reference/OptimInstance.html),
+an error is raised so that the `loop_function` can propose a randomly
+sampled point instead.
+
 ## Super class
 
 [`AcqOptimizer`](https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.md)
@@ -123,5 +129,5 @@ The objects of this class are cloneable with this method.
 ``` r
 acqo("local_search")
 #> <AcqOptimizerLocalSearch>: (OptimizerLocalSearch)
-#> * Parameters: catch_errors=TRUE
+#> * Parameters: skip_already_evaluated=TRUE, catch_errors=TRUE
 ```

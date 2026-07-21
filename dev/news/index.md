@@ -38,6 +38,12 @@
   ignores the starting point, so restarts only repeated the identical
   search with a smaller evaluation budget.
 - fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`,
+  `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` now support
+  the `skip_already_evaluated` parameter (default `TRUE`) and reject an
+  already evaluated candidate, so an `AcqOptimizerLbfgsb` starting at
+  the incumbent no longer re-proposes and re-evaluates the same point
+  every iteration.
+- fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`,
   `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be
   deep cloned without error.
 - fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` no longer expose
@@ -69,6 +75,9 @@
 - fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from
   an exponential distribution as documented, so that the `lambda`
   parameter has an effect.
+- fix: `OutputTrafo$max_to_min` now requires a named vector whose names
+  match `$cols_y`, so invalid assignments fail immediately instead of
+  causing a subscript error during the transformation.
 - fix: `OptimizerAsyncMbo` and `TunerAsyncMbo` now raise an informative
   error when the `param_set` construction argument is not a `ParamSet`.
 - fix: `OptimizerAsyncMbo` no longer ignores its `id` construction

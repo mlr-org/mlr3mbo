@@ -48,5 +48,5 @@ as.data.table(mlr_acqoptimizers)
 #> 4: random_search Random Search mlr3mbo::AcqOptimizerRandomSearch
 acqo("local_search")
 #> <AcqOptimizerLocalSearch>: (OptimizerLocalSearch)
-#> * Parameters: catch_errors=TRUE
+#> * Parameters: skip_already_evaluated=TRUE, catch_errors=TRUE
 ```

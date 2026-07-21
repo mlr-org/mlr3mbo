@@ -69,6 +69,13 @@ The point with the highest acquisition value is returned.</p>
 Number of random points to sample.
 Default is <code>100 * D^2</code>, where <code>D</code> is the dimension of the search space.</p></dd>
 
+<dt><code>skip_already_evaluated</code></dt>
+<dd><p><code>logical(1)</code><br>
+Should the proposed candidate be rejected if it was already evaluated on the actual <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>?
+If <code>TRUE</code> and the candidate was already evaluated, an error is raised so that the <code>loop_function</code> can
+propose a randomly sampled point instead.
+Default is <code>TRUE</code>.</p></dd>
+
 
 </dl></div>
     <div class="section level2">
@@ -157,7 +164,7 @@ String in the format <code>[pkg]::[topic]</code> pointing to a manual page for t
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="acqo.html">acqo</a></span><span class="op">(</span><span class="st">"random_search"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;AcqOptimizerRandomSearch&gt;: (OptimizerRandomSearch)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * Parameters: catch_errors=TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Parameters: skip_already_evaluated=TRUE, catch_errors=TRUE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
