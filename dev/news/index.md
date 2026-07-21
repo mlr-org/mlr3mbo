@@ -56,6 +56,11 @@
 - fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a
   search space bound, which previously caused the optimization to
   silently degenerate into random search.
+- fix: `AcqOptimizerLocalSearch` now populates its `state` field with
+  the result of the last
+  [`bbotk::local_search()`](https://bbotk.mlr-org.com/reference/local_search.html)
+  call and clears it on `reset()`, and no longer references the
+  unavailable `cmaes` package in its documentation.
 - fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from
   an exponential distribution as documented, so that the `lambda`
   parameter has an effect.

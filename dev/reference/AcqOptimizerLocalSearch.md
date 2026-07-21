@@ -17,7 +17,9 @@ The termination stops when the budget defined by the `n_searches`,
 - `state`:
 
   ([`list()`](https://rdrr.io/r/base/list.html))  
-  List of `cmaes::cma_es()` results.
+  Result of the last
+  [`bbotk::local_search()`](https://bbotk.mlr-org.com/reference/local_search.html)
+  call.
 
 ## Active bindings
 
@@ -94,7 +96,7 @@ with 1 row per candidate.
 
 Reset the acquisition function optimizer.
 
-Currently not used.
+Clears the `state` of the previous optimization run.
 
 #### Usage
 
