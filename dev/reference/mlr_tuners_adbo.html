@@ -76,7 +76,19 @@ For additional information and documentation see <a href="mlr_optimizers_async_m
     <h2 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a></h2>
 
 
-<dl><dt><code>initial_design</code></dt>
+<dl><dt><code>lambda</code></dt>
+<dd><p><code>numeric(1)</code><br>
+Value used for sampling the lambda for each worker from an exponential distribution.</p></dd>
+
+<dt><code>rate</code></dt>
+<dd><p><code>numeric(1)</code><br>
+Rate of the exponential decay.</p></dd>
+
+<dt><code>period</code></dt>
+<dd><p><code>integer(1)</code><br>
+Period of the exponential decay.</p></dd>
+
+<dt><code>initial_design</code></dt>
 <dd><p><code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code><br>
 Initial design of the optimization.
 If <code>NULL</code>, a design of size <code>design_size</code> is generated with the specified <code>design_function</code>.

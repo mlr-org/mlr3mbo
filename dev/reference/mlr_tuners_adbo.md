@@ -16,6 +16,22 @@ subject to changes.
 
 ## Parameters
 
+- `lambda`:
+
+  `numeric(1)`  
+  Value used for sampling the lambda for each worker from an exponential
+  distribution.
+
+- `rate`:
+
+  `numeric(1)`  
+  Rate of the exponential decay.
+
+- `period`:
+
+  `integer(1)`  
+  Period of the exponential decay.
+
 - `initial_design`:
 
   [`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)  

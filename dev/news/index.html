@@ -78,6 +78,7 @@
 <li>fix: <code><a href="../reference/srlrn.html">srlrn()</a></code> now correctly unwraps a single learner supplied in a list instead of erroring.</li>
 <li>fix: <code>TunerAsyncMbo</code> now accepts the documented <code>result_assigner</code> construction argument and forwards it to <code>OptimizerAsyncMbo</code>.</li>
 <li>fix: <code>SurrogateLearner$predict()</code> no longer modifies the data.table passed as <code>xdt</code> by reference.</li>
+<li>fix: <code>SurrogateLearner$predict()</code> now always returns a <code>data.table</code> with columns <code>mean</code> and <code>se</code> as documented, instead of a bare named list in configurations without an inverting output transformation.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1.1" id="mlr3mbo-111">mlr3mbo 1.1.1<a class="anchor" aria-label="anchor" href="#mlr3mbo-111"></a></h2><p class="text-muted">CRAN release: 2026-04-24</p>
