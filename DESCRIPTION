@@ -52,6 +52,7 @@ Imports:
     spacefillr,
     R6 (>= 2.4.1)
 Suggests:
+    emoa,
     DiceKriging,
     fastGHQuad,
     lhs,
