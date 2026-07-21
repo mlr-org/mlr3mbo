@@ -34,6 +34,27 @@ test_that("AcqFunctionEHVIGH works", {
   expect_true(all(res[[acqf$id]] >= 0))
 })
 
+test_that("AcqFunctionEHVIGH does not vanish for k = 2", {
+  skip_if_not_installed("emoa")
+  skip_if_not_installed("fastGHQuad")
+  inst = MAKE_INST(OBJ_1D_2, PS_1D, trm("evals", n_evals = 5L))
+  surrogate = SurrogateLearnerCollection$new(
+    list(REGR_FEATURELESS, REGR_FEATURELESS$clone(deep = TRUE)),
+    archive = inst$archive
+  )
+  acqf = AcqFunctionEHVIGH$new(surrogate = surrogate, k = 2L)
+
+  design = MAKE_DESIGN(inst)
+  inst$eval_batch(design)
+
+  acqf$surrogate$update()
+  acqf$update()
+  res = acqf$eval_dt(data.table(x = seq(-1, 1, length.out = 5L)))
+  expect_data_table(res, ncols = 1L, nrows = 5L, any.missing = FALSE)
+  # for k = 2 all product weights are equal; strict pruning previously removed every node -> identically 0
+  expect_true(any(res[[acqf$id]] > 0))
+})
+
 test_that("AcqFunctionEHVIGH transforms ys_front onto the output trafo scale", {
   skip_if_not_installed("emoa")
   skip_if_not_installed("fastGHQuad")

@@ -44,6 +44,22 @@ test_that("OutputTrafoLog works with constant y values", {
   expect_equal(ot$inverse_transform(transformed_data), ydt)
 })
 
+test_that("OutputTrafoLog works with tiny relative ranges", {
+  ot = OutputTrafoLog$new()
+  ot$cols_y = "y"
+  ydt = data.table(y = c(1e12, 1e12 + 1e-3))
+
+  ot$max_to_min = c(y = 1L)
+  ot$update(ydt)
+  transformed_data = ot$transform(ydt)
+  expect_true(all(is.finite(transformed_data$y)))
+
+  ot$max_to_min = c(y = -1L)
+  ot$update(ydt)
+  transformed_data = ot$transform(ydt)
+  expect_true(all(is.finite(transformed_data$y)))
+})
+
 test_that("OutputTrafoLog works with SurrogateLearner", {
   skip_if_missing_regr_km()
   instance = MAKE_INST_1D()
@@ -171,4 +187,24 @@ test_that("OutputTrafoLog works with OptimizerMbo and bayesopt_smsego", {
   optimizer$optimize(instance)
   expect_true(nrow(instance$archive$data) == 5L)
   expect_data_table(instance$result, min.rows = 1L)
+})
+
+test_that("OutputTrafoLog inverse_transform_posterior works with mean-only predictions", {
+  ot = OutputTrafoLog$new()
+  ot$cols_y = "y"
+  ydt = data.table(y = c(1, 2, 3))
+
+  ot$max_to_min = c(y = 1L)
+  ot$update(ydt)
+  pred = data.table(mean = ot$transform(ydt)$y)
+  inverted = ot$inverse_transform_posterior(pred)
+  expect_data_table(inverted, nrows = 3L)
+  expect_equal(inverted$mean, ydt$y)
+  expect_false("se" %in% names(inverted))
+
+  ot$max_to_min = c(y = -1L)
+  ot$update(ydt)
+  pred = data.table(mean = ot$transform(ydt)$y)
+  inverted = ot$inverse_transform_posterior(pred)
+  expect_equal(inverted$mean, ydt$y)
 })

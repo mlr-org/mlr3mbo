@@ -11,6 +11,8 @@ for at most \code{100 * D^2} function evaluations, where \code{D} is the dimensi
 The run stops when the relative tolerance of the parameters is less than \code{10^-4}.
 With \code{restart_strategy = "random"}, the optimizer additionally restarts from random points until the evaluation
 budget is exhausted, which can help escape local optima.
+
+Only fully numeric search spaces (all parameters of type \code{p_dbl}) are supported.
 }
 \note{
 If the restart strategy is \code{"none"}, the optimizer runs a single time starting from the best point in the archive.
@@ -31,6 +33,11 @@ Default is \code{"none"}.
 \item{\code{max_restarts}}{\code{integer(1)}\cr
 Maximum number of restarts.
 Default is \code{5 * D}, where \code{D} is the dimension of the search space.}
+\item{\code{skip_already_evaluated}}{\code{logical(1)}\cr
+Should the proposed candidate be rejected if it was already evaluated on the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}?
+If \code{TRUE} and the candidate was already evaluated, an error is raised so that the \code{loop_function} can
+propose a randomly sampled point instead.
+Default is \code{TRUE}.}
 }
 }
 
@@ -98,6 +105,7 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
   \itemize{
     \item \href{#method-AcqOptimizerLbfgsb-initialize}{\code{AcqOptimizerLbfgsb$new()}}
     \item \href{#method-AcqOptimizerLbfgsb-optimize}{\code{AcqOptimizerLbfgsb$optimize()}}
+    \item \href{#method-AcqOptimizerLbfgsb-reset}{\code{AcqOptimizerLbfgsb$reset()}}
     \item \href{#method-AcqOptimizerLbfgsb-clone}{\code{AcqOptimizerLbfgsb$clone()}}
   }
 }
@@ -105,7 +113,6 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
 <ul>
   <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>AcqOptimizer$format()</code></a></span></li>
   <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>AcqOptimizer$print()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>AcqOptimizer$reset()</code></a></span></li>
 </ul>
 </details>}}
 \if{html}{\out{<hr>}}
@@ -139,6 +146,20 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
   }
   \subsection{Returns}{
     \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
+  }
+}
+
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqOptimizerLbfgsb-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizerLbfgsb-reset}{}}}
+\subsection{\code{AcqOptimizerLbfgsb$reset()}}{
+  Reset the acquisition function optimizer.
+
+Clears the \code{state} of the previous optimization run.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizerLbfgsb$reset()}
+    \if{html}{\out{</div>}}
   }
 }
 

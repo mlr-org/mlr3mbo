@@ -132,9 +132,12 @@ OutputTrafoStandardize = R6Class(
       }
       for (col_y in self$cols_y) {
         mean = pred[[col_y]]$mean * self$state[[col_y]]$sigma + self$state[[col_y]]$mu
-        se = pred[[col_y]]$se * self$state[[col_y]]$sigma
         set(pred[[col_y]], j = "mean", value = mean)
-        set(pred[[col_y]], j = "se", value = se)
+        # mean-only predictions of a response-only learner have no se column to invert
+        if ("se" %in% colnames(pred[[col_y]])) {
+          se = pred[[col_y]]$se * self$state[[col_y]]$sigma
+          set(pred[[col_y]], j = "se", value = se)
+        }
       }
       if (length(self$cols_y) == 1L) {
         pred[[self$cols_y]]

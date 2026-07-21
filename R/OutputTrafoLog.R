@@ -70,10 +70,15 @@ OutputTrafoLog = R6Class(
     update = function(ydt) {
       epsilon = 1e-3
       state = map(self$cols_y, function(col_y) {
-        range_y = diff(range(ydt[[col_y]]))
+        min_y = min(ydt[[col_y]])
+        max_y = max(ydt[[col_y]])
+        range_y = max_y - min_y
         # if all values are identical, a relative epsilon would result in min == max and transform() would yield NaN
         epsilon_extended = if (range_y == 0) epsilon * max(1, abs(ydt[[col_y]][1L])) else epsilon * range_y
-        list(min = min(ydt[[col_y]]) - epsilon_extended, max = max(ydt[[col_y]]) + epsilon_extended, epsilon = epsilon)
+        # floor the padding at the local ULP scale so that it does not vanish in double precision
+        # when the range is tiny relative to the magnitude of the outcomes
+        epsilon_extended = max(epsilon_extended, 4 * .Machine$double.eps * max(abs(min_y), abs(max_y), 1))
+        list(min = min_y - epsilon_extended, max = max_y + epsilon_extended, epsilon = epsilon)
       })
       state = setNames(state, nm = self$cols_y)
       private$.state = state
@@ -144,23 +149,28 @@ OutputTrafoLog = R6Class(
         }
       }
       for (col_y in self$cols_y) {
+        # mean-only predictions of a response-only learner are inverted with a variance of zero
+        has_se = "se" %in% colnames(pred[[col_y]])
+        variance = if (has_se) pred[[col_y]]$se^2 else 0
         if (self$max_to_min[[col_y]] == 1L) {
           mean = (self$state[[col_y]]$max - self$state[[col_y]]$min) *
-            exp(pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) +
+            exp(pred[[col_y]]$mean + (variance / 2)) +
             self$state[[col_y]]$min
           se = (self$state[[col_y]]$max - self$state[[col_y]]$min) *
-            exp(pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) *
-            sqrt(expm1(pred[[col_y]]$se^2))
+            exp(pred[[col_y]]$mean + (variance / 2)) *
+            sqrt(expm1(variance))
         } else {
           mean = -(self$state[[col_y]]$max - self$state[[col_y]]$min) *
-            exp(-pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) +
+            exp(-pred[[col_y]]$mean + (variance / 2)) +
             self$state[[col_y]]$max
           se = (self$state[[col_y]]$max - self$state[[col_y]]$min) *
-            exp(-pred[[col_y]]$mean + ((pred[[col_y]]$se^2) / 2)) *
-            sqrt(expm1(pred[[col_y]]$se^2))
+            exp(-pred[[col_y]]$mean + (variance / 2)) *
+            sqrt(expm1(variance))
         }
         set(pred[[col_y]], j = "mean", value = mean)
-        set(pred[[col_y]], j = "se", value = se)
+        if (has_se) {
+          set(pred[[col_y]], j = "se", value = se)
+        }
       }
       if (length(self$cols_y) == 1L) {
         pred[[self$cols_y]]

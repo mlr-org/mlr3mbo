@@ -196,10 +196,13 @@ adjust_gh_data = function(gh_data, mu, sigma, r) {
   weights = apply(matrix(gh_data[idx, 2L], nrow = nrow(idx), ncol = n_obj), MARGIN = 1L, FUN = prod)
 
   # pruning with pruning rate r
+  # use >= so that ties at the quantile are kept; otherwise all nodes can be pruned
+  # (e.g. for k = 2 all product weights are equal, which previously made EHVIGH identically 0)
   if (r > 0) {
     weights_quantile = quantile(weights, probs = r)
-    nodes = nodes[weights > weights_quantile, ]
-    weights = weights[weights > weights_quantile]
+    keep = weights >= weights_quantile
+    nodes = nodes[keep, , drop = FALSE]
+    weights = weights[keep]
   }
 
   # rotate, scale, translate nodes with error catching

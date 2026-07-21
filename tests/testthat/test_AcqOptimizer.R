@@ -134,7 +134,12 @@ test_that("AcqOptimizer trafo", {
   acqfun$surrogate$update()
   acqfun$update()
   res = acqopt$optimize()
-  expect_equal(res$x, res$x_domain[[1L]][[1L]])
+  # the acq optimizer works in the untransformed surrogate space and does not carry an x_domain;
+  # instance$eval_batch() computes the trafo'd x_domain for the real archive
+  expect_names(names(res), disjunct.from = "x_domain")
+  instance$eval_batch(res)
+  last = tail(instance$archive$data, 1L)
+  expect_equal(last$x_domain[[1L]]$x, last$x - 15)
 })
 
 test_that("AcqOptimizer deep clone", {
@@ -171,6 +176,37 @@ test_that("AcqOptimizer callbacks", {
   acqfun$update()
   res = acqopt$optimize()
   expect_number(attr(instance, "acq_opt_runtime"))
+})
+
+test_that("AcqOptimizer warmstart respects warmstart_size for multi-crit archives", {
+  skip_if_not_installed("emoa")
+
+  instance = MAKE_INST(objective = OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 20L))
+  instance$eval_batch(data.table(x = seq(-1, 1, length.out = 8L)))
+  surrogate = srlrn(list(lrn("regr.featureless"), lrn("regr.featureless")), archive = instance$archive)
+  acqfun = acqf("smsego", surrogate = surrogate)
+  acqfun$surrogate$update()
+  acqfun$progress = 1
+  acqfun$update()
+
+  # the non-dominated front has more than one point, so best() would ignore warmstart_size
+  expect_gt(nrow(instance$archive$best()), 1L)
+
+  callback = callback_batch("mlr3mbo.warmstart_count",
+    on_optimization_begin = function(callback, context) {
+      attr(callback$state$outer, "n_warmstart") = context$instance$archive$n_evals
+    }
+  )
+  acqopt = AcqOptimizer$new(
+    opt("random_search", batch_size = 20L),
+    trm("evals", n_evals = 20L),
+    acq_function = acqfun,
+    callbacks = callback
+  )
+  callback$state$outer = acqopt
+  acqopt$param_set$set_values(warmstart = TRUE, warmstart_size = 1L)
+  acqopt$optimize()
+  expect_equal(attr(acqopt, "n_warmstart"), 1L)
 })
 
 test_that("AcqOptimizer deep cloning works", {

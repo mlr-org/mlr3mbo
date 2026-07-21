@@ -4,31 +4,25 @@
 #'
 #' @description
 #' Direct acquisition function optimizer.
-#' Calls `nloptr()` from \CRANpkg{nloptr}.
-#' In its default setting, the algorithm restarts `5 * D` times and runs at most for `100 * D^2` function evaluations,
+#' Calls `nloptr()` from \CRANpkg{nloptr} with the `NLOPT_GN_DIRECT_L` algorithm.
+#' In its default setting, the algorithm runs for at most `100 * D^2` function evaluations,
 #' where `D` is the dimension of the search space.
-#' Each run stops when the relative tolerance of the parameters is less than `10^-4`.
-#' The first iteration starts with the best point in the archive and the next iterations start from a random point.
+#' The optimization stops when the relative tolerance of the parameters is less than `10^-4`.
+#'
+#' Only fully numeric search spaces (all parameters of type `p_dbl`) are supported.
+#'
+#' @note
+#' `NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the starting point.
+#' Restarts would only repeat the identical search, so the optimizer does not support them.
 #'
 #' @section Parameters:
 #' \describe{
-#' \item{`restart_strategy`}{`character(1)`\cr
-#'   Restart strategy.
-#'   Can be `"none"` or `"random"`.
-#'   Default is `"none"`.
+#' \item{`skip_already_evaluated`}{`logical(1)`\cr
+#'   Should the proposed candidate be rejected if it was already evaluated on the actual [bbotk::OptimInstance]?
+#'   If `TRUE` and the candidate was already evaluated, an error is raised so that the `loop_function` can
+#'   propose a randomly sampled point instead.
+#'   Default is `TRUE`.}
 #' }
-#' \item{`max_restarts`}{`integer(1)`\cr
-#'   Maximum number of restarts.
-#'   Default is `5 * D`, where `D` is the dimension of the search space.}
-#' }
-#'
-#' @note
-#' If the restart strategy is `"none"`, the optimizer starts with the best point in the archive.
-#' The optimization stops when one of the stopping criteria is met.
-#'
-#' If `restart_strategy` is `"random"`, the optimizer runs at most for `maxeval` iterations in total.
-#' The first iteration starts with the best point in the archive and stops when one of the stopping criteria is met.
-#' The next iterations start from a random point.
 #'
 #' @section Termination Parameters:
 #' The following termination parameters can be used.
@@ -65,8 +59,8 @@ AcqOptimizerDirect = R6Class(
   "AcqOptimizerDirect",
   inherit = AcqOptimizer,
   public = list(
-    #' @field state (`list()`)\cr
-    #' List of [nloptr::nloptr()] results.
+    #' @field state ([nloptr::nloptr()] result)\cr
+    #' Result of the last optimization run.
     state = NULL,
 
     #' @description
@@ -76,15 +70,13 @@ AcqOptimizerDirect = R6Class(
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        maxeval = p_int(lower = 1, special_vals = list(-1)),
+        maxeval = p_int(lower = 1, special_vals = list(-1L, -1)),
         stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
         xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1)),
         xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        minf_max = p_dbl(default = -Inf),
-        restart_strategy = p_fct(levels = c("none", "random"), init = "random"),
-        max_restarts = p_int(lower = 0L),
+        skip_already_evaluated = p_lgl(init = TRUE),
         catch_errors = p_lgl(init = TRUE)
       )
       private$.param_set = param_set
@@ -95,21 +87,17 @@ AcqOptimizerDirect = R6Class(
     #'
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
+      if (!all(self$acq_function$domain$class == "ParamDbl")) {
+        stopf("`AcqOptimizerDirect` only supports fully numeric (`p_dbl`) search spaces.")
+      }
+      self$state = NULL
       pv = self$param_set$values
-      restart_strategy = pv$restart_strategy
-      max_restarts = pv$max_restarts
       maxeval = pv$maxeval
       catch_errors = pv$catch_errors
-      pv$max_restarts = NULL
-      pv$restart_strategy = NULL
+      skip_already_evaluated = pv$skip_already_evaluated
       pv$maxeval = NULL
       pv$catch_errors = NULL
-
-      if (restart_strategy == "none") {
-        max_restarts = 0L
-      } else if (restart_strategy == "random" && is.null(max_restarts)) {
-        max_restarts = 5 * self$acq_function$domain$length
-      }
+      pv$skip_already_evaluated = NULL
 
       if (is.null(maxeval)) {
         maxeval = 100 * self$acq_function$domain$length^2
@@ -125,62 +113,50 @@ AcqOptimizerDirect = R6Class(
       constants = self$acq_function$constants$values
       direction = self$acq_function$codomain$direction
 
-      y = Inf
-      n_evals = 0L
-      n_restarts = 0L
-      while ((n_evals < maxeval || maxeval < 0) && n_restarts <= max_restarts) {
-        n_restarts = n_restarts + 1L
+      # NLOPT_GN_DIRECT_L ignores the starting point; nloptr only requires x0 to infer the dimension
+      x0 = (self$acq_function$domain$lower + self$acq_function$domain$upper) / 2
 
-        x0 = if (n_restarts == 1L) {
-          as.numeric(self$acq_function$archive$best()[, self$acq_function$domain$ids(), with = FALSE])
-        } else {
-          # random restart
-          as.numeric(generate_design_random(self$acq_function$domain, n = 1)$data)
-        }
-
-        optimize = function() {
-          invoke(
-            nloptr::nloptr,
-            eval_f = wrapper,
-            lb = self$acq_function$domain$lower,
-            ub = self$acq_function$domain$upper,
-            opts = insert_named(pv, list(algorithm = "NLOPT_GN_DIRECT_L", maxeval = maxeval - n_evals)),
-            eval_grad_f = NULL,
-            x0 = x0,
-            fun = fun,
-            constants = constants,
-            direction = direction
-          )
-        }
-
-        if (catch_errors) {
-          tryCatch(
-            {
-              res = optimize()
-            },
-            error = function(error_condition) {
-              error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
-            }
-          )
-        } else {
-          res = optimize()
-        }
-
-        if (res$objective < y) {
-          y = res$objective
-          x = res$solution
-        }
-
-        n_evals = n_evals + res$iterations
-
-        self$state = c(self$state, set_names(list(list(model = res, start = x0)), paste0("iteration_", n_restarts)))
-
-        if (restart_strategy == "none") break
+      optimize = function() {
+        invoke(
+          nloptr::nloptr,
+          eval_f = wrapper,
+          lb = self$acq_function$domain$lower,
+          ub = self$acq_function$domain$upper,
+          opts = insert_named(pv, list(algorithm = "NLOPT_GN_DIRECT_L", maxeval = maxeval)),
+          eval_grad_f = NULL,
+          x0 = x0,
+          fun = fun,
+          constants = constants,
+          direction = direction
+        )
       }
-      as.data.table(as.list(set_names(
-        c(x, y * direction),
+
+      res = if (catch_errors) {
+        tryCatch(optimize(), error = function(error_condition) {
+          error_acq_optimizer("Acquisition function optimization failed.", parent = error_condition)
+        })
+      } else {
+        optimize()
+      }
+
+      self$state = res
+
+      xdt = as.data.table(as.list(set_names(
+        c(res$solution, res$objective * direction),
         c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
       )))
+      if (skip_already_evaluated) {
+        assert_not_already_evaluated(xdt, self$acq_function$archive)
+      }
+      xdt
+    },
+
+    #' @description
+    #' Reset the acquisition function optimizer.
+    #'
+    #' Clears the `state` of the previous optimization run.
+    reset = function() {
+      self$state = NULL
     }
   ),
 
