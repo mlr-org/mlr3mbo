@@ -119,3 +119,14 @@ test_that("feature types", {
   surrogate = SurrogateLearnerCollection$new(learners = list(REGR_KM_DETERM, REGR_FEATURELESS))
   expect_equal(surrogate$feature_types, Reduce(intersect, map(surrogate$learner, "feature_types")))
 })
+
+test_that("SurrogateLearnerCollection fields are validated on assignment", {
+  surrogate = SurrogateLearnerCollection$new(
+    learners = list(REGR_FEATURELESS$clone(deep = TRUE), REGR_FEATURELESS$clone(deep = TRUE))
+  )
+  expect_error({surrogate$learner = "garbage"}, "list")
+  learner = REGR_FEATURELESS$clone(deep = TRUE)
+  expect_error({surrogate$learner = list(learner, learner)}, "unique in memory")
+  expect_error({surrogate$input_trafo = "garbage"}, "R6")
+  expect_error({surrogate$output_trafo = "garbage"}, "R6")
+})

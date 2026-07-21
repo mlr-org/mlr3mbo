@@ -209,3 +209,19 @@ test_that("bayesopt_ego random interleave", {
   expect_true(inherits(cond, "Mlr3ErrorMbo"))
   expect_true(inherits(cond, "Mlr3Error"))
 })
+
+test_that("bayesopt_ego random interleave works with a pre-filled archive", {
+  instance = MAKE_INST_1D(terminator = trm("evals", n_evals = 8L))
+  instance$eval_batch(MAKE_DESIGN(instance, n = 4L))
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+  bayesopt_ego(
+    instance,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer,
+    random_interleave_iter = 2L
+  )
+  expect_identical(is.na(instance$archive$data$acq_ei), c(rep(TRUE, 4L), FALSE, TRUE, FALSE, TRUE))
+})

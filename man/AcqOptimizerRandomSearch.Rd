@@ -14,6 +14,11 @@ The point with the highest acquisition value is returned.
 \item{\code{n_evals}}{\code{integer(1)}\cr
 Number of random points to sample.
 Default is \code{100 * D^2}, where \code{D} is the dimension of the search space.}
+\item{\code{skip_already_evaluated}}{\code{logical(1)}\cr
+Should the proposed candidate be rejected if it was already evaluated on the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}?
+If \code{TRUE} and the candidate was already evaluated, an error is raised so that the \code{loop_function} can
+propose a randomly sampled point instead.
+Default is \code{TRUE}.}
 }
 }
 
