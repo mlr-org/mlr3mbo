@@ -126,6 +126,9 @@ bayesopt_mpcl = function(
     design = generate_design_sobol(search_space, n = init_design_size)$data
     instance$eval_batch(design)
   }
+  # a user-supplied initial design already in the archive leaves init_design_size NULL,
+  # which would otherwise silently disable random interleaving
+  init_design_size = init_design_size %??% instance$archive$n_evals
 
   # completing initialization
   surrogate$archive = instance$archive
@@ -139,12 +142,22 @@ bayesopt_mpcl = function(
     # normal ego proposal with error catching
     xdt = tryCatch(
       {
+        # random interleaving is handled here; the counter must advance per proposal, not per batch
+        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+          error_random_interleave("Random interleaving")
+        }
+
         acq_function$surrogate$update()
         acq_function$update()
         acq_optimizer$optimize()
       },
+      Mlr3ErrorMboRandomInterleave = function(cond) {
+        lg$info("Random interleaving triggered, proposing a randomly sampled point")
+        generate_design_random(search_space, n = 1L)$data
+      },
       Mlr3ErrorMbo = function(cond) {
-        #lg$info("Proposing a randomly sampled point") no logging because we do not evaluate this point
+        lg$warn("Caught the following error: %s", cond$message)
+        lg$info("Proposing a randomly sampled point")
         generate_design_random(search_space, n = 1L)$data
       }
     )
@@ -168,8 +181,8 @@ bayesopt_mpcl = function(
             ydt = lie
           )
 
-          # random interleaving is handled here
-          if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+          # random interleaving is handled here; the counter must advance per proposal, not per batch
+          if (isTRUE((instance$archive$n_evals - init_design_size + i) %% random_interleave_iter == 0)) {
             error_random_interleave("Random interleaving")
           }
 
@@ -188,7 +201,8 @@ bayesopt_mpcl = function(
           generate_design_random(search_space, n = 1L)$data
         }
       )
-      xdt = rbind(xdt, xdt_new)
+      # fill because randomly sampled fallback points lack the acquisition function columns
+      xdt = rbind(xdt, xdt_new, fill = TRUE)
     }
 
     acq_function$surrogate$archive = instance$archive

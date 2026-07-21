@@ -9,7 +9,9 @@ default_rf(noisy = FALSE)
 \arguments{
 \item{noisy}{(\code{logical(1)})\cr
 Whether the learner will be used in a noisy objective function scenario.
-See \code{\link[=default_surrogate]{default_surrogate()}}.}
+See \code{\link[=default_surrogate]{default_surrogate()}}.
+Currently, the constructed random forest is identical in the noisy and deterministic case,
+and the argument only exists for consistency with \code{\link[=default_gp]{default_gp()}}.}
 }
 \value{
 \link[mlr3learners:LearnerRegrRanger]{mlr3learners::LearnerRegrRanger}

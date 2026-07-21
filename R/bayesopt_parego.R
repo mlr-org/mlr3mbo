@@ -129,6 +129,9 @@ bayesopt_parego = function(
     design = generate_design_sobol(search_space, n = init_design_size)$data
     instance$eval_batch(design)
   }
+  # a user-supplied initial design already in the archive leaves init_design_size NULL,
+  # which would otherwise silently disable random interleaving
+  init_design_size = init_design_size %??% instance$archive$n_evals
 
   # completing initialization
   surrogate$archive = instance$archive
@@ -144,12 +147,20 @@ bayesopt_parego = function(
   repeat {
     data = instance$archive$data
     ydt = data[, instance$archive$cols_y, with = FALSE]
-    ydt = Map("*", ydt, mult_max_to_min(instance$archive$codomain)) # we always assume minimization
-    ydt = Map(function(y) (y - min(y, na.rm = TRUE)) / diff(range(y, na.rm = TRUE)), ydt) # scale y to [0, 1]
+    # the codomain can hold non-target columns, so the multiplier must be subset to the target columns
+    ydt = Map("*", ydt, mult_max_to_min(instance$archive$codomain)[instance$archive$cols_y]) # we always assume minimization
+    # scale y to [0, 1]; a constant objective would yield division by zero and is mapped to a constant instead
+    ydt = Map(
+      function(y) {
+        range_y = diff(range(y, na.rm = TRUE))
+        if (range_y == 0) rep(0.5, length(y)) else (y - min(y, na.rm = TRUE)) / range_y
+      },
+      ydt
+    )
 
     xdt = map_dtr(
       qs,
-      function(q) {
+      function(i) {
         # scalarize y
         lambda = lambdas[sample.int(nrow(lambdas), 1L), , drop = TRUE]
         mult = Map("*", ydt, lambda)
@@ -159,8 +170,8 @@ bayesopt_parego = function(
 
         tryCatch(
           {
-            # random interleaving is handled here
-            if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+            # random interleaving is handled here; the counter must advance per proposal, not per batch
+            if (isTRUE((instance$archive$n_evals - init_design_size + i) %% random_interleave_iter == 0)) {
               error_random_interleave("Random interleaving")
             }
             acq_function$surrogate$update()

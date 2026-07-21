@@ -48,7 +48,7 @@ test_that("conditions work", {
 
   surrogate = SurrogateLearner$new(learner)
   acq_function = AcqFunctionEI$new()
-  acq_optimizer = acqo("random_search", terminator = trm("evals", n_evals = 2L))
+  acq_optimizer = acqo("random_search")
   expect_snapshot(bayesopt_ego(
     instance,
     surrogate = surrogate,
@@ -72,7 +72,7 @@ test_that("conditions work", {
 
   surrogate = SurrogateLearner$new(learner)
   acq_function = AcqFunctionEI$new()
-  acq_optimizer = acqo("random_search", terminator = trm("evals", n_evals = 2L))
+  acq_optimizer = acqo("random_search")
   expect_snapshot(bayesopt_ego(
     instance,
     surrogate = surrogate,

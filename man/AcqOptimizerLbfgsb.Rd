@@ -10,6 +10,8 @@ In its default setting, the algorithm restarts \code{5 * D} times and runs at mo
 where \code{D} is the dimension of the search space.
 Each run stops when the relative tolerance of the parameters is less than \code{10^-4}.
 The first iteration starts with the best point in the archive and the next iterations start from a random point.
+
+Only fully numeric search spaces (all parameters of type \code{p_dbl}) are supported.
 }
 \note{
 If the restart strategy is \code{"none"}, the optimizer starts with the best point in the archive.
@@ -30,6 +32,11 @@ Default is \code{"none"}.
 \item{\code{max_restarts}}{\code{integer(1)}\cr
 Maximum number of restarts.
 Default is \code{5 * D} (Default).}
+\item{\code{skip_already_evaluated}}{\code{logical(1)}\cr
+Should the proposed candidate be rejected if it was already evaluated on the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}?
+If \code{TRUE} and the candidate was already evaluated, an error is raised so that the \code{loop_function} can
+propose a randomly sampled point instead.
+Default is \code{TRUE}.}
 }
 }
 
