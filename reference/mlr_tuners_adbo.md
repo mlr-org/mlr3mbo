@@ -16,6 +16,22 @@ subject to changes.
 
 ## Parameters
 
+- `lambda`:
+
+  `numeric(1)`  
+  Value used for sampling the lambda for each worker from an exponential
+  distribution.
+
+- `rate`:
+
+  `numeric(1)`  
+  Rate of the exponential decay.
+
+- `period`:
+
+  `integer(1)`  
+  Period of the exponential decay.
+
 - `initial_design`:
 
   [`data.table::data.table()`](https://rdrr.io/pkg/data.table/man/data.table.html)  
@@ -121,7 +137,7 @@ subject to changes.
 
 ### Public methods
 
-- [`TunerADBO$new()`](#method-TunerADBO-new)
+- [`TunerADBO$new()`](#method-TunerADBO-initialize)
 
 - [`TunerADBO$print()`](#method-TunerADBO-print)
 
@@ -137,7 +153,7 @@ Inherited methods
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `TunerADBO$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -148,7 +164,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `TunerADBO$print()`
 
 Print method.
 
@@ -162,7 +178,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `TunerADBO$reset()`
 
 Reset the tuner. Sets the following fields to `NULL`: `surrogate`,
 `acq_function`, `acq_optimizer`, `result_assigner` Resets parameter
@@ -174,7 +190,7 @@ values `design_size` and `design_function` to their defaults.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `TunerADBO$clone()`
 
 The objects of this class are cloneable with this method.
 

@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Surrogate Model Containing Multiple Learners — SurrogateLearnerCollection"><meta name="description" content="Surrogate model containing multiple mlr3::LearnerRegr.
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Surrogate Model Containing Multiple Learners — SurrogateLearnerCollection"><meta name="description" content="Surrogate model containing multiple mlr3::LearnerRegr.
 The mlr3::LearnerRegr are fit on the target variables as indicated via cols_y.
 Note that redundant mlr3::LearnerRegr must be deep clones."><meta property="og:description" content="Surrogate model containing multiple mlr3::LearnerRegr.
 The mlr3::LearnerRegr are fit on the target variables as indicated via cols_y.
@@ -17,7 +17,7 @@ Note that redundant mlr3::LearnerRegr must be deep clones."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,63 +83,60 @@ Default is <code>"random"</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="super-class">Super class<a class="anchor" aria-label="anchor" href="#super-class"></a></h2>
-    <p><code><a href="Surrogate.html">mlr3mbo::Surrogate</a></code> -&gt; <code>SurrogateLearnerCollection</code></p>
-    </div>
-    <div class="section level2">
-    <h2 id="public-fields">Public fields<a class="anchor" aria-label="anchor" href="#public-fields"></a></h2>
-    <p></p><div class="r6-fields"><dl><dt><code>learner</code></dt>
-<dd><p>(list of <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a>)<br>
-List of <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a> wrapped as surrogate models.</p></dd>
-
-
-<dt><code>input_trafo</code></dt>
-<dd><p>(<a href="InputTrafo.html">InputTrafo</a>)<br>
-Input transformation.</p></dd>
-
-
-<dt><code>output_trafo</code></dt>
-<dd><p>(<a href="OutputTrafo.html">OutputTrafo</a>)<br>
-Output transformation.</p></dd>
-
-
-</dl><p></p></div>
+    <p><code><a href="Surrogate.html">Surrogate</a></code> -&gt; <code>SurrogateLearnerCollection</code></p>
     </div>
     <div class="section level2">
     <h2 id="active-bindings">Active bindings<a class="anchor" aria-label="anchor" href="#active-bindings"></a></h2>
-    <p></p><div class="r6-active-bindings"><dl><dt><code>print_id</code></dt>
+    <p></p><div class="r6-active-bindings"><dl><dt><code>learner</code></dt>
+<dd><p>(list of <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a>)<br>
+List of <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a> wrapped as surrogate models.
+The learners must be unique in memory, i.e., deep clones.</p></dd>
+
+
+    <dt><code>input_trafo</code></dt>
+<dd><p>(<a href="InputTrafo.html">InputTrafo</a> | <code>NULL</code>)<br>
+Input transformation.</p></dd>
+
+
+    <dt><code>output_trafo</code></dt>
+<dd><p>(<a href="OutputTrafo.html">OutputTrafo</a> | <code>NULL</code>)<br>
+Output transformation.</p></dd>
+
+
+    <dt><code>print_id</code></dt>
 <dd><p>(<code>character</code>)<br>
 Id used when printing.</p></dd>
 
 
-<dt><code>n_learner</code></dt>
+    <dt><code>n_learner</code></dt>
 <dd><p>(<code>integer(1)</code>)<br>
 Returns the number of surrogate models.</p></dd>
 
 
-<dt><code>packages</code></dt>
+    <dt><code>packages</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Set of required packages.
 A warning is signaled if at least one of the packages is not installed, but loaded (not attached) later on-demand via <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>.</p></dd>
 
 
-<dt><code>feature_types</code></dt>
+    <dt><code>feature_types</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Stores the feature types the surrogate can handle, e.g. <code>"logical"</code>, <code>"numeric"</code>, or <code>"factor"</code>.
 A complete list of candidate feature types, grouped by task type, is stored in <code><a href="https://mlr3.mlr-org.com/reference/mlr_reflections.html" class="external-link">mlr_reflections$task_feature_types</a></code>.</p></dd>
 
 
-<dt><code>properties</code></dt>
+    <dt><code>properties</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Stores a set of properties/capabilities the surrogate has.
 A complete list of candidate properties, grouped by task type, is stored in <code><a href="https://mlr3.mlr-org.com/reference/mlr_reflections.html" class="external-link">mlr_reflections$learner_properties</a></code>.</p></dd>
 
 
-<dt><code>predict_type</code></dt>
+    <dt><code>predict_type</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 Retrieves the currently active predict type, e.g. <code>"response"</code>.</p></dd>
 
 
-<dt><code>output_trafo_must_be_considered</code></dt>
+    <dt><code>output_trafo_must_be_considered</code></dt>
 <dd><p>(<code>logical(1)</code>)<br>
 Whether a transformation has been applied to the target variable that has not been inverted during prediction.</p></dd>
 
@@ -151,16 +148,15 @@ Whether a transformation has been applied to the target variable that has not be
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-SurrogateLearnerCollection-new"><code>SurrogateLearnerCollection$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-SurrogateLearnerCollection-initialize"><code>SurrogateLearnerCollection$new()</code></a></p></li>
 <li><p><a href="#method-SurrogateLearnerCollection-predict"><code>SurrogateLearnerCollection$predict()</code></a></p></li>
 <li><p><a href="#method-SurrogateLearnerCollection-clone"><code>SurrogateLearnerCollection$clone()</code></a></p></li>
-</ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="format"><a href="Surrogate.html#method-format"><code>mlr3mbo::Surrogate$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="print"><a href="Surrogate.html#method-print"><code>mlr3mbo::Surrogate$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="reset"><a href="Surrogate.html#method-reset"><code>mlr3mbo::Surrogate$reset()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href="Surrogate.html#method-update"><code>mlr3mbo::Surrogate$update()</code></a></span></li>
-</ul></details></p><hr><a id="method-SurrogateLearnerCollection-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+</ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="format"><a href="Surrogate.html#method-format"><code>Surrogate$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="print"><a href="Surrogate.html#method-print"><code>Surrogate$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="reset"><a href="Surrogate.html#method-reset"><code>Surrogate$reset()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="Surrogate" data-id="update"><a href="Surrogate.html#method-update"><code>Surrogate$update()</code></a></span></li>
+</ul></details></p><hr><a id="method-SurrogateLearnerCollection-initialize"></a><div class="section">
+<h3 id="surrogatelearnercollection-new-"><code>SurrogateLearnerCollection$new()</code><a class="anchor" aria-label="anchor" href="#surrogatelearnercollection-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/SurrogateLearnerCollection.html">SurrogateLearnerCollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
@@ -171,35 +167,28 @@ Whether a transformation has been applied to the target variable that has not be
 <span>  cols_x <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cols_y <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>learners</code></dt>
 <dd><p>(list of <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a>).</p></dd>
 
-
-<dt><code>input_trafo</code></dt>
+      <dt><code>input_trafo</code></dt>
 <dd><p>(<a href="InputTrafo.html">InputTrafo</a> | <code>NULL</code>).
 <a href="InputTrafo.html">InputTrafo</a> to be applied.</p></dd>
 
-
-<dt><code>output_trafo</code></dt>
+      <dt><code>output_trafo</code></dt>
 <dd><p>(<a href="OutputTrafo.html">OutputTrafo</a> | <code>NULL</code>).
 <a href="OutputTrafo.html">OutputTrafo</a> to be applied.</p></dd>
 
-
-<dt><code>archive</code></dt>
+      <dt><code>archive</code></dt>
 <dd><p>(<a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> | <code>NULL</code>)<br><a href="https://bbotk.mlr-org.com/reference/Archive.html" class="external-link">bbotk::Archive</a> of the <a href="https://bbotk.mlr-org.com/reference/OptimInstance.html" class="external-link">bbotk::OptimInstance</a>.</p></dd>
 
-
-<dt><code>cols_x</code></dt>
+      <dt><code>cols_x</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code> | <code>NULL</code>)<br>
 Column id's of variables that should be used as features.
 By default, automatically inferred based on the archive.</p></dd>
 
-
-<dt><code>cols_y</code></dt>
+      <dt><code>cols_y</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code> | <code>NULL</code>)<br>
 Column id's of variables that should be used as targets.
 By default, automatically inferred based on the archive.</p></dd>
@@ -208,16 +197,16 @@ By default, automatically inferred based on the archive.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-SurrogateLearnerCollection-predict"></a><div class="section">
-<h3 id="method-predict-">Method <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code><a class="anchor" aria-label="anchor" href="#method-predict-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-SurrogateLearnerCollection-predict"></a><div class="section">
+<h3 id="surrogatelearnercollection-predict-"><code>SurrogateLearnerCollection$predict()</code><a class="anchor" aria-label="anchor" href="#surrogatelearnercollection-predict-"></a></h3>
 <p>Predict mean response and standard error.
 Returns a named list of <code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>.
 Each contains the mean response and standard error for one <code>col_y</code>.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SurrogateLearnerCollection</span><span class="op">$</span><span class="fu">predict</span><span class="op">(</span><span class="va">xdt</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>xdt</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code>)<br>
@@ -225,20 +214,19 @@ New data. One row per observation.</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
 <p>named list of <code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code> with the columns <code>mean</code> and <code>se</code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-SurrogateLearnerCollection-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-SurrogateLearnerCollection-clone"></a><div class="section">
+<h3 id="surrogatelearnercollection-clone-"><code>SurrogateLearnerCollection$clone()</code><a class="anchor" aria-label="anchor" href="#surrogatelearnercollection-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SurrogateLearnerCollection</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
@@ -248,6 +236,7 @@ New data. One row per observation.</p></dd>
 </div>
 
 </div>
+
 
     </div>
 
@@ -2321,7 +2310,7 @@ New data. One row per observation.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

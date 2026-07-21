@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="TunerBatch using Model Based Optimization — mlr_tuners_mbo"><meta name="description" content="TunerMbo class that implements Model Based Optimization (MBO).
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="TunerBatch using Model Based Optimization — mlr_tuners_mbo"><meta name="description" content="TunerMbo class that implements Model Based Optimization (MBO).
 This is a minimal interface internally passing on to OptimizerMbo.
 For additional information and documentation see OptimizerMbo."><meta property="og:description" content="TunerMbo class that implements Model Based Optimization (MBO).
 This is a minimal interface internally passing on to OptimizerMbo.
@@ -17,7 +17,7 @@ For additional information and documentation see OptimizerMbo."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,6 +61,14 @@ For additional information and documentation see <a href="mlr_optimizers_mbo.htm
 
 
     <div class="section level2">
+    <h2 id="defaults">Defaults<a class="anchor" aria-label="anchor" href="#defaults"></a></h2>
+
+
+<p>All components have sensible defaults.
+For more information on the defaults for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>, and
+<code>result_assigner</code>, see <a href="mbo_defaults.html">mbo_defaults</a>.</p>
+    </div>
+    <div class="section level2">
     <h2 id="super-classes">Super classes<a class="anchor" aria-label="anchor" href="#super-classes"></a></h2>
     <p><code><a href="https://mlr3tuning.mlr-org.com/reference/Tuner.html" class="external-link">mlr3tuning::Tuner</a></code> -&gt; <code><a href="https://mlr3tuning.mlr-org.com/reference/TunerBatch.html" class="external-link">mlr3tuning::TunerBatch</a></code> -&gt; <code><a href="https://mlr3tuning.mlr-org.com/reference/TunerBatchFromOptimizerBatch.html" class="external-link">mlr3tuning::TunerBatchFromOptimizerBatch</a></code> -&gt; <code>TunerMbo</code></p>
     </div>
@@ -71,33 +79,33 @@ For additional information and documentation see <a href="mlr_optimizers_mbo.htm
 Loop function determining the MBO flavor.</p></dd>
 
 
-<dt><code>surrogate</code></dt>
+    <dt><code>surrogate</code></dt>
 <dd><p>(<a href="Surrogate.html">Surrogate</a> | <code>NULL</code>)<br>
 The surrogate.</p></dd>
 
 
-<dt><code>acq_function</code></dt>
+    <dt><code>acq_function</code></dt>
 <dd><p>(<a href="AcqFunction.html">AcqFunction</a> | <code>NULL</code>)<br>
 The acquisition function.</p></dd>
 
 
-<dt><code>acq_optimizer</code></dt>
+    <dt><code>acq_optimizer</code></dt>
 <dd><p>(<a href="AcqOptimizer.html">AcqOptimizer</a> | <code>NULL</code>)<br>
 The acquisition function optimizer.</p></dd>
 
 
-<dt><code>args</code></dt>
+    <dt><code>args</code></dt>
 <dd><p>(named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>)<br>
 Further arguments passed to the <code>loop_function</code>.
 For example, <code>random_interleave_iter</code>.</p></dd>
 
 
-<dt><code>result_assigner</code></dt>
+    <dt><code>result_assigner</code></dt>
 <dd><p>(<a href="ResultAssigner.html">ResultAssigner</a> | <code>NULL</code>)<br>
 The result assigner.</p></dd>
 
 
-<dt><code>param_classes</code></dt>
+    <dt><code>param_classes</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Supported parameter classes that the optimizer can optimize.
 Determined based on the <code>surrogate</code> and the <code>acq_optimizer</code>.
@@ -105,7 +113,7 @@ This corresponds to the values given by a <a href="https://paradox.mlr-org.com/r
 <code>$class</code> field.</p></dd>
 
 
-<dt><code>properties</code></dt>
+    <dt><code>properties</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Set of properties of the optimizer.
 Must be a subset of <code><a href="https://bbotk.mlr-org.com/reference/bbotk_reflections.html" class="external-link">bbotk_reflections$optimizer_properties</a></code>.
@@ -113,7 +121,7 @@ MBO in principle is very flexible and by default we assume that the optimizer ha
 When fully initialized, properties are determined based on the loop, e.g., the <code>loop_function</code>, and <code>surrogate</code>.</p></dd>
 
 
-<dt><code>packages</code></dt>
+    <dt><code>packages</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>)<br>
 Set of required packages.
 A warning is signaled prior to optimization if at least one of the packages is not installed, but loaded (not attached) later on-demand via <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>.
@@ -127,19 +135,16 @@ Required packages are determined based on the <code>acq_function</code>, <code>s
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-TunerMbo-new"><code>TunerMbo$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-TunerMbo-initialize"><code>TunerMbo$new()</code></a></p></li>
 <li><p><a href="#method-TunerMbo-print"><code>TunerMbo$print()</code></a></p></li>
 <li><p><a href="#method-TunerMbo-reset"><code>TunerMbo$reset()</code></a></p></li>
 <li><p><a href="#method-TunerMbo-clone"><code>TunerMbo$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="format"><a href="https://mlr3tuning.mlr-org.com/reference/Tuner.html#method-format"><code>mlr3tuning::Tuner$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href="https://mlr3tuning.mlr-org.com/reference/Tuner.html#method-help"><code>mlr3tuning::Tuner$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerBatchFromOptimizerBatch" data-id="optimize"><a href="https://mlr3tuning.mlr-org.com/reference/TunerBatchFromOptimizerBatch.html#method-optimize"><code>mlr3tuning::TunerBatchFromOptimizerBatch$optimize()</code></a></span></li>
-</ul></details></p><hr><a id="method-TunerMbo-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
-<p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.
-For more information on default values for <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>,
-and <code>result_assigner</code>, see <code><a href="mbo_defaults.html">?mbo_defaults</a></code>.</p>
+  <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="Tuner" data-id="help"><a href="https://mlr3tuning.mlr-org.com/reference/Tuner.html#method-help"><code>mlr3tuning::Tuner$help()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3tuning" data-topic="TunerBatchFromOptimizerBatch" data-id="optimize"><a href="https://mlr3tuning.mlr-org.com/reference/TunerBatchFromOptimizerBatch.html#method-optimize"><code>mlr3tuning::TunerBatchFromOptimizerBatch$optimize()</code></a></span></li>
+</ul></details></p><hr><a id="method-TunerMbo-initialize"></a><div class="section">
+<h3 id="tunermbo-new-"><code>TunerMbo$new()</code><a class="anchor" aria-label="anchor" href="#tunermbo-new-"></a></h3>
+<p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p>
 <p>Note that all the parameters below are simply passed to the <a href="mlr_optimizers_mbo.html">OptimizerMbo</a> and
 the respective fields are simply (settable) active bindings to the fields of the <a href="mlr_optimizers_mbo.html">OptimizerMbo</a>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -151,37 +156,30 @@ the respective fields are simply (settable) active bindings to the fields of the
 <span>  args <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  result_assigner <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>loop_function</code></dt>
 <dd><p>(<a href="loop_function.html">loop_function</a> | <code>NULL</code>)<br>
 Loop function determining the MBO flavor.</p></dd>
 
-
-<dt><code>surrogate</code></dt>
+      <dt><code>surrogate</code></dt>
 <dd><p>(<a href="Surrogate.html">Surrogate</a> | <code>NULL</code>)<br>
 The surrogate.</p></dd>
 
-
-<dt><code>acq_function</code></dt>
+      <dt><code>acq_function</code></dt>
 <dd><p>(<a href="AcqFunction.html">AcqFunction</a> | <code>NULL</code>)<br>
 The acquisition function.</p></dd>
 
-
-<dt><code>acq_optimizer</code></dt>
+      <dt><code>acq_optimizer</code></dt>
 <dd><p>(<a href="AcqOptimizer.html">AcqOptimizer</a> | <code>NULL</code>)<br>
 The acquisition function optimizer.</p></dd>
 
-
-<dt><code>args</code></dt>
+      <dt><code>args</code></dt>
 <dd><p>(named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>)<br>
 Further arguments passed to the <code>loop_function</code>.
 For example, <code>random_interleave_iter</code>.</p></dd>
 
-
-<dt><code>result_assigner</code></dt>
+      <dt><code>result_assigner</code></dt>
 <dd><p>(<a href="ResultAssigner.html">ResultAssigner</a> | <code>NULL</code>)<br>
 The result assigner.</p></dd>
 
@@ -189,20 +187,22 @@ The result assigner.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-TunerMbo-print"></a><div class="section">
-<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TunerMbo-print"></a><div class="section">
+<h3 id="tunermbo-print-"><code>TunerMbo$print()</code><a class="anchor" aria-label="anchor" href="#tunermbo-print-"></a></h3>
 <p>Print method.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TunerMbo</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
 <p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>).</p>
 </div>
 
-</div><p></p><hr><a id="method-TunerMbo-reset"></a><div class="section">
-<h3 id="method-reset-">Method <code>reset()</code><a class="anchor" aria-label="anchor" href="#method-reset-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-TunerMbo-reset"></a><div class="section">
+<h3 id="tunermbo-reset-"><code>TunerMbo$reset()</code><a class="anchor" aria-label="anchor" href="#tunermbo-reset-"></a></h3>
 <p>Reset the tuner.
 Sets the following fields to <code>NULL</code>:
 <code>loop_function</code>, <code>surrogate</code>, <code>acq_function</code>, <code>acq_optimizer</code>, <code>args</code>, <code>result_assigner</code></p><div class="section">
@@ -210,15 +210,14 @@ Sets the following fields to <code>NULL</code>:
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TunerMbo</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-TunerMbo-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+<p></p><hr><a id="method-TunerMbo-clone"></a><div class="section">
+<h3 id="tunermbo-clone-"><code>TunerMbo$clone()</code><a class="anchor" aria-label="anchor" href="#tunermbo-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">TunerMbo</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
@@ -228,6 +227,7 @@ Sets the following fields to <code>NULL</code>:
 </div>
 
 </div>
+
 
     </div>
 
@@ -272,12 +272,13 @@ Sets the following fields to <code>NULL</code>:
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://mlr3tuning.mlr-org.com/reference/tnr.html" class="external-link">tnr</a></span><span class="op">(</span><span class="st">"mbo"</span><span class="op">)</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="va">instance</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           cp learner_param_vals  x_domain classif.acc selected_features</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        &lt;num&gt;             &lt;list&gt;    &lt;list&gt;       &lt;num&gt;             &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -6.372912          &lt;list[2]&gt; &lt;list[1]&gt;   0.8817326          2.666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -1.767742          &lt;list[2]&gt; &lt;list[1]&gt;   0.8539548          2.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -8.675497          &lt;list[2]&gt; &lt;list[1]&gt;   0.8817326          2.666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4: -7.479440          &lt;list[2]&gt; &lt;list[1]&gt;   0.8817326          2.666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            cp learner_param_vals  x_domain classif.acc selected_features</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;             &lt;list&gt;    &lt;list&gt;       &lt;num&gt;             &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: -5.0358810          &lt;list[2]&gt; &lt;list[1]&gt;   0.8707156                 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: -0.4307109          &lt;list[2]&gt; &lt;list[1]&gt;   0.3987759                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: -2.7332960          &lt;list[2]&gt; &lt;list[1]&gt;   0.8650659                 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: -7.3384661          &lt;list[2]&gt; &lt;list[1]&gt;   0.8707156                 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: -6.1809026          &lt;list[2]&gt; &lt;list[1]&gt;   0.8707156                 3</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
@@ -290,7 +291,7 @@ Sets the following fields to <code>NULL</code>:
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

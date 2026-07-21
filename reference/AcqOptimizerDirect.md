@@ -1,36 +1,32 @@
 # Direct Acquisition Function Optimizer
 
 Direct acquisition function optimizer. Calls `nloptr()` from
-[nloptr](https://CRAN.R-project.org/package=nloptr). In its default
-setting, the algorithm restarts `5 * D` times and runs at most for
-`100 * D^2` function evaluations, where `D` is the dimension of the
-search space. Each run stops when the relative tolerance of the
-parameters is less than `10^-4`. The first iteration starts with the
-best point in the archive and the next iterations start from a random
-point.
+[nloptr](https://CRAN.R-project.org/package=nloptr) with the
+`NLOPT_GN_DIRECT_L` algorithm. In its default setting, the algorithm
+runs for at most `100 * D^2` function evaluations, where `D` is the
+dimension of the search space. The optimization stops when the relative
+tolerance of the parameters is less than `10^-4`.
+
+Only fully numeric search spaces (all parameters of type `p_dbl`) are
+supported.
 
 ## Note
 
-If the restart strategy is `"none"`, the optimizer starts with the best
-point in the archive. The optimization stops when one of the stopping
-criteria is met.
-
-If `restart_strategy` is `"random"`, the optimizer runs at least for
-`maxeval` iterations. The first iteration starts with the best point in
-the archive and stops when one of the stopping criteria is met. The next
-iterations start from a random point.
+`NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the
+starting point. Restarts would only repeat the identical search, so the
+optimizer does not support them.
 
 ## Parameters
 
-- `restart_strategy`:
+- `skip_already_evaluated`:
 
-  `character(1)`  
-  Restart strategy. Can be `"none"` or `"random"`. Default is `"none"`.
-
-- `max_restarts`:
-
-  `integer(1)`  
-  Maximum number of restarts. Default is `5 * D` (Default).
+  `logical(1)`  
+  Should the proposed candidate be rejected if it was already evaluated
+  on the actual
+  [bbotk::OptimInstance](https://bbotk.mlr-org.com/reference/OptimInstance.html)?
+  If `TRUE` and the candidate was already evaluated, an error is raised
+  so that the `loop_function` can propose a randomly sampled point
+  instead. Default is `TRUE`.
 
 ## Termination Parameters
 
@@ -61,7 +57,7 @@ The following termination parameters can be used.
 - `ftol_rel`:
 
   `numeric(1)`  
-  Relative tolerance of the objective function. Deactivate with `-1`.
+  Relative tolerance of the objective function. Deactivate with `-1`
   (Default).
 
 - `ftol_abs`:
@@ -72,17 +68,16 @@ The following termination parameters can be used.
 
 ## Super class
 
-[`mlr3mbo::AcqOptimizer`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.md)
+[`AcqOptimizer`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.md)
 -\> `AcqOptimizerDirect`
 
 ## Public fields
 
 - `state`:
 
-  ([`list()`](https://rdrr.io/r/base/list.html))  
-  List of
-  [`nloptr::nloptr()`](https://astamm.github.io/nloptr/reference/nloptr.html)
-  results.
+  ([`nloptr::nloptr()`](https://astamm.github.io/nloptr/reference/nloptr.html)
+  result)  
+  Result of the last optimization run.
 
 ## Active bindings
 
@@ -91,25 +86,38 @@ The following termination parameters can be used.
   (`character`)  
   Id used when printing.
 
+- `label`:
+
+  (`character(1)`)  
+  Label for this object. Can be used in tables, plot and text output
+  instead of the ID.
+
+- `man`:
+
+  (`character(1)`)  
+  String in the format `[pkg]::[topic]` pointing to a manual page for
+  this object.
+
 ## Methods
 
 ### Public methods
 
-- [`AcqOptimizerDirect$new()`](#method-AcqOptimizerDirect-new)
+- [`AcqOptimizerDirect$new()`](#method-AcqOptimizerDirect-initialize)
 
 - [`AcqOptimizerDirect$optimize()`](#method-AcqOptimizerDirect-optimize)
+
+- [`AcqOptimizerDirect$reset()`](#method-AcqOptimizerDirect-reset)
 
 - [`AcqOptimizerDirect$clone()`](#method-AcqOptimizerDirect-clone)
 
 Inherited methods
 
-- [`mlr3mbo::AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-format)
-- [`mlr3mbo::AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-print)
-- [`mlr3mbo::AcqOptimizer$reset()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-reset)
+- [`AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-format)
+- [`AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-print)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqOptimizerDirect$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -127,7 +135,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `AcqOptimizerDirect$optimize()`
 
 Optimize the acquisition function.
 
@@ -142,7 +150,19 @@ with 1 row per candidate.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqOptimizerDirect$reset()`
+
+Reset the acquisition function optimizer.
+
+Clears the `state` of the previous optimization run.
+
+#### Usage
+
+    AcqOptimizerDirect$reset()
+
+------------------------------------------------------------------------
+
+### `AcqOptimizerDirect$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -164,5 +184,5 @@ if (requireNamespace("nloptr")) {
 }
 #> Loading required namespace: nloptr
 #> <AcqOptimizerDirect>: (OptimizerDirect)
-#> * Parameters: restart_strategy=random, catch_errors=TRUE
+#> * Parameters: skip_already_evaluated=TRUE, catch_errors=TRUE
 ```

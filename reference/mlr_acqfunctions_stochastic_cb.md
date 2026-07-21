@@ -101,14 +101,14 @@ Other Acquisition Function:
 
 [`bbotk::Objective`](https://bbotk.mlr-org.com/reference/Objective.html)
 -\>
-[`mlr3mbo::AcqFunction`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.md)
+[`AcqFunction`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.md)
 -\> `AcqFunctionStochasticCB`
 
 ## Methods
 
 ### Public methods
 
-- [`AcqFunctionStochasticCB$new()`](#method-AcqFunctionStochasticCB-new)
+- [`AcqFunctionStochasticCB$new()`](#method-AcqFunctionStochasticCB-initialize)
 
 - [`AcqFunctionStochasticCB$update()`](#method-AcqFunctionStochasticCB-update)
 
@@ -122,13 +122,13 @@ Inherited methods
 - [`bbotk::Objective$format()`](https://bbotk.mlr-org.com/reference/Objective.html#method-format)
 - [`bbotk::Objective$help()`](https://bbotk.mlr-org.com/reference/Objective.html#method-help)
 - [`bbotk::Objective$print()`](https://bbotk.mlr-org.com/reference/Objective.html#method-print)
-- [`mlr3mbo::AcqFunction$assert_surrogate()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-assert_surrogate)
-- [`mlr3mbo::AcqFunction$eval_dt()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_dt)
-- [`mlr3mbo::AcqFunction$eval_many()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_many)
+- [`AcqFunction$assert_surrogate()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-assert_surrogate)
+- [`AcqFunction$eval_dt()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_dt)
+- [`AcqFunction$eval_many()`](https://mlr3mbo.mlr-org.com/reference/AcqFunction.html#method-eval_many)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqFunctionStochasticCB$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -178,7 +178,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `AcqFunctionStochasticCB$update()`
 
 Update the acquisition function. Samples and decays lambda.
 
@@ -188,10 +188,10 @@ Update the acquisition function. Samples and decays lambda.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `AcqFunctionStochasticCB$reset()`
 
 Reset the acquisition function. Resets the private update counter `.t`
-used within the epsilon decay.
+and the sampled lambda so that a fresh lambda is drawn on the next run.
 
 #### Usage
 
@@ -199,7 +199,7 @@ used within the epsilon decay.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqFunctionStochasticCB$clone()`
 
 The objects of this class are cloneable with this method.
 

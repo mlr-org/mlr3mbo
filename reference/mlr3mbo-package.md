@@ -34,6 +34,9 @@ Useful links:
 
 Authors:
 
+- Marc Becker <marcbecker@posteo.de>
+  ([ORCID](https://orcid.org/0000-0002-8115-0400))
+
 - Lennart Schneider <lennart.sch@web.de>
   ([ORCID](https://orcid.org/0000-0003-4152-5308))
 

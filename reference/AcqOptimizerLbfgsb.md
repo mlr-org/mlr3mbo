@@ -1,24 +1,28 @@
 # L-BFGS-B Acquisition Function Optimizer
 
 L-BFGS-B acquisition function optimizer. Calls `nloptr()` from
-[nloptr](https://CRAN.R-project.org/package=nloptr). In its default
-setting, the algorithm restarts `5 * D` times and runs at most for
+[nloptr](https://CRAN.R-project.org/package=nloptr) with the
+`NLOPT_LD_LBFGS` algorithm. In its default setting, the algorithm runs a
+single time starting from the best point in the archive, for at most
 `100 * D^2` function evaluations, where `D` is the dimension of the
-search space. Each run stops when the relative tolerance of the
-parameters is less than `10^-4`. The first iteration starts with the
-best point in the archive and the next iterations start from a random
-point.
+search space. The run stops when the relative tolerance of the
+parameters is less than `10^-4`. With `restart_strategy = "random"`, the
+optimizer additionally restarts from random points until the evaluation
+budget is exhausted, which can help escape local optima.
+
+Only fully numeric search spaces (all parameters of type `p_dbl`) are
+supported.
 
 ## Note
 
-If the restart strategy is `"none"`, the optimizer starts with the best
-point in the archive. The optimization stops when one of the stopping
-criteria is met.
+If the restart strategy is `"none"`, the optimizer runs a single time
+starting from the best point in the archive. The optimization stops when
+one of the stopping criteria is met.
 
-If `restart_strategy` is `"random"`, the optimizer runs at least for
-`maxeval` iterations. The first iteration starts with the best point in
-the archive and stops when one of the stopping criteria is met. The next
-iterations start from a random point.
+If `restart_strategy` is `"random"`, the optimizer runs at most for
+`maxeval` iterations in total. The first iteration starts with the best
+point in the archive and stops when one of the stopping criteria is met.
+The next iterations start from a random point.
 
 ## Parameters
 
@@ -30,7 +34,18 @@ iterations start from a random point.
 - `max_restarts`:
 
   `integer(1)`  
-  Maximum number of restarts. Default is `5 * D` (Default).
+  Maximum number of restarts. Default is `5 * D`, where `D` is the
+  dimension of the search space.
+
+- `skip_already_evaluated`:
+
+  `logical(1)`  
+  Should the proposed candidate be rejected if it was already evaluated
+  on the actual
+  [bbotk::OptimInstance](https://bbotk.mlr-org.com/reference/OptimInstance.html)?
+  If `TRUE` and the candidate was already evaluated, an error is raised
+  so that the `loop_function` can propose a randomly sampled point
+  instead. Default is `TRUE`.
 
 ## Termination Parameters
 
@@ -61,7 +76,7 @@ The following termination parameters can be used.
 - `ftol_rel`:
 
   `numeric(1)`  
-  Relative tolerance of the objective function. Deactivate with `-1`.
+  Relative tolerance of the objective function. Deactivate with `-1`
   (Default).
 
 - `ftol_abs`:
@@ -72,7 +87,7 @@ The following termination parameters can be used.
 
 ## Super class
 
-[`mlr3mbo::AcqOptimizer`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.md)
+[`AcqOptimizer`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.md)
 -\> `AcqOptimizerLbfgsb`
 
 ## Public fields
@@ -91,25 +106,38 @@ The following termination parameters can be used.
   (`character`)  
   Id used when printing.
 
+- `label`:
+
+  (`character(1)`)  
+  Label for this object. Can be used in tables, plot and text output
+  instead of the ID.
+
+- `man`:
+
+  (`character(1)`)  
+  String in the format `[pkg]::[topic]` pointing to a manual page for
+  this object.
+
 ## Methods
 
 ### Public methods
 
-- [`AcqOptimizerLbfgsb$new()`](#method-AcqOptimizerLbfgsb-new)
+- [`AcqOptimizerLbfgsb$new()`](#method-AcqOptimizerLbfgsb-initialize)
 
 - [`AcqOptimizerLbfgsb$optimize()`](#method-AcqOptimizerLbfgsb-optimize)
+
+- [`AcqOptimizerLbfgsb$reset()`](#method-AcqOptimizerLbfgsb-reset)
 
 - [`AcqOptimizerLbfgsb$clone()`](#method-AcqOptimizerLbfgsb-clone)
 
 Inherited methods
 
-- [`mlr3mbo::AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-format)
-- [`mlr3mbo::AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-print)
-- [`mlr3mbo::AcqOptimizer$reset()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-reset)
+- [`AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-format)
+- [`AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-print)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqOptimizerLbfgsb$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -127,7 +155,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `AcqOptimizerLbfgsb$optimize()`
 
 Optimize the acquisition function.
 
@@ -142,7 +170,19 @@ with 1 row per candidate.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqOptimizerLbfgsb$reset()`
+
+Reset the acquisition function optimizer.
+
+Clears the `state` of the previous optimization run.
+
+#### Usage
+
+    AcqOptimizerLbfgsb$reset()
+
+------------------------------------------------------------------------
+
+### `AcqOptimizerLbfgsb$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -163,5 +203,6 @@ if (requireNamespace("nloptr")) {
   acqo("lbfgsb")
 }
 #> <AcqOptimizerLbfgsb>: (OptimizerLbfgsb)
-#> * Parameters: restart_strategy=none, catch_errors=TRUE
+#> * Parameters: restart_strategy=none, skip_already_evaluated=TRUE,
+#>   catch_errors=TRUE
 ```

@@ -26,10 +26,10 @@ Surrogate model containing a single
 
 ## Super class
 
-[`mlr3mbo::Surrogate`](https://mlr3mbo.mlr-org.com/reference/Surrogate.md)
--\> `SurrogateLearner`
+[`Surrogate`](https://mlr3mbo.mlr-org.com/reference/Surrogate.md) -\>
+`SurrogateLearner`
 
-## Public fields
+## Active bindings
 
 - `learner`:
 
@@ -39,15 +39,15 @@ Surrogate model containing a single
 
 - `input_trafo`:
 
-  ([InputTrafo](https://mlr3mbo.mlr-org.com/reference/InputTrafo.md))  
+  ([InputTrafo](https://mlr3mbo.mlr-org.com/reference/InputTrafo.md) \|
+  `NULL`)  
   Input transformation.
 
 - `output_trafo`:
 
-  ([OutputTrafo](https://mlr3mbo.mlr-org.com/reference/OutputTrafo.md))  
+  ([OutputTrafo](https://mlr3mbo.mlr-org.com/reference/OutputTrafo.md)
+  \| `NULL`)  
   Output transformation.
-
-## Active bindings
 
 - `print_id`:
 
@@ -96,7 +96,7 @@ Surrogate model containing a single
 
 ### Public methods
 
-- [`SurrogateLearner$new()`](#method-SurrogateLearner-new)
+- [`SurrogateLearner$new()`](#method-SurrogateLearner-initialize)
 
 - [`SurrogateLearner$predict()`](#method-SurrogateLearner-predict)
 
@@ -104,14 +104,14 @@ Surrogate model containing a single
 
 Inherited methods
 
-- [`mlr3mbo::Surrogate$format()`](https://mlr3mbo.mlr-org.com/reference/Surrogate.html#method-format)
-- [`mlr3mbo::Surrogate$print()`](https://mlr3mbo.mlr-org.com/reference/Surrogate.html#method-print)
-- [`mlr3mbo::Surrogate$reset()`](https://mlr3mbo.mlr-org.com/reference/Surrogate.html#method-reset)
-- [`mlr3mbo::Surrogate$update()`](https://mlr3mbo.mlr-org.com/reference/Surrogate.html#method-update)
+- [`Surrogate$format()`](https://mlr3mbo.mlr-org.com/reference/Surrogate.html#method-format)
+- [`Surrogate$print()`](https://mlr3mbo.mlr-org.com/reference/Surrogate.html#method-print)
+- [`Surrogate$reset()`](https://mlr3mbo.mlr-org.com/reference/Surrogate.html#method-reset)
+- [`Surrogate$update()`](https://mlr3mbo.mlr-org.com/reference/Surrogate.html#method-update)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `SurrogateLearner$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -169,7 +169,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`predict()`](https://rdrr.io/r/stats/predict.html)
+### `SurrogateLearner$predict()`
 
 Predict mean response and standard error.
 
@@ -191,7 +191,7 @@ with the columns `mean` and `se`.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `SurrogateLearner$clone()`
 
 The objects of this class are cloneable with this method.
 

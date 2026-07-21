@@ -53,6 +53,13 @@ or based on the
 [Surrogate](https://mlr3mbo.mlr-org.com/reference/Surrogate.md) via
 [ResultAssignerSurrogate](https://mlr3mbo.mlr-org.com/reference/mlr_result_assigners_surrogate.md).
 
+## Defaults
+
+All components have sensible defaults. For more information on the
+defaults for `surrogate`, `acq_function`, `acq_optimizer`, and
+`result_assigner`, see
+[mbo_defaults](https://mlr3mbo.mlr-org.com/reference/mbo_defaults.md).
+
 ## Archive
 
 The
@@ -215,7 +222,7 @@ and
 
 ### Public methods
 
-- [`OptimizerAsyncMbo$new()`](#method-OptimizerAsyncMbo-new)
+- [`OptimizerAsyncMbo$new()`](#method-OptimizerAsyncMbo-initialize)
 
 - [`OptimizerAsyncMbo$print()`](#method-OptimizerAsyncMbo-print)
 
@@ -232,7 +239,7 @@ Inherited methods
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `OptimizerAsyncMbo$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -254,10 +261,6 @@ be overwritten by the
 of the current
 [bbotk::OptimInstanceAsyncSingleCrit](https://bbotk.mlr-org.com/reference/OptimInstanceAsyncSingleCrit.html)
 to be optimized.
-
-For more information on default values for `surrogate`, `acq_function`,
-`acq_optimizer` and `result_assigner`, see
-[`?mbo_defaults`](https://mlr3mbo.mlr-org.com/reference/mbo_defaults.md).
 
 #### Usage
 
@@ -323,7 +326,7 @@ For more information on default values for `surrogate`, `acq_function`,
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `OptimizerAsyncMbo$print()`
 
 Print method.
 
@@ -337,7 +340,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `OptimizerAsyncMbo$reset()`
 
 Reset the optimizer. Sets the following fields to `NULL`: `surrogate`,
 `acq_function`, `acq_optimizer`,`result_assigner` Resets parameter
@@ -349,7 +352,7 @@ values `design_size` and `design_function` to their defaults.
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `OptimizerAsyncMbo$optimize()`
 
 Performs the optimization on an
 [bbotk::OptimInstanceAsyncSingleCrit](https://bbotk.mlr-org.com/reference/OptimInstanceAsyncSingleCrit.html)
@@ -373,7 +376,7 @@ The result will be written into the instance object.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `OptimizerAsyncMbo$clone()`
 
 The objects of this class are cloneable with this method.
 

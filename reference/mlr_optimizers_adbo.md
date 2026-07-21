@@ -87,14 +87,14 @@ evaluations.
 -\>
 [`bbotk::OptimizerAsync`](https://bbotk.mlr-org.com/reference/OptimizerAsync.html)
 -\>
-[`mlr3mbo::OptimizerAsyncMbo`](https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_async_mbo.md)
+[`OptimizerAsyncMbo`](https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_async_mbo.md)
 -\> `OptimizerADBO`
 
 ## Methods
 
 ### Public methods
 
-- [`OptimizerADBO$new()`](#method-OptimizerADBO-new)
+- [`OptimizerADBO$new()`](#method-OptimizerADBO-initialize)
 
 - [`OptimizerADBO$optimize()`](#method-OptimizerADBO-optimize)
 
@@ -104,12 +104,12 @@ Inherited methods
 
 - [`bbotk::Optimizer$format()`](https://bbotk.mlr-org.com/reference/Optimizer.html#method-format)
 - [`bbotk::Optimizer$help()`](https://bbotk.mlr-org.com/reference/Optimizer.html#method-help)
-- [`mlr3mbo::OptimizerAsyncMbo$print()`](https://mlr3mbo.mlr-org.com/reference/OptimizerAsyncMbo.html#method-print)
-- [`mlr3mbo::OptimizerAsyncMbo$reset()`](https://mlr3mbo.mlr-org.com/reference/OptimizerAsyncMbo.html#method-reset)
+- [`OptimizerAsyncMbo$print()`](https://mlr3mbo.mlr-org.com/reference/OptimizerAsyncMbo.html#method-print)
+- [`OptimizerAsyncMbo$reset()`](https://mlr3mbo.mlr-org.com/reference/OptimizerAsyncMbo.html#method-reset)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `OptimizerADBO$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -120,7 +120,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `OptimizerADBO$optimize()`
 
 Performs the optimization on an
 [bbotk::OptimInstanceAsyncSingleCrit](https://bbotk.mlr-org.com/reference/OptimInstanceAsyncSingleCrit.html)
@@ -144,7 +144,7 @@ The result will be written into the instance object.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `OptimizerADBO$clone()`
 
 The objects of this class are cloneable with this method.
 

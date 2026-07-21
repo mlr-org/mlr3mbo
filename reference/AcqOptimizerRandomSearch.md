@@ -13,9 +13,19 @@ value is returned.
   Number of random points to sample. Default is `100 * D^2`, where `D`
   is the dimension of the search space.
 
+- `skip_already_evaluated`:
+
+  `logical(1)`  
+  Should the proposed candidate be rejected if it was already evaluated
+  on the actual
+  [bbotk::OptimInstance](https://bbotk.mlr-org.com/reference/OptimInstance.html)?
+  If `TRUE` and the candidate was already evaluated, an error is raised
+  so that the `loop_function` can propose a randomly sampled point
+  instead. Default is `TRUE`.
+
 ## Super class
 
-[`mlr3mbo::AcqOptimizer`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.md)
+[`AcqOptimizer`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.md)
 -\> `AcqOptimizerRandomSearch`
 
 ## Active bindings
@@ -25,11 +35,23 @@ value is returned.
   (`character`)  
   Id used when printing.
 
+- `label`:
+
+  (`character(1)`)  
+  Label for this object. Can be used in tables, plot and text output
+  instead of the ID.
+
+- `man`:
+
+  (`character(1)`)  
+  String in the format `[pkg]::[topic]` pointing to a manual page for
+  this object.
+
 ## Methods
 
 ### Public methods
 
-- [`AcqOptimizerRandomSearch$new()`](#method-AcqOptimizerRandomSearch-new)
+- [`AcqOptimizerRandomSearch$new()`](#method-AcqOptimizerRandomSearch-initialize)
 
 - [`AcqOptimizerRandomSearch$optimize()`](#method-AcqOptimizerRandomSearch-optimize)
 
@@ -37,13 +59,13 @@ value is returned.
 
 Inherited methods
 
-- [`mlr3mbo::AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-format)
-- [`mlr3mbo::AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-print)
-- [`mlr3mbo::AcqOptimizer$reset()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-reset)
+- [`AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-format)
+- [`AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-print)
+- [`AcqOptimizer$reset()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-reset)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqOptimizerRandomSearch$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -61,7 +83,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `AcqOptimizerRandomSearch$optimize()`
 
 Optimize the acquisition function.
 
@@ -76,7 +98,7 @@ with 1 row per candidate.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqOptimizerRandomSearch$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -95,5 +117,5 @@ The objects of this class are cloneable with this method.
 ``` r
 acqo("random_search")
 #> <AcqOptimizerRandomSearch>: (OptimizerRandomSearch)
-#> * Parameters: catch_errors=TRUE
+#> * Parameters: skip_already_evaluated=TRUE, catch_errors=TRUE
 ```

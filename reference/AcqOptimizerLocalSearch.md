@@ -7,9 +7,15 @@ For the meaning of the control parameters, see
 The termination stops when the budget defined by the `n_searches`,
 `n_steps`, and `n_neighs` parameters is exhausted.
 
+If `skip_already_evaluated` is `TRUE` (default) and the proposed
+candidate was already evaluated on the actual
+[bbotk::OptimInstance](https://bbotk.mlr-org.com/reference/OptimInstance.html),
+an error is raised so that the `loop_function` can propose a randomly
+sampled point instead.
+
 ## Super class
 
-[`mlr3mbo::AcqOptimizer`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.md)
+[`AcqOptimizer`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.md)
 -\> `AcqOptimizerLocalSearch`
 
 ## Public fields
@@ -17,7 +23,9 @@ The termination stops when the budget defined by the `n_searches`,
 - `state`:
 
   ([`list()`](https://rdrr.io/r/base/list.html))  
-  List of `cmaes::cma_es()` results.
+  Result of the last
+  [`bbotk::local_search()`](https://bbotk.mlr-org.com/reference/local_search.html)
+  call.
 
 ## Active bindings
 
@@ -26,11 +34,23 @@ The termination stops when the budget defined by the `n_searches`,
   (`character`)  
   Id used when printing.
 
+- `label`:
+
+  (`character(1)`)  
+  Label for this object. Can be used in tables, plot and text output
+  instead of the ID.
+
+- `man`:
+
+  (`character(1)`)  
+  String in the format `[pkg]::[topic]` pointing to a manual page for
+  this object.
+
 ## Methods
 
 ### Public methods
 
-- [`AcqOptimizerLocalSearch$new()`](#method-AcqOptimizerLocalSearch-new)
+- [`AcqOptimizerLocalSearch$new()`](#method-AcqOptimizerLocalSearch-initialize)
 
 - [`AcqOptimizerLocalSearch$optimize()`](#method-AcqOptimizerLocalSearch-optimize)
 
@@ -40,12 +60,12 @@ The termination stops when the budget defined by the `n_searches`,
 
 Inherited methods
 
-- [`mlr3mbo::AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-format)
-- [`mlr3mbo::AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-print)
+- [`AcqOptimizer$format()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-format)
+- [`AcqOptimizer$print()`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html#method-print)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqOptimizerLocalSearch$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -63,7 +83,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `AcqOptimizerLocalSearch$optimize()`
 
 Optimize the acquisition function.
 
@@ -78,11 +98,11 @@ with 1 row per candidate.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `AcqOptimizerLocalSearch$reset()`
 
 Reset the acquisition function optimizer.
 
-Currently not used.
+Clears the `state` of the previous optimization run.
 
 #### Usage
 
@@ -90,7 +110,7 @@ Currently not used.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqOptimizerLocalSearch$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -109,5 +129,5 @@ The objects of this class are cloneable with this method.
 ``` r
 acqo("local_search")
 #> <AcqOptimizerLocalSearch>: (OptimizerLocalSearch)
-#> * Parameters: catch_errors=TRUE
+#> * Parameters: skip_already_evaluated=TRUE, catch_errors=TRUE
 ```

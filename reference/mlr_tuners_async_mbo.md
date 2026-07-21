@@ -11,6 +11,13 @@ Currently, only single-objective optimization is supported and
 `TunerAsyncMbo` is considered an experimental feature and API might be
 subject to changes.
 
+## Defaults
+
+All components have sensible defaults. For more information on the
+defaults for `surrogate`, `acq_function`, `acq_optimizer`, and
+`result_assigner`, see
+[mbo_defaults](https://mlr3mbo.mlr-org.com/reference/mbo_defaults.md).
+
 ## Parameters
 
 - `initial_design`:
@@ -111,7 +118,7 @@ subject to changes.
 
 ### Public methods
 
-- [`TunerAsyncMbo$new()`](#method-TunerAsyncMbo-new)
+- [`TunerAsyncMbo$new()`](#method-TunerAsyncMbo-initialize)
 
 - [`TunerAsyncMbo$print()`](#method-TunerAsyncMbo-print)
 
@@ -127,13 +134,10 @@ Inherited methods
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `TunerAsyncMbo$new()`
 
 Creates a new instance of this
-[R6](https://r6.r-lib.org/reference/R6Class.html) class. For more
-information on default values for `surrogate`, `acq_function`,
-`acq_optimizer`, and `result_assigner`, see
-[`?mbo_defaults`](https://mlr3mbo.mlr-org.com/reference/mbo_defaults.md).
+[R6](https://r6.r-lib.org/reference/R6Class.html) class.
 
 Note that all the parameters below are simply passed to the
 [OptimizerAsyncMbo](https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_async_mbo.md)
@@ -147,6 +151,7 @@ fields of the
       surrogate = NULL,
       acq_function = NULL,
       acq_optimizer = NULL,
+      result_assigner = NULL,
       param_set = NULL
     )
 
@@ -170,6 +175,12 @@ fields of the
   \| `NULL`)  
   The acquisition function optimizer.
 
+- `result_assigner`:
+
+  ([ResultAssigner](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.md)
+  \| `NULL`)  
+  The result assigner.
+
 - `param_set`:
 
   ([paradox::ParamSet](https://paradox.mlr-org.com/reference/ParamSet.html))  
@@ -177,7 +188,7 @@ fields of the
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `TunerAsyncMbo$print()`
 
 Print method.
 
@@ -191,7 +202,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `TunerAsyncMbo$reset()`
 
 Reset the tuner. Sets the following fields to `NULL`: `surrogate`,
 `acq_function`, `acq_optimizer`, `result_assigner` Resets parameter
@@ -203,7 +214,7 @@ values `design_size` and `design_function` to their defaults.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `TunerAsyncMbo$clone()`
 
 The objects of this class are cloneable with this method.
 

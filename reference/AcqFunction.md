@@ -92,7 +92,7 @@ Other Acquisition Function:
 
 ### Public methods
 
-- [`AcqFunction$new()`](#method-AcqFunction-new)
+- [`AcqFunction$new()`](#method-AcqFunction-initialize)
 
 - [`AcqFunction$update()`](#method-AcqFunction-update)
 
@@ -115,7 +115,7 @@ Inherited methods
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqFunction$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -194,7 +194,7 @@ the active binding `$surrogate`.
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `AcqFunction$update()`
 
 Update the acquisition function.
 
@@ -206,7 +206,7 @@ Can be implemented by subclasses.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `AcqFunction$reset()`
 
 Reset the acquisition function.
 
@@ -218,7 +218,7 @@ Can be implemented by subclasses.
 
 ------------------------------------------------------------------------
 
-### Method `eval_many()`
+### `AcqFunction$eval_many()`
 
 Evaluates multiple input values on the acquisition function.
 
@@ -243,7 +243,7 @@ acquisition functions, e.g. `data.table(y = 1:2)` or
 
 ------------------------------------------------------------------------
 
-### Method `eval_dt()`
+### `AcqFunction$eval_dt()`
 
 Evaluates multiple input values on the objective function
 
@@ -267,7 +267,7 @@ acquisition functions, e.g. `data.table(y = 1:2)` or
 
 ------------------------------------------------------------------------
 
-### Method `assert_surrogate()`
+### `AcqFunction$assert_surrogate()`
 
 Validate that the surrogate is compatible with this acquisition
 function. Asserts the surrogate class and that `$predict_type` is `"se"`
@@ -292,7 +292,7 @@ The validated
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqFunction$clone()`
 
 The objects of this class are cloneable with this method.
 

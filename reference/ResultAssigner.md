@@ -39,7 +39,7 @@ Other Result Assigner:
 
 ### Public methods
 
-- [`ResultAssigner$new()`](#method-ResultAssigner-new)
+- [`ResultAssigner$new()`](#method-ResultAssigner-initialize)
 
 - [`ResultAssigner$assign_result()`](#method-ResultAssigner-assign_result)
 
@@ -51,7 +51,7 @@ Other Result Assigner:
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `ResultAssigner$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -75,7 +75,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method `assign_result()`
+### `ResultAssigner$assign_result()`
 
 Assigns the result, i.e., the final point(s) to the instance.
 
@@ -100,7 +100,7 @@ Assigns the result, i.e., the final point(s) to the instance.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `ResultAssigner$format()`
 
 Helper for print outputs.
 
@@ -114,7 +114,7 @@ Helper for print outputs.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `ResultAssigner$print()`
 
 Print method.
 
@@ -128,7 +128,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `ResultAssigner$clone()`
 
 The objects of this class are cloneable with this method.
 

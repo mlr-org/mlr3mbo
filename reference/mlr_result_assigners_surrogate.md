@@ -22,7 +22,7 @@ Other Result Assigner:
 
 ## Super class
 
-[`mlr3mbo::ResultAssigner`](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.md)
+[`ResultAssigner`](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.md)
 -\> `ResultAssignerSurrogate`
 
 ## Active bindings
@@ -44,7 +44,7 @@ Other Result Assigner:
 
 ### Public methods
 
-- [`ResultAssignerSurrogate$new()`](#method-ResultAssignerSurrogate-new)
+- [`ResultAssignerSurrogate$new()`](#method-ResultAssignerSurrogate-initialize)
 
 - [`ResultAssignerSurrogate$assign_result()`](#method-ResultAssignerSurrogate-assign_result)
 
@@ -52,12 +52,12 @@ Other Result Assigner:
 
 Inherited methods
 
-- [`mlr3mbo::ResultAssigner$format()`](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.html#method-format)
-- [`mlr3mbo::ResultAssigner$print()`](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.html#method-print)
+- [`ResultAssigner$format()`](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.html#method-format)
+- [`ResultAssigner$print()`](https://mlr3mbo.mlr-org.com/reference/ResultAssigner.html#method-print)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `ResultAssignerSurrogate$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -77,7 +77,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method `assign_result()`
+### `ResultAssignerSurrogate$assign_result()`
 
 Assigns the result, i.e., the final point(s) to the instance. If
 `$surrogate` is `NULL`, `default_surrogate(instance)` is used and also
@@ -104,7 +104,7 @@ assigned to `$surrogate`.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `ResultAssignerSurrogate$clone()`
 
 The objects of this class are cloneable with this method.
 

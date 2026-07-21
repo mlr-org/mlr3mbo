@@ -108,6 +108,18 @@ and
   (`character`)  
   Id used when printing.
 
+- `label`:
+
+  (`character(1)`)  
+  Label for this object. Can be used in tables, plot and text output
+  instead of the ID.
+
+- `man`:
+
+  (`character(1)`)  
+  String in the format `[pkg]::[topic]` pointing to a manual page for
+  this object.
+
 - `param_set`:
 
   ([paradox::ParamSet](https://paradox.mlr-org.com/reference/ParamSet.html))  
@@ -117,7 +129,7 @@ and
 
 ### Public methods
 
-- [`AcqOptimizer$new()`](#method-AcqOptimizer-new)
+- [`AcqOptimizer$new()`](#method-AcqOptimizer-initialize)
 
 - [`AcqOptimizer$format()`](#method-AcqOptimizer-format)
 
@@ -131,7 +143,7 @@ and
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `AcqOptimizer$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -162,7 +174,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `AcqOptimizer$format()`
 
 Helper for print outputs.
 
@@ -176,7 +188,7 @@ Helper for print outputs.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `AcqOptimizer$print()`
 
 Print method.
 
@@ -190,7 +202,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method [`optimize()`](https://rdrr.io/r/stats/optimize.html)
+### `AcqOptimizer$optimize()`
 
 Optimize the acquisition function.
 
@@ -205,7 +217,7 @@ with 1 row per candidate.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `AcqOptimizer$reset()`
 
 Reset the acquisition function optimizer.
 
@@ -217,7 +229,7 @@ Currently not used.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `AcqOptimizer$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -273,7 +285,12 @@ if (requireNamespace("mlr3learners") &
 }
 #> Loading required namespace: DiceKriging
 #> Loading required namespace: rgenoud
-#>           x   acq_ei  x_domain .already_evaluated
-#>       <num>    <num>    <list>             <lgcl>
-#> 1: 1.187665 5.305171 <list[1]>              FALSE
+#> 
+#> Attaching package: ‘data.table’
+#> The following object is masked from ‘package:base’:
+#> 
+#>     %notin%
+#>           x   acq_ei .already_evaluated
+#>       <num>    <num>             <lgcl>
+#> 1: 1.187665 5.305171              FALSE
 ```

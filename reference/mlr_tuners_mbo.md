@@ -6,6 +6,13 @@ a minimal interface internally passing on to
 For additional information and documentation see
 [OptimizerMbo](https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_mbo.md).
 
+## Defaults
+
+All components have sensible defaults. For more information on the
+defaults for `loop_function`, `surrogate`, `acq_function`,
+`acq_optimizer`, and `result_assigner`, see
+[mbo_defaults](https://mlr3mbo.mlr-org.com/reference/mbo_defaults.md).
+
 ## Super classes
 
 [`mlr3tuning::Tuner`](https://mlr3tuning.mlr-org.com/reference/Tuner.html)
@@ -86,7 +93,7 @@ For additional information and documentation see
 
 ### Public methods
 
-- [`TunerMbo$new()`](#method-TunerMbo-new)
+- [`TunerMbo$new()`](#method-TunerMbo-initialize)
 
 - [`TunerMbo$print()`](#method-TunerMbo-print)
 
@@ -102,13 +109,10 @@ Inherited methods
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `TunerMbo$new()`
 
 Creates a new instance of this
-[R6](https://r6.r-lib.org/reference/R6Class.html) class. For more
-information on default values for `loop_function`, `surrogate`,
-`acq_function`, `acq_optimizer`, and `result_assigner`, see
-[`?mbo_defaults`](https://mlr3mbo.mlr-org.com/reference/mbo_defaults.md).
+[R6](https://r6.r-lib.org/reference/R6Class.html) class.
 
 Note that all the parameters below are simply passed to the
 [OptimizerMbo](https://mlr3mbo.mlr-org.com/reference/mlr_optimizers_mbo.md)
@@ -167,7 +171,7 @@ fields of the
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `TunerMbo$print()`
 
 Print method.
 
@@ -181,7 +185,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `TunerMbo$reset()`
 
 Reset the tuner. Sets the following fields to `NULL`: `loop_function`,
 `surrogate`, `acq_function`, `acq_optimizer`, `args`, `result_assigner`
@@ -192,7 +196,7 @@ Reset the tuner. Sets the following fields to `NULL`: `loop_function`,
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `TunerMbo$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -248,11 +252,12 @@ if (requireNamespace("mlr3learners") &
 
   tnr("mbo")$optimize(instance)
 }
-#>           cp learner_param_vals  x_domain classif.acc selected_features
-#>        <num>             <list>    <list>       <num>             <num>
-#> 1: -6.372912          <list[2]> <list[1]>   0.8817326          2.666667
-#> 2: -1.767742          <list[2]> <list[1]>   0.8539548          2.000000
-#> 3: -8.675497          <list[2]> <list[1]>   0.8817326          2.666667
-#> 4: -7.479440          <list[2]> <list[1]>   0.8817326          2.666667
+#>            cp learner_param_vals  x_domain classif.acc selected_features
+#>         <num>             <list>    <list>       <num>             <num>
+#> 1: -5.0358810          <list[2]> <list[1]>   0.8707156                 3
+#> 2: -0.4307109          <list[2]> <list[1]>   0.3987759                 0
+#> 3: -2.7332960          <list[2]> <list[1]>   0.8650659                 2
+#> 4: -7.3384661          <list[2]> <list[1]>   0.8707156                 3
+#> 5: -6.1809026          <list[2]> <list[1]>   0.8707156                 3
 # }
 ```

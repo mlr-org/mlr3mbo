@@ -14,8 +14,8 @@ Other Input Transformation:
 
 ## Super class
 
-[`mlr3mbo::InputTrafo`](https://mlr3mbo.mlr-org.com/reference/InputTrafo.md)
--\> `InputTrafoUnitcube`
+[`InputTrafo`](https://mlr3mbo.mlr-org.com/reference/InputTrafo.md) -\>
+`InputTrafoUnitcube`
 
 ## Active bindings
 
@@ -30,7 +30,7 @@ Other Input Transformation:
 
 ### Public methods
 
-- [`InputTrafoUnitcube$new()`](#method-InputTrafoUnitcube-new)
+- [`InputTrafoUnitcube$new()`](#method-InputTrafoUnitcube-initialize)
 
 - [`InputTrafoUnitcube$update()`](#method-InputTrafoUnitcube-update)
 
@@ -40,12 +40,12 @@ Other Input Transformation:
 
 Inherited methods
 
-- [`mlr3mbo::InputTrafo$format()`](https://mlr3mbo.mlr-org.com/reference/InputTrafo.html#method-format)
-- [`mlr3mbo::InputTrafo$print()`](https://mlr3mbo.mlr-org.com/reference/InputTrafo.html#method-print)
+- [`InputTrafo$format()`](https://mlr3mbo.mlr-org.com/reference/InputTrafo.html#method-format)
+- [`InputTrafo$print()`](https://mlr3mbo.mlr-org.com/reference/InputTrafo.html#method-print)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `InputTrafoUnitcube$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -56,7 +56,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `InputTrafoUnitcube$update()`
 
 Learn the transformation based on observed data and update parameters in
 `$state`.
@@ -74,7 +74,7 @@ Learn the transformation based on observed data and update parameters in
 
 ------------------------------------------------------------------------
 
-### Method [`transform()`](https://rdrr.io/r/base/transform.html)
+### `InputTrafoUnitcube$transform()`
 
 Perform the transformation.
 
@@ -97,7 +97,7 @@ or a subset thereof.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `InputTrafoUnitcube$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -148,10 +148,9 @@ if (requireNamespace("mlr3learners") &
 
   surrogate$predict(data.table(x = c(-1, 0, 1)))
 }
-#> $mean
-#> [1] 3.9850673 1.9068454 0.8955834
-#> 
-#> $se
-#> [1] 4.2925690 3.0487653 0.4707067
-#> 
+#>         mean        se
+#>        <num>     <num>
+#> 1: 3.9850673 4.2925690
+#> 2: 1.9068454 3.0487653
+#> 3: 0.8955834 0.4707067
 ```

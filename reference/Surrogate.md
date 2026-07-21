@@ -5,14 +5,13 @@ Abstract surrogate model class.
 A surrogate model is used to model the unknown objective function(s)
 based on all points evaluated so far.
 
-## Public fields
+## Active bindings
 
 - `learner`:
 
   (learner)  
-  Arbitrary learner object depending on the subclass.
-
-## Active bindings
+  Arbitrary learner object depending on the subclass. Subclasses
+  validate the learner on assignment.
 
 - `print_id`:
 
@@ -83,11 +82,24 @@ based on all points evaluated so far.
   (`character(1)`)  
   Retrieves the currently active predict type, e.g. `"response"`.
 
+- `output_trafo`:
+
+  ([OutputTrafo](https://mlr3mbo.mlr-org.com/reference/OutputTrafo.md)
+  \| `NULL`)  
+  Output transformation. Defaults to `NULL` for subclasses that do not
+  support output transformations.
+
+- `output_trafo_must_be_considered`:
+
+  (`logical(1)`)  
+  Whether a transformation has been applied to the target variable that
+  has not been inverted during prediction.
+
 ## Methods
 
 ### Public methods
 
-- [`Surrogate$new()`](#method-Surrogate-new)
+- [`Surrogate$new()`](#method-Surrogate-initialize)
 
 - [`Surrogate$update()`](#method-Surrogate-update)
 
@@ -103,7 +115,7 @@ based on all points evaluated so far.
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `Surrogate$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -146,7 +158,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `Surrogate$update()`
 
 Train learner with new data. Subclasses must implement
 `private.update()` and `private.update_async()`.
@@ -161,7 +173,7 @@ Train learner with new data. Subclasses must implement
 
 ------------------------------------------------------------------------
 
-### Method `reset()`
+### `Surrogate$reset()`
 
 Reset the surrogate model. Subclasses must implement `private$.reset()`.
 
@@ -175,7 +187,7 @@ Reset the surrogate model. Subclasses must implement `private$.reset()`.
 
 ------------------------------------------------------------------------
 
-### Method [`predict()`](https://rdrr.io/r/stats/predict.html)
+### `Surrogate$predict()`
 
 Predict mean response and standard error. Must be implemented by
 subclasses.
@@ -197,7 +209,7 @@ Arbitrary prediction object.
 
 ------------------------------------------------------------------------
 
-### Method [`format()`](https://rdrr.io/r/base/format.html)
+### `Surrogate$format()`
 
 Helper for print outputs.
 
@@ -211,7 +223,7 @@ Helper for print outputs.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `Surrogate$print()`
 
 Print method.
 
@@ -225,7 +237,7 @@ Print method.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `Surrogate$clone()`
 
 The objects of this class are cloneable with this method.
 

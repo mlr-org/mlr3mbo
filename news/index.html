@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Changelog"></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Changelog"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +49,63 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.1.1" id="mlr3mbo-111">mlr3mbo 1.1.1<a class="anchor" aria-label="anchor" href="#mlr3mbo-111"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.2.0" id="mlr3mbo-120">mlr3mbo 1.2.0<a class="anchor" aria-label="anchor" href="#mlr3mbo-120"></a></h2><p class="text-muted">CRAN release: 2026-07-21</p>
+<ul><li>fix: <code><a href="../reference/acqo.html">acqo()</a></code> now raises an error when <code>terminator</code> or <code>callbacks</code> are combined with a dictionary key as <code>optimizer</code>, because these arguments were silently discarded before.</li>
+<li>fix: <code>AcqOptimizer</code> now respects <code>warmstart_size</code> when warm-starting a single-objective acquisition function on a multi-objective archive, instead of evaluating the entire non-dominated front.</li>
+<li>fix: <code>AcqOptimizer</code> and its subclasses gained <code>$label</code> and <code>$man</code> fields, so that <code>as.data.table(mlr_acqoptimizers)</code> no longer errors.</li>
+<li>fix: <code>AcqOptimizer</code> no longer attaches an <code>x_domain</code> to the proposed candidates, so the archive stores the transformed values computed by the instance instead of a stale or untransformed <code>x_domain</code>, which was incorrect under a search space transformation or after clipping out-of-bounds candidates to the bounds.</li>
+<li>fix: <code><a href="../reference/mlr_loop_functions_mpcl.html">bayesopt_mpcl()</a></code> now logs a warning when a surrogate or acquisition function error is caught and a randomly sampled point is proposed, consistent with the other loop functions.</li>
+<li>fix: <code><a href="../reference/mlr_loop_functions_mpcl.html">bayesopt_mpcl()</a></code> no longer aborts when a batch mixes model-based proposals and randomly sampled fallback points, because the batch is now combined with filling missing columns.</li>
+<li>fix: <code><a href="../reference/mlr_loop_functions_mpcl.html">bayesopt_mpcl()</a></code> and <code><a href="../reference/mlr_loop_functions_parego.html">bayesopt_parego()</a></code> now advance the random interleaving counter per proposal instead of per batch, so random interleaving also triggers for <code>q &gt; 1</code> as documented.</li>
+<li>fix: <code><a href="../reference/mlr_loop_functions_parego.html">bayesopt_parego()</a></code> now subsets the minimization multiplier to the target columns, so the scalarization signs no longer misalign when the codomain holds non-target columns.</li>
+<li>fix: <code><a href="../reference/mlr_loop_functions_ego.html">bayesopt_ego()</a></code>, <code><a href="../reference/mlr_loop_functions_emo.html">bayesopt_emo()</a></code>, <code><a href="../reference/mlr_loop_functions_mpcl.html">bayesopt_mpcl()</a></code>, <code><a href="../reference/mlr_loop_functions_parego.html">bayesopt_parego()</a></code>, and <code><a href="../reference/mlr_loop_functions_smsego.html">bayesopt_smsego()</a></code> no longer silently disable random interleaving when the archive already contains a user-supplied initial design and <code>init_design_size</code> is <code>NULL</code>.</li>
+<li>fix: <code><a href="../reference/mlr_loop_functions_parego.html">bayesopt_parego()</a></code> no longer silently degrades to random search when an objective is constant, because the zero-range scaling now maps the constant objective to a constant value instead of <code>NaN</code>.</li>
+<li>fix: <code>AcqFunctionAEI</code> no longer errors during <code>$update()</code> when the surrogate model is not a <code>"regr.km"</code> model and now falls back to a noise variance of <code>0</code> as documented.</li>
+<li>fix: <code>AcqFunctionEHVI</code>, <code>AcqFunctionEHVIGH</code>, and <code>AcqFunctionSmsEgo</code> now apply the surrogate’s output transformation to <code>ys_front</code>, so the front and the reference point are compared on the same scale.</li>
+<li>fix: <code>AcqFunctionEHVIGH</code> no longer prunes all Gauss-Hermite nodes when their weights are tied, which previously made the acquisition function identically <code>0</code> for <code>k = 2</code>.</li>
+<li>feat: <code>AcqFunctionEHVIGH</code> now computes the hypervolume via the <code>moocore</code> package instead of <code>emoa</code>, which is no longer a dependency (<a href="https://github.com/mlr-org/mlr3mbo/issues/186" class="external-link">#186</a>).</li>
+<li>fix: <code>AcqFunctionEI</code>, <code>AcqFunctionEILog</code>, <code>AcqFunctionPI</code>, and <code>AcqFunctionStochasticEI</code> now ignore the missing outcomes of pending evaluations when determining the best observed value, so <code>y_best</code> is no longer <code>NA</code> on an asynchronous archive with more than one worker.</li>
+<li>fix: <code>AcqFunctionEIPS</code> now correctly divides the expected improvement by the predicted time instead of behaving like plain expected improvement.</li>
+<li>fix: <code>AcqFunctionSmsEgo</code> now accepts a <code>lambda</code> below <code>1</code> during construction, consistent with the lower bound of its <code>constants</code> parameter set.</li>
+<li>fix: <code>AcqFunctionMulti</code> now raises an informative error when the wrapped acquisition functions do not share the same domain instead of failing with a cryptic type error.</li>
+<li>fix: <code>AcqFunctionMulti</code> can now be deep cloned without error and preserves the shared surrogate across the wrapped acquisition functions.</li>
+<li>fix: <code>AcqFunctionStochasticCB</code> now clears the sampled lambda on <code>$reset()</code>, so a reused optimizer draws a fresh initial lambda for each run as documented.</li>
+<li>BREAKING CHANGE: <code>AcqOptimizerDirect</code> no longer supports restarts and its <code>restart_strategy</code> and <code>max_restarts</code> parameters have been removed, because the deterministic <code>NLOPT_GN_DIRECT_L</code> algorithm ignores the starting point, so restarts only repeated the identical search with a smaller evaluation budget.</li>
+<li>fix: <code>AcqOptimizerDirect</code>, <code>AcqOptimizerLbfgsb</code>, <code>AcqOptimizerLocalSearch</code>, and <code>AcqOptimizerRandomSearch</code> now support the <code>skip_already_evaluated</code> parameter (default <code>TRUE</code>) and reject an already evaluated candidate, so an <code>AcqOptimizerLbfgsb</code> starting at the incumbent no longer re-proposes and re-evaluates the same point every iteration.</li>
+<li>fix: <code>AcqOptimizerDirect</code>, <code>AcqOptimizerLbfgsb</code>, <code>AcqOptimizerLocalSearch</code>, and <code>AcqOptimizerRandomSearch</code> can now be deep cloned without error.</li>
+<li>fix: <code>AcqOptimizerDirect</code> and <code>AcqOptimizerLbfgsb</code> no longer expose the <code>minf_max</code> parameter, which was not a valid <code>nloptr</code> option and was silently ignored.</li>
+<li>fix: <code>AcqOptimizerDirect</code> and <code>AcqOptimizerLbfgsb</code> now accept <code>maxeval = -1L</code> to deactivate the evaluation limit, as documented.</li>
+<li>fix: <code>AcqOptimizerDirect</code> and <code>AcqOptimizerLbfgsb</code> now raise an informative error for non-numeric search spaces instead of failing confusingly inside <code>nloptr</code> or silently degrading to random search under <code>catch_errors = TRUE</code>.</li>
+<li>fix: <code>AcqOptimizerDirect</code> and <code>AcqOptimizerLbfgsb</code> now reset their <code>state</code> at the start of each <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code> call and clear it on <code>reset()</code>, so the <code>state</code> no longer grows unboundedly across a Bayesian optimization loop.</li>
+<li>fix: <code>AcqOptimizerLbfgsb</code> now raises a catchable acquisition function optimizer error instead of an unrelated error when no restart produces a valid solution, so the loop function can fall back to a randomly sampled point.</li>
+<li>fix: <code>AcqOptimizerLbfgsb</code> no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.</li>
+<li>fix: <code>InputTrafoUnitcube</code> now raises an informative error for infinite bounds and maps degenerate parameters with equal lower and upper bounds to a constant, instead of producing <code>NaN</code> features that fail inside the surrogate learner.</li>
+<li>fix: <code><a href="../reference/default_acqfunction.html">default_acqfunction()</a></code> now raises an informative error for unsupported instance classes instead of returning invisible <code>NULL</code>.</li>
+<li>fix: <code>AcqOptimizerLocalSearch</code> now populates its <code>state</code> field with the result of the last <code><a href="https://bbotk.mlr-org.com/reference/local_search.html" class="external-link">bbotk::local_search()</a></code> call and clears it on <code>reset()</code>, and no longer references the unavailable <code>cmaes</code> package in its documentation.</li>
+<li>fix: <code>OptimizerADBO</code> and <code>TunerADBO</code> now draw the initial lambda from an exponential distribution as documented, so that the <code>lambda</code> parameter has an effect.</li>
+<li>fix: <code>OptimizerMbo</code> and <code>TunerMbo</code> now update the surrogate a final time even when the optimization exits through a termination error, e.g., when the archive is already at budget or the terminator triggers between two evaluations.</li>
+<li>fix: <code>OptimizerMbo</code> and <code>OptimizerAsyncMbo</code> no longer abort a successful run when the final surrogate update fails with a plain error, e.g., when the surrogate is configured with <code>catch_errors = FALSE</code>.</li>
+<li>fix: <code>OptimizerAsyncMbo</code>, <code>OptimizerADBO</code>, <code>TunerAsyncMbo</code>, and <code>TunerADBO</code> now perform the final surrogate update on the main process, so the user-facing surrogate reflects all available data after optimization instead of remaining untrained.</li>
+<li>fix: <code>OptimizerAsyncMbo</code> now proposes a randomly sampled point when the archive contains no finished evaluations yet, instead of failing to train the surrogate on an empty archive.</li>
+<li>fix: <code>mlr_loop_functions$get()</code> now raises an error when additional arguments are passed, because loop functions are stored as plain values and the arguments were silently discarded before.</li>
+<li>fix: <code>OutputTrafo$max_to_min</code> now requires a named vector whose names match <code>$cols_y</code>, so invalid assignments fail immediately instead of causing a subscript error during the transformation.</li>
+<li>fix: <code>OptimizerAsyncMbo</code> and <code>TunerAsyncMbo</code> now raise an informative error when the <code>param_set</code> construction argument is not a <code>ParamSet</code>.</li>
+<li>fix: <code>OptimizerAsyncMbo</code> no longer ignores its <code>id</code> construction argument, so <code>OptimizerADBO</code> and <code>TunerADBO</code> now correctly report the id <code>"adbo"</code> instead of <code>"async_mbo"</code>.</li>
+<li>fix: <code>OutputTrafoLog</code> and <code>OutputTrafoStandardize</code> no longer produce <code>NaN</code> or <code>Inf</code> values when all observed outcomes are identical.</li>
+<li>fix: <code>OutputTrafoLog$inverse_transform_posterior()</code> no longer errors on mean-only predictions of a response-only learner; the mean is inverted with a variance of zero and no <code>se</code> column is fabricated.</li>
+<li>fix: <code>OutputTrafoStandardize$inverse_transform_posterior()</code> no longer fabricates an all-<code>NA</code> <code>se</code> column for mean-only predictions of a response-only learner.</li>
+<li>fix: <code>OutputTrafoLog</code> no longer produces infinite values when the range of the observed outcomes is tiny relative to their magnitude, because the epsilon padding is now floored at the local floating point precision.</li>
+<li>fix: <code>ResultAssignerSurrogate</code> no longer errors when the archive contains duplicated x-configurations.</li>
+<li>fix: <code><a href="../reference/srlrn.html">srlrn()</a></code> now correctly unwraps a single learner supplied in a list instead of erroring.</li>
+<li>fix: <code><a href="../reference/srlrn.html">srlrn()</a></code> now implements the documented replication of a single learner when <code>cols_y</code> or the <code>archive</code> reference more than one target variable, returning a <code>SurrogateLearnerCollection</code> with deep clones of the learner.</li>
+<li>fix: <code>TunerAsyncMbo</code> now accepts the documented <code>result_assigner</code> construction argument and forwards it to <code>OptimizerAsyncMbo</code>.</li>
+<li>fix: <code>Surrogate</code> now provides default <code>output_trafo</code> and <code>output_trafo_must_be_considered</code> fields, so third-party subclasses work with the acquisition functions without implementing output transformation support.</li>
+<li>fix: <code>SurrogateLearner$predict()</code> no longer modifies the data.table passed as <code>xdt</code> by reference.</li>
+<li>fix: <code>SurrogateLearner</code> and <code>SurrogateLearnerCollection</code> now validate assignments to the <code>learner</code>, <code>input_trafo</code>, and <code>output_trafo</code> fields, so invalid values are rejected immediately instead of failing later during updating or predicting.</li>
+<li>fix: <code>SurrogateLearner$predict()</code> now always returns a <code>data.table</code> with columns <code>mean</code> and <code>se</code> as documented, instead of a bare named list in configurations without an inverting output transformation.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.1" id="mlr3mbo-111">mlr3mbo 1.1.1<a class="anchor" aria-label="anchor" href="#mlr3mbo-111"></a></h2><p class="text-muted">CRAN release: 2026-04-24</p>
 <ul><li>fix: <code><a href="../reference/acqo.html">acqo()</a></code> now correctly returns the <code>mlr_acqoptimizers</code> dictionary when called with no arguments (<a href="https://github.com/mlr-org/mlr3mbo/issues/211" class="external-link">#211</a>).</li>
 <li>fix: <code>AcqFunctionEILog</code> now provides a more informative error message when the surrogate is not configured with the correct output transformation.</li>
 <li>fix: <code>AcqOptimizerDirect</code> and <code>AcqOptimizerLbfgsb</code> now correctly enforce the <code>max_restarts</code> limit in all cases.</li>
@@ -174,7 +230,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Acquisition Function Expected Hypervolume Improvement via Gauss-Hermite Quadrature — mlr_acqfunctions_ehvigh"><meta name="description" content="Expected Hypervolume Improvement.
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Acquisition Function Expected Hypervolume Improvement via Gauss-Hermite Quadrature — mlr_acqfunctions_ehvigh"><meta name="description" content="Expected Hypervolume Improvement.
 Computed via Gauss-Hermite quadrature.
 In the case of optimizing only two objective functions AcqFunctionEHVI is to be preferred."><meta property="og:description" content="Expected Hypervolume Improvement.
 Computed via Gauss-Hermite quadrature.
@@ -17,7 +17,7 @@ In the case of optimizing only two objective functions AcqFunctionEHVI is to be 
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,7 +104,7 @@ In Rudolph, Günter, Kononova, V. A, Aguirre, Hernán, Kerschke, Pascal, Ochoa, 
     </div>
     <div class="section level2">
     <h2 id="super-classes">Super classes<a class="anchor" aria-label="anchor" href="#super-classes"></a></h2>
-    <p><code><a href="https://bbotk.mlr-org.com/reference/Objective.html" class="external-link">bbotk::Objective</a></code> -&gt; <code><a href="AcqFunction.html">mlr3mbo::AcqFunction</a></code> -&gt; <code>AcqFunctionEHVIGH</code></p>
+    <p><code><a href="https://bbotk.mlr-org.com/reference/Objective.html" class="external-link">bbotk::Objective</a></code> -&gt; <code><a href="AcqFunction.html">AcqFunction</a></code> -&gt; <code>AcqFunctionEHVIGH</code></p>
     </div>
     <div class="section level2">
     <h2 id="public-fields">Public fields<a class="anchor" aria-label="anchor" href="#public-fields"></a></h2>
@@ -114,18 +114,18 @@ Approximated Pareto front.
 Signs are corrected with respect to assuming minimization of objectives.</p></dd>
 
 
-<dt><code>ref_point</code></dt>
+    <dt><code>ref_point</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric()</a></code>)<br>
 Reference point.
 Signs are corrected with respect to assuming minimization of objectives.</p></dd>
 
 
-<dt><code>hypervolume</code></dt>
+    <dt><code>hypervolume</code></dt>
 <dd><p>(<code>numeric(1)</code>).
 Current hypervolume of the approximated Pareto front with respect to the reference point.</p></dd>
 
 
-<dt><code>gh_data</code></dt>
+    <dt><code>gh_data</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix()</a></code>)<br>
 Data required for the Gauss-Hermite quadrature rule in the form of a matrix of dimension (k x 2).
 Each row corresponds to one Gauss-Hermite node (column <code>"x"</code>) and corresponding weight (column <code>"w"</code>).
@@ -140,58 +140,54 @@ Nodes are scaled by a factor of <code>sqrt(2)</code> and weights are normalized 
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-AcqFunctionEHVIGH-new"><code>AcqFunctionEHVIGH$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-AcqFunctionEHVIGH-initialize"><code>AcqFunctionEHVIGH$new()</code></a></p></li>
 <li><p><a href="#method-AcqFunctionEHVIGH-update"><code>AcqFunctionEHVIGH$update()</code></a></p></li>
 <li><p><a href="#method-AcqFunctionEHVIGH-clone"><code>AcqFunctionEHVIGH$clone()</code></a></p></li>
 </ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="eval"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-eval"><code>bbotk::Objective$eval()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-help"><code>bbotk::Objective$help()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-print"><code>bbotk::Objective$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href="AcqFunction.html#method-assert_surrogate"><code>mlr3mbo::AcqFunction$assert_surrogate()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href="AcqFunction.html#method-eval_dt"><code>mlr3mbo::AcqFunction$eval_dt()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href="AcqFunction.html#method-eval_many"><code>mlr3mbo::AcqFunction$eval_many()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href="AcqFunction.html#method-reset"><code>mlr3mbo::AcqFunction$reset()</code></a></span></li>
-</ul></details></p><hr><a id="method-AcqFunctionEHVIGH-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="format"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-format"><code>bbotk::Objective$format()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="help"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-help"><code>bbotk::Objective$help()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="bbotk" data-topic="Objective" data-id="print"><a href="https://bbotk.mlr-org.com/reference/Objective.html#method-print"><code>bbotk::Objective$print()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="assert_surrogate"><a href="AcqFunction.html#method-assert_surrogate"><code>AcqFunction$assert_surrogate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_dt"><a href="AcqFunction.html#method-eval_dt"><code>AcqFunction$eval_dt()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="eval_many"><a href="AcqFunction.html#method-eval_many"><code>AcqFunction$eval_many()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqFunction" data-id="reset"><a href="AcqFunction.html#method-reset"><code>AcqFunction$reset()</code></a></span></li>
+</ul></details></p><hr><a id="method-AcqFunctionEHVIGH-initialize"></a><div class="section">
+<h3 id="acqfunctionehvigh-new-"><code>AcqFunctionEHVIGH$new()</code><a class="anchor" aria-label="anchor" href="#acqfunctionehvigh-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/mlr_acqfunctions_ehvigh.html">AcqFunctionEHVIGH</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>surrogate <span class="op">=</span> <span class="cn">NULL</span>, k <span class="op">=</span> <span class="fl">15L</span>, r <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>surrogate</code></dt>
 <dd><p>(<code>NULL</code> | <a href="SurrogateLearnerCollection.html">SurrogateLearnerCollection</a>).</p></dd>
 
-
-<dt><code>k</code></dt>
+      <dt><code>k</code></dt>
 <dd><p>(<code>integer(1)</code>).</p></dd>
 
-
-<dt><code>r</code></dt>
+      <dt><code>r</code></dt>
 <dd><p>(<code>numeric(1)</code>).</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-AcqFunctionEHVIGH-update"></a><div class="section">
-<h3 id="method-update-">Method <code><a href="https://rdrr.io/r/stats/update.html" class="external-link">update()</a></code><a class="anchor" aria-label="anchor" href="#method-update-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-AcqFunctionEHVIGH-update"></a><div class="section">
+<h3 id="acqfunctionehvigh-update-"><code>AcqFunctionEHVIGH$update()</code><a class="anchor" aria-label="anchor" href="#acqfunctionehvigh-update-"></a></h3>
 <p>Update the acquisition function and set <code>ys_front</code>, <code>ref_point</code>, <code>hypervolume</code> and <code>gh_data</code>.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunctionEHVIGH</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-AcqFunctionEHVIGH-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+<p></p><hr><a id="method-AcqFunctionEHVIGH-clone"></a><div class="section">
+<h3 id="acqfunctionehvigh-clone-"><code>AcqFunctionEHVIGH$clone()</code><a class="anchor" aria-label="anchor" href="#acqfunctionehvigh-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqFunctionEHVIGH</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
@@ -201,6 +197,7 @@ Nodes are scaled by a factor of <code>sqrt(2)</code> and weights are normalized 
 </div>
 
 </div>
+
 
     </div>
 
@@ -253,7 +250,7 @@ Nodes are scaled by a factor of <code>sqrt(2)</code> and weights are normalized 
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

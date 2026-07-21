@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Acquisition Function Optimizer — AcqOptimizer"><meta name="description" content="Optimizer for AcqFunctions which performs the acquisition function optimization.
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet"><link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet"><link href="../deps/Roboto_Slab-0.4.10/font.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Acquisition Function Optimizer — AcqOptimizer"><meta name="description" content="Optimizer for AcqFunctions which performs the acquisition function optimization.
 Wraps an bbotk::OptimizerBatch and bbotk::Terminator."><meta property="og:description" content="Optimizer for AcqFunctions which performs the acquisition function optimization.
 Wraps an bbotk::OptimizerBatch and bbotk::Terminator."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -15,7 +15,7 @@ Wraps an bbotk::OptimizerBatch and bbotk::Terminator."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">mlr3mbo</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -122,15 +122,15 @@ Default is <code>TRUE</code>.</p></dd>
 <dd><p>(<a href="https://bbotk.mlr-org.com/reference/OptimizerBatch.html" class="external-link">bbotk::OptimizerBatch</a>).</p></dd>
 
 
-<dt><code>terminator</code></dt>
+    <dt><code>terminator</code></dt>
 <dd><p>(<a href="https://bbotk.mlr-org.com/reference/Terminator.html" class="external-link">bbotk::Terminator</a>).</p></dd>
 
 
-<dt><code>acq_function</code></dt>
+    <dt><code>acq_function</code></dt>
 <dd><p>(<a href="AcqFunction.html">AcqFunction</a>).</p></dd>
 
 
-<dt><code>callbacks</code></dt>
+    <dt><code>callbacks</code></dt>
 <dd><p>(<code>NULL</code> | list of <a href="https://mlr3misc.mlr-org.com/reference/Callback.html" class="external-link">mlr3misc::Callback</a>).</p></dd>
 
 
@@ -143,7 +143,18 @@ Default is <code>TRUE</code>.</p></dd>
 Id used when printing.</p></dd>
 
 
-<dt><code>param_set</code></dt>
+    <dt><code>label</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+Label for this object.
+Can be used in tables, plot and text output instead of the ID.</p></dd>
+
+
+    <dt><code>man</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+String in the format <code>[pkg]::[topic]</code> pointing to a manual page for this object.</p></dd>
+
+
+    <dt><code>param_set</code></dt>
 <dd><p>(<a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">paradox::ParamSet</a>)<br>
 Set of hyperparameters.</p></dd>
 
@@ -155,94 +166,89 @@ Set of hyperparameters.</p></dd>
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-AcqOptimizer-new"><code>AcqOptimizer$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-AcqOptimizer-initialize"><code>AcqOptimizer$new()</code></a></p></li>
 <li><p><a href="#method-AcqOptimizer-format"><code>AcqOptimizer$format()</code></a></p></li>
 <li><p><a href="#method-AcqOptimizer-print"><code>AcqOptimizer$print()</code></a></p></li>
 <li><p><a href="#method-AcqOptimizer-optimize"><code>AcqOptimizer$optimize()</code></a></p></li>
 <li><p><a href="#method-AcqOptimizer-reset"><code>AcqOptimizer$reset()</code></a></p></li>
 <li><p><a href="#method-AcqOptimizer-clone"><code>AcqOptimizer$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-AcqOptimizer-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+</ul></div><p></p><hr><a id="method-AcqOptimizer-initialize"></a><div class="section">
+<h3 id="acqoptimizer-new-"><code>AcqOptimizer$new()</code><a class="anchor" aria-label="anchor" href="#acqoptimizer-new-"></a></h3>
 <p>Creates a new instance of this <a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6</a> class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/AcqOptimizer.html">AcqOptimizer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">optimizer</span>, <span class="va">terminator</span>, acq_function <span class="op">=</span> <span class="cn">NULL</span>, callbacks <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>optimizer</code></dt>
 <dd><p>(<a href="https://bbotk.mlr-org.com/reference/OptimizerBatch.html" class="external-link">bbotk::OptimizerBatch</a>).</p></dd>
 
-
-<dt><code>terminator</code></dt>
+      <dt><code>terminator</code></dt>
 <dd><p>(<a href="https://bbotk.mlr-org.com/reference/Terminator.html" class="external-link">bbotk::Terminator</a>).</p></dd>
 
-
-<dt><code>acq_function</code></dt>
+      <dt><code>acq_function</code></dt>
 <dd><p>(<code>NULL</code> | <a href="AcqFunction.html">AcqFunction</a>).</p></dd>
 
-
-<dt><code>callbacks</code></dt>
+      <dt><code>callbacks</code></dt>
 <dd><p>(<code>NULL</code> | list of <a href="https://mlr3misc.mlr-org.com/reference/Callback.html" class="external-link">mlr3misc::Callback</a>)</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-AcqOptimizer-format"></a><div class="section">
-<h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-AcqOptimizer-format"></a><div class="section">
+<h3 id="acqoptimizer-format-"><code>AcqOptimizer$format()</code><a class="anchor" aria-label="anchor" href="#acqoptimizer-format-"></a></h3>
 <p>Helper for print outputs.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizer</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
 <p>(<code>character(1)</code>).</p>
 </div>
 
-</div><p></p><hr><a id="method-AcqOptimizer-print"></a><div class="section">
-<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-AcqOptimizer-print"></a><div class="section">
+<h3 id="acqoptimizer-print-"><code>AcqOptimizer$print()</code><a class="anchor" aria-label="anchor" href="#acqoptimizer-print-"></a></h3>
 <p>Print method.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizer</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p>(<code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code>).</p>
 </div>
 
-</div><p></p><hr><a id="method-AcqOptimizer-optimize"></a><div class="section">
-<h3 id="method-optimize-">Method <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code><a class="anchor" aria-label="anchor" href="#method-optimize-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-AcqOptimizer-optimize"></a><div class="section">
+<h3 id="acqoptimizer-optimize-"><code>AcqOptimizer$optimize()</code><a class="anchor" aria-label="anchor" href="#acqoptimizer-optimize-"></a></h3>
 <p>Optimize the acquisition function.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizer</span><span class="op">$</span><span class="fu">optimize</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p><code><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table::data.table()</a></code> with 1 row per candidate.</p>
 </div>
 
-</div><p></p><hr><a id="method-AcqOptimizer-reset"></a><div class="section">
-<h3 id="method-reset-">Method <code>reset()</code><a class="anchor" aria-label="anchor" href="#method-reset-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-AcqOptimizer-reset"></a><div class="section">
+<h3 id="acqoptimizer-reset-"><code>AcqOptimizer$reset()</code><a class="anchor" aria-label="anchor" href="#acqoptimizer-reset-"></a></h3>
 <p>Reset the acquisition function optimizer.</p>
 <p>Currently not used.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizer</span><span class="op">$</span><span class="fu">reset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-AcqOptimizer-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+<p></p><hr><a id="method-AcqOptimizer-clone"></a><div class="section">
+<h3 id="acqoptimizer-clone-"><code>AcqOptimizer$clone()</code><a class="anchor" aria-label="anchor" href="#acqoptimizer-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">AcqOptimizer</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
@@ -252,6 +258,7 @@ Set of hyperparameters.</p></dd>
 </div>
 
 </div>
+
 
     </div>
 
@@ -296,9 +303,14 @@ Set of hyperparameters.</p></dd>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: DiceKriging</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: rgenoud</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           x   acq_ei  x_domain .already_evaluated</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;num&gt;    &lt;num&gt;    &lt;list&gt;             &lt;lgcl&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 1.187665 5.305171 &lt;list[1]&gt;              FALSE</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘data.table’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:base’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     %notin%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           x   acq_ei .already_evaluated</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;num&gt;    &lt;num&gt;             &lt;lgcl&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 1.187665 5.305171              FALSE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -310,7 +322,7 @@ Set of hyperparameters.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

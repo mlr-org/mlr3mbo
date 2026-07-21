@@ -12,7 +12,7 @@ Other Output Transformation:
 
 ## Super class
 
-[`mlr3mbo::OutputTrafo`](https://mlr3mbo.mlr-org.com/reference/OutputTrafo.md)
+[`OutputTrafo`](https://mlr3mbo.mlr-org.com/reference/OutputTrafo.md)
 -\> `OutputTrafoStandardize`
 
 ## Active bindings
@@ -28,7 +28,7 @@ Other Output Transformation:
 
 ### Public methods
 
-- [`OutputTrafoStandardize$new()`](#method-OutputTrafoStandardize-new)
+- [`OutputTrafoStandardize$new()`](#method-OutputTrafoStandardize-initialize)
 
 - [`OutputTrafoStandardize$update()`](#method-OutputTrafoStandardize-update)
 
@@ -42,12 +42,12 @@ Other Output Transformation:
 
 Inherited methods
 
-- [`mlr3mbo::OutputTrafo$format()`](https://mlr3mbo.mlr-org.com/reference/OutputTrafo.html#method-format)
-- [`mlr3mbo::OutputTrafo$print()`](https://mlr3mbo.mlr-org.com/reference/OutputTrafo.html#method-print)
+- [`OutputTrafo$format()`](https://mlr3mbo.mlr-org.com/reference/OutputTrafo.html#method-format)
+- [`OutputTrafo$print()`](https://mlr3mbo.mlr-org.com/reference/OutputTrafo.html#method-print)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `OutputTrafoStandardize$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -70,7 +70,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `OutputTrafoStandardize$update()`
 
 Learn the transformation based on observed data and update parameters in
 `$state`.
@@ -88,7 +88,7 @@ Learn the transformation based on observed data and update parameters in
 
 ------------------------------------------------------------------------
 
-### Method [`transform()`](https://rdrr.io/r/base/transform.html)
+### `OutputTrafoStandardize$transform()`
 
 Perform the transformation.
 
@@ -110,7 +110,7 @@ with the transformation applied to the columns `$cols_y`.
 
 ------------------------------------------------------------------------
 
-### Method `inverse_transform_posterior()`
+### `OutputTrafoStandardize$inverse_transform_posterior()`
 
 Perform the inverse transformation on a posterior predictive
 distribution characterized by the first and second moment.
@@ -143,7 +143,7 @@ with the inverse transformation applied to the columns `mean` and `se`.
 
 ------------------------------------------------------------------------
 
-### Method `inverse_transform()`
+### `OutputTrafoStandardize$inverse_transform()`
 
 Perform the inverse transformation.
 
@@ -165,7 +165,7 @@ with the inverse transformation applied to the columns `$cols_y`.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `OutputTrafoStandardize$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -220,10 +220,9 @@ if (requireNamespace("mlr3learners") &
 
   surrogate$predict(data.table(x = c(-1, 0, 1)))
 }
-#> $mean
-#> [1] -0.9215786 -0.9649938 -0.9792974
-#> 
-#> $se
-#> [1] 0.01389580 0.07362557 0.16448148
-#> 
+#>          mean         se
+#>         <num>      <num>
+#> 1: -0.9215786 0.01389580
+#> 2: -0.9649938 0.07362557
+#> 3: -0.9792974 0.16448148
 ```
