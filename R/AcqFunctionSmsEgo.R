@@ -197,7 +197,13 @@ AcqFunctionSmsEgo = R6Class(
       front2 = t(rbind(self$ys_front, 0))
       # note that the negative indicator is returned from C
       sms = .Call(
-        "c_sms_indicator", PACKAGE = "mlr3mbo", cbs, self$ys_front, front2, self$epsilon, self$ref_point
+        "c_sms_indicator",
+        PACKAGE = "mlr3mbo",
+        cbs,
+        self$ys_front,
+        front2,
+        self$epsilon,
+        self$ref_point
       )
       data.table(acq_smsego = sms, acq_epsilon = list(self$epsilon))
     }
