@@ -281,7 +281,11 @@ AcqOptimizer = R6Class(
       #  }
       #  setcolorder(xdt, c(instance$archive$cols_x, "x_domain", instance$objective$id))
       #}
-      xdt[, -c("timestamp", "batch_nr")] # drop timestamp and batch_nr information from the candidates
+      # drop timestamp and batch_nr, and drop x_domain so that instance$eval_batch() recomputes it from the (clipped)
+      # x columns; carrying over the acquisition function archive's x_domain would store a stale, potentially
+      # out-of-bounds value and is inconsistent with all other candidates entering the archive (initial design,
+      # random interleaving, and the AcqOptimizer subclasses), none of which supply an x_domain
+      xdt[, -c("timestamp", "batch_nr", "x_domain")]
     },
 
     #' @description

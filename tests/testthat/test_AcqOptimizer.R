@@ -134,7 +134,12 @@ test_that("AcqOptimizer trafo", {
   acqfun$surrogate$update()
   acqfun$update()
   res = acqopt$optimize()
-  expect_equal(res$x, res$x_domain[[1L]][[1L]])
+  # the acq optimizer works in the untransformed surrogate space and does not carry an x_domain;
+  # instance$eval_batch() computes the trafo'd x_domain for the real archive
+  expect_names(names(res), disjunct.from = "x_domain")
+  instance$eval_batch(res)
+  last = tail(instance$archive$data, 1L)
+  expect_equal(last$x_domain[[1L]]$x, last$x - 15)
 })
 
 test_that("AcqOptimizer deep clone", {
