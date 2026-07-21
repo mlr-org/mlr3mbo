@@ -5,14 +5,13 @@ Abstract surrogate model class.
 A surrogate model is used to model the unknown objective function(s)
 based on all points evaluated so far.
 
-## Public fields
+## Active bindings
 
 - `learner`:
 
   (learner)  
-  Arbitrary learner object depending on the subclass.
-
-## Active bindings
+  Arbitrary learner object depending on the subclass. Subclasses
+  validate the learner on assignment.
 
 - `print_id`:
 
@@ -82,6 +81,19 @@ based on all points evaluated so far.
 
   (`character(1)`)  
   Retrieves the currently active predict type, e.g. `"response"`.
+
+- `output_trafo`:
+
+  ([OutputTrafo](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.md)
+  \| `NULL`)  
+  Output transformation. Defaults to `NULL` for subclasses that do not
+  support output transformations.
+
+- `output_trafo_must_be_considered`:
+
+  (`logical(1)`)  
+  Whether a transformation has been applied to the target variable that
+  has not been inverted during prediction.
 
 ## Methods
 

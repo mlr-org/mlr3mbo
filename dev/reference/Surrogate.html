@@ -58,17 +58,14 @@ A surrogate model is used to model the unknown objective function(s) based on al
 
 
     <div class="section level2">
-    <h2 id="public-fields">Public fields<a class="anchor" aria-label="anchor" href="#public-fields"></a></h2>
-    <p></p><div class="r6-fields"><dl><dt><code>learner</code></dt>
-<dd><p>(learner)<br>
-Arbitrary learner object depending on the subclass.</p></dd>
-
-
-</dl><p></p></div>
-    </div>
-    <div class="section level2">
     <h2 id="active-bindings">Active bindings<a class="anchor" aria-label="anchor" href="#active-bindings"></a></h2>
-    <p></p><div class="r6-active-bindings"><dl><dt><code>print_id</code></dt>
+    <p></p><div class="r6-active-bindings"><dl><dt><code>learner</code></dt>
+<dd><p>(learner)<br>
+Arbitrary learner object depending on the subclass.
+Subclasses validate the learner on assignment.</p></dd>
+
+
+    <dt><code>print_id</code></dt>
 <dd><p>(<code>character</code>)<br>
 Id used when printing.</p></dd>
 
@@ -125,6 +122,17 @@ A complete list of candidate properties, grouped by task type, is stored in <cod
     <dt><code>predict_type</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 Retrieves the currently active predict type, e.g. <code>"response"</code>.</p></dd>
+
+
+    <dt><code>output_trafo</code></dt>
+<dd><p>(<a href="OutputTrafo.html">OutputTrafo</a> | <code>NULL</code>)<br>
+Output transformation.
+Defaults to <code>NULL</code> for subclasses that do not support output transformations.</p></dd>
+
+
+    <dt><code>output_trafo_must_be_considered</code></dt>
+<dd><p>(<code>logical(1)</code>)<br>
+Whether a transformation has been applied to the target variable that has not been inverted during prediction.</p></dd>
 
 
 </dl><p></p></div>

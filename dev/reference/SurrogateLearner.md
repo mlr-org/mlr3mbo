@@ -29,7 +29,7 @@ Surrogate model containing a single
 [`Surrogate`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.md)
 -\> `SurrogateLearner`
 
-## Public fields
+## Active bindings
 
 - `learner`:
 
@@ -39,15 +39,15 @@ Surrogate model containing a single
 
 - `input_trafo`:
 
-  ([InputTrafo](https://mlr3mbo.mlr-org.com/dev/reference/InputTrafo.md))  
+  ([InputTrafo](https://mlr3mbo.mlr-org.com/dev/reference/InputTrafo.md)
+  \| `NULL`)  
   Input transformation.
 
 - `output_trafo`:
 
-  ([OutputTrafo](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.md))  
+  ([OutputTrafo](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.md)
+  \| `NULL`)  
   Output transformation.
-
-## Active bindings
 
 - `print_id`:
 

@@ -35,7 +35,7 @@ must be deep clones.
 [`Surrogate`](https://mlr3mbo.mlr-org.com/dev/reference/Surrogate.md)
 -\> `SurrogateLearnerCollection`
 
-## Public fields
+## Active bindings
 
 - `learner`:
 
@@ -43,19 +43,20 @@ must be deep clones.
   [mlr3::LearnerRegr](https://mlr3.mlr-org.com/reference/LearnerRegr.html))  
   List of
   [mlr3::LearnerRegr](https://mlr3.mlr-org.com/reference/LearnerRegr.html)
-  wrapped as surrogate models.
+  wrapped as surrogate models. The learners must be unique in memory,
+  i.e., deep clones.
 
 - `input_trafo`:
 
-  ([InputTrafo](https://mlr3mbo.mlr-org.com/dev/reference/InputTrafo.md))  
+  ([InputTrafo](https://mlr3mbo.mlr-org.com/dev/reference/InputTrafo.md)
+  \| `NULL`)  
   Input transformation.
 
 - `output_trafo`:
 
-  ([OutputTrafo](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.md))  
+  ([OutputTrafo](https://mlr3mbo.mlr-org.com/dev/reference/OutputTrafo.md)
+  \| `NULL`)  
   Output transformation.
-
-## Active bindings
 
 - `print_id`:
 

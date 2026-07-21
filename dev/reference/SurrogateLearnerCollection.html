@@ -86,27 +86,24 @@ Default is <code>"random"</code>.</p></dd>
     <p><code><a href="Surrogate.html">Surrogate</a></code> -&gt; <code>SurrogateLearnerCollection</code></p>
     </div>
     <div class="section level2">
-    <h2 id="public-fields">Public fields<a class="anchor" aria-label="anchor" href="#public-fields"></a></h2>
-    <p></p><div class="r6-fields"><dl><dt><code>learner</code></dt>
+    <h2 id="active-bindings">Active bindings<a class="anchor" aria-label="anchor" href="#active-bindings"></a></h2>
+    <p></p><div class="r6-active-bindings"><dl><dt><code>learner</code></dt>
 <dd><p>(list of <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a>)<br>
-List of <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a> wrapped as surrogate models.</p></dd>
+List of <a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">mlr3::LearnerRegr</a> wrapped as surrogate models.
+The learners must be unique in memory, i.e., deep clones.</p></dd>
 
 
     <dt><code>input_trafo</code></dt>
-<dd><p>(<a href="InputTrafo.html">InputTrafo</a>)<br>
+<dd><p>(<a href="InputTrafo.html">InputTrafo</a> | <code>NULL</code>)<br>
 Input transformation.</p></dd>
 
 
     <dt><code>output_trafo</code></dt>
-<dd><p>(<a href="OutputTrafo.html">OutputTrafo</a>)<br>
+<dd><p>(<a href="OutputTrafo.html">OutputTrafo</a> | <code>NULL</code>)<br>
 Output transformation.</p></dd>
 
 
-</dl><p></p></div>
-    </div>
-    <div class="section level2">
-    <h2 id="active-bindings">Active bindings<a class="anchor" aria-label="anchor" href="#active-bindings"></a></h2>
-    <p></p><div class="r6-active-bindings"><dl><dt><code>print_id</code></dt>
+    <dt><code>print_id</code></dt>
 <dd><p>(<code>character</code>)<br>
 Id used when printing.</p></dd>
 

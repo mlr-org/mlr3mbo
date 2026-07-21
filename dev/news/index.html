@@ -74,10 +74,13 @@
 <li>fix: <code>OptimizerAsyncMbo</code> no longer ignores its <code>id</code> construction argument, so <code>OptimizerADBO</code> and <code>TunerADBO</code> now correctly report the id <code>"adbo"</code> instead of <code>"async_mbo"</code>.</li>
 <li>fix: <code>OptimizerMbo</code> and <code>TunerMbo</code> now update the surrogate a final time even when the optimization exits through a termination error, e.g., when the archive is already at budget or the terminator triggers between two evaluations.</li>
 <li>fix: <code>OutputTrafoLog</code> and <code>OutputTrafoStandardize</code> no longer produce <code>NaN</code> or <code>Inf</code> values when all observed outcomes are identical.</li>
+<li>fix: <code>OutputTrafoLog</code> no longer produces infinite values when the range of the observed outcomes is tiny relative to their magnitude, because the epsilon padding is now floored at the local floating point precision.</li>
 <li>fix: <code>ResultAssignerSurrogate</code> no longer errors when the archive contains duplicated x-configurations.</li>
 <li>fix: <code><a href="../reference/srlrn.html">srlrn()</a></code> now correctly unwraps a single learner supplied in a list instead of erroring.</li>
 <li>fix: <code>TunerAsyncMbo</code> now accepts the documented <code>result_assigner</code> construction argument and forwards it to <code>OptimizerAsyncMbo</code>.</li>
+<li>fix: <code>Surrogate</code> now provides default <code>output_trafo</code> and <code>output_trafo_must_be_considered</code> fields, so third-party subclasses work with the acquisition functions without implementing output transformation support.</li>
 <li>fix: <code>SurrogateLearner$predict()</code> no longer modifies the data.table passed as <code>xdt</code> by reference.</li>
+<li>fix: <code>SurrogateLearner</code> and <code>SurrogateLearnerCollection</code> now validate assignments to the <code>learner</code>, <code>input_trafo</code>, and <code>output_trafo</code> fields, so invalid values are rejected immediately instead of failing later during updating or predicting.</li>
 <li>fix: <code>SurrogateLearner$predict()</code> now always returns a <code>data.table</code> with columns <code>mean</code> and <code>se</code> as documented, instead of a bare named list in configurations without an inverting output transformation.</li>
 </ul></div>
     <div class="section level2">
