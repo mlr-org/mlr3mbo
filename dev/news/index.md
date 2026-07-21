@@ -2,6 +2,9 @@
 
 ## mlr3mbo (development version)
 
+- fix: `AcqOptimizer` now respects `warmstart_size` when warm-starting a
+  single-objective acquisition function on a multi-objective archive,
+  instead of evaluating the entire non-dominated front.
 - fix: `AcqOptimizer` and its subclasses gained `$label` and `$man`
   fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
 - fix: `AcqFunctionAEI` no longer errors during `$update()` when the
