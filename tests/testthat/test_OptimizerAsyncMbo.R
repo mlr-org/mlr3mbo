@@ -46,3 +46,9 @@ test_that("OptimizerAsyncMbo works with evaluations in archive", {
   expect_data_table(instance$archive$data[is.na(get("acq_cb"))], min.rows = 10L)
   expect_data_table(instance$archive$data[!is.na(get("acq_cb"))], min.rows = 20L)
 })
+
+test_that("OptimizerAsyncMbo passes the id argument through", {
+  expect_equal(OptimizerAsyncMbo$new()$id, "async_mbo")
+  expect_equal(OptimizerAsyncMbo$new(id = "custom")$id, "custom")
+  expect_equal(OptimizerADBO$new()$id, "adbo")
+})
