@@ -21,7 +21,7 @@ test_that("SurrogateLearner API works", {
   expect_error(surrogate$update(), class = "Mlr3ErrorMboSurrogateUpdate")
 
   surrogate$param_set$values$catch_errors = FALSE
-  expect_error(surrogate$optimize(), class = "simpleError")
+  expect_error(surrogate$update(), class = "Mlr3ErrorLearnerTrain")
 
   # predict_type
   expect_equal(surrogate$predict_type, surrogate$learner$predict_type)
