@@ -67,6 +67,9 @@
 - fix: `AcqFunctionEHVIGH` no longer prunes all Gauss-Hermite nodes when
   their weights are tied, which previously made the acquisition function
   identically `0` for `k = 2`.
+- feat: `AcqFunctionEHVIGH` now computes the hypervolume via the
+  `moocore` package instead of `emoa`, which is no longer a dependency
+  ([\#186](https://github.com/mlr-org/mlr3mbo/issues/186)).
 - fix: `AcqFunctionEI`, `AcqFunctionEILog`, `AcqFunctionPI`, and
   `AcqFunctionStochasticEI` now ignore the missing outcomes of pending
   evaluations when determining the best observed value, so `y_best` is
