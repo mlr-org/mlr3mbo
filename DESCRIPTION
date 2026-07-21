@@ -53,6 +53,7 @@ Imports:
     R6 (>= 2.4.1)
 Suggests:
     DiceKriging,
+    emoa,
     fastGHQuad,
     lhs,
     mlr3learners (>= 0.12.0),
