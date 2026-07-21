@@ -15,6 +15,7 @@
 * fix: `AcqOptimizerLbfgsb` now raises a catchable acquisition function optimizer error instead of an unrelated error when no restart produces a valid solution, so the loop function can fall back to a randomly sampled point.
 * fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a search space bound, which previously caused the optimization to silently degenerate into random search.
 * fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from an exponential distribution as documented, so that the `lambda` parameter has an effect.
+* fix: `OptimizerAsyncMbo` no longer ignores its `id` construction argument, so `OptimizerADBO` and `TunerADBO` now correctly report the id `"adbo"` instead of `"async_mbo"`.
 * fix: `OptimizerMbo` and `TunerMbo` now update the surrogate a final time even when the optimization exits through a termination error, e.g., when the archive is already at budget or the terminator triggers between two evaluations.
 * fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce `NaN` or `Inf` values when all observed outcomes are identical.
 * fix: `ResultAssignerSurrogate` no longer errors when the archive contains duplicated x-configurations.
