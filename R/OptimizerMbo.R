@@ -428,7 +428,6 @@ OptimizerMbo = R6Class(
               self$surrogate$update()
             },
             error = function(error_condition) {
-              lg = lgr::get_logger("mlr3/bbotk")
               lg$warn("Could not update the surrogate a final time after the optimization process has terminated.")
             }
           )
