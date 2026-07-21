@@ -169,7 +169,7 @@ bayesopt_ego = function(
     if (instance$is_terminated) break
   }
 
-  return(invisible(instance))
+  invisible(instance)
 }
 
 class(bayesopt_ego) = "loop_function"

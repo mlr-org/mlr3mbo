@@ -212,7 +212,7 @@ bayesopt_mpcl = function(
     if (instance$is_terminated) break
   }
 
-  return(invisible(instance))
+  invisible(instance)
 }
 
 class(bayesopt_mpcl) = "loop_function"
