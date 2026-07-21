@@ -9,10 +9,6 @@
 Surrogate = R6Class(
   "Surrogate",
   public = list(
-    #' @field learner (learner)\cr
-    #'   Arbitrary learner object depending on the subclass.
-    learner = NULL,
-
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     #'
@@ -103,6 +99,17 @@ Surrogate = R6Class(
   ),
 
   active = list(
+    #' @field learner (learner)\cr
+    #'   Arbitrary learner object depending on the subclass.
+    #'   Subclasses validate the learner on assignment.
+    learner = function(rhs) {
+      if (missing(rhs)) {
+        private$.learner
+      } else {
+        private$.learner = rhs
+      }
+    },
+
     #' @template field_print_id
     print_id = function(rhs) {
       if (missing(rhs)) {
@@ -198,10 +205,32 @@ Surrogate = R6Class(
       } else {
         stop("$predict_type is read-only. To change it, modify $predict_type of the learner directly.")
       }
+    },
+
+    #' @field output_trafo ([OutputTrafo] | `NULL`)\cr
+    #'   Output transformation.
+    #'   Defaults to `NULL` for subclasses that do not support output transformations.
+    output_trafo = function(rhs) {
+      if (missing(rhs)) {
+        NULL
+      } else {
+        stop("$output_trafo is read-only.")
+      }
+    },
+
+    #' @template field_output_trafo_must_be_considered
+    output_trafo_must_be_considered = function(rhs) {
+      if (missing(rhs)) {
+        FALSE
+      } else {
+        stop("$output_trafo_must_be_considered is read-only.")
+      }
     }
   ),
 
   private = list(
+    .learner = NULL,
+
     .archive = NULL,
 
     .cols_x = NULL,

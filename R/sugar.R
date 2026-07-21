@@ -44,38 +44,38 @@ srlrn = function(learner, input_trafo = NULL, output_trafo = NULL, archive = NUL
   dots = list(...)
   assert_learner_surrogate(learner)
 
-  surrogate = if (test_r6(learner, classes = "Learner")) {
+  learners = if (test_r6(learner, classes = "Learner")) list(learner) else learner
+  n_targets = if (!is.null(cols_y)) {
+    length(cols_y)
+  } else if (!is.null(archive)) {
+    length(archive$cols_y)
+  } else {
+    length(learners)
+  }
+  if (length(learners) == 1L && n_targets > 1L) {
+    # replicate a single learner as many times as needed via deep clones
+    learners = map(seq_len(n_targets), function(i) learners[[1L]]$clone(deep = TRUE))
+  }
+
+  surrogate = if (length(learners) == 1L) {
     SurrogateLearner$new(
-      learner = learner,
+      learner = learners[[1L]],
       input_trafo = input_trafo,
       output_trafo = output_trafo,
       archive = archive,
       cols_x = cols_x,
       col_y = cols_y
     )
-  } else if (inherits(learner, what = "list")) {
-    if (length(learner) == 1L) {
-      learner = learner[[1L]]
-      # if a single learner is provided in a list, we unlist it
-      SurrogateLearner$new(
-        learner = learner,
-        input_trafo = input_trafo,
-        output_trafo = output_trafo,
-        archive = archive,
-        cols_x = cols_x,
-        col_y = cols_y
-      )
-    } else {
-      assert_character(cols_y, len = length(learner), null.ok = TRUE)
-      SurrogateLearnerCollection$new(
-        learners = learner,
-        input_trafo = input_trafo,
-        output_trafo = output_trafo,
-        archive = archive,
-        cols_x = cols_x,
-        cols_y = cols_y
-      )
-    }
+  } else {
+    assert_character(cols_y, len = length(learners), null.ok = TRUE)
+    SurrogateLearnerCollection$new(
+      learners = learners,
+      input_trafo = input_trafo,
+      output_trafo = output_trafo,
+      archive = archive,
+      cols_x = cols_x,
+      cols_y = cols_y
+    )
   }
   surrogate$param_set$values = insert_named(surrogate$param_set$values, dots)
   surrogate
@@ -160,6 +160,11 @@ acqo = function(optimizer, terminator, acq_function = NULL, callbacks = NULL, ..
   dots = list(...)
 
   if (is.character(optimizer)) {
+    if (!missing(terminator) || !is.null(callbacks)) {
+      stopf(
+        "'terminator' and 'callbacks' must not be given when 'optimizer' is a key of mlr_acqoptimizers, because the pre-defined acquisition function optimizers do not use them."  # nolint
+      )
+    }
     return(dictionary_sugar_get(mlr_acqoptimizers, optimizer, acq_function = acq_function, ...))
   }
 
