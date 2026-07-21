@@ -147,7 +147,8 @@ bayesopt_mpcl = function(
         acq_optimizer$optimize()
       },
       Mlr3ErrorMbo = function(cond) {
-        #lg$info("Proposing a randomly sampled point") no logging because we do not evaluate this point
+        lg$warn("Caught the following error: %s", cond$message)
+        lg$info("Proposing a randomly sampled point")
         generate_design_random(search_space, n = 1L)$data
       }
     )

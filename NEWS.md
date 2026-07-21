@@ -2,6 +2,7 @@
 
 * fix: `AcqOptimizer` now respects `warmstart_size` when warm-starting a single-objective acquisition function on a multi-objective archive, instead of evaluating the entire non-dominated front.
 * fix: `AcqOptimizer` and its subclasses gained `$label` and `$man` fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
+* fix: `bayesopt_mpcl()` now logs a warning when a surrogate or acquisition function error is caught and a randomly sampled point is proposed, consistent with the other loop functions.
 * fix: `bayesopt_parego()` now subsets the minimization multiplier to the target columns, so the scalarization signs no longer misalign when the codomain holds non-target columns.
 * fix: `bayesopt_ego()`, `bayesopt_emo()`, `bayesopt_mpcl()`, `bayesopt_parego()`, and `bayesopt_smsego()` no longer silently disable random interleaving when the archive already contains a user-supplied initial design and `init_design_size` is `NULL`.
 * fix: `AcqFunctionAEI` no longer errors during `$update()` when the surrogate model is not a `"regr.km"` model and now falls back to a noise variance of `0` as documented.
