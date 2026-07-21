@@ -8,6 +8,11 @@
 - fix: `AcqOptimizer` and its subclasses gained `$label` and `$man`
   fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
 - fix:
+  [`bayesopt_parego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_parego.md)
+  now subsets the minimization multiplier to the target columns, so the
+  scalarization signs no longer misalign when the codomain holds
+  non-target columns.
+- fix:
   [`bayesopt_ego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_ego.md),
   [`bayesopt_emo()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_emo.md),
   [`bayesopt_mpcl()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_mpcl.md),
