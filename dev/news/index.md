@@ -40,6 +40,8 @@
 - fix: `AcqOptimizerDirect`, `AcqOptimizerLbfgsb`,
   `AcqOptimizerLocalSearch`, and `AcqOptimizerRandomSearch` can now be
   deep cloned without error.
+- fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now accept
+  `maxeval = -1L` to deactivate the evaluation limit, as documented.
 - fix: `AcqOptimizerDirect` and `AcqOptimizerLbfgsb` now raise an
   informative error for non-numeric search spaces instead of failing
   confusingly inside `nloptr` or silently degrading to random search
