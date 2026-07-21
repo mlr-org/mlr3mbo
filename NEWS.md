@@ -27,6 +27,7 @@
 * fix: `ResultAssignerSurrogate` no longer errors when the archive contains duplicated x-configurations.
 * fix: `srlrn()` now correctly unwraps a single learner supplied in a list instead of erroring.
 * fix: `TunerAsyncMbo` now accepts the documented `result_assigner` construction argument and forwards it to `OptimizerAsyncMbo`.
+* fix: `Surrogate` now provides default `output_trafo` and `output_trafo_must_be_considered` fields, so third-party subclasses work with the acquisition functions without implementing output transformation support.
 * fix: `SurrogateLearner$predict()` no longer modifies the data.table passed as `xdt` by reference.
 * fix: `SurrogateLearner` and `SurrogateLearnerCollection` now validate assignments to the `learner`, `input_trafo`, and `output_trafo` fields, so invalid values are rejected immediately instead of failing later during updating or predicting.
 * fix: `SurrogateLearner$predict()` now always returns a `data.table` with columns `mean` and `se` as documented, instead of a bare named list in configurations without an inverting output transformation.

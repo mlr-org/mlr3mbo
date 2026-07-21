@@ -52,6 +52,13 @@ A complete list of candidate properties, grouped by task type, is stored in \cod
 
     \item{\code{predict_type}}{(\code{character(1)})\cr
 Retrieves the currently active predict type, e.g. \code{"response"}.}
+
+    \item{\code{output_trafo}}{(\link{OutputTrafo} | \code{NULL})\cr
+Output transformation.
+Defaults to \code{NULL} for subclasses that do not support output transformations.}
+
+    \item{\code{output_trafo_must_be_considered}}{(\code{logical(1)})\cr
+Whether a transformation has been applied to the target variable that has not been inverted during prediction.}
   }
   \if{html}{\out{</div>}}
 }
