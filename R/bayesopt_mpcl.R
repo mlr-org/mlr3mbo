@@ -142,9 +142,18 @@ bayesopt_mpcl = function(
     # normal ego proposal with error catching
     xdt = tryCatch(
       {
+        # random interleaving is handled here; the counter must advance per proposal, not per batch
+        if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+          error_random_interleave("Random interleaving")
+        }
+
         acq_function$surrogate$update()
         acq_function$update()
         acq_optimizer$optimize()
+      },
+      Mlr3ErrorMboRandomInterleave = function(cond) {
+        lg$info("Random interleaving triggered, proposing a randomly sampled point")
+        generate_design_random(search_space, n = 1L)$data
       },
       Mlr3ErrorMbo = function(cond) {
         lg$warn("Caught the following error: %s", cond$message)
@@ -172,8 +181,8 @@ bayesopt_mpcl = function(
             ydt = lie
           )
 
-          # random interleaving is handled here
-          if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+          # random interleaving is handled here; the counter must advance per proposal, not per batch
+          if (isTRUE((instance$archive$n_evals - init_design_size + i) %% random_interleave_iter == 0)) {
             error_random_interleave("Random interleaving")
           }
 
@@ -192,7 +201,8 @@ bayesopt_mpcl = function(
           generate_design_random(search_space, n = 1L)$data
         }
       )
-      xdt = rbind(xdt, xdt_new)
+      # fill because randomly sampled fallback points lack the acquisition function columns
+      xdt = rbind(xdt, xdt_new, fill = TRUE)
     }
 
     acq_function$surrogate$archive = instance$archive

@@ -66,3 +66,22 @@ test_that("bayesopt_parego works with a constant objective", {
   expect_true(all(is.finite(head(instance$archive$data$y_scal, 5L))))
   expect_true(all(!is.na(tail(instance$archive$data$acq_ei, 2L))))
 })
+
+test_that("bayesopt_parego random interleave triggers per proposal", {
+  instance = MAKE_INST(OBJ_1D_2, search_space = PS_1D, terminator = trm("evals", n_evals = 8L))
+  surrogate = SurrogateLearner$new(REGR_FEATURELESS)
+  acq_function = AcqFunctionEI$new()
+  acq_optimizer = AcqOptimizer$new(opt("random_search", batch_size = 2L), terminator = trm("evals", n_evals = 2L))
+
+  bayesopt_parego(
+    instance,
+    surrogate = surrogate,
+    acq_function = acq_function,
+    acq_optimizer = acq_optimizer,
+    init_design_size = 4L,
+    q = 2L,
+    random_interleave_iter = 2L
+  )
+
+  expect_identical(is.na(instance$archive$data$acq_ei), c(rep(TRUE, 4L), FALSE, TRUE, FALSE, TRUE))
+})

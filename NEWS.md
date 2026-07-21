@@ -3,6 +3,9 @@
 * fix: `AcqOptimizer` now respects `warmstart_size` when warm-starting a single-objective acquisition function on a multi-objective archive, instead of evaluating the entire non-dominated front.
 * fix: `AcqOptimizer` and its subclasses gained `$label` and `$man` fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
 * fix: `bayesopt_mpcl()` now logs a warning when a surrogate or acquisition function error is caught and a randomly sampled point is proposed, consistent with the other loop functions.
+* fix: `bayesopt_mpcl()` no longer aborts when a batch mixes model-based proposals and randomly sampled fallback points, because the batch is now combined with filling missing columns.
+* fix: `bayesopt_mpcl()` and `bayesopt_parego()` now advance the random interleaving counter per proposal instead of per batch, so random interleaving also triggers for `q > 1` as documented.
+* fix: `bayesopt_parego()` now subsets the minimization multiplier to the target columns, so the scalarization signs no longer misalign when the codomain holds non-target columns.
 * fix: `bayesopt_parego()` now subsets the minimization multiplier to the target columns, so the scalarization signs no longer misalign when the codomain holds non-target columns.
 * fix: `bayesopt_ego()`, `bayesopt_emo()`, `bayesopt_mpcl()`, `bayesopt_parego()`, and `bayesopt_smsego()` no longer silently disable random interleaving when the archive already contains a user-supplied initial design and `init_design_size` is `NULL`.
 * fix: `bayesopt_parego()` no longer silently degrades to random search when an objective is constant, because the zero-range scaling now maps the constant objective to a constant value instead of `NaN`.

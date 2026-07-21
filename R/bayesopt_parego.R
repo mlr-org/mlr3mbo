@@ -160,7 +160,7 @@ bayesopt_parego = function(
 
     xdt = map_dtr(
       qs,
-      function(q) {
+      function(i) {
         # scalarize y
         lambda = lambdas[sample.int(nrow(lambdas), 1L), , drop = TRUE]
         mult = Map("*", ydt, lambda)
@@ -170,8 +170,8 @@ bayesopt_parego = function(
 
         tryCatch(
           {
-            # random interleaving is handled here
-            if (isTRUE((instance$archive$n_evals - init_design_size + 1L) %% random_interleave_iter == 0)) {
+            # random interleaving is handled here; the counter must advance per proposal, not per batch
+            if (isTRUE((instance$archive$n_evals - init_design_size + i) %% random_interleave_iter == 0)) {
               error_random_interleave("Random interleaving")
             }
             acq_function$surrogate$update()
