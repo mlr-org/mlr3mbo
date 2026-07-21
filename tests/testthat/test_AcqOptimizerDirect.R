@@ -49,6 +49,12 @@ test_that("AcqOptimizerDirect works with instance", {
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
 
+test_that("AcqOptimizerDirect maxeval accepts -1L and -1 to deactivate", {
+  acqopt = AcqOptimizerDirect$new()
+  expect_error(acqopt$param_set$set_values(maxeval = -1L), NA)
+  expect_error(acqopt$param_set$set_values(maxeval = -1), NA)
+})
+
 test_that("AcqOptimizerDirect resets state between optimize() calls", {
   skip_if_missing_regr_km()
   instance = oi(OBJ_1D, terminator = trm("evals", n_evals = 5L))
