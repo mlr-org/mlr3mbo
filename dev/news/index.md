@@ -2,6 +2,10 @@
 
 ## mlr3mbo (development version)
 
+## mlr3mbo 1.2.0
+
+CRAN release: 2026-07-21
+
 - fix: [`acqo()`](https://mlr3mbo.mlr-org.com/dev/reference/acqo.md) now
   raises an error when `terminator` or `callbacks` are combined with a
   dictionary key as `optimizer`, because these arguments were silently
@@ -33,11 +37,6 @@
   now advance the random interleaving counter per proposal instead of
   per batch, so random interleaving also triggers for `q > 1` as
   documented.
-- fix:
-  [`bayesopt_parego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_parego.md)
-  now subsets the minimization multiplier to the target columns, so the
-  scalarization signs no longer misalign when the codomain holds
-  non-target columns.
 - fix:
   [`bayesopt_parego()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_parego.md)
   now subsets the minimization multiplier to the target columns, so the
@@ -166,10 +165,6 @@
 - fix: `OptimizerAsyncMbo` no longer ignores its `id` construction
   argument, so `OptimizerADBO` and `TunerADBO` now correctly report the
   id `"adbo"` instead of `"async_mbo"`.
-- fix: `OptimizerMbo` and `TunerMbo` now update the surrogate a final
-  time even when the optimization exits through a termination error,
-  e.g., when the archive is already at budget or the terminator triggers
-  between two evaluations.
 - fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce
   `NaN` or `Inf` values when all observed outcomes are identical.
 - fix: `OutputTrafoLog$inverse_transform_posterior()` no longer errors

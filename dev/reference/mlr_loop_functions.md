@@ -5,29 +5,11 @@ A simple
 storing objects of class `loop_function`. Each loop function has an
 associated help page, see `mlr_loop_functions_[id]`.
 
-Retrieves object with key `key` from the dictionary.
-
 ## Format
 
 [R6::R6Class](https://r6.r-lib.org/reference/R6Class.html) object
 inheriting from
 [mlr3misc::Dictionary](https://mlr3misc.mlr-org.com/reference/Dictionary.html).
-
-## Arguments
-
-- key:
-
-  (`character(1)`).
-
-- ...:
-
-  (`any`)  
-  Must be empty, because loop functions are stored as plain values and
-  nothing is constructed.
-
-## Value
-
-Object with corresponding key.
 
 ## Methods
 
