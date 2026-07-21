@@ -86,7 +86,10 @@ AcqFunctionMulti = R6Class(
       )
       constants = ps()
       domains = map(acq_functions, function(acq_function) acq_function$domain)
-      assert_true(all(map_lgl(domains[-1L], function(domain) all.equal(domains[[1L]]$data, domain$data))))
+      domains_equal = map_lgl(domains[-1L], function(domain) isTRUE(all.equal(domains[[1L]]$data, domain$data)))
+      if (!all(domains_equal)) {
+        stop("All acquisition functions must have the same domain.")
+      }
       if (is.null(surrogate)) {
         surrogates = map(acq_functions, function(acq_function) acq_function$surrogate)
         assert_list(surrogates, types = c("Surrogate", "NULL"))

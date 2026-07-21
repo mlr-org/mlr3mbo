@@ -10,6 +10,8 @@
 #' Each run stops when the relative tolerance of the parameters is less than `10^-4`.
 #' The first iteration starts with the best point in the archive and the next iterations start from a random point.
 #'
+#' Only fully numeric search spaces (all parameters of type `p_dbl`) are supported.
+#'
 #' @section Parameters:
 #' \describe{
 #' \item{`restart_strategy`}{`character(1)`\cr
@@ -81,13 +83,12 @@ AcqOptimizerLbfgsb = R6Class(
     initialize = function(acq_function = NULL) {
       self$acq_function = assert_r6(acq_function, "AcqFunction", null.ok = TRUE)
       param_set = ps(
-        maxeval = p_int(lower = 1, special_vals = list(-1)),
+        maxeval = p_int(lower = 1, special_vals = list(-1L, -1)),
         stopval = p_dbl(default = -Inf, lower = -Inf, upper = Inf),
         xtol_rel = p_dbl(default = 1e-04, lower = 0, upper = Inf, special_vals = list(-1)),
         xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
-        minf_max = p_dbl(default = -Inf),
         restart_strategy = p_fct(levels = c("none", "random"), init = "none"),
         max_restarts = p_int(lower = 0L),
         skip_already_evaluated = p_lgl(init = TRUE),
@@ -101,6 +102,10 @@ AcqOptimizerLbfgsb = R6Class(
     #'
     #' @return [data.table::data.table()] with 1 row per candidate.
     optimize = function() {
+      if (!all(self$acq_function$domain$class == "ParamDbl")) {
+        stopf("`AcqOptimizerLbfgsb` only supports fully numeric (`p_dbl`) search spaces.")
+      }
+      self$state = NULL
       pv = self$param_set$values
       restart_strategy = pv$restart_strategy
       max_restarts = pv$max_restarts
@@ -148,6 +153,7 @@ AcqOptimizerLbfgsb = R6Class(
       }
 
       y = Inf
+      x = NULL
       n_evals = 0L
       n_restarts = 0L
       while ((n_evals < maxeval || maxeval < 0) && n_restarts <= max_restarts) {
@@ -194,7 +200,8 @@ AcqOptimizerLbfgsb = R6Class(
           res = optimize()
         }
 
-        if (res$objective < y) {
+        # isTRUE guards against a NaN objective (e.g., constant acquisition surface) that would otherwise error here
+        if (isTRUE(res$objective < y)) {
           y = res$objective
           x = res$solution
         }
@@ -205,6 +212,9 @@ AcqOptimizerLbfgsb = R6Class(
 
         if (restart_strategy == "none") break
       }
+      if (is.null(x)) {
+        error_acq_optimizer("Acquisition function optimization did not yield a valid solution.")
+      }
       xdt = as.data.table(as.list(set_names(
         c(x, y * direction),
         c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
@@ -213,6 +223,14 @@ AcqOptimizerLbfgsb = R6Class(
         assert_not_already_evaluated(xdt, self$acq_function$archive)
       }
       xdt
+    },
+
+    #' @description
+    #' Reset the acquisition function optimizer.
+    #'
+    #' Clears the `state` of the previous optimization run.
+    reset = function() {
+      self$state = NULL
     }
   ),
 

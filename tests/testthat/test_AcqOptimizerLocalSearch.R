@@ -13,6 +13,12 @@ test_that("AcqOptimizerLocalSearch works", {
   res = acqopt$optimize()
   expect_data_table(res, nrows = 1L, ncols = 2L)
   expect_names(names(res), must.include = c("x", "acq_ei"))
+
+  # state is populated with the local_search result and cleared on reset
+  expect_list(acqopt$state)
+  expect_names(names(acqopt$state), must.include = c("x", "y"))
+  acqopt$reset()
+  expect_null(acqopt$state)
 })
 
 test_that("AcqOptimizerLocalSearch has skip_already_evaluated enabled by default", {

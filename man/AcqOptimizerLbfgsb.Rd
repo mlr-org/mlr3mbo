@@ -10,6 +10,8 @@ In its default setting, the algorithm restarts \code{5 * D} times and runs at mo
 where \code{D} is the dimension of the search space.
 Each run stops when the relative tolerance of the parameters is less than \code{10^-4}.
 The first iteration starts with the best point in the archive and the next iterations start from a random point.
+
+Only fully numeric search spaces (all parameters of type \code{p_dbl}) are supported.
 }
 \note{
 If the restart strategy is \code{"none"}, the optimizer starts with the best point in the archive.
@@ -102,6 +104,7 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
   \itemize{
     \item \href{#method-AcqOptimizerLbfgsb-initialize}{\code{AcqOptimizerLbfgsb$new()}}
     \item \href{#method-AcqOptimizerLbfgsb-optimize}{\code{AcqOptimizerLbfgsb$optimize()}}
+    \item \href{#method-AcqOptimizerLbfgsb-reset}{\code{AcqOptimizerLbfgsb$reset()}}
     \item \href{#method-AcqOptimizerLbfgsb-clone}{\code{AcqOptimizerLbfgsb$clone()}}
   }
 }
@@ -109,7 +112,6 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
 <ul>
   <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="format"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-format'><code>AcqOptimizer$format()</code></a></span></li>
   <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="print"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-print'><code>AcqOptimizer$print()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="mlr3mbo" data-topic="AcqOptimizer" data-id="reset"><a href='../../mlr3mbo/html/AcqOptimizer.html#method-AcqOptimizer-reset'><code>AcqOptimizer$reset()</code></a></span></li>
 </ul>
 </details>}}
 \if{html}{\out{<hr>}}
@@ -143,6 +145,20 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
   }
   \subsection{Returns}{
     \code{\link[data.table:data.table]{data.table::data.table()}} with 1 row per candidate.
+  }
+}
+
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AcqOptimizerLbfgsb-reset"></a>}}
+\if{latex}{\out{\hypertarget{method-AcqOptimizerLbfgsb-reset}{}}}
+\subsection{\code{AcqOptimizerLbfgsb$reset()}}{
+  Reset the acquisition function optimizer.
+
+Clears the \code{state} of the previous optimization run.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{AcqOptimizerLbfgsb$reset()}
+    \if{html}{\out{</div>}}
   }
 }
 
