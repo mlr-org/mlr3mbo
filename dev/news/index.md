@@ -113,6 +113,10 @@
 - fix: `AcqOptimizerLbfgsb` no longer fails when the incumbent lies on a
   search space bound, which previously caused the optimization to
   silently degenerate into random search.
+- fix: `InputTrafoUnitcube` now raises an informative error for infinite
+  bounds and maps degenerate parameters with equal lower and upper
+  bounds to a constant, instead of producing `NaN` features that fail
+  inside the surrogate learner.
 - fix:
   [`default_acqfunction()`](https://mlr3mbo.mlr-org.com/dev/reference/default_acqfunction.md)
   now raises an informative error for unsupported instance classes
@@ -145,6 +149,9 @@
   between two evaluations.
 - fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce
   `NaN` or `Inf` values when all observed outcomes are identical.
+- fix: `OutputTrafoStandardize$inverse_transform_posterior()` no longer
+  fabricates an all-`NA` `se` column for mean-only predictions of a
+  response-only learner.
 - fix: `OutputTrafoLog` no longer produces infinite values when the
   range of the observed outcomes is tiny relative to their magnitude,
   because the epsilon padding is now floored at the local floating point
