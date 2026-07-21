@@ -8,17 +8,13 @@ Abstract surrogate model class.
 
 A surrogate model is used to model the unknown objective function(s) based on all points evaluated so far.
 }
-\section{Public fields}{
-  \if{html}{\out{<div class="r6-fields">}}
-  \describe{
-    \item{\code{learner}}{(learner)\cr
-Arbitrary learner object depending on the subclass.}
-  }
-  \if{html}{\out{</div>}}
-}
 \section{Active bindings}{
   \if{html}{\out{<div class="r6-active-bindings">}}
   \describe{
+    \item{\code{learner}}{(learner)\cr
+Arbitrary learner object depending on the subclass.
+Subclasses validate the learner on assignment.}
+
     \item{\code{print_id}}{(\code{character})\cr
 Id used when printing.}
 
@@ -56,6 +52,13 @@ A complete list of candidate properties, grouped by task type, is stored in \cod
 
     \item{\code{predict_type}}{(\code{character(1)})\cr
 Retrieves the currently active predict type, e.g. \code{"response"}.}
+
+    \item{\code{output_trafo}}{(\link{OutputTrafo} | \code{NULL})\cr
+Output transformation.
+Defaults to \code{NULL} for subclasses that do not support output transformations.}
+
+    \item{\code{output_trafo_must_be_considered}}{(\code{logical(1)})\cr
+Whether a transformation has been applied to the target variable that has not been inverted during prediction.}
   }
   \if{html}{\out{</div>}}
 }

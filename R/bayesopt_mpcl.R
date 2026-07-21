@@ -126,6 +126,9 @@ bayesopt_mpcl = function(
     design = generate_design_sobol(search_space, n = init_design_size)$data
     instance$eval_batch(design)
   }
+  # a user-supplied initial design already in the archive leaves init_design_size NULL,
+  # which would otherwise silently disable random interleaving
+  init_design_size = init_design_size %??% instance$archive$n_evals
 
   # completing initialization
   surrogate$archive = instance$archive
@@ -144,7 +147,8 @@ bayesopt_mpcl = function(
         acq_optimizer$optimize()
       },
       Mlr3ErrorMbo = function(cond) {
-        #lg$info("Proposing a randomly sampled point") no logging because we do not evaluate this point
+        lg$warn("Caught the following error: %s", cond$message)
+        lg$info("Proposing a randomly sampled point")
         generate_design_random(search_space, n = 1L)$data
       }
     )
