@@ -52,6 +52,10 @@
 - fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from
   an exponential distribution as documented, so that the `lambda`
   parameter has an effect.
+- fix: `OptimizerMbo` and `TunerMbo` now update the surrogate a final
+  time even when the optimization exits through a termination error,
+  e.g., when the archive is already at budget or the terminator triggers
+  between two evaluations.
 - fix: `OutputTrafoLog` and `OutputTrafoStandardize` no longer produce
   `NaN` or `Inf` values when all observed outcomes are identical.
 - fix: `ResultAssignerSurrogate` no longer errors when the archive
