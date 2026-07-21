@@ -8,6 +8,9 @@
 #' For the meaning of the control parameters, see [bbotk::local_search_control()].
 #' The termination stops when the budget defined by the `n_searches`, `n_steps`, and `n_neighs` parameters is exhausted.
 #'
+#' If `skip_already_evaluated` is `TRUE` (default) and the proposed candidate was already evaluated on the actual
+#' [bbotk::OptimInstance], an error is raised so that the `loop_function` can propose a randomly sampled point instead.
+#'
 #' @export
 #' @examples
 #' acqo("local_search")
@@ -31,6 +34,7 @@ AcqOptimizerLocalSearch = R6Class(
         n_neighs = p_int(lower = 1L, default = 10L),
         mut_sd = p_dbl(lower = 0, default = 0.1),
         stagnate_max = p_int(lower = 1L, default = 10L),
+        skip_already_evaluated = p_lgl(init = TRUE),
         catch_errors = p_lgl(init = TRUE)
       )
       private$.param_set = param_set
@@ -45,7 +49,7 @@ AcqOptimizerLocalSearch = R6Class(
       control = invoke(
         bbotk::local_search_control,
         minimize = self$acq_function$codomain$direction == 1L,
-        .args = pv[names(pv) != "catch_errors"]
+        .args = pv[names(pv) %nin% c("catch_errors", "skip_already_evaluated")]
       )
 
       wrapper = function(xdt) {
@@ -69,10 +73,14 @@ AcqOptimizerLocalSearch = R6Class(
         res = optimize()
       }
       self$state = res
-      as.data.table(as.list(set_names(
+      xdt = as.data.table(as.list(set_names(
         c(res$x, res$y),
         c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
       )))
+      if (pv$skip_already_evaluated) {
+        assert_not_already_evaluated(xdt, self$acq_function$archive)
+      }
+      xdt
     },
 
     #' @description

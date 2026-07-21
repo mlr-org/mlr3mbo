@@ -15,6 +15,15 @@
 #' `NLOPT_GN_DIRECT_L` is a deterministic global optimizer that ignores the starting point.
 #' Restarts would only repeat the identical search, so the optimizer does not support them.
 #'
+#' @section Parameters:
+#' \describe{
+#' \item{`skip_already_evaluated`}{`logical(1)`\cr
+#'   Should the proposed candidate be rejected if it was already evaluated on the actual [bbotk::OptimInstance]?
+#'   If `TRUE` and the candidate was already evaluated, an error is raised so that the `loop_function` can
+#'   propose a randomly sampled point instead.
+#'   Default is `TRUE`.}
+#' }
+#'
 #' @section Termination Parameters:
 #' The following termination parameters can be used.
 #'
@@ -67,6 +76,7 @@ AcqOptimizerDirect = R6Class(
         xtol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_rel = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
         ftol_abs = p_dbl(default = 0, lower = 0, upper = Inf, special_vals = list(-1)),
+        skip_already_evaluated = p_lgl(init = TRUE),
         catch_errors = p_lgl(init = TRUE)
       )
       private$.param_set = param_set
@@ -84,8 +94,10 @@ AcqOptimizerDirect = R6Class(
       pv = self$param_set$values
       maxeval = pv$maxeval
       catch_errors = pv$catch_errors
+      skip_already_evaluated = pv$skip_already_evaluated
       pv$maxeval = NULL
       pv$catch_errors = NULL
+      pv$skip_already_evaluated = NULL
 
       if (is.null(maxeval)) {
         maxeval = 100 * self$acq_function$domain$length^2
@@ -129,10 +141,14 @@ AcqOptimizerDirect = R6Class(
 
       self$state = res
 
-      as.data.table(as.list(set_names(
+      xdt = as.data.table(as.list(set_names(
         c(res$solution, res$objective * direction),
         c(self$acq_function$domain$ids(), self$acq_function$codomain$ids())
       )))
+      if (skip_already_evaluated) {
+        assert_not_already_evaluated(xdt, self$acq_function$archive)
+      }
+      xdt
     },
 
     #' @description

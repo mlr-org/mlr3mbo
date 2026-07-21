@@ -16,6 +16,17 @@ Only fully numeric search spaces (all parameters of type \code{p_dbl}) are suppo
 \code{NLOPT_GN_DIRECT_L} is a deterministic global optimizer that ignores the starting point.
 Restarts would only repeat the identical search, so the optimizer does not support them.
 }
+\section{Parameters}{
+
+\describe{
+\item{\code{skip_already_evaluated}}{\code{logical(1)}\cr
+Should the proposed candidate be rejected if it was already evaluated on the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}?
+If \code{TRUE} and the candidate was already evaluated, an error is raised so that the \code{loop_function} can
+propose a randomly sampled point instead.
+Default is \code{TRUE}.}
+}
+}
+
 \section{Termination Parameters}{
 
 The following termination parameters can be used.

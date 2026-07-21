@@ -32,6 +32,11 @@ Default is \code{"none"}.
 \item{\code{max_restarts}}{\code{integer(1)}\cr
 Maximum number of restarts.
 Default is \code{5 * D} (Default).}
+\item{\code{skip_already_evaluated}}{\code{logical(1)}\cr
+Should the proposed candidate be rejected if it was already evaluated on the actual \link[bbotk:OptimInstance]{bbotk::OptimInstance}?
+If \code{TRUE} and the candidate was already evaluated, an error is raised so that the \code{loop_function} can
+propose a randomly sampled point instead.
+Default is \code{TRUE}.}
 }
 }
 

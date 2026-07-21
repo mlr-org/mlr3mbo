@@ -49,6 +49,12 @@ test_that("AcqOptimizerDirect works with instance", {
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 })
 
+test_that("AcqOptimizerDirect has skip_already_evaluated enabled by default", {
+  acqopt = AcqOptimizerDirect$new()
+  expect_true("skip_already_evaluated" %in% acqopt$param_set$ids())
+  expect_true(acqopt$param_set$values$skip_already_evaluated)
+})
+
 test_that("AcqOptimizerDirect does not expose the dead minf_max parameter", {
   expect_false("minf_max" %in% AcqOptimizerDirect$new()$param_set$ids())
 })
