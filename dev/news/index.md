@@ -129,6 +129,18 @@
 - fix: `OptimizerADBO` and `TunerADBO` now draw the initial lambda from
   an exponential distribution as documented, so that the `lambda`
   parameter has an effect.
+- fix: `OptimizerMbo` and `TunerMbo` now update the surrogate a final
+  time even when the optimization exits through a termination error,
+  e.g., when the archive is already at budget or the terminator triggers
+  between two evaluations.
+- fix: `OptimizerMbo` and `OptimizerAsyncMbo` no longer abort a
+  successful run when the final surrogate update fails with a plain
+  error, e.g., when the surrogate is configured with
+  `catch_errors = FALSE`.
+- fix: `OptimizerAsyncMbo`, `OptimizerADBO`, `TunerAsyncMbo`, and
+  `TunerADBO` now perform the final surrogate update on the main
+  process, so the user-facing surrogate reflects all available data
+  after optimization instead of remaining untrained.
 - fix: `OptimizerAsyncMbo` now proposes a randomly sampled point when
   the archive contains no finished evaluations yet, instead of failing
   to train the surrogate on an empty archive.
