@@ -11,6 +11,11 @@
   instead of evaluating the entire non-dominated front.
 - fix: `AcqOptimizer` and its subclasses gained `$label` and `$man`
   fields, so that `as.data.table(mlr_acqoptimizers)` no longer errors.
+- fix: `AcqOptimizer` no longer attaches an `x_domain` to the proposed
+  candidates, so the archive stores the transformed values computed by
+  the instance instead of a stale or untransformed `x_domain`, which was
+  incorrect under a search space transformation or after clipping
+  out-of-bounds candidates to the bounds.
 - fix:
   [`bayesopt_mpcl()`](https://mlr3mbo.mlr-org.com/dev/reference/mlr_loop_functions_mpcl.md)
   now logs a warning when a surrogate or acquisition function error is
@@ -59,6 +64,9 @@
 - fix: `AcqFunctionEHVI`, `AcqFunctionEHVIGH`, and `AcqFunctionSmsEgo`
   now apply the surrogate’s output transformation to `ys_front`, so the
   front and the reference point are compared on the same scale.
+- fix: `AcqFunctionEHVIGH` no longer prunes all Gauss-Hermite nodes when
+  their weights are tied, which previously made the acquisition function
+  identically `0` for `k = 2`.
 - fix: `AcqFunctionEI`, `AcqFunctionEILog`, `AcqFunctionPI`, and
   `AcqFunctionStochasticEI` now ignore the missing outcomes of pending
   evaluations when determining the best observed value, so `y_best` is

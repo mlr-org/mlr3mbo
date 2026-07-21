@@ -290,7 +290,7 @@ if (requireNamespace("mlr3learners") &
 #> The following object is masked from ‘package:base’:
 #> 
 #>     %notin%
-#>           x   acq_ei  x_domain .already_evaluated
-#>       <num>    <num>    <list>             <lgcl>
-#> 1: 1.187665 5.305171 <list[1]>              FALSE
+#>           x   acq_ei .already_evaluated
+#>       <num>    <num>             <lgcl>
+#> 1: 1.187665 5.305171              FALSE
 ```
