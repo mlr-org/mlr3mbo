@@ -38,15 +38,15 @@ Source:
 [`inst/CITATION`](https://github.com/mlr-org/mlr3mbo/blob/main/inst/CITATION)
 
 Becker M, Schneider L, Binder M, Kotthoff L, Bischl B (2026). “mlr3mbo:
-Bayesian Optimization in R.” *arXiv preprint arXiv:2603.29730*.
-[doi:10.48550/arXiv.2603.29730](https://doi.org/10.48550/arXiv.2603.29730).
-<https://arxiv.org/abs/2603.29730>.
+Bayesian Optimization in R.” *Patterns*.
+[doi:10.1016/j.patter.2026.101614](https://doi.org/10.1016/j.patter.2026.101614).
+<https://doi.org/10.1016/j.patter.2026.101614>.
 
     @Article{becker2026mlr3mbo,
       title = {mlr3mbo: Bayesian Optimization in R},
       author = {Marc Becker and Lennart Schneider and Martin Binder and Lars Kotthoff and Bernd Bischl},
       year = {2026},
-      journal = {arXiv preprint arXiv:2603.29730},
-      doi = {10.48550/arXiv.2603.29730},
-      url = {https://arxiv.org/abs/2603.29730},
+      journal = {Patterns},
+      doi = {10.1016/j.patter.2026.101614},
+      url = {https://doi.org/10.1016/j.patter.2026.101614},
     }
