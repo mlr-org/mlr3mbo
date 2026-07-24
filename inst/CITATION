@@ -10,7 +10,7 @@ bibentry(
     person("Bernd", "Bischl")
   ),
   year = 2026,
-  journal = "arXiv preprint arXiv:2603.29730",
-  doi = "10.48550/arXiv.2603.29730",
-  url = "https://arxiv.org/abs/2603.29730"
+  journal = "Patterns",
+  doi = "10.1016/j.patter.2026.101614",
+  url = "https://doi.org/10.1016/j.patter.2026.101614"
 )

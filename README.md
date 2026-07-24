@@ -7,7 +7,7 @@ Package website: [release](https://mlr3mbo.mlr-org.com/) \|
 <!-- badges: start -->
 
 [![r-cmd-check](https://github.com/mlr-org/mlr3mbo/actions/workflows/r-cmd-check.yml/badge.svg)](https://github.com/mlr-org/mlr3mbo/actions/workflows/r-cmd-check.yml)
-[![arXiv](https://img.shields.io/badge/arXiv-2603.29730-b31b1b.svg)](https://arxiv.org/abs/2603.29730)
+[![Patterns](https://img.shields.io/badge/DOI-10.1016%2Fj.patter.2026.101614-blue.svg)](https://doi.org/10.1016/j.patter.2026.101614)
 [![CRANstatus](https://www.r-pkg.org/badges/version/mlr3mbo)](https://cran.r-project.org/package=mlr3mbo)
 [![StackOverflow](https://img.shields.io/badge/stackoverflow-mlr3-orange.svg)](https://stackoverflow.com/questions/tagged/mlr3)
 [![Mattermost](https://img.shields.io/badge/chat-mattermost-orange.svg)](https://lmmisld-lmu-stats-slds.srv.mwn.de/mlr_invite/)
@@ -148,23 +148,23 @@ instance = tune(
 instance$result
 ```
 
-    ##          cp learner_param_vals  x_domain classif.ce
-    ##       <num>             <list>    <list>      <num>
-    ## 1: -6.48394          <list[2]> <list[1]>  0.2382812
+    ##           cp learner_param_vals  x_domain classif.ce
+    ##        <num>             <list>    <list>      <num>
+    ## 1: -6.220556          <list[2]> <list[1]>  0.2382812
 
 ## Citation
 
 If you use mlr3mbo, please cite our paper.
 
 > Becker M, Schneider L, Binder M, Kotthoff L, Bischl B (2026).
-> “mlr3mbo: Bayesian Optimization in R.” *arXiv preprint
-> arXiv:2603.29730*. <https://arxiv.org/abs/2603.29730>.
+> “mlr3mbo: Bayesian Optimization in R.” *Patterns*.
+> <https://doi.org/10.1016/j.patter.2026.101614>.
 
     @Article{becker2026mlr3mbo,
       title = {mlr3mbo: Bayesian Optimization in R},
       author = {Marc Becker and Lennart Schneider and Martin Binder and Lars Kotthoff and Bernd Bischl},
       year = {2026},
-      journal = {arXiv preprint arXiv:2603.29730},
-      doi = {10.48550/arXiv.2603.29730},
-      url = {https://arxiv.org/abs/2603.29730},
+      journal = {Patterns},
+      doi = {10.1016/j.patter.2026.101614},
+      url = {https://doi.org/10.1016/j.patter.2026.101614},
     }
