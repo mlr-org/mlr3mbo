@@ -7,7 +7,7 @@ test_that("adbo tuner works", {
 
   rush::rush_plan(n_workers = 4)
   instance = ti_async(
-    task = tsk("pima"),
+    task = tsk("sonar"),
     learner = learner,
     resampling = rsmp("cv", folds = 3),
     measure = msr("classif.ce"),
@@ -35,7 +35,7 @@ test_that("adbo works with transformation functions", {
 
   rush::rush_plan(n_workers = 2)
   instance = ti_async(
-    task = tsk("pima"),
+    task = tsk("sonar"),
     learner = learner,
     resampling = rsmp("cv", folds = 3),
     measure = msr("classif.ce"),
@@ -64,7 +64,7 @@ test_that("search works with dependencies", {
 
   rush::rush_plan(n_workers = 2)
   instance = ti_async(
-    task = tsk("pima"),
+    task = tsk("sonar"),
     learner = learner,
     resampling = rsmp("cv", folds = 3),
     measure = msr("classif.ce"),
@@ -99,7 +99,7 @@ test_that("adbo works with branching", {
 
   rush::rush_plan(n_workers = 2)
   instance = ti_async(
-    task = tsk("pima"),
+    task = tsk("sonar"),
     learner = graph_learner,
     resampling = rsmp("cv", folds = 3),
     measure = msr("classif.ce"),
