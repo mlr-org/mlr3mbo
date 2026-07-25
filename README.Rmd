@@ -118,7 +118,7 @@ library(mlr3tuning)
 library(mlr3mbo)
 set.seed(1)
 
-task = tsk("pima")
+task = tsk("sonar")
 
 learner = lrn("classif.rpart", cp = to_tune(lower = 1e-04, upper = 1, logscale = TRUE))
 

@@ -91,7 +91,7 @@ test_that("ResultAssignerArchive passes internal tuned values", {
   )
 
   instance = ti(
-    task = tsk("pima"),
+    task = tsk("sonar"),
     learner = learner,
     resampling = rsmp("cv", folds = 3L),
     measures = msr("classif.ce"),
