@@ -41,6 +41,8 @@ function, which is called on the worker after it has claimed its subspace.
 
 Each evaluation is logged into the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} with an additional \code{.subspace} column holding the id of
 the subspace it was proposed from.
+As for all other columns that are written when an evaluation finishes, \code{.subspace} is \code{NA} for the queued, running,
+and failed points that the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} also contains.
 }
 
 \section{Initial Design}{
@@ -69,8 +71,9 @@ subspace which are imputed.
 \item The acquisition function is optimized over the subspace and the resulting point is evaluated.
 }
 
-The \link{SurrogateLearner} is configured to use a random forest and the \link{AcqOptimizer} is a random search with a batch
-size of 1000 and a budget of 10000 evaluations.
+Unless a surrogate, acquisition function, or acquisition function optimizer has been set on the optimizer,
+the \link{SurrogateLearner} defaults to a random forest, the acquisition function to \link{AcqFunctionStochasticCB}, and the
+\link{AcqOptimizer} to a random search with a batch size of 1000 and a budget of 10000 evaluations.
 After termination, the surrogate held by the optimizer is updated a final time on \emph{all} evaluations, i.e., across
 subspaces.
 }

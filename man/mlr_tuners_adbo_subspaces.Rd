@@ -31,6 +31,8 @@ function, which is called on the worker after it has claimed its subspace.
 
 Each evaluation is logged into the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} with an additional \code{.subspace} column holding the id of
 the subspace it was proposed from.
+As for all other columns that are written when an evaluation finishes, \code{.subspace} is \code{NA} for the queued, running,
+and failed points that the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} also contains.
 }
 
 \section{Initial Design}{

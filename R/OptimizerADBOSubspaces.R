@@ -39,6 +39,8 @@
 #'
 #' Each evaluation is logged into the [bbotk::ArchiveAsync] with an additional `.subspace` column holding the id of
 #' the subspace it was proposed from.
+#' As for all other columns that are written when an evaluation finishes, `.subspace` is `NA` for the queued, running,
+#' and failed points that the [bbotk::ArchiveAsync] also contains.
 #'
 #' @section Initial Design:
 #' Every subspace receives its own initial design of `design_size` points, generated with `design_function` on the
@@ -62,8 +64,9 @@
 #'    [OptimizerADBO].
 #' 3. The acquisition function is optimized over the subspace and the resulting point is evaluated.
 #'
-#' The [SurrogateLearner] is configured to use a random forest and the [AcqOptimizer] is a random search with a batch
-#' size of 1000 and a budget of 10000 evaluations.
+#' Unless a surrogate, acquisition function, or acquisition function optimizer has been set on the optimizer,
+#' the [SurrogateLearner] defaults to a random forest, the acquisition function to [AcqFunctionStochasticCB], and the
+#' [AcqOptimizer] to a random search with a batch size of 1000 and a budget of 10000 evaluations.
 #' After termination, the surrogate held by the optimizer is updated a final time on *all* evaluations, i.e., across
 #' subspaces.
 #'
@@ -231,19 +234,25 @@ OptimizerADBOSubspaces = R6Class(
       # the acquisition function is optimized on the untransformed subspace, mirroring `generate_acq_domain()`
       private$.acq_domains = map(subspaces, strip_trafo)
 
-      self$acq_function = AcqFunctionStochasticCB$new(
-        distribution = "exponential",
-        lambda = pv[["lambda"]],
-        rate = pv[["rate"]],
-        period = pv[["period"]]
-      )
+      if (is.null(self$acq_function)) {
+        self$acq_function = AcqFunctionStochasticCB$new(
+          distribution = "exponential",
+          lambda = pv[["lambda"]],
+          rate = pv[["rate"]],
+          period = pv[["period"]]
+        )
+      }
 
-      self$surrogate = default_surrogate(inst, force_random_forest = TRUE)
+      if (is.null(self$surrogate)) {
+        self$surrogate = self$acq_function$surrogate %??% default_surrogate(inst, force_random_forest = TRUE)
+      }
 
-      self$acq_optimizer = AcqOptimizer$new(
-        optimizer = opt("random_search", batch_size = 1000L),
-        terminator = trm("evals", n_evals = 10000L)
-      )
+      if (is.null(self$acq_optimizer)) {
+        self$acq_optimizer = AcqOptimizer$new(
+          optimizer = opt("random_search", batch_size = 1000L),
+          terminator = trm("evals", n_evals = 10000L)
+        )
+      }
 
       if (is.null(self$result_assigner)) {
         self$result_assigner = default_result_assigner(inst)

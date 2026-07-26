@@ -42,10 +42,17 @@ test_that("TunerADBOSubspaces tunes a branching graph learner", {
     n_workers_subspace = c(rpart = 1L, featureless = 1L),
     design_size = 2L
   )
+  surrogate = default_surrogate(instance)
+  surrogate$param_set$set_values(catch_errors = FALSE)
+  tuner$surrogate = surrogate
   tuner$optimize(instance)
 
   data = instance$archive$data
   expect_data_table(data, min.rows = 12L)
-  expect_equal(data$.subspace, data$branch.selection)
-  expect_set_equal(unique(data$.subspace), c("rpart", "featureless"))
+  # `.subspace` is written when an evaluation finishes, so pending evaluations still have `NA`
+  finished = data[data$state == "finished", ]
+  expect_equal(finished$.subspace, finished$branch.selection)
+  expect_set_equal(unique(finished$.subspace), c("rpart", "featureless"))
+  expect_identical(tuner$surrogate, surrogate)
+  expect_false(tuner$surrogate$param_set$values$catch_errors)
 })

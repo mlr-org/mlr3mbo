@@ -33,12 +33,14 @@ test_that("OptimizerADBOSubspaces keeps every worker in its subspace", {
   data = instance$archive$data
   expect_data_table(data, min.rows = 20L)
   expect_names(names(data), must.include = c(".subspace", "acq_cb", "acq_lambda", "acq_lambda_0"))
-  # every point was proposed from the subspace it belongs to
-  expect_equal(data$.subspace, data$branch)
   expect_true(all(is.na(data[data$branch == "a", "xb"][[1L]])))
   expect_true(all(is.na(data[data$branch == "b", "xa"][[1L]])))
+  # every point was proposed from the subspace it belongs to;
+  # `.subspace` is written when an evaluation finishes, so pending evaluations still have `NA`
+  finished = data[data$state == "finished", ]
+  expect_equal(finished$.subspace, finished$branch)
   # both subspaces were worked on
-  expect_set_equal(unique(data$.subspace), c("a", "b"))
+  expect_set_equal(unique(finished$.subspace), c("a", "b"))
 })
 
 test_that("OptimizerADBOSubspaces evaluates one initial design per subspace", {
@@ -101,6 +103,35 @@ test_that("OptimizerADBOSubspaces accepts an initial design per subspace and a w
   expect_data_table(data, min.rows = 12L)
   expect_design_evaluated(initial_design_subspace$a, data)
   expect_design_evaluated(initial_design_subspace$b, data)
+})
+
+test_that("OptimizerADBOSubspaces respects a pre-set surrogate", {
+  rush = start_rush(n_workers = 2)
+  on.exit({
+    rush$reset()
+    mirai::daemons(0)
+  })
+
+  instance = oi_async(
+    objective = OBJ_1D_BRANCH,
+    search_space = PS_1D_BRANCH,
+    terminator = trm("evals", n_evals = 12L),
+    rush = rush
+  )
+  optimizer = opt(
+    "adbo_subspaces",
+    subspaces = SUBSPACES_1D_BRANCH,
+    n_workers_subspace = c(a = 1L, b = 1L),
+    design_size = 2L
+  )
+  surrogate = default_surrogate(instance, force_random_forest = TRUE)
+  surrogate$param_set$set_values(catch_errors = FALSE)
+  optimizer$surrogate = surrogate
+
+  optimizer$optimize(instance)
+
+  expect_identical(optimizer$surrogate, surrogate)
+  expect_false(optimizer$surrogate$param_set$values$catch_errors)
 })
 
 test_that("OptimizerADBOSubspaces checks the subspaces", {

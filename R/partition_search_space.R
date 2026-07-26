@@ -107,7 +107,7 @@ subset_search_space = function(search_space, param, levels) {
 
 # `condition_test()` is the (internal) paradox generic that evaluates a dependency condition on a vector of values
 condition_test = function(cond, x) {
-  fun = getFromNamespace("condition_test", ns = "paradox")
+  fun = utils::getFromNamespace("condition_test", ns = "paradox")
   fun(cond, x)
 }
 
