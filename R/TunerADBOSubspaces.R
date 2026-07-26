@@ -15,6 +15,7 @@
 #' Currently, only single-objective optimization is supported.
 #'
 #' @inheritSection mlr_optimizers_adbo_subspaces Subspaces
+#' @inheritSection mlr_optimizers_adbo_subspaces Compute Profiles
 #' @inheritSection mlr_optimizers_adbo_subspaces Initial Design
 #' @inheritSection mlr_optimizers_adbo_subspaces Parameters
 #' @inheritSection mlr_optimizers_adbo_subspaces Note
@@ -56,15 +57,17 @@
 #'       param = "branch.selection",
 #'       groups = list(rpart = "rpart", featureless = "featureless"))
 #'
-#'     mirai::daemons(2)
-#'     rush::rush_plan(n_workers = 2, worker_type = "mirai")
+#'     # one worker per subspace, each on its own compute profile
+#'     mirai::daemons(1, .compute = "rpart")
+#'     mirai::daemons(1, .compute = "featureless")
+#'     rush::rush_plan(profiles = c(rpart = 1, featureless = 1), worker_type = "mirai")
 #'
 #'     tnr("adbo_subspaces",
 #'       subspaces = subspaces,
-#'       n_workers_subspace = c(rpart = 1L, featureless = 1L),
 #'       design_size = 4)$optimize(instance)
 #'
-#'     mirai::daemons(0)
+#'     mirai::daemons(0, .compute = "rpart")
+#'     mirai::daemons(0, .compute = "featureless")
 #'   } else {
 #'     message("Redis server is not available.\nPlease set up Redis prior to running the example.")
 #'   }

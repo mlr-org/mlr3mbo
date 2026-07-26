@@ -1,9 +1,11 @@
 # mlr3mbo (development version)
 
 * feat: New `OptimizerADBOSubspaces` and `TunerADBOSubspaces` run ADBO on a partition of the search space into homogeneous subspaces, permanently assigning each worker to one subspace so that every worker fits its own surrogate on the evaluations of its subspace only. This suits strongly hierarchical search spaces and setups in which parts of the search space require different hardware, e.g., learners that can only be trained on a GPU.
+* feat: `OptimizerADBOSubspaces` and `TunerADBOSubspaces` divide the workers among the subspaces by the `mirai` compute profiles. Every subspace runs on its own profile, by default on the profile of the same name, and `subspace_profiles = c(nn = "gpu", rf = "cpu")` maps the subspaces to differently named profiles. The number of workers per subspace is set with the `profiles` parameter or `rush::rush_plan()`.
 * feat: New `partition_search_space()` splits a hierarchical search space along the levels of a categorical parameter, e.g., the branching parameter of a `mlr3pipelines::Graph`, into the subspaces consumed by `OptimizerADBOSubspaces`.
 * feat: `OptimizerADBOSubspaces` and `TunerADBOSubspaces` respect a surrogate, acquisition function, or acquisition function optimizer that has been set before the optimization and only construct the defaults for unset objects.
 * feat: `Surrogate` gained a `$row_filter` field that restricts the archive rows the surrogate is updated on.
+* feat: `OptimizerAsyncMbo`, `OptimizerADBO`, `TunerAsyncMbo`, and `TunerADBO` gained the `profiles` parameter that distributes the workers over the `mirai` compute profiles, e.g. `profiles = c(cpu = 2, gpu = 2)`. Cannot be combined with `n_workers`.
 
 # mlr3mbo 1.2.0
 

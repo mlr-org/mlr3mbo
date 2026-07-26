@@ -43,7 +43,7 @@ Depends:
     mlr3tuning (>= 1.4.0),
     R (>= 3.1.0)
 Imports:
-    bbotk (>= 1.8.0),
+    bbotk (>= 1.12.0.9000),
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
@@ -66,7 +66,7 @@ Suggests:
     rgenoud,
     rpart,
     redux,
-    rush (>= 1.0.0),
+    rush (>= 1.2.1.9000),
     stringi,
     testthat (>= 3.0.0)
 ByteCompile: no

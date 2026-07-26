@@ -9,10 +9,11 @@ expect_design_evaluated = function(design, data) {
 }
 
 test_that("OptimizerADBOSubspaces keeps every worker in its subspace", {
-  rush = start_rush(n_workers = 2)
+  profiles = c(a = 1, b = 1)
+  rush = start_rush_profiles(profiles)
   on.exit({
     rush$reset()
-    mirai::daemons(0)
+    stop_rush_profiles(profiles)
   })
 
   instance = oi_async(
@@ -21,12 +22,7 @@ test_that("OptimizerADBOSubspaces keeps every worker in its subspace", {
     terminator = trm("evals", n_evals = 20L),
     rush = rush
   )
-  optimizer = opt(
-    "adbo_subspaces",
-    subspaces = SUBSPACES_1D_BRANCH,
-    n_workers_subspace = c(a = 1L, b = 1L),
-    design_size = 3L
-  )
+  optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH, design_size = 3L)
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 
@@ -44,10 +40,11 @@ test_that("OptimizerADBOSubspaces keeps every worker in its subspace", {
 })
 
 test_that("OptimizerADBOSubspaces evaluates one initial design per subspace", {
-  rush = start_rush(n_workers = 2)
+  profiles = c(a = 1, b = 1)
+  rush = start_rush_profiles(profiles)
   on.exit({
     rush$reset()
-    mirai::daemons(0)
+    stop_rush_profiles(profiles)
   })
 
   instance = oi_async(
@@ -59,7 +56,6 @@ test_that("OptimizerADBOSubspaces evaluates one initial design per subspace", {
   optimizer = opt(
     "adbo_subspaces",
     subspaces = SUBSPACES_1D_BRANCH,
-    n_workers_subspace = c(a = 1L, b = 1L),
     design_size = 2L,
     design_size_subspace = c(b = 4L)
   )
@@ -73,11 +69,12 @@ test_that("OptimizerADBOSubspaces evaluates one initial design per subspace", {
   expect_design_evaluated(designs$b, data)
 })
 
-test_that("OptimizerADBOSubspaces accepts an initial design per subspace and a worker setup", {
-  rush = start_rush(n_workers = 2)
+test_that("OptimizerADBOSubspaces accepts an initial design per subspace", {
+  profiles = c(a = 1, b = 1)
+  rush = start_rush_profiles(profiles)
   on.exit({
     rush$reset()
-    mirai::daemons(0)
+    stop_rush_profiles(profiles)
   })
 
   instance = oi_async(
@@ -93,9 +90,7 @@ test_that("OptimizerADBOSubspaces accepts an initial design per subspace and a w
   optimizer = opt(
     "adbo_subspaces",
     subspaces = SUBSPACES_1D_BRANCH,
-    n_workers_subspace = c(a = 1L, b = 1L),
-    initial_design_subspace = initial_design_subspace,
-    worker_setup = function(subspace_id) Sys.setenv(MLR3MBO_TEST_SUBSPACE = subspace_id)
+    initial_design_subspace = initial_design_subspace
   )
   optimizer$optimize(instance)
 
@@ -106,10 +101,11 @@ test_that("OptimizerADBOSubspaces accepts an initial design per subspace and a w
 })
 
 test_that("OptimizerADBOSubspaces respects a pre-set surrogate", {
-  rush = start_rush(n_workers = 2)
+  profiles = c(a = 1, b = 1)
+  rush = start_rush_profiles(profiles)
   on.exit({
     rush$reset()
-    mirai::daemons(0)
+    stop_rush_profiles(profiles)
   })
 
   instance = oi_async(
@@ -118,12 +114,7 @@ test_that("OptimizerADBOSubspaces respects a pre-set surrogate", {
     terminator = trm("evals", n_evals = 12L),
     rush = rush
   )
-  optimizer = opt(
-    "adbo_subspaces",
-    subspaces = SUBSPACES_1D_BRANCH,
-    n_workers_subspace = c(a = 1L, b = 1L),
-    design_size = 2L
-  )
+  optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH, design_size = 2L)
   surrogate = default_surrogate(instance, force_random_forest = TRUE)
   surrogate$param_set$set_values(catch_errors = FALSE)
   optimizer$surrogate = surrogate
@@ -134,11 +125,69 @@ test_that("OptimizerADBOSubspaces respects a pre-set surrogate", {
   expect_false(optimizer$surrogate$param_set$values$catch_errors)
 })
 
-test_that("OptimizerADBOSubspaces checks the subspaces", {
-  rush = start_rush(n_workers = 1)
+test_that("OptimizerADBOSubspaces pins subspaces to compute profiles", {
+  profiles = c(cpu = 1, gpu = 1)
+  rush = start_rush_profiles(profiles)
   on.exit({
     rush$reset()
-    mirai::daemons(0)
+    stop_rush_profiles(profiles)
+  })
+
+  instance = oi_async(
+    objective = OBJ_1D_BRANCH,
+    search_space = PS_1D_BRANCH,
+    terminator = trm("evals", n_evals = 20L),
+    rush = rush
+  )
+  optimizer = opt(
+    "adbo_subspaces",
+    subspaces = SUBSPACES_1D_BRANCH,
+    subspace_profiles = c(a = "gpu", b = "cpu"),
+    design_size = 3L
+  )
+
+  expect_data_table(optimizer$optimize(instance), nrows = 1L)
+
+  worker_info = instance$rush$worker_info
+  expect_set_equal(worker_info$profile, c("cpu", "gpu"))
+
+  finished = instance$archive$data[instance$archive$data$state == "finished", ]
+  expect_equal(finished$.subspace, finished$branch)
+  expect_set_equal(unique(finished$.subspace), c("a", "b"))
+})
+
+test_that("OptimizerADBOSubspaces distributes the workers with the profiles parameter", {
+  profiles = c(a = 1, b = 2)
+  rush = start_rush_profiles(profiles)
+  on.exit({
+    rush$reset()
+    stop_rush_profiles(profiles)
+  })
+
+  instance = oi_async(
+    objective = OBJ_1D_BRANCH,
+    search_space = PS_1D_BRANCH,
+    terminator = trm("evals", n_evals = 20L),
+    rush = rush
+  )
+  optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH, profiles = profiles, design_size = 3L)
+
+  expect_data_table(optimizer$optimize(instance), nrows = 1L)
+
+  worker_info = instance$rush$worker_info
+  expect_equal(sort(worker_info$profile), c("a", "b", "b"))
+
+  finished = instance$archive$data[instance$archive$data$state == "finished", ]
+  expect_equal(finished$.subspace, finished$branch)
+  expect_set_equal(unique(finished$.subspace), c("a", "b"))
+})
+
+test_that("OptimizerADBOSubspaces checks the subspaces", {
+  profiles = c(a = 1, b = 1)
+  rush = start_rush_profiles(profiles)
+  on.exit({
+    rush$reset()
+    stop_rush_profiles(profiles)
   })
 
   make_instance = function() {
@@ -159,14 +208,44 @@ test_that("OptimizerADBOSubspaces checks the subspaces", {
   optimizer = opt(
     "adbo_subspaces",
     subspaces = SUBSPACES_1D_BRANCH,
-    n_workers_subspace = c(a = 1L, wrong = 1L)
+    initial_design = generate_design_random(PS_1D_BRANCH, n = 2L)$data
   )
-  expect_error(optimizer$optimize(make_instance()), "n_workers_subspace")
+  expect_error(optimizer$optimize(make_instance()), "initial_design_subspace")
+})
+
+test_that("OptimizerADBOSubspaces checks the compute profiles", {
+  rush = start_rush(n_workers = 1)
+  on.exit({
+    rush$reset()
+    mirai::daemons(0)
+  })
+
+  make_instance = function() {
+    oi_async(
+      objective = OBJ_1D_BRANCH,
+      search_space = PS_1D_BRANCH,
+      terminator = trm("evals", n_evals = 5L),
+      rush = rush
+    )
+  }
+
+  optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH, subspace_profiles = c(a = "cpu"))
+  expect_error(optimizer$optimize(make_instance()), "subspace_profiles")
 
   optimizer = opt(
     "adbo_subspaces",
     subspaces = SUBSPACES_1D_BRANCH,
-    initial_design = generate_design_random(PS_1D_BRANCH, n = 2L)$data
+    subspace_profiles = c(a = "cpu", b = "cpu")
   )
-  expect_error(optimizer$optimize(make_instance()), "initial_design_subspace")
+  expect_error(optimizer$optimize(make_instance()), "must run on its own profile")
+
+  # the workers are divided among the subspaces by the compute profiles, `n_workers` is not enough
+  optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH, n_workers = 1L)
+  expect_error(optimizer$optimize(make_instance()), "Set 'profiles' instead of 'n_workers'")
+
+  optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH)
+  expect_error(optimizer$optimize(make_instance()), "divides the workers")
+
+  optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH, profiles = c(a = 1, cpu = 1))
+  expect_error(optimizer$optimize(make_instance()), "names of 'profiles'")
 })

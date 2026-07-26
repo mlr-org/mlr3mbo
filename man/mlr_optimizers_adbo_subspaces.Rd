@@ -20,7 +20,8 @@ Restricting the surrogate to a homogeneous subspace removes most of these depend
 lower-dimensional and much better behaved modeling problem.
 Second, when different parts of the search space require different hardware, e.g., learners that can only be
 trained on a GPU versus learners that are trained on CPU cores.
-Assigning a fixed number of workers per subspace then directly controls how much of each resource is used.
+Running every subspace on its own \CRANpkg{mirai} compute profile then directly controls how much of each resource
+is used.
 
 \code{OptimizerADBOSubspaces} is considered an experimental feature and the API might be subject to changes.
 Currently, only single-objective optimization is supported.
@@ -32,17 +33,39 @@ Every subspace must be a subset of the search space of the \link[bbotk:OptimInst
 must be disjoint, i.e., every evaluated point must belong to exactly one subspace.
 Use \code{\link[=partition_search_space]{partition_search_space()}} to derive such a list from a branching parameter of the search space.
 
-A worker claims a subspace when it starts and keeps it until the optimization terminates.
-The number of workers per subspace is set with \code{n_workers_subspace}, e.g., \code{c(gpu = 1L, cpu = 7L)} on a machine
-with one GPU and eight CPU cores.
-Note that \code{mlr3mbo} only controls which subspace a worker samples from.
-Binding a worker to a specific device is the responsibility of the user and can be done with the \code{worker_setup}
-function, which is called on the worker after it has claimed its subspace.
-
 Each evaluation is logged into the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} with an additional \code{.subspace} column holding the id of
 the subspace it was proposed from.
 As for all other columns that are written when an evaluation finishes, \code{.subspace} is \code{NA} for the queued, running,
 and failed points that the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} also contains.
+}
+
+\section{Compute Profiles}{
+
+The workers are divided among the subspaces by the
+\href{https://mirai.r-lib.org/articles/mirai.html#scoped-profiles}{compute profiles} of \CRANpkg{mirai}.
+Every subspace runs on its own profile and a worker derives its subspace from the profile it runs on.
+By default, a subspace runs on the profile of the same name.
+Use \code{subspace_profiles} to map the subspaces to differently named profiles.
+
+The daemons of every profile must be created beforehand and the number of workers per subspace is set with the
+\code{profiles} parameter of \link{OptimizerAsyncMbo} or with \code{\link[rush:rush_plan]{rush::rush_plan()}}, e.g., one worker on the single GPU and
+seven workers on the CPU cores of a machine.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{mirai::daemons(1, .compute = "gpu")
+mirai::daemons(7, .compute = "cpu")
+
+opt("adbo_subspaces",
+  subspaces = subspaces,
+  subspace_profiles = c(nn = "gpu", rf = "cpu"),
+  profiles = c(gpu = 1L, cpu = 7L))
+}\if{html}{\out{</div>}}
+
+Deriving the subspace from the compute profile keeps the assignment stable when \CRANpkg{rush} restarts a worker
+that died.
+It also leaves the setup of a worker to the daemons of its profile, e.g. binding a worker to a device with
+\code{mirai::daemons(env = list(CUDA_VISIBLE_DEVICES = "0"), .compute = "gpu")}.
+The \code{n_workers} parameter of \link{OptimizerAsyncMbo} must not be used, since all its workers would run on the default
+compute profile which is not assigned to any subspace.
 }
 
 \section{Initial Design}{
@@ -84,14 +107,11 @@ subspaces.
 \item{\code{subspaces}}{named \code{list()} of \link[paradox:ParamSet]{paradox::ParamSet}\cr
 Partition of the search space.
 See section Subspaces.}
-\item{\code{n_workers_subspace}}{named \code{integer()}\cr
-Number of workers assigned to each subspace.
-Must be named like \code{subspaces}.
-Default is one worker per subspace.}
-\item{\code{worker_setup}}{\verb{function(subspace_id)}\cr
-Function called on a worker after it has claimed the subspace \code{subspace_id}, e.g., to bind the worker to a
-device via \code{Sys.setenv(CUDA_VISIBLE_DEVICES = "0")}.
-Default is \code{NULL}.}
+\item{\code{subspace_profiles}}{named \code{character()}\cr
+\CRANpkg{mirai} compute profile of each subspace, e.g. \code{c(nn = "gpu", rf = "cpu")}.
+Must be named like \code{subspaces} and every subspace must run on its own profile.
+See section Compute Profiles.
+Default is \code{NULL}, i.e., every subspace runs on the profile of the same name.}
 \item{\code{initial_design_subspace}}{named \code{list()} of \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Initial design per subspace.
 If \code{NULL}, a design is generated for every subspace with the specified \code{design_function}.
@@ -122,9 +142,6 @@ Period of the exponential decay.}
 A terminator that counts evaluations, e.g. \link[bbotk:TerminatorEvals]{bbotk::TerminatorEvals}, is shared by all subspaces.
 Subspaces with slow evaluations therefore receive only a small share of the budget.
 Consider \link[bbotk:TerminatorRunTime]{bbotk::TerminatorRunTime} instead when the subspaces differ strongly in evaluation time.
-
-If a worker dies and \CRANpkg{rush} restarts it, the restarted worker claims the next subspace of the assignment
-cycle, which is not necessarily the subspace of the worker that died.
 }
 
 \examples{
@@ -159,16 +176,18 @@ if (requireNamespace("rush") &
       param = "branch",
       groups = list(a = "a", b = "b"))
 
-    mirai::daemons(2)
-    rush::rush_plan(n_workers = 2, worker_type = "mirai")
+    # one worker per subspace, each on its own compute profile
+    mirai::daemons(1, .compute = "a")
+    mirai::daemons(1, .compute = "b")
+    rush::rush_plan(profiles = c(a = 1, b = 1), worker_type = "mirai")
 
     optimizer = opt("adbo_subspaces",
       subspaces = subspaces,
-      n_workers_subspace = c(a = 1L, b = 1L),
       design_size = 4)
 
     optimizer$optimize(instance)
-    mirai::daemons(0)
+    mirai::daemons(0, .compute = "a")
+    mirai::daemons(0, .compute = "b")
   } else {
     message("Redis server is not available.\nPlease set up Redis prior to running the example.")
   }

@@ -3,10 +3,11 @@ skip_if_not_installed("mlr3pipelines")
 skip_if_no_redis()
 
 test_that("TunerADBOSubspaces tunes a branching graph learner", {
-  rush = start_rush(n_workers = 2)
+  profiles = c(rpart = 1, featureless = 1)
+  rush = start_rush_profiles(profiles)
   on.exit({
     rush$reset()
-    mirai::daemons(0)
+    stop_rush_profiles(profiles)
   })
 
   library(mlr3pipelines)
@@ -36,12 +37,7 @@ test_that("TunerADBOSubspaces tunes a branching graph learner", {
     groups = list(rpart = "rpart", featureless = "featureless")
   )
 
-  tuner = tnr(
-    "adbo_subspaces",
-    subspaces = subspaces,
-    n_workers_subspace = c(rpart = 1L, featureless = 1L),
-    design_size = 2L
-  )
+  tuner = tnr("adbo_subspaces", subspaces = subspaces, design_size = 2L)
   surrogate = default_surrogate(instance)
   surrogate$param_set$set_values(catch_errors = FALSE)
   tuner$surrogate = surrogate

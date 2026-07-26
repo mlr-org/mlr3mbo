@@ -35,6 +35,12 @@
 #'   Number of parallel workers.
 #'   If `NULL`, all rush workers specified via [rush::rush_plan()] are used.
 #'   Default is `NULL`.}
+#' \item{`profiles`}{named `integer()`\cr
+#'   Number of parallel workers per \CRANpkg{mirai} compute profile, e.g. `c(cpu = 2, gpu = 2)`.
+#'   The daemons of every profile must be created with [mirai::daemons()] beforehand.
+#'   Cannot be combined with `n_workers`.
+#'   If `NULL`, the profiles specified via [rush::rush_plan()] are used.
+#'   Default is `NULL`.}
 #' }
 #'
 #' @references

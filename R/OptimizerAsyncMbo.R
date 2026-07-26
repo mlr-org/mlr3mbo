@@ -73,6 +73,12 @@
 #'   Number of parallel workers.
 #'   If `NULL`, all rush workers specified via [rush::rush_plan()] are used.
 #'   Default is `NULL`.}
+#' \item{`profiles`}{named `integer()`\cr
+#'   Number of parallel workers per \CRANpkg{mirai} compute profile, e.g. `c(cpu = 2, gpu = 2)`.
+#'   The daemons of every profile must be created with [mirai::daemons()] beforehand.
+#'   Cannot be combined with `n_workers`.
+#'   If `NULL`, the profiles specified via [rush::rush_plan()] are used.
+#'   Default is `NULL`.}
 #' }
 #'
 #' @export
@@ -154,7 +160,10 @@ OptimizerAsyncMbo = R6Class(
         initial_design = p_uty(),
         design_size = p_int(lower = 1, default = 100L),
         design_function = p_fct(c("random", "sobol", "lhs"), default = "sobol"),
-        n_workers = p_int(lower = 1L)
+        n_workers = p_int(lower = 1L),
+        profiles = p_uty(custom_check = crate(function(x) {
+          check_integerish(x, lower = 1L, min.len = 1L, any.missing = FALSE, names = "unique", null.ok = TRUE)
+        }))
       )
       param_set = c(default_param_set, param_set)
 
@@ -277,7 +286,7 @@ OptimizerAsyncMbo = R6Class(
         lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
         pv$initial_design
       }
-      result = optimize_async_default(inst, self, design, n_workers = pv$n_workers)
+      result = optimize_async_default(inst, self, design, n_workers = pv$n_workers, profiles = pv$profiles)
 
       # the workers only update copies of the surrogate, so the final update must happen on the main process
       tryCatch(

@@ -19,7 +19,8 @@
 #' lower-dimensional and much better behaved modeling problem.
 #' Second, when different parts of the search space require different hardware, e.g., learners that can only be
 #' trained on a GPU versus learners that are trained on CPU cores.
-#' Assigning a fixed number of workers per subspace then directly controls how much of each resource is used.
+#' Running every subspace on its own \CRANpkg{mirai} compute profile then directly controls how much of each resource
+#' is used.
 #'
 #' `OptimizerADBOSubspaces` is considered an experimental feature and the API might be subject to changes.
 #' Currently, only single-objective optimization is supported.
@@ -30,17 +31,38 @@
 #' must be disjoint, i.e., every evaluated point must belong to exactly one subspace.
 #' Use [partition_search_space()] to derive such a list from a branching parameter of the search space.
 #'
-#' A worker claims a subspace when it starts and keeps it until the optimization terminates.
-#' The number of workers per subspace is set with `n_workers_subspace`, e.g., `c(gpu = 1L, cpu = 7L)` on a machine
-#' with one GPU and eight CPU cores.
-#' Note that `mlr3mbo` only controls which subspace a worker samples from.
-#' Binding a worker to a specific device is the responsibility of the user and can be done with the `worker_setup`
-#' function, which is called on the worker after it has claimed its subspace.
-#'
 #' Each evaluation is logged into the [bbotk::ArchiveAsync] with an additional `.subspace` column holding the id of
 #' the subspace it was proposed from.
 #' As for all other columns that are written when an evaluation finishes, `.subspace` is `NA` for the queued, running,
 #' and failed points that the [bbotk::ArchiveAsync] also contains.
+#'
+#' @section Compute Profiles:
+#' The workers are divided among the subspaces by the
+#' [compute profiles](https://mirai.r-lib.org/articles/mirai.html#scoped-profiles) of \CRANpkg{mirai}.
+#' Every subspace runs on its own profile and a worker derives its subspace from the profile it runs on.
+#' By default, a subspace runs on the profile of the same name.
+#' Use `subspace_profiles` to map the subspaces to differently named profiles.
+#'
+#' The daemons of every profile must be created beforehand and the number of workers per subspace is set with the
+#' `profiles` parameter of [OptimizerAsyncMbo] or with [rush::rush_plan()], e.g., one worker on the single GPU and
+#' seven workers on the CPU cores of a machine.
+#'
+#' ```
+#' mirai::daemons(1, .compute = "gpu")
+#' mirai::daemons(7, .compute = "cpu")
+#'
+#' opt("adbo_subspaces",
+#'   subspaces = subspaces,
+#'   subspace_profiles = c(nn = "gpu", rf = "cpu"),
+#'   profiles = c(gpu = 1L, cpu = 7L))
+#' ```
+#'
+#' Deriving the subspace from the compute profile keeps the assignment stable when \CRANpkg{rush} restarts a worker
+#' that died.
+#' It also leaves the setup of a worker to the daemons of its profile, e.g. binding a worker to a device with
+#' `mirai::daemons(env = list(CUDA_VISIBLE_DEVICES = "0"), .compute = "gpu")`.
+#' The `n_workers` parameter of [OptimizerAsyncMbo] must not be used, since all its workers would run on the default
+#' compute profile which is not assigned to any subspace.
 #'
 #' @section Initial Design:
 #' Every subspace receives its own initial design of `design_size` points, generated with `design_function` on the
@@ -75,14 +97,11 @@
 #' \item{`subspaces`}{named `list()` of [paradox::ParamSet]\cr
 #'   Partition of the search space.
 #'   See section Subspaces.}
-#' \item{`n_workers_subspace`}{named `integer()`\cr
-#'   Number of workers assigned to each subspace.
-#'   Must be named like `subspaces`.
-#'   Default is one worker per subspace.}
-#' \item{`worker_setup`}{`function(subspace_id)`\cr
-#'   Function called on a worker after it has claimed the subspace `subspace_id`, e.g., to bind the worker to a
-#'   device via `Sys.setenv(CUDA_VISIBLE_DEVICES = "0")`.
-#'   Default is `NULL`.}
+#' \item{`subspace_profiles`}{named `character()`\cr
+#'   \CRANpkg{mirai} compute profile of each subspace, e.g. `c(nn = "gpu", rf = "cpu")`.
+#'   Must be named like `subspaces` and every subspace must run on its own profile.
+#'   See section Compute Profiles.
+#'   Default is `NULL`, i.e., every subspace runs on the profile of the same name.}
 #' \item{`initial_design_subspace`}{named `list()` of [data.table::data.table()]\cr
 #'   Initial design per subspace.
 #'   If `NULL`, a design is generated for every subspace with the specified `design_function`.
@@ -111,9 +130,6 @@
 #' A terminator that counts evaluations, e.g. [bbotk::TerminatorEvals], is shared by all subspaces.
 #' Subspaces with slow evaluations therefore receive only a small share of the budget.
 #' Consider [bbotk::TerminatorRunTime] instead when the subspaces differ strongly in evaluation time.
-#'
-#' If a worker dies and \CRANpkg{rush} restarts it, the restarted worker claims the next subspace of the assignment
-#' cycle, which is not necessarily the subspace of the worker that died.
 #'
 #' @references
 #' * `r format_bib("egele_2023")`
@@ -151,16 +167,18 @@
 #'       param = "branch",
 #'       groups = list(a = "a", b = "b"))
 #'
-#'     mirai::daemons(2)
-#'     rush::rush_plan(n_workers = 2, worker_type = "mirai")
+#'     # one worker per subspace, each on its own compute profile
+#'     mirai::daemons(1, .compute = "a")
+#'     mirai::daemons(1, .compute = "b")
+#'     rush::rush_plan(profiles = c(a = 1, b = 1), worker_type = "mirai")
 #'
 #'     optimizer = opt("adbo_subspaces",
 #'       subspaces = subspaces,
-#'       n_workers_subspace = c(a = 1L, b = 1L),
 #'       design_size = 4)
 #'
 #'     optimizer$optimize(instance)
-#'     mirai::daemons(0)
+#'     mirai::daemons(0, .compute = "a")
+#'     mirai::daemons(0, .compute = "b")
 #'   } else {
 #'     message("Redis server is not available.\nPlease set up Redis prior to running the example.")
 #'   }
@@ -178,10 +196,9 @@ OptimizerADBOSubspaces = R6Class(
         subspaces = p_uty(custom_check = crate(function(x) {
           check_list(x, types = "ParamSet", min.len = 1L, names = "unique", any.missing = FALSE)
         })),
-        n_workers_subspace = p_uty(custom_check = crate(function(x) {
-          check_integerish(x, lower = 1L, min.len = 1L, any.missing = FALSE, names = "unique", null.ok = TRUE)
+        subspace_profiles = p_uty(custom_check = crate(function(x) {
+          check_character(x, any.missing = FALSE, min.chars = 1L, min.len = 1L, names = "unique", null.ok = TRUE)
         })),
-        worker_setup = p_uty(custom_check = crate(function(x) check_function(x, null.ok = TRUE))),
         initial_design_subspace = p_uty(custom_check = crate(function(x) {
           check_list(x, types = "data.table", names = "unique", null.ok = TRUE)
         })),
@@ -225,11 +242,10 @@ OptimizerADBOSubspaces = R6Class(
         )
       }
 
-      n_workers_subspace = pv[["n_workers_subspace"]] %??% set_names(rep(1L, length(subspaces)), subspace_ids)
-      assert_permutation(names(n_workers_subspace), subspace_ids, .var.name = "names of 'n_workers_subspace'")
-      n_workers_subspace = as.integer(n_workers_subspace[subspace_ids])
+      subspace_profiles = private$.assert_subspace_profiles(pv[["subspace_profiles"]], subspace_ids)
+      # a worker looks up its subspace by the compute profile it runs on
+      private$.subspace_of_profile = set_names(subspace_ids, subspace_profiles[subspace_ids])
 
-      private$.assignment = rep(subspace_ids, times = n_workers_subspace)
       private$.designs = private$.generate_designs(subspaces)
       # the acquisition function is optimized on the untransformed subspace, mirroring `generate_acq_domain()`
       private$.acq_domains = map(subspaces, strip_trafo)
@@ -271,18 +287,29 @@ OptimizerADBOSubspaces = R6Class(
         msg = sprintf("Package '%%s' required but not installed for Optimizer '%s'", format(self))
       )
 
+      if (!is.null(pv[["n_workers"]])) {
+        error_config(
+          paste(
+            "'%s' divides the workers among the subspaces by the mirai compute profiles.",
+            "Set 'profiles' instead of 'n_workers'."
+          ),
+          self$id
+        )
+      }
+
+      profiles = private$.assert_profiles(pv[["profiles"]], subspace_profiles)
+
       lg = lgr::get_logger("mlr3/bbotk")
       lg$info(
-        "Optimizing %i subspace(s) (%s) with %s worker(s)",
+        "Optimizing %i subspace(s): %s",
         length(subspaces),
-        str_collapse(sprintf("%s: %i", subspace_ids, n_workers_subspace)),
-        sum(n_workers_subspace)
+        str_collapse(sprintf("'%s' on compute profile '%s'", subspace_ids, subspace_profiles[subspace_ids]))
       )
 
-      # the counters that assign workers and initial design points are stateful and must not survive a previous run
+      # the counters that claim the initial design points are stateful and must not survive a previous run
       private$.reset_counters(inst)
 
-      result = optimize_async_default(inst, self, design = NULL, n_workers = sum(n_workers_subspace))
+      result = optimize_async_default(inst, self, design = NULL, profiles = profiles)
 
       # the workers only update copies of the surrogate that are restricted to their subspace,
       # so the final update on all data must happen on the main process
@@ -300,8 +327,9 @@ OptimizerADBOSubspaces = R6Class(
   ),
 
   private = list(
-    # assignment of subspaces to workers, e.g. `c("gpu", "cpu", "cpu")`; workers claim an entry when they start
-    .assignment = NULL,
+    # subspace id per compute profile, e.g. `c(gpu = "nn", cpu = "rf")`;
+    # a worker looks up the subspace of the profile it runs on when it starts
+    .subspace_of_profile = NULL,
 
     # initial design per subspace, generated on the main process so that all workers see the same design
     .designs = NULL,
@@ -340,9 +368,48 @@ OptimizerADBOSubspaces = R6Class(
       }), subspace_ids)
     },
 
+    # every subspace runs on its own compute profile, otherwise a worker cannot derive its subspace from the
+    # profile it runs on
+    .assert_subspace_profiles = function(subspace_profiles, subspace_ids) {
+      subspace_profiles = subspace_profiles %??% set_names(subspace_ids, subspace_ids)
+      assert_permutation(names(subspace_profiles), subspace_ids, .var.name = "names of 'subspace_profiles'")
+
+      duplicated_profiles = unique(subspace_profiles[duplicated(subspace_profiles)])
+      if (length(duplicated_profiles)) {
+        error_config(
+          "Compute profile(s) %s are assigned to more than one subspace. Every subspace must run on its own profile.",
+          str_collapse(duplicated_profiles, quote = "'")
+        )
+      }
+
+      subspace_profiles
+    },
+
+    # the workers are divided among the subspaces by the compute profiles, so every profile of a subspace must
+    # receive workers
+    .assert_profiles = function(profiles, subspace_profiles) {
+      if (getOption("bbotk.debug", FALSE)) {
+        # the debug mode runs a single worker in the main process which has no compute profile
+        return(NULL)
+      }
+
+      profiles = profiles %??% rush::rush_config()$profiles
+      if (is.null(profiles)) {
+        error_config(
+          paste(
+            "'%s' divides the workers among the subspaces by the mirai compute profiles.",
+            "Set the 'profiles' parameter or `rush::rush_plan(profiles = ...)` instead of 'n_workers'."
+          ),
+          self$id
+        )
+      }
+
+      assert_permutation(names(profiles), unname(subspace_profiles), .var.name = "names of 'profiles'")
+      profiles
+    },
+
     .reset_counters = function(inst) {
       r = inst$rush$connector
-      r$DEL(private$.counter_key(inst, "workers"))
       walk(names(private$.designs), function(subspace_id) {
         r$DEL(private$.counter_key(inst, paste0("design:", subspace_id)))
       })
@@ -374,14 +441,24 @@ OptimizerADBOSubspaces = R6Class(
 
     .optimize = function(inst) {
       lg = lgr::get_logger("mlr3/bbotk")
-      pv = self$param_set$values
 
-      subspace_id = private$.assignment[[(private$.claim(inst, "workers") - 1L) %% length(private$.assignment) + 1L]]
-      lg$info("Worker '%s' is assigned to subspace '%s'", inst$rush$worker_id, subspace_id)
-
-      if (!is.null(pv[["worker_setup"]])) {
-        pv[["worker_setup"]](subspace_id)
+      # a worker takes the subspace of the compute profile it runs on
+      profile = inst$rush$profile
+      subspace_id = if (is.null(profile) && getOption("bbotk.debug", FALSE)) {
+        # the debug mode runs a single worker in the main process, which has no compute profile
+        private$.subspace_of_profile[[1L]]
+      } else {
+        # `[[` on a missing name errors, `[` marks the missing profile with `NA`
+        unname(private$.subspace_of_profile[profile %??% ""])
       }
+
+      if (is.na(subspace_id)) {
+        error_config(
+          "No subspace is assigned to compute profile '%s'. Check 'subspace_profiles' and the daemons of the profile.",
+          profile %??% "default"
+        )
+      }
+      lg$info("Worker '%s' is assigned to subspace '%s'", inst$rush$worker_id, subspace_id)
 
       private$.restrict_to_subspace(inst, subspace_id)
 

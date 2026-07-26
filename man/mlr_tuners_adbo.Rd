@@ -39,6 +39,12 @@ Default is \code{sobol}.}
 Number of parallel workers.
 If \code{NULL}, all rush workers specified via \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.
 Default is \code{NULL}.}
+\item{\code{profiles}}{named \code{integer()}\cr
+Number of parallel workers per \CRANpkg{mirai} compute profile, e.g. \code{c(cpu = 2, gpu = 2)}.
+The daemons of every profile must be created with \code{\link[mirai:daemons]{mirai::daemons()}} beforehand.
+Cannot be combined with \code{n_workers}.
+If \code{NULL}, the profiles specified via \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.
+Default is \code{NULL}.}
 }
 }
 
