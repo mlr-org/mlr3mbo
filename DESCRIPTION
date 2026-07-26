@@ -70,8 +70,8 @@ Suggests:
     stringi,
     testthat (>= 3.0.0)
 Remotes:
-    ml-org/rush@worker_profile,
-    ml-org/bbotk@worker_profile
+    mlr-org/rush@worker_profile,
+    mlr-org/bbotk@worker_profile
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
