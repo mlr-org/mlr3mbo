@@ -33,8 +33,10 @@
 #'
 #' Each evaluation is logged into the [bbotk::ArchiveAsync] with an additional `.subspace` column holding the id of
 #' the subspace it was proposed from.
-#' As for all other columns that are written when an evaluation finishes, `.subspace` is `NA` for the queued, running,
-#' and failed points that the [bbotk::ArchiveAsync] also contains.
+#' The points of the initial designs already carry `.subspace` while they are queued.
+#' For the points proposed by the workers, `.subspace` is written when the evaluation finishes, as for all other
+#' columns of a finished evaluation, and is therefore `NA` for the running and failed points that the
+#' [bbotk::ArchiveAsync] also contains.
 #'
 #' @section Compute Profiles:
 #' The workers are divided among the subspaces by the
@@ -57,6 +59,11 @@
 #'   profiles = c(gpu = 1L, cpu = 7L))
 #' ```
 #'
+#' Every compute profile also has its own queue in \CRANpkg{rush} which is used to hand the initial design of a
+#' subspace to its workers, see section Initial Design.
+#' Points that are pushed to the shared queue instead, e.g. by a callback, are popped by any worker and therefore have
+#' no `.subspace`.
+#'
 #' Deriving the subspace from the compute profile keeps the assignment stable when \CRANpkg{rush} restarts a worker
 #' that died.
 #' It also leaves the setup of a worker to the daemons of its profile, e.g. binding a worker to a device with
@@ -73,12 +80,13 @@
 #'
 #' In contrast to [OptimizerAsyncMbo], the initial design is not pushed to the shared queue of \CRANpkg{rush},
 #' because any worker could pop any point from it and would thereby leave its subspace.
-#' Instead, the workers of a subspace claim the points of the design of their subspace one by one.
+#' Instead, the design of a subspace is pushed to the queue of the compute profile of that subspace, so that only the
+#' workers of the subspace pop its points.
 #' The `initial_design` and `design_size` parameters of [OptimizerAsyncMbo] therefore behave slightly differently and
 #' `initial_design` must not be set.
 #'
 #' @section Loop:
-#' On each worker, after the initial design of its subspace has been claimed:
+#' On each worker, after the queue of its compute profile has been emptied:
 #'
 #' 1. The [SurrogateLearner] is updated on the evaluations of the subspace only, including pending evaluations of the
 #'    subspace which are imputed.
@@ -246,7 +254,6 @@ OptimizerADBOSubspaces = R6Class(
       # a worker looks up its subspace by the compute profile it runs on
       private$.subspace_of_profile = set_names(subspace_ids, subspace_profiles[subspace_ids])
 
-      private$.designs = private$.generate_designs(subspaces)
       # the acquisition function is optimized on the untransformed subspace, mirroring `generate_acq_domain()`
       private$.acq_domains = map(subspaces, strip_trafo)
 
@@ -306,8 +313,8 @@ OptimizerADBOSubspaces = R6Class(
         str_collapse(sprintf("'%s' on compute profile '%s'", subspace_ids, subspace_profiles[subspace_ids]))
       )
 
-      # the counters that claim the initial design points are stateful and must not survive a previous run
-      private$.reset_counters(inst)
+      # every subspace hands its initial design to its own workers through the queue of its compute profile
+      private$.push_designs(inst, subspaces, subspace_profiles)
 
       result = optimize_async_default(inst, self, design = NULL, profiles = profiles)
 
@@ -331,11 +338,30 @@ OptimizerADBOSubspaces = R6Class(
     # a worker looks up the subspace of the profile it runs on when it starts
     .subspace_of_profile = NULL,
 
-    # initial design per subspace, generated on the main process so that all workers see the same design
-    .designs = NULL,
-
     # search space of the acquisition function optimization per subspace
     .acq_domains = NULL,
+
+    # push the initial design of every subspace to the queue of its compute profile, so that only the workers of
+    # that subspace pop its points
+    .push_designs = function(inst, subspaces, subspace_profiles) {
+      designs = private$.generate_designs(subspaces)
+      cols_x = inst$archive$cols_x
+      na_x = na_values(inst$search_space)
+      # the debug mode runs a single worker in the main process which has no compute profile and therefore only
+      # pops from the shared queue
+      debug = getOption("bbotk.debug", FALSE)
+
+      iwalk(designs, function(design, subspace_id) {
+        xss = map(transpose_list(design), function(xs) pad_xs(xs, cols_x = cols_x, na_values = na_x))
+        inst$archive$push_points(
+          xss,
+          xss_extra = list(list(.subspace = subspace_id)),
+          profile = if (!debug) subspace_profiles[[subspace_id]]
+        )
+      })
+
+      invisible(designs)
+    },
 
     .generate_designs = function(subspaces) {
       pv = self$param_set$values
@@ -408,22 +434,6 @@ OptimizerADBOSubspaces = R6Class(
       profiles
     },
 
-    .reset_counters = function(inst) {
-      r = inst$rush$connector
-      walk(names(private$.designs), function(subspace_id) {
-        r$DEL(private$.counter_key(inst, paste0("design:", subspace_id)))
-      })
-    },
-
-    .counter_key = function(inst, id) {
-      sprintf("%s:adbo_subspaces:%s", inst$rush$network_id, id)
-    },
-
-    # atomically claim the next slot of a counter, shared by all workers of the network
-    .claim = function(inst, id) {
-      as.integer(inst$rush$connector$INCR(private$.counter_key(inst, id)))
-    },
-
     # restrict the surrogate, the acquisition function and the acquisition function optimizer of this worker
     # to `subspace_id`
     .restrict_to_subspace = function(inst, subspace_id) {
@@ -464,16 +474,9 @@ OptimizerADBOSubspaces = R6Class(
 
       cols_x = inst$archive$cols_x
       na_x = na_values(inst$search_space)
-      design = private$.designs[[subspace_id]]
 
       lg$debug("Optimizer '%s' evaluates the initial design of subspace '%s'", self$id, subspace_id)
-      while (!inst$is_terminated) {
-        i = private$.claim(inst, paste0("design:", subspace_id))
-        if (i > nrow(design)) break
-        xs = pad_xs(transpose_list(design[i])[[1L]], cols_x = cols_x, na_values = na_x)
-        xs[[".subspace"]] = subspace_id
-        get_private(inst)$.eval_point(xs)
-      }
+      get_private(inst)$.eval_queue()
 
       lg$debug("Optimizer '%s' starts the optimization phase on subspace '%s'", self$id, subspace_id)
       while (!inst$is_terminated) {

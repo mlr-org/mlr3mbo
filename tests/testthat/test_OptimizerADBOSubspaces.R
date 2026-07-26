@@ -39,6 +39,35 @@ test_that("OptimizerADBOSubspaces keeps every worker in its subspace", {
   expect_set_equal(unique(finished$.subspace), c("a", "b"))
 })
 
+test_that("OptimizerADBOSubspaces queues one initial design per subspace", {
+  rush = rush::rsh(config = redis_configuration())
+  on.exit(rush$reset())
+
+  instance = oi_async(
+    objective = OBJ_1D_BRANCH,
+    search_space = PS_1D_BRANCH,
+    terminator = trm("evals", n_evals = 12L),
+    rush = rush
+  )
+  optimizer = opt(
+    "adbo_subspaces",
+    subspaces = SUBSPACES_1D_BRANCH,
+    design_size = 2L,
+    design_size_subspace = c(b = 4L)
+  )
+  get_private(optimizer)$.push_designs(instance, SUBSPACES_1D_BRANCH, c(a = "gpu", b = "cpu"))
+
+  # the design of a subspace is queued for the compute profile of that subspace, the shared queue stays empty
+  expect_equal(instance$archive$n_queued_per_profile, c(default = 0L, cpu = 4L, gpu = 2L))
+
+  queued = instance$archive$queued_data
+  expect_equal(queued[profile == "gpu", .subspace], rep("a", 2L))
+  expect_equal(queued[profile == "cpu", .subspace], rep("b", 4L))
+  # the points are padded, so the parameters outside of the subspace are inactive
+  expect_true(all(is.na(queued[profile == "gpu", xb])))
+  expect_true(all(is.na(queued[profile == "cpu", xa])))
+})
+
 test_that("OptimizerADBOSubspaces evaluates one initial design per subspace", {
   profiles = c(a = 1, b = 1)
   rush = start_rush_profiles(profiles)
@@ -61,12 +90,11 @@ test_that("OptimizerADBOSubspaces evaluates one initial design per subspace", {
   )
   optimizer$optimize(instance)
 
-  data = instance$archive$data
-  designs = get_private(optimizer)$.designs
-  expect_data_table(designs$a, nrows = 2L)
-  expect_data_table(designs$b, nrows = 4L)
-  expect_design_evaluated(designs$a, data)
-  expect_design_evaluated(designs$b, data)
+  # the whole queue was worked off, so every design point was evaluated by a worker of its subspace
+  expect_equal(instance$archive$n_queued, 0L)
+  finished = instance$archive$finished_data
+  expect_gte(sum(finished$.subspace == "a"), 2L)
+  expect_gte(sum(finished$.subspace == "b"), 4L)
 })
 
 test_that("OptimizerADBOSubspaces accepts an initial design per subspace", {
