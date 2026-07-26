@@ -97,6 +97,29 @@ test_that("OptimizerADBOSubspaces evaluates one initial design per subspace", {
   expect_gte(sum(finished$.subspace == "b"), 4L)
 })
 
+test_that("OptimizerADBOSubspaces evaluates the initial designs in debug mode", {
+  rush = rush::rsh(config = redis_configuration())
+  old = options(bbotk.debug = TRUE)
+  on.exit({
+    rush$reset()
+    options(old)
+  })
+
+  instance = oi_async(
+    objective = OBJ_1D_BRANCH,
+    search_space = PS_1D_BRANCH,
+    terminator = trm("evals", n_evals = 8L),
+    rush = rush
+  )
+  optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH, design_size = 2L)
+  optimizer$optimize(instance)
+
+  # the single worker in the main process has no compute profile, so the designs go to the shared queue
+  finished = instance$archive$finished_data
+  expect_gte(sum(finished$.subspace == "a"), 2L)
+  expect_gte(sum(finished$.subspace == "b"), 2L)
+})
+
 test_that("OptimizerADBOSubspaces accepts an initial design per subspace", {
   profiles = c(a = 1, b = 1)
   rush = start_rush_profiles(profiles)

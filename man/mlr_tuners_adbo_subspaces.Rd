@@ -24,8 +24,10 @@ Use \code{\link[=partition_search_space]{partition_search_space()}} to derive su
 
 Each evaluation is logged into the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} with an additional \code{.subspace} column holding the id of
 the subspace it was proposed from.
-As for all other columns that are written when an evaluation finishes, \code{.subspace} is \code{NA} for the queued, running,
-and failed points that the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} also contains.
+The points of the initial designs already carry \code{.subspace} while they are queued.
+For the points proposed by the workers, \code{.subspace} is written when the evaluation finishes, as for all other
+columns of a finished evaluation, and is therefore \code{NA} for the running and failed points that the
+\link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync} also contains.
 }
 
 \section{Compute Profiles}{
@@ -49,6 +51,11 @@ opt("adbo_subspaces",
   profiles = c(gpu = 1L, cpu = 7L))
 }\if{html}{\out{</div>}}
 
+Every compute profile also has its own queue in \CRANpkg{rush} which is used to hand the initial design of a
+subspace to its workers, see section Initial Design.
+Points that are pushed to the shared queue instead, e.g. by a callback, are popped by any worker and therefore have
+no \code{.subspace}.
+
 Deriving the subspace from the compute profile keeps the assignment stable when \CRANpkg{rush} restarts a worker
 that died.
 It also leaves the setup of a worker to the daemons of its profile, e.g. binding a worker to a device with
@@ -67,7 +74,8 @@ Alternatively, \code{initial_design_subspace} accepts a named list of \code{\lin
 
 In contrast to \link{OptimizerAsyncMbo}, the initial design is not pushed to the shared queue of \CRANpkg{rush},
 because any worker could pop any point from it and would thereby leave its subspace.
-Instead, the workers of a subspace claim the points of the design of their subspace one by one.
+Instead, the design of a subspace is pushed to the queue of the compute profile of that subspace, so that only the
+workers of the subspace pop its points.
 The \code{initial_design} and \code{design_size} parameters of \link{OptimizerAsyncMbo} therefore behave slightly differently and
 \code{initial_design} must not be set.
 }
