@@ -105,6 +105,7 @@ Collate:
     'OptimizerADBO.R'
     'OptimizerMbo.R'
     'OptimizerAsyncMbo.R'
+    'OptimizerADBOSubspaces.R'
     'mlr_output_trafos.R'
     'OutputTrafo.R'
     'OutputTrafoLog.R'
@@ -117,6 +118,7 @@ Collate:
     'SurrogateLearner.R'
     'SurrogateLearnerCollection.R'
     'TunerADBO.R'
+    'TunerADBOSubspaces.R'
     'TunerAsyncMbo.R'
     'TunerMbo.R'
     'mlr_loop_functions.R'
@@ -130,6 +132,7 @@ Collate:
     'helper.R'
     'loop_function.R'
     'mbo_defaults.R'
+    'partition_search_space.R'
     'sugar.R'
     'zzz.R'
 Config/roxygen2/version: 8.0.0.9000
