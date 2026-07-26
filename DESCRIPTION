@@ -69,6 +69,9 @@ Suggests:
     rush (>= 1.2.1.9000),
     stringi,
     testthat (>= 3.0.0)
+Remotes:
+    ml-org/rush@worker_profile,
+    ml-org/bbotk@worker_profile
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
