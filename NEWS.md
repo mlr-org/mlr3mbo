@@ -1,3 +1,5 @@
+# mlr3mbo (development version)
+
 # mlr3mbo 1.2.1
 
 * compatibility: mlr3 1.7.2
