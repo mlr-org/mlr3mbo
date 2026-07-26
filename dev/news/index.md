@@ -2,6 +2,12 @@
 
 ## mlr3mbo (development version)
 
+## mlr3mbo 1.2.1
+
+CRAN release: 2026-07-26
+
+- compatibility: mlr3 1.7.2
+
 ## mlr3mbo 1.2.0
 
 CRAN release: 2026-07-21
