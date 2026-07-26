@@ -7,6 +7,10 @@
 * feat: `Surrogate` gained a `$row_filter` field that restricts the archive rows the surrogate is updated on.
 * feat: `OptimizerAsyncMbo`, `OptimizerADBO`, `TunerAsyncMbo`, and `TunerADBO` gained the `profiles` parameter that distributes the workers over the `mirai` compute profiles, e.g. `profiles = c(cpu = 2, gpu = 2)`. Cannot be combined with `n_workers`.
 
+# mlr3mbo 1.2.1
+
+* compatibility: mlr3 1.7.2
+
 # mlr3mbo 1.2.0
 
 * fix: `acqo()` now raises an error when `terminator` or `callbacks` are combined with a dictionary key as `optimizer`, because these arguments were silently discarded before.
