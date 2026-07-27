@@ -149,6 +149,7 @@ In the case of maximization, this already includes the necessary change of sign.
 \if{latex}{\out{\hypertarget{method-AcqFunctionEIPS-update}{}}}
 \subsection{\code{AcqFunctionEIPS$update()}}{
   Update the acquisition function and set \code{y_best}.
+See \link{AcqFunction} for a general description of \verb{$update()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionEIPS$update()}

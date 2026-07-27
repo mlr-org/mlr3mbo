@@ -84,6 +84,7 @@ AcqFunctionEHVI = R6Class(
 
     #' @description
     #' Update the acquisition function and set `ys_front` and `ref_point`.
+    #' See [AcqFunction] for a general description of `$update()`.
     update = function() {
       n_obj = length(self$archive$cols_y)
       if (n_obj > 2L) {

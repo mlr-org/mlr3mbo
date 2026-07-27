@@ -184,6 +184,7 @@ Other Acquisition Function:
 \subsection{\code{AcqFunctionStochasticCB$update()}}{
   Update the acquisition function.
 Samples and decays lambda.
+See \link{AcqFunction} for a general description of \verb{$update()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionStochasticCB$update()}
@@ -197,6 +198,7 @@ Samples and decays lambda.
 \subsection{\code{AcqFunctionStochasticCB$reset()}}{
   Reset the acquisition function.
 Resets the private update counter \code{.t} and the sampled lambda so that a fresh lambda is drawn on the next run.
+See \link{AcqFunction} for a general description of \verb{$reset()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionStochasticCB$reset()}

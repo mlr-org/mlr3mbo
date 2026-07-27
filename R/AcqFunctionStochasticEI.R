@@ -116,6 +116,7 @@ AcqFunctionStochasticEI = R6Class(
     #' Update the acquisition function.
     #' Sets `y_best` to the best observed objective function value.
     #' Decays epsilon.
+    #' See [AcqFunction] for a general description of `$update()`.
     update = function() {
       y = self$archive$data[, self$surrogate$cols_y, with = FALSE]
       if (self$surrogate$output_trafo_must_be_considered) {
@@ -137,6 +138,7 @@ AcqFunctionStochasticEI = R6Class(
     #' @description
     #' Reset the acquisition function.
     #' Resets the private update counter `.t` used within the epsilon decay.
+    #' See [AcqFunction] for a general description of `$reset()`.
     reset = function() {
       private$.t = 0L
     }

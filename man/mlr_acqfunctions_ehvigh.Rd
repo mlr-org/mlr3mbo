@@ -157,6 +157,7 @@ Nodes are scaled by a factor of \code{sqrt(2)} and weights are normalized under 
 \if{latex}{\out{\hypertarget{method-AcqFunctionEHVIGH-update}{}}}
 \subsection{\code{AcqFunctionEHVIGH$update()}}{
   Update the acquisition function and set \code{ys_front}, \code{ref_point}, \code{hypervolume} and \code{gh_data}.
+See \link{AcqFunction} for a general description of \verb{$update()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionEHVIGH$update()}

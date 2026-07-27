@@ -134,6 +134,7 @@ Signs are corrected with respect to assuming minimization of objectives.}
 \if{latex}{\out{\hypertarget{method-AcqFunctionEHVI-update}{}}}
 \subsection{\code{AcqFunctionEHVI$update()}}{
   Update the acquisition function and set \code{ys_front} and \code{ref_point}.
+See \link{AcqFunction} for a general description of \verb{$update()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionEHVI$update()}

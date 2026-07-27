@@ -175,6 +175,7 @@ In the case of maximization, this already includes the necessary change of sign.
   Update the acquisition function.
 Sets \code{y_best} to the best observed objective function value.
 Decays epsilon.
+See \link{AcqFunction} for a general description of \verb{$update()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionStochasticEI$update()}
@@ -188,6 +189,7 @@ Decays epsilon.
 \subsection{\code{AcqFunctionStochasticEI$reset()}}{
   Reset the acquisition function.
 Resets the private update counter \code{.t} used within the epsilon decay.
+See \link{AcqFunction} for a general description of \verb{$reset()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionStochasticEI$reset()}

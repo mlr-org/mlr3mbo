@@ -7,6 +7,43 @@
 #'
 #' Based on the predictions of a [Surrogate], the acquisition function encodes the preference to evaluate a new point.
 #'
+#' Most acquisition functions are stateful and depend on quantities that must be recomputed whenever the [Surrogate]
+#' has been refitted on new data, e.g., the best objective function value observed so far (`$y_best` of
+#' [mlr_acqfunctions_ei]) or the current Pareto front and the reference point (`$ys_front` and `$ref_point` of
+#' [mlr_acqfunctions_ehvi]).
+#' These quantities are cached in public fields and are recomputed from the [Surrogate] and its [bbotk::Archive] by
+#' calling `$update()`.
+#' Which fields a subclass sets is documented in its `$update()` method.
+#'
+#' Loop functions such as [bayesopt_ego] call `$update()` in every iteration, directly after updating the surrogate
+#' and before optimizing the acquisition function:
+#'
+#' ```
+#' acq_function$surrogate$update()
+#' acq_function$update()
+#' acq_optimizer$optimize()
+#' ```
+#'
+#' The order matters, because `$update()` reads the archive through the surrogate and may rely on the surrogate's
+#' predictions or its [OutputTrafo].
+#' Evaluating an acquisition function whose cached fields have not been set results in an error along the lines of
+#' `"$y_best is not set. Missed to call $update()?"`.
+#'
+#' `$reset()` discards state so that the same acquisition function object can be reused for another optimization run
+#' without carrying over information from the previous one.
+#' Fields that `$update()` recomputes from scratch in every iteration need not be reset,
+#' which is why most acquisition functions do not override `$reset()`.
+#' It matters for state that persists across iterations instead:
+#' [mlr_acqfunctions_stochastic_cb], for example, samples `lambda` once at the first `$update()` and afterwards only
+#' decays it using an iteration counter,
+#' so both are reset to make the next run start from a freshly sampled `lambda`.
+#' [OptimizerMbo] and [OptimizerAsyncMbo] call `$reset()` at the beginning of `$optimize()`, together with resetting
+#' the [Surrogate] and the [AcqOptimizer].
+#'
+#' Both methods can be implemented by subclasses.
+#' The default implementations do nothing, which is sufficient for stateless acquisition functions such as
+#' [mlr_acqfunctions_mean] or [mlr_acqfunctions_sd].
+#'
 #' @family Acquisition Function
 #' @export
 AcqFunction = R6Class(
@@ -94,18 +131,24 @@ AcqFunction = R6Class(
 
     #' @description
     #' Update the acquisition function.
+    #' Recomputes the cached quantities from the current state of the [Surrogate] and its [bbotk::Archive].
+    #' Can be implemented by subclasses; see the class description above for details.
     #'
-    #' Can be implemented by subclasses.
+    #' @return `NULL`.
     update = function() {
       # FIXME: at some point we may want to make this an AB to a private$.update
+      invisible(NULL)
     },
 
     #' @description
     #' Reset the acquisition function.
+    #' Discards state so that the acquisition function can be reused for another optimization run.
+    #' Can be implemented by subclasses; see the class description above for details.
     #'
-    #' Can be implemented by subclasses.
+    #' @return `NULL`.
     reset = function() {
       # FIXME: at some point we may want to make this an AB to a private$.reset
+      invisible(NULL)
     },
 
     #' @description

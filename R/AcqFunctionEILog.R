@@ -90,6 +90,7 @@ AcqFunctionEILog = R6Class(
 
     #' @description
     #' Update the acquisition function and set `y_best`.
+    #' See [AcqFunction] for a general description of `$update()`.
     update = function() {
       assert_r6(self$surrogate$output_trafo, "OutputTrafoLog")
       assert_false(self$surrogate$output_trafo$invert_posterior)

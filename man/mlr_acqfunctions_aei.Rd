@@ -157,6 +157,7 @@ when using a \link[mlr3learners:mlr_learners_regr.km]{mlr3learners} as surrogate
 \if{latex}{\out{\hypertarget{method-AcqFunctionAEI-update}{}}}
 \subsection{\code{AcqFunctionAEI$update()}}{
   Update the acquisition function and set \code{y_effective_best} and \code{noise_var}.
+See \link{AcqFunction} for a general description of \verb{$update()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionAEI$update()}

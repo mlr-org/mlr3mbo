@@ -166,6 +166,7 @@ Note that this requires the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstance
 \if{latex}{\out{\hypertarget{method-AcqFunctionSmsEgo-update}{}}}
 \subsection{\code{AcqFunctionSmsEgo$update()}}{
   Update the acquisition function and set \code{ys_front}, \code{ref_point} and \code{epsilon}.
+See \link{AcqFunction} for a general description of \verb{$update()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionSmsEgo$update()}
@@ -179,6 +180,7 @@ Note that this requires the \link[bbotk:OptimInstanceBatch]{bbotk::OptimInstance
 \subsection{\code{AcqFunctionSmsEgo$reset()}}{
   Reset the acquisition function.
 Resets \code{epsilon}.
+See \link{AcqFunction} for a general description of \verb{$reset()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionSmsEgo$reset()}
