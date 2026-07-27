@@ -139,7 +139,9 @@ Creates a new instance of this
 ### `AcqFunctionEHVIGH$update()`
 
 Update the acquisition function and set `ys_front`, `ref_point`,
-`hypervolume` and `gh_data`.
+`hypervolume` and `gh_data`. See
+[AcqFunction](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+for a general description of `$update()`.
 
 #### Usage
 

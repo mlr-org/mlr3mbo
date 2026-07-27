@@ -181,7 +181,9 @@ Creates a new instance of this
 
 ### `AcqFunctionStochasticCB$update()`
 
-Update the acquisition function. Samples and decays lambda.
+Update the acquisition function. Samples and decays lambda. See
+[AcqFunction](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+for a general description of `$update()`.
 
 #### Usage
 
@@ -193,6 +195,9 @@ Update the acquisition function. Samples and decays lambda.
 
 Reset the acquisition function. Resets the private update counter `.t`
 and the sampled lambda so that a fresh lambda is drawn on the next run.
+See
+[AcqFunction](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+for a general description of `$reset()`.
 
 #### Usage
 

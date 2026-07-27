@@ -131,7 +131,9 @@ Creates a new instance of this
 
 ### `AcqFunctionMulti$update()`
 
-Update each of the wrapped acquisition functions.
+Update each of the wrapped acquisition functions. See
+[AcqFunction](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+for a general description of `$update()`.
 
 #### Usage
 

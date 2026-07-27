@@ -122,7 +122,9 @@ Creates a new instance of this
 
 ### `AcqFunctionEIPS$update()`
 
-Update the acquisition function and set `y_best`.
+Update the acquisition function and set `y_best`. See
+[AcqFunction](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+for a general description of `$update()`.
 
 #### Usage
 

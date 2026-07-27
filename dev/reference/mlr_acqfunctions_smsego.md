@@ -152,7 +152,9 @@ Creates a new instance of this
 ### `AcqFunctionSmsEgo$update()`
 
 Update the acquisition function and set `ys_front`, `ref_point` and
-`epsilon`.
+`epsilon`. See
+[AcqFunction](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+for a general description of `$update()`.
 
 #### Usage
 
@@ -162,7 +164,9 @@ Update the acquisition function and set `ys_front`, `ref_point` and
 
 ### `AcqFunctionSmsEgo$reset()`
 
-Reset the acquisition function. Resets `epsilon`.
+Reset the acquisition function. Resets `epsilon`. See
+[AcqFunction](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+for a general description of `$reset()`.
 
 #### Usage
 

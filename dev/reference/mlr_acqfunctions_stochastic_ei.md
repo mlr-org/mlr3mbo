@@ -157,7 +157,9 @@ Creates a new instance of this
 ### `AcqFunctionStochasticEI$update()`
 
 Update the acquisition function. Sets `y_best` to the best observed
-objective function value. Decays epsilon.
+objective function value. Decays epsilon. See
+[AcqFunction](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+for a general description of `$update()`.
 
 #### Usage
 
@@ -168,7 +170,9 @@ objective function value. Decays epsilon.
 ### `AcqFunctionStochasticEI$reset()`
 
 Reset the acquisition function. Resets the private update counter `.t`
-used within the epsilon decay.
+used within the epsilon decay. See
+[AcqFunction](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+for a general description of `$reset()`.
 
 #### Usage
 

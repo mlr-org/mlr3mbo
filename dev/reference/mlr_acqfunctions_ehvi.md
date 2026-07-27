@@ -104,7 +104,9 @@ Creates a new instance of this
 
 ### `AcqFunctionEHVI$update()`
 
-Update the acquisition function and set `ys_front` and `ref_point`.
+Update the acquisition function and set `ys_front` and `ref_point`. See
+[AcqFunction](https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.md)
+for a general description of `$update()`.
 
 #### Usage
 
