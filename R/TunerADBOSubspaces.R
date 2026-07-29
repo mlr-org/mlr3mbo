@@ -1,26 +1,24 @@
-#' @title TunerAsync using Asynchronous Decentralized Bayesian Optimization
-#' @name mlr_tuners_adbo
+#' @title TunerAsync using Asynchronous Decentralized Bayesian Optimization on Homogeneous Subspaces
+#'
+#' @include OptimizerADBOSubspaces.R
+#' @name mlr_tuners_adbo_subspaces
 #'
 #' @description
-#' `TunerADBO` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO).
-#' ADBO is a variant of Asynchronous Model Based Optimization (AMBO) that uses
-#' [AcqFunctionStochasticCB] with exponential lambda decay.
-#' This is a minimal interface internally passing on to [OptimizerAsyncMbo].
-#' For additional information and documentation see [OptimizerAsyncMbo].
+#' `TunerADBOSubspaces` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO) on a partition
+#' of the search space into homogeneous subspaces.
+#' Every worker is permanently assigned to one subspace and fits its own [SurrogateLearner] on the evaluations of
+#' that subspace only.
+#' This is a minimal interface internally passing on to [OptimizerADBOSubspaces].
+#' For additional information and documentation see [OptimizerADBOSubspaces].
 #'
-#' Currently, only single-objective optimization is supported and
-#' `TunerADBO` is considered an experimental feature and API might be subject to changes.
+#' `TunerADBOSubspaces` is considered an experimental feature and the API might be subject to changes.
+#' Currently, only single-objective optimization is supported.
 #'
-#' @section Parameters:
-#' \describe{
-#' \item{`lambda`}{`numeric(1)`\cr
-#'   Value used for sampling the lambda for each worker from an exponential distribution.}
-#' \item{`rate`}{`numeric(1)`\cr
-#'   Rate of the exponential decay.}
-#' \item{`period`}{`integer(1)`\cr
-#'   Period of the exponential decay.}
-#' }
-#' @template params_async_mbo
+#' @inheritSection mlr_optimizers_adbo_subspaces Subspaces
+#' @inheritSection mlr_optimizers_adbo_subspaces Compute Profiles
+#' @inheritSection mlr_optimizers_adbo_subspaces Initial Design
+#' @inheritSection mlr_optimizers_adbo_subspaces Parameters
+#' @inheritSection mlr_optimizers_adbo_subspaces Note
 #'
 #' @references
 #' * `r format_bib("egele_2023")`
@@ -30,48 +28,60 @@
 #' \donttest{
 #' if (requireNamespace("rush") &
 #'     requireNamespace("mlr3learners") &
-#'     requireNamespace("DiceKriging") &
-#'     requireNamespace("rgenoud")) {
-#
+#'     requireNamespace("ranger") &
+#'     requireNamespace("mlr3pipelines") &
+#'     requireNamespace("rpart")) {
+#'
 #'   if (redis_available()) {
 #'
 #'     library(mlr3)
 #'     library(mlr3tuning)
+#'     library(mlr3pipelines)
 #'
-#'     # single-objective
-#'     task = tsk("wine")
-#'     learner = lrn("classif.rpart", cp = to_tune(lower = 1e-4, upper = 1, logscale = TRUE))
-#'     resampling = rsmp("cv", folds = 3)
-#'     measure = msr("classif.acc")
+#'     # a branching parameter selects the learner
+#'     graph = ppl("branch", list(
+#'       rpart = lrn("classif.rpart", cp = to_tune(1e-4, 1, logscale = TRUE)),
+#'       featureless = lrn("classif.featureless", method = to_tune())))
+#'     learner = as_learner(graph)
+#'     learner$param_set$set_values(branch.selection = to_tune())
 #'
 #'     instance = TuningInstanceAsyncSingleCrit$new(
-#'       task = task,
+#'       task = tsk("wine"),
 #'       learner = learner,
-#'       resampling = resampling,
-#'       measure = measure,
-#'       terminator = trm("evals", n_evals = 10))
+#'       resampling = rsmp("cv", folds = 3),
+#'       measure = msr("classif.acc"),
+#'       terminator = trm("evals", n_evals = 20))
 #'
-#'     mirai::daemons(2)
-#'     rush::rush_plan(n_workers=2, worker_type = "mirai")
+#'     subspaces = partition_search_space(
+#'       instance$search_space,
+#'       param = "branch.selection",
+#'       groups = list(rpart = "rpart", featureless = "featureless"))
 #'
-#'     tnr("adbo", design_size = 4, n_workers = 2)$optimize(instance)
-#'     mirai::daemons(0)
+#'     # one worker per subspace, each on its own compute profile
+#'     mirai::daemons(1, .compute = "rpart")
+#'     mirai::daemons(1, .compute = "featureless")
+#'     rush::rush_plan(profiles = c(rpart = 1, featureless = 1), worker_type = "mirai")
+#'
+#'     tnr("adbo_subspaces",
+#'       subspaces = subspaces,
+#'       design_size = 4)$optimize(instance)
+#'
+#'     mirai::daemons(0, .compute = "rpart")
+#'     mirai::daemons(0, .compute = "featureless")
 #'   } else {
 #'     message("Redis server is not available.\nPlease set up Redis prior to running the example.")
 #'   }
 #' }
 #' }
-TunerADBO = R6Class(
-  "TunerADBO",
+TunerADBOSubspaces = R6Class(
+  "TunerADBOSubspaces",
   inherit = mlr3tuning::TunerAsyncFromOptimizerAsync,
 
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function() {
-      optimizer = OptimizerADBO$new()
-
-      super$initialize(optimizer = optimizer, man = "mlr3mbo::TunerADBO")
+      super$initialize(optimizer = OptimizerADBOSubspaces$new(), man = "mlr3mbo::mlr_tuners_adbo_subspaces")
     },
 
     #' @description
@@ -80,7 +90,6 @@ TunerADBO = R6Class(
     #' @return (`character()`).
     print = function() {
       catn(format(self), if (is.na(self$label)) "" else paste0(": ", self$label))
-      #catn(str_indent("* Parameters:", as_short_string(self$param_set$values)))
       catn(str_indent("* Parameter classes:", self$param_classes))
       catn(str_indent("* Properties:", self$properties))
       catn(str_indent("* Packages:", self$packages))
@@ -145,32 +154,23 @@ TunerADBO = R6Class(
 
     #' @template field_param_classes
     param_classes = function(rhs) {
-      if (missing(rhs)) {
-        private$.optimizer$param_classes
-      } else {
-        stop("$param_classes is read-only.")
-      }
+      assert_ro_binding(rhs)
+      private$.optimizer$param_classes
     },
 
     #' @template field_properties
     properties = function(rhs) {
-      if (missing(rhs)) {
-        private$.optimizer$properties
-      } else {
-        stop("$properties is read-only.")
-      }
+      assert_ro_binding(rhs)
+      private$.optimizer$properties
     },
 
     #' @template field_packages
     packages = function(rhs) {
-      if (missing(rhs)) {
-        private$.optimizer$packages
-      } else {
-        stop("$packages is read-only.")
-      }
+      assert_ro_binding(rhs)
+      private$.optimizer$packages
     }
   )
 )
 
 #' @include aaa.R
-tuners[["adbo"]] = TunerADBO
+tuners[["adbo_subspaces"]] = TunerADBOSubspaces

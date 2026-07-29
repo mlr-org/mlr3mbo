@@ -161,6 +161,20 @@ Surrogate = R6Class(
       }
     },
 
+    #' @field row_filter (`NULL` | `function`)\cr
+    #'   Function used to restrict the rows of the [bbotk::Archive] the surrogate is updated on.
+    #'   Takes the archive data as a [data.table::data.table()] and must return a `logical()` of the same length as
+    #'   the number of rows of the data indicating which rows to keep.
+    #'   If `NULL` (default), all rows are used.
+    #'   This is for example used by [OptimizerADBOSubspaces] to fit a separate surrogate per subspace.
+    row_filter = function(rhs) {
+      if (missing(rhs)) {
+        private$.row_filter
+      } else {
+        private$.row_filter = assert_function(rhs, null.ok = TRUE)
+      }
+    },
+
     #' @field param_set ([paradox::ParamSet])\cr
     #'   Set of hyperparameters.
     param_set = function(rhs) {
@@ -238,6 +252,28 @@ Surrogate = R6Class(
     .cols_y = NULL,
 
     .param_set = NULL,
+
+    .row_filter = NULL,
+
+    # fetch the training data from a synchronous archive, honoring `$row_filter`
+    .fetch_xydt = function() {
+      copy(private$.filter_rows(self$archive$data)[, c(self$cols_x, self$cols_y), with = FALSE])
+    },
+
+    # fetch the training data from an asynchronous archive, honoring `$row_filter`
+    # pending evaluations are included so that subclasses can impute them
+    .fetch_xydt_async = function() {
+      data = self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))
+      copy(private$.filter_rows(data)[, c(self$cols_x, self$cols_y, "state"), with = FALSE])
+    },
+
+    .filter_rows = function(data) {
+      if (is.null(private$.row_filter)) {
+        return(data)
+      }
+      keep = assert_logical(private$.row_filter(data), len = nrow(data), any.missing = FALSE)
+      data[which(keep)]
+    },
 
     .update = function() {
       stop("Abstract.")

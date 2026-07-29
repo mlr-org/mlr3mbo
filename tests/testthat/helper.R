@@ -89,6 +89,28 @@ OBJ_1D_2_MIXED = bbotk::ObjectiveRFun$new(
   properties = "multi-crit"
 )
 
+# Branching 1D Function with one homogeneous subspace per branch
+PS_1D_BRANCH = ps(
+  branch = p_fct(c("a", "b")),
+  xa = p_dbl(-1, 1, depends = branch == "a"),
+  xb = p_dbl(-1, 1, depends = branch == "b"),
+  fb = p_fct(c("lo", "hi"), depends = branch == "b"),
+  shared = p_dbl(0, 1)
+)
+FUN_1D_BRANCH = function(xs) {
+  if (xs$branch == "a") {
+    list(y = xs$xa^2 + xs$shared)
+  } else {
+    list(y = abs(xs$xb) * (if (xs$fb == "hi") 2 else 1) + xs$shared)
+  }
+}
+OBJ_1D_BRANCH = bbotk::ObjectiveRFun$new(
+  fun = FUN_1D_BRANCH,
+  domain = PS_1D_BRANCH,
+  codomain = FUN_1D_CODOMAIN,
+  properties = "single-crit"
+)
+
 # Simple 2D Functions
 PS_2D = ps(
   x1 = p_dbl(lower = -1, upper = 1),
