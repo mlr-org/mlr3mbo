@@ -32,6 +32,10 @@ Value used for sampling the lambda for each worker from an exponential distribut
 Rate of the exponential decay.}
 \item{\code{period}}{\code{integer(1)}\cr
 Period of the exponential decay.}
+}
+
+
+\describe{
 \item{\code{initial_design}}{\code{data.table::data.table()}\cr
 Initial design of the optimization.
 If \code{NULL}, a design of size \code{design_size} is generated with the specified \code{design_function}.
