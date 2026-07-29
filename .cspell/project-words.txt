@@ -1,5 +1,6 @@
 # Project-specific words — commit and share with the team.
 # Add words here (or via "Add to project dictionary" in VS Code / Cursor).
+abipop
 acqf
 acqfs
 acqfun
@@ -21,6 +22,7 @@ Bernd
 beume
 BFGS
 bibentries
+bipop
 Bischl
 Branin
 Buselli
@@ -36,6 +38,7 @@ CRAN
 Dankers
 dlnode
 donttest
+dsigma
 egele
 EHVI
 EHVIGH
@@ -45,10 +48,12 @@ emoa
 epsdom
 estim
 evals
+fevals
 Florian
 focussearch
 Fonseca
 fpli
+ftarget
 ftol
 gchild
 ggplot
@@ -60,11 +65,14 @@ Hypervolume
 Ibanez
 inbag
 insample
+ipop
 Jakob
 Kriging
 kushner
 Lbfgsb
 Lennart
+libcmaes
+libcmaesr
 lightswitch
 lockfiles
 logscale
