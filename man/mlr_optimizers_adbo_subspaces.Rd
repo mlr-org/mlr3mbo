@@ -120,10 +120,24 @@ See section Subspaces.}
 Must be named like \code{subspaces} and every subspace must run on its own profile.
 See section Compute Profiles.
 Default is \code{NULL}, i.e., every subspace runs on the profile of the same name.}
+\item{\code{profiles}}{named \code{integer()}\cr
+Number of parallel workers per \CRANpkg{mirai} compute profile, e.g. \code{c(gpu = 1, cpu = 7)}.
+Must be named like the profiles of \code{subspace_profiles} and the daemons of every profile must be created with
+\code{\link[mirai:daemons]{mirai::daemons()}} beforehand.
+See section Compute Profiles.
+Default is \code{NULL}, i.e., the profiles specified via \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.}
+\item{\code{n_workers}}{\code{integer(1)}\cr
+Must not be set, since the workers are divided among the subspaces by the compute profiles.
+Set \code{profiles} instead.
+See section Compute Profiles.}
 \item{\code{initial_design_subspace}}{named \code{list()} of \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Initial design per subspace.
 If \code{NULL}, a design is generated for every subspace with the specified \code{design_function}.
 Default is \code{NULL}.}
+\item{\code{initial_design}}{\code{data.table::data.table()}\cr
+Must not be set, since every subspace receives its own initial design.
+Set \code{initial_design_subspace} instead.
+See section Initial Design.}
 \item{\code{design_size_subspace}}{named \code{integer()}\cr
 Size of the generated initial design per subspace.
 Overrides \code{design_size} for the named subspaces.

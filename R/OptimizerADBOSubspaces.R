@@ -110,10 +110,24 @@
 #'   Must be named like `subspaces` and every subspace must run on its own profile.
 #'   See section Compute Profiles.
 #'   Default is `NULL`, i.e., every subspace runs on the profile of the same name.}
+#' \item{`profiles`}{named `integer()`\cr
+#'   Number of parallel workers per \CRANpkg{mirai} compute profile, e.g. `c(gpu = 1, cpu = 7)`.
+#'   Must be named like the profiles of `subspace_profiles` and the daemons of every profile must be created with
+#'   [mirai::daemons()] beforehand.
+#'   See section Compute Profiles.
+#'   Default is `NULL`, i.e., the profiles specified via [rush::rush_plan()] are used.}
+#' \item{`n_workers`}{`integer(1)`\cr
+#'   Must not be set, since the workers are divided among the subspaces by the compute profiles.
+#'   Set `profiles` instead.
+#'   See section Compute Profiles.}
 #' \item{`initial_design_subspace`}{named `list()` of [data.table::data.table()]\cr
 #'   Initial design per subspace.
 #'   If `NULL`, a design is generated for every subspace with the specified `design_function`.
 #'   Default is `NULL`.}
+#' \item{`initial_design`}{`data.table::data.table()`\cr
+#'   Must not be set, since every subspace receives its own initial design.
+#'   Set `initial_design_subspace` instead.
+#'   See section Initial Design.}
 #' \item{`design_size_subspace`}{named `integer()`\cr
 #'   Size of the generated initial design per subspace.
 #'   Overrides `design_size` for the named subspaces.
