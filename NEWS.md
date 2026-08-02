@@ -1,5 +1,8 @@
 # mlr3mbo (development version)
 
+* compatibility: use Paradox 2's public transformation-free subset API while
+  retaining support for Paradox 1.
+
 # mlr3mbo 1.2.1
 
 * compatibility: mlr3 1.7.2
@@ -188,4 +191,3 @@
 # mlr3mbo 0.1.1
 
 * Initial upload to CRAN.
-
