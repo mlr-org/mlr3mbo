@@ -5,6 +5,7 @@
 <url><loc>https://mlr3mbo.mlr-org.com/dev/news/index.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqFunction.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizer.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizerCmaes.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizerDirect.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizerLbfgsb.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/dev/reference/AcqOptimizerLocalSearch.html</loc></url>
