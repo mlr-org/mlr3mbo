@@ -1,5 +1,7 @@
 # mlr3mbo (development version)
 
+* feat: new `AcqOptimizerCmaes` acquisition function optimizer that calls `cmaes()` from the `libcmaesr` package, available under the key `"cmaes"`.
+
 # mlr3mbo 1.2.1
 
 * compatibility: mlr3 1.7.2
