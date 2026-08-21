@@ -120,6 +120,7 @@ AcqFunctionSmsEgo = R6Class(
 
     #' @description
     #' Update the acquisition function and set `ys_front`, `ref_point` and `epsilon`.
+    #' See [AcqFunction] for a general description of `$update()`.
     update = function() {
       if (is.null(self$progress)) {
         # needs self$progress here!
@@ -171,6 +172,7 @@ AcqFunctionSmsEgo = R6Class(
     #' @description
     #' Reset the acquisition function.
     #' Resets `epsilon`.
+    #' See [AcqFunction] for a general description of `$reset()`.
     reset = function() {
       self$epsilon = NULL
     }

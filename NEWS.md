@@ -6,6 +6,7 @@
 * feat: `OptimizerADBOSubspaces` and `TunerADBOSubspaces` respect a surrogate, acquisition function, or acquisition function optimizer that has been set before the optimization and only construct the defaults for unset objects.
 * feat: `Surrogate` gained a `$row_filter` field that restricts the archive rows the surrogate is updated on.
 * feat: `OptimizerAsyncMbo`, `OptimizerADBO`, `TunerAsyncMbo`, and `TunerADBO` gained the `profiles` parameter that distributes the workers over the `mirai` compute profiles, e.g. `profiles = c(cpu = 2, gpu = 2)`. Cannot be combined with `n_workers`.
+* feat: new `AcqOptimizerCmaes` acquisition function optimizer that calls `cmaes()` from the `libcmaesr` package, available under the key `"cmaes"`.
 
 # mlr3mbo 1.2.1
 

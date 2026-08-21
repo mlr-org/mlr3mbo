@@ -88,6 +88,7 @@ AcqFunctionEI = R6Class(
 
     #' @description
     #' Update the acquisition function and set `y_best`.
+    #' See [AcqFunction] for a general description of `$update()`.
     update = function() {
       y = self$archive$data[, self$surrogate$cols_y, with = FALSE]
       if (self$surrogate$output_trafo_must_be_considered) {

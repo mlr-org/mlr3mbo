@@ -139,6 +139,7 @@ AcqFunctionStochasticCB = R6Class(
     #' @description
     #' Update the acquisition function.
     #' Samples and decays lambda.
+    #' See [AcqFunction] for a general description of `$update()`.
     update = function() {
       # sample lambda
       if (is.null(self$constants$values$lambda)) {
@@ -167,6 +168,7 @@ AcqFunctionStochasticCB = R6Class(
     #' @description
     #' Reset the acquisition function.
     #' Resets the private update counter `.t` and the sampled lambda so that a fresh lambda is drawn on the next run.
+    #' See [AcqFunction] for a general description of `$reset()`.
     reset = function() {
       private$.t = 0L
       private$.lambda_0 = NULL

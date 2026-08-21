@@ -145,6 +145,7 @@ Points to the ids of the individual acquisition functions.}
 \if{latex}{\out{\hypertarget{method-AcqFunctionMulti-update}{}}}
 \subsection{\code{AcqFunctionMulti$update()}}{
   Update each of the wrapped acquisition functions.
+See \link{AcqFunction} for a general description of \verb{$update()}.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunctionMulti$update()}

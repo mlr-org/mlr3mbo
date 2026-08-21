@@ -43,7 +43,7 @@ Depends:
     mlr3tuning (>= 1.4.0),
     R (>= 3.1.0)
 Imports:
-    bbotk (>= 1.12.0.9000),
+    bbotk (>= 1.12.0),
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
@@ -55,6 +55,7 @@ Suggests:
     emoa,
     DiceKriging,
     fastGHQuad,
+    libcmaesr,
     lhs,
     mlr3learners (>= 0.12.0),
     mirai,
@@ -97,6 +98,7 @@ Collate:
     'AcqFunctionStochasticEI.R'
     'AcqOptimizer.R'
     'mlr_acqoptimizers.R'
+    'AcqOptimizerCmaes.R'
     'AcqOptimizerDirect.R'
     'AcqOptimizerLbfgsb.R'
     'AcqOptimizerLocalSearch.R'
@@ -138,4 +140,4 @@ Collate:
     'partition_search_space.R'
     'sugar.R'
     'zzz.R'
-Config/roxygen2/version: 8.0.0.9000
+Config/roxygen2/version: 8.1.0

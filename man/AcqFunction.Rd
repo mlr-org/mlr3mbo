@@ -7,6 +7,42 @@
 Abstract acquisition function class.
 
 Based on the predictions of a \link{Surrogate}, the acquisition function encodes the preference to evaluate a new point.
+
+Most acquisition functions are stateful and depend on quantities that must be recomputed whenever the \link{Surrogate}
+has been refitted on new data, e.g., the best objective function value observed so far (\verb{$y_best} of
+\link{mlr_acqfunctions_ei}) or the current Pareto front and the reference point (\verb{$ys_front} and \verb{$ref_point} of
+\link{mlr_acqfunctions_ehvi}).
+These quantities are cached in public fields and are recomputed from the \link{Surrogate} and its \link[bbotk:Archive]{bbotk::Archive} by
+calling \verb{$update()}.
+Which fields a subclass sets is documented in its \verb{$update()} method.
+
+Loop functions such as \link{bayesopt_ego} call \verb{$update()} in every iteration, directly after updating the surrogate
+and before optimizing the acquisition function:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{acq_function$surrogate$update()
+acq_function$update()
+acq_optimizer$optimize()
+}\if{html}{\out{</div>}}
+
+The order matters, because \verb{$update()} reads the archive through the surrogate and may rely on the surrogate's
+predictions or its \link{OutputTrafo}.
+Evaluating an acquisition function whose cached fields have not been set results in an error along the lines of
+\code{"$y_best is not set. Missed to call $update()?"}.
+
+\verb{$reset()} discards state so that the same acquisition function object can be reused for another optimization run
+without carrying over information from the previous one.
+Fields that \verb{$update()} recomputes from scratch in every iteration need not be reset,
+which is why most acquisition functions do not override \verb{$reset()}.
+It matters for state that persists across iterations instead:
+\link{mlr_acqfunctions_stochastic_cb}, for example, samples \code{lambda} once at the first \verb{$update()} and afterwards only
+decays it using an iteration counter,
+so both are reset to make the next run start from a freshly sampled \code{lambda}.
+\link{OptimizerMbo} and \link{OptimizerAsyncMbo} call \verb{$reset()} at the beginning of \verb{$optimize()}, together with resetting
+the \link{Surrogate} and the \link{AcqOptimizer}.
+
+Both methods can be implemented by subclasses.
+The default implementations do nothing, which is sufficient for stateless acquisition functions such as
+\link{mlr_acqfunctions_mean} or \link{mlr_acqfunctions_sd}.
 }
 \seealso{
 Other Acquisition Function:
@@ -141,12 +177,15 @@ String in the format \verb{[pkg]::[topic]} pointing to a manual page for this ob
 \if{latex}{\out{\hypertarget{method-AcqFunction-update}{}}}
 \subsection{\code{AcqFunction$update()}}{
   Update the acquisition function.
-
-Can be implemented by subclasses.
+Recomputes the cached quantities from the current state of the \link{Surrogate} and its \link[bbotk:Archive]{bbotk::Archive}.
+Can be implemented by subclasses; see the class description above for details.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunction$update()}
     \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}.
   }
 }
 
@@ -155,12 +194,15 @@ Can be implemented by subclasses.
 \if{latex}{\out{\hypertarget{method-AcqFunction-reset}{}}}
 \subsection{\code{AcqFunction$reset()}}{
   Reset the acquisition function.
-
-Can be implemented by subclasses.
+Discards state so that the acquisition function can be reused for another optimization run.
+Can be implemented by subclasses; see the class description above for details.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{AcqFunction$reset()}
     \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{NULL}.
   }
 }
 

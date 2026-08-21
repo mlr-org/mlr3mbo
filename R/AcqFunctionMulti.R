@@ -141,6 +141,7 @@ AcqFunctionMulti = R6Class(
 
     #' @description
     #' Update each of the wrapped acquisition functions.
+    #' See [AcqFunction] for a general description of `$update()`.
     update = function() {
       if (length(unique(map_chr(self$acq_functions, function(acq_function) address(acq_function$surrogate)))) > 1L) {
         stop("Acquisition functions must rely on the same surrogate model.")
