@@ -65,3 +65,9 @@ test_that("subspace_contains separates the subspaces", {
   expect_equal(subspace_contains(subspaces$a, data), data$branch == "a")
   expect_equal(subspace_contains(subspaces$b, data), data$branch == "b")
 })
+
+test_that("partition_search_space defaults to one subspace per level", {
+  subspaces = partition_search_space(PS_1D_BRANCH, param = "branch")
+  expect_names(names(subspaces), identical.to = c("a", "b"))
+  expect_equal(subspaces, partition_search_space(PS_1D_BRANCH, param = "branch", groups = list(a = "a", b = "b")))
+})

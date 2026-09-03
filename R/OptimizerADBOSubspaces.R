@@ -213,8 +213,20 @@ OptimizerADBOSubspaces = R6Class(
   public = list(
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
-    initialize = function() {
-      param_set = ps(
+    #'
+    #' @template param_id
+    #' @param param_set ([paradox::ParamSet])\cr
+    #'   Set of control parameters of a subclass, added to the parameters of `OptimizerADBOSubspaces`.
+    #' @template param_label
+    #' @template param_man
+    initialize = function(
+      id = "adbo_subspaces",
+      param_set = NULL,
+      label = "Asynchronous Decentralized Bayesian Optimization on Homogeneous Subspaces",
+      man = "mlr3mbo::mlr_optimizers_adbo_subspaces"
+    ) {
+      assert_r6(param_set, classes = "ParamSet", null.ok = TRUE)
+      default_param_set = ps(
         subspaces = p_uty(custom_check = crate(function(x) {
           check_list(x, types = "ParamSet", min.len = 1L, names = "unique", any.missing = FALSE)
         })),
@@ -231,13 +243,9 @@ OptimizerADBOSubspaces = R6Class(
         rate = p_dbl(lower = 0, default = 0.1),
         period = p_int(lower = 1L, default = 25L)
       )
+      param_set = c(default_param_set, param_set)
 
-      super$initialize(
-        id = "adbo_subspaces",
-        param_set = param_set,
-        label = "Asynchronous Decentralized Bayesian Optimization on Homogeneous Subspaces",
-        man = "mlr3mbo::mlr_optimizers_adbo_subspaces"
-      )
+      super$initialize(id = id, param_set = param_set, label = label, man = man)
 
       self$param_set$set_values(lambda = 1.96, rate = 0.1, period = 25L)
     },

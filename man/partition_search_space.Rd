@@ -4,7 +4,7 @@
 \alias{partition_search_space}
 \title{Partition a Search Space into Homogeneous Subspaces}
 \usage{
-partition_search_space(search_space, param, groups)
+partition_search_space(search_space, param, groups = NULL)
 }
 \arguments{
 \item{search_space}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
@@ -17,7 +17,8 @@ Must be a \code{ParamFct} of \code{search_space}.}
 \item{groups}{(named \code{list()} of \code{character()})\cr
 Groups of levels of \code{param}.
 The names of the list are used as the ids of the resulting subspaces.
-The groups must be disjoint and must cover all levels of \code{param}.}
+The groups must be disjoint and must cover all levels of \code{param}.
+Default is \code{NULL}, i.e., every level of \code{param} becomes a subspace of its own named like the level.}
 }
 \value{
 (named \code{list()} of \link[paradox:ParamSet]{paradox::ParamSet}) with one element per group of \code{groups}.
@@ -58,4 +59,7 @@ subspaces = partition_search_space(
 
 subspaces$gpu$ids()
 subspaces$cpu$ids()
+
+# one subspace per learner
+names(partition_search_space(search_space, param = "learner"))
 }

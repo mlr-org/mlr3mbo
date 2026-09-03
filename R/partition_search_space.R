@@ -21,6 +21,7 @@
 #'   Groups of levels of `param`.
 #'   The names of the list are used as the ids of the resulting subspaces.
 #'   The groups must be disjoint and must cover all levels of `param`.
+#'   Default is `NULL`, i.e., every level of `param` becomes a subspace of its own named like the level.
 #'
 #' @return (named `list()` of [paradox::ParamSet]) with one element per group of `groups`.
 #'
@@ -49,16 +50,20 @@
 #'
 #' subspaces$gpu$ids()
 #' subspaces$cpu$ids()
-partition_search_space = function(search_space, param, groups) {
+#'
+#' # one subspace per learner
+#' names(partition_search_space(search_space, param = "learner"))
+partition_search_space = function(search_space, param, groups = NULL) {
   assert_r6(search_space, classes = "ParamSet")
   assert_choice(param, choices = search_space$ids())
   if (search_space$class[[param]] != "ParamFct") {
     stopf("Parameter '%s' must be a 'ParamFct' but is a '%s'.", param, search_space$class[[param]])
   }
+  levels = search_space$levels[[param]]
+  groups = groups %??% set_names(as.list(levels), levels)
   assert_list(groups, types = "character", min.len = 1L, names = "unique", any.missing = FALSE)
   walk(groups, function(levels) assert_character(levels, min.len = 1L, unique = TRUE))
 
-  levels = search_space$levels[[param]]
   all_levels = unlist(groups, use.names = FALSE)
   if (anyDuplicated(all_levels)) {
     stopf("The groups must be disjoint but level(s) %s appear in more than one group.",

@@ -249,7 +249,28 @@ In \emph{2023 IEEE 19th International Conference on e-Science (e-Science)}, 1--1
   Creates a new instance of this \link[R6:R6Class]{R6} class.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
-    \preformatted{OptimizerADBOSubspaces$new()}
+    \preformatted{OptimizerADBOSubspaces$new(
+  id = "adbo_subspaces",
+  param_set = NULL,
+  label = "Asynchronous Decentralized Bayesian Optimization on Homogeneous Subspaces",
+  man = "mlr3mbo::mlr_optimizers_adbo_subspaces"
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})\cr
+Identifier for the new instance.}
+      \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+Set of control parameters of a subclass, added to the parameters of \code{OptimizerADBOSubspaces}.}
+      \item{\code{label}}{(\code{character(1)})\cr
+Label for this object.
+Can be used in tables, plot and text output instead of the ID.}
+      \item{\code{man}}{(\code{character(1)})\cr
+String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.
+The referenced help package can be opened via method \verb{$help()}.}
+    }
     \if{html}{\out{</div>}}
   }
 }

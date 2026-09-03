@@ -129,6 +129,24 @@ bibentries = c(
     pages     = "90--103"
   ),
 
+  thompson_1933 = bibentry("article",
+    title    = "On the Likelihood That One Unknown Probability Exceeds Another in View of the Evidence of Two Samples",
+    author   = "Thompson, William R.",
+    year     = "1933",
+    volume   = "25",
+    number   = "3/4",
+    pages    = "285--294",
+    journal  = "Biometrika"
+  ),
+
+  thornton_2013 = bibentry("inproceedings",
+    title     = "Auto-WEKA: Combined Selection and Hyperparameter Optimization of Classification Algorithms",
+    author    = "Thornton, Chris and Hutter, Frank and Hoos, Holger H. and Leyton-Brown, Kevin",
+    booktitle = "Proceedings of the 19th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining",
+    year      = "2013",
+    pages     = "847--855"
+  ),
+
   egele_2023 = bibentry("inproceedings",
     title     = "Asynchronous Decentralized Bayesian Optimization for Large Scale Hyperparameter Optimization",
     author    = "Egel{\\'e}, Romain and Guyon, Isabelle and Vishwanath, Venkatram and Balaprakash, Prasanna",
