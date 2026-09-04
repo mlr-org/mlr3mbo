@@ -189,6 +189,79 @@ test_that("OptimizerADBOThompson checks the compute profiles", {
   expect_error(optimizer$optimize(make_instance()), "divides the workers")
 })
 
+test_that("OptimizerADBOThompson evaluates a single-point subspace exactly once", {
+  profiles = c(cpu = 2)
+  rush = start_rush_profiles(profiles)
+  on.exit({
+    rush$reset()
+    stop_rush_profiles(profiles)
+  })
+
+  search_space = ps(
+    branch = p_fct(c("a", "b")),
+    xb = p_dbl(-1, 1, depends = branch == "b")
+  )
+  # the parameter-free branch is the better one, so its arm keeps winning
+  fun = function(xs) list(y = if (xs$branch == "a") -10 else xs$xb^2)
+  objective = bbotk::ObjectiveRFun$new(fun = fun, domain = search_space, codomain = FUN_1D_CODOMAIN)
+  instance = oi_async(
+    objective = objective,
+    search_space = search_space,
+    terminator = trm("evals", n_evals = 15L),
+    rush = rush
+  )
+  subspaces = partition_search_space(search_space, param = "branch")
+  optimizer = opt("adbo_thompson", subspaces = subspaces, subspace_profiles = c(a = "cpu", b = "cpu"), design_size = 3L)
+
+  # the generated design of the single-point subspace is capped at its one configuration
+  designs = get_private(optimizer)$.generate_designs(subspaces)
+  expect_data_table(designs$a, nrows = 1L)
+  expect_data_table(designs$b, nrows = 3L)
+
+  expect_data_table(optimizer$optimize(instance), nrows = 1L)
+
+  finished = instance$archive$finished_data
+  expect_equal(sum(finished$branch == "a"), 1L)
+  expect_gte(sum(finished$branch == "b"), 14L)
+})
+
+test_that("OptimizerADBOThompson terminates the workers of exhausted subspaces", {
+  profiles = c(cpu = 1)
+  rush = start_rush_profiles(profiles)
+  on.exit({
+    rush$reset()
+    stop_rush_profiles(profiles)
+  })
+
+  search_space = ps(
+    branch = p_fct(c("a", "b")),
+    fb = p_fct(c("lo", "hi"), depends = branch == "b"),
+    lb = p_lgl(depends = branch == "b")
+  )
+  fun = function(xs) list(y = if (xs$branch == "a") 1 else 2)
+  objective = bbotk::ObjectiveRFun$new(fun = fun, domain = search_space, codomain = FUN_1D_CODOMAIN)
+  instance = oi_async(
+    objective = objective,
+    search_space = search_space,
+    terminator = trm("evals", n_evals = 20L),
+    rush = rush
+  )
+  optimizer = opt(
+    "adbo_thompson",
+    subspaces = partition_search_space(search_space, param = "branch"),
+    subspace_profiles = c(a = "cpu", b = "cpu"),
+    design_size = 2L
+  )
+
+  # the worker runs out of configurations before the terminator triggers and the optimization ends nevertheless
+  expect_data_table(optimizer$optimize(instance), nrows = 1L)
+
+  finished = instance$archive$finished_data
+  expect_data_table(finished, nrows = 5L)
+  expect_equal(uniqueN(finished[, c("branch", "fb", "lb")]), 5L)
+  expect_false(instance$is_terminated)
+})
+
 test_that("OptimizerADBOThompson has the Thompson sampling parameters", {
   optimizer = opt("adbo_thompson")
   expect_r6(optimizer, c("OptimizerADBOThompson", "OptimizerADBOSubspaces", "OptimizerAsyncMbo"))

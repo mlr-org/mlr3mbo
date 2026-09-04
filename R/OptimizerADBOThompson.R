@@ -72,6 +72,15 @@
 #' on only stays a success as long as it remains among the best.
 #' The prior counts `alpha` and `beta` control how long an algorithm keeps being tried after a streak of failures.
 #'
+#' A subspace without numeric parameters has finitely many configurations, e.g., the subspace of a learner without
+#' hyperparameters consists of a single configuration.
+#' Once all of its configurations have been evaluated, the subspace is exhausted and excluded from the sampling, so
+#' that no configuration is evaluated twice.
+#' The generated initial design of such a subspace is capped at the number of its configurations for the same
+#' reason.
+#' A worker whose subspaces are all exhausted terminates, and the optimization ends when all workers have
+#' terminated, even before the [bbotk::Terminator] signals termination.
+#'
 #' @section Loop:
 #' On each worker, after the queue of its compute profile has been emptied:
 #'
@@ -210,6 +219,18 @@ OptimizerADBOThompson = R6Class(
   ),
 
   private = list(
+    # the generated design of a subspace with finitely many configurations is capped at that number
+    .generate_designs = function(subspaces) {
+      designs = super$.generate_designs(subspaces)
+      if (!is.null(self$param_set$values[["initial_design_subspace"]])) {
+        return(designs)
+      }
+      imap(designs, function(design, subspace_id) {
+        grid = subspace_grid(subspaces[[subspace_id]])
+        if (is.null(grid)) design else grid[sample.int(nrow(grid), min(nrow(design), nrow(grid)))]
+      })
+    },
+
     # several subspaces may share a compute profile, so only the names have to match the subspaces
     .assert_subspace_profiles = function(subspace_profiles, subspace_ids) {
       subspace_profiles = subspace_profiles %??% set_names(subspace_ids, subspace_ids)
@@ -271,6 +292,9 @@ OptimizerADBOThompson = R6Class(
       cols_x = inst$archive$cols_x
       col_y = inst$archive$cols_y
       na_x = na_values(inst$search_space)
+      subspaces = pv[["subspaces"]][subspace_ids]
+      # a subspace without numeric parameters can be exhausted, so its number of configurations is needed
+      n_configurations = map_dbl(subspaces, function(subspace) nrow(subspace_grid(subspace)) %??% Inf)
       # the bandit counts top-quantile hits, so the objective values are always oriented towards minimization
       y_mult = mult_max_to_min(inst$archive$codomain)[[col_y]]
 
@@ -282,9 +306,24 @@ OptimizerADBOThompson = R6Class(
       while (!inst$is_terminated) {
         finished = inst$archive$finished_data
         # points that were pushed to the shared queue, e.g. by a callback, carry no `.subspace` and count for no arm
+        finished_subspace = finished[[".subspace"]] %??% rep(NA_character_, nrow(finished))
+
+        # exhausted subspaces have nothing left to evaluate and are excluded from the sampling
+        exhausted = map_lgl(subspace_ids, function(subspace_id) {
+          subspace_exhausted(
+            subspaces[[subspace_id]],
+            finished[which(finished_subspace == subspace_id)],
+            n_configurations[[subspace_id]]
+          )
+        })
+        if (all(exhausted)) {
+          lg$info("All subspaces of worker '%s' are exhausted, the worker terminates", inst$rush$worker_id)
+          break
+        }
+
         subspace_id = thompson_sample_subspace(
-          subspace_ids,
-          subspace = finished[[".subspace"]] %??% rep(NA_character_, nrow(finished)),
+          subspace_ids[!exhausted],
+          subspace = finished_subspace,
           y = (finished[[col_y]] %??% numeric()) * y_mult,
           top_quantile = pv[["top_quantile"]],
           alpha = pv[["alpha"]],

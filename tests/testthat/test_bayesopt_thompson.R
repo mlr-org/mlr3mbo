@@ -125,6 +125,56 @@ test_that("bayesopt_thompson random interleaving stays within the sampled subspa
   expect_equal(sum(is.na(data$acq_ei[5:10])), 3L)
 })
 
+test_that("bayesopt_thompson evaluates a single-point subspace exactly once", {
+  search_space = ps(
+    branch = p_fct(c("a", "b")),
+    xb = p_dbl(-1, 1, depends = branch == "b")
+  )
+  # the parameter-free branch is the better one, so its arm keeps winning
+  fun = function(xs) list(y = if (xs$branch == "a") -10 else xs$xb^2)
+  objective = bbotk::ObjectiveRFun$new(fun = fun, domain = search_space, codomain = FUN_1D_CODOMAIN)
+  instance = MAKE_INST(objective = objective, search_space = search_space, terminator = trm("evals", n_evals = 10L))
+
+  bayesopt_thompson(
+    instance,
+    surrogate = SurrogateLearner$new(REGR_FEATURELESS),
+    acq_function = AcqFunctionEI$new(),
+    acq_optimizer = MAKE_ACQ_OPTIMIZER(),
+    param = "branch",
+    init_design_size = 3L
+  )
+
+  data = instance$archive$data
+  expect_data_table(data, nrows = 10L)
+  expect_equal(sum(data$branch == "a"), 1L)
+})
+
+test_that("bayesopt_thompson stops when all subspaces are exhausted", {
+  search_space = ps(
+    branch = p_fct(c("a", "b")),
+    fb = p_fct(c("lo", "hi"), depends = branch == "b"),
+    lb = p_lgl(depends = branch == "b")
+  )
+  fun = function(xs) list(y = if (xs$branch == "a") 1 else 2)
+  objective = bbotk::ObjectiveRFun$new(fun = fun, domain = search_space, codomain = FUN_1D_CODOMAIN)
+  instance = MAKE_INST(objective = objective, search_space = search_space, terminator = trm("evals", n_evals = 20L))
+
+  bayesopt_thompson(
+    instance,
+    surrogate = SurrogateLearner$new(REGR_FEATURELESS),
+    acq_function = AcqFunctionEI$new(),
+    acq_optimizer = MAKE_ACQ_OPTIMIZER(),
+    param = "branch",
+    init_design_size = 2L
+  )
+
+  # 1 + 4 configurations, each evaluated exactly once
+  data = instance$archive$data
+  expect_data_table(data, nrows = 5L)
+  expect_equal(uniqueN(data[, c("branch", "fb", "lb")]), 5L)
+  expect_false(instance$is_terminated)
+})
+
 test_that("bayesopt_thompson asserts its arguments", {
   instance = MAKE_INST(objective = OBJ_1D_BRANCH, search_space = PS_1D_BRANCH, terminator = trm("evals", n_evals = 6L))
   args = list(

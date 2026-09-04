@@ -135,3 +135,31 @@ subspace_contains = function(subspace, data) {
   }
   keep
 }
+
+# all configurations of a subspace without numeric parameters, respecting its dependencies;
+# `NULL` if the subspace has numeric parameters or more than `max_configurations` configurations,
+# so that the grid of a large discrete subspace is never materialized
+subspace_grid = function(subspace, max_configurations = 10000) {
+  if (prod(subspace$nlevels) > max_configurations) {
+    return(NULL)
+  }
+  generate_design_grid(subspace)$data
+}
+
+# whether all `n_configurations` configurations of a subspace are among its evaluated points `xdt`
+subspace_exhausted = function(subspace, xdt, n_configurations) {
+  if (!is.finite(n_configurations) || !nrow(xdt)) {
+    return(FALSE)
+  }
+  uniqueN(xdt[, subspace$ids(), with = FALSE]) >= n_configurations
+}
+
+# random design of `n` points of a subspace; a subspace with finitely many configurations is enumerated instead and
+# capped at `n`, so that no configuration is evaluated twice
+generate_design_subspace = function(subspace, n) {
+  grid = subspace_grid(subspace)
+  if (is.null(grid)) {
+    return(generate_design_random(subspace, n = n)$data)
+  }
+  grid[sample.int(nrow(grid), min(n, nrow(grid)))]
+}

@@ -55,6 +55,14 @@
 #' only stays a success as long as it remains among the best.
 #' The prior counts `alpha` and `beta` control how long an algorithm keeps being tried after a streak of failures.
 #'
+#' A subspace without numeric parameters has finitely many configurations, e.g., the subspace of a learner without
+#' hyperparameters consists of a single configuration.
+#' Once all of its configurations have been evaluated, the subspace is exhausted and excluded from the sampling, so
+#' that no configuration is evaluated twice.
+#' The initial design of such a subspace is capped at the number of its configurations for the same reason.
+#' If all subspaces are exhausted, the loop stops before the [bbotk::Terminator] signals termination, because
+#' there is nothing left to evaluate.
+#'
 #' @param instance ([bbotk::OptimInstanceBatchSingleCrit])\cr
 #'   The [bbotk::OptimInstanceBatchSingleCrit] to be optimized.
 #' @param surrogate ([Surrogate])\cr
@@ -187,6 +195,8 @@ bayesopt_thompson = function(
   cols_x = instance$archive$cols_x
   col_y = instance$archive$cols_y
   na_x = na_values(search_space)
+  # a subspace without numeric parameters can be exhausted, so its number of configurations is needed
+  n_configurations = map_dbl(subspaces, function(subspace) nrow(subspace_grid(subspace)) %??% Inf)
   # the bandit counts top-quantile hits, so the objective values are always oriented towards minimization
   y_mult = mult_max_to_min(instance$archive$codomain)[[col_y]]
 
@@ -197,7 +207,7 @@ bayesopt_thompson = function(
       function(subspace_id) {
         subspace = subspaces[[subspace_id]]
         n = init_design_size %??% (4L * subspace$length)
-        pad_xdt(generate_design_random(subspace, n = n)$data, cols_x = cols_x, na_values = na_x)
+        pad_xdt(generate_design_subspace(subspace, n = n), cols_x = cols_x, na_values = na_x)
       },
       .fill = TRUE
     )
@@ -213,8 +223,22 @@ bayesopt_thompson = function(
   repeat {
     data = instance$archive$data
     set(data, j = ".subspace", value = assign_subspaces(subspaces, data))
+
+    # exhausted subspaces have nothing left to evaluate and are excluded from the sampling
+    exhausted = map_lgl(subspace_ids, function(subspace_id) {
+      subspace_exhausted(
+        subspaces[[subspace_id]],
+        data[which(data[[".subspace"]] == subspace_id)],
+        n_configurations[[subspace_id]]
+      )
+    })
+    if (all(exhausted)) {
+      lg$info("All subspaces are exhausted, stopping the optimization")
+      break
+    }
+
     subspace_id = thompson_sample_subspace(
-      subspace_ids,
+      subspace_ids[!exhausted],
       subspace = data[[".subspace"]],
       y = data[[col_y]] * y_mult,
       top_quantile = top_quantile,
