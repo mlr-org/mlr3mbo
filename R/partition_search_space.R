@@ -136,14 +136,15 @@ subspace_contains = function(subspace, data) {
   keep
 }
 
-# all configurations of a subspace without numeric parameters, respecting its dependencies;
-# `NULL` if the subspace has numeric parameters or more than `max_configurations` configurations,
-# so that the grid of a large discrete subspace is never materialized
+# all configurations of a subspace with finitely many configurations, respecting its dependencies;
+# `NULL` if the subspace has unbounded parameters, i.e., doubles or unbounded integers, or more than
+# `max_configurations` configurations, so that the grid of a large discrete subspace is never materialized.
+# bounded integers have as many levels as they have values, so a resolution of `nlevels` enumerates them exactly.
 subspace_grid = function(subspace, max_configurations = 10000) {
   if (prod(subspace$nlevels) > max_configurations) {
     return(NULL)
   }
-  generate_design_grid(subspace)$data
+  generate_design_grid(subspace, param_resolutions = subspace$nlevels[subspace$is_number])$data
 }
 
 # whether all `n_configurations` configurations of a subspace are among its evaluated points `xdt`

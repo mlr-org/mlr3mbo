@@ -142,8 +142,8 @@ The successes are recounted on the whole archive in every iteration, so an evalu
 only stays a success as long as it remains among the best.
 The prior counts \code{alpha} and \code{beta} control how long an algorithm keeps being tried after a streak of failures.
 
-A subspace without numeric parameters has finitely many configurations, e.g., the subspace of a learner without
-hyperparameters consists of a single configuration.
+A subspace whose parameters are all discrete, i.e., categorical, logical, or bounded integer, has finitely many
+configurations, e.g., the subspace of a learner without hyperparameters consists of a single configuration.
 Once all of its configurations have been evaluated, the subspace is exhausted and excluded from the sampling, so
 that no configuration is evaluated twice.
 The initial design of such a subspace is capped at the number of its configurations for the same reason.

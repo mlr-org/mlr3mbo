@@ -72,8 +72,8 @@
 #' on only stays a success as long as it remains among the best.
 #' The prior counts `alpha` and `beta` control how long an algorithm keeps being tried after a streak of failures.
 #'
-#' A subspace without numeric parameters has finitely many configurations, e.g., the subspace of a learner without
-#' hyperparameters consists of a single configuration.
+#' A subspace whose parameters are all discrete, i.e., categorical, logical, or bounded integer, has finitely many
+#' configurations, e.g., the subspace of a learner without hyperparameters consists of a single configuration.
 #' Once all of its configurations have been evaluated, the subspace is exhausted and excluded from the sampling, so
 #' that no configuration is evaluated twice.
 #' The generated initial design of such a subspace is capped at the number of its configurations for the same
@@ -293,7 +293,7 @@ OptimizerADBOThompson = R6Class(
       col_y = inst$archive$cols_y
       na_x = na_values(inst$search_space)
       subspaces = pv[["subspaces"]][subspace_ids]
-      # a subspace without numeric parameters can be exhausted, so its number of configurations is needed
+      # a subspace with finitely many configurations can be exhausted, so its number of configurations is needed
       n_configurations = map_dbl(subspaces, function(subspace) nrow(subspace_grid(subspace)) %??% Inf)
       # the bandit counts top-quantile hits, so the objective values are always oriented towards minimization
       y_mult = mult_max_to_min(inst$archive$codomain)[[col_y]]

@@ -92,6 +92,19 @@ test_that("subspace_grid enumerates the configurations of discrete subspaces", {
   expect_null(subspace_grid(ps(x = p_int(1, 200), y = p_int(1, 200))))
 })
 
+test_that("subspace_grid enumerates bounded integers", {
+  subspace = ps(branch = p_fct("a"), i = p_int(1, 8), l = p_lgl())
+  grid = subspace_grid(subspace)
+  expect_data_table(grid, nrows = 16L)
+  expect_set_equal(grid$i, 1:8)
+  expect_equal(uniqueN(grid), 16L)
+  expect_data_table(generate_design_subspace(subspace, n = 5L), nrows = 5L)
+  expect_true(subspace_exhausted(subspace, grid, n_configurations = 16L))
+  # unbounded integers cannot be enumerated
+  expect_null(subspace_grid(ps(i = p_int(1))))
+  expect_null(subspace_grid(ps(i = p_int(1, 8, logscale = TRUE))))
+})
+
 test_that("subspace_exhausted detects fully evaluated subspaces", {
   subspaces = partition_search_space(PS_1D_DISCRETE, param = "branch")
   grid = subspace_grid(subspaces$b)
