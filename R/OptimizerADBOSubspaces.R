@@ -364,7 +364,9 @@ OptimizerADBOSubspaces = R6Class(
     .acq_domains = NULL,
 
     # push the initial design of every subspace to the queue of its compute profile, so that only the workers of
-    # that subspace pop its points
+    # that subspace pop its points;
+    # the designs of the subspaces that share a profile are interleaved round-robin, so that the workers of the
+    # profile evaluate the subspaces evenly instead of one after the other
     .push_designs = function(inst, subspaces, subspace_profiles) {
       designs = private$.generate_designs(subspaces)
       cols_x = inst$archive$cols_x
@@ -373,12 +375,25 @@ OptimizerADBOSubspaces = R6Class(
       # pops from the shared queue
       debug = getOption("bbotk.debug", FALSE)
 
-      iwalk(designs, function(design, subspace_id) {
-        xss = map(transpose_list(design), function(xs) pad_xs(xs, cols_x = cols_x, na_values = na_x))
+      # subspace ids per queue, named by the compute profile; the shared queue of the debug mode has no name
+      groups = if (debug) {
+        list(names(designs))
+      } else {
+        split(names(designs), unname(subspace_profiles[names(designs)]))
+      }
+
+      iwalk(groups, function(subspace_ids, profile) {
+        group_designs = designs[subspace_ids]
+        # the i-th points of all subspaces are queued before the (i + 1)-th points, in the order of the subspaces
+        subspace_of_point = rep(subspace_ids, map_int(group_designs, nrow))
+        position = unlist(map(group_designs, function(design) seq_len(nrow(design))), use.names = FALSE)
+        xss = unlist(map(group_designs, transpose_list), recursive = FALSE, use.names = FALSE)
+        order_rr = order(position, match(subspace_of_point, subspace_ids))
+
         inst$archive$push_points(
-          xss,
-          xss_extra = list(list(.subspace = subspace_id)),
-          profile = if (!debug) subspace_profiles[[subspace_id]]
+          map(xss[order_rr], function(xs) pad_xs(xs, cols_x = cols_x, na_values = na_x)),
+          xss_extra = map(subspace_of_point[order_rr], function(subspace_id) list(.subspace = subspace_id)),
+          profile = if (!debug) profile
         )
       })
 

@@ -20,6 +20,95 @@ OBJ_1D_BRANCH3 = bbotk::ObjectiveRFun$new(
 )
 SUBSPACES_1D_BRANCH3 = partition_search_space(PS_1D_BRANCH3, param = "branch")
 
+# the queue of a profile is popped from the tail, `queued_data` lists the head first
+pop_order = function(queued) {
+  queued[rev(seq_len(nrow(queued))), ]
+}
+
+test_that("OptimizerADBOThompson interleaves the initial designs of the subspaces of a compute profile", {
+  rush = rush::rsh(config = redis_configuration())
+  on.exit(rush$reset())
+
+  instance = oi_async(
+    objective = OBJ_1D_BRANCH3,
+    search_space = PS_1D_BRANCH3,
+    terminator = trm("evals", n_evals = 12L),
+    rush = rush
+  )
+  optimizer = opt(
+    "adbo_thompson",
+    subspaces = SUBSPACES_1D_BRANCH3,
+    design_size = 5L,
+    design_size_subspace = c(b = 2L, c = 1L)
+  )
+  get_private(optimizer)$.push_designs(instance, SUBSPACES_1D_BRANCH3, c(a = "cpu", b = "cpu", c = "cpu"))
+
+  expect_equal(instance$archive$n_queued_per_profile, c(default = 0L, cpu = 8L))
+  queued = pop_order(instance$archive$queued_data)
+  # round-robin over the subspaces, a subspace drops out when its design is exhausted
+  expect_equal(queued$.subspace, c("a", "b", "c", "a", "b", "a", "a", "a"))
+  expect_equal(queued$.subspace, queued$branch)
+  expect_true(all(is.na(queued[branch != "a", xa])))
+  expect_true(all(is.na(queued[branch != "b", xb])))
+  expect_true(all(is.na(queued[branch != "c", xc])))
+})
+
+test_that("OptimizerADBOThompson interleaves the initial designs per compute profile", {
+  rush = rush::rsh(config = redis_configuration())
+  on.exit(rush$reset())
+
+  instance = oi_async(
+    objective = OBJ_1D_BRANCH3,
+    search_space = PS_1D_BRANCH3,
+    terminator = trm("evals", n_evals = 12L),
+    rush = rush
+  )
+  design_a = generate_design_random(SUBSPACES_1D_BRANCH3$a, n = 3L)$data
+  design_b = generate_design_random(SUBSPACES_1D_BRANCH3$b, n = 0L)$data
+  design_c = generate_design_random(SUBSPACES_1D_BRANCH3$c, n = 2L)$data
+  optimizer = opt(
+    "adbo_thompson",
+    subspaces = SUBSPACES_1D_BRANCH3,
+    initial_design_subspace = list(a = design_a, b = design_b, c = design_c)
+  )
+  get_private(optimizer)$.push_designs(instance, SUBSPACES_1D_BRANCH3, c(a = "gpu", b = "cpu", c = "cpu"))
+
+  # the points only reach the queue of their own profile, an empty design is neither dropped nor duplicated
+  expect_equal(instance$archive$n_queued_per_profile, c(default = 0L, cpu = 2L, gpu = 3L))
+  queued = pop_order(instance$archive$queued_data)
+  expect_equal(queued[profile == "gpu", .subspace], rep("a", 3L))
+  expect_equal(queued[profile == "cpu", .subspace], rep("c", 2L))
+  # one subspace per profile keeps the order of the design
+  expect_equal(queued[profile == "gpu", xa], design_a$xa)
+  expect_equal(queued[profile == "cpu", xc], design_c$xc)
+})
+
+test_that("OptimizerADBOThompson interleaves the initial designs in the shared queue in debug mode", {
+  rush = rush::rsh(config = redis_configuration())
+  old = options(bbotk.debug = TRUE)
+  on.exit({
+    rush$reset()
+    options(old)
+  })
+
+  instance = oi_async(
+    objective = OBJ_1D_BRANCH3,
+    search_space = PS_1D_BRANCH3,
+    terminator = trm("evals", n_evals = 12L),
+    rush = rush
+  )
+  optimizer = opt(
+    "adbo_thompson",
+    subspaces = SUBSPACES_1D_BRANCH3,
+    design_size = 2L,
+    design_size_subspace = c(c = 1L)
+  )
+  get_private(optimizer)$.push_designs(instance, SUBSPACES_1D_BRANCH3, c(a = "gpu", b = "cpu", c = "cpu"))
+
+  expect_equal(instance$archive$n_queued_per_profile, c(default = 5L))
+  expect_equal(pop_order(instance$archive$queued_data)$.subspace, c("a", "b", "c", "a", "b"))
+})
+
 test_that("OptimizerADBOThompson samples among the subspaces of a shared compute profile", {
   profiles = c(cpu = 2)
   rush = start_rush_profiles(profiles)

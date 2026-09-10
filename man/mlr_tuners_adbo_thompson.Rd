@@ -41,6 +41,9 @@ Every subspace receives its own initial design, which is pushed to the queue of 
 \link{OptimizerADBOSubspaces}.
 The queue of a profile that is shared by several subspaces therefore holds the designs of all of them and any
 worker of the profile pops any of these points.
+The designs are interleaved round-robin over the subspaces of the profile, i.e., the first points of all
+subspaces are queued before their second points, so that the subspaces are covered evenly even if the
+optimization terminates during the initial design.
 }
 
 \section{Thompson Sampling}{
