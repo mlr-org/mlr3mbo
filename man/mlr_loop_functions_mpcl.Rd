@@ -132,6 +132,7 @@ Other Loop Function:
 \code{\link{mlr_loop_functions_ego}},
 \code{\link{mlr_loop_functions_emo}},
 \code{\link{mlr_loop_functions_parego}},
-\code{\link{mlr_loop_functions_smsego}}
+\code{\link{mlr_loop_functions_smsego}},
+\code{\link{mlr_loop_functions_thompson}}
 }
 \concept{Loop Function}

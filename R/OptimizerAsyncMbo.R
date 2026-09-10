@@ -55,25 +55,7 @@
 #'
 #' @inheritSection mlr_optimizers_mbo Conditions
 #'
-#' @section Parameters:
-#' \describe{
-#' \item{`initial_design`}{`data.table::data.table()`\cr
-#'   Initial design of the optimization.
-#'   If `NULL`, a design of size `design_size` is generated with the specified `design_function`.
-#'   Default is `NULL`.}
-#' \item{`design_size`}{`integer(1)`\cr
-#'   Size of the initial design if it is to be generated.
-#'   Default is `100`.}
-#' \item{`design_function`}{`character(1)`\cr
-#'   Sampling function to generate the initial design.
-#'   Can be `random` [paradox::generate_design_random], `lhs` [paradox::generate_design_lhs],
-#'   or `sobol` [paradox::generate_design_sobol].
-#'   Default is `sobol`.}
-#' \item{`n_workers`}{`integer(1)`\cr
-#'   Number of parallel workers.
-#'   If `NULL`, all rush workers specified via [rush::rush_plan()] are used.
-#'   Default is `NULL`.}
-#' }
+#' @template params_async_mbo
 #'
 #' @export
 #' @examples
@@ -154,7 +136,10 @@ OptimizerAsyncMbo = R6Class(
         initial_design = p_uty(),
         design_size = p_int(lower = 1, default = 100L),
         design_function = p_fct(c("random", "sobol", "lhs"), default = "sobol"),
-        n_workers = p_int(lower = 1L)
+        n_workers = p_int(lower = 1L),
+        profiles = p_uty(custom_check = crate(function(x) {
+          check_integerish(x, lower = 1L, min.len = 1L, any.missing = FALSE, names = "unique", null.ok = TRUE)
+        }))
       )
       param_set = c(default_param_set, param_set)
 
@@ -277,7 +262,7 @@ OptimizerAsyncMbo = R6Class(
         lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
         pv$initial_design
       }
-      result = optimize_async_default(inst, self, design, n_workers = pv$n_workers)
+      result = optimize_async_default(inst, self, design, n_workers = pv$n_workers, profiles = pv$profiles)
 
       # the workers only update copies of the surrogate, so the final update must happen on the main process
       tryCatch(

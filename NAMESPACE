@@ -31,6 +31,8 @@ export(AcqOptimizerRandomSearch)
 export(InputTrafo)
 export(InputTrafoUnitcube)
 export(OptimizerADBO)
+export(OptimizerADBOSubspaces)
+export(OptimizerADBOThompson)
 export(OptimizerAsyncMbo)
 export(OptimizerMbo)
 export(OutputTrafo)
@@ -43,6 +45,8 @@ export(Surrogate)
 export(SurrogateLearner)
 export(SurrogateLearnerCollection)
 export(TunerADBO)
+export(TunerADBOSubspaces)
+export(TunerADBOThompson)
 export(TunerAsyncMbo)
 export(TunerMbo)
 export(acqf)
@@ -53,6 +57,7 @@ export(bayesopt_emo)
 export(bayesopt_mpcl)
 export(bayesopt_parego)
 export(bayesopt_smsego)
+export(bayesopt_thompson)
 export(default_acqfunction)
 export(default_acqoptimizer)
 export(default_gp)
@@ -71,6 +76,7 @@ export(mlr_loop_functions)
 export(mlr_output_trafos)
 export(mlr_result_assigners)
 export(ot)
+export(partition_search_space)
 export(ras)
 export(redis_available)
 export(srlrn)
@@ -88,6 +94,7 @@ importFrom(stats,
   dnorm,
   pnorm,
   quantile,
+  rbeta,
   rexp,
   runif,
   sd,

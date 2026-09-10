@@ -35,6 +35,7 @@ codomain
 consistant
 covtype
 CRAN
+CUDA
 Dankers
 dlnode
 donttest
@@ -55,6 +56,8 @@ Fonseca
 fpli
 ftarget
 ftol
+gblinear
+gbtree
 gchild
 ggplot
 ginsbourger
@@ -80,6 +83,7 @@ loopfun
 lrns
 matern
 mathjax
+mathrm
 maxeval
 minf
 mirai
@@ -87,6 +91,7 @@ misalign
 moocore
 mpcl
 msrs
+mtry
 multiarch
 Multipoint
 newdata
@@ -138,6 +143,7 @@ stackoverflow
 stopval
 stringi
 superparent
+tabpfn
 Tchebycheff
 testthat
 TEVC
@@ -151,5 +157,6 @@ Unitcube
 Universidade
 warmstart
 Wessel
+xgboost
 xtol
 yolobox
