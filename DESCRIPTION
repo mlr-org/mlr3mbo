@@ -55,6 +55,7 @@ Suggests:
     emoa,
     DiceKriging,
     fastGHQuad,
+    libcmaesr,
     lhs,
     mlr3learners (>= 0.12.0),
     mirai,
@@ -69,6 +70,8 @@ Suggests:
     rush (>= 1.0.0),
     stringi,
     testthat (>= 3.0.0)
+Remotes:
+    mlr-org/rush
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
@@ -94,6 +97,7 @@ Collate:
     'AcqFunctionStochasticEI.R'
     'AcqOptimizer.R'
     'mlr_acqoptimizers.R'
+    'AcqOptimizerCmaes.R'
     'AcqOptimizerDirect.R'
     'AcqOptimizerLbfgsb.R'
     'AcqOptimizerLocalSearch.R'
@@ -132,4 +136,4 @@ Collate:
     'mbo_defaults.R'
     'sugar.R'
     'zzz.R'
-Config/roxygen2/version: 8.0.0.9000
+Config/roxygen2/version: 8.1.0

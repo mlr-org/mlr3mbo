@@ -2,6 +2,7 @@
 
 * compatibility: use Paradox 2's public transformation-free subset API while
   retaining support for Paradox 1.
+* feat: new `AcqOptimizerCmaes` acquisition function optimizer that calls `cmaes()` from the `libcmaesr` package, available under the key `"cmaes"`.
 
 # mlr3mbo 1.2.1
 
