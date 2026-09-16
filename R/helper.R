@@ -29,7 +29,7 @@ generate_acq_multi_codomain = function(surrogate, acq_functions) {
 generate_acq_domain = function(surrogate) {
   assert_archive(surrogate$archive)
   if (utils::packageVersion("paradox") >= numeric_version("2.0.0")) {
-    domain = surrogate$archive$search_space$subset(
+    surrogate$archive$search_space$subset(
       surrogate$cols_x,
       keep_trafo = FALSE
     )
@@ -39,9 +39,8 @@ generate_acq_domain = function(surrogate) {
       x$.trafo[1] = list(NULL)
       x
     })
-    domain = do.call(ps, dms)
+    do.call(ps, dms)
   }
-  domain
 }
 
 archive_xy = function(archive) {
