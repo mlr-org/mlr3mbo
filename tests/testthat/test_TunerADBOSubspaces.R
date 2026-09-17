@@ -38,9 +38,6 @@ test_that("TunerADBOSubspaces tunes a branching graph learner", {
   )
 
   tuner = tnr("adbo_subspaces", subspaces = subspaces, design_size = 2L)
-  surrogate = default_surrogate(instance)
-  surrogate$param_set$set_values(catch_errors = FALSE)
-  tuner$surrogate = surrogate
   tuner$optimize(instance)
 
   data = instance$archive$data
@@ -49,6 +46,28 @@ test_that("TunerADBOSubspaces tunes a branching graph learner", {
   finished = data[data$state == "finished", ]
   expect_equal(finished$.subspace, finished$branch.selection)
   expect_set_equal(unique(finished$.subspace), c("rpart", "featureless"))
-  expect_identical(tuner$surrogate, surrogate)
-  expect_false(tuner$surrogate$param_set$values$catch_errors)
+  expect_r6(tuner$surrogate, "SurrogateLearner")
+})
+
+test_that("TunerADBOSubspaces fixes the surrogate, acquisition function, and acquisition function optimizer", {
+  tuner = tnr("adbo_subspaces")
+
+  expect_error(
+    {
+      tuner$surrogate = SurrogateLearner$new(REGR_FEATURELESS)
+    },
+    "read-only"
+  )
+  expect_error(
+    {
+      tuner$acq_function = acqf("ei")
+    },
+    "read-only"
+  )
+  expect_error(
+    {
+      tuner$acq_optimizer = acqo(opt("random_search"), trm("evals", n_evals = 100L))
+    },
+    "read-only"
+  )
 })

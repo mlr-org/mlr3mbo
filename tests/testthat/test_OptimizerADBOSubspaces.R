@@ -37,6 +37,17 @@ test_that("OptimizerADBOSubspaces keeps every worker in its subspace", {
   expect_equal(finished$.subspace, finished$branch)
   # both subspaces were worked on
   expect_set_equal(unique(finished$.subspace), c("a", "b"))
+  # the lambda of a worker is not decayed by default
+  proposed = finished[!is.na(finished$acq_lambda), ]
+  expect_equal(proposed$acq_lambda, proposed$acq_lambda_0)
+})
+
+test_that("OptimizerADBOSubspaces disables the lambda decay by default", {
+  optimizer = opt("adbo_subspaces")
+
+  expect_equal(optimizer$param_set$values$lambda, 1.96)
+  expect_equal(optimizer$param_set$values$rate, 0)
+  expect_equal(optimizer$param_set$values$period, 25L)
 })
 
 test_that("OptimizerADBOSubspaces queues one initial design per subspace", {
@@ -151,7 +162,30 @@ test_that("OptimizerADBOSubspaces accepts an initial design per subspace", {
   expect_design_evaluated(initial_design_subspace$b, data)
 })
 
-test_that("OptimizerADBOSubspaces respects a pre-set surrogate", {
+test_that("OptimizerADBOSubspaces fixes the surrogate, acquisition function, and acquisition function optimizer", {
+  optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH)
+
+  expect_error(
+    {
+      optimizer$surrogate = SurrogateLearner$new(REGR_FEATURELESS)
+    },
+    "read-only"
+  )
+  expect_error(
+    {
+      optimizer$acq_function = acqf("ei")
+    },
+    "read-only"
+  )
+  expect_error(
+    {
+      optimizer$acq_optimizer = acqo(opt("random_search"), trm("evals", n_evals = 100L))
+    },
+    "read-only"
+  )
+})
+
+test_that("OptimizerADBOSubspaces constructs the surrogate, acquisition function, and acquisition function optimizer", {
   profiles = c(a = 1, b = 1)
   rush = start_rush_profiles(profiles)
   on.exit({
@@ -166,14 +200,11 @@ test_that("OptimizerADBOSubspaces respects a pre-set surrogate", {
     rush = rush
   )
   optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH, design_size = 2L)
-  surrogate = default_surrogate(instance, force_random_forest = TRUE)
-  surrogate$param_set$set_values(catch_errors = FALSE)
-  optimizer$surrogate = surrogate
-
   optimizer$optimize(instance)
 
-  expect_identical(optimizer$surrogate, surrogate)
-  expect_false(optimizer$surrogate$param_set$values$catch_errors)
+  expect_r6(optimizer$surrogate, "SurrogateLearner")
+  expect_r6(optimizer$acq_function, "AcqFunctionStochasticCB")
+  expect_r6(optimizer$acq_optimizer, "AcqOptimizer")
 })
 
 test_that("OptimizerADBOSubspaces pins subspaces to compute profiles", {

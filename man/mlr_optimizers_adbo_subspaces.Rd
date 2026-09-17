@@ -97,16 +97,40 @@ On each worker, after the queue of its compute profile has been emptied:
 \enumerate{
 \item The \link{SurrogateLearner} is updated on the evaluations of the subspace only, including pending evaluations of the
 subspace which are imputed.
-\item \link{AcqFunctionStochasticCB} is updated, sampling and decaying its own \eqn{\lambda} exactly as in
-\link{OptimizerADBO}.
+\item \link{AcqFunctionStochasticCB} is updated, sampling its own \eqn{\lambda} as in \link{OptimizerADBO}, see section
+Lambda.
 \item The acquisition function is optimized over the subspace and the resulting point is evaluated.
 }
 
-Unless a surrogate, acquisition function, or acquisition function optimizer has been set on the optimizer,
-the \link{SurrogateLearner} defaults to a random forest, the acquisition function to \link{AcqFunctionStochasticCB}, and the
-\link{AcqOptimizer} to a random search with a batch size of 1000 and a budget of 10000 evaluations.
 After termination, the surrogate held by the optimizer is updated a final time on \emph{all} evaluations, i.e., across
 subspaces.
+}
+
+\section{Lambda}{
+
+\link{AcqFunctionStochasticCB} samples the \eqn{\lambda} of every worker once from an exponential distribution with rate
+\code{1 / lambda}, so that the workers spread over exploration and exploitation as in \link{OptimizerADBO}.
+In contrast to \link{OptimizerADBO}, the decay of \eqn{\lambda} is disabled by default, i.e., \code{rate} is \code{0} and a worker
+keeps its \eqn{\lambda} for the whole run.
+Set \code{rate} to a value greater than \code{0} to decay \eqn{\lambda} over the iterations of a worker as in
+\link{OptimizerADBO}, which restarts the decay at the sampled \eqn{\lambda} every \code{period} iterations.
+}
+
+\section{Surrogate, Acquisition Function, and Acquisition Function Optimizer}{
+
+In contrast to \link{OptimizerAsyncMbo}, the \code{surrogate}, \code{acq_function}, and \code{acq_optimizer} fields are read-only and
+are set by \verb{$optimize()}.
+The \link{SurrogateLearner} is a random forest, the acquisition function is \link{AcqFunctionStochasticCB} configured with
+the \code{lambda}, \code{rate}, and \code{period} parameters, see section Lambda, and the \link{AcqOptimizer} is a random search with a
+batch size of 1000 and a budget of 10000 evaluations.
+
+The other components of \link{OptimizerAsyncMbo} do not work on subspaces.
+The surrogate of a worker is fitted on the evaluations of its subspace only, whereas an acquisition function that
+requires an incumbent, e.g. \link{mlr_acqfunctions_ei}, would read the incumbent from the whole \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync},
+and an \link{OutputTrafo} of the surrogate that is not inverted for the posterior would be fitted on a single subspace
+and could not represent the outcomes of the other subspaces.
+\link{AcqFunctionStochasticCB} needs no incumbent, and the \eqn{\lambda} it samples per worker is what makes the workers
+explore independently of each other, which is the mechanism ADBO relies on.
 }
 
 \section{Parameters}{
@@ -151,11 +175,17 @@ Can be \code{random} \link[paradox:generate_design_random]{paradox::generate_des
 or \code{sobol} \link[paradox:generate_design_sobol]{paradox::generate_design_sobol}.
 Default is \code{sobol}.}
 \item{\code{lambda}}{\code{numeric(1)}\cr
-Value used for sampling the lambda for each worker from an exponential distribution.}
+Value used for sampling the lambda of every worker from an exponential distribution.
+See section Lambda.
+Default is \code{1.96}.}
 \item{\code{rate}}{\code{numeric(1)}\cr
-Rate of the exponential decay.}
+Rate of the exponential decay of lambda.
+See section Lambda.
+Default is \code{0}, i.e., the lambda of a worker is not decayed.}
 \item{\code{period}}{\code{integer(1)}\cr
-Period of the exponential decay.}
+Period of the exponential decay of lambda.
+Only used when \code{rate} is greater than \code{0}.
+Default is \code{25}.}
 }
 }
 
@@ -225,6 +255,23 @@ In \emph{2023 IEEE 19th International Conference on e-Science (e-Science)}, 1--1
 }
 \section{Super classes}{
 \code{\link[bbotk:Optimizer]{bbotk::Optimizer}} -> \code{\link[bbotk:OptimizerAsync]{bbotk::OptimizerAsync}} -> \code{\link[mlr3mbo:OptimizerAsyncMbo]{OptimizerAsyncMbo}} -> \code{OptimizerADBOSubspaces}
+}
+\section{Active bindings}{
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{surrogate}}{(\link{SurrogateLearner} | \code{NULL})\cr
+The surrogate.
+Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.}
+
+    \item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
+The acquisition function.
+Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.}
+
+    \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
+The acquisition function optimizer.
+Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{

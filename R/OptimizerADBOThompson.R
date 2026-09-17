@@ -11,29 +11,42 @@
 #' [mlr3pipelines::Graph] that selects the learner.
 #'
 #' The optimizer extends [OptimizerADBOSubspaces] by a second level of grouping.
-#' In [OptimizerADBOSubspaces], every subspace runs on its own \CRANpkg{mirai} compute profile and a worker is
-#' permanently assigned to exactly one subspace.
-#' In `OptimizerADBOThompson`, several subspaces may share a compute profile, e.g., all learners that are trained on CPU
-#' cores run on the `"cpu"` profile while the learners that require a GPU run on the `"gpu"` profile.
+#' In [OptimizerADBOSubspaces], every subspace runs on its own \CRANpkg{mirai} compute profile
+#' and a worker is permanently assigned to exactly one subspace.
+#' In `OptimizerADBOThompson`, several subspaces may share a compute profile,
+#' e.g., all learners that are trained on CPU cores run on the `"cpu"` profile
+#' while the learners that require a GPU run on the `"gpu"` profile.
 #' A worker is still permanently assigned to its compute profile, but in each iteration it samples one of the
 #' subspaces of its profile via Thompson sampling and proposes a point of that subspace only.
-#' The hardware is therefore a property of *where* a subspace runs, whereas the algorithm is a property of *what*
-#' the subspace is.
+#' The hardware is therefore a property of *where* a subspace runs,
+#' whereas the algorithm is a property of *what* the subspace is.
 #' With exactly one subspace per compute profile, `OptimizerADBOThompson` behaves like [OptimizerADBOSubspaces].
 #'
 #' `OptimizerADBOThompson` is considered an experimental feature and the API might be subject to changes.
 #' Currently, only single-objective optimization is supported.
 #'
 #' @section Subspaces and Compute Profiles:
-#' The subspaces are passed as a named list of [paradox::ParamSet]s via the `subspaces` parameter and must partition
-#' the search space, see the section Subspaces of [OptimizerADBOSubspaces].
-#' Use [partition_search_space()] with one group per algorithm to derive them from the parameter that selects the
-#' algorithm.
+#' The subspaces are passed as a named list of [paradox::ParamSet]s via the `subspaces` parameter
+#' and must partition the search space, see the section Subspaces of [OptimizerADBOSubspaces].
+#' Use [partition_search_space()] with one group per algorithm to derive them from the parameter
+#' that selects the algorithm.
+#' The names of the list are the ids of the subspaces and are used by all other parameters that are set per subspace.
 #'
-#' `subspace_profiles` maps every subspace to the compute profile it runs on and, in contrast to
-#' [OptimizerADBOSubspaces], several subspaces may map to the same profile.
-#' By default, every subspace runs on the profile of the same name, which reduces the optimizer to
-#' [OptimizerADBOSubspaces].
+#' ```
+#' search_space = ps(
+#'   learner = p_fct(c("tabpfn", "ranger", "xgboost")),
+#'   tabpfn.n_estimators = p_int(1, 16, depends = learner == "tabpfn"),
+#'   ranger.mtry_ratio = p_dbl(0, 1, depends = learner == "ranger"),
+#'   xgboost.eta = p_dbl(1e-4, 1, logscale = TRUE, depends = learner == "xgboost")
+#' )
+#'
+#' # one subspace per learner
+#' subspaces = partition_search_space(search_space, param = "learner")
+#' ```
+#'
+#' `subspace_profiles` maps every subspace to the compute profile it runs on.
+#' Here, the `"tabpfn"` subspace runs on the single GPU
+#' while the `"ranger"` and `"xgboost"` subspaces share the seven workers on the CPU cores.
 #'
 #' ```
 #' mirai::daemons(1, .compute = "gpu")
@@ -57,20 +70,21 @@
 #' Each subspace is an arm of a Beta-Bernoulli bandit.
 #' An evaluation counts as a success if its objective value is among the best `top_quantile` fraction of all finished
 #' evaluations, and as a failure otherwise.
-#' The single best evaluation is always a success and evaluations that share the objective value at the boundary are
-#' all successes.
+#' The single best evaluation is always a success and evaluations
+#' that share the objective value at the boundary are all successes.
 #' With \eqn{s_k} successes and \eqn{f_k} failures of subspace \eqn{k}, a value is sampled from the posterior
-#' \eqn{\theta_k \sim \mathrm{Beta}(\alpha + s_k, \beta + f_k)} and the subspace with the largest \eqn{\theta_k} is
-#' selected.
+#' \eqn{\theta_k \sim \mathrm{Beta}(\alpha + s_k, \beta + f_k)}
+#' and the subspace with the largest \eqn{\theta_k} is selected.
 #'
-#' A worker only samples among the subspaces of its own compute profile, but the successes and failures are counted
-#' on all finished evaluations of the [bbotk::ArchiveAsync], i.e., an evaluation has to be among the best across all
-#' profiles to count as a success.
-#' Because every worker draws its own sample from the shared posterior, the workers of a profile naturally spread
-#' over its subspaces instead of all working on the currently most promising one.
+#' A worker only samples among the subspaces of its own compute profile,
+#' but the successes and failures are counted on all finished evaluations of the [bbotk::ArchiveAsync],
+#' i.e., an evaluation has to be among the best across all profiles to count as a success.
+#' Because every worker draws its own sample from the shared posterior,
+#' the workers of a profile naturally spread over its subspaces
+#' instead of all working on the currently most promising one.
 #'
-#' Counting top-quantile hits instead of comparing objective values directly makes the sampling invariant to the
-#' scale of the objective and robust to outliers.
+#' Counting top-quantile hits instead of comparing objective values directly
+#' makes the sampling invariant to the scale of the objective and robust to outliers.
 #' The successes are recounted on all finished evaluations in every iteration, so an evaluation that was good early
 #' on only stays a success as long as it remains among the best.
 #' The prior counts `alpha` and `beta` control how long an algorithm keeps being tried after a streak of failures.
@@ -89,16 +103,13 @@
 #' On each worker, after the queue of its compute profile has been emptied:
 #'
 #' 1. One of the subspaces of the compute profile of the worker is sampled via Thompson sampling.
-#' 2. If the sampled subspace differs from the one of the previous iteration, the [SurrogateLearner], the acquisition
-#'    function, and the [AcqOptimizer] are restricted to the sampled subspace.
-#' 3. The [SurrogateLearner] is updated on the evaluations of the sampled subspace only, including pending evaluations
-#'    of the subspace which are imputed.
-#' 4. [AcqFunctionStochasticCB] is updated, sampling and decaying its own \eqn{\lambda} exactly as in
-#'    [OptimizerADBO].
-#'    The decay continues across the subspaces a worker samples.
+#' 2. The [SurrogateLearner], the acquisition function, and the [AcqOptimizer] are restricted to the sampled subspace.
+#' 3. The [SurrogateLearner] is updated on the evaluations of the sampled subspace only,
+#'    including pending evaluations of the subspace which are imputed.
+#' 4. [AcqFunctionStochasticCB] is updated, sampling its own \eqn{\lambda} as in [OptimizerADBO], see section Lambda.
 #' 5. The acquisition function is optimized over the sampled subspace and the resulting point is evaluated.
 #'
-#' The defaults for the [SurrogateLearner], the acquisition function, and the [AcqOptimizer] are those of
+#' The [SurrogateLearner], the acquisition function, and the [AcqOptimizer] are fixed and are those of
 #' [OptimizerADBOSubspaces].
 #'
 #' @section Parameters:
@@ -130,17 +141,15 @@
 #'
 #' @inheritSection mlr_optimizers_adbo_subspaces Initial Design
 #'
-#' @section Note:
-#' The surrogate of a worker is fitted on the evaluations of the sampled subspace only, but an acquisition function
-#' that requires an incumbent, e.g. [mlr_acqfunctions_ei], reads the incumbent from the whole
-#' [bbotk::ArchiveAsync].
-#' If the surrogate uses an [OutputTrafo] that is not inverted for the posterior, the transformation is fitted on the
-#' sampled subspace and cannot represent the outcomes of the other subspaces.
-#' Use the default [AcqFunctionStochasticCB], which does not require an incumbent, or a surrogate without an
-#' [OutputTrafo] in this case.
+#' @section Lambda:
+#' \eqn{\lambda} is sampled and decayed as in [OptimizerADBOSubspaces] and the decay is disabled by default, i.e.,
+#' `rate` is `0`.
+#' \eqn{\lambda} belongs to the worker and not to the subspace, i.e., a worker keeps its \eqn{\lambda} when Thompson
+#' sampling selects another subspace, and the decay counts the iterations of the worker across all the subspaces it
+#' samples.
+#' A decayed \eqn{\lambda} therefore does not reflect how much is already known about the sampled subspace.
 #'
-#' A terminator that counts evaluations, e.g. [bbotk::TerminatorEvals], is shared by all subspaces.
-#' Consider [bbotk::TerminatorRunTime] instead when the subspaces differ strongly in evaluation time.
+#' @inheritSection mlr_optimizers_adbo_subspaces Surrogate, Acquisition Function, and Acquisition Function Optimizer
 #'
 #' @references
 #' * `r format_bib("egele_2023")`

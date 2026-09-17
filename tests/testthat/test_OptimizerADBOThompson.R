@@ -143,6 +143,9 @@ test_that("OptimizerADBOThompson samples among the subspaces of a shared compute
   expect_true(all(is.na(finished[finished$branch != "c", ]$xc)))
   # the workers switched subspaces after the initial designs
   expect_set_equal(unique(finished$.subspace), c("a", "b", "c"))
+  # the lambda of a worker is not decayed by default, also not across the subspaces it samples
+  proposed = finished[!is.na(finished$acq_lambda), ]
+  expect_equal(proposed$acq_lambda, proposed$acq_lambda_0)
   proposed = finished[-seq_len(6L), ]
   expect_gt(length(unique(proposed$.subspace)), 1L)
 })
@@ -357,6 +360,8 @@ test_that("OptimizerADBOThompson has the Thompson sampling parameters", {
   expect_equal(optimizer$param_set$values$top_quantile, 0.1)
   expect_equal(optimizer$param_set$values$alpha, 1)
   expect_equal(optimizer$param_set$values$beta, 1)
+  # the lambda decay of OptimizerADBO is disabled by default
+  expect_equal(optimizer$param_set$values$rate, 0)
   expect_subset(c("subspaces", "subspace_profiles", "lambda", "rate", "period"), optimizer$param_set$ids())
   expect_man_exists(optimizer$man)
 })

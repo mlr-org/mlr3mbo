@@ -18,15 +18,26 @@ Currently, only single-objective optimization is supported.
 }
 \section{Subspaces and Compute Profiles}{
 
-The subspaces are passed as a named list of \link[paradox:ParamSet]{paradox::ParamSet}s via the \code{subspaces} parameter and must partition
-the search space, see the section Subspaces of \link{OptimizerADBOSubspaces}.
-Use \code{\link[=partition_search_space]{partition_search_space()}} with one group per algorithm to derive them from the parameter that selects the
-algorithm.
+The subspaces are passed as a named list of \link[paradox:ParamSet]{paradox::ParamSet}s via the \code{subspaces} parameter
+and must partition the search space, see the section Subspaces of \link{OptimizerADBOSubspaces}.
+Use \code{\link[=partition_search_space]{partition_search_space()}} with one group per algorithm to derive them from the parameter
+that selects the algorithm.
+The names of the list are the ids of the subspaces and are used by all other parameters that are set per subspace.
 
-\code{subspace_profiles} maps every subspace to the compute profile it runs on and, in contrast to
-\link{OptimizerADBOSubspaces}, several subspaces may map to the same profile.
-By default, every subspace runs on the profile of the same name, which reduces the optimizer to
-\link{OptimizerADBOSubspaces}.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{search_space = ps(
+  learner = p_fct(c("tabpfn", "ranger", "xgboost")),
+  tabpfn.n_estimators = p_int(1, 16, depends = learner == "tabpfn"),
+  ranger.mtry_ratio = p_dbl(0, 1, depends = learner == "ranger"),
+  xgboost.eta = p_dbl(1e-4, 1, logscale = TRUE, depends = learner == "xgboost")
+)
+
+# one subspace per learner
+subspaces = partition_search_space(search_space, param = "learner")
+}\if{html}{\out{</div>}}
+
+\code{subspace_profiles} maps every subspace to the compute profile it runs on.
+Here, the \code{"tabpfn"} subspace runs on the single GPU
+while the \code{"ranger"} and \code{"xgboost"} subspaces share the seven workers on the CPU cores.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{mirai::daemons(1, .compute = "gpu")
 mirai::daemons(7, .compute = "cpu")
@@ -51,20 +62,21 @@ optimization terminates during the initial design.
 Each subspace is an arm of a Beta-Bernoulli bandit.
 An evaluation counts as a success if its objective value is among the best \code{top_quantile} fraction of all finished
 evaluations, and as a failure otherwise.
-The single best evaluation is always a success and evaluations that share the objective value at the boundary are
-all successes.
+The single best evaluation is always a success and evaluations
+that share the objective value at the boundary are all successes.
 With \eqn{s_k} successes and \eqn{f_k} failures of subspace \eqn{k}, a value is sampled from the posterior
-\eqn{\theta_k \sim \mathrm{Beta}(\alpha + s_k, \beta + f_k)} and the subspace with the largest \eqn{\theta_k} is
-selected.
+\eqn{\theta_k \sim \mathrm{Beta}(\alpha + s_k, \beta + f_k)}
+and the subspace with the largest \eqn{\theta_k} is selected.
 
-A worker only samples among the subspaces of its own compute profile, but the successes and failures are counted
-on all finished evaluations of the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync}, i.e., an evaluation has to be among the best across all
-profiles to count as a success.
-Because every worker draws its own sample from the shared posterior, the workers of a profile naturally spread
-over its subspaces instead of all working on the currently most promising one.
+A worker only samples among the subspaces of its own compute profile,
+but the successes and failures are counted on all finished evaluations of the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync},
+i.e., an evaluation has to be among the best across all profiles to count as a success.
+Because every worker draws its own sample from the shared posterior,
+the workers of a profile naturally spread over its subspaces
+instead of all working on the currently most promising one.
 
-Counting top-quantile hits instead of comparing objective values directly makes the sampling invariant to the
-scale of the objective and robust to outliers.
+Counting top-quantile hits instead of comparing objective values directly
+makes the sampling invariant to the scale of the objective and robust to outliers.
 The successes are recounted on all finished evaluations in every iteration, so an evaluation that was good early
 on only stays a success as long as it remains among the best.
 The prior counts \code{alpha} and \code{beta} control how long an algorithm keeps being tried after a streak of failures.
@@ -85,17 +97,14 @@ terminated, even before the \link[bbotk:Terminator]{bbotk::Terminator} signals t
 On each worker, after the queue of its compute profile has been emptied:
 \enumerate{
 \item One of the subspaces of the compute profile of the worker is sampled via Thompson sampling.
-\item If the sampled subspace differs from the one of the previous iteration, the \link{SurrogateLearner}, the acquisition
-function, and the \link{AcqOptimizer} are restricted to the sampled subspace.
-\item The \link{SurrogateLearner} is updated on the evaluations of the sampled subspace only, including pending evaluations
-of the subspace which are imputed.
-\item \link{AcqFunctionStochasticCB} is updated, sampling and decaying its own \eqn{\lambda} exactly as in
-\link{OptimizerADBO}.
-The decay continues across the subspaces a worker samples.
+\item The \link{SurrogateLearner}, the acquisition function, and the \link{AcqOptimizer} are restricted to the sampled subspace.
+\item The \link{SurrogateLearner} is updated on the evaluations of the sampled subspace only,
+including pending evaluations of the subspace which are imputed.
+\item \link{AcqFunctionStochasticCB} is updated, sampling its own \eqn{\lambda} as in \link{OptimizerADBO}, see section Lambda.
 \item The acquisition function is optimized over the sampled subspace and the resulting point is evaluated.
 }
 
-The defaults for the \link{SurrogateLearner}, the acquisition function, and the \link{AcqOptimizer} are those of
+The \link{SurrogateLearner}, the acquisition function, and the \link{AcqOptimizer} are fixed and are those of
 \link{OptimizerADBOSubspaces}.
 }
 
@@ -144,18 +153,31 @@ The \code{initial_design} and \code{design_size} parameters of \link{OptimizerAs
 \code{initial_design} must not be set.
 }
 
-\section{Note}{
+\section{Lambda}{
 
-The surrogate of a worker is fitted on the evaluations of the sampled subspace only, but an acquisition function
-that requires an incumbent, e.g. \link{mlr_acqfunctions_ei}, reads the incumbent from the whole
-\link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync}.
-If the surrogate uses an \link{OutputTrafo} that is not inverted for the posterior, the transformation is fitted on the
-sampled subspace and cannot represent the outcomes of the other subspaces.
-Use the default \link{AcqFunctionStochasticCB}, which does not require an incumbent, or a surrogate without an
-\link{OutputTrafo} in this case.
+\eqn{\lambda} is sampled and decayed as in \link{OptimizerADBOSubspaces} and the decay is disabled by default, i.e.,
+\code{rate} is \code{0}.
+\eqn{\lambda} belongs to the worker and not to the subspace, i.e., a worker keeps its \eqn{\lambda} when Thompson
+sampling selects another subspace, and the decay counts the iterations of the worker across all the subspaces it
+samples.
+A decayed \eqn{\lambda} therefore does not reflect how much is already known about the sampled subspace.
+}
 
-A terminator that counts evaluations, e.g. \link[bbotk:TerminatorEvals]{bbotk::TerminatorEvals}, is shared by all subspaces.
-Consider \link[bbotk:TerminatorRunTime]{bbotk::TerminatorRunTime} instead when the subspaces differ strongly in evaluation time.
+\section{Surrogate, Acquisition Function, and Acquisition Function Optimizer}{
+
+In contrast to \link{OptimizerAsyncMbo}, the \code{surrogate}, \code{acq_function}, and \code{acq_optimizer} fields are read-only and
+are set by \verb{$optimize()}.
+The \link{SurrogateLearner} is a random forest, the acquisition function is \link{AcqFunctionStochasticCB} configured with
+the \code{lambda}, \code{rate}, and \code{period} parameters, see section Lambda, and the \link{AcqOptimizer} is a random search with a
+batch size of 1000 and a budget of 10000 evaluations.
+
+The other components of \link{OptimizerAsyncMbo} do not work on subspaces.
+The surrogate of a worker is fitted on the evaluations of its subspace only, whereas an acquisition function that
+requires an incumbent, e.g. \link{mlr_acqfunctions_ei}, would read the incumbent from the whole \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync},
+and an \link{OutputTrafo} of the surrogate that is not inverted for the posterior would be fitted on a single subspace
+and could not represent the outcomes of the other subspaces.
+\link{AcqFunctionStochasticCB} needs no incumbent, and the \eqn{\lambda} it samples per worker is what makes the workers
+explore independently of each other, which is the mechanism ADBO relies on.
 }
 
 \examples{
@@ -227,14 +249,17 @@ In \emph{Proceedings of the 19th ACM SIGKDD International Conference on Knowledg
 \section{Active bindings}{
   \if{html}{\out{<div class="r6-active-bindings">}}
   \describe{
-    \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
-The surrogate.}
+    \item{\code{surrogate}}{(\link{SurrogateLearner} | \code{NULL})\cr
+The surrogate.
+Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.}
 
     \item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
-The acquisition function.}
+The acquisition function.
+Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.}
 
     \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
-The acquisition function optimizer.}
+The acquisition function optimizer.
+Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.}
 
     \item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
 The result assigner.}

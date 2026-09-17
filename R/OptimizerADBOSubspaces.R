@@ -90,15 +90,35 @@
 #'
 #' 1. The [SurrogateLearner] is updated on the evaluations of the subspace only, including pending evaluations of the
 #'    subspace which are imputed.
-#' 2. [AcqFunctionStochasticCB] is updated, sampling and decaying its own \eqn{\lambda} exactly as in
-#'    [OptimizerADBO].
+#' 2. [AcqFunctionStochasticCB] is updated, sampling its own \eqn{\lambda} as in [OptimizerADBO], see section
+#'    Lambda.
 #' 3. The acquisition function is optimized over the subspace and the resulting point is evaluated.
 #'
-#' Unless a surrogate, acquisition function, or acquisition function optimizer has been set on the optimizer,
-#' the [SurrogateLearner] defaults to a random forest, the acquisition function to [AcqFunctionStochasticCB], and the
-#' [AcqOptimizer] to a random search with a batch size of 1000 and a budget of 10000 evaluations.
 #' After termination, the surrogate held by the optimizer is updated a final time on *all* evaluations, i.e., across
 #' subspaces.
+#'
+#' @section Lambda:
+#' [AcqFunctionStochasticCB] samples the \eqn{\lambda} of every worker once from an exponential distribution with rate
+#' `1 / lambda`, so that the workers spread over exploration and exploitation as in [OptimizerADBO].
+#' In contrast to [OptimizerADBO], the decay of \eqn{\lambda} is disabled by default, i.e., `rate` is `0` and a worker
+#' keeps its \eqn{\lambda} for the whole run.
+#' Set `rate` to a value greater than `0` to decay \eqn{\lambda} over the iterations of a worker as in
+#' [OptimizerADBO], which restarts the decay at the sampled \eqn{\lambda} every `period` iterations.
+#'
+#' @section Surrogate, Acquisition Function, and Acquisition Function Optimizer:
+#' In contrast to [OptimizerAsyncMbo], the `surrogate`, `acq_function`, and `acq_optimizer` fields are read-only and
+#' are set by `$optimize()`.
+#' The [SurrogateLearner] is a random forest, the acquisition function is [AcqFunctionStochasticCB] configured with
+#' the `lambda`, `rate`, and `period` parameters, see section Lambda, and the [AcqOptimizer] is a random search with a
+#' batch size of 1000 and a budget of 10000 evaluations.
+#'
+#' The other components of [OptimizerAsyncMbo] do not work on subspaces.
+#' The surrogate of a worker is fitted on the evaluations of its subspace only, whereas an acquisition function that
+#' requires an incumbent, e.g. [mlr_acqfunctions_ei], would read the incumbent from the whole [bbotk::ArchiveAsync],
+#' and an [OutputTrafo] of the surrogate that is not inverted for the posterior would be fitted on a single subspace
+#' and could not represent the outcomes of the other subspaces.
+#' [AcqFunctionStochasticCB] needs no incumbent, and the \eqn{\lambda} it samples per worker is what makes the workers
+#' explore independently of each other, which is the mechanism ADBO relies on.
 #'
 #' @section Parameters:
 #' \describe{
@@ -141,11 +161,17 @@
 #'   or `sobol` [paradox::generate_design_sobol].
 #'   Default is `sobol`.}
 #' \item{`lambda`}{`numeric(1)`\cr
-#'   Value used for sampling the lambda for each worker from an exponential distribution.}
+#'   Value used for sampling the lambda of every worker from an exponential distribution.
+#'   See section Lambda.
+#'   Default is `1.96`.}
 #' \item{`rate`}{`numeric(1)`\cr
-#'   Rate of the exponential decay.}
+#'   Rate of the exponential decay of lambda.
+#'   See section Lambda.
+#'   Default is `0`, i.e., the lambda of a worker is not decayed.}
 #' \item{`period`}{`integer(1)`\cr
-#'   Period of the exponential decay.}
+#'   Period of the exponential decay of lambda.
+#'   Only used when `rate` is greater than `0`.
+#'   Default is `25`.}
 #' }
 #'
 #' @section Note:
@@ -240,14 +266,14 @@ OptimizerADBOSubspaces = R6Class(
           check_integerish(x, lower = 1L, min.len = 1L, any.missing = FALSE, names = "unique", null.ok = TRUE)
         })),
         lambda = p_dbl(lower = 0, default = 1.96),
-        rate = p_dbl(lower = 0, default = 0.1),
+        rate = p_dbl(lower = 0, default = 0),
         period = p_int(lower = 1L, default = 25L)
       )
       param_set = c(default_param_set, param_set)
 
       super$initialize(id = id, param_set = param_set, label = label, man = man)
 
-      self$param_set$set_values(lambda = 1.96, rate = 0.1, period = 25L)
+      self$param_set$set_values(lambda = 1.96, rate = 0, period = 25L)
     },
 
     #' @description
@@ -279,37 +305,30 @@ OptimizerADBOSubspaces = R6Class(
       # the acquisition function is optimized on the untransformed subspace, mirroring `generate_acq_domain()`
       private$.acq_domains = map(subspaces, strip_trafo)
 
-      if (is.null(self$acq_function)) {
-        self$acq_function = AcqFunctionStochasticCB$new(
-          distribution = "exponential",
-          lambda = pv[["lambda"]],
-          rate = pv[["rate"]],
-          period = pv[["period"]]
-        )
-      }
+      # the surrogate, the acquisition function, and the acquisition function optimizer are fixed, because only these
+      # work on subspaces, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer
+      private$.acq_function = AcqFunctionStochasticCB$new(
+        distribution = "exponential",
+        lambda = pv[["lambda"]],
+        rate = pv[["rate"]],
+        period = pv[["period"]]
+      )
 
-      if (is.null(self$surrogate)) {
-        self$surrogate = self$acq_function$surrogate %??% default_surrogate(inst, force_random_forest = TRUE)
-      }
+      private$.surrogate = default_surrogate(inst, force_random_forest = TRUE)
 
-      if (is.null(self$acq_optimizer)) {
-        self$acq_optimizer = AcqOptimizer$new(
-          optimizer = opt("random_search", batch_size = 1000L),
-          terminator = trm("evals", n_evals = 10000L)
-        )
-      }
+      private$.acq_optimizer = AcqOptimizer$new(
+        optimizer = opt("random_search", batch_size = 1000L),
+        terminator = trm("evals", n_evals = 10000L)
+      )
 
       if (is.null(self$result_assigner)) {
         self$result_assigner = default_result_assigner(inst)
       }
 
-      self$surrogate$reset()
-      self$acq_function$reset()
-      self$acq_optimizer$reset()
-
-      self$surrogate$archive = inst$archive
-      self$acq_function$surrogate = self$surrogate
-      self$acq_optimizer$acq_function = self$acq_function
+      # `self$x$y = z` would assign to the read-only binding `x`, so the private fields are modified directly
+      private$.surrogate$archive = inst$archive
+      private$.acq_function$surrogate = private$.surrogate
+      private$.acq_optimizer$acq_function = private$.acq_function
 
       check_packages_installed(
         self$packages,
@@ -352,6 +371,32 @@ OptimizerADBOSubspaces = R6Class(
       )
 
       result
+    }
+  ),
+
+  active = list(
+    #' @field surrogate ([SurrogateLearner] | `NULL`)\cr
+    #'   The surrogate.
+    #'   Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.
+    surrogate = function(rhs) {
+      assert_ro_binding(rhs)
+      private$.surrogate
+    },
+
+    #' @field acq_function ([AcqFunction] | `NULL`)\cr
+    #'   The acquisition function.
+    #'   Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.
+    acq_function = function(rhs) {
+      assert_ro_binding(rhs)
+      private$.acq_function
+    },
+
+    #' @field acq_optimizer ([AcqOptimizer] | `NULL`)\cr
+    #'   The acquisition function optimizer.
+    #'   Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.
+    acq_optimizer = function(rhs) {
+      assert_ro_binding(rhs)
+      private$.acq_optimizer
     }
   ),
 
@@ -476,14 +521,15 @@ OptimizerADBOSubspaces = R6Class(
     .restrict_to_subspace = function(inst, subspace_id) {
       subspace = self$param_set$values[["subspaces"]][[subspace_id]]
 
-      self$surrogate$cols_x = subspace$ids()
-      self$surrogate$row_filter = crate(function(data) subspace_contains(subspace, data), subspace)
+      # `self$x$y = z` would assign to the read-only binding `x`, so the private fields are modified directly
+      private$.surrogate$cols_x = subspace$ids()
+      private$.surrogate$row_filter = crate(function(data) subspace_contains(subspace, data), subspace)
 
       # assigning the surrogate resets the domain of the acquisition function to the full support of `cols_x`,
       # so the restricted domain has to be set afterwards
-      self$acq_function$surrogate = self$surrogate
-      self$acq_function$domain = private$.acq_domains[[subspace_id]]
-      self$acq_optimizer$acq_function = self$acq_function
+      private$.acq_function$surrogate = private$.surrogate
+      private$.acq_function$domain = private$.acq_domains[[subspace_id]]
+      private$.acq_optimizer$acq_function = private$.acq_function
     },
 
     .optimize = function(inst) {

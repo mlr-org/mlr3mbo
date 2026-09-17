@@ -158,10 +158,11 @@ OptimizerAsyncMbo = R6Class(
         man = man
       )
 
-      self$surrogate = assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
-      self$acq_function = assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
-      self$acq_optimizer = assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
-      self$result_assigner = assert_r6(result_assigner, classes = "ResultAssigner", null.ok = TRUE)
+      # the private fields are set directly, because subclasses may declare the bindings read-only
+      private$.surrogate = assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
+      private$.acq_function = assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
+      private$.acq_optimizer = assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
+      private$.result_assigner = assert_r6(result_assigner, classes = "ResultAssigner", null.ok = TRUE)
     },
 
     #' @description

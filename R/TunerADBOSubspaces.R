@@ -17,6 +17,8 @@
 #' @inheritSection mlr_optimizers_adbo_subspaces Subspaces
 #' @inheritSection mlr_optimizers_adbo_subspaces Compute Profiles
 #' @inheritSection mlr_optimizers_adbo_subspaces Initial Design
+#' @inheritSection mlr_optimizers_adbo_subspaces Lambda
+#' @inheritSection mlr_optimizers_adbo_subspaces Surrogate, Acquisition Function, and Acquisition Function Optimizer
 #' @inheritSection mlr_optimizers_adbo_subspaces Parameters
 #' @inheritSection mlr_optimizers_adbo_subspaces Note
 #'
@@ -116,31 +118,28 @@ TunerADBOSubspaces = R6Class(
   ),
 
   active = list(
-    #' @template field_surrogate
+    #' @field surrogate ([SurrogateLearner] | `NULL`)\cr
+    #'   The surrogate.
+    #'   Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.
     surrogate = function(rhs) {
-      if (missing(rhs)) {
-        private$.optimizer$surrogate
-      } else {
-        private$.optimizer$surrogate = assert_r6(rhs, classes = "Surrogate", null.ok = TRUE)
-      }
+      assert_ro_binding(rhs)
+      private$.optimizer$surrogate
     },
 
-    #' @template field_acq_function
+    #' @field acq_function ([AcqFunction] | `NULL`)\cr
+    #'   The acquisition function.
+    #'   Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.
     acq_function = function(rhs) {
-      if (missing(rhs)) {
-        private$.optimizer$acq_function
-      } else {
-        private$.optimizer$acq_function = assert_r6(rhs, classes = "AcqFunction", null.ok = TRUE)
-      }
+      assert_ro_binding(rhs)
+      private$.optimizer$acq_function
     },
 
-    #' @template field_acq_optimizer
+    #' @field acq_optimizer ([AcqOptimizer] | `NULL`)\cr
+    #'   The acquisition function optimizer.
+    #'   Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.
     acq_optimizer = function(rhs) {
-      if (missing(rhs)) {
-        private$.optimizer$acq_optimizer
-      } else {
-        private$.optimizer$acq_optimizer = assert_r6(rhs, classes = "AcqOptimizer", null.ok = TRUE)
-      }
+      assert_ro_binding(rhs)
+      private$.optimizer$acq_optimizer
     },
 
     #' @template field_result_assigner
