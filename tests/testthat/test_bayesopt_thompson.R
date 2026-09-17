@@ -175,6 +175,40 @@ test_that("bayesopt_thompson stops when all subspaces are exhausted", {
   expect_false(instance$is_terminated)
 })
 
+test_that("bayesopt_thompson proposes no evaluated configuration when sampling a point at random", {
+  search_space = ps(
+    branch = p_fct(c("a", "b")),
+    fb = p_fct(c("lo", "hi"), depends = branch == "b"),
+    lb = p_lgl(depends = branch == "b")
+  )
+  fun = function(xs) list(y = if (xs$branch == "a") 1 else 2)
+  objective = bbotk::ObjectiveRFun$new(fun = fun, domain = search_space, codomain = FUN_1D_CODOMAIN)
+
+  run = function(surrogate, ...) {
+    instance = MAKE_INST(objective = objective, search_space = search_space, terminator = trm("evals", n_evals = 20L))
+    bayesopt_thompson(
+      instance,
+      surrogate = surrogate,
+      acq_function = AcqFunctionEI$new(),
+      acq_optimizer = MAKE_ACQ_OPTIMIZER(),
+      param = "branch",
+      init_design_size = 1L,
+      ...
+    )
+    instance$archive$data
+  }
+
+  # the erroring surrogate makes every iteration fall back to a randomly sampled point
+  data = run(SurrogateLearner$new(LearnerRegrError$new()))
+  expect_data_table(data, nrows = 5L)
+  expect_equal(uniqueN(data[, c("branch", "fb", "lb")]), 5L)
+
+  # random interleaving samples every point at random
+  data = run(SurrogateLearner$new(REGR_FEATURELESS), random_interleave_iter = 1L)
+  expect_data_table(data, nrows = 5L)
+  expect_equal(uniqueN(data[, c("branch", "fb", "lb")]), 5L)
+})
+
 test_that("bayesopt_thompson asserts its arguments", {
   instance = MAKE_INST(objective = OBJ_1D_BRANCH, search_space = PS_1D_BRANCH, terminator = trm("evals", n_evals = 6L))
   args = list(

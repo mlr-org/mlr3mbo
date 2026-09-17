@@ -164,3 +164,24 @@ generate_design_subspace = function(subspace, n) {
   }
   grid[sample.int(nrow(grid), min(n, nrow(grid)))]
 }
+
+# configurations of a subspace that are not among the evaluated points `xdt`; `NULL` if the subspace has unbounded
+# parameters or too many configurations to enumerate, i.e., if there is always a configuration left
+subspace_remaining = function(subspace, xdt) {
+  grid = subspace_grid(subspace)
+  if (is.null(grid) || !nrow(xdt)) {
+    return(grid)
+  }
+  ids = subspace$ids()
+  grid[!unique(xdt[, ids, with = FALSE]), on = ids]
+}
+
+# random point of a subspace; a subspace with finitely many configurations only proposes configurations that are not
+# among the evaluated points `xdt`, so that no configuration is evaluated twice
+generate_point_subspace = function(subspace, xdt) {
+  remaining = subspace_remaining(subspace, xdt)
+  if (is.null(remaining) || !nrow(remaining)) {
+    return(generate_design_random(subspace, n = 1L)$data)
+  }
+  remaining[sample.int(nrow(remaining), 1L)]
+}

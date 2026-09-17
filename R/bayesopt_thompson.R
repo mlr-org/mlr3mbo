@@ -59,7 +59,9 @@
 #' configurations, e.g., the subspace of a learner without hyperparameters consists of a single configuration.
 #' Once all of its configurations have been evaluated, the subspace is exhausted and excluded from the sampling, so
 #' that no configuration is evaluated twice.
-#' The initial design of such a subspace is capped at the number of its configurations for the same reason.
+#' The initial design of such a subspace is capped at the number of its configurations, and a randomly sampled point,
+#' i.e., a random interleave iteration or the fallback after an error, is drawn from the configurations that are not
+#' evaluated yet, for the same reason.
 #' If all subspaces are exhausted, the loop stops before the [bbotk::Terminator] signals termination, because
 #' there is nothing left to evaluate.
 #'
@@ -276,12 +278,12 @@ bayesopt_thompson = function(
       },
       Mlr3ErrorMboRandomInterleave = function(cond) {
         lg$info("Random interleaving triggered, proposing a randomly sampled point of subspace '%s'", subspace_id)
-        generate_design_random(subspace, n = 1L)$data
+        generate_point_subspace(subspace, archive$data)
       },
       Mlr3ErrorMbo = function(cond) {
         lg$warn("Caught the following error: %s", cond$message)
         lg$info("Proposing a randomly sampled point of subspace '%s'", subspace_id)
-        generate_design_random(subspace, n = 1L)$data
+        generate_point_subspace(subspace, archive$data)
       }
     )
 

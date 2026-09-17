@@ -79,8 +79,9 @@
 #' configurations, e.g., the subspace of a learner without hyperparameters consists of a single configuration.
 #' Once all of its configurations have been evaluated, the subspace is exhausted and excluded from the sampling, so
 #' that no configuration is evaluated twice.
-#' The generated initial design of such a subspace is capped at the number of its configurations for the same
-#' reason.
+#' The generated initial design of such a subspace is capped at the number of its configurations, and a randomly
+#' sampled point, i.e., the fallback after an error, is drawn from the configurations that no worker has finished
+#' yet, for the same reason.
 #' A worker whose subspaces are all exhausted terminates, and the optimization ends when all workers have
 #' terminated, even before the [bbotk::Terminator] signals termination.
 #'
@@ -232,6 +233,15 @@ OptimizerADBOThompson = R6Class(
         grid = subspace_grid(subspaces[[subspace_id]])
         if (is.null(grid)) design else grid[sample.int(nrow(grid), min(nrow(design), nrow(grid)))]
       })
+    },
+
+    # a subspace with finitely many configurations only proposes configurations that are not evaluated yet
+    .propose_random = function(inst, subspace_id, cols_x, na_values) {
+      subspace = self$param_set$values[["subspaces"]][[subspace_id]]
+      finished = inst$archive$finished_data
+      finished_subspace = finished[[".subspace"]] %??% rep(NA_character_, nrow(finished))
+      xdt = generate_point_subspace(subspace, finished[which(finished_subspace == subspace_id)])
+      pad_xs(transpose_list(xdt)[[1L]], cols_x = cols_x, na_values = na_values)
     },
 
     # several subspaces may share a compute profile, so only the names have to match the subspaces

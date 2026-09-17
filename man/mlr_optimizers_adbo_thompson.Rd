@@ -82,8 +82,9 @@ A subspace whose parameters are all discrete, i.e., categorical, logical, or bou
 configurations, e.g., the subspace of a learner without hyperparameters consists of a single configuration.
 Once all of its configurations have been evaluated, the subspace is exhausted and excluded from the sampling, so
 that no configuration is evaluated twice.
-The generated initial design of such a subspace is capped at the number of its configurations for the same
-reason.
+The generated initial design of such a subspace is capped at the number of its configurations, and a randomly
+sampled point, i.e., the fallback after an error, is drawn from the configurations that no worker has finished
+yet, for the same reason.
 A worker whose subspaces are all exhausted terminates, and the optimization ends when all workers have
 terminated, even before the \link[bbotk:Terminator]{bbotk::Terminator} signals termination.
 }

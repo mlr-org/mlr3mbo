@@ -127,3 +127,20 @@ test_that("generate_design_subspace caps the design of discrete subspaces", {
   expect_data_table(generate_design_subspace(subspaces$b, n = 2L), nrows = 2L)
   expect_data_table(generate_design_subspace(subspaces$c, n = 10L), nrows = 1L)
 })
+
+test_that("generate_point_subspace only proposes unevaluated configurations", {
+  subspaces = partition_search_space(PS_1D_DISCRETE, param = "branch")
+  grid = subspace_grid(subspaces$b)
+
+  expect_data_table(subspace_remaining(subspaces$b, grid[0]), nrows = 4L)
+  expect_data_table(subspace_remaining(subspaces$b, grid[1:3]), nrows = 1L)
+  expect_data_table(subspace_remaining(subspaces$b, grid), nrows = 0L)
+  # a subspace with numeric parameters always has a configuration left
+  expect_null(subspace_remaining(subspaces$a, generate_design_random(subspaces$a, n = 10L)$data))
+
+  # the only configuration left is the only one that can be proposed
+  expect_equal(generate_point_subspace(subspaces$b, grid[1:3]), grid[4])
+  # an exhausted subspace and a subspace with numeric parameters fall back to a random point
+  expect_data_table(generate_point_subspace(subspaces$b, grid), nrows = 1L)
+  expect_data_table(generate_point_subspace(subspaces$a, data.table()), nrows = 1L)
+})
