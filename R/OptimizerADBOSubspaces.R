@@ -172,6 +172,12 @@
 #'   Period of the exponential decay of lambda.
 #'   Only used when `rate` is greater than `0`.
 #'   Default is `25`.}
+#' \item{`catch_errors`}{`logical(1)`\cr
+#'   Whether errors of the [SurrogateLearner] and the [AcqOptimizer] are caught.
+#'   If `TRUE`, the learner of the surrogate is encapsulated with a fallback learner
+#'   and a point that cannot be proposed is replaced by a randomly sampled point.
+#'   Set to `FALSE` to raise the errors, e.g., for debugging.
+#'   Default is `TRUE`.}
 #' }
 #'
 #' @section Note:
@@ -267,13 +273,14 @@ OptimizerADBOSubspaces = R6Class(
         })),
         lambda = p_dbl(lower = 0, default = 1.96),
         rate = p_dbl(lower = 0, default = 0),
-        period = p_int(lower = 1L, default = 25L)
+        period = p_int(lower = 1L, default = 25L),
+        catch_errors = p_lgl(default = TRUE)
       )
       param_set = c(default_param_set, param_set)
 
       super$initialize(id = id, param_set = param_set, label = label, man = man)
 
-      self$param_set$set_values(lambda = 1.96, rate = 0, period = 25L)
+      self$param_set$set_values(lambda = 1.96, rate = 0, period = 25L, catch_errors = TRUE)
     },
 
     #' @description
@@ -320,6 +327,12 @@ OptimizerADBOSubspaces = R6Class(
         optimizer = opt("random_search", batch_size = 1000L),
         terminator = trm("evals", n_evals = 10000L)
       )
+
+      private$.surrogate$param_set$set_values(catch_errors = pv[["catch_errors"]])
+      private$.acq_optimizer$param_set$set_values(catch_errors = pv[["catch_errors"]])
+      if (!pv[["catch_errors"]]) {
+        private$.surrogate$learner$encapsulate(method = "none")
+      }
 
       if (is.null(self$result_assigner)) {
         self$result_assigner = default_result_assigner(inst)

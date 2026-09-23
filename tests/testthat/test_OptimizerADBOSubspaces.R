@@ -48,6 +48,7 @@ test_that("OptimizerADBOSubspaces disables the lambda decay by default", {
   expect_equal(optimizer$param_set$values$lambda, 1.96)
   expect_equal(optimizer$param_set$values$rate, 0)
   expect_equal(optimizer$param_set$values$period, 25L)
+  expect_true(optimizer$param_set$values$catch_errors)
 })
 
 test_that("OptimizerADBOSubspaces queues one initial design per subspace", {
@@ -205,6 +206,28 @@ test_that("OptimizerADBOSubspaces constructs the surrogate, acquisition function
   expect_r6(optimizer$surrogate, "SurrogateLearner")
   expect_r6(optimizer$acq_function, "AcqFunctionStochasticCB")
   expect_r6(optimizer$acq_optimizer, "AcqOptimizer")
+})
+
+test_that("OptimizerADBOSubspaces passes catch_errors to the surrogate and the acquisition function optimizer", {
+  rush = rush::rsh(config = redis_configuration())
+  old = options(bbotk.debug = TRUE)
+  on.exit({
+    rush$reset()
+    options(old)
+  })
+
+  instance = oi_async(
+    objective = OBJ_1D_BRANCH,
+    search_space = PS_1D_BRANCH,
+    terminator = trm("evals", n_evals = 6L),
+    rush = rush
+  )
+  optimizer = opt("adbo_subspaces", subspaces = SUBSPACES_1D_BRANCH, design_size = 2L, catch_errors = FALSE)
+  optimizer$optimize(instance)
+
+  expect_false(optimizer$surrogate$param_set$values$catch_errors)
+  expect_false(optimizer$acq_optimizer$param_set$values$catch_errors)
+  expect_equal(optimizer$surrogate$learner$encapsulation[["train"]], "none")
 })
 
 test_that("OptimizerADBOSubspaces pins subspaces to compute profiles", {

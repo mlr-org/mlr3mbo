@@ -160,6 +160,12 @@ Default is \code{0}, i.e., the lambda of a worker is not decayed.}
 Period of the exponential decay of lambda.
 Only used when \code{rate} is greater than \code{0}.
 Default is \code{25}.}
+\item{\code{catch_errors}}{\code{logical(1)}\cr
+Whether errors of the \link{SurrogateLearner} and the \link{AcqOptimizer} are caught.
+If \code{TRUE}, the learner of the surrogate is encapsulated with a fallback learner
+and a point that cannot be proposed is replaced by a randomly sampled point.
+Set to \code{FALSE} to raise the errors, e.g., for debugging.
+Default is \code{TRUE}.}
 }
 }
 

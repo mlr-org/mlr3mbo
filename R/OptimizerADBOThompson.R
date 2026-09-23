@@ -138,8 +138,8 @@
 #' }
 #'
 #' The remaining parameters `profiles`, `n_workers`, `initial_design_subspace`, `initial_design`,
-#' `design_size_subspace`, `design_size`, `design_function`, `lambda`, `rate`, and `period` are those of
-#' [OptimizerADBOSubspaces].
+#' `design_size_subspace`, `design_size`, `design_function`, `lambda`, `rate`, `period`, and `catch_errors` are those
+#' of [OptimizerADBOSubspaces].
 #'
 #' @inheritSection mlr_optimizers_adbo_subspaces Initial Design
 #'

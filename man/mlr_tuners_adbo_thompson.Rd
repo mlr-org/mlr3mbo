@@ -135,8 +135,8 @@ Default is \code{1}.}
 }
 
 The remaining parameters \code{profiles}, \code{n_workers}, \code{initial_design_subspace}, \code{initial_design},
-\code{design_size_subspace}, \code{design_size}, \code{design_function}, \code{lambda}, \code{rate}, and \code{period} are those of
-\link{OptimizerADBOSubspaces}.
+\code{design_size_subspace}, \code{design_size}, \code{design_function}, \code{lambda}, \code{rate}, \code{period}, and \code{catch_errors} are those
+of \link{OptimizerADBOSubspaces}.
 }
 
 \section{Initial Design}{
