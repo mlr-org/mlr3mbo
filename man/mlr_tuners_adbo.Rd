@@ -23,6 +23,10 @@ Value used for sampling the lambda for each worker from an exponential distribut
 Rate of the exponential decay.}
 \item{\code{period}}{\code{integer(1)}\cr
 Period of the exponential decay.}
+}
+
+
+\describe{
 \item{\code{initial_design}}{\code{data.table::data.table()}\cr
 Initial design of the optimization.
 If \code{NULL}, a design of size \code{design_size} is generated with the specified \code{design_function}.
@@ -38,6 +42,12 @@ Default is \code{sobol}.}
 \item{\code{n_workers}}{\code{integer(1)}\cr
 Number of parallel workers.
 If \code{NULL}, all rush workers specified via \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.
+Default is \code{NULL}.}
+\item{\code{profiles}}{named \code{integer()}\cr
+Number of parallel workers per \CRANpkg{mirai} compute profile, e.g. \code{c(cpu = 2, gpu = 2)}.
+The daemons of every profile must be created with \code{\link[mirai:daemons]{mirai::daemons()}} beforehand.
+Cannot be combined with \code{n_workers}.
+If \code{NULL}, the profiles specified via \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.
 Default is \code{NULL}.}
 }
 }
