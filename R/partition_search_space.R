@@ -136,7 +136,7 @@ subspace_contains = function(subspace, data) {
   keep
 }
 
-# all configurations of a subspace with finitely many configurations, respecting its dependencies;
+# all configurations of a subspace with finitely many configurations, respecting its dependencies and constraint;
 # `NULL` if the subspace has unbounded parameters, i.e., doubles or unbounded integers, or more than
 # `max_configurations` configurations, so that the grid of a large discrete subspace is never materialized.
 # bounded integers have as many levels as they have values, so a resolution of `nlevels` enumerates them exactly.
@@ -144,11 +144,18 @@ subspace_grid = function(subspace, max_configurations = 10000) {
   if (prod(subspace$nlevels) > max_configurations) {
     return(NULL)
   }
-  generate_design_grid(subspace, param_resolutions = subspace$nlevels[subspace$is_number])$data
+  grid = generate_design_grid(subspace, param_resolutions = subspace$nlevels[subspace$is_number])$data
+  if (subspace$has_constraint) {
+    grid = grid[subspace$test_constraint_dt(grid, assert_value = FALSE)]
+  }
+  grid
 }
 
 # whether all `n_configurations` configurations of a subspace are among its evaluated points `xdt`
 subspace_exhausted = function(subspace, xdt, n_configurations) {
+  if (n_configurations == 0L) {
+    return(TRUE)
+  }
   if (!is.finite(n_configurations) || !nrow(xdt)) {
     return(FALSE)
   }

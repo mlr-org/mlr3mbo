@@ -105,6 +105,23 @@ test_that("subspace_grid enumerates bounded integers", {
   expect_null(subspace_grid(ps(i = p_int(1, 8, logscale = TRUE))))
 })
 
+test_that("subspace_grid respects constraints", {
+  search_space = ps(branch = p_fct(c("a", "b")), x = p_int(1L, 3L))
+  search_space$constraint = function(x) x$branch == "a" && x$x != 2L
+  subspaces = partition_search_space(search_space, param = "branch")
+
+  grid = subspace_grid(subspaces$a)
+  expect_set_equal(grid$x, c(1L, 3L))
+  expect_data_table(generate_design_subspace(subspaces$a, n = 3L), nrows = 2L)
+  expect_equal(generate_point_subspace(subspaces$a, grid[1L]), grid[2L])
+  expect_true(subspace_exhausted(subspaces$a, grid, n_configurations = nrow(grid)))
+
+  grid = subspace_grid(subspaces$b)
+  expect_data_table(grid, nrows = 0L)
+  expect_data_table(generate_design_subspace(subspaces$b, n = 3L), nrows = 0L)
+  expect_true(subspace_exhausted(subspaces$b, grid, n_configurations = nrow(grid)))
+})
+
 test_that("subspace_exhausted detects fully evaluated subspaces", {
   subspaces = partition_search_space(PS_1D_DISCRETE, param = "branch")
   grid = subspace_grid(subspaces$b)

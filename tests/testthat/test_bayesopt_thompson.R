@@ -175,6 +175,29 @@ test_that("bayesopt_thompson stops when all subspaces are exhausted", {
   expect_false(instance$is_terminated)
 })
 
+test_that("bayesopt_thompson respects constraints in discrete initial designs", {
+  search_space = ps(branch = p_fct(c("a", "b")), x = p_int(1L, 3L))
+  search_space$constraint = function(x) x$branch == "a" && x$x != 2L
+  objective = bbotk::ObjectiveRFun$new(
+    fun = function(xs) list(y = xs$x), domain = search_space, codomain = FUN_1D_CODOMAIN
+  )
+  instance = MAKE_INST(objective = objective, search_space = search_space, terminator = trm("evals", n_evals = 10L))
+
+  bayesopt_thompson(
+    instance,
+    surrogate = SurrogateLearner$new(REGR_FEATURELESS),
+    acq_function = AcqFunctionEI$new(),
+    acq_optimizer = MAKE_ACQ_OPTIMIZER(),
+    param = "branch",
+    init_design_size = 3L
+  )
+
+  expect_data_table(instance$archive$data, nrows = 2L)
+  expect_set_equal(instance$archive$data$x, c(1L, 3L))
+  expect_true(all(instance$archive$data$branch == "a"))
+  expect_false(instance$is_terminated)
+})
+
 test_that("bayesopt_thompson proposes no evaluated configuration when sampling a point at random", {
   search_space = ps(
     branch = p_fct(c("a", "b")),
