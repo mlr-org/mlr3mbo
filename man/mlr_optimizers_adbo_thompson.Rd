@@ -90,6 +90,8 @@ makes the sampling invariant to the scale of the objective and robust to outlier
 The successes are recounted on all finished evaluations in every iteration, so an evaluation that was good early
 on only stays a success as long as it remains among the best.
 The prior counts \code{alpha} and \code{beta} control how long an algorithm keeps being tried after a streak of failures.
+Evaluations that raise an error are not counted,
+so equip the learners with a fallback learner that turns their errors into finished evaluations.
 
 A subspace whose parameters are all discrete, i.e., categorical, logical, or bounded integer, has finitely many
 configurations, e.g., the subspace of a learner without hyperparameters consists of a single configuration.

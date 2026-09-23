@@ -88,6 +88,8 @@
 #' The successes are recounted on all finished evaluations in every iteration, so an evaluation that was good early
 #' on only stays a success as long as it remains among the best.
 #' The prior counts `alpha` and `beta` control how long an algorithm keeps being tried after a streak of failures.
+#' Evaluations that raise an error are not counted,
+#' so equip the learners with a fallback learner that turns their errors into finished evaluations.
 #'
 #' A subspace whose parameters are all discrete, i.e., categorical, logical, or bounded integer, has finitely many
 #' configurations, e.g., the subspace of a learner without hyperparameters consists of a single configuration.
@@ -239,8 +241,8 @@ OptimizerADBOThompson = R6Class(
         return(designs)
       }
       imap(designs, function(design, subspace_id) {
-        grid = subspace_grid(subspaces[[subspace_id]])
-        if (is.null(grid)) design else grid[sample.int(nrow(grid), min(nrow(design), nrow(grid)))]
+        subspace = subspaces[[subspace_id]]
+        if (is.null(subspace_grid(subspace))) design else generate_design_subspace(subspace, n = nrow(design))
       })
     },
 
@@ -248,8 +250,7 @@ OptimizerADBOThompson = R6Class(
     .propose_random = function(inst, subspace_id, cols_x, na_values) {
       subspace = self$param_set$values[["subspaces"]][[subspace_id]]
       finished = inst$archive$finished_data
-      finished_subspace = finished[[".subspace"]] %??% rep(NA_character_, nrow(finished))
-      xdt = generate_point_subspace(subspace, finished[which(finished_subspace == subspace_id)])
+      xdt = generate_point_subspace(subspace, finished[which(finished[[".subspace"]] == subspace_id)])
       pad_xs(transpose_list(xdt)[[1L]], cols_x = cols_x, na_values = na_values)
     },
 
@@ -312,13 +313,10 @@ OptimizerADBOThompson = R6Class(
       )
 
       cols_x = inst$archive$cols_x
-      col_y = inst$archive$cols_y
       na_x = na_values(inst$search_space)
       subspaces = pv[["subspaces"]][subspace_ids]
       # a subspace with finitely many configurations can be exhausted, so its number of configurations is needed
       n_configurations = map_dbl(subspaces, function(subspace) nrow(subspace_grid(subspace)) %??% Inf)
-      # the bandit counts top-quantile hits, so the objective values are always oriented towards minimization
-      y_mult = mult_max_to_min(inst$archive$codomain)[[col_y]]
 
       lg$debug("Optimizer '%s' evaluates the initial designs of subspace(s) %s", self$id, str_collapse(subspace_ids))
       get_private(inst)$.eval_queue()
@@ -326,31 +324,11 @@ OptimizerADBOThompson = R6Class(
       lg$debug("Optimizer '%s' starts the optimization phase", self$id)
       current = NULL
       while (!inst$is_terminated) {
-        finished = inst$archive$finished_data
-        # points that were pushed to the shared queue, e.g. by a callback, carry no `.subspace` and count for no arm
-        finished_subspace = finished[[".subspace"]] %??% rep(NA_character_, nrow(finished))
-
-        # exhausted subspaces have nothing left to evaluate and are excluded from the sampling
-        exhausted = map_lgl(subspace_ids, function(subspace_id) {
-          subspace_exhausted(
-            subspaces[[subspace_id]],
-            finished[which(finished_subspace == subspace_id)],
-            n_configurations[[subspace_id]]
-          )
-        })
-        if (all(exhausted)) {
+        subspace_id = private$.sample_subspace(inst, subspaces, n_configurations)
+        if (is.null(subspace_id)) {
           lg$info("All subspaces of worker '%s' are exhausted, the worker terminates", inst$rush$worker_id)
           break
         }
-
-        subspace_id = thompson_sample_subspace(
-          subspace_ids[!exhausted],
-          subspace = finished_subspace,
-          y = (finished[[col_y]] %??% numeric()) * y_mult,
-          top_quantile = pv[["top_quantile"]],
-          alpha = pv[["alpha"]],
-          beta = pv[["beta"]]
-        )
 
         if (!identical(subspace_id, current)) {
           lg$debug("Thompson sampling selected subspace '%s'", subspace_id)
@@ -358,30 +336,43 @@ OptimizerADBOThompson = R6Class(
           current = subspace_id
         }
 
-        xs = if (inst$archive$n_finished == 0L) {
-          # the surrogate cannot be trained without any finished evaluation
-          # this happens when a worker reaches this point before the initial design has been evaluated
-          lg$info("No finished evaluations available yet. Proposing a randomly sampled point")
-          private$.propose_random(inst, subspace_id, cols_x, na_x)
-        } else {
-          tryCatch(
-            {
-              self$acq_function$surrogate$update()
-              self$acq_function$update()
-              xdt = self$acq_optimizer$optimize()
-              pad_xs(transpose_list(xdt)[[1L]], cols_x = cols_x, na_values = na_x)
-            },
-            Mlr3ErrorMbo = function(cond) {
-              lg$warn("Caught the following error: %s", cond$message)
-              lg$info("Proposing a randomly sampled point")
-              private$.propose_random(inst, subspace_id, cols_x, na_x)
-            }
-          )
-        }
-
+        xs = private$.propose_point(inst, subspace_id, cols_x, na_x)
         xs[[".subspace"]] = subspace_id
         get_private(inst)$.eval_point(xs)
       }
+    },
+
+    # Thompson sampling over the subspaces of the worker that are not exhausted; `NULL` if all are exhausted.
+    # the arms are counted on the finished evaluations, a failed evaluation is not counted because the fallback
+    # learner turns errors of the learner into finished evaluations.
+    # points without `.subspace`, e.g. pushed by a callback, count for no arm
+    .sample_subspace = function(inst, subspaces, n_configurations) {
+      pv = self$param_set$values
+      col_y = inst$archive$cols_y
+      finished = inst$archive$finished_data
+      finished_subspace = finished[[".subspace"]]
+
+      subspace_ids = names(subspaces)
+      exhausted = map_lgl(subspace_ids, function(subspace_id) {
+        subspace_exhausted(
+          subspaces[[subspace_id]],
+          finished[which(finished_subspace == subspace_id)],
+          n_configurations[[subspace_id]]
+        )
+      })
+      if (all(exhausted)) {
+        return(NULL)
+      }
+
+      thompson_sample_subspace(
+        subspace_ids[!exhausted],
+        subspace = finished_subspace,
+        # the bandit counts top-quantile hits, so the objective values are always oriented towards minimization
+        y = finished[[col_y]] * mult_max_to_min(inst$archive$codomain)[[col_y]],
+        top_quantile = pv[["top_quantile"]],
+        alpha = pv[["alpha"]],
+        beta = pv[["beta"]]
+      )
     }
   )
 )

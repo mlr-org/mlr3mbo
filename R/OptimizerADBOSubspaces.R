@@ -563,30 +563,36 @@ OptimizerADBOSubspaces = R6Class(
 
       lg$debug("Optimizer '%s' starts the optimization phase on subspace '%s'", self$id, subspace_id)
       while (!inst$is_terminated) {
-        xs = if (inst$archive$n_finished == 0L) {
-          # the surrogate cannot be trained without any finished evaluation
-          # this happens when a worker reaches this point before the initial design has been evaluated
-          lg$info("No finished evaluations available yet. Proposing a randomly sampled point")
-          private$.propose_random(inst, subspace_id, cols_x, na_x)
-        } else {
-          tryCatch(
-            {
-              self$acq_function$surrogate$update()
-              self$acq_function$update()
-              xdt = self$acq_optimizer$optimize()
-              pad_xs(transpose_list(xdt)[[1L]], cols_x = cols_x, na_values = na_x)
-            },
-            Mlr3ErrorMbo = function(cond) {
-              lg$warn("Caught the following error: %s", cond$message)
-              lg$info("Proposing a randomly sampled point")
-              private$.propose_random(inst, subspace_id, cols_x, na_x)
-            }
-          )
-        }
-
+        xs = private$.propose_point(inst, subspace_id, cols_x, na_x)
         xs[[".subspace"]] = subspace_id
         get_private(inst)$.eval_point(xs)
       }
+    },
+
+    # optimize the acquisition function on the subspace the worker is restricted to;
+    # falls back to a randomly sampled point if the surrogate cannot be trained or the optimization fails
+    .propose_point = function(inst, subspace_id, cols_x, na_values) {
+      lg = lgr::get_logger("mlr3/bbotk")
+
+      if (inst$archive$n_finished == 0L) {
+        # this happens when a worker reaches this point before the initial design has been evaluated
+        lg$info("No finished evaluations available yet. Proposing a randomly sampled point")
+        return(private$.propose_random(inst, subspace_id, cols_x, na_values))
+      }
+
+      tryCatch(
+        {
+          self$acq_function$surrogate$update()
+          self$acq_function$update()
+          xdt = self$acq_optimizer$optimize()
+          pad_xs(transpose_list(xdt)[[1L]], cols_x = cols_x, na_values = na_values)
+        },
+        Mlr3ErrorMbo = function(cond) {
+          lg$warn("Caught the following error: %s", cond$message)
+          lg$info("Proposing a randomly sampled point")
+          private$.propose_random(inst, subspace_id, cols_x, na_values)
+        }
+      )
     },
 
     .propose_random = function(inst, subspace_id, cols_x, na_values) {
