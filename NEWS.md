@@ -1,7 +1,7 @@
 # mlr3mbo (development version)
 
-* compatibility: use Paradox 2's public transformation-free subset API while
-  retaining support for Paradox 1.
+* compatibility: use Paradox 2's public transformation-free subset API while retaining support for Paradox 1.
+* fix: acquisition function domains now preserve search space constraints when using paradox 2.0.0 or later.
 * feat: new `AcqOptimizerCmaes` acquisition function optimizer that calls `cmaes()` from the `libcmaesr` package, available under the key `"cmaes"`.
 
 # mlr3mbo 1.2.1
