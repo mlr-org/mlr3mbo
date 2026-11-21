@@ -1,11 +1,13 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://mlr3mbo.mlr-org.com/404.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/AGENTS.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/CLAUDE.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/authors.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/index.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/news/index.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/AcqFunction.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.html</loc></url>
+<url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerCmaes.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerDirect.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerLbfgsb.html</loc></url>
 <url><loc>https://mlr3mbo.mlr-org.com/reference/AcqOptimizerLocalSearch.html</loc></url>

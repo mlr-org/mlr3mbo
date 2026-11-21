@@ -6,6 +6,8 @@
   : Acquisition Function Base Class
 - [`AcqOptimizer`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizer.md)
   : Acquisition Function Optimizer
+- [`AcqOptimizerCmaes`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizerCmaes.md)
+  : CMA-ES Acquisition Function Optimizer
 - [`AcqOptimizerDirect`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizerDirect.md)
   : Direct Acquisition Function Optimizer
 - [`AcqOptimizerLbfgsb`](https://mlr3mbo.mlr-org.com/reference/AcqOptimizerLbfgsb.md)

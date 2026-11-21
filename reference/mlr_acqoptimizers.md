@@ -42,10 +42,11 @@ as.data.table(mlr_acqoptimizers)
 #> Key: <key>
 #>              key         label                               man
 #>           <char>        <char>                            <char>
-#> 1:        direct        DIRECT       mlr3mbo::AcqOptimizerDirect
-#> 2:        lbfgsb      L-BFGS-B       mlr3mbo::AcqOptimizerLbfgsb
-#> 3:  local_search  Local Search  mlr3mbo::AcqOptimizerLocalSearch
-#> 4: random_search Random Search mlr3mbo::AcqOptimizerRandomSearch
+#> 1:         cmaes        CMA-ES        mlr3mbo::AcqOptimizerCmaes
+#> 2:        direct        DIRECT       mlr3mbo::AcqOptimizerDirect
+#> 3:        lbfgsb      L-BFGS-B       mlr3mbo::AcqOptimizerLbfgsb
+#> 4:  local_search  Local Search  mlr3mbo::AcqOptimizerLocalSearch
+#> 5: random_search Random Search mlr3mbo::AcqOptimizerRandomSearch
 acqo("local_search")
 #> <AcqOptimizerLocalSearch>: (OptimizerLocalSearch)
 #> * Parameters: skip_already_evaluated=TRUE, catch_errors=TRUE

@@ -118,7 +118,9 @@ Creates a new instance of this
 ### `AcqFunctionAEI$update()`
 
 Update the acquisition function and set `y_effective_best` and
-`noise_var`.
+`noise_var`. See
+[AcqFunction](https://mlr3mbo.mlr-org.com/reference/AcqFunction.md) for
+a general description of `$update()`.
 
 #### Usage
 
