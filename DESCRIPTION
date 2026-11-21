@@ -1,7 +1,7 @@
 Type: Package
 Package: mlr3mbo
 Title: Flexible Bayesian Optimization
-Version: 1.2.1.9000
+Version: 1.3.0
 Authors@R: c(
     person("Marc", "Becker", , "marcbecker@posteo.de", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-8115-0400")),
@@ -67,11 +67,9 @@ Suggests:
     rgenoud,
     rpart,
     redux,
-    rush (>= 1.0.0),
+    rush (>= 1.4.0),
     stringi,
     testthat (>= 3.0.0)
-Remotes:
-    mlr-org/rush
 ByteCompile: no
 Encoding: UTF-8
 Config/testthat/edition: 3
