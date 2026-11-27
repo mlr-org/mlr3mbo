@@ -6,6 +6,11 @@
 * feat: New `partition_search_space()` splits a hierarchical search space along the levels of a categorical parameter, e.g., the branching parameter of a `mlr3pipelines::Graph`, into the subspaces consumed by `bayesopt_thompson`. By default, every level becomes a subspace of its own.
 * feat: `Surrogate` gained a `$row_filter` field that restricts the archive rows the surrogate is updated on.
 * feat: `OptimizerAsyncMbo`, `OptimizerADBO`, `TunerAsyncMbo`, and `TunerADBO` gained the `profiles` parameter that distributes the workers over the `mirai` compute profiles, e.g. `profiles = c(cpu = 2, gpu = 2)`. Cannot be combined with `n_workers`.
+
+# mlr3mbo 1.3.0
+
+* compatibility: use Paradox 2's public transformation-free subset API while retaining support for Paradox 1.
+* fix: acquisition function domains now preserve search space constraints when using paradox 2.0.0 or later.
 * feat: new `AcqOptimizerCmaes` acquisition function optimizer that calls `cmaes()` from the `libcmaesr` package, available under the key `"cmaes"`.
 
 # mlr3mbo 1.2.1
@@ -196,4 +201,3 @@
 # mlr3mbo 0.1.1
 
 * Initial upload to CRAN.
-

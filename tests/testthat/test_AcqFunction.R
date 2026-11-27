@@ -160,6 +160,7 @@ test_that("AcqFunction generate_acq_domain works", {
   domain = generate_acq_domain(surrogate)
   expect_equal(domain, OBJ_2D$domain)
   expect_false(domain$has_trafo)
+  expect_true(inst$search_space$has_trafo)
 
   surrogate$cols_x = "x2"
   domain = generate_acq_domain(surrogate)
