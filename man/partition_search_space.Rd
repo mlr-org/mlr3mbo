@@ -33,7 +33,7 @@ and all parameters whose dependencies can still be satisfied by at least one lev
 Parameters that can never be active within a group are dropped, which makes the resulting subspaces
 considerably lower-dimensional and much less conditional than the original search space.
 
-The resulting subspaces are the input of \link{OptimizerADBOSubspaces} and \link{TunerADBOSubspaces}.
+The resulting subspaces are the input of \code{\link[=bayesopt_thompson]{bayesopt_thompson()}} and are used internally by \link{OptimizerADBOThompson}.
 }
 \note{
 The extra trafo and the constraint of \code{search_space} are carried over to every subspace unchanged.

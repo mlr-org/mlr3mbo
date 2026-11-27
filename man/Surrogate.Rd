@@ -40,7 +40,7 @@ Function used to restrict the rows of the \link[bbotk:Archive]{bbotk::Archive} t
 Takes the archive data as a \code{\link[data.table:data.table]{data.table::data.table()}} and must return a \code{logical()} of the same length as
 the number of rows of the data indicating which rows to keep.
 If \code{NULL} (default), all rows are used.
-This is for example used by \link{OptimizerADBOSubspaces} to fit a separate surrogate per subspace.}
+This is for example used by \link{OptimizerADBOThompson} to fit the surrogate on a single subspace.}
 
     \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
 Set of hyperparameters.}

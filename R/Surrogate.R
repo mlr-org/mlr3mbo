@@ -166,7 +166,7 @@ Surrogate = R6Class(
     #'   Takes the archive data as a [data.table::data.table()] and must return a `logical()` of the same length as
     #'   the number of rows of the data indicating which rows to keep.
     #'   If `NULL` (default), all rows are used.
-    #'   This is for example used by [OptimizerADBOSubspaces] to fit a separate surrogate per subspace.
+    #'   This is for example used by [OptimizerADBOThompson] to fit the surrogate on a single subspace.
     row_filter = function(rhs) {
       if (missing(rhs)) {
         private$.row_filter

@@ -10,7 +10,7 @@
 #' Parameters that can never be active within a group are dropped, which makes the resulting subspaces
 #' considerably lower-dimensional and much less conditional than the original search space.
 #'
-#' The resulting subspaces are the input of [OptimizerADBOSubspaces] and [TunerADBOSubspaces].
+#' The resulting subspaces are the input of [bayesopt_thompson()] and are used internally by [OptimizerADBOThompson].
 #'
 #' @param search_space ([paradox::ParamSet])\cr
 #'   Search space to partition.
@@ -191,4 +191,27 @@ generate_point_subspace = function(subspace, xdt) {
     return(generate_design_random(subspace, n = 1L)$data)
   }
   remaining[sample.int(nrow(remaining), 1L)]
+}
+
+# drop the trafos of the individual parameters, mirroring `generate_acq_domain()`
+strip_trafo = function(search_space) {
+  domains = map(search_space$domains, function(domain) {
+    domain$.trafo[1] = list(NULL)
+    domain
+  })
+  do.call(ps, domains)
+}
+
+# typed `NA` per parameter, used to mark parameters outside of a subspace as inactive
+na_values = function(search_space) {
+  map(search_space$class, function(class) {
+    switch(class, ParamDbl = NA_real_, ParamInt = NA_integer_, ParamFct = NA_character_, NA)
+  })
+}
+
+# a point of a subspace only holds the parameters of that subspace, but the archive expects all parameters of the
+# search space; the remaining ones are inactive and therefore `NA`
+pad_xs = function(xs, cols_x, na_values) {
+  missing = setdiff(cols_x, names(xs))
+  c(xs, na_values[missing])
 }

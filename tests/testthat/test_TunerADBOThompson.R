@@ -31,11 +31,9 @@ test_that("TunerADBOThompson tunes a branching graph learner on a shared compute
     rush = rush
   )
 
-  subspaces = partition_search_space(instance$search_space, param = "branch.selection")
-
   tuner = tnr(
     "adbo_thompson",
-    subspaces = subspaces,
+    branch = "branch.selection",
     subspace_profiles = c(rpart = "cpu", featureless = "cpu"),
     design_size = 2L
   )
@@ -44,32 +42,8 @@ test_that("TunerADBOThompson tunes a branching graph learner on a shared compute
   data = instance$archive$data
   expect_data_table(data, min.rows = 16L)
   finished = data[data$state == "finished", ]
-  expect_equal(finished$.subspace, finished$branch.selection)
-  expect_set_equal(unique(finished$.subspace), c("rpart", "featureless"))
+  expect_set_equal(unique(finished$branch.selection), c("rpart", "featureless"))
   expect_r6(tuner$surrogate, "SurrogateLearner")
-})
-
-test_that("TunerADBOThompson fixes the surrogate, acquisition function, and acquisition function optimizer", {
-  tuner = tnr("adbo_thompson")
-
-  expect_error(
-    {
-      tuner$surrogate = SurrogateLearner$new(REGR_FEATURELESS)
-    },
-    "read-only"
-  )
-  expect_error(
-    {
-      tuner$acq_function = acqf("ei")
-    },
-    "read-only"
-  )
-  expect_error(
-    {
-      tuner$acq_optimizer = acqo(opt("random_search"), trm("evals", n_evals = 100L))
-    },
-    "read-only"
-  )
 })
 
 test_that("TunerADBOThompson is registered", {

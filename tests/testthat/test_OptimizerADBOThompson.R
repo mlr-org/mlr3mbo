@@ -18,136 +18,44 @@ OBJ_1D_BRANCH3 = bbotk::ObjectiveRFun$new(
   codomain = FUN_1D_CODOMAIN,
   properties = "single-crit"
 )
-SUBSPACES_1D_BRANCH3 = partition_search_space(PS_1D_BRANCH3, param = "branch")
 
-# the queue of a profile is popped from the tail, `queued_data` lists the head first
-pop_order = function(queued) {
-  queued[rev(seq_len(nrow(queued))), ]
+make_instance = function(rush, n_evals) {
+  oi_async(
+    objective = OBJ_1D_BRANCH3,
+    search_space = PS_1D_BRANCH3,
+    terminator = trm("evals", n_evals = n_evals),
+    rush = rush
+  )
 }
 
-test_that("OptimizerADBOThompson interleaves the initial designs of the subspaces of a compute profile", {
-  rush = rush::rsh(config = redis_configuration())
-  on.exit(rush$reset())
-
-  instance = oi_async(
-    objective = OBJ_1D_BRANCH3,
-    search_space = PS_1D_BRANCH3,
-    terminator = trm("evals", n_evals = 12L),
-    rush = rush
-  )
-  optimizer = opt(
-    "adbo_thompson",
-    subspaces = SUBSPACES_1D_BRANCH3,
-    design_size = 5L,
-    design_size_subspace = c(b = 2L, c = 1L)
-  )
-  get_private(optimizer)$.push_designs(instance, SUBSPACES_1D_BRANCH3, c(a = "cpu", b = "cpu", c = "cpu"))
-
-  expect_equal(instance$archive$n_queued_per_profile, c(default = 0L, cpu = 8L))
-  queued = pop_order(instance$archive$queued_data)
-  # round-robin over the subspaces, a subspace drops out when its design is exhausted
-  expect_equal(queued$.subspace, c("a", "b", "c", "a", "b", "a", "a", "a"))
-  expect_equal(queued$.subspace, queued$branch)
-  expect_true(all(is.na(queued[branch != "a", xa])))
-  expect_true(all(is.na(queued[branch != "b", xb])))
-  expect_true(all(is.na(queued[branch != "c", xc])))
-})
-
-test_that("OptimizerADBOThompson interleaves the initial designs per compute profile", {
-  rush = rush::rsh(config = redis_configuration())
-  on.exit(rush$reset())
-
-  instance = oi_async(
-    objective = OBJ_1D_BRANCH3,
-    search_space = PS_1D_BRANCH3,
-    terminator = trm("evals", n_evals = 12L),
-    rush = rush
-  )
-  design_a = generate_design_random(SUBSPACES_1D_BRANCH3$a, n = 3L)$data
-  design_b = generate_design_random(SUBSPACES_1D_BRANCH3$b, n = 0L)$data
-  design_c = generate_design_random(SUBSPACES_1D_BRANCH3$c, n = 2L)$data
-  optimizer = opt(
-    "adbo_thompson",
-    subspaces = SUBSPACES_1D_BRANCH3,
-    initial_design_subspace = list(a = design_a, b = design_b, c = design_c)
-  )
-  get_private(optimizer)$.push_designs(instance, SUBSPACES_1D_BRANCH3, c(a = "gpu", b = "cpu", c = "cpu"))
-
-  # the points only reach the queue of their own profile, an empty design is neither dropped nor duplicated
-  expect_equal(instance$archive$n_queued_per_profile, c(default = 0L, cpu = 2L, gpu = 3L))
-  queued = pop_order(instance$archive$queued_data)
-  expect_equal(queued[profile == "gpu", .subspace], rep("a", 3L))
-  expect_equal(queued[profile == "cpu", .subspace], rep("c", 2L))
-  # one subspace per profile keeps the order of the design
-  expect_equal(queued[profile == "gpu", xa], design_a$xa)
-  expect_equal(queued[profile == "cpu", xc], design_c$xc)
-})
-
-test_that("OptimizerADBOThompson interleaves the initial designs in the shared queue in debug mode", {
-  rush = rush::rsh(config = redis_configuration())
-  old = options(bbotk.debug = TRUE)
+test_that("OptimizerADBOThompson samples among all subspaces by default", {
+  rush = start_rush(n_workers = 2)
   on.exit({
     rush$reset()
-    options(old)
+    mirai::daemons(0)
   })
 
-  instance = oi_async(
-    objective = OBJ_1D_BRANCH3,
-    search_space = PS_1D_BRANCH3,
-    terminator = trm("evals", n_evals = 12L),
-    rush = rush
-  )
-  optimizer = opt(
-    "adbo_thompson",
-    subspaces = SUBSPACES_1D_BRANCH3,
-    design_size = 2L,
-    design_size_subspace = c(c = 1L)
-  )
-  get_private(optimizer)$.push_designs(instance, SUBSPACES_1D_BRANCH3, c(a = "gpu", b = "cpu", c = "cpu"))
-
-  expect_equal(instance$archive$n_queued_per_profile, c(default = 5L))
-  expect_equal(pop_order(instance$archive$queued_data)$.subspace, c("a", "b", "c", "a", "b"))
-})
-
-test_that("OptimizerADBOThompson samples among the subspaces of a shared compute profile", {
-  profiles = c(cpu = 2)
-  rush = start_rush_profiles(profiles)
-  on.exit({
-    rush$reset()
-    stop_rush_profiles(profiles)
-  })
-
-  instance = oi_async(
-    objective = OBJ_1D_BRANCH3,
-    search_space = PS_1D_BRANCH3,
-    terminator = trm("evals", n_evals = 30L),
-    rush = rush
-  )
-  optimizer = opt(
-    "adbo_thompson",
-    subspaces = SUBSPACES_1D_BRANCH3,
-    subspace_profiles = c(a = "cpu", b = "cpu", c = "cpu"),
-    design_size = 2L
-  )
+  instance = make_instance(rush, n_evals = 30L)
+  optimizer = opt("adbo_thompson", branch = "branch", design_size = 2L, n_workers = 2L)
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 
   data = instance$archive$data
   expect_data_table(data, min.rows = 30L)
-  expect_names(names(data), must.include = c(".subspace", "acq_cb", "acq_lambda", "acq_lambda_0"))
+  expect_names(names(data), must.include = c("acq_cb", "acq_lambda", "acq_lambda_0"))
   finished = data[data$state == "finished", ]
-  # every point was proposed from the subspace it belongs to
-  expect_equal(finished$.subspace, finished$branch)
+  # every point only holds the parameters of its subspace
   expect_true(all(is.na(finished[finished$branch != "a", ]$xa)))
   expect_true(all(is.na(finished[finished$branch != "b", ]$xb)))
   expect_true(all(is.na(finished[finished$branch != "c", ]$xc)))
-  # the workers switched subspaces after the initial designs
-  expect_set_equal(unique(finished$.subspace), c("a", "b", "c"))
-  # the lambda of a worker is not decayed by default, also not across the subspaces it samples
+  expect_false(anyNA(finished$shared))
+  # every subspace received its initial design
+  expect_true(all(table(finished$branch)[c("a", "b", "c")] >= 2L))
+  # points were proposed by the surrogate and the lambda of a worker is not decayed by default
   proposed = finished[!is.na(finished$acq_lambda), ]
+  expect_data_table(proposed, min.rows = 1L)
   expect_equal(proposed$acq_lambda, proposed$acq_lambda_0)
-  proposed = finished[-seq_len(6L), ]
-  expect_gt(length(unique(proposed$.subspace)), 1L)
+  expect_r6(optimizer$surrogate, "SurrogateLearner")
 })
 
 test_that("OptimizerADBOThompson keeps the subspaces of one profile away from the workers of another", {
@@ -158,15 +66,10 @@ test_that("OptimizerADBOThompson keeps the subspaces of one profile away from th
     stop_rush_profiles(profiles)
   })
 
-  instance = oi_async(
-    objective = OBJ_1D_BRANCH3,
-    search_space = PS_1D_BRANCH3,
-    terminator = trm("evals", n_evals = 30L),
-    rush = rush
-  )
+  instance = make_instance(rush, n_evals = 30L)
   optimizer = opt(
     "adbo_thompson",
-    subspaces = SUBSPACES_1D_BRANCH3,
+    branch = "branch",
     subspace_profiles = c(a = "gpu", b = "cpu", c = "cpu"),
     design_size = 2L
   )
@@ -179,44 +82,12 @@ test_that("OptimizerADBOThompson keeps the subspaces of one profile away from th
   cpu_worker = worker_info[worker_info$profile == "cpu", ]$worker_id
 
   finished = instance$archive$data[instance$archive$data$state == "finished", ]
-  expect_equal(finished$.subspace, finished$branch)
   # the gpu worker only ever evaluated subspace 'a', the cpu worker only 'b' and 'c'
-  expect_equal(unique(finished[finished$worker_id == gpu_worker, ]$.subspace), "a")
-  expect_subset(finished[finished$worker_id == cpu_worker, ]$.subspace, c("b", "c"))
-  expect_set_equal(unique(finished$.subspace), c("a", "b", "c"))
+  expect_equal(unique(finished[finished$worker_id == gpu_worker, ]$branch), "a")
+  expect_set_equal(unique(finished[finished$worker_id == cpu_worker, ]$branch), c("b", "c"))
 })
 
-test_that("OptimizerADBOThompson reduces to OptimizerADBOSubspaces with one subspace per profile", {
-  profiles = c(a = 1, b = 1, c = 1)
-  rush = start_rush_profiles(profiles)
-  on.exit({
-    rush$reset()
-    stop_rush_profiles(profiles)
-  })
-
-  instance = oi_async(
-    objective = OBJ_1D_BRANCH3,
-    search_space = PS_1D_BRANCH3,
-    terminator = trm("evals", n_evals = 20L),
-    rush = rush
-  )
-  optimizer = opt("adbo_thompson", subspaces = SUBSPACES_1D_BRANCH3, design_size = 2L)
-
-  expect_data_table(optimizer$optimize(instance), nrows = 1L)
-
-  worker_info = instance$rush$worker_info
-  finished = instance$archive$data[instance$archive$data$state == "finished", ]
-  expect_equal(finished$.subspace, finished$branch)
-  # every worker stayed in the subspace of its profile
-  assignment = unique(finished[, c("worker_id", ".subspace")])
-  expect_equal(nrow(assignment), 3L)
-  expect_equal(
-    assignment$.subspace[match(worker_info$worker_id, assignment$worker_id)],
-    worker_info$profile
-  )
-})
-
-test_that("OptimizerADBOThompson evaluates the initial designs in debug mode", {
+test_that("OptimizerADBOThompson evaluates the initial designs evenly in debug mode", {
   rush = rush::rsh(config = redis_configuration())
   old = options(bbotk.debug = TRUE)
   on.exit({
@@ -224,69 +95,73 @@ test_that("OptimizerADBOThompson evaluates the initial designs in debug mode", {
     options(old)
   })
 
-  instance = oi_async(
-    objective = OBJ_1D_BRANCH3,
-    search_space = PS_1D_BRANCH3,
-    terminator = trm("evals", n_evals = 12L),
-    rush = rush
-  )
+  instance = make_instance(rush, n_evals = 9L)
   optimizer = opt(
     "adbo_thompson",
-    subspaces = SUBSPACES_1D_BRANCH3,
+    branch = "branch",
     subspace_profiles = c(a = "gpu", b = "cpu", c = "cpu"),
-    design_size = 2L
+    design_size = 3L,
+    catch_errors = FALSE
   )
   optimizer$optimize(instance)
 
   # the single worker in the main process has no compute profile and samples among all subspaces
   finished = instance$archive$finished_data
-  expect_equal(finished$.subspace, finished$branch)
-  expect_gte(sum(finished$.subspace == "a"), 2L)
-  expect_gte(sum(finished$.subspace == "b"), 2L)
-  expect_gte(sum(finished$.subspace == "c"), 2L)
+  expect_equal(as.integer(table(finished$branch[1:9])[c("a", "b", "c")]), rep(3L, 3L))
+  expect_true(all(is.na(finished$acq_cb[1:9])) || "acq_cb" %nin% names(finished))
+  expect_false(optimizer$surrogate$param_set$values$catch_errors)
+  expect_false(optimizer$acq_optimizer$param_set$values$catch_errors)
 })
 
-test_that("OptimizerADBOThompson checks the compute profiles", {
+test_that("OptimizerADBOThompson counts a supplied initial design towards the design size", {
+  rush = rush::rsh(config = redis_configuration())
+  old = options(bbotk.debug = TRUE)
+  on.exit({
+    rush$reset()
+    options(old)
+  })
+
+  instance = make_instance(rush, n_evals = 8L)
+  design = generate_design_random(PS_1D_BRANCH3, n = 30L)$data[branch == "a"][1:2]
+  optimizer = opt("adbo_thompson", branch = "branch", initial_design = design, design_size = 2L)
+  optimizer$optimize(instance)
+
+  finished = instance$archive$finished_data
+  expect_equal(finished$xa[1:2], design$xa)
+  # subspace 'a' is already covered, so only 'b' and 'c' receive random points
+  expect_equal(sort(finished$branch[3:6]), c("b", "b", "c", "c"))
+  expect_false(anyNA(finished$acq_cb[7:8]))
+})
+
+test_that("OptimizerADBOThompson checks the branching parameter and the compute profiles", {
   rush = start_rush(n_workers = 1)
   on.exit({
     rush$reset()
     mirai::daemons(0)
   })
 
-  make_instance = function() {
-    oi_async(
-      objective = OBJ_1D_BRANCH3,
-      search_space = PS_1D_BRANCH3,
-      terminator = trm("evals", n_evals = 5L),
-      rush = rush
-    )
-  }
+  expect_error(opt("adbo_thompson")$optimize(make_instance(rush, 5L)), "branch")
+  expect_error(opt("adbo_thompson", branch = "xa")$optimize(make_instance(rush, 5L)), "categorical")
+  expect_error(opt("adbo_thompson", branch = "foo")$optimize(make_instance(rush, 5L)), "categorical")
 
-  optimizer = opt("adbo_thompson", subspaces = SUBSPACES_1D_BRANCH3, subspace_profiles = c(a = "cpu"))
-  expect_error(optimizer$optimize(make_instance()), "subspace_profiles")
+  optimizer = opt("adbo_thompson", branch = "branch", subspace_profiles = c(a = "cpu"))
+  expect_error(optimizer$optimize(make_instance(rush, 5L)), "subspace_profiles")
 
   # the profiles must cover every profile a subspace is assigned to, but not more
   optimizer = opt(
     "adbo_thompson",
-    subspaces = SUBSPACES_1D_BRANCH3,
+    branch = "branch",
     subspace_profiles = c(a = "gpu", b = "cpu", c = "cpu"),
     profiles = c(gpu = 1, cpu = 1, tpu = 1)
   )
-  expect_error(optimizer$optimize(make_instance()), "names of 'profiles'")
-
-  optimizer = opt("adbo_thompson", subspaces = SUBSPACES_1D_BRANCH3, n_workers = 1L)
-  expect_error(optimizer$optimize(make_instance()), "Set 'profiles' instead of 'n_workers'")
-
-  optimizer = opt("adbo_thompson", subspaces = SUBSPACES_1D_BRANCH3)
-  expect_error(optimizer$optimize(make_instance()), "divides the workers")
+  expect_error(optimizer$optimize(make_instance(rush, 5L)), "names of 'profiles'")
 })
 
 test_that("OptimizerADBOThompson evaluates a single-point subspace exactly once", {
-  profiles = c(cpu = 2)
-  rush = start_rush_profiles(profiles)
+  rush = start_rush(n_workers = 1)
   on.exit({
     rush$reset()
-    stop_rush_profiles(profiles)
+    mirai::daemons(0)
   })
 
   search_space = ps(
@@ -302,13 +177,7 @@ test_that("OptimizerADBOThompson evaluates a single-point subspace exactly once"
     terminator = trm("evals", n_evals = 15L),
     rush = rush
   )
-  subspaces = partition_search_space(search_space, param = "branch")
-  optimizer = opt("adbo_thompson", subspaces = subspaces, subspace_profiles = c(a = "cpu", b = "cpu"), design_size = 3L)
-
-  # the generated design of the single-point subspace is capped at its one configuration
-  designs = get_private(optimizer)$.generate_designs(subspaces)
-  expect_data_table(designs$a, nrows = 1L)
-  expect_data_table(designs$b, nrows = 3L)
+  optimizer = opt("adbo_thompson", branch = "branch", design_size = 3L, n_workers = 1L)
 
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
 
@@ -318,11 +187,10 @@ test_that("OptimizerADBOThompson evaluates a single-point subspace exactly once"
 })
 
 test_that("OptimizerADBOThompson terminates the workers of exhausted subspaces", {
-  profiles = c(cpu = 1)
-  rush = start_rush_profiles(profiles)
+  rush = start_rush(n_workers = 1)
   on.exit({
     rush$reset()
-    stop_rush_profiles(profiles)
+    mirai::daemons(0)
   })
 
   search_space = ps(
@@ -338,12 +206,7 @@ test_that("OptimizerADBOThompson terminates the workers of exhausted subspaces",
     terminator = trm("evals", n_evals = 20L),
     rush = rush
   )
-  optimizer = opt(
-    "adbo_thompson",
-    subspaces = partition_search_space(search_space, param = "branch"),
-    subspace_profiles = c(a = "cpu", b = "cpu"),
-    design_size = 2L
-  )
+  optimizer = opt("adbo_thompson", branch = "branch", design_size = 2L, n_workers = 1L)
 
   # the worker runs out of configurations before the terminator triggers and the optimization ends nevertheless
   expect_data_table(optimizer$optimize(instance), nrows = 1L)
@@ -356,12 +219,13 @@ test_that("OptimizerADBOThompson terminates the workers of exhausted subspaces",
 
 test_that("OptimizerADBOThompson has the Thompson sampling parameters", {
   optimizer = opt("adbo_thompson")
-  expect_r6(optimizer, c("OptimizerADBOThompson", "OptimizerADBOSubspaces", "OptimizerAsyncMbo"))
+  expect_r6(optimizer, c("OptimizerADBOThompson", "OptimizerADBO", "OptimizerAsyncMbo"))
   expect_equal(optimizer$param_set$values$top_quantile, 0.1)
   expect_equal(optimizer$param_set$values$alpha, 1)
   expect_equal(optimizer$param_set$values$beta, 1)
+  expect_true(optimizer$param_set$values$catch_errors)
   # the lambda decay of OptimizerADBO is disabled by default
   expect_equal(optimizer$param_set$values$rate, 0)
-  expect_subset(c("subspaces", "subspace_profiles", "lambda", "rate", "period"), optimizer$param_set$ids())
+  expect_subset(c("branch", "subspace_profiles", "lambda", "rate", "period"), optimizer$param_set$ids())
   expect_man_exists(optimizer$man)
 })

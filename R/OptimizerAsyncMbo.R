@@ -158,11 +158,10 @@ OptimizerAsyncMbo = R6Class(
         man = man
       )
 
-      # the private fields are set directly, because subclasses may declare the bindings read-only
-      private$.surrogate = assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
-      private$.acq_function = assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
-      private$.acq_optimizer = assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
-      private$.result_assigner = assert_r6(result_assigner, classes = "ResultAssigner", null.ok = TRUE)
+      self$surrogate = assert_r6(surrogate, classes = "Surrogate", null.ok = TRUE)
+      self$acq_function = assert_r6(acq_function, classes = "AcqFunction", null.ok = TRUE)
+      self$acq_optimizer = assert_r6(acq_optimizer, classes = "AcqOptimizer", null.ok = TRUE)
+      self$result_assigner = assert_r6(result_assigner, classes = "ResultAssigner", null.ok = TRUE)
     },
 
     #' @description
@@ -243,26 +242,7 @@ OptimizerAsyncMbo = R6Class(
       lg = lgr::get_logger("mlr3/bbotk")
       pv = self$param_set$values
 
-      # initial design
-      design = if (inst$archive$n_evals) {
-        lg$debug("Using archive with %s evaluations as initial design", inst$archive$n_evals)
-        NULL
-      } else if (is.null(pv$initial_design)) {
-        # generate initial design
-        generate_design = switch(
-          pv$design_function,
-          "random" = generate_design_random,
-          "sobol" = generate_design_sobol,
-          "lhs" = generate_design_lhs
-        )
-
-        lg$debug("Generating sobol design with size %s", pv$design_size)
-        generate_design(inst$search_space, n = pv$design_size)$data
-      } else {
-        # use provided initial design
-        lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
-        pv$initial_design
-      }
+      design = private$.initial_design(inst)
       result = optimize_async_default(inst, self, design, n_workers = pv$n_workers, profiles = pv$profiles)
 
       # the workers only update copies of the surrogate, so the final update must happen on the main process
@@ -380,6 +360,32 @@ OptimizerAsyncMbo = R6Class(
     .acq_function = NULL,
     .acq_optimizer = NULL,
     .result_assigner = NULL,
+
+    # initial design that is pushed to the queue before the workers are started; `NULL` if nothing is pushed
+    .initial_design = function(inst) {
+      lg = lgr::get_logger("mlr3/bbotk")
+      pv = self$param_set$values
+
+      if (inst$archive$n_evals) {
+        lg$debug("Using archive with %s evaluations as initial design", inst$archive$n_evals)
+        NULL
+      } else if (is.null(pv$initial_design)) {
+        # generate initial design
+        generate_design = switch(
+          pv$design_function,
+          "random" = generate_design_random,
+          "sobol" = generate_design_sobol,
+          "lhs" = generate_design_lhs
+        )
+
+        lg$debug("Generating sobol design with size %s", pv$design_size)
+        generate_design(inst$search_space, n = pv$design_size)$data
+      } else {
+        # use provided initial design
+        lg$debug("Using provided initial design with size %s", nrow(pv$initial_design))
+        pv$initial_design
+      }
+    },
 
     .optimize = function(inst) {
       lg = lgr::get_logger("mlr3/bbotk")

@@ -4,24 +4,23 @@
 #' @name mlr_tuners_adbo_thompson
 #'
 #' @description
-#' `TunerADBOThompson` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO) on a search
-#' space that is partitioned into homogeneous subspaces, typically one subspace per learner.
-#' Several subspaces may share a \CRANpkg{mirai} compute profile, e.g., all learners trained on CPU cores.
-#' A worker is permanently assigned to its compute profile and, in each iteration, samples one of the subspaces of
-#' its profile via Thompson sampling.
+#' `TunerADBOThompson` class that implements Asynchronous Decentralized Bayesian Optimization (ADBO) on a hierarchical
+#' search space, typically with a branching parameter that selects the learner.
+#' The search space is split into one subspace per level of the `branch` parameter and, in each iteration,
+#' a worker samples one of its subspaces via Thompson sampling.
 #' This is a minimal interface internally passing on to [OptimizerADBOThompson].
 #' For additional information and documentation see [OptimizerADBOThompson].
 #'
 #' `TunerADBOThompson` is considered an experimental feature and the API might be subject to changes.
 #' Currently, only single-objective optimization is supported.
 #'
-#' @inheritSection mlr_optimizers_adbo_thompson Subspaces and Compute Profiles
+#' @inheritSection mlr_optimizers_adbo_thompson Subspaces
+#' @inheritSection mlr_optimizers_adbo_thompson Compute Profiles
+#' @inheritSection mlr_optimizers_adbo_thompson Initial Design
 #' @inheritSection mlr_optimizers_adbo_thompson Thompson Sampling
 #' @inheritSection mlr_optimizers_adbo_thompson Loop
+#' @inheritSection mlr_optimizers_adbo_thompson Surrogate, Acquisition Function, and Acquisition Function Optimizer
 #' @inheritSection mlr_optimizers_adbo_thompson Parameters
-#' @inheritSection mlr_optimizers_adbo_subspaces Initial Design
-#' @inheritSection mlr_optimizers_adbo_thompson Lambda
-#' @inheritSection mlr_optimizers_adbo_subspaces Surrogate, Acquisition Function, and Acquisition Function Optimizer
 #' @inheritSection mlr_optimizers_adbo_thompson Note
 #'
 #' @references
@@ -59,16 +58,13 @@
 #'       measure = msr("classif.acc"),
 #'       terminator = trm("evals", n_evals = 30))
 #'
-#'     # one subspace per learner
-#'     subspaces = partition_search_space(instance$search_space, param = "branch.selection")
-#'
 #'     # the tree learners share the "cpu" profile, the featureless learner runs on the "fast" profile
 #'     mirai::daemons(2, .compute = "cpu")
 #'     mirai::daemons(1, .compute = "fast")
 #'     rush::rush_plan(profiles = c(cpu = 2, fast = 1), worker_type = "mirai")
 #'
 #'     tnr("adbo_thompson",
-#'       subspaces = subspaces,
+#'       branch = "branch.selection",
 #'       subspace_profiles = c(rpart = "cpu", ranger = "cpu", featureless = "fast"),
 #'       design_size = 4)$optimize(instance)
 #'
@@ -122,28 +118,31 @@ TunerADBOThompson = R6Class(
   ),
 
   active = list(
-    #' @field surrogate ([SurrogateLearner] | `NULL`)\cr
-    #'   The surrogate.
-    #'   Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.
+    #' @template field_surrogate
     surrogate = function(rhs) {
-      assert_ro_binding(rhs)
-      private$.optimizer$surrogate
+      if (missing(rhs)) {
+        private$.optimizer$surrogate
+      } else {
+        private$.optimizer$surrogate = assert_r6(rhs, classes = "Surrogate", null.ok = TRUE)
+      }
     },
 
-    #' @field acq_function ([AcqFunction] | `NULL`)\cr
-    #'   The acquisition function.
-    #'   Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.
+    #' @template field_acq_function
     acq_function = function(rhs) {
-      assert_ro_binding(rhs)
-      private$.optimizer$acq_function
+      if (missing(rhs)) {
+        private$.optimizer$acq_function
+      } else {
+        private$.optimizer$acq_function = assert_r6(rhs, classes = "AcqFunction", null.ok = TRUE)
+      }
     },
 
-    #' @field acq_optimizer ([AcqOptimizer] | `NULL`)\cr
-    #'   The acquisition function optimizer.
-    #'   Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.
+    #' @template field_acq_optimizer
     acq_optimizer = function(rhs) {
-      assert_ro_binding(rhs)
-      private$.optimizer$acq_optimizer
+      if (missing(rhs)) {
+        private$.optimizer$acq_optimizer
+      } else {
+        private$.optimizer$acq_optimizer = assert_r6(rhs, classes = "AcqOptimizer", null.ok = TRUE)
+      }
     },
 
     #' @template field_result_assigner
@@ -157,20 +156,29 @@ TunerADBOThompson = R6Class(
 
     #' @template field_param_classes
     param_classes = function(rhs) {
-      assert_ro_binding(rhs)
-      private$.optimizer$param_classes
+      if (missing(rhs)) {
+        private$.optimizer$param_classes
+      } else {
+        stop("$param_classes is read-only.")
+      }
     },
 
     #' @template field_properties
     properties = function(rhs) {
-      assert_ro_binding(rhs)
-      private$.optimizer$properties
+      if (missing(rhs)) {
+        private$.optimizer$properties
+      } else {
+        stop("$properties is read-only.")
+      }
     },
 
     #' @template field_packages
     packages = function(rhs) {
-      assert_ro_binding(rhs)
-      private$.optimizer$packages
+      if (missing(rhs)) {
+        private$.optimizer$packages
+      } else {
+        stop("$packages is read-only.")
+      }
     }
   )
 )

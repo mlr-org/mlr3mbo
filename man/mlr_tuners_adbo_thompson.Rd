@@ -5,56 +5,65 @@
 \alias{TunerADBOThompson}
 \title{TunerAsync using Asynchronous Decentralized Bayesian Optimization with Thompson Sampling over Subspaces}
 \description{
-\code{TunerADBOThompson} class that implements Asynchronous Decentralized Bayesian Optimization (ADBO) on a search
-space that is partitioned into homogeneous subspaces, typically one subspace per learner.
-Several subspaces may share a \CRANpkg{mirai} compute profile, e.g., all learners trained on CPU cores.
-A worker is permanently assigned to its compute profile and, in each iteration, samples one of the subspaces of
-its profile via Thompson sampling.
+\code{TunerADBOThompson} class that implements Asynchronous Decentralized Bayesian Optimization (ADBO) on a hierarchical
+search space, typically with a branching parameter that selects the learner.
+The search space is split into one subspace per level of the \code{branch} parameter and, in each iteration,
+a worker samples one of its subspaces via Thompson sampling.
 This is a minimal interface internally passing on to \link{OptimizerADBOThompson}.
 For additional information and documentation see \link{OptimizerADBOThompson}.
 
 \code{TunerADBOThompson} is considered an experimental feature and the API might be subject to changes.
 Currently, only single-objective optimization is supported.
 }
-\section{Subspaces and Compute Profiles}{
+\section{Subspaces}{
 
-The subspaces are passed as a named list of \link[paradox:ParamSet]{paradox::ParamSet}s via the \code{subspaces} parameter
-and must partition the search space, see the section Subspaces of \link{OptimizerADBOSubspaces}.
-Use \code{\link[=partition_search_space]{partition_search_space()}} with one group per algorithm to derive them from the parameter
-that selects the algorithm.
-The names of the list are the ids of the subspaces and are used by all other parameters that are set per subspace.
+The \code{branch} parameter is the id of a categorical parameter of the search space.
+Every level of it defines a subspace, see \code{\link[=partition_search_space]{partition_search_space()}}, and the subspaces are named like the levels.
+The subspace of an evaluation is the value of the \code{branch} parameter in the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync}.
+}
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{search_space = ps(
-  learner = p_fct(c("tabpfn", "ranger", "xgboost")),
-  tabpfn.n_estimators = p_int(1, 16, depends = learner == "tabpfn"),
-  ranger.mtry_ratio = p_dbl(0, 1, depends = learner == "ranger"),
-  xgboost.eta = p_dbl(1e-4, 1, logscale = TRUE, depends = learner == "xgboost")
-)
+\section{Compute Profiles}{
 
-# one subspace per learner
-subspaces = partition_search_space(search_space, param = "learner")
-}\if{html}{\out{</div>}}
+By default, every worker samples among all subspaces.
+When different parts of the search space require different hardware, e.g., learners that can only be trained on a
+GPU versus learners that are trained on CPU cores, \code{subspace_profiles} maps every subspace to the
+\href{https://mirai.r-lib.org/articles/mirai.html#scoped-profiles}{compute profile} of \CRANpkg{mirai} it runs on.
+A worker then only samples among the subspaces of the profile it runs on.
+Several subspaces may share a profile and with one subspace per profile every worker is permanently assigned to
+one subspace.
 
-\code{subspace_profiles} maps every subspace to the compute profile it runs on.
-Here, the \code{"tabpfn"} subspace runs on the single GPU
-while the \code{"ranger"} and \code{"xgboost"} subspaces share the seven workers on the CPU cores.
+The daemons of every profile must be created beforehand and the number of workers per profile is set with the
+\code{profiles} parameter or with \code{\link[rush:rush_plan]{rush::rush_plan()}}.
+Here, the \code{"tabpfn"} subspace runs on the single GPU while the \code{"ranger"} and \code{"xgboost"} subspaces share the seven
+workers on the CPU cores.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{mirai::daemons(1, .compute = "gpu")
 mirai::daemons(7, .compute = "cpu")
 
 opt("adbo_thompson",
-  subspaces = subspaces,
+  branch = "learner",
   subspace_profiles = c(tabpfn = "gpu", ranger = "cpu", xgboost = "cpu"),
   profiles = c(gpu = 1L, cpu = 7L))
 }\if{html}{\out{</div>}}
 
-Every subspace receives its own initial design, which is pushed to the queue of its compute profile as in
-\link{OptimizerADBOSubspaces}.
-The queue of a profile that is shared by several subspaces therefore holds the designs of all of them and any
-worker of the profile pops any of these points.
-The designs are interleaved round-robin over the subspaces of the profile, i.e., the first points of all
-subspaces are queued before their second points, so that the subspaces are covered evenly even if the
-optimization terminates during the initial design.
+A worker that runs on no compute profile, e.g., when the workers are started with \code{n_workers} or in the debug mode
+of \CRANpkg{bbotk}, samples among all subspaces.
+}
+
+\section{Initial Design}{
+
+Every subspace receives an initial design of \code{design_size} randomly sampled points.
+The design is not generated upfront.
+Instead, a worker proposes a random point of the subspace with the fewest points among its subspaces,
+as long as one of them holds fewer than \code{design_size} points, counting queued, running, finished, and failed points.
+The subspaces are therefore covered evenly even if the optimization terminates during the initial design.
+Because the workers do not coordinate, a subspace may receive a few more than \code{design_size} random points.
+For the same reason, workers that propose at the same time may evaluate the same configuration of a subspace with
+finitely many configurations more than once, see section Thompson Sampling.
+
+Points passed as \code{initial_design} are pushed to the shared queue, evaluated by any worker regardless of its
+compute profile, and count towards \code{design_size} of the subspace they belong to.
+The \code{design_function} parameter is not used.
 }
 
 \section{Thompson Sampling}{
@@ -68,12 +77,11 @@ With \eqn{s_k} successes and \eqn{f_k} failures of subspace \eqn{k}, a value is 
 \eqn{\theta_k \sim \mathrm{Beta}(\alpha + s_k, \beta + f_k)}
 and the subspace with the largest \eqn{\theta_k} is selected.
 
-A worker only samples among the subspaces of its own compute profile,
+A worker only samples among its own subspaces,
 but the successes and failures are counted on all finished evaluations of the \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync},
-i.e., an evaluation has to be among the best across all profiles to count as a success.
+i.e., an evaluation has to be among the best across all subspaces to count as a success.
 Because every worker draws its own sample from the shared posterior,
-the workers of a profile naturally spread over its subspaces
-instead of all working on the currently most promising one.
+the workers naturally spread over the subspaces instead of all working on the currently most promising one.
 
 Counting top-quantile hits instead of comparing objective values directly
 makes the sampling invariant to the scale of the objective and robust to outliers.
@@ -85,43 +93,53 @@ so equip the learners with a fallback learner that turns their errors into finis
 
 A subspace whose parameters are all discrete, i.e., categorical, logical, or bounded integer, has finitely many
 configurations, e.g., the subspace of a learner without hyperparameters consists of a single configuration.
-Once all of its configurations have been evaluated, the subspace is exhausted and excluded from the sampling, so
-that no configuration is evaluated twice.
-The generated initial design of such a subspace is capped at the number of its configurations, and a randomly
-sampled point, i.e., the fallback after an error, is drawn from the configurations that no worker has finished
-yet, for the same reason.
+Once all of its configurations are in the archive, the subspace is exhausted and excluded from the sampling.
+Random points of such a subspace are drawn from the configurations that are not in the archive yet.
 A worker whose subspaces are all exhausted terminates, and the optimization ends when all workers have
 terminated, even before the \link[bbotk:Terminator]{bbotk::Terminator} signals termination.
 }
 
 \section{Loop}{
 
-On each worker, after the queue of its compute profile has been emptied:
+On each worker, after the shared queue has been emptied:
 \enumerate{
-\item One of the subspaces of the compute profile of the worker is sampled via Thompson sampling.
-\item The \link{SurrogateLearner}, the acquisition function, and the \link{AcqOptimizer} are restricted to the sampled subspace.
-\item The \link{SurrogateLearner} is updated on the evaluations of the sampled subspace only,
+\item A subspace is selected, the one with the fewest points during the initial design and via Thompson sampling
+afterwards.
+\item During the initial design, a random point of the subspace is evaluated and the loop starts over.
+\item The \link{SurrogateLearner} is updated on the evaluations and the parameters of the subspace only,
 including pending evaluations of the subspace which are imputed.
-\item \link{AcqFunctionStochasticCB} is updated, sampling its own \eqn{\lambda} as in \link{OptimizerADBO}, see section Lambda.
-\item The acquisition function is optimized over the sampled subspace and the resulting point is evaluated.
+\item \link{AcqFunctionStochasticCB} is updated and optimized over the subspace and the resulting point is evaluated.
 }
 
-The \link{SurrogateLearner}, the acquisition function, and the \link{AcqOptimizer} are fixed and are those of
-\link{OptimizerADBOSubspaces}.
+After termination, the surrogate held by the optimizer is updated a final time on \emph{all} evaluations, i.e., across
+subspaces.
+}
+
+\section{Surrogate, Acquisition Function, and Acquisition Function Optimizer}{
+
+As in \link{OptimizerADBO}, the \code{surrogate}, \code{acq_function}, and \code{acq_optimizer} are set by \verb{$optimize()} and
+components that were set beforehand are overwritten.
+The \link{SurrogateLearner} is a random forest, the acquisition function is \link{AcqFunctionStochasticCB},
+and the \link{AcqOptimizer} is a random search with a batch size of 1000 and a budget of 10000 evaluations.
+
+\link{AcqFunctionStochasticCB} samples the \eqn{\lambda} of every worker once from an exponential distribution with rate
+\code{1 / lambda}, so that the workers spread over exploration and exploitation.
+In contrast to \link{OptimizerADBO}, the decay of \eqn{\lambda} is disabled by default, i.e., \code{rate} is \code{0}.
+\eqn{\lambda} belongs to the worker and not to the subspace,
+i.e., with \code{rate} greater than \code{0} the decay counts the iterations of the worker across all the subspaces it samples.
 }
 
 \section{Parameters}{
 
 \describe{
-\item{\code{subspaces}}{named \code{list()} of \link[paradox:ParamSet]{paradox::ParamSet}\cr
-Partition of the search space, usually one subspace per algorithm.
-See section Subspaces and Compute Profiles.}
+\item{\code{branch}}{\code{character(1)}\cr
+Id of the categorical parameter of the search space whose levels define the subspaces.
+See section Subspaces.}
 \item{\code{subspace_profiles}}{named \code{character()}\cr
 \CRANpkg{mirai} compute profile of each subspace, e.g. \code{c(tabpfn = "gpu", ranger = "cpu", xgboost = "cpu")}.
-Must be named like \code{subspaces}.
-Several subspaces may run on the same profile.
-See section Subspaces and Compute Profiles.
-Default is \code{NULL}, i.e., every subspace runs on the profile of the same name.}
+Must be named like the levels of the \code{branch} parameter.
+See section Compute Profiles.
+Default is \code{NULL}, i.e., every worker samples among all subspaces.}
 \item{\code{top_quantile}}{\code{numeric(1)}\cr
 Fraction of the finished evaluations that count as successes, i.e., an evaluation is a success if its objective
 value is among the best \code{top_quantile} fraction of all finished evaluations.
@@ -132,54 +150,48 @@ Default is \code{1}.}
 \item{\code{beta}}{\code{numeric(1)}\cr
 \eqn{\beta} of the Beta prior, i.e., the prior number of failures of every subspace.
 Default is \code{1}.}
+\item{\code{design_size}}{\code{integer(1)}\cr
+Size of the initial design of every subspace.
+See section Initial Design.
+Default is \code{100}.}
+\item{\code{initial_design}}{\code{data.table::data.table()}\cr
+Points that are evaluated before the optimization starts.
+See section Initial Design.
+Default is \code{NULL}.}
+\item{\code{lambda}}{\code{numeric(1)}\cr
+Value used for sampling the lambda of every worker from an exponential distribution.
+Default is \code{1.96}.}
+\item{\code{rate}}{\code{numeric(1)}\cr
+Rate of the exponential decay of lambda.
+Default is \code{0}, i.e., the lambda of a worker is not decayed.}
+\item{\code{period}}{\code{integer(1)}\cr
+Period of the exponential decay of lambda.
+Only used when \code{rate} is greater than \code{0}.
+Default is \code{25}.}
+\item{\code{catch_errors}}{\code{logical(1)}\cr
+Whether errors of the \link{SurrogateLearner} and the \link{AcqOptimizer} are caught.
+If \code{TRUE}, the learner of the surrogate is encapsulated with a fallback learner
+and a point that cannot be proposed is replaced by a randomly sampled point.
+Set to \code{FALSE} to raise the errors, e.g., for debugging.
+Default is \code{TRUE}.}
+\item{\code{n_workers}}{\code{integer(1)}\cr
+Number of parallel workers.
+If \code{NULL}, all rush workers specified via \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.
+Default is \code{NULL}.}
+\item{\code{profiles}}{named \code{integer()}\cr
+Number of parallel workers per \CRANpkg{mirai} compute profile, e.g. \code{c(gpu = 1, cpu = 7)}.
+The daemons of every profile must be created with \code{\link[mirai:daemons]{mirai::daemons()}} beforehand.
+Cannot be combined with \code{n_workers}.
+If \code{NULL}, the profiles specified via \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.
+Default is \code{NULL}.}
+}
 }
 
-The remaining parameters \code{profiles}, \code{n_workers}, \code{initial_design_subspace}, \code{initial_design},
-\code{design_size_subspace}, \code{design_size}, \code{design_function}, \code{lambda}, \code{rate}, \code{period}, and \code{catch_errors} are those
-of \link{OptimizerADBOSubspaces}.
-}
+\section{Note}{
 
-\section{Initial Design}{
-
-Every subspace receives its own initial design of \code{design_size} points, generated with \code{design_function} on the
-subspace.
-Use \code{design_size_subspace} to set a different size per subspace, which is usually necessary when the subspaces
-differ strongly in dimensionality or in how many evaluations they can afford.
-Alternatively, \code{initial_design_subspace} accepts a named list of \code{\link[data.table:data.table]{data.table::data.table()}}s.
-
-In contrast to \link{OptimizerAsyncMbo}, the initial design is not pushed to the shared queue of \CRANpkg{rush},
-because any worker could pop any point from it and would thereby leave its subspace.
-Instead, the design of a subspace is pushed to the queue of the compute profile of that subspace, so that only the
-workers of the subspace pop its points.
-The \code{initial_design} and \code{design_size} parameters of \link{OptimizerAsyncMbo} therefore behave slightly differently and
-\code{initial_design} must not be set.
-}
-
-\section{Lambda}{
-
-\eqn{\lambda} is sampled and decayed as in \link{OptimizerADBOSubspaces} and the decay is disabled by default, i.e.,
-\code{rate} is \code{0}.
-\eqn{\lambda} belongs to the worker and not to the subspace, i.e., a worker keeps its \eqn{\lambda} when Thompson
-sampling selects another subspace, and the decay counts the iterations of the worker across all the subspaces it
-samples.
-A decayed \eqn{\lambda} therefore does not reflect how much is already known about the sampled subspace.
-}
-
-\section{Surrogate, Acquisition Function, and Acquisition Function Optimizer}{
-
-In contrast to \link{OptimizerAsyncMbo}, the \code{surrogate}, \code{acq_function}, and \code{acq_optimizer} fields are read-only and
-are set by \verb{$optimize()}.
-The \link{SurrogateLearner} is a random forest, the acquisition function is \link{AcqFunctionStochasticCB} configured with
-the \code{lambda}, \code{rate}, and \code{period} parameters, see section Lambda, and the \link{AcqOptimizer} is a random search with a
-batch size of 1000 and a budget of 10000 evaluations.
-
-The other components of \link{OptimizerAsyncMbo} do not work on subspaces.
-The surrogate of a worker is fitted on the evaluations of its subspace only, whereas an acquisition function that
-requires an incumbent, e.g. \link{mlr_acqfunctions_ei}, would read the incumbent from the whole \link[bbotk:ArchiveAsync]{bbotk::ArchiveAsync},
-and an \link{OutputTrafo} of the surrogate that is not inverted for the posterior would be fitted on a single subspace
-and could not represent the outcomes of the other subspaces.
-\link{AcqFunctionStochasticCB} needs no incumbent, and the \eqn{\lambda} it samples per worker is what makes the workers
-explore independently of each other, which is the mechanism ADBO relies on.
+A terminator that counts evaluations, e.g. \link[bbotk:TerminatorEvals]{bbotk::TerminatorEvals}, is shared by all subspaces.
+Subspaces with slow evaluations therefore receive only a small share of the budget.
+Consider \link[bbotk:TerminatorRunTime]{bbotk::TerminatorRunTime} instead when the subspaces differ strongly in evaluation time.
 }
 
 \examples{
@@ -211,16 +223,13 @@ if (requireNamespace("rush") &
       measure = msr("classif.acc"),
       terminator = trm("evals", n_evals = 30))
 
-    # one subspace per learner
-    subspaces = partition_search_space(instance$search_space, param = "branch.selection")
-
     # the tree learners share the "cpu" profile, the featureless learner runs on the "fast" profile
     mirai::daemons(2, .compute = "cpu")
     mirai::daemons(1, .compute = "fast")
     rush::rush_plan(profiles = c(cpu = 2, fast = 1), worker_type = "mirai")
 
     tnr("adbo_thompson",
-      subspaces = subspaces,
+      branch = "branch.selection",
       subspace_profiles = c(rpart = "cpu", ranger = "cpu", featureless = "fast"),
       design_size = 4)$optimize(instance)
 
@@ -251,17 +260,14 @@ In \emph{Proceedings of the 19th ACM SIGKDD International Conference on Knowledg
 \section{Active bindings}{
   \if{html}{\out{<div class="r6-active-bindings">}}
   \describe{
-    \item{\code{surrogate}}{(\link{SurrogateLearner} | \code{NULL})\cr
-The surrogate.
-Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.}
+    \item{\code{surrogate}}{(\link{Surrogate} | \code{NULL})\cr
+The surrogate.}
 
     \item{\code{acq_function}}{(\link{AcqFunction} | \code{NULL})\cr
-The acquisition function.
-Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.}
+The acquisition function.}
 
     \item{\code{acq_optimizer}}{(\link{AcqOptimizer} | \code{NULL})\cr
-The acquisition function optimizer.
-Read-only, see section Surrogate, Acquisition Function, and Acquisition Function Optimizer.}
+The acquisition function optimizer.}
 
     \item{\code{result_assigner}}{(\link{ResultAssigner} | \code{NULL})\cr
 The result assigner.}
