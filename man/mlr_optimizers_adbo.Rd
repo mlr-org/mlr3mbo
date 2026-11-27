@@ -32,6 +32,10 @@ Value used for sampling the lambda for each worker from an exponential distribut
 Rate of the exponential decay.}
 \item{\code{period}}{\code{integer(1)}\cr
 Period of the exponential decay.}
+}
+
+
+\describe{
 \item{\code{initial_design}}{\code{data.table::data.table()}\cr
 Initial design of the optimization.
 If \code{NULL}, a design of size \code{design_size} is generated with the specified \code{design_function}.
@@ -47,6 +51,12 @@ Default is \code{sobol}.}
 \item{\code{n_workers}}{\code{integer(1)}\cr
 Number of parallel workers.
 If \code{NULL}, all rush workers specified via \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.
+Default is \code{NULL}.}
+\item{\code{profiles}}{named \code{integer()}\cr
+Number of parallel workers per \CRANpkg{mirai} compute profile, e.g. \code{c(cpu = 2, gpu = 2)}.
+The daemons of every profile must be created with \code{\link[mirai:daemons]{mirai::daemons()}} beforehand.
+Cannot be combined with \code{n_workers}.
+If \code{NULL}, the profiles specified via \code{\link[rush:rush_plan]{rush::rush_plan()}} are used.
 Default is \code{NULL}.}
 }
 }
@@ -121,7 +131,28 @@ In \emph{2023 IEEE 19th International Conference on e-Science (e-Science)}, 1--1
   Creates a new instance of this \link[R6:R6Class]{R6} class.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
-    \preformatted{OptimizerADBO$new()}
+    \preformatted{OptimizerADBO$new(
+  id = "adbo",
+  param_set = NULL,
+  label = "Asynchronous Decentralized Bayesian Optimization",
+  man = "mlr3mbo::OptimizerADBO"
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{id}}{(\code{character(1)})\cr
+Identifier for the new instance.}
+      \item{\code{param_set}}{(\link[paradox:ParamSet]{paradox::ParamSet})\cr
+Set of control parameters of a subclass, added to the parameters of \code{OptimizerADBO}.}
+      \item{\code{label}}{(\code{character(1)})\cr
+Label for this object.
+Can be used in tables, plot and text output instead of the ID.}
+      \item{\code{man}}{(\code{character(1)})\cr
+String in the format \verb{[pkg]::[topic]} pointing to a manual page for this object.
+The referenced help package can be opened via method \verb{$help()}.}
+    }
     \if{html}{\out{</div>}}
   }
 }

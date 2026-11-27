@@ -241,7 +241,7 @@ SurrogateLearner = R6Class(
   private = list(
     # Train learner with new data.
     .update = function() {
-      xydt = copy(self$archive$data[, c(self$cols_x, self$cols_y), with = FALSE])
+      xydt = private$.fetch_xydt()
       if (!is.null(self$input_trafo)) {
         self$input_trafo$cols_x = self$cols_x
         self$input_trafo$search_space = self$archive$search_space
@@ -262,10 +262,7 @@ SurrogateLearner = R6Class(
     # Train learner with new data.
     # Operates on an asynchronous archive and performs imputation as needed.
     .update_async = function() {
-      xydt = copy(self$archive$rush$fetch_tasks_with_state(states = c("queued", "running", "finished"))[,
-        c(self$cols_x, self$cols_y, "state"),
-        with = FALSE
-      ])
+      xydt = private$.fetch_xydt_async()
       if (!is.null(self$input_trafo)) {
         self$input_trafo$cols_x = self$cols_x
         self$input_trafo$search_space = self$archive$search_space

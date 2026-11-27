@@ -43,7 +43,7 @@ Depends:
     mlr3tuning (>= 1.4.0),
     R (>= 3.1.0)
 Imports:
-    bbotk (>= 1.8.0),
+    bbotk (>= 1.12.0),
     checkmate (>= 2.0.0),
     data.table,
     lgr (>= 0.3.4),
@@ -105,6 +105,7 @@ Collate:
     'InputTrafoUnitcube.R'
     'aaa.R'
     'OptimizerADBO.R'
+    'OptimizerADBOThompson.R'
     'OptimizerMbo.R'
     'OptimizerAsyncMbo.R'
     'mlr_output_trafos.R'
@@ -119,6 +120,7 @@ Collate:
     'SurrogateLearner.R'
     'SurrogateLearnerCollection.R'
     'TunerADBO.R'
+    'TunerADBOThompson.R'
     'TunerAsyncMbo.R'
     'TunerMbo.R'
     'mlr_loop_functions.R'
@@ -127,11 +129,13 @@ Collate:
     'bayesopt_mpcl.R'
     'bayesopt_parego.R'
     'bayesopt_smsego.R'
+    'bayesopt_thompson.R'
     'bibentries.R'
     'conditions.R'
     'helper.R'
     'loop_function.R'
     'mbo_defaults.R'
+    'partition_search_space.R'
     'sugar.R'
     'zzz.R'
 Config/roxygen2/version: 8.1.0

@@ -1,5 +1,12 @@
 # mlr3mbo (development version)
 
+* fix: `bayesopt_thompson` respects constraints when enumerating discrete subspaces for initial designs, fallback sampling, and exhaustion checks.
+* feat: New loop function `bayesopt_thompson` for search spaces that are partitioned into homogeneous subspaces along a categorical parameter, e.g., the parameter that selects the learner in combined algorithm selection and hyperparameter optimization. In each iteration, one subspace is sampled with Beta-Bernoulli Thompson sampling, counting the evaluations in the top `top_quantile` fraction of the archive as successes, and the surrogate, the acquisition function, and the acquisition function optimizer only see the evaluations and the parameters of that subspace, which removes most of the dependencies of the search space from the modeling problem.
+* feat: New `OptimizerADBOThompson` and `TunerADBOThompson` run ADBO on a hierarchical search space, typically with a branching parameter that selects the learner. The search space is split into one subspace per level of the `branch` parameter, and in each iteration a worker samples one subspace via Beta-Bernoulli Thompson sampling and fits its surrogate on the evaluations and the parameters of that subspace only. The initial design of `design_size` random points per subspace is proposed by the workers on the fly. `subspace_profiles = c(tabpfn = "gpu", ranger = "cpu", xgboost = "cpu")` restricts the workers of a `mirai` compute profile to the subspaces of that profile, e.g., for learners that can only be trained on a GPU. The decay of the lambda of `AcqFunctionStochasticCB` is disabled by default, and the `catch_errors` parameter controls whether errors of the surrogate and the acquisition function optimizer are caught.
+* feat: New `partition_search_space()` splits a hierarchical search space along the levels of a categorical parameter, e.g., the branching parameter of a `mlr3pipelines::Graph`, into the subspaces consumed by `bayesopt_thompson`. By default, every level becomes a subspace of its own.
+* feat: `Surrogate` gained a `$row_filter` field that restricts the archive rows the surrogate is updated on.
+* feat: `OptimizerAsyncMbo`, `OptimizerADBO`, `TunerAsyncMbo`, and `TunerADBO` gained the `profiles` parameter that distributes the workers over the `mirai` compute profiles, e.g. `profiles = c(cpu = 2, gpu = 2)`. Cannot be combined with `n_workers`.
+
 # mlr3mbo 1.3.0
 
 * compatibility: use Paradox 2's public transformation-free subset API while retaining support for Paradox 1.
